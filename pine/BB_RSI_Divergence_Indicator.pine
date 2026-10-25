@@ -1,0 +1,165 @@
+//@version=6
+// Band-touch RSI divergence reconstruction from the user-provided screenshot.
+//
+// Signal contract
+//   BUY: a confirmed price swing low has a wick at/below the lower Bollinger
+//        Band, price makes a lower low than the prior accepted swing low, and
+//        Wilder RSI makes a higher low over the matched pivot window.
+//   SELL: a confirmed price swing high has a wick at/above the upper band,
+//         price makes a higher high than the prior accepted swing high, and
+//         Wilder RSI makes a lower high over the matched pivot window.
+//
+// Desk sleeve v2 adds local regime/volatility risk scaling and execution checks.
+// This Pine script deliberately remains the frozen raw signal for parity; it
+// does not size positions or send orders.
+// The marker and alert occur on the confirmation bar close. A pivot with
+// rightBars = 3 is only knowable after three bars have elapsed; this script
+// deliberately does not move the signal back to the pivot candle.
+//
+// This is an indicator reconstruction, not the author's original code, a
+// trading strategy, or evidence of profitability. Validate by instrument,
+// timeframe, and execution costs before relying on it.
+//
+// Research references:
+// - Bollinger Bands use an n-period moving average and population standard
+//   deviation; defaults are 20 periods and +/-2 deviations:
+//   https://www.bollingerbands.com/bollinger-bands
+// - Band tags alone are not signals; bands can be walked in trends, and closes
+//   outside initially indicate continuation:
+//   https://www.bollingerbands.com/bollinger-band-rules
+// - TradingView RSI uses Wilder-style RMA of gains/losses:
+//   https://www.tradingview.com/support/solutions/43000502338-relative-strength-index-rsi/
+// - Confirmed bars reduce realtime repainting; pivot plots shifted into the
+//   past can be misleading:
+//   https://www.tradingview.com/pine-script-docs/concepts/repainting/
+// - force_overlay supports price plots while RSI remains in a separate pane:
+//   https://www.tradingview.com/pine-script-docs/visuals/overview/
+
+indicator("Band-Touch RSI Divergence", shorttitle="BBRSI Div", overlay=false, max_lines_count=200)
+
+string GROUP_BB = "Bollinger Bands"
+string GROUP_RSI = "RSI"
+string GROUP_SWING = "Swing Divergence"
+
+int bbLength = input.int(20, "Basis and deviation length", minval=2, group=GROUP_BB)
+float bbMultiplier = input.float(2.0, "Standard deviation multiplier", minval=0.1, step=0.1, group=GROUP_BB)
+float source = input.source(close, "Band and RSI source", group=GROUP_BB)
+bool showBands = input.bool(true, "Show bands on price chart", group=GROUP_BB)
+
+int rsiLength = input.int(14, "Wilder RSI length", minval=2, group=GROUP_RSI)
+
+int pivotLeft = input.int(3, "Pivot bars to the left", minval=1, maxval=20, group=GROUP_SWING)
+int pivotRight = input.int(3, "Pivot bars to the right / confirmation delay", minval=1, maxval=20, group=GROUP_SWING)
+int rsiAlignInput = input.int(1, "RSI pivot alignment radius", minval=0, maxval=5, group=GROUP_SWING,
+     tooltip="0 samples RSI on the exact price pivot bar. 1 takes the RSI low/high within one bar on either side of the price pivot.")
+int minPivotGap = input.int(5, "Minimum bars between compared swings", minval=1, maxval=100, group=GROUP_SWING)
+int maxPivotGap = input.int(60, "Maximum bars between compared swings", minval=2, maxval=500, group=GROUP_SWING)
+float minPriceMovePct = input.float(0.0, "Minimum price extension (%)", minval=0.0, maxval=20.0, step=0.1, group=GROUP_SWING,
+     tooltip="0 requires any strictly lower low / higher high. Increase to ignore tiny price extensions.")
+float minRsiDifference = input.float(2.0, "Minimum RSI divergence (points)", minval=0.0, maxval=30.0, step=0.5, group=GROUP_SWING)
+bool requireCloseBackInside = input.bool(false, "Require pivot candle close back inside band", group=GROUP_SWING,
+     tooltip="Optional confirmation filter. Off by default to match the stated band-touch rule.")
+
+// Classic Bollinger construction: SMA plus/minus a multiple of population SD.
+float basis = ta.sma(source, bbLength)
+float deviation = ta.stdev(source, bbLength, true)
+float upperBand = basis + bbMultiplier * deviation
+float lowerBand = basis - bbMultiplier * deviation
+
+// ta.rsi() follows Wilder's smoothed average-gain / average-loss formulation.
+float rsi = ta.rsi(source, rsiLength)
+
+// A symmetric price pivot becomes knowable only after pivotRight bars.
+float pricePivotLow = ta.pivotlow(low, pivotLeft, pivotRight)
+float pricePivotHigh = ta.pivothigh(high, pivotLeft, pivotRight)
+
+// Match RSI to the price swing. The window is centered on the historical
+// price-pivot bar and lies entirely in known history when the pivot confirms.
+int rsiAlignBars = math.min(rsiAlignInput, pivotRight)
+float rsiAtLowPivot = ta.lowest(rsi[pivotRight - rsiAlignBars], 2 * rsiAlignBars + 1)
+float rsiAtHighPivot = ta.highest(rsi[pivotRight - rsiAlignBars], 2 * rsiAlignBars + 1)
+
+// Persist the last accepted low/high price pivots and their matched RSI values.
+var float previousLowPrice = na
+var float previousLowRsi = na
+var int previousLowBar = na
+var float previousHighPrice = na
+var float previousHighRsi = na
+var int previousHighBar = na
+
+bool buySignal = false
+bool sellSignal = false
+
+// State changes and signals are committed only at a closed bar.
+if barstate.isconfirmed and not na(pricePivotLow)
+    int pivotBar = bar_index - pivotRight
+    float pivotPrice = low[pivotRight]
+    float pivotRsi = rsiAtLowPivot
+    int barsFromPrevious = na(previousLowBar) ? 0 : pivotBar - previousLowBar
+    bool hasComparableLow = not na(previousLowBar) and barsFromPrevious >= minPivotGap and barsFromPrevious <= maxPivotGap
+    bool lowerBandTouched = not na(lowerBand[pivotRight]) and low[pivotRight] <= lowerBand[pivotRight]
+    bool closeBackInside = not requireCloseBackInside or close[pivotRight] > lowerBand[pivotRight]
+    bool priceMadeLowerLow = not na(previousLowPrice) and pivotPrice < previousLowPrice * (1.0 - minPriceMovePct / 100.0)
+    bool rsiMadeHigherLow = not na(previousLowRsi) and pivotRsi > previousLowRsi + minRsiDifference
+    bool validPivot = not na(pivotRsi) and not na(lowerBand[pivotRight])
+
+    buySignal := hasComparableLow and lowerBandTouched and closeBackInside and priceMadeLowerLow and rsiMadeHigherLow and validPivot
+
+    if buySignal
+        line.new(x1=previousLowBar, y1=previousLowRsi, x2=pivotBar, y2=pivotRsi,
+             xloc=xloc.bar_index, extend=extend.none, color=color.teal, width=2)
+
+    // Ignore pivots closer than minPivotGap; accept the current low after a
+    // valid gap, including when the previous low is too old to compare.
+    if validPivot and (na(previousLowBar) or barsFromPrevious >= minPivotGap)
+        previousLowPrice := pivotPrice
+        previousLowRsi := pivotRsi
+        previousLowBar := pivotBar
+
+if barstate.isconfirmed and not na(pricePivotHigh)
+    int pivotBar = bar_index - pivotRight
+    float pivotPrice = high[pivotRight]
+    float pivotRsi = rsiAtHighPivot
+    int barsFromPrevious = na(previousHighBar) ? 0 : pivotBar - previousHighBar
+    bool hasComparableHigh = not na(previousHighBar) and barsFromPrevious >= minPivotGap and barsFromPrevious <= maxPivotGap
+    bool upperBandTouched = not na(upperBand[pivotRight]) and high[pivotRight] >= upperBand[pivotRight]
+    bool closeBackInside = not requireCloseBackInside or close[pivotRight] < upperBand[pivotRight]
+    bool priceMadeHigherHigh = not na(previousHighPrice) and pivotPrice > previousHighPrice * (1.0 + minPriceMovePct / 100.0)
+    bool rsiMadeLowerHigh = not na(previousHighRsi) and pivotRsi < previousHighRsi - minRsiDifference
+    bool validPivot = not na(pivotRsi) and not na(upperBand[pivotRight])
+
+    sellSignal := hasComparableHigh and upperBandTouched and closeBackInside and priceMadeHigherHigh and rsiMadeLowerHigh and validPivot
+
+    if sellSignal
+        line.new(x1=previousHighBar, y1=previousHighRsi, x2=pivotBar, y2=pivotRsi,
+             xloc=xloc.bar_index, extend=extend.none, color=color.red, width=2)
+
+    if validPivot and (na(previousHighBar) or barsFromPrevious >= minPivotGap)
+        previousHighPrice := pivotPrice
+        previousHighRsi := pivotRsi
+        previousHighBar := pivotBar
+
+// RSI is shown in this script's pane. Bands and signal labels are forced onto
+// the main price pane so both views remain in one indicator.
+plot(showBands ? upperBand : na, "Upper Bollinger Band", color=color.new(color.orange, 10), linewidth=1, force_overlay=true)
+plot(showBands ? basis : na, "Bollinger Basis", color=color.new(color.gray, 55), linewidth=1, force_overlay=true)
+plot(showBands ? lowerBand : na, "Lower Bollinger Band", color=color.new(color.orange, 10), linewidth=1, force_overlay=true)
+
+plot(rsi, "Wilder RSI", color=color.rgb(125, 85, 190), linewidth=2)
+hline(70, "RSI 70", color=color.new(color.gray, 65), linestyle=hline.style_dotted)
+hline(50, "RSI 50", color=color.new(color.gray, 78), linestyle=hline.style_dotted)
+hline(30, "RSI 30", color=color.new(color.gray, 65), linestyle=hline.style_dotted)
+
+// These shapes are deliberately plotted on the confirmation bar, without a
+// negative offset that would make the signal look earlier than it was known.
+plotshape(buySignal, title="Bullish BB touch + RSI divergence", style=shape.labelup,
+     location=location.belowbar, color=color.rgb(0, 145, 125), text="BUY", textcolor=color.white,
+     size=size.tiny, force_overlay=true)
+plotshape(sellSignal, title="Bearish BB touch + RSI divergence", style=shape.labeldown,
+     location=location.abovebar, color=color.rgb(205, 55, 65), text="SELL", textcolor=color.white,
+     size=size.tiny, force_overlay=true)
+
+alertcondition(buySignal, title="Bullish BB touch + RSI divergence",
+     message="{{ticker}} {{interval}}: confirmed bullish lower-band touch with regular RSI divergence.")
+alertcondition(sellSignal, title="Bearish BB touch + RSI divergence",
+     message="{{ticker}} {{interval}}: confirmed bearish upper-band touch with regular RSI divergence.")

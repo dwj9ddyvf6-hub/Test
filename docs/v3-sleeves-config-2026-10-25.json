@@ -1,0 +1,6724 @@
+{
+ "note": "Batch 6 ported: raschke_rre, red_day_reversal, rsi_meanrev, rsi_meanrev_options, rule_1d_cyan_smallcap, rule_1d_green_tom, rule_1h_cyan_raw, rule_1w_cyan_mom_adx, rule_1w_swing_beta_wt, saty_day (rows carry producer-registry inputs; adapters in desk_sleeves/, strategies byte-identical in sleeves/). Batch-5 port rows (momentum..raschke_pf3) copied from muse-desk-v2 config @3593668; producer inputs declared per sleeve.",
+ "paper_only": true,
+ "sleeves": [
+  {
+   "id": "1d",
+   "module": "adapters3.laz_1d",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10350.0,
+    "cash_usd": 10350.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "1dc",
+   "module": "adapters3.laz_1dc",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 12500.0,
+    "cash_usd": 12500.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "1h",
+   "module": "adapters3.laz_1h",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 51750.0,
+    "cash_usd": 51750.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "1w",
+   "module": "adapters3.laz_1w",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 19287.0,
+    "cash_usd": 19287.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "1wa",
+   "module": "adapters3.laz_1wa",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 17250.0,
+    "cash_usd": 17250.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_abs_base_ada_fullcash",
+   "module": "aster_sleeves.aster_abs_base_ada_fullcash",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_abs_base_ada_vol1pct",
+   "module": "aster_sleeves.aster_abs_base_ada_vol1pct",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_abs_enj_4h",
+   "module": "adapters3.aster_abs_enj_4h",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_abs_link_4h",
+   "module": "adapters3.aster_abs_link_4h",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_abs_neg_ada_fullcash",
+   "module": "aster_sleeves.aster_abs_neg_ada_fullcash",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "funding"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_abs_neg_ada_vol1pct",
+   "module": "aster_sleeves.aster_abs_neg_ada_vol1pct",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "funding"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_abs_nonneg_ada_fullcash",
+   "module": "aster_sleeves.aster_abs_nonneg_ada_fullcash",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "funding"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_abs_nonneg_ada_vol1pct",
+   "module": "aster_sleeves.aster_abs_nonneg_ada_vol1pct",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "funding"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_breakout_ada_fullcash",
+   "module": "aster_sleeves.aster_breakout_ada_fullcash",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_breakout_ada_vol1pct",
+   "module": "aster_sleeves.aster_breakout_ada_vol1pct",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_core_rsi2_long",
+   "module": "adapters3.aster_core_rsi2_long",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_core_rsi2_vertical",
+   "module": "adapters3.aster_core_rsi2_vertical",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_enj_nfs_fixed96_vol",
+   "module": "adapters3.aster_enj_nfs_fixed96_vol",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_enj_nfs_lost_full",
+   "module": "adapters3.aster_enj_nfs_lost_full",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_enj_nfs_lost_vol",
+   "module": "adapters3.aster_enj_nfs_lost_vol",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_enj_nfs_norm_full",
+   "module": "adapters3.aster_enj_nfs_norm_full",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_enj_nfs_norm_vol",
+   "module": "adapters3.aster_enj_nfs_norm_vol",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_enj_nfs_normfail_full",
+   "module": "adapters3.aster_enj_nfs_normfail_full",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_enj_nfs_normfail_vol",
+   "module": "adapters3.aster_enj_nfs_normfail_vol",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_core25_c098",
+   "module": "adapters3.aster_etf_core25_c098",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_core25_m150",
+   "module": "adapters3.aster_etf_core25_m150",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_drift1_c098",
+   "module": "adapters3.aster_etf_drift1_c098",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_drift1_m150",
+   "module": "adapters3.aster_etf_drift1_m150",
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "DRIFT1",
+    "gross_target": 1.5,
+    "source_id": "R19_ETF_DRIFT1_M150"
+   }
+  },
+  {
+   "id": "aster_etf_exsmh1_c098",
+   "module": "adapters3.aster_etf_exsmh1_c098",
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "EXSMH1",
+    "gross_target": 0.98,
+    "source_id": "R19_ETF_EXSMH1_C098"
+   }
+  },
+  {
+   "id": "aster_etf_exsmh1_m150",
+   "module": "adapters3.aster_etf_exsmh1_m150",
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "EXSMH1",
+    "gross_target": 1.5,
+    "source_id": "R19_ETF_EXSMH1_M150"
+   }
+  },
+  {
+   "id": "aster_etf_interval1_c098",
+   "module": "adapters3.aster_etf_interval1_c098",
+   "inputs": [
+    "bars",
+    "bars_secondary",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "INTERVAL1",
+    "gross_target": 0.98,
+    "source_id": "R19_ETF_INTERVAL1_C098"
+   }
+  },
+  {
+   "id": "aster_etf_interval1_m150",
+   "module": "adapters3.aster_etf_interval1_m150",
+   "inputs": [
+    "bars",
+    "bars_secondary",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "INTERVAL1",
+    "gross_target": 1.5,
+    "source_id": "R19_ETF_INTERVAL1_M150"
+   }
+  },
+  {
+   "id": "aster_etf_interval_core25_c098",
+   "module": "adapters3.aster_etf_interval_core25_c098",
+   "inputs": [
+    "bars",
+    "bars_secondary",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "INTERVAL_CORE25",
+    "gross_target": 0.98,
+    "source_id": "R19_ETF_INTERVAL_CORE25_C098"
+   }
+  },
+  {
+   "id": "aster_etf_interval_core25_m150",
+   "module": "adapters3.aster_etf_interval_core25_m150",
+   "inputs": [
+    "bars",
+    "bars_secondary",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "INTERVAL_CORE25",
+    "gross_target": 1.5,
+    "source_id": "R19_ETF_INTERVAL_CORE25_M150"
+   }
+  },
+  {
+   "id": "aster_etf_interval_drift1_c098",
+   "module": "adapters3.aster_etf_interval_drift1_c098",
+   "inputs": [
+    "bars",
+    "bars_secondary",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "INTERVAL_DRIFT1",
+    "gross_target": 0.98,
+    "source_id": "R19_ETF_INTERVAL_DRIFT1_C098"
+   }
+  },
+  {
+   "id": "aster_etf_interval_drift1_m150",
+   "module": "adapters3.aster_etf_interval_drift1_m150",
+   "inputs": [
+    "bars",
+    "bars_secondary",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "INTERVAL_DRIFT1",
+    "gross_target": 1.5,
+    "source_id": "R19_ETF_INTERVAL_DRIFT1_M150"
+   }
+  },
+  {
+   "id": "aster_etf_leader1_c098",
+   "module": "adapters3.aster_etf_leader1_c098",
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "cadence_s": 300,
+   "session": "rth",
+   "parked": false,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "bp_buffer_frac": 0.02,
+   "params": {
+    "policy": "LEADER1",
+    "gross_target": 0.98,
+    "source_id": "R19_ETF_LEADER1_C098"
+   }
+  },
+  {
+   "id": "aster_etf_leader1_m150",
+   "module": "adapters3.aster_etf_leader1_m150",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_qld_buy_hold",
+   "module": "adapters3.aster_etf_qld_buy_hold",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_qld_monthly",
+   "module": "adapters3.aster_etf_qld_monthly",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_qqq_buy_hold",
+   "module": "adapters3.aster_etf_qqq_buy_hold",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_qqq_monthly_c098",
+   "module": "adapters3.aster_etf_qqq_monthly_c098",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_qqq_monthly_m150",
+   "module": "adapters3.aster_etf_qqq_monthly_m150",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_qqq_qld_buy_hold",
+   "module": "adapters3.aster_etf_qqq_qld_buy_hold",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_qqq_qld_monthly",
+   "module": "adapters3.aster_etf_qqq_qld_monthly",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_smh_hold_c098",
+   "module": "adapters3.aster_etf_smh_hold_c098",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_smh_hold_m150",
+   "module": "adapters3.aster_etf_smh_hold_m150",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_spy_buy_hold",
+   "module": "adapters3.aster_etf_spy_buy_hold",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_spy_monthly_c098",
+   "module": "adapters3.aster_etf_spy_monthly_c098",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_etf_spy_monthly_m150",
+   "module": "adapters3.aster_etf_spy_monthly_m150",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_link_nfs_norm_vol",
+   "module": "adapters3.aster_link_nfs_norm_vol",
+   "cadence_s": 14400,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_native_btc_eth_sma200",
+   "module": "adapters3.aster_native_btc_eth_sma200",
+   "cadence_s": 86400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_native_eth_sma200",
+   "module": "adapters3.aster_native_eth_sma200",
+   "cadence_s": 86400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_open_gamma_a",
+   "module": "adapters3.aster_open_gamma_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "opening_events",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_open_gamma_b",
+   "module": "adapters3.aster_open_gamma_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "opening_events",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_pead_long_a",
+   "module": "adapters3.aster_pead_long_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions",
+    "earnings_events"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_pead_long_b",
+   "module": "adapters3.aster_pead_long_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions",
+    "earnings_events"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_pead_vertical_a",
+   "module": "adapters3.aster_pead_vertical_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions",
+    "earnings_events"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_pead_vertical_b",
+   "module": "adapters3.aster_pead_vertical_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions",
+    "earnings_events"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_pub_enj_iu_body",
+   "module": "adapters3.aster_pub_enj_iu_body",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_pub_link_ai_volume",
+   "module": "adapters3.aster_pub_link_ai_volume",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_pub_rsi2_ada",
+   "module": "aster_sleeves.aster_pub_rsi2_ada",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_fixed16_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_fixed96_fullcash",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_fixed96_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_fixed96_volume1pct",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_fixed96_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_lost_breakout_fullcash",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_lost_breakout_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_lost_breakout_volume1pct",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_lost_breakout_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_normalization_failure_fullcash",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_normalization_failure_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_normalization_failure_volume1pct",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_normalization_failure_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_normalization_fullcash",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_normalization_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_adausdt_negative_funding_squeeze_normalization_volume1pct",
+   "module": "adapters3.aster_r19_adausdt_negative_funding_squeeze_normalization_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_absorption_base_fixed16_fullcash",
+   "module": "adapters3.aster_r19_enjusdt_absorption_base_fixed16_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_absorption_base_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_enjusdt_absorption_base_fixed16_volume1pct",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "absorption_base",
+    "exit_policy": "fixed16",
+    "capacity": "volume1pct",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_absorption_negative_funding_fixed16_fullcash",
+   "module": "adapters3.aster_r19_enjusdt_absorption_negative_funding_fixed16_fullcash",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "absorption_negative_funding",
+    "exit_policy": "fixed16",
+    "capacity": "fullcash",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_absorption_negative_funding_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_enjusdt_absorption_negative_funding_fixed16_volume1pct",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "absorption_negative_funding",
+    "exit_policy": "fixed16",
+    "capacity": "volume1pct",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_absorption_nonnegative_funding_fixed16_fullcash",
+   "module": "adapters3.aster_r19_enjusdt_absorption_nonnegative_funding_fixed16_fullcash",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "absorption_nonnegative_funding",
+    "exit_policy": "fixed16",
+    "capacity": "fullcash",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_absorption_nonnegative_funding_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_enjusdt_absorption_nonnegative_funding_fixed16_volume1pct",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "absorption_nonnegative_funding",
+    "exit_policy": "fixed16",
+    "capacity": "volume1pct",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_breakout_base_fixed16_fullcash",
+   "module": "adapters3.aster_r19_enjusdt_breakout_base_fixed16_fullcash",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "breakout_base",
+    "exit_policy": "fixed16",
+    "capacity": "fullcash",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_breakout_base_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_enjusdt_breakout_base_fixed16_volume1pct",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "breakout_base",
+    "exit_policy": "fixed16",
+    "capacity": "volume1pct",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_negative_funding_squeeze_fixed16_fullcash",
+   "module": "adapters3.aster_r19_enjusdt_negative_funding_squeeze_fixed16_fullcash",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "negative_funding_squeeze",
+    "exit_policy": "fixed16",
+    "capacity": "fullcash",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_negative_funding_squeeze_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_enjusdt_negative_funding_squeeze_fixed16_volume1pct",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "negative_funding_squeeze",
+    "exit_policy": "fixed16",
+    "capacity": "volume1pct",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_enjusdt_negative_funding_squeeze_fixed96_fullcash",
+   "module": "adapters3.aster_r19_enjusdt_negative_funding_squeeze_fixed96_fullcash",
+   "cadence_s": 300,
+   "session": "always",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {
+    "family": "negative_funding_squeeze",
+    "exit_policy": "fixed96",
+    "capacity": "fullcash",
+    "symbol": "ENJUSDT",
+    "fee_bps": 10
+   },
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_absorption_base_fixed16_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_absorption_base_fixed16_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_absorption_base_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_absorption_base_fixed16_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_absorption_negative_funding_fixed16_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_absorption_negative_funding_fixed16_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_absorption_negative_funding_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_absorption_negative_funding_fixed16_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_absorption_nonnegative_funding_fixed16_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_absorption_nonnegative_funding_fixed16_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_absorption_nonnegative_funding_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_absorption_nonnegative_funding_fixed16_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_breakout_base_fixed16_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_breakout_base_fixed16_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_breakout_base_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_breakout_base_fixed16_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_fixed16_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_fixed16_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_fixed16_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_fixed96_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_fixed96_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_fixed96_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_fixed96_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_lost_breakout_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_lost_breakout_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_lost_breakout_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_lost_breakout_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_normalization_failure_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_normalization_failure_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_normalization_failure_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_normalization_failure_volume1pct",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_linkusdt_negative_funding_squeeze_normalization_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_negative_funding_squeeze_normalization_fullcash",
+   "cadence_s": 14400,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "funding",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_tensor_g4_hot_delay_25",
+   "module": "adapters3.aster_r19_tensor_g4_hot_delay_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_tensor_g4_hot_reserve_25",
+   "module": "adapters3.aster_r19_tensor_g4_hot_reserve_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_tensor_g4_red_timeout_25",
+   "module": "adapters3.aster_r19_tensor_g4_red_timeout_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_timing_cloud_aggressive",
+   "module": "adapters3.aster_r19_timing_cloud_aggressive",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_timing_cloud_base",
+   "module": "adapters3.aster_r19_timing_cloud_base",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_timing_hour_floor0_delay0",
+   "module": "adapters3.aster_r19_timing_hour_floor0_delay0",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes",
+    "timing_signals"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_timing_hour_floor0_delay1",
+   "module": "adapters3.aster_r19_timing_hour_floor0_delay1",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes",
+    "timing_signals"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_timing_hour_floor1_delay0",
+   "module": "adapters3.aster_r19_timing_hour_floor1_delay0",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes",
+    "timing_signals"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_timing_hour_floor1_delay1",
+   "module": "adapters3.aster_r19_timing_hour_floor1_delay1",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes",
+    "timing_signals"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_r19_timing_overnight_25bp",
+   "module": "adapters3.aster_r19_timing_overnight_25bp",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_rsi2_long_fixed_a",
+   "module": "adapters3.aster_rec_rsi2_long_fixed_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_rsi2_long_fixed_b",
+   "module": "adapters3.aster_rec_rsi2_long_fixed_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_rsi2_long_touch_a",
+   "module": "adapters3.aster_rec_rsi2_long_touch_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_rsi2_long_touch_b",
+   "module": "adapters3.aster_rec_rsi2_long_touch_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_rsi2_vertical_fixed_a",
+   "module": "adapters3.aster_rec_rsi2_vertical_fixed_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_rsi2_vertical_fixed_b",
+   "module": "adapters3.aster_rec_rsi2_vertical_fixed_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_rsi2_vertical_touch_a",
+   "module": "adapters3.aster_rec_rsi2_vertical_touch_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_rsi2_vertical_touch_b",
+   "module": "adapters3.aster_rec_rsi2_vertical_touch_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_vwap20_long_fixed_a",
+   "module": "adapters3.aster_rec_vwap20_long_fixed_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_vwap20_long_fixed_b",
+   "module": "adapters3.aster_rec_vwap20_long_fixed_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_vwap20_long_touch_a",
+   "module": "adapters3.aster_rec_vwap20_long_touch_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_vwap20_long_touch_b",
+   "module": "adapters3.aster_rec_vwap20_long_touch_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_vwap20_vert_fixed_a",
+   "module": "adapters3.aster_rec_vwap20_vert_fixed_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_vwap20_vert_fixed_b",
+   "module": "adapters3.aster_rec_vwap20_vert_fixed_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_vwap20_vert_touch_a",
+   "module": "adapters3.aster_rec_vwap20_vert_touch_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rec_vwap20_vert_touch_b",
+   "module": "adapters3.aster_rec_vwap20_vert_touch_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_rsi2_1d",
+   "module": "adapters3.aster_rsi2_1d",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_squeeze_1d",
+   "module": "adapters3.aster_squeeze_1d",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_squeeze_ada_fullcash",
+   "module": "aster_sleeves.aster_squeeze_ada_fullcash",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "funding"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_tensor_beta_cash_all_25",
+   "module": "adapters3.aster_tensor_beta_cash_all_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_cash_all_25",
+   "module": "adapters3.aster_tensor_c1_cash_all_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_cash_cool_25",
+   "module": "adapters3.aster_tensor_c1_cash_cool_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_cash_hot_25",
+   "module": "adapters3.aster_tensor_c1_cash_hot_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_delay_all_25",
+   "module": "adapters3.aster_tensor_c1_delay_all_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_delay_cool_25",
+   "module": "adapters3.aster_tensor_c1_delay_cool_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_delay_hot_25",
+   "module": "adapters3.aster_tensor_c1_delay_hot_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_reserve_all_25",
+   "module": "adapters3.aster_tensor_c1_reserve_all_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_reserve_cool_25",
+   "module": "adapters3.aster_tensor_c1_reserve_cool_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_c1_reserve_hot_25",
+   "module": "adapters3.aster_tensor_c1_reserve_hot_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_cash_all_10",
+   "module": "adapters3.aster_tensor_g4_cash_all_10",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_cash_all_25",
+   "module": "adapters3.aster_tensor_g4_cash_all_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_cash_cool_25",
+   "module": "adapters3.aster_tensor_g4_cash_cool_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_cash_hot_25",
+   "module": "adapters3.aster_tensor_g4_cash_hot_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_delay_all_25",
+   "module": "adapters3.aster_tensor_g4_delay_all_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_delay_cool_25",
+   "module": "adapters3.aster_tensor_g4_delay_cool_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_reserve_all_10",
+   "module": "adapters3.aster_tensor_g4_reserve_all_10",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_reserve_all_25",
+   "module": "adapters3.aster_tensor_g4_reserve_all_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_g4_reserve_cool_25",
+   "module": "adapters3.aster_tensor_g4_reserve_cool_25",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "aster_tensor_h1_recovery",
+   "module": "adapters3.aster_tensor_h1_recovery",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_tensor_leaps_a",
+   "module": "adapters3.aster_tensor_leaps_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_tensor_leaps_b",
+   "module": "adapters3.aster_tensor_leaps_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options_chain",
+    "quotes",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_tensor_w1_recovery",
+   "module": "adapters3.aster_tensor_w1_recovery",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_xsp_pcs_calm_a",
+   "module": "adapters3.aster_xsp_pcs_calm_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "options",
+    "positions",
+    "xsp_state"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_xsp_pcs_calm_b",
+   "module": "adapters3.aster_xsp_pcs_calm_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "options",
+    "positions",
+    "xsp_state"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_xsp_pcs_graded_a",
+   "module": "adapters3.aster_xsp_pcs_graded_a",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "options",
+    "positions",
+    "xsp_state"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_xsp_pcs_graded_b",
+   "module": "adapters3.aster_xsp_pcs_graded_b",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "options",
+    "positions",
+    "xsp_state"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aurelia_gold",
+   "module": "adapters3.aurelia_gold",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ]
+  },
+  {
+   "id": "aurelia_ndx",
+   "module": "adapters3.aurelia_ndx",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ]
+  },
+  {
+   "id": "bb_rsi_divergence",
+   "module": "adapters3.bb_rsi_divergence",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes",
+    "session_fills"
+   ]
+  },
+  {
+   "id": "beatendown",
+   "module": "adapters3.beatendown",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ]
+  },
+  {
+   "id": "bilbo_options",
+   "module": "adapters3.bilbo_options",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": true,
+   "flatten_time_et": "15:55",
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ]
+  },
+  {
+   "id": "capitulation",
+   "module": "adapters3.capitulation",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "earnings",
+    "positions"
+   ]
+  },
+  {
+   "id": "capitulation_options",
+   "module": "adapters3.capitulation_options",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ]
+  },
+  {
+   "id": "confluence",
+   "module": "adapters3.confluence",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ]
+  },
+  {
+   "id": "daily_cyan_gbm",
+   "module": "adapters3.daily_cyan_gbm",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ]
+  },
+  {
+   "id": "donchian",
+   "module": "adapters3.donchian",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ]
+  },
+  {
+   "id": "donchian_crypto",
+   "module": "adapters3.donchian_crypto",
+   "cadence_s": 900,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "earnings_buyback",
+   "module": "adapters3.earnings_buyback",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "options",
+    "earnings",
+    "buyback_scan"
+   ],
+   "parked": false
+  },
+  {
+   "id": "em_1587",
+   "module": "adapters3.em_1587",
+   "cadence_s": 60,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "options",
+    "extra"
+   ],
+   "parked": false
+  },
+  {
+   "id": "ema_vwap",
+   "module": "adapters3.ema_vwap",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "ema_vwap_options",
+   "module": "adapters3.ema_vwap_options",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": true,
+   "flatten_time_et": "15:55",
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "options"
+   ],
+   "parked": false
+  },
+  {
+   "id": "fear_premium",
+   "module": "adapters3.fear_premium",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "options"
+   ],
+   "parked": false
+  },
+  {
+   "id": "free_etf",
+   "module": "adapters3.free_etf",
+   "cadence_s": 60,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "positions",
+    "extra",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "free_kraken_ada_basis",
+   "module": "adapters3.free_kraken_ada_basis",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "kraken",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "free_kraken_ada_breakdown",
+   "module": "adapters3.free_kraken_ada_breakdown",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "kraken",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "free_kraken_ada_crowded",
+   "module": "adapters3.free_kraken_ada_crowded",
+   "cadence_s": 3600,
+   "session": "24h",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "kraken",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "free_kraken_enj_spot",
+   "module": "desk3.sleeves.free_kraken_enj_spot",
+   "cadence_s": 3600,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "kraken.book",
+    "bars"
+   ],
+   "strategy_module": "desk3.strategies.free_kraken_enj_spot"
+  },
+  {
+   "id": "free_kraken_link_basis",
+   "module": "desk3.sleeves.free_kraken_link_basis",
+   "cadence_s": 3600,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "kraken.basis",
+    "kraken.quote"
+   ],
+   "strategy_module": "desk3.strategies.free_kraken_link_basis"
+  },
+  {
+   "id": "free_kraken_link_breakdown",
+   "module": "desk3.sleeves.free_kraken_link_breakdown",
+   "cadence_s": 3600,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "kraken.quote"
+   ],
+   "strategy_module": "desk3.strategies.free_kraken_link_breakdown"
+  },
+  {
+   "id": "free_kraken_link_crowded",
+   "module": "desk3.sleeves.free_kraken_link_crowded",
+   "cadence_s": 3600,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "kraken.quote",
+    "kraken.funding"
+   ],
+   "strategy_module": "desk3.strategies.free_kraken_link_crowded"
+  },
+  {
+   "id": "free_opt_own_iv",
+   "module": "desk3.sleeves.free_opt_own_iv",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "options"
+   ],
+   "strategy_module": "desk3.strategies.free_opt_own_iv"
+  },
+  {
+   "id": "free_opt_pair",
+   "module": "desk3.sleeves.free_opt_pair",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "options"
+   ],
+   "strategy_module": "desk3.strategies.free_opt_pair"
+  },
+  {
+   "id": "free_opt_parity",
+   "module": "desk3.sleeves.free_opt_parity",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "options.chain",
+    "bars"
+   ],
+   "strategy_module": "desk3.strategies.free_opt_parity"
+  },
+  {
+   "id": "free_opt_release",
+   "module": "desk3.sleeves.free_opt_release",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "options"
+   ],
+   "strategy_module": "desk3.strategies.free_opt_release"
+  },
+  {
+   "id": "free_opt_tail",
+   "module": "desk3.sleeves.free_opt_tail",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "options"
+   ],
+   "strategy_module": "desk3.strategies.free_opt_tail"
+  },
+  {
+   "id": "free_opt_wheel",
+   "module": "desk3.sleeves.free_opt_wheel",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "options"
+   ],
+   "strategy_module": "desk3.strategies.free_opt_wheel"
+  },
+  {
+   "id": "fwd_alpaca_ada_rsi2",
+   "module": "desk3.sleeves.fwd_alpaca_ada_rsi2",
+   "cadence_s": 3600,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:ADA/USD:1Hour",
+    "positions"
+   ]
+  },
+  {
+   "id": "fwd_alpaca_enj_iu_body",
+   "module": "desk3.sleeves.fwd_alpaca_enj_iu_body",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:ENJ/USD:1Min"
+   ]
+  },
+  {
+   "id": "fwd_alpaca_link_ai_volume",
+   "module": "desk3.sleeves.fwd_alpaca_link_ai_volume",
+   "cadence_s": 14400,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:LINK/USD:4Hour",
+    "positions"
+   ]
+  },
+  {
+   "id": "fwd_coinbase_sma200",
+   "module": "desk3.sleeves.fwd_coinbase_sma200",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "24h",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:BTC-USD:1Day",
+    "positions",
+    "journal:self"
+   ]
+  },
+  {
+   "id": "gate_1h",
+   "module": "desk3.sleeves.gate_1h",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:*:1Day",
+    "bars:*:1Hour",
+    "positions",
+    "journal:self"
+   ]
+  },
+  {
+   "id": "iron_condor",
+   "module": "desk3.sleeves.iron_condor",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:*:1Day",
+    "bars:VIX:1Day",
+    "options:chains",
+    "earnings",
+    "iv"
+   ]
+  },
+  {
+   "id": "leader_d",
+   "module": "desk3.sleeves.leader_d",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:*:1Day",
+    "positions",
+    "journal:self"
+   ]
+  },
+  {
+   "id": "leader_sc",
+   "module": "desk3.sleeves.leader_sc",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:*:1Day",
+    "bars:*:1Week",
+    "positions",
+    "journal:self"
+   ]
+  },
+  {
+   "id": "leaps_momentum",
+   "module": "desk3.sleeves.leaps_momentum",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:*:1Day",
+    "options:chains",
+    "positions",
+    "journal:momentum"
+   ]
+  },
+  {
+   "id": "legends_ema",
+   "module": "desk3.sleeves.legends_ema",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars:QQQ:15Min",
+    "bars:QQQ:1Day",
+    "positions",
+    "journal:self"
+   ]
+  },
+  {
+   "id": "momentum",
+   "module": "desk3.port_b5.momentum",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "momentum_rotation",
+   "module": "desk3.port_b5.momentum_rotation",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "journal"
+   ],
+   "parked": false
+  },
+  {
+   "id": "morning_dip",
+   "module": "desk3.port_b5.morning_dip",
+   "cadence_s": 180,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 20000.0,
+    "cash_usd": 20000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "phase_daily",
+   "module": "desk3.port_b5.phase_daily",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "earnings",
+    "journal"
+   ],
+   "parked": false
+  },
+  {
+   "id": "phoenix",
+   "module": "desk3.port_b5.phoenix",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "earnings"
+   ],
+   "parked": false
+  },
+  {
+   "id": "po10_qqq",
+   "module": "desk3.port_b5.po10_qqq",
+   "cadence_s": 60,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 100000.0,
+    "cash_usd": 100000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": true,
+   "flatten_time_et": "15:55",
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes",
+    "session_fills"
+   ],
+   "parked": false
+  },
+  {
+   "id": "qqq_put_ladder",
+   "module": "desk3.port_b5.qqq_put_ladder",
+   "cadence_s": 900,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "options"
+   ],
+   "parked": false
+  },
+  {
+   "id": "qullamaggie",
+   "module": "desk3.port_b5.qullamaggie",
+   "cadence_s": 1800,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "qullamaggie_paper",
+   "module": "desk3.port_b5.qullamaggie_paper",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "positions",
+    "qulla"
+   ],
+   "parked": false
+  },
+  {
+   "id": "raschke_pf3",
+   "module": "desk3.port_b5.raschke_pf3",
+   "cadence_s": 60,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "journal"
+   ],
+   "parked": false
+  },
+  {
+   "id": "raschke_rre",
+   "module": "raschke_rre",
+   "cadence_s": 60,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_5min",
+    "positions",
+    "session_fills",
+    "latest_quotes"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "red_day_reversal",
+   "module": "red_day_reversal",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "rsi_meanrev",
+   "module": "rsi_meanrev",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "earnings"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "rsi_meanrev_options",
+   "module": "rsi_meanrev_options",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "options_chains",
+    "options_quotes"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "rule_1d_cyan_smallcap",
+   "module": "rule_1d_cyan_smallcap",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "rule_fires",
+    "log_mcap"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "rule_1d_green_tom",
+   "module": "rule_1d_green_tom",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "rule_fires",
+    "trading_days"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "rule_1h_cyan_raw",
+   "module": "rule_1h_cyan_raw",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_1hour",
+    "bars_1day",
+    "positions",
+    "rule_fires_1h"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "rule_1w_cyan_mom_adx",
+   "module": "rule_1w_cyan_mom_adx",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "rule_fires"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "rule_1w_swing_beta_wt",
+   "module": "rule_1w_swing_beta_wt",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "rule_fires"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "s_1dg",
+   "module": "adapters3.laz_s_1dg",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 17000.0,
+    "cash_usd": 17000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_1dgp5",
+   "module": "adapters3.s_1dgp5",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_1wc_micro",
+   "module": "adapters3.laz_s_1wc_micro",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_1wc_ml",
+   "module": "adapters3.laz_s_1wc_ml",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 4000.0,
+    "cash_usd": 4000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_1wg_small",
+   "module": "adapters3.s_1wg_small",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 2696.0,
+    "cash_usd": 2696.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true,
+   "timeout_s": null
+  },
+  {
+   "id": "s_1wlab",
+   "module": "adapters3.laz_s_1wlab",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 22000.0,
+    "cash_usd": 22000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_1wsw",
+   "module": "adapters3.laz_s_1wsw",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_1wsw_stress",
+   "module": "adapters3.s_1wsw_stress",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1335.0,
+    "cash_usd": 1335.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true,
+   "timeout_s": null
+  },
+  {
+   "id": "s_cl_qm_small",
+   "module": "laz_sleeves.s_cl_qm_small",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 8000.0,
+    "cash_usd": 8000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "alt_data"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_cl_vmr_qqq",
+   "module": "laz_sleeves.s_cl_vmr_qqq",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "vix"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_d_green_band",
+   "module": "adapters3.s_mn_d_green_band",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_faber",
+   "module": "adapters.s_mn_faber",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 3000.0,
+    "cash_usd": 3000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_hedge",
+   "module": "laz_sleeves.s_mn_hedge",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "hedge_signal"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_hourly",
+   "module": "laz_sleeves.s_mn_hourly",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 12000.0,
+    "cash_usd": 12000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1hour",
+    "positions",
+    "midna_signals"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_hourly_1w",
+   "module": "adapters3.s_mn_hourly_1w",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_kronos",
+   "module": "adapters.s_mn_kronos",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 2000.0,
+    "cash_usd": 2000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "fires"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_macd",
+   "module": "adapters.s_mn_macd",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_moonshot",
+   "module": "adapters.s_mn_moonshot",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "fires"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_nostop",
+   "module": "laz_sleeves.s_mn_nostop",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1hour",
+    "positions",
+    "midna_signals"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_opt_pairs",
+   "module": "adapters.s_mn_opt_pairs",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_opt_reversal",
+   "module": "adapters.s_mn_opt_reversal",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_opt_turtle",
+   "module": "adapters.s_mn_opt_turtle",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_pairs",
+   "module": "adapters.s_mn_pairs",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 3000.0,
+    "cash_usd": 3000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_reversal",
+   "module": "adapters.s_mn_reversal",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 3000.0,
+    "cash_usd": 3000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_vwap",
+   "module": "adapters.s_mn_vwap",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_w_cyan_breadth",
+   "module": "adapters3.s_mn_w_cyan_breadth",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_w_cyan_vix",
+   "module": "adapters3.s_mn_w_cyan_vix",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_mn_w_green_smh",
+   "module": "adapters3.s_mn_w_green_smh",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_moonshot",
+   "module": "adapters3.s_moonshot",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 2581.0,
+    "cash_usd": 2581.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c52_ml_mom6_tierA_wlow",
+   "module": "adapters3.s_q07w_c52_ml_mom6_tierA_wlow",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c52_ml_mom6_wspike2",
+   "module": "adapters3.s_q07w_c52_ml_mom6_wspike2",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c52_ml_tierA_wcov",
+   "module": "adapters3.s_q07w_c52_ml_tierA_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c52_ml_tierA_wlow",
+   "module": "adapters3.s_q07w_c52_ml_tierA_wlow",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c52_sm_cheap5_ins2_mom6",
+   "module": "adapters3.s_q07w_c52_sm_cheap5_ins2_mom6",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_c52_sm_cheap5_wcov",
+   "module": "adapters3.s_q07w_c52_sm_cheap5_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c52_sm_deep70_wcov",
+   "module": "adapters3.s_q07w_c52_sm_deep70_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c52_sm_tierA_wcov",
+   "module": "adapters3.s_q07w_c52_sm_tierA_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c78_ml_deep70_tierA_wlow",
+   "module": "adapters3.s_q07w_c78_ml_deep70_tierA_wlow",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c78_ml_mom6_tierA_wlow",
+   "module": "adapters3.s_q07w_c78_ml_mom6_tierA_wlow",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c78_ml_tierA_wcov",
+   "module": "adapters3.s_q07w_c78_ml_tierA_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c78_ml_tierA_wlow",
+   "module": "adapters3.s_q07w_c78_ml_tierA_wlow",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c78_sm_deep70_ins2_vix20",
+   "module": "adapters3.s_q07w_c78_sm_deep70_ins2_vix20",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_c78_sm_deep70_wcov",
+   "module": "adapters3.s_q07w_c78_sm_deep70_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_c78_sm_ins2_mom6_vix20",
+   "module": "adapters3.s_q07w_c78_sm_ins2_mom6_vix20",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_c78_sm_tierA_wcov",
+   "module": "adapters3.s_q07w_c78_sm_tierA_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_g52_ml_ats_z1_mom6_wlow",
+   "module": "adapters3.s_q07w_g52_ml_ats_z1_mom6_wlow",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_q07w_g52_ml_ins2_wlow",
+   "module": "adapters3.s_q07w_g52_ml_ins2_wlow",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_g52_ml_tierA_wcov",
+   "module": "adapters3.s_q07w_g52_ml_tierA_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_q07w_g52_sm_deep70_ins2_vix20",
+   "module": "adapters3.s_q07w_g52_sm_deep70_ins2_vix20",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_g52_sm_deep70_wcov",
+   "module": "adapters3.s_q07w_g52_sm_deep70_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_q07w_g52_sm_ins2_wcov",
+   "module": "adapters3.s_q07w_g52_sm_ins2_wcov",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_g52_sm_tierA_wcov",
+   "module": "adapters3.s_q07w_g52_sm_tierA_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_q07w_g78_mi_cheap5_deep70_ins2",
+   "module": "adapters3.s_q07w_g78_mi_cheap5_deep70_ins2",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_g78_ml_tierA_wcov",
+   "module": "adapters3.s_q07w_g78_ml_tierA_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_q07w_g78_sm_cheap5_ins2",
+   "module": "adapters3.s_q07w_g78_sm_cheap5_ins2",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_g78_sm_deep70_ins2",
+   "module": "adapters3.s_q07w_g78_sm_deep70_ins2",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_g78_sm_deep70_wcov",
+   "module": "adapters3.s_q07w_g78_sm_deep70_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_q07w_g78_sm_tierA_wcov",
+   "module": "adapters3.s_q07w_g78_sm_tierA_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "s_q07w_s52_ml_deep70_ins2_vix20",
+   "module": "adapters3.s_q07w_s52_ml_deep70_ins2_vix20",
+   "cadence_s": 300,
+   "parked": true,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_ml_deep70_vix20_wlow",
+   "module": "adapters3.s_q07w_s52_ml_deep70_vix20_wlow",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_s52_ml_deep70_wlow",
+   "module": "adapters3.s_q07w_s52_ml_deep70_wlow",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_s52_ml_ins2_mom6_vix20",
+   "module": "laz_sleeves.s_q07w_s52_ml_ins2_mom6_vix20",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1984.0,
+    "cash_usd": 1984.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "tensor_fires",
+    "alt_data",
+    "vix"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_q07w_s52_ml_ins2_mom6_wlow",
+   "module": "laz_sleeves.s_q07w_s52_ml_ins2_mom6_wlow",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "tensor_fires",
+    "alt_data",
+    "vix"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_q07w_s52_sm_cheap5_deep70_ins2",
+   "module": "adapters3.s_q07w_s52_sm_cheap5_deep70_ins2",
+   "cadence_s": 300,
+   "parked": true,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_sm_cheap5_ins2_vix20",
+   "module": "adapters3.s_q07w_s52_sm_cheap5_ins2_vix20",
+   "cadence_s": 300,
+   "parked": true,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_sm_cheap5_wcov",
+   "module": "adapters3.s_q07w_s52_sm_cheap5_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_q07w_s52_sm_deep70_wcov",
+   "module": "adapters3.s_q07w_s52_sm_deep70_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_q07w_s78_mi_ats_z1_cheap5",
+   "module": "laz_sleeves.s_q07w_s78_mi_ats_z1_cheap5",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "tensor_fires",
+    "alt_data",
+    "vix"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_q07w_s78_mi_ats_z1_mom6",
+   "module": "laz_sleeves.s_q07w_s78_mi_ats_z1_mom6",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "tensor_fires",
+    "alt_data",
+    "vix"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_q07w_s78_mi_cheap5_ins2_mom6",
+   "module": "adapters3.s_q07w_s78_mi_cheap5_ins2_mom6",
+   "cadence_s": 300,
+   "parked": true,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_ml_deep70_glow_ins2",
+   "module": "laz_sleeves.s_q07w_s78_ml_deep70_glow_ins2",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars_1day",
+    "positions",
+    "tensor_fires",
+    "alt_data",
+    "vix"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_q07w_s78_ml_deep70_ins2_vix20",
+   "module": "adapters3.s_q07w_s78_ml_deep70_ins2_vix20",
+   "cadence_s": 300,
+   "parked": true,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_ml_deep70_mom6_wlow",
+   "module": "adapters3.s_q07w_s78_ml_deep70_mom6_wlow",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_s78_ml_deep70_wcov",
+   "module": "adapters3.s_q07w_s78_ml_deep70_wcov",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true,
+   "producers": [
+    {
+     "name": "sleeve_feed_composer",
+     "outputs": [
+      "fires"
+     ],
+     "freshness_sla_s": 604800
+    },
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 3600
+    },
+    {
+     "name": "broker_readback",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 3600
+    }
+   ]
+  },
+  {
+   "id": "s_q07w_s78_sm_cheap5_ins2_vix20",
+   "module": "adapters3.s_q07w_s78_sm_cheap5_ins2_vix20",
+   "cadence_s": 300,
+   "parked": true,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_sm_cheap5_wcov",
+   "module": "adapters3.s_q07w_s78_sm_cheap5_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 1194.0,
+    "cash_usd": 1194.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_q07w_s78_sm_deep70_ins2",
+   "module": "adapters3.s_q07w_s78_sm_deep70_ins2",
+   "cadence_s": 300,
+   "parked": true,
+   "slice": {
+    "capital_usd": 1000.0,
+    "cash_usd": 1000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "sleeve_fires",
+    "bars_1day",
+    "vix",
+    "positions"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_sm_deep70_wcov",
+   "module": "adapters3.s_q07w_s78_sm_deep70_wcov",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 2265.0,
+    "cash_usd": 2265.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "fires",
+    "bars",
+    "positions"
+   ],
+   "parked": true
+  },
+  {
+   "id": "s_rules_1d",
+   "module": "adapters3.s_rules_1d",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 44000.0,
+    "cash_usd": 44000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "s_rules_1w",
+   "module": "adapters3.s_rules_1w",
+   "cadence_s": 3600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 6000.0,
+    "cash_usd": 6000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "lazarus_fires",
+    "bars",
+    "positions"
+   ],
+   "parked": false,
+   "timeout_s": null
+  },
+  {
+   "id": "saty_day",
+   "module": "saty_day",
+   "cadence_s": 60,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": true,
+   "flatten_time_et": "15:55",
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars_5min",
+    "bars_1min",
+    "positions",
+    "options_chains",
+    "options_quotes",
+    "session_fills"
+   ],
+   "adapter_dir": "desk_sleeves"
+  },
+  {
+   "id": "saty_gpt_v02",
+   "module": "adapters3.saty_gpt_v02",
+   "cadence_s": 60,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "quotes",
+    "options",
+    "session_fills"
+   ]
+  },
+  {
+   "id": "saty_gpt_v03",
+   "module": "adapters3.saty_gpt_v03",
+   "cadence_s": 60,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "quotes",
+    "options",
+    "session_fills"
+   ]
+  },
+  {
+   "id": "saty_magnum",
+   "module": "adapters3.saty_magnum",
+   "cadence_s": 60,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "quotes",
+    "options",
+    "session_fills"
+   ]
+  },
+  {
+   "id": "saty_sol",
+   "module": "adapters3.saty_sol",
+   "cadence_s": 60,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "quotes",
+    "options",
+    "session_fills"
+   ]
+  },
+  {
+   "id": "saty_sol_0dte",
+   "module": "adapters3.saty_sol_0dte",
+   "cadence_s": 60,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": true,
+   "flatten_time_et": "15:55",
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "quotes",
+    "options",
+    "session_fills"
+   ]
+  },
+  {
+   "id": "snapback",
+   "module": "adapters3.snapback",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars"
+   ]
+  },
+  {
+   "id": "spx_premium",
+   "module": "adapters3.spx_premium",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options"
+   ]
+  },
+  {
+   "id": "tensor_red_dip",
+   "module": "adapters3.tensor_red_dip",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "tensor"
+   ]
+  },
+  {
+   "id": "tensor_swing",
+   "module": "adapters3.tensor_swing",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "tensor"
+   ]
+  },
+  {
+   "id": "ts_momentum_decile",
+   "module": "adapters3.ts_momentum_decile",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars"
+   ]
+  },
+  {
+   "id": "vix_hedge",
+   "module": "adapters.vix_hedge",
+   "cadence_s": 300,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "options",
+    "positions"
+   ],
+   "producers": [
+    {
+     "name": "bars",
+     "outputs": [
+      "bars"
+     ],
+     "freshness_sla_s": 900
+    },
+    {
+     "name": "options",
+     "outputs": [
+      "options"
+     ],
+     "freshness_sla_s": 900
+    },
+    {
+     "name": "positions",
+     "outputs": [
+      "positions"
+     ],
+     "freshness_sla_s": 900
+    }
+   ]
+  },
+  {
+   "id": "aster_r19_timing_overnight_5bp",
+   "module": "adapters3.aster_r19_timing_overnight_5bp",
+   "cadence_s": 300,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions",
+    "quotes"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_trader_donchian55",
+   "module": "adapters3.aster_trader_donchian55",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_tensor_d20_tensor",
+   "module": "adapters3.aster_tensor_d20_tensor",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor_daily20",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_tensor_d20_pv",
+   "module": "adapters3.aster_tensor_d20_pv",
+   "cadence_s": 86400,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "tensor_daily20",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "aster_saty_research",
+   "module": "adapters3.aster_saty_research",
+   "cadence_s": 600,
+   "session": "rth",
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "params": {},
+   "inputs": [
+    "saty_setups",
+    "quotes",
+    "bars",
+    "positions"
+   ],
+   "parked": false
+  },
+  {
+   "id": "trullas_divergence",
+   "module": "adapters3.trullas_divergence",
+   "cadence_s": 60,
+   "parked": false,
+   "slice": {
+    "capital_usd": 10000.0,
+    "cash_usd": 10000.0
+   },
+   "bp_buffer_frac": 0.02,
+   "flat_by_close": false,
+   "flatten_time_et": null,
+   "session": "rth",
+   "timeout_s": null,
+   "params": {},
+   "inputs": [
+    "bars",
+    "bars_1min",
+    "bars:QQQ:1Min",
+    "positions",
+    "quotes",
+    "session_fills"
+   ]
+  }
+ ]
+}
