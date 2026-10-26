@@ -261,12 +261,12 @@ master desk (branch master-desk), or at `22f3e991c224` where a cite names it (th
 | Entry: Gate: the latest completed UTC daily close strictly above the 200-day SMA (inclusive). | master-desk `desk/vendor/ausar_native/prospective_native_math.py:11-24`<br>master-desk `desk/vendor/ausar_native/prospective_native.py:36` |
 | Entry: Rebalances 00:00-00:05 UTC to post-fee targets, once per day, with every market qualified. | master-desk `desk/sleeves/families/coinbase_sma200.py:180-219`<br>master-desk `desk/vendor/ausar_native/prospective_native.py:347-381` |
 | Exit: A symbol whose gate turns off is sold in full at the bid, at any time. | master-desk `desk/sleeves/families/coinbase_sma200.py:224-227` |
-| Exit: Aurelia forward: no exit on the master desk; Midna v3's copy sells it all on a close below the SMA200. | master-desk `desk/sleeves/femto/fwd_coinbase_sma200.py:133-144`<br>`sleeves/fwd_coinbase_sma200.py:145-160`<br>`sleeves/fwd_coinbase_sma200.py:219-272` |
+| Exit: Aurelia forward: sells the whole holding at the bid on a daily close below the SMA200, on the master desk (Q41, 2026-10-26) as in Midna v3. | master-desk `desk/sleeves/femto/fwd_coinbase_sma200.py:93-125`<br>`sleeves/fwd_coinbase_sma200.py:145-160`<br>`sleeves/fwd_coinbase_sma200.py:219-272` |
 | Sizing: Weights: ETH_SMA200 0/1, BTC_ETH_SMA200 0.5/0.5 of post-fee NAV; 0.2% fee per side; lot floors. | master-desk `desk/vendor/ausar_native/prospective_native.py:29-30`<br>master-desk `desk/vendor/ausar_native/prospective_native.py:347-381` |
 | Sizing: Aurelia forward: 0.01 BTC at the ask once per UTC day (00:00-00:05) once 200 consecutive completed days exist and the quote is ≤ 30 s old; each order ≤ 10% of a $100,000 budget. | master-desk `desk/sleeves/femto/fwd_coinbase_sma200.py:38-46`<br>master-desk `desk/sleeves/femto/fwd_coinbase_sma200.py:75-106`<br>master-desk `desk/vendor/aurelia/coinbase_schedule.py:21-66` |
 | Data: Coinbase daily candles (200), products and quotes. | master-desk `desk/sleeves/families/coinbase_sma200.py:83-151` |
 | Midna v3 native rows | `desk3/aster_batch1.py:883-935` |
-| Aurelia forward: no SMA200 test, no exit | master-desk `desk/sleeves/femto/fwd_coinbase_sma200.py:7-15` |
+| Aurelia forward: SMA200 entry and exit since 2026-10-26 (Q41); the source had neither | master-desk `desk/sleeves/femto/fwd_coinbase_sma200.py:12-17` |
 | Midna v3 forward: SMA200 entry and exit | `sleeves/fwd_coinbase_sma200.py:36-48` |
 
 ## [Daily20 tree-model forecasts](../../strategies/ausar/daily20.md)
