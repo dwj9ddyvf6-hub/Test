@@ -1,17 +1,17 @@
 # Verification
 
 Each card rule was read from the code at these lines. `master-desk` paths are at commit `843ccb53ad15` of the
-master desk (branch master-desk); every other path is in this repository.
+master desk (branch master-desk), or at `22f3e991c224` where a cite names it (the four recorders converted into books on 2026-10-26); every other path is in this repository.
 
 | Family | Cards | Rules read |
 |---|---:|---:|
 | [Ausar](verify/ausar.md) | 24 | 178 |
 | [Lazarus](verify/lazarus.md) | 19 | 178 |
 | [Femto-lean](verify/femto.md) | 45 | 384 |
-| [Midna](verify/midna.md) | 15 | 81 |
+| [Midna](verify/midna.md) | 17 | 99 |
 | [Muse](verify/muse.md) | 12 | 164 |
 | [APEX](verify/apex.md) | 33 | 335 |
-| [Galath / GrokBot](verify/galath.md) | 8 | 108 |
+| [Galath / GrokBot](verify/galath.md) | 10 | 130 |
 | [Griffith](verify/griffith.md) | 23 | 180 |
 | [Milkman](verify/milkman.md) | 33 | 269 |
 | [Quant research](verify/quant_research.md) | 18 | 161 |
@@ -83,6 +83,11 @@ Each file under `sleeves/<family>/` that is not Midna's is a copy of a master-de
 | `sleeves/galath/grokbot.py` | `desk/sleeves/families/grokbot.py` (branch master-desk, commit `f650e4e0`) |  |
 | `sleeves/galath/komar.py` | `desk/sleeves/galath/komar.py` |  |
 | `sleeves/galath/levels.py` | `desk/sleeves/galath/levels.py` |  |
+| `sleeves/galath/monitor.py` | `desk/sleeves/families/monitor.py` (commit `22f3e991`) |  |
+| `sleeves/galath/monitor/galath_phd_mon.py` | `desk/sleeves/monitor/galath_phd_mon.py` (commit `22f3e991`) | research-box host path neutralised (1) |
+| `sleeves/galath/monitor/galath_tensor_mon.py` | `desk/sleeves/monitor/galath_tensor_mon.py` (commit `22f3e991`) |  |
+| `sleeves/galath/monitor/printer_books.py` | `desk/sleeves/monitor/printer_books.py` (commit `22f3e991`) |  |
+| `sleeves/galath/monitor/reads.py` | `desk/sleeves/monitor/reads.py` (commit `22f3e991`) |  |
 | `sleeves/galath/paper.py` | `desk/sleeves/galath/paper.py` |  |
 | `sleeves/galath/prism.py` | `desk/sleeves/galath/prism.py` |  |
 | `sleeves/galath/tensor.py` | `desk/sleeves/galath/tensor.py` |  |
@@ -146,9 +151,14 @@ Each file under `sleeves/<family>/` that is not Midna's is a copy of a master-de
 | `sleeves/midna/lanes.py` | `desk/sleeves/midna/lanes.py` |  |
 | `sleeves/midna/midna.py` | `desk/sleeves/families/midna.py` |  |
 | `sleeves/midna/midna_tensor.py` | `desk/sleeves/families/midna_tensor.py` |  |
+| `sleeves/midna/monitor/midna_books.py` | `desk/sleeves/monitor/midna_books.py` (commit `22f3e991`) |  |
+| `sleeves/midna/monitor/midna_mon.py` | `desk/sleeves/monitor/midna_mon.py` (commit `22f3e991`) |  |
 | `sleeves/midna/qld.py` | `desk/sleeves/midna/qld.py` |  |
 | `sleeves/midna/shadow.py` | `desk/sleeves/midna/shadow.py` |  |
 | `sleeves/midna/vendor/midna/board_signals.py` | `desk/vendor/midna/board_signals.py` |  |
+| `sleeves/midna/vendor/midna_mon/scripts/tsmom-forms.ts` | `desk/vendor/midna_mon/scripts/tsmom-forms.ts` (commit `22f3e991`) |  |
+| `sleeves/midna/vendor/midna_mon/src/lib/felipe/pullback.ts` | `desk/vendor/midna_mon/src/lib/felipe/pullback.ts` (commit `22f3e991`) |  |
+| `sleeves/midna/vendor/midna_mon/src/lib/research/tsmom.ts` | `desk/vendor/midna_mon/src/lib/research/tsmom.ts` (commit `22f3e991`) |  |
 | `sleeves/milkman/__init__.py` | `desk/sleeves/milkman/__init__.py` |  |
 | `sleeves/milkman/daily.py` | `desk/sleeves/milkman/daily.py` |  |
 | `sleeves/milkman/galath.py` | `desk/sleeves/milkman/galath.py` |  |

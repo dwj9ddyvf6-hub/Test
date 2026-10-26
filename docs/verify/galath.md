@@ -1,7 +1,7 @@
 # Verification: Galath / GrokBot
 
 Each card rule was read from the code at these lines. `master-desk` paths are at commit `843ccb53ad15` of the
-master desk (branch master-desk); every other path is in this repository.
+master desk (branch master-desk), or at `22f3e991c224` where a cite names it (the four recorders converted into books on 2026-10-26); every other path is in this repository.
 
 ## [Next-support plan](../../strategies/galath/galath-next-support-plan.md)
 
@@ -150,3 +150,35 @@ master desk (branch master-desk); every other path is in this repository.
 | Sizing: 0.5% of equity / (entry - stop), at most 15% of equity, whole shares; skipped when cash is short; a $100,000 book. | `sleeves/galath/vendor/cci_correction/cci_correction.py:11`<br>`sleeves/galath/vendor/cci_correction/cci_correction.py:43-46`<br>`sleeves/galath/grokbot.py:83`<br>`sleeves/galath/grokbot.py:177-179`<br>`sleeves/galath/grokbot.py:424-445` |
 | Data: Genome split-adjusted daily bars (260 sessions, cached), SPY, VIX daily, opening quotes. | `sleeves/galath/grokbot.py:84-85`<br>`sleeves/galath/grokbot.py:211-218`<br>`sleeves/galath/grokbot.py:270-280` |
 | Reference parameters | `sleeves/galath/vendor/cci_correction/cci_correction.py:6-12`<br>`sleeves/galath/grokbot.py:82` |
+
+## [Tensor 2 washout / reclaim printer](../../strategies/galath/galath-tensor2-washout-reclaim.md)
+
+| Rule | Read from |
+|---|---|
+| Entry: Read once per completed canonical hour for each of the 13 names (SATL, SKYQ, RDW, INDI, SPY, QQQ, NVDA, MU, AAPL, AMD, TSLA, WULF, POET), once the frame holds 200 bars (the source's authority). | `sleeves/galath/monitor/galath_tensor_mon.py:4-8`<br>`sleeves/galath/monitor/galath_tensor_mon.py:45-53`<br>`sleeves/galath/monitor/galath_tensor_mon.py:56-73`<br>master-desk `desk/vendor/galath_mon/src/lib/desk-store.ts:7-25` at `22f3e991`<br>`sleeves/galath/monitor/printer_books.py:39`<br>`sleeves/galath/monitor/printer_books.py:146-161` |
+| Entry: Washout: within the last 9 hours, a bar's low at the 12-hour swing low with RSI(14) ≤ 42. | master-desk `desk/vendor/galath_mon/src/lib/tensor/engine.ts:169-176` at `22f3e991` |
+| Entry: Green buy, on the hour: no buy signal held and no green buy in the last 12 hours; a washout; the bar closes at or above its open; RSI(14) rising from a 9-hour trough ≤ 48 and still under 58, with the MACD histogram rising; at most 0.8 ATR(14) above EMA21; the close reclaiming EMA21 or at a reclaim or launch-pad location, never extended (over 1.2 ATR above it). | master-desk `desk/vendor/galath_mon/src/lib/tensor/engine.ts:163-168` at `22f3e991`<br>master-desk `desk/vendor/galath_mon/src/lib/tensor/engine.ts:177-187` at `22f3e991`<br>master-desk `desk/vendor/galath_mon/src/lib/tensor/engine.ts:189-230` at `22f3e991` |
+| Entry: Orders: each decision once, at the book's next pass in the session (from 5 minutes after the open): a market buy of one slot while the signal is buy and the name is not held, a market sell once it is no longer buy; a decision unsent by the close of the session after its bar lapses, and a name without a live equity quote is not bought. | `sleeves/galath/monitor/printer_books.py:16-27`<br>`sleeves/galath/monitor/printer_books.py:37`<br>`sleeves/galath/monitor/printer_books.py:113-135` |
+| Exit: Out when the signal ends: an hour that closes below EMA21 on a red bar (the magenta sell); sold at the book's next pass in the session. No stop of its own. | master-desk `desk/vendor/galath_mon/src/lib/tensor/engine.ts:240-241` at `22f3e991`<br>master-desk `desk/vendor/galath_mon/src/lib/tensor/engine.ts:255-259` at `22f3e991`<br>`sleeves/galath/monitor/printer_books.py:131-133` |
+| Sizing: An equal slot of the book's equity / 13 a name; $100,000 book. | `sleeves/galath/monitor/printer_books.py:115`<br>master-desk `desk/contract.py:136` at `22f3e991` |
+| Data: Yahoo 60-minute bars (the desk's canonical 1H series, a year, regular session) and daily bars (2 years); the producer job runs 2-11 minutes after each completed hour, and a read older than 90 minutes is not used. | `sleeves/galath/monitor/galath_tensor_mon.py:4-8`<br>`sleeves/galath/monitor/galath_tensor_mon.py:17-26`<br>`sleeves/galath/monitor/galath_tensor_mon.py:38-53` |
+| The Galath printer convention | `sleeves/galath/monitor/printer_books.py:16-19`<br>master-desk `docs/research/2026-10-26-recorders/CONVERT.md:48-52` at `22f3e991` |
+| Converted rows | `sleeves/galath/monitor.py:1-12` |
+| Conversion record | master-desk `docs/research/2026-10-26-recorders/CONVERT.md:59` at `22f3e991` |
+
+## [Anna PhD location printer](../../strategies/galath/galath-anna-phd-printer.md)
+
+| Rule | Read from |
+|---|---|
+| Entry: Votes on each completed daily bar: Stoch RSI K over D, Aroon up over down, +DI over -DI, OBV's 5-bar slope, squeeze momentum, EMA8 over EMA21, WaveTrend 1 over 2; the buy gate needs all seven readable, at least 5 bullish and 4 more than bearish. | master-desk `desk/vendor/galath_gospel/scripts/anna-phd-replay.mjs:472-518` at `22f3e991`<br>master-desk `desk/vendor/galath_gospel/scripts/anna-phd-replay.mjs:634-637` at `22f3e991` |
+| Entry: Prints: a UT Bot buy flip through the gate is cyan; an EMA 8/21 cross up within 6 bars of a UT buy flip, through the gate, is green; a UT sell flip is red; an EMA 8/21 cross down within 6 bars of a UT sell flip is magenta. | master-desk `desk/vendor/galath_gospel/scripts/anna-phd-replay.mjs:604-651` at `22f3e991` |
+| Entry: Location re-prints: a red or magenta print deep under EMA200 (the close at most 65% of it) with at least 5 bullish votes turns cyan; an EMA200 reclaim inside the band, a confirmed gold warning, a launch-pad sequence and a support bounce print cyan; a failed euphoria or an extended failure prints magenta. | master-desk `desk/vendor/galath_gospel/scripts/anna-phd-replay.mjs:678-829` at `22f3e991` |
+| Entry: Read after each close by the producer job (the replay under Node over the census names); the session's decision trades at the book's first pass of the next session. | `sleeves/galath/monitor/galath_phd_mon.py:1-12`<br>`sleeves/galath/monitor/galath_phd_mon.py:105-115`<br>`sleeves/galath/monitor/printer_books.py:168-198`<br>`sleeves/galath/monitor/printer_books.py:209-212` |
+| Entry: Orders: each decision once, at the book's next pass in the session (from 5 minutes after the open): a market buy of one slot while the signal is buy and the name is not held, a market sell once it is no longer buy; a decision unsent by the close of the session after its bar lapses, and a name without a live equity quote is not bought. | `sleeves/galath/monitor/printer_books.py:16-27`<br>`sleeves/galath/monitor/printer_books.py:37`<br>`sleeves/galath/monitor/printer_books.py:113-135` |
+| Exit: Out when the signal turns sell: a red or magenta print, or, while long, a close crossing below EMA200. No stop of its own. | master-desk `desk/vendor/galath_gospel/scripts/anna-phd-replay.mjs:833-846` at `22f3e991`<br>`sleeves/galath/monitor/printer_books.py:131-133` |
+| Sizing: An equal slot of the book's equity / 115 a name; $100,000 book. | `sleeves/galath/monitor/printer_books.py:115`<br>master-desk `desk/contract.py:136` at `22f3e991` |
+| Data: Yahoo daily bars (2 years; Nasdaq or Cboe while Yahoo refuses), completed sessions only. | `sleeves/galath/monitor/galath_phd_mon.py:14-18`<br>`sleeves/galath/monitor/galath_phd_mon.py:37`<br>`sleeves/galath/monitor/galath_phd_mon.py:77-86` |
+| The Galath printer convention | `sleeves/galath/monitor/printer_books.py:16-19`<br>master-desk `docs/research/2026-10-26-recorders/CONVERT.md:48-52` at `22f3e991` |
+| Converted rows | `sleeves/galath/monitor.py:1-12` |
+| Census names | `sleeves/galath/monitor/galath_phd_mon.py:52-71` |
+| Conversion record | master-desk `docs/research/2026-10-26-recorders/CONVERT.md:60` at `22f3e991` |
