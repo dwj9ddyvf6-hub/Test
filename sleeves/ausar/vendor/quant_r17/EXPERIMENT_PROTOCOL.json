@@ -1,0 +1,78 @@
+{
+  "version": "R17-opportunity-funded-ETF-ladder-v1",
+  "created_utc": "2026-10-09T22:49:51.201577+00:00",
+  "status": "discovery experiment fixed before this lane computes outcomes; all history is reused and not an untouched holdout",
+  "purpose": "Determine whether aggressive concentration, relative leadership, repair timing, and causal capital displacement supply useful candidates beyond original-ten unqualified native models; preserve natural and equally levered QQQ comparisons.",
+  "inputs": [
+    "<workspace>/five-strategy-refinement-2026-10-08/data/alpaca/daily_all.csv.gz",
+    "<workspace>/five-strategy-refinement-2026-10-08/data/alpaca/daily_raw.csv.gz",
+    "<workspace>/five-strategy-alpha-extraction-r3-2026-10-08/data/yahoo_combined_daily_all.csv.gz"
+  ],
+  "universe": [
+    "QQQ",
+    "SPY",
+    "SMH",
+    "XLB",
+    "XLC",
+    "XLE",
+    "XLF",
+    "XLI",
+    "XLK",
+    "XLP",
+    "XLRE",
+    "XLU",
+    "XLV",
+    "XLY"
+  ],
+  "universe_limit": "Fixed contemporary ETF identities, not a point-in-time census of every fund. XLC/XLRE only after 252 contiguous observed sessions. Excludes SOXX to avoid presenting duplicate semiconductor exposure as a second independent industry.",
+  "rules": {
+    "QQQ_HOLD": "98% QQQ for cash account; target gross1.5 for margin account; buy once, margin controls can reduce.",
+    "SPY_HOLD": "same for SPY",
+    "SMH_HOLD": "same for SMH; named aggressive sector control, selected with full knowledge of prior semiconductor leadership, not blind selection",
+    "LEADER1": "month-end: choose largest 126-session log return among available universe; 98% or1.5 gross in one fund",
+    "LEADER3": "month-end equal targets in three largest126-session log returns",
+    "RELATIVE3": "month-end select up to3 ETFs excluding QQQ with largest positive126-session log return minus QQQ; each gets1/3 target gross; empty slots go to QQQ",
+    "VOLADJ3": "month-end top3 of positive126-session QQQ-relative log return divided by prior63-session daily volatility; empty slots QQQ",
+    "ACCEL3": "month-end positive acceleration=(21-session log return minus126-session log return/6), divided by63-session volatility; require close>SMA200 and126-session return>QQQ; top3; empty slots QQQ",
+    "REPAIR3": "month-end rank126-session relative winners; require price2%-10% below trailing20-session highest close, past3-session return>0, close>SMA200; top3; empty slots QQQ",
+    "ESCAPE1": "month-end highest126-session return among funds whose close>SMA200 and126-session log return>0; cash if none"
+  },
+  "risk_and_cost_cells": {
+    "gross_targets": [
+      0.98,
+      1.5
+    ],
+    "per_side_basis_points": [
+      5,
+      15,
+      30
+    ],
+    "margin_interest_annual": 0.1,
+    "zero_cash_yield": true,
+    "initial_usd": 100000,
+    "capacity_prior_day_dollar_volume": 0.001
+  },
+  "execution": "Signals only completed month-end close; last available previous month-end governs inception. Next observed QQQ session open proxy. Desired adjusted units frozen using that open and pretrade NAV; sells first. Unfilled units persist until next rebalance. Cash proceeds are unavailable until T+3 before2017-09-05, T+2 until2024-05-24, T+1 from2024-05-28. Margined accounts may reuse receivables, charge10% annual on net debit daily including weekends; no claim actual broker permission/rate. No shorts/options. Maintenance: if previous close gross/NAV>2, proportional reduction target1.5 at next open. Terminal net wealth reserves sell fee on all remaining positions. Fractional adjusted research units and adjusted prices are not actual share/cash-distribution execution; no forward receipts or broker fills asserted.",
+  "windows": {
+    "ALPACA": [
+      "2018-01-02/2022-12-30",
+      "2023-01-03/2026-10-07"
+    ],
+    "YAHOO": [
+      "2003-01-02/2017-12-29",
+      "2018-01-02/2022-12-30",
+      "2023-01-03/2026-10-07"
+    ]
+  },
+  "output": "all300accounts, dated NAV/cash/debt/receivable/holdings/fills, returns/CAGR/maxdrawdown/fees/interest, excess against equally funded gross0.98QQQ and corresponding grossQQQ; no best-only deletion; input hashes",
+  "selection_rule": "No automatic deployment. Research candidate requires late net wealth>QQQ at matching gross AND natural cash QQQ at all fee cells with both providers; report early and long-window failure without overriding. Same-gross return advantage not risk-adjusted alpha. New native-price forward trial required.",
+  "not_claimed": [
+    "novel invention of momentum",
+    "canonical CRD replication",
+    "historical first receipt authentication",
+    "survivorship-free complete ETF universe",
+    "actual option profits",
+    "guaranteed future alpha",
+    "independent external preregistration"
+  ]
+}
