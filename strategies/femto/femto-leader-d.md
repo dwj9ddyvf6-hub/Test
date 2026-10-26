@@ -51,7 +51,7 @@ Rows: 5 on the master desk, 3 on Midna's desk (ids in `docs/CATALOG.json`).
 ## Code
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/leader_d.py`, `desk/sleeves/femto/leader_sc.py`, `desk/sleeves/femto/gate_1h.py`, `desk/sleeves/femto/leader_core.py`, `desk/feedlib/leader.py`, `desk/vendor/old_desk_research/leader1d_long_fulluniverse_2026-10-02.py`
-- **Master desk (killed study)** (not in this repo): `desk/sleeves/killed/daily.py`
+- **Master desk (killed study)**: `sleeves/killed/daily.py`
 - **Midna v3**: `sleeves/leader_d.py`
 - **Midna v3 (small caps)**: `sleeves/leader_sc.py`
 - **Midna v3 (hourly)**: `sleeves/gate_1h.py`
