@@ -33,7 +33,7 @@ Each Friday, takes the week's M2 qualifiers at least 20% under their 52-week hig
 
 ## Code
 
-- **Master desk** (not in this repo): `desk/sleeves/femto/beatendown.py`, `desk/sleeves/femto/m2_core.py`, `desk/feedlib/m2.py`
+- **Master desk**: `sleeves/killed/feedlib/m2.py`; not in this repo: `desk/sleeves/femto/beatendown.py`, `desk/sleeves/femto/m2_core.py`
 - **Midna v3**: `sleeves/beatendown.py`
 
 ## Notes

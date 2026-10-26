@@ -33,7 +33,7 @@ Buys hourly Tensor Cyan fires on a wide-range bar with a strong WaveTrend gap wh
 
 ## Code
 
-- **Master desk** (not in this repo): `desk/sleeves/femto/rule_1h_cyan_raw.py`, `sleeves/femto/sleeve_core.py`
+- **Master desk**: `sleeves/femto/sleeve_core.py`; not in this repo: `desk/sleeves/femto/rule_1h_cyan_raw.py`
 - **Midna v3**: `sleeves/rule_1h_cyan_raw.py`
 
 ## Notes

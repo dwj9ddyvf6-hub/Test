@@ -5,7 +5,7 @@ Trades the break out of a daily squeeze (Bollinger inside Keltner): a buy-stop o
 | | |
 |---|---|
 | **Family** | Femto-lean |
-| **Source** | The old Alpaca swing desk, via Femto-lean |
+| **Source** | Milkman Trades' Daily Bilbo Boxes, via the old Alpaca swing desk and Femto-lean |
 | **Asset** | US equities |
 | **Timeframe** | 1d |
 | **Universe** | 48-name phase universe |
@@ -38,3 +38,7 @@ Trades the break out of a daily squeeze (Bollinger inside Keltner): a buy-stop o
 
 - **Master desk**: `sleeves/femto/phase_daily.py`
 - **Midna v3**: `sleeves/phase_daily.py`. A wrapper only; the strategy file is not in this repo
+
+## Notes
+
+- K5 is Milkman's Daily Bilbo Box; the Milkman study trades that box alone, both ways, as [Daily Bilbo Box](../milkman/mk-dailybilbobox.md).
