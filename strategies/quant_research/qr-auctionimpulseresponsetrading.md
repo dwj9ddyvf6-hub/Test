@@ -34,3 +34,4 @@ Buys a stock after a registered opening-auction impulse routes to continuation o
 ## Code
 
 - **Master desk**: `sleeves/quant_research/airt.py`, `sleeves/quant_research/r10.py`; not in this repo: `desk/vendor/quant_research/r10/airt/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)

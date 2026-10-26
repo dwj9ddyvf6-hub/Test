@@ -32,3 +32,4 @@ Buys when Bollinger Bands expand out of the Keltner Channel with rising positive
 
 - **Midna v3**: `desk3/aster_batch1.py`
 - **Master desk** (not in this repo): `desk/vendor/ausar/trader_signals.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

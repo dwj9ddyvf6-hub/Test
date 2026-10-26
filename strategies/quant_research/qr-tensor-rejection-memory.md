@@ -36,6 +36,7 @@ Buys a frozen 21-stock basket's names when a Tensor buy trigger lands as price f
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`; not in this repo: `desk/vendor/foliotend_research/rejection_memory/strategy.py`, `desk/vendor/foliotend_research/rejection_memory/acceptance_features.py`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 

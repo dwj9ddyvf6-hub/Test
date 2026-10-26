@@ -35,6 +35,7 @@ Buys daily Tensor Green fires that close under $5 and holds 40 sessions.
 
 - **Midna v3**: `desk3/lazarus.py`, `integration/*_adapter.py`
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)
 
 ## Notes
 

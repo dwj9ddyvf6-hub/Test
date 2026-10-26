@@ -37,6 +37,7 @@ Six fade tests on 41 names: shorts strong late-day runs, extended closes, strong
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/intraday.py`, `sleeves/killed/common.py`, `sleeves/femto/vendor/old_desk_research/rsiobv.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)
 
 ## Notes
 

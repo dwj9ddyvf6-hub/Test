@@ -34,3 +34,4 @@ Buys fires of 29 frozen OLX clean-support rules scored by the live lab, and hold
 ## Code
 
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)

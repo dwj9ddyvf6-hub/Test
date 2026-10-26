@@ -37,6 +37,7 @@ Each morning plans a buy at the next support under the last close for 30 names, 
 ## Code
 
 - **Master desk**: `sleeves/galath/galath.py`, `sleeves/galath/levels.py`, `sleeves/galath/paper.py`, `sleeves/galath/wire.py`
+- **Rule lines**: [docs/verify/galath.md](../../docs/verify/galath.md)
 
 ## Notes
 

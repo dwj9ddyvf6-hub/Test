@@ -48,6 +48,7 @@ Rows: 2 on the master desk, 1 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk**: `sleeves/femto/morning_dip.py`
 - **Midna v3**: `sleeves/morning_dip.py`. A wrapper only: it runs the strategy file through Midna's `_enh2` layer, neither of which is in this repo
 - **Master desk (Milkman study)**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

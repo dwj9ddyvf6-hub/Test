@@ -32,3 +32,4 @@ When SPY opens above the prior close and trades 1% above it before noon, buys th
 ## Code
 
 - **Master desk**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)

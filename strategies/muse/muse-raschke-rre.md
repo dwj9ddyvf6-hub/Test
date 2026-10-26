@@ -36,6 +36,7 @@ Scores Linda Raschke-style first-cross pullbacks and failed breaks of the prior 
 
 - **Master desk**: `sleeves/muse/muse.py`; not in this repo: `desk/sleeves/muse/sleeves/raschke_rre.py`, `desk/sleeves/muse/core/raschke_rre/`. The strategy file is Midna v3's `sleeves/raschke_rre.py`
 - **Midna v3**: `sleeves/raschke_rre.py`, `integration/raschke_rre_adapter.py`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

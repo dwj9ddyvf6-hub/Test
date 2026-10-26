@@ -31,3 +31,4 @@ Times SPY from 06:00 to 16:00 ET each Monday, long and short; recorded only, as 
 ## Code
 
 - **Master desk**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)

@@ -37,3 +37,4 @@ Buys a liquid, trending leader on a stop order at its 20-day high the session af
 ## Code
 
 - **Master desk**: `sleeves/galath/galath.py`, `sleeves/galath/komar.py`
+- **Rule lines**: [docs/verify/galath.md](../../docs/verify/galath.md)

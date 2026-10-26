@@ -35,3 +35,4 @@ After a strict 20-day closing high in a weak tape (SPY down over 60 sessions), b
 
 - **Master desk**: `sleeves/femto/phoenix.py`
 - **Midna v3**: `sleeves/phoenix.py`. A wrapper only; the strategy file is not in this repo
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)

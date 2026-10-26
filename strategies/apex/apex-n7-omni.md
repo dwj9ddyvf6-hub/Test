@@ -37,3 +37,4 @@ N1's Duration Shield Nasdaq exposure plus a monthly Variance Value options trade
 ## Code
 
 - **Master desk**: `sleeves/apex/apex.py`, `sleeves/apex/feedlib/apex_rules.py`, `sleeves/apex/feedlib/apex.py`, `sleeves/apex/feedlib/apex_book.py`, `sleeves/apex/vendor/apex/inventions.py`, `sleeves/apex/vendor/apex/opt_strategies.py`, `sleeves/apex/vendor/apex/strategies.py`, `sleeves/femto/vendor/aurelia/features.py`
+- **Rule lines**: [docs/verify/apex.md](../../docs/verify/apex.md)

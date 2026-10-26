@@ -35,6 +35,7 @@ A 47.5% SPY / 47.5% QQQ book that adds CAT, DE or MSFT itself for 20 sessions af
 ## Code
 
 - **Master desk**: `sleeves/quant_research/crg.py`, `sleeves/quant_research/relay.py`, `sleeves/quant_research/common.py`; not in this repo: `desk/vendor/quant_research/r3/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 

@@ -34,6 +34,7 @@ On the same VWAP signal, buys a call debit spread 14-30 days out and exits at ha
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/ema_vwap_options.py`, `desk/sleeves/femto/ema_vwap.py`
 - **Midna v3**: `sleeves/ema_vwap_options.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

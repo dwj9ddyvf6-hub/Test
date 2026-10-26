@@ -33,6 +33,7 @@ Buys 20- or 55-day closing breakouts with Turtle unit sizing and pyramiding, and
 ## Code
 
 - **Master desk**: `sleeves/midna/board.py`, `sleeves/midna/vendor/midna/board_signals.py`, `sleeves/midna/common.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

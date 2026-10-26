@@ -34,3 +34,4 @@ A weekly optimized long book of up to 30 registered capital-release candidates; 
 ## Code
 
 - **Master desk**: `sleeves/quant_research/crd.py`, `sleeves/quant_research/r10.py`; not in this repo: `desk/vendor/quant_research/r10/crd/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)

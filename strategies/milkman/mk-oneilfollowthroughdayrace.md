@@ -42,3 +42,4 @@ After a 10% correction, a follow-through day (day 4+ of a rally, up 1.25% on ris
 ## Code
 
 - **Master desk**: `sleeves/milkman/daily.py`, `sleeves/milkman/rules.py`, `sleeves/milkman/vendor/milkman/dstrats.py`, `sleeves/milkman/vendor/milkman/dlib.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)

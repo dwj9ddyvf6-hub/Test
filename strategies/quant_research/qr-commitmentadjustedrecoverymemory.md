@@ -34,3 +34,4 @@ A 90% QQQ core plus short intraday trades on registered shock-recovery order-boo
 ## Code
 
 - **Master desk**: `sleeves/quant_research/carm.py`, `sleeves/quant_research/r10.py`; not in this repo: `desk/vendor/quant_research/r10/carm/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)

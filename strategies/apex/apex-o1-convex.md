@@ -44,3 +44,4 @@ Holds the first 1× of the APEX-50F exposure in QQQ and the rest in 3-month at-t
 ## Code
 
 - **Master desk**: `sleeves/apex/apex_options.py`, `sleeves/apex/apex.py`, `sleeves/apex/feedlib/apex.py`, `sleeves/apex/feedlib/apex_book.py`, `sleeves/apex/vendor/apex/opt_strategies.py`, `sleeves/apex/vendor/apex/strategies.py`, `sleeves/femto/vendor/aurelia/features.py`
+- **Rule lines**: [docs/verify/apex.md](../../docs/verify/apex.md)

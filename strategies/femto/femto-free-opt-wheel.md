@@ -34,6 +34,7 @@ Sells a cash-secured 30-delta weekly SPY put; if assigned, sells 30-delta covere
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/free_opt_wheel.py`, `desk/sleeves/femto/free_opt_core.py`, `desk/vendor/aurelia/free_options.py`, `desk/feedlib/free_options_inputs.py`
 - **Midna v3**: `sleeves/free_opt_wheel.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

@@ -49,6 +49,7 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Midna v3**: `sleeves/aurelia_ndx.py`. Nasdaq legs; sizes off account equity
 - **Midna v3 (gold)**: `sleeves/aurelia_gold.py`. The GLD leg
 - **Master desk (APEX C1)**: `sleeves/apex/apex.py`, `sleeves/apex/feedlib/apex_rules.py`, `sleeves/apex/feedlib/apex.py`, `sleeves/apex/vendor/apex/round3.py`, `sleeves/apex/vendor/apex/inventions.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

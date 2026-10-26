@@ -35,3 +35,4 @@ Buys $100 of a scanned name pulling back to VWAP in a short uptrend, with a 1.5%
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith_intraday.py`; not in this repo: `desk/vendor/griffith/config.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

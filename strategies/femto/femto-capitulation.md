@@ -36,6 +36,7 @@ Buys the first green hourly bar after an RSI(14) < 20 volume-climax flush into t
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/capitulation.py`
 - **Midna v3**: `sleeves/capitulation.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

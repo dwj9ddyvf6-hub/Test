@@ -32,6 +32,7 @@ Each month, buys the five large caps that fell most last calendar month.
 
 - **Midna v3**: `sleeves/s_mn_reversal.py`
 - **Master desk** (not in this repo): `desk/sleeves/midna/quantpedia.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

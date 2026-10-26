@@ -40,6 +40,7 @@ Buys the Signal Prism scan's best S/A-grade events at support in a turning secto
 ## Code
 
 - **Master desk**: `sleeves/galath/galath.py`, `sleeves/galath/book.py`, `sleeves/galath/prism.py`, `sleeves/galath/levels.py`, `sleeves/galath/paper.py`, `sleeves/galath/wire.py`
+- **Rule lines**: [docs/verify/galath.md](../../docs/verify/galath.md)
 
 ## Notes
 

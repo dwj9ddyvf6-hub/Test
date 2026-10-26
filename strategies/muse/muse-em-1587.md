@@ -40,6 +40,7 @@ Draws the day's expected-move map from the VIX (prior close ± (VIX ÷ 15.87)%),
 
 - **Master desk**: `sleeves/muse/core/em_1587.py`, `sleeves/muse/muse.py`; not in this repo: `desk/sleeves/muse/sleeves/em_1587.py`. The strategy file is Midna v3's `sleeves/em_1587.py`
 - **Midna v3**: `sleeves/em_1587.py`, `integration/em_1587_adapter.py`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

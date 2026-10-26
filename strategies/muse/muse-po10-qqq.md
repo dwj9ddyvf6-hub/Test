@@ -37,6 +37,7 @@ Goes long QQQ when the 10-minute Phase Oscillator closes above +100 (short below
 
 - **Master desk**: `sleeves/muse/sleeves/po10_qqq.py`, `sleeves/muse/muse.py`. Vendored from Midna v3
 - **Midna v3**: `sleeves/po10_qqq.py`, `integration/po10_qqq_adapter.py`. A wrapper only; the strategy file is not in this repo
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

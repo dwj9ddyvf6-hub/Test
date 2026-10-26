@@ -40,3 +40,4 @@ When a 10-minute squeeze releases, enters the next minute in the EMA21/48 direct
 ## Code
 
 - **Master desk**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)

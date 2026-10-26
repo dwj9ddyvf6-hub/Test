@@ -34,6 +34,7 @@ When SPY is down 3% or more on the session, buys one SPY put (delta 0.50-0.65, 2
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/free_opt_tail.py`, `desk/sleeves/femto/free_opt_core.py`, `desk/vendor/aurelia/free_options.py`, `desk/feedlib/free_options_inputs.py`
 - **Midna v3**: `sleeves/free_opt_tail.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

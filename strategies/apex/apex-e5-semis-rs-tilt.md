@@ -35,3 +35,4 @@ APEX-30 Nasdaq exposure with a third of it moved to SMH while semiconductors lea
 ## Code
 
 - **Master desk**: `sleeves/apex/apex.py`, `sleeves/apex/feedlib/apex_rules.py`, `sleeves/apex/feedlib/apex.py`, `sleeves/apex/vendor/apex/strategies.py`, `sleeves/femto/vendor/aurelia/features.py`
+- **Rule lines**: [docs/verify/apex.md](../../docs/verify/apex.md)

@@ -33,6 +33,7 @@ Among the 20 closest large-cap pairs, buys the cheap leg when the spread is two 
 
 - **Midna v3**: `sleeves/s_mn_pairs.py`
 - **Master desk** (not in this repo): `desk/sleeves/midna/quantpedia.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

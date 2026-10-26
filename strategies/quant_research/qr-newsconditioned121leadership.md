@@ -35,3 +35,4 @@ Each month's S&P 500 12-1 momentum leaders, bought only on a fresh Tensor 1-hour
 ## Code
 
 - **Master desk**: `sleeves/quant_research/news121.py`, `sleeves/quant_research/vendor/old_desk_research/structural_screen.py`; not in this repo: `desk/sleeves/femto/tensor_swing.py`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)

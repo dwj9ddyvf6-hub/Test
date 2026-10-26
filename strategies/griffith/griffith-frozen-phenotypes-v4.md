@@ -33,3 +33,4 @@ Buys the four enabled frozen Tensor phenotypes (a daily green base expansion and
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_features.py`, `sleeves/griffith/vendor/griffith/tensor_phenotype_registry.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

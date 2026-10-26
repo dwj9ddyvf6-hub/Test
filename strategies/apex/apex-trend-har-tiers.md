@@ -34,6 +34,7 @@ Holds the Nasdaq-100 at trend score × min(4, 50% / forecast volatility), from a
 ## Code
 
 - **Master desk**: `sleeves/apex/apex.py`, `sleeves/apex/feedlib/apex_rules.py`, `sleeves/apex/feedlib/apex.py`, `sleeves/apex/vendor/apex/strategies.py`, `sleeves/femto/vendor/aurelia/features.py`
+- **Rule lines**: [docs/verify/apex.md](../../docs/verify/apex.md)
 
 ## Notes
 

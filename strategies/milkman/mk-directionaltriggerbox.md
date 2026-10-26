@@ -34,3 +34,4 @@ When SPY opens between the prior close and a trigger and holds that box for the 
 ## Code
 
 - **Master desk**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)

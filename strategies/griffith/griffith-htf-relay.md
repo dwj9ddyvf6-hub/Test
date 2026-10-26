@@ -33,3 +33,4 @@ Buys fresh daily and weekly Tensor buys (daily greens, inside a weekly bull epis
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/griffith/vendor/griffith/tensor_htf_strategy_spec.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

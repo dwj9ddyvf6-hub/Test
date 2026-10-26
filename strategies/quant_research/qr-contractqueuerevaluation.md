@@ -34,3 +34,4 @@ Buys an issuer the session after a registered contract award re-optimizes its or
 ## Code
 
 - **Master desk**: `sleeves/quant_research/cqr.py`, `sleeves/quant_research/r10.py`; not in this repo: `desk/vendor/quant_research/r10/cqr/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)

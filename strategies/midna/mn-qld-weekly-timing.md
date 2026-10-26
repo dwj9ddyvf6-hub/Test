@@ -32,3 +32,4 @@ Holds QLD all-in while QQQ's weekly EMA(12) is above its EMA(26), switching at t
 ## Code
 
 - **Master desk**: `sleeves/midna/qld.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)

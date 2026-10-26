@@ -50,6 +50,7 @@ Rows: 52 on the master desk, 50 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Midna v3**: `desk3/lazarus.py`, `integration/*_adapter.py`
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
 - **Midna v3 (Q07)**: `desk3/lazarus_q07.py`, `desk3/q07_engine.py`, `sleeves/lazarus/s_q07w_*.py`. The `sleeves/lazarus/s_q07w_*` files call `laz_sleeves._common`, which is not in this repo
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)
 
 ## Notes
 

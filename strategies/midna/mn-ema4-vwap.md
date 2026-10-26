@@ -32,6 +32,7 @@ Buys when EMA(4) crosses above a rising 20-session VWAP, and exits on the cross 
 
 - **Midna v3**: `sleeves/s_mn_vwap.py`
 - **Master desk**: `sleeves/midna/board.py`, `sleeves/midna/vendor/midna/board_signals.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

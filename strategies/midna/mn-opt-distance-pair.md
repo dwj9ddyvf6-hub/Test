@@ -32,6 +32,7 @@ Expresses the distance-pair signal with listed options: a call on the cheap leg 
 
 - **Midna v3**: `sleeves/s_mn_opt_pairs.py`
 - **Master desk** (not in this repo): `desk/sleeves/midna/options.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

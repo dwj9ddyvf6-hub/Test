@@ -48,6 +48,7 @@ Rows: 2 on the master desk, 1 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk** (not in this repo): `desk/sleeves/femto/legends_ema.py`
 - **Midna v3**: `sleeves/legends_ema.py`
 - **Master desk (Milkman study)**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

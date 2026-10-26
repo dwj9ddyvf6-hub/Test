@@ -32,3 +32,4 @@ Each session, every liquid SCOPE name in an uptrend with positive 12-1 momentum 
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith_factor.py`, `sleeves/griffith/vendor/griffith/strategy_tournament.py`, `sleeves/griffith/feedlib/griffith.py`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

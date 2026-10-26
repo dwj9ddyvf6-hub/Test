@@ -38,6 +38,7 @@ Trades the break out of a daily squeeze (Bollinger inside Keltner): a buy-stop o
 
 - **Master desk**: `sleeves/femto/phase_daily.py`
 - **Midna v3**: `sleeves/phase_daily.py`. A wrapper only; the strategy file is not in this repo
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

@@ -34,3 +34,4 @@ Buys a provisional weekly Cyan or Green marker on Monday to Thursday, before the
 ## Code
 
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)

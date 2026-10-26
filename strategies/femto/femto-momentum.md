@@ -49,6 +49,7 @@ Rows: 2 on the master desk, 1 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk**: `sleeves/femto/momentum.py`
 - **Master desk (Midna's book)**: `sleeves/midna/context.py`, `sleeves/midna/common.py`
 - **Midna v3**: `sleeves/momentum.py`. A wrapper only: it runs the strategy file through Midna's `_enh2` layer, neither of which is in this repo
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

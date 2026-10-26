@@ -40,3 +40,4 @@ Trades SPY's opening gap by size: fades it toward the prior close, or rides it h
 ## Code
 
 - **Master desk**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)

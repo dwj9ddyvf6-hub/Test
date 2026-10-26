@@ -36,6 +36,7 @@ Each Friday, ranks the genome's thinnest tenth for wide daily ranges after a 20%
 
 - **Master desk**: `sleeves/femto/sleeve_core.py`; not in this repo: `desk/sleeves/femto/snapback.py`
 - **Midna v3**: `sleeves/snapback.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

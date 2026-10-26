@@ -47,6 +47,7 @@ Rows: 2 on the master desk, 1 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk** (not in this repo): `desk/sleeves/femto/rule_1w_cyan_mom_adx.py`, `desk/sleeves/femto/dcg_core.py`
 - **Master desk (Midna's lab account)**: `sleeves/midna/forward.py`, `sleeves/midna/forward_scan.py`
 - **Midna v3**: `sleeves/rule_1w_cyan_mom_adx.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

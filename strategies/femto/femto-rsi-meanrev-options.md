@@ -34,6 +34,7 @@ On the RSI(2) pullback signal, buys an 8%-wide call debit spread 14-30 days out 
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/rsi_meanrev_options.py`, `desk/sleeves/femto/rsi_meanrev.py`
 - **Midna v3**: `sleeves/rsi_meanrev_options.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

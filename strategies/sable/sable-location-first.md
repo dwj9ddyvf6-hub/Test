@@ -38,6 +38,7 @@ Buys a washed-out stock still under its 50-day average when it sits on a support
 ## Code
 
 - **Master desk**: `sleeves/sable/sable.py`, `sleeves/sable/location_first.py`, `sleeves/sable/runtime.py`
+- **Rule lines**: [docs/verify/sable.md](../../docs/verify/sable.md)
 
 ## Notes
 

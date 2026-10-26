@@ -36,6 +36,7 @@ Buys daily Tensor Green fires with strong 12-1 momentum and calm dispersion on a
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/rule_1d_green_tom.py`, `desk/sleeves/femto/dcg_core.py`
 - **Midna v3**: `sleeves/rule_1d_green_tom.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

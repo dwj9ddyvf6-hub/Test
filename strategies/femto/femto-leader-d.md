@@ -55,6 +55,7 @@ Rows: 5 on the master desk, 3 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Midna v3**: `sleeves/leader_d.py`
 - **Midna v3 (small caps)**: `sleeves/leader_sc.py`
 - **Midna v3 (hourly)**: `sleeves/gate_1h.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

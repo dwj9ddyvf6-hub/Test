@@ -43,3 +43,4 @@ Rows: 4 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_b2.py`
 - **Master desk** (not in this repo): `desk/vendor/ausar_r19/r19_options.py`, `desk/feedlib/ausar_pead.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

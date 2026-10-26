@@ -44,6 +44,7 @@ Buys an in-play Polymarket underdog on a deep dip below its opening price with a
 ## Code
 
 - **Master desk**: `sleeves/span/prediction_markets.py`, `sleeves/span/vendor/span_harvest/span_harvest_unified.py`, `sleeves/span/feedlib/polymarket.py`
+- **Rule lines**: [docs/verify/span.md](../../docs/verify/span.md)
 
 ## Notes
 

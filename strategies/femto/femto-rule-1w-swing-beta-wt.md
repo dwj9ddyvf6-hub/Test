@@ -36,6 +36,7 @@ Buys weekly Tensor swing fires on high-beta names with a strong WaveTrend and ri
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/rule_1w_swing_beta_wt.py`, `desk/sleeves/femto/dcg_core.py`
 - **Midna v3**: `sleeves/rule_1w_swing_beta_wt.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

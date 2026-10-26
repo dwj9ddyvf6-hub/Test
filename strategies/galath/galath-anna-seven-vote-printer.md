@@ -36,6 +36,7 @@ Holds each of 13 names while Galath's seven-vote Anna printer reads buy, and sel
 ## Code
 
 - **Master desk**: `sleeves/galath/galath.py`, `sleeves/galath/anna.py`
+- **Rule lines**: [docs/verify/galath.md](../../docs/verify/galath.md)
 
 ## Notes
 

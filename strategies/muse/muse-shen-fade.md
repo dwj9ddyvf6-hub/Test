@@ -39,6 +39,7 @@ Buys same-day SPY puts when price first touches a marked level with RSI(14) over
 
 - **Master desk**: `sleeves/muse/muse.py`; not in this repo: `desk/sleeves/muse/sleeves/shen_fade.py`. The same strategy file as `sleeves/femto/shen_fade.py`
 - **Midna's Femto-lean book**: `sleeves/femto/shen_fade.py`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

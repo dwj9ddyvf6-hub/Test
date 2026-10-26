@@ -34,6 +34,7 @@ Each fresh daily Tensor buy-green that Leaders Rest calls a SETUP (a leader rest
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/griffith/griffith.py`, `sleeves/griffith/vendor/griffith/strategy_system.py`, `sleeves/griffith/vendor/griffith/strategy_execution.py`, `sleeves/tensor_research/feedlib/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.mjs`; not in this repo: `desk/vendor/griffith/config.json`
+- **Rule lines**: [docs/verify/tensor_research.md](../../docs/verify/tensor_research.md)
 
 ## Notes
 

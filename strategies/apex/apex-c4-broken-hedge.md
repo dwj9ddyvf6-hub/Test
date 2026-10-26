@@ -36,3 +36,4 @@ APEX-50F Nasdaq exposure, halved when Treasuries and gold stop hedging it, with 
 ## Code
 
 - **Master desk**: `sleeves/apex/apex.py`, `sleeves/apex/feedlib/apex_rules.py`, `sleeves/apex/feedlib/apex.py`, `sleeves/apex/vendor/apex/round3.py`, `sleeves/apex/vendor/apex/inventions.py`, `sleeves/apex/vendor/apex/strategies.py`, `sleeves/femto/vendor/aurelia/features.py`
+- **Rule lines**: [docs/verify/apex.md](../../docs/verify/apex.md)

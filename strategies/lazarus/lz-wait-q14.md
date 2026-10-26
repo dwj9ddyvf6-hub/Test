@@ -34,3 +34,4 @@ Buys tier-A weekly Cyan or Green fires closing at or under $5, capped at $5.00, 
 ## Code
 
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)

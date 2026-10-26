@@ -46,6 +46,7 @@ Buys a confirmed 1-hour swing low that tags the lower Bollinger Band while RSI m
 - **Midna v3**: `sleeves/bb_rsi_divergence_expanded.py`, `integration/bb_rsi_divergence_expanded_adapter.py`. The expanded file; its switch defaults on
 - **Femto-lean sleeve v2.2**: `sleeves/bb_rsi_divergence.py`
 - **TradingView indicator**: `pine/BB_RSI_Divergence_Indicator.pine`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

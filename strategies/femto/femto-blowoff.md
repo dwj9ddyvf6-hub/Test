@@ -36,6 +36,7 @@ Buys a rising-edge RSI + OBV blowoff (both in the top tenth of their 144-bar ran
 ## Code
 
 - **Master desk**: `sleeves/femto/blowoff_d.py`, `sleeves/femto/blowoff_1h.py`, `sleeves/femto/sleeve_core.py`, `sleeves/femto/vendor/old_desk_research/rsiobv.py`, `sleeves/femto/vendor/old_desk_research/run_r4_blowoff_standalone.py`, `sleeves/femto/feedlib/blowoff.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

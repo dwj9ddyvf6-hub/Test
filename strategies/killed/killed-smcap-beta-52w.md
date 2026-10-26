@@ -35,6 +35,7 @@ Each week, buys the qualifiers that are beaten down, small by dollar volume and 
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/smcap.py`, `sleeves/killed/common.py`, `sleeves/killed/feedlib/killed_data.py`, `sleeves/killed/vendor/midna_research/run_smcap_beta_52w.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)
 
 ## Notes
 

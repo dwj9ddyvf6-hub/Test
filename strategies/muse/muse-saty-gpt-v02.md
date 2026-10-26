@@ -41,6 +41,7 @@ Trades SPY shares long or short on ten Saty-vocabulary setups from 10-minute bar
 
 - **Master desk**: `sleeves/muse/muse.py`; not in this repo: `desk/sleeves/muse/sleeves/saty_gpt_v02.py`, `desk/sleeves/muse/core/saty_gpt_v02/`. The strategy file is Midna v3's `sleeves/saty_gpt_v02.py`
 - **Midna v3**: `sleeves/saty_gpt_v02.py`, `integration/saty_gpt_v02_adapter.py`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

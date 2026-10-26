@@ -34,6 +34,7 @@ Expresses tier-A weekly Tensor Cyan / Green fires with one-year at-the-money cal
 ## Code
 
 - **Master desk**: `sleeves/milkman/galath.py`, `sleeves/milkman/vendored.py`, `sleeves/milkman/vendor/milkman/dstrats.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)
 
 ## Notes
 

@@ -46,6 +46,7 @@ Rows: 5 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/lazarus.py`, `integration/*_adapter.py`
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)
 
 ## Notes
 

@@ -34,3 +34,4 @@ Buys weekly Cyan fires in the top tenth of 126-day momentum that sit within 5% o
 ## Code
 
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)

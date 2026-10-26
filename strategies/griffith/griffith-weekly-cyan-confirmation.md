@@ -35,6 +35,7 @@ Buys a fresh weekly Tensor buy-cyan that fits any of 18 frozen context hypothese
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_features.py`, `sleeves/griffith/vendor/griffith/tensor_htf_weekly_cyan_spec.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)
 
 ## Notes
 

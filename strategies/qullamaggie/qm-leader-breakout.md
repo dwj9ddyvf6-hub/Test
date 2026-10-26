@@ -52,3 +52,4 @@ Rows: 3 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk (Femto-lean)**: `sleeves/femto/qullamaggie.py`
 - **Master desk (Aurelia paper engine)**: `sleeves/femto/qullamaggie_paper.py`, `sleeves/femto/vendor/aurelia_qulla/desk.py`
 - **Midna v3**: `sleeves/qullamaggie.py`, `sleeves/qullamaggie_paper.py`. Wrappers only; the strategy files are not in this repo
+- **Rule lines**: [docs/verify/qullamaggie.md](../../docs/verify/qullamaggie.md)

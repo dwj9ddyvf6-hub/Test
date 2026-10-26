@@ -32,3 +32,4 @@ Trades SPY on its 5-minute 20/50 average cross: $100 in when the 20 is above the
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith_intraday.py`; not in this repo: `desk/vendor/griffith/config.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

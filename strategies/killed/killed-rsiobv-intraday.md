@@ -33,3 +33,4 @@ Buys a strong bullish RSI divergence on 5-minute bars of 8 names and holds it 2,
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/intraday.py`, `sleeves/killed/common.py`, `sleeves/femto/vendor/old_desk_research/rsiobv.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)

@@ -33,3 +33,4 @@ Buys the top fifth of earnings price surprises two sessions after the report, he
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/events.py`, `sleeves/killed/common.py`, `sleeves/killed/feedlib/killed_data.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)

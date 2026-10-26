@@ -37,6 +37,7 @@ Buys small caps the day they enter ChartsLector's Qullamaggie screen, unless str
 - **Midna v3**: `desk3/lazarus.py`, `integration/*_adapter.py`
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
 - **Midna v3 (lane file)**: `sleeves/lazarus/s_cl_qm_small.py`. Calls `laz_sleeves._common`, which is not in this repo
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)
 
 ## Notes
 

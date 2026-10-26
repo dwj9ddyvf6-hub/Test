@@ -32,3 +32,4 @@ Each session, every SCOPE name closing above its 200-day average with the 50-day
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith_factor.py`, `sleeves/griffith/vendor/griffith/strategy_tournament.py`, `sleeves/griffith/feedlib/griffith.py`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

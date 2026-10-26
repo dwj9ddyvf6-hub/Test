@@ -32,6 +32,7 @@ Buys a call spread on each of the five worst prior-month large caps.
 
 - **Midna v3**: `sleeves/s_mn_opt_reversal.py`
 - **Master desk** (not in this repo): `desk/sleeves/midna/options.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

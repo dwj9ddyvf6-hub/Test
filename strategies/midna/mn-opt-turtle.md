@@ -32,6 +32,7 @@ Expresses Turtle breakouts as one at-the-money call about 30 days out.
 
 - **Midna v3**: `sleeves/s_mn_opt_turtle.py`. Its `laz8_opt` helper is not in this repo
 - **Master desk** (not in this repo): `desk/sleeves/midna/options.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

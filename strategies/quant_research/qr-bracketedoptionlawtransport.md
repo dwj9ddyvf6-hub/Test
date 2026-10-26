@@ -36,6 +36,7 @@ A 50/50 SPY / QQQ book that records index-option bounds around FOMC and CPI rele
 ## Code
 
 - **Master desk**: `sleeves/quant_research/bolt.py`, `sleeves/quant_research/common.py`; not in this repo: `desk/vendor/quant_research/r10/bolt/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 

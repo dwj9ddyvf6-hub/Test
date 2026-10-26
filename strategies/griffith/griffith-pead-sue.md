@@ -34,3 +34,4 @@ Buys every SCOPE stock that beats its consensus EPS at the first open after the 
 ## Code
 
 - **Master desk**: `sleeves/griffith/event_research.py`, `sleeves/griffith/feedlib/griffith_earnings.py`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

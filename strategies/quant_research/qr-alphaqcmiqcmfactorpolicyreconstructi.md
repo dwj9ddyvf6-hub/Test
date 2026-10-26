@@ -35,6 +35,7 @@ Every 20 sessions buys the top 20% of a frozen 100-stock roster by AlphaQCM's te
 ## Code
 
 - **Master desk**: `sleeves/quant_research/alphaqcm.py`, `sleeves/quant_research/alphagen_np.py`, `sleeves/quant_research/common.py`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 

@@ -49,6 +49,7 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
 - **Master desk (Midna's book)**: `sleeves/midna/shadow.py`
 - **Midna v3 (`s_mn_moonshot`)**: `sleeves/s_mn_moonshot.py`. Consumes upstream fires; no stop, 390 sessions
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)
 
 ## Notes
 

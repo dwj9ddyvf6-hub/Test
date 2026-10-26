@@ -32,3 +32,4 @@ On a stock's earnings day, buys the close when the day's return beats 0.16%, and
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/events.py`, `sleeves/killed/common.py`, `sleeves/killed/feedlib/killed_data.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)

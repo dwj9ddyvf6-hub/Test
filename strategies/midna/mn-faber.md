@@ -47,6 +47,7 @@ Rows: 2 on the master desk, 1 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Midna v3**: `sleeves/s_mn_faber.py`
 - **Master desk** (not in this repo): `desk/sleeves/midna/quantpedia.py`
 - **Master desk (Griffith R4 lab)**: `sleeves/griffith/griffith_factor.py`, `sleeves/griffith/vendor/griffith/r4_parallel_strategy_lab.py`, `sleeves/griffith/feedlib/griffith.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

@@ -35,6 +35,7 @@ Ten equal sub-books, one per trading lineage, buy a watchlist stock on a clean c
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research_hands.mjs`, `sleeves/tensor_research/feedlib/tensor_research.mjs`; not in this repo: `desk/vendor/foliotend_research/autopilot/scout-hands.mjs`, `desk/vendor/foliotend_research/autopilot/lineage.mjs`
+- **Rule lines**: [docs/verify/tensor_research.md](../../docs/verify/tensor_research.md)
 
 ## Notes
 

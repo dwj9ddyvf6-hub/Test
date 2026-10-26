@@ -41,6 +41,7 @@ Buys a stock when a completed hourly Tensor green arrow confirms a black-square 
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.mjs`; not in this repo: `desk/vendor/foliotend_research/v615/lib/tensor-swing-signals.mjs`, `desk/vendor/foliotend_research/v615/lib/tensor-swing-notification.mjs`, `desk/vendor/foliotend_research/v615/lib/tensor-enrichment-signals.mjs`
+- **Rule lines**: [docs/verify/tensor_research.md](../../docs/verify/tensor_research.md)
 
 ## Notes
 

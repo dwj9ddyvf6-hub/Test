@@ -34,6 +34,7 @@ Buys a confirmed hourly Tensor Swing on a daily buy-cyan name when its hourly vo
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.mjs`; not in this repo: `desk/vendor/foliotend_research/v615/lib/tensor-swing-signals.mjs`, `desk/vendor/foliotend_research/v615/lib/tensor-enrichment-signals.mjs`
+- **Rule lines**: [docs/verify/tensor_research.md](../../docs/verify/tensor_research.md)
 
 ## Notes
 

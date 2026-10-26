@@ -42,6 +42,7 @@ Trades SPY shares long or short when the daily and 10-minute Pivot Ribbons agree
 
 - **Master desk**: `sleeves/muse/muse.py`; not in this repo: `desk/sleeves/muse/sleeves/saty_magnum.py`. The strategy file is Midna v3's `sleeves/saty_magnum.py`
 - **Midna v3**: `sleeves/saty_magnum.py`, `integration/saty_magnum_adapter.py`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

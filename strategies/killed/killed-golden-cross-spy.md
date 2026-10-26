@@ -32,3 +32,4 @@ Holds SPY while its 50-day average is above the 200-day, and goes flat when it i
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/daily.py`, `sleeves/killed/common.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)

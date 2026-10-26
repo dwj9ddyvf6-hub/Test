@@ -36,6 +36,7 @@ A 47.5% SPY / 47.5% QQQ book that adds a sender's fixed receivers for 20 session
 ## Code
 
 - **Master desk**: `sleeves/quant_research/uir.py`, `sleeves/quant_research/relay.py`, `sleeves/quant_research/common.py`; not in this repo: `desk/vendor/quant_research/r3/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 

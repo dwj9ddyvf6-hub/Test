@@ -34,6 +34,7 @@ Buys fresh daily or weekly Tensor signals that match one of eight frozen conditi
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_features.py`, `sleeves/griffith/vendor/griffith/tensor_htf_holdout_spec.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)
 
 ## Notes
 

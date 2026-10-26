@@ -37,6 +37,7 @@ Each week splits a regime-set budget over the two strongest of three asset group
 ## Code
 
 - **Master desk**: `sleeves/quant_research/finrlx.py`, `sleeves/quant_research/common.py`; not in this repo: `desk/vendor/quant_research/finrlx/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 

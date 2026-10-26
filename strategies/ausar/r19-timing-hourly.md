@@ -45,3 +45,4 @@ Rows: 4 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_batch15.py`. Waits on a `timing_signals` producer v3 does not yet have
 - **Master desk** (not in this repo): `desk/vendor/ausar_r19/r19_timing.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)
