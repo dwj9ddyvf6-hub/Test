@@ -35,6 +35,7 @@ Holds the 50 best-scored stocks of a frozen 640-name roster under QuantaAlpha's 
 ## Code
 
 - **Master desk**: `sleeves/quant_research/factor_books.py`, `sleeves/quant_research/dropout_book.py`, `sleeves/quant_research/sixai.py`, `sleeves/quant_research/scores.py`, `sleeves/quant_research/lgbm_text.py`, `sleeves/quant_research/common.py`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 

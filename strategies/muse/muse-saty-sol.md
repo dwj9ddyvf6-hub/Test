@@ -50,6 +50,7 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk**: `sleeves/muse/muse.py`; not in this repo: `desk/sleeves/muse/sleeves/saty_sol.py`, `desk/sleeves/muse/sleeves/saty_sol_0dte.py`. The strategy file is Midna v3's `sleeves/saty_sol.py`
 - **Midna v3**: `sleeves/saty_sol.py`, `integration/saty_sol_adapter.py`
 - **Midna v3 (0DTE)**: `sleeves/saty_sol_0dte.py`, `integration/saty_sol_0dte_adapter.py`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

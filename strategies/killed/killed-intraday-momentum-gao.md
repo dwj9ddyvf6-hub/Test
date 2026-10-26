@@ -33,6 +33,7 @@ At 15:30 ET goes long or short SPY and QQQ in the direction of the first half ho
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/intraday.py`, `sleeves/killed/common.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)
 
 ## Notes
 

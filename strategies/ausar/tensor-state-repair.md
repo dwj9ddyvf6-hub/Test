@@ -42,3 +42,4 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_batch1.py`
 - **Master desk** (not in this repo): `desk/vendor/ausar_ts/backend/tensor_strategy.py`, `desk/sleeves/families/tensor_state.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

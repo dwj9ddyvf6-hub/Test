@@ -34,6 +34,7 @@ Buys a basket name that closes more than 2% under its 20-day VWAP and sells it b
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/ema_vwap.py`
 - **Midna v3**: `sleeves/ema_vwap.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

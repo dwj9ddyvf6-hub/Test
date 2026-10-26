@@ -41,3 +41,4 @@ Each month holds the top decile of the more liquid half of the SCOPE universe by
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith_factor.py`, `sleeves/griffith/vendor/griffith/r4_parallel_strategy_lab.py`, `sleeves/griffith/feedlib/griffith.py`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

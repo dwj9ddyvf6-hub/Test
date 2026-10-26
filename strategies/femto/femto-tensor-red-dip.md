@@ -34,6 +34,7 @@ On a fear day (QQQ down 1.5%+ intraday), buys the flagship's fresh Tensor signal
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/tensor_red_dip.py`, `desk/sleeves/femto/tensor_swing.py`
 - **Midna v3**: `sleeves/tensor_red_dip.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

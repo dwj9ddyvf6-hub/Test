@@ -35,3 +35,4 @@ Buys $100 of a scanned name pressing its 20-bar high on rising volume, with a 1.
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith_intraday.py`; not in this repo: `desk/vendor/griffith/config.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

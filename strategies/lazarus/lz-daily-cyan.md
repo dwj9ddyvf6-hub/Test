@@ -36,6 +36,7 @@ Buys the live lab's Daily Cyan book picks, sized by market-cap band, for 21 sess
 
 - **Midna v3**: `desk3/lazarus.py`, `integration/*_adapter.py`
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)
 
 ## Notes
 

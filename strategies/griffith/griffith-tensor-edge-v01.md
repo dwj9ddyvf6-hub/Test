@@ -36,3 +36,4 @@ Buys a break of the signal bar's high after a qualifying daily green ignition, w
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_features.py`, `sleeves/griffith/vendor/griffith/tensor_edge_strategy_spec.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

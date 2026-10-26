@@ -35,6 +35,7 @@ Buys a liquid stock whose residual volume pressure built inside a 20-session box
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`; not in this repo: `desk/vendor/foliotend_research/trace/trace_r10.py`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 

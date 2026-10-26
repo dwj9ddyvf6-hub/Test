@@ -36,6 +36,7 @@ On the first trading day of each month, holds the top tenth of liquid genome nam
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/ts_momentum_decile.py`
 - **Midna v3**: `sleeves/ts_momentum_decile.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

@@ -42,3 +42,4 @@ Rows: 6 on the master desk (ids in `docs/CATALOG.json`).
 ## Code
 
 - **Master desk**: `sleeves/ausar/r17_etf.py`, `sleeves/ausar/vendor/quant_r17/run_ladder.py`, `sleeves/ausar/vendor/quant_r17/EXPERIMENT_PROTOCOL.json`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

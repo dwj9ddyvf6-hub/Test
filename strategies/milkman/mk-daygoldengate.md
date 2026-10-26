@@ -34,3 +34,4 @@ Trades SPY's first touch of its daily Golden Gate (38.2% of the ATR from the pri
 ## Code
 
 - **Master desk**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)

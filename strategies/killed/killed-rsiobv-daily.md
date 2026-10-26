@@ -36,6 +36,7 @@ Trades every arm of three RSI / OBV divergence studies on 19 names' daily bars, 
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/daily.py`, `sleeves/killed/common.py`, `sleeves/femto/vendor/old_desk_research/rsiobv.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)
 
 ## Notes
 

@@ -36,6 +36,7 @@ Trades QQQ on 1-minute MACD divergences between two same-day swing pivots, enter
 ## Code
 
 - **Midna v3**: `sleeves/trullas_divergence.py`, `integration/trullas_divergence_adapter.py`, `integration/trullas_divergence_worker.py`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

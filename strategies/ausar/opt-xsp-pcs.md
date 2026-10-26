@@ -49,6 +49,7 @@ Rows: 5 on the master desk, 5 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk** (not in this repo): `desk/vendor/ausar_r19/r19_options.py`
 - **Master desk (Femto-lean)** (not in this repo): `desk/sleeves/femto/spx_premium.py`
 - **Midna v3 (Femto-lean)**: `sleeves/spx_premium.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)
 
 ## Notes
 

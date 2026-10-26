@@ -46,6 +46,7 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk** (not in this repo): `desk/sleeves/femto/donchian.py`, `desk/sleeves/femto/donchian_crypto.py`
 - **Midna v3**: `sleeves/donchian.py`
 - **Midna v3 (SOL)**: `sleeves/donchian_crypto.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

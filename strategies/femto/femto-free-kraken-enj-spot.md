@@ -31,6 +31,7 @@ Buys ENJ when Kraken's book is tight and bid-heavy, and sells on a depth flip, a
 ## Code
 
 - **Midna v3**: `sleeves/free_kraken_enj_spot.py`. Logic authored to a locked design under the owner's 2026-10-24 ruling
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

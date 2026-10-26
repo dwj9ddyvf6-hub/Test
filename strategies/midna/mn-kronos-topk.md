@@ -46,6 +46,7 @@ Rows: 2 on the master desk, 1 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Midna v3**: `sleeves/s_mn_kronos.py`. Consumes forecast fires from an upstream producer not in this repo
 - **Master desk** (not in this repo): `desk/sleeves/midna/kronos.py`
 - **Master desk (quant research)**: `sleeves/quant_research/dropout_book.py`, `sleeves/quant_research/sixai.py`, `sleeves/quant_research/common.py`; not in this repo: `desk/sleeves/quant_research/kronos.py`, `desk/sleeves/quant_research/kronos_runner.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

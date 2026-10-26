@@ -35,6 +35,7 @@ After a 5%+ down day with RSI(14) under 50, sells a put credit spread about 7% u
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/fear_premium.py`
 - **Midna v3**: `sleeves/fear_premium.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

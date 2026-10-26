@@ -37,6 +37,7 @@ Trades SPY long or short at the first 5-minute bar where ROC2 and the 3-10 oscil
 
 - **Master desk**: `sleeves/muse/sleeves/raschke_pf3.py`, `sleeves/muse/muse.py`. Vendored from Midna v3
 - **Midna v3**: `sleeves/raschke_pf3.py`, `integration/raschke_pf3_adapter.py`. A wrapper only; the strategy file is not in this repo
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

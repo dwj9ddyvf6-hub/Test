@@ -35,6 +35,7 @@ Takes Galath's Tensor lane fires through the Milkman study's add-on rules: four 
 ## Code
 
 - **Master desk**: `sleeves/milkman/galath.py`, `sleeves/milkman/vendored.py`, `sleeves/milkman/vendor/milkman/dstrats.py`
+- **Rule lines**: [docs/verify/milkman.md](../../docs/verify/milkman.md)
 
 ## Notes
 

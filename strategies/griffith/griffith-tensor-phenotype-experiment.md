@@ -34,6 +34,7 @@ Sends each frozen-phenotype prediction through the Griffith desk's bracket path:
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_features.py`, `sleeves/griffith/griffith.py`, `sleeves/griffith/vendor/griffith/strategy_execution.py`; not in this repo: `desk/vendor/griffith/config.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)
 
 ## Notes
 

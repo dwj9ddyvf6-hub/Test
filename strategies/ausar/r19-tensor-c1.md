@@ -43,6 +43,7 @@ Rows: 9 on the master desk, 9 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_batch13.py`, `desk3/aster_batch14.py`
 - **Master desk** (not in this repo): `desk/vendor/ausar_r19/r19_tensor.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)
 
 ## Notes
 

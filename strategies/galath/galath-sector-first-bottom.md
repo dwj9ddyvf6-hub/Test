@@ -40,6 +40,7 @@ Buys a cheap, liquid stock basing under its long averages when its sector has tu
 ## Code
 
 - **Master desk**: `sleeves/galath/galath.py`, `sleeves/galath/book.py`, `sleeves/galath/levels.py`, `sleeves/galath/paper.py`, `sleeves/galath/wire.py`
+- **Rule lines**: [docs/verify/galath.md](../../docs/verify/galath.md)
 
 ## Notes
 

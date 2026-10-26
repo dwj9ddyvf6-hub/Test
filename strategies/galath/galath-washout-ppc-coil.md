@@ -38,6 +38,7 @@ Buys a stock washed out under its 50-day average on a Fib, its 12-day shelf or t
 ## Code
 
 - **Master desk**: `sleeves/galath/galath.py`, `sleeves/galath/levels.py`, `sleeves/galath/paper.py`, `sleeves/galath/wire.py`
+- **Rule lines**: [docs/verify/galath.md](../../docs/verify/galath.md)
 
 ## Notes
 

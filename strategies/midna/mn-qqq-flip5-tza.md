@@ -33,3 +33,4 @@ When QQQ's slow Tensor state has turned bearish within five sessions, buys TZA a
 
 - **Midna v3**: `sleeves/lazarus/s_mn_hedge.py`. Reads a `hedge_signal` input with no producer in this repo; $300 of a $1,000 budget
 - **Master desk**: `sleeves/midna/shadow.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)

@@ -32,3 +32,4 @@ Buys a strict new 20-day closing high on 41 names and holds it 20 sessions.
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/daily.py`, `sleeves/killed/common.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)

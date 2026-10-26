@@ -34,3 +34,4 @@ When VIX is complacent (under 16, or in the bottom quarter of its last 30 closes
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/vix_hedge.py`
 - **Midna v3**: `sleeves/vix_hedge.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)

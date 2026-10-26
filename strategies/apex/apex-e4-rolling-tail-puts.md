@@ -34,6 +34,7 @@ APEX-30 Nasdaq exposure plus QQQ puts 15% out of the money, bought each month wh
 ## Code
 
 - **Master desk**: `sleeves/apex/apex_options.py`, `sleeves/apex/apex.py`, `sleeves/apex/feedlib/apex.py`, `sleeves/apex/vendor/apex/strategies.py`, `sleeves/femto/vendor/aurelia/features.py`, `sleeves/apex/vendor/apex/backtest_options.py`
+- **Rule lines**: [docs/verify/apex.md](../../docs/verify/apex.md)
 
 ## Notes
 

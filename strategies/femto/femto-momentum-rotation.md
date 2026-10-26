@@ -35,3 +35,4 @@ Each Monday, holds the five basket names with the best 60-day return at 20% each
 
 - **Master desk**: `sleeves/femto/momentum_rotation.py`
 - **Midna v3**: `sleeves/momentum_rotation.py`. A wrapper only: it runs the strategy file through Midna's `_enh2` layer, neither of which is in this repo
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)

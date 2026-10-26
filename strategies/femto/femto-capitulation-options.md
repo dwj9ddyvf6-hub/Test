@@ -35,6 +35,7 @@ On the hourly capitulation signal, buys a call 2% out of the money expiring with
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/capitulation_options.py`, `desk/sleeves/femto/capitulation.py`
 - **Midna v3**: `sleeves/capitulation_options.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

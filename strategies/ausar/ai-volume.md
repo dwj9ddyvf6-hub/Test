@@ -41,3 +41,4 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_b4.py`, `sleeves/fwd_alpaca_link_ai_volume.py`
 - **Master desk**: `sleeves/ausar/vendor/public_recipes/public_source_sleeves.py`, `sleeves/ausar/ausar_spot_recipes.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

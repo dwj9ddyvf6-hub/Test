@@ -42,3 +42,4 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `sleeves/lazarus/s_mn_hourly.py`, `sleeves/lazarus/s_mn_nostop.py`. They call `laz_sleeves._common`, which is not in this repo
 - **Master desk**: `sleeves/midna/hourly.py`, `sleeves/midna/lanes.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)

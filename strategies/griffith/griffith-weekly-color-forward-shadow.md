@@ -34,6 +34,7 @@ Buys a fresh weekly Tensor buy-green or buy-cyan meeting any of 9 frozen two-con
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_features.py`, `sleeves/griffith/vendor/griffith/tensor_htf_weekly_color_forward_spec.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)
 
 **The 9 candidates** (each on the fresh weekly marker named; weeks are bars)
 

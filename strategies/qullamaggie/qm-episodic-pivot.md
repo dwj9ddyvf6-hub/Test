@@ -36,3 +36,4 @@ Buys a quiet stock that gaps up 10%+ on a verified catalyst with heavy early vol
 ## Code
 
 - **Master desk (pass-3 research desk)**: `sleeves/qullamaggie/qullamaggie.py`, `sleeves/qullamaggie/vendor/qullamaggie_pass3/desk_fixed.py`. One setup per sleeve; the EDGAR catalyst and metadata producer (`desk/feedlib/qm_inputs.py`) is not in this repo
+- **Rule lines**: [docs/verify/qullamaggie.md](../../docs/verify/qullamaggie.md)

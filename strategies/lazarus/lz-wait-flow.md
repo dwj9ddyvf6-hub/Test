@@ -34,3 +34,4 @@ Buys small-cap daily Green fires priced $5-20 with heavy short-sale volume, and 
 ## Code
 
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)

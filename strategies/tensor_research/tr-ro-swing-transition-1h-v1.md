@@ -34,6 +34,7 @@ On eight named stocks, buys a confirmed hourly Tensor Swing that repairs a slowi
 ## Code
 
 - **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.mjs`; not in this repo: `desk/vendor/old_desk_research/tensor_exact/lib/tensor-swing-transition.mjs`
+- **Rule lines**: [docs/verify/tensor_research.md](../../docs/verify/tensor_research.md)
 
 ## Notes
 

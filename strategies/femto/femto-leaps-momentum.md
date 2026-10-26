@@ -36,6 +36,7 @@ Holds a deep in-the-money LEAPS call on each name of the six-month momentum book
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/leaps_momentum.py`
 - **Midna v3**: `sleeves/leaps_momentum.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

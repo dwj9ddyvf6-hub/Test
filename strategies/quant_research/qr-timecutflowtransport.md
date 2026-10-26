@@ -35,3 +35,4 @@ A 99% QQQ book that swaps up to 20% into stocks facing a registered index-rebala
 ## Code
 
 - **Master desk**: `sleeves/quant_research/tcft.py`, `sleeves/quant_research/r10.py`; not in this repo: `desk/vendor/quant_research/r10/tcft/`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)

@@ -35,3 +35,4 @@ Buys a SCOPE stock that beats its consensus EPS while in a liquid momentum uptre
 ## Code
 
 - **Master desk**: `sleeves/griffith/event_research.py`, `sleeves/griffith/vendor/griffith/strategy_tournament.py`, `sleeves/griffith/feedlib/griffith_earnings.py`, `sleeves/griffith/feedlib/griffith.py`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

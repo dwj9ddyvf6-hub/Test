@@ -49,6 +49,7 @@ Rows: 4 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Midna v3**: `desk3/aster_batch1.py`, `sleeves/rsi_meanrev.py`, `sleeves/fwd_alpaca_ada_rsi2.py`, `sleeves/aster/aster_pub_rsi2_ada.py`. `fwd_alpaca_ada_rsi2` takes the signal as an input; the aster file's engine is not in this repo
 - **Master desk** (not in this repo): `desk/vendor/ausar/trader_signals.py`, `desk/sleeves/families/ausar_public.py`, `desk/sleeves/femto/rsi_meanrev.py`
 - **Master desk (ADA)**: `sleeves/ausar/ausar_spot_recipes.py`, `sleeves/ausar/vendor/public_recipes/public_source_sleeves.py`, `sleeves/ausar/vendor/public_recipes/public_recipe_runtime.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)
 
 ## Notes
 

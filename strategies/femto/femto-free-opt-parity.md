@@ -34,6 +34,7 @@ When a conversion or reversal on SPY options and shares locks a positive residua
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/free_opt_parity.py`, `desk/vendor/aurelia/free_options.py`
 - **Midna v3**: `sleeves/free_opt_parity.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

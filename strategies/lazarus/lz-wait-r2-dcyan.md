@@ -34,3 +34,4 @@ Buys the lab's 1D Cyan covered rule-search book picks on the tracker universe an
 ## Code
 
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)

@@ -43,3 +43,4 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_batch15.py`
 - **Master desk** (not in this repo): `desk/vendor/ausar_r19/r19_timing.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

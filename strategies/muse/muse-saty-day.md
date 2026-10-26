@@ -42,6 +42,7 @@ Buys same-day SPY calls or puts at Saty ATR levels: the ±38.2% Golden Gate touc
 
 - **Master desk**: `sleeves/muse/muse.py`; not in this repo: `desk/sleeves/muse/sleeves/saty_day.py`. The strategy file is Midna v3's `sleeves/saty_day.py`
 - **Midna v3**: `sleeves/saty_day.py`, `integration/saty_day_adapter.py`
+- **Rule lines**: [docs/verify/muse.md](../../docs/verify/muse.md)
 
 ## Notes
 

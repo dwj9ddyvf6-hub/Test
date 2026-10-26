@@ -48,6 +48,7 @@ Rows: 26 on the master desk, 27 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_etf.py`, `desk3/aster_etf_b9.py`, `desk3/aster_batch8.py`, `desk3/aster_batch11.py`, `sleeves/free_etf.py`. `free_etf` executes R19 books handed to it on one $100,000 budget
 - **Master desk** (not in this repo): `desk/vendor/ausar_r19/r19_etf.py`, `desk/sleeves/families/r19_etf.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)
 
 ## Notes
 

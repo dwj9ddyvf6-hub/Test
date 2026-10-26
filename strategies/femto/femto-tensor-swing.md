@@ -35,6 +35,7 @@ Buys fresh confirmed Tensor swings (confidence 8+) on canonical hourly bars of t
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/tensor_swing.py`
 - **Midna v3**: `sleeves/tensor_swing.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

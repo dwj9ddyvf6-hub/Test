@@ -43,6 +43,7 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk** (not in this repo): `desk/sleeves/femto/free_kraken_ada_crowded.py`, `desk/sleeves/femto/free_kraken_link_crowded.py`, `desk/vendor/aurelia/kraken.py`
 - **Midna v3**: `sleeves/free_kraken_ada_crowded.py`
 - **Midna v3 (LINK)**: `sleeves/free_kraken_link_crowded.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

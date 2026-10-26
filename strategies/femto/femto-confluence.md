@@ -35,6 +35,7 @@ Each Friday, buys the week's M2 qualifiers on which at least 2 of 9 frozen confl
 
 - **Master desk**: `sleeves/killed/feedlib/m2.py`; not in this repo: `desk/sleeves/femto/confluence.py`, `desk/sleeves/femto/m2_core.py`
 - **Midna v3**: `sleeves/confluence.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

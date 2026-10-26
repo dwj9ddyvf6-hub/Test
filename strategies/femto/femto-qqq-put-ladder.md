@@ -48,3 +48,4 @@ Rows: 2 on the master desk, 1 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk**: `sleeves/femto/qqq_put_ladder.py`, `sleeves/femto/vendor/aurelia/put_ladder.py`, `sleeves/femto/vendor/aurelia/judgment.py`
 - **Master desk (Midna's variant)**: `sleeves/midna/ladder.py`
 - **Midna v3**: `sleeves/qqq_put_ladder.py`. A wrapper only; the strategy file is not in this repo
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)

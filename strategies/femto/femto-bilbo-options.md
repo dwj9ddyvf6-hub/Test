@@ -37,6 +37,7 @@ When an hourly squeeze box (Saty Phase compression) closes out above its high, b
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/bilbo_options.py`, `desk/vendor/old_desk_research/bilbo_options_signals.py`
 - **Midna v3**: `sleeves/bilbo_options.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

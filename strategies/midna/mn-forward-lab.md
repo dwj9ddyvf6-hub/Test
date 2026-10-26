@@ -44,6 +44,7 @@ Rows: 5 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/lazarus_midna.py`. Fire consumer for d_green_band, w_cyan_vix, w_green_smh, w_cyan_breadth; the rules run upstream
 - **Master desk**: `sleeves/midna/forward.py`, `sleeves/midna/forward_scan.py`, `sleeves/midna/lanes.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

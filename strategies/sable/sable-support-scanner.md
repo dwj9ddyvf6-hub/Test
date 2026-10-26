@@ -37,6 +37,7 @@ Buys a stock holding its completed 5-minute swing support, not stretched and wit
 ## Code
 
 - **Master desk**: `sleeves/sable/sable.py`, `sleeves/sable/desk_scanner.py`, `sleeves/sable/runtime.py`
+- **Rule lines**: [docs/verify/sable.md](../../docs/verify/sable.md)
 
 ## Notes
 

@@ -36,6 +36,7 @@ Buys QQQ when ChartsLector's VIX Mood Ring composite drops to 35 or lower, and s
 - **Midna v3**: `desk3/lazarus.py`, `integration/*_adapter.py`
 - **Master desk**: `sleeves/lazarus/lazarus.py`, `sleeves/lazarus/vendor/lazarus/`
 - **Midna v3 (lane file)**: `sleeves/lazarus/s_cl_vmr_qqq.py`
+- **Rule lines**: [docs/verify/lazarus.md](../../docs/verify/lazarus.md)
 
 ## Notes
 

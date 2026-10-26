@@ -34,3 +34,4 @@ Buys SCOPE stocks whose standardized earnings surprise ranks in the top tenth of
 ## Code
 
 - **Master desk**: `sleeves/griffith/event_research.py`, `sleeves/griffith/feedlib/griffith_earnings.py`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

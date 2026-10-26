@@ -34,3 +34,4 @@ Each month holds, in equal weight, every ETF of a frozen basket whose 252-sessio
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith_factor.py`, `sleeves/griffith/vendor/griffith/r4_parallel_strategy_lab.py`, `sleeves/griffith/feedlib/griffith.py`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

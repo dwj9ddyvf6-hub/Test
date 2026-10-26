@@ -37,6 +37,7 @@ Buys a stock when @EchoAnalysis posts that he bought it, or adds when he adds at
 ## Code
 
 - **Master desk**: `sleeves/galath/galath.py`, `sleeves/galath/echo.py`, `sleeves/galath/paper.py`, `sleeves/galath/wire.py`
+- **Rule lines**: [docs/verify/galath.md](../../docs/verify/galath.md)
 
 ## Notes
 

@@ -41,6 +41,7 @@ Trades the 20 closest stock pairs of a 12-month formation: both legs at a 2σ sp
 ## Code
 
 - **Master desk**: `sleeves/killed/killed_studies.py`, `sleeves/killed/pairs.py`, `sleeves/killed/common.py`, `sleeves/killed/feedlib/killed_data.py`
+- **Rule lines**: [docs/verify/killed.md](../../docs/verify/killed.md)
 
 ## Notes
 

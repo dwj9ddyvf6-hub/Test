@@ -32,6 +32,7 @@ Buys a MACD cross up when CCI(20) is above 100, strongest CCI first, and exits o
 
 - **Midna v3**: `sleeves/s_mn_macd.py`
 - **Master desk**: `sleeves/midna/board.py`, `sleeves/midna/vendor/midna/board_signals.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

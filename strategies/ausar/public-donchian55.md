@@ -32,3 +32,4 @@ Buys a 55-day breakout above the 200-day average and rides it until a 20-day low
 
 - **Midna v3**: `desk3/aster_batch16.py`
 - **Master desk** (not in this repo): `desk/vendor/ausar/trader_signals.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

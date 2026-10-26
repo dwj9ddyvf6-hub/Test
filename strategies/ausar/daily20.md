@@ -42,3 +42,4 @@ Rows: 2 on the master desk, 2 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_batch16.py`. Its model assets are not in this repo
 - **Master desk** (not in this repo): `desk/vendor/ausar_tensor/tensor_daily_models.py`, `desk/sleeves/families/ausar_daily20.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

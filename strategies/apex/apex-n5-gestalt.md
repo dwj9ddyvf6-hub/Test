@@ -35,3 +35,4 @@ Sets Nasdaq leverage from the 150 most similar past market states: half-Kelly on
 ## Code
 
 - **Master desk**: `sleeves/apex/apex.py`, `sleeves/apex/feedlib/apex_rules.py`, `sleeves/apex/feedlib/apex.py`, `sleeves/apex/vendor/apex/inventions.py`, `sleeves/apex/vendor/apex/strategies.py`
+- **Rule lines**: [docs/verify/apex.md](../../docs/verify/apex.md)

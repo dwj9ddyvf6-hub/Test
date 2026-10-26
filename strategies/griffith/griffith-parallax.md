@@ -38,6 +38,7 @@ Scores four entry engines (drift, dislocation, compression, reclaim) against the
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith.py`, `sleeves/griffith/vendor/griffith/strategy_system.py`, `sleeves/griffith/vendor/griffith/strategy_orchestrator.py`, `sleeves/griffith/vendor/griffith/strategy_execution.py`, `sleeves/griffith/feedlib/griffith.py`; not in this repo: `desk/vendor/griffith/config.json`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)
 
 ## Notes
 

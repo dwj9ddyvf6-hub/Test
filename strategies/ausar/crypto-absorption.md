@@ -48,6 +48,7 @@ Rows: 20 on the master desk, 20 on Midna's desk (ids in `docs/CATALOG.json`).
 
 - **Midna v3**: `desk3/aster_crypto.py`, `desk3/aster_batch7.py`, `desk3/aster_b11_crypto.py`, `desk3/aster_batch1.py`, `integration/aster_*_adapter.py`. The ADA files under `sleeves/aster/` call `aster_sleeves._common`, which is not in this repo
 - **Master desk** (not in this repo): `desk/vendor/ausar_ctx/strategies/absorption/signals.py`, `desk/sleeves/families/absorption.py`, `desk/sleeves/families/r19_crypto.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)
 
 ## Notes
 

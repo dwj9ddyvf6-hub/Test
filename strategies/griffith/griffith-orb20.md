@@ -32,3 +32,4 @@ Buys the first 5-minute close above the 09:30-09:50 range on a name whose openin
 ## Code
 
 - **Master desk**: `sleeves/griffith/griffith_intraday.py`, `sleeves/griffith/feedlib/griffith.py`
+- **Rule lines**: [docs/verify/griffith.md](../../docs/verify/griffith.md)

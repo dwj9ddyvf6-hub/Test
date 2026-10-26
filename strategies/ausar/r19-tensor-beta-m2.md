@@ -34,3 +34,4 @@ Each week, buys the least-liquid third of high-beta stocks that print a qualifyi
 
 - **Midna v3**: `desk3/aster_batch13.py`. Reads the M2-qualified fires from its Tensor bundle
 - **Master desk** (not in this repo): `desk/vendor/ausar_r19/r19_tensor.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)

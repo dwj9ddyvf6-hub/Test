@@ -34,6 +34,7 @@ Buys a basket name above its 200-day average after a 3%+ down day with RSI(2) â‰
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/red_day_reversal.py`
 - **Midna v3**: `sleeves/red_day_reversal.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

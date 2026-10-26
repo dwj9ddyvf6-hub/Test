@@ -36,6 +36,7 @@ Buys daily Tensor Cyan fires on $5-10 small caps that pass a frozen two-feature 
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/rule_1d_cyan_smallcap.py`, `desk/sleeves/femto/dcg_core.py`
 - **Midna v3**: `sleeves/rule_1d_cyan_smallcap.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

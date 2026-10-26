@@ -47,6 +47,7 @@ Rows: 3 on the master desk, 3 on Midna's desk (ids in `docs/CATALOG.json`).
 - **Master desk** (not in this repo): `desk/vendor/ausar_native/prospective_native.py`, `desk/sleeves/families/coinbase_sma200.py`
 - **Master desk (Aurelia forward)** (not in this repo): `desk/sleeves/femto/fwd_coinbase_sma200.py`, `desk/vendor/aurelia/coinbase_schedule.py`
 - **Midna v3 (Aurelia forward)**: `sleeves/fwd_coinbase_sma200.py`
+- **Rule lines**: [docs/verify/ausar.md](../../docs/verify/ausar.md)
 
 ## Notes
 

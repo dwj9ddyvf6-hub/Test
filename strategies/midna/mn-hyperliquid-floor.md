@@ -31,6 +31,7 @@ Trades the strongest uncrowded daily mover among liquid Hyperliquid perps, long 
 ## Code
 
 - **Master desk**: `sleeves/midna/hyperliquid.py`
+- **Rule lines**: [docs/verify/midna.md](../../docs/verify/midna.md)
 
 ## Notes
 

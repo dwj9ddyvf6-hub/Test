@@ -34,6 +34,7 @@ Sells a 16-delta iron condor 30-45 days out on 13 high-volatility names when IV 
 
 - **Master desk** (not in this repo): `desk/sleeves/femto/iron_condor.py`
 - **Midna v3**: `sleeves/iron_condor.py`
+- **Rule lines**: [docs/verify/femto.md](../../docs/verify/femto.md)
 
 ## Notes
 

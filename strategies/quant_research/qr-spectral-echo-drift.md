@@ -35,6 +35,7 @@ Intraday longs in 20 Nasdaq leaders when returns lead top-of-book pressure with 
 ## Code
 
 - **Master desk**: `sleeves/quant_research/sed.py`, `sleeves/quant_research/vendor/quant_research/sed/engine.py`, `sleeves/quant_research/common.py`
+- **Rule lines**: [docs/verify/quant_research.md](../../docs/verify/quant_research.md)
 
 ## Notes
 
