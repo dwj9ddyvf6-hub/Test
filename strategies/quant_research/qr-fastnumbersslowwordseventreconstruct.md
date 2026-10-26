@@ -35,4 +35,4 @@ On each earnings release's first session, long the stocks whose standardized EPS
 
 ## Code
 
-- **Master desk**: `sleeves/quant_research/fastnumbers.py`; not in this repo: `desk/vendor/quant_research/fastnumbers/`, `desk/feedlib/griffith_earnings.py`
+- **Master desk**: `sleeves/quant_research/fastnumbers.py`, `sleeves/griffith/feedlib/griffith_earnings.py`; not in this repo: `desk/vendor/quant_research/fastnumbers/`

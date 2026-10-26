@@ -1,0 +1,26 @@
+{
+  "version": "TENSOR_WEEKLY_COLOR_FORWARD_SHADOW_1_0_0",
+  "frozenAt": "2026-08-28T00:05:00Z",
+  "effectiveAfter": "2026-08-28T00:05:00Z",
+  "authority": "FORWARD_SHADOW_OBSERVATION_ONLY_NO_STRATEGY_NO_RISK_NO_BROKER",
+  "horizonsWeeks": [1, 2, 4, 8, 12, 26, 52],
+  "thresholds": {
+    "upside": [0.10, 0.25, 0.50, 1.00],
+    "downside": [-0.10, -0.20, -0.30]
+  },
+  "candidates": [
+    {"id":"FG01_GREEN_BULL_VOLUME","color":"buy-green","conditions":["SPY_BULL","VOLUME_EXPANSION"],"origin":"FROZEN_CONFIRMATION_8_OF_8_PLUS_ROBUSTNESS"},
+    {"id":"FG02_GREEN_BULL_UP_VOLUME","color":"buy-green","conditions":["SPY_BULL","UP_VOLUME_GE60"],"origin":"FROZEN_CONFIRMATION_8_OF_8"},
+    {"id":"FG03_GREEN_DUAL_RELATIVE_STRENGTH","color":"buy-green","conditions":["RS13_POS","RS26_POS"],"origin":"FROZEN_CONFIRMATION_8_OF_8"},
+    {"id":"FC01_CYAN_MID_CYCLE_RELATIVE_STRENGTH","color":"buy-cyan","conditions":["RET13_25_60","RS13_GE20"],"origin":"OUTCOME_AWARE_ANATOMY_FORWARD_ONLY"},
+    {"id":"FC02_CYAN_MATURE_MODERATE_TREND","color":"buy-cyan","conditions":["CYCLE_AGE_GT10","ADX_20_35"],"origin":"OUTCOME_AWARE_ANATOMY_FORWARD_ONLY"},
+    {"id":"FC03_CYAN_WEAK_BULL_UP_VOLUME","color":"buy-cyan","conditions":["CYCLE_BULL_WEAK","UP_VOLUME_GE60"],"origin":"OUTCOME_AWARE_ANATOMY_FORWARD_ONLY"},
+    {"id":"FC04_CYAN_PRIOR_GREEN_REACCELERATION","color":"buy-cyan","conditions":["PRIOR_GREEN_1_8","CYCLE_AGE_GT10"],"origin":"OUTCOME_AWARE_ANATOMY_FORWARD_ONLY"},
+    {"id":"FC05_CYAN_CONTRACTION_RELATIVE_STRENGTH","color":"buy-cyan","conditions":["RANGE4_TO13_LT50","RS13_GE20"],"origin":"OUTCOME_AWARE_ANATOMY_FORWARD_ONLY"},
+    {"id":"FC06_CYAN_PARTICIPATION_MID_MOMENTUM","color":"buy-cyan","conditions":["WITH_PARTICIPATION","RET13_25_60"],"origin":"OUTCOME_AWARE_ANATOMY_FORWARD_ONLY"}
+  ],
+  "promotionLaw": "No retrospective query after effectiveAfter can promote a forward-only candidate. Evidence accrues only as completed future weekly bars mature.",
+  "automaticInfluence": false,
+  "strategyAuthority": false,
+  "brokerAuthority": false
+}

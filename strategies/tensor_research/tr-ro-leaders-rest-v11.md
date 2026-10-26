@@ -15,7 +15,7 @@ Each fresh daily Tensor buy-green that Leaders Rest calls a SETUP (a leader rest
 ## Entry
 
 - Candidates: names with a fresh daily buy-green (funds excluded), each run through Leaders Rest v1.1 on its daily history with SPY's.
-- Leader: ≥ 253 sessions; price ≥ $10 or 20-day dollar volume ≥ $20M; within 25% of the 52-week high; EMA 50 rising over 10 sessions; 12-1 momentum above SPY's; price above EMA 50 (or above EMA 21 with EMA 50 rising); SPY not below a falling EMA 50, nor 12-1 momentum under -4% with SPY under EMA 200 or a falling EMA 50.
+- Leader: ≥ 253 sessions; price ≥ $10 or 20-day dollar volume ≥ $20M; within 25% of the 52-week high; EMA 50 rising over 10 sessions; 12-1 momentum above SPY's; price above EMA 50 (or above EMA 21 with EMA 50 rising); SPY not below a falling EMA 50, and SPY's 12-1 momentum not under -4% while SPY is under its EMA 200 or its EMA 50 is falling.
 - SETUP: resting (3-12% under the 20-day high, or the last 15 days' range ≤ 60% of the prior 20 days' with 2-18% off the 52-week high) and RSI(14) 48-68.
 - Order: a GTC buy limit at the decision's close, armed 5 days; dropped when the name is held or the ask is at or under the stop.
 
@@ -33,7 +33,7 @@ Each fresh daily Tensor buy-green that Leaders Rest calls a SETUP (a leader rest
 
 ## Code
 
-- **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.mjs`; not in this repo: `desk/sleeves/families/griffith.py`, `desk/vendor/griffith/strategy_system.py`, `desk/vendor/griffith/strategy_execution.py`, `desk/vendor/griffith/config.json`
+- **Master desk**: `sleeves/tensor_research/tensor_research.py`, `sleeves/griffith/griffith.py`, `sleeves/griffith/vendor/griffith/strategy_system.py`, `sleeves/griffith/vendor/griffith/strategy_execution.py`, `sleeves/tensor_research/feedlib/tensor_research.py`, `sleeves/tensor_research/feedlib/tensor_research.mjs`; not in this repo: `desk/vendor/griffith/config.json`
 
 ## Notes
 
