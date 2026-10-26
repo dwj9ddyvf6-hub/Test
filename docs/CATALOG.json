@@ -1,10 +1,11 @@
 {
  "about": "Every strategy on the master desk and on Midna's desk, one entry per strategy; variants and every row id inside it. Monitors and research recorders are not listed.",
  "master_desk_commit": "843ccb53ad151f7fedaa93e325c44b576bc4b482",
- "strategies_count": 259,
+ "converted_books_commit": "22f3e991c22422b9f417d6ff775c77fb5f9a1dce",
+ "strategies_count": 263,
  "rows_by_status": {
   "live": 204,
-  "waiting": 205,
+  "waiting": 209,
   "blocked": 87,
   "off": 1,
   "midna_only": 3
@@ -4489,6 +4490,69 @@
    }
   },
   {
+   "id": "mn-weekly-8-20-50-pullback",
+   "name": "Weekly 8/20/50 pullback",
+   "family": "midna",
+   "asset_class": "US ETFs",
+   "timeframe": "1w signal · 1d management",
+   "universe": "19 ETFs (the funds of the public Portfolio T page)",
+   "style": "Trend pullback",
+   "source": "Midna's TypeScript desk: the weekly 8/20/50 pullback, ported line for line; a recorder made a book by the owner's D32",
+   "status": {
+    "waiting": 1
+   },
+   "card": "strategies/midna/mn-weekly-8-20-50-pullback.md",
+   "variants": [],
+   "rows": {
+    "master_desk": [
+     "mon_midna_weekly_8_20_50_pullback"
+    ],
+    "midna": []
+   },
+   "code": {
+    "Master desk": [
+     "sleeves/midna/monitor/midna_books.py",
+     "sleeves/midna/monitor/midna_mon.py",
+     "sleeves/galath/monitor.py"
+    ],
+    "Midna's TypeScript source": [
+     "sleeves/midna/vendor/midna_mon/src/lib/felipe/pullback.ts"
+    ]
+   }
+  },
+  {
+   "id": "mn-tsmom-12-1-etf",
+   "name": "TSMOM 12-1 ETF book",
+   "family": "midna",
+   "asset_class": "US ETFs",
+   "timeframe": "1d (every 21 sessions)",
+   "universe": "30 diversified ETFs (equity, sector, bond, commodity, currency)",
+   "style": "Time-series momentum",
+   "source": "Midna's TSMOM forms study (scripts/tsmom-forms.ts), its ETF 12-1 book, ported line for line; a recorder made a book by the owner's D32",
+   "status": {
+    "waiting": 1
+   },
+   "card": "strategies/midna/mn-tsmom-12-1-etf.md",
+   "variants": [],
+   "rows": {
+    "master_desk": [
+     "mon_midna_tsmom_forms"
+    ],
+    "midna": []
+   },
+   "code": {
+    "Master desk": [
+     "sleeves/midna/monitor/midna_books.py",
+     "sleeves/midna/monitor/midna_mon.py",
+     "sleeves/galath/monitor.py"
+    ],
+    "Midna's TypeScript source": [
+     "sleeves/midna/vendor/midna_mon/scripts/tsmom-forms.ts",
+     "sleeves/midna/vendor/midna_mon/src/lib/research/tsmom.ts"
+    ]
+   }
+  },
+  {
    "id": "muse-saty-day",
    "name": "SATY day system (SPY 0DTE)",
    "family": "muse",
@@ -6241,6 +6305,66 @@
     "Master desk": [
      "sleeves/galath/grokbot.py",
      "sleeves/galath/vendor/cci_correction/cci_correction.py"
+    ]
+   }
+  },
+  {
+   "id": "galath-tensor2-washout-reclaim",
+   "name": "Tensor 2 washout / reclaim printer",
+   "family": "galath",
+   "asset_class": "US equities and ETFs",
+   "timeframe": "1h",
+   "universe": "Galath's 13-name default watch list",
+   "style": "Washout reclaim",
+   "source": "The Galath desk's Tensor 2 replica (galath-desk src/lib/tensor/engine.ts); a recorder made a book by the owner's D32",
+   "status": {
+    "waiting": 1
+   },
+   "card": "strategies/galath/galath-tensor2-washout-reclaim.md",
+   "variants": [],
+   "rows": {
+    "master_desk": [
+     "mon_galath_tensor2washoutreclaimtransition"
+    ],
+    "midna": []
+   },
+   "code": {
+    "Master desk": [
+     "sleeves/galath/monitor/printer_books.py",
+     "sleeves/galath/monitor/galath_tensor_mon.py",
+     "sleeves/galath/monitor/reads.py",
+     "sleeves/galath/monitor.py",
+     "desk/vendor/galath_mon/src/lib/tensor/engine.ts"
+    ]
+   }
+  },
+  {
+   "id": "galath-anna-phd-printer",
+   "name": "Anna PhD location printer",
+   "family": "galath",
+   "asset_class": "US equities and ETFs",
+   "timeframe": "1d",
+   "universe": "Anna's labeled census: 115 names",
+   "style": "Printer signal (seven votes + location)",
+   "source": "The Galath desk's gospel PhD replay of Anna's printer (galath-desk-backup scripts/anna-phd-replay.mjs); a recorder made a book by the owner's D32",
+   "status": {
+    "waiting": 1
+   },
+   "card": "strategies/galath/galath-anna-phd-printer.md",
+   "variants": [],
+   "rows": {
+    "master_desk": [
+     "mon_galath_annaphdlocationoverriddenprintergrid"
+    ],
+    "midna": []
+   },
+   "code": {
+    "Master desk": [
+     "sleeves/galath/monitor/printer_books.py",
+     "sleeves/galath/monitor/galath_phd_mon.py",
+     "sleeves/galath/monitor/reads.py",
+     "sleeves/galath/monitor.py",
+     "desk/vendor/galath_gospel/scripts/anna-phd-replay.mjs"
     ]
    }
   },

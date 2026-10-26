@@ -1,7 +1,7 @@
 # Verification: Midna
 
 Each card rule was read from the code at these lines. `master-desk` paths are at commit `843ccb53ad15` of the
-master desk (branch master-desk); every other path is in this repository.
+master desk (branch master-desk), or at `22f3e991c224` where a cite names it (the four recorders converted into books on 2026-10-26); every other path is in this repository.
 
 ## [Faber ETF trend (10-month average)](../../strategies/midna/mn-faber.md)
 
@@ -158,3 +158,31 @@ master desk (branch master-desk); every other path is in this repository.
 | Exit: 1h-basket plan: no stop, time exit 60 bars; otherwise the calibrated stop and max bars. | `sleeves/midna/hourly.py:126-163`<br>`sleeves/midna/hourly.py:172-191` |
 | Sizing: $100,000 account, 20 slots of min($5,000, 1% of dv20); lane caps 1h 5 / 1d 5 / 1w 10. | `sleeves/midna/hourly.py:46-53`<br>`sleeves/midna/hourly.py:208-321` |
 | Data: The hourly watch's inbox (tensor-watch port). | `sleeves/midna/hourly.py:419-426` |
+
+## [Weekly 8/20/50 pullback](../../strategies/midna/mn-weekly-8-20-50-pullback.md)
+
+| Rule | Read from |
+|---|---|
+| Entry: Signal, on a completed week (its last session a Friday, else once the next week begins): EMA8 > EMA20 > EMA50 of the weekly closes, the close above EMA50, the week's low at or under EMA8 and the close above the low; at least 60 weeks of history. | `sleeves/midna/monitor/midna_books.py:186-191`<br>`sleeves/midna/monitor/midna_books.py:194-209`<br>`sleeves/midna/monitor/midna_books.py:212-222` |
+| Entry: Levels: entry at the week's close, stop = entry - weekly ATR(5), target = entry + ATR, deadline = the last session of the fifth week after. | `sleeves/midna/monitor/midna_books.py:225-254`<br>`sleeves/midna/monitor/midna_books.py:433-440` |
+| Entry: Decided after that week's close: at most 10 names held, the week's signals by RSI(14) ascending, then symbol; bought at the book's first pass of the next session, skipped when the price is already at or under the stop. | `sleeves/midna/monitor/midna_books.py:26-30`<br>`sleeves/midna/monitor/midna_books.py:567-586`<br>`sleeves/midna/monitor/midna_books.py:588-603` |
+| Exit: Stop at entry - weekly ATR(5), held by the engine on the live price. | `sleeves/midna/monitor/midna_books.py:31-32`<br>`sleeves/midna/monitor/midna_books.py:610-611` |
+| Exit: A quarter sold the first time the live price reaches the target; the rest by a market-on-close order on the deadline session. | `sleeves/midna/monitor/midna_books.py:31-33`<br>`sleeves/midna/monitor/midna_books.py:617-635` |
+| Sizing: A tenth of equity a name, never more than the cash, divided by 1.001 for the source's cost; $100,000 book. | `sleeves/midna/monitor/midna_books.py:514`<br>`sleeves/midna/monitor/midna_books.py:604-610`<br>master-desk `desk/contract.py:136` at `22f3e991` |
+| Data: Yahoo daily bars (1,600 sessions), adjusted as Midna's live board adjusts them (OHLC × adjclose / close), built into weeks. | `sleeves/midna/monitor/midna_books.py:36-37`<br>`sleeves/midna/monitor/midna_books.py:415-430`<br>`sleeves/midna/monitor/midna_books.py:517-521` |
+| Primary options | `sleeves/midna/monitor/midna_books.py:139` |
+| The nineteen funds | `sleeves/midna/vendor/midna_mon/src/lib/felipe/pullback.ts:13-18` |
+| Conversion record | master-desk `docs/research/2026-10-26-recorders/CONVERT.md:57` at `22f3e991`<br>master-desk `docs/research/2026-10-26-recorders/CONVERT.md:63-64` at `22f3e991`<br>master-desk `docs/research/2026-10-26-recorders/CONVERT.md:71-72` at `22f3e991` |
+
+## [TSMOM 12-1 ETF book](../../strategies/midna/mn-tsmom-12-1-etf.md)
+
+| Rule | Read from |
+|---|---|
+| Entry: Sign 12-1: the adjusted close 21 sessions back over the one 252 sessions before it, minus one, > 0; the panel is aligned to SPY's sessions and a name needs 260 valid sessions. | `sleeves/midna/monitor/midna_books.py:447-459`<br>`sleeves/midna/monitor/midna_books.py:462-486` |
+| Entry: Every 21 sessions from the book's first session, in the last 40 to 15 minutes of the session: equal weights over the names with a positive sign, as market-on-close orders. | `sleeves/midna/monitor/midna_books.py:645`<br>`sleeves/midna/monitor/midna_books.py:649-651`<br>`sleeves/midna/monitor/midna_books.py:663-668`<br>`sleeves/midna/monitor/midna_books.py:680-716` |
+| Exit: A held name whose sign is no longer positive goes to cash at that rebalance (market-on-close); the weights drift in between; no stop. | `sleeves/midna/monitor/midna_books.py:21-24`<br>`sleeves/midna/monitor/midna_books.py:712-714` |
+| Sizing: 1 / N of the book a long; $100,000 book. | `sleeves/midna/monitor/midna_books.py:705-711`<br>master-desk `desk/contract.py:136` at `22f3e991` |
+| Data: Yahoo daily bars (600 sessions) of the 30 ETFs on rebalance days, adjusted closes (the close when the provider gives none). | `sleeves/midna/monitor/midna_books.py:43`<br>`sleeves/midna/monitor/midna_books.py:651`<br>`sleeves/midna/monitor/midna_books.py:670-671` |
+| The study's ETF book | `sleeves/midna/vendor/midna_mon/scripts/tsmom-forms.ts:331-339` |
+| The panel | `sleeves/midna/vendor/midna_mon/scripts/tsmom-forms.ts:22-28` |
+| Conversion record | master-desk `docs/research/2026-10-26-recorders/CONVERT.md:58` at `22f3e991`<br>master-desk `docs/research/2026-10-26-recorders/CONVERT.md:65-70` at `22f3e991` |

@@ -1,7 +1,7 @@
 # Verification: Ausar
 
 Each card rule was read from the code at these lines. `master-desk` paths are at commit `843ccb53ad15` of the
-master desk (branch master-desk); every other path is in this repository.
+master desk (branch master-desk), or at `22f3e991c224` where a cite names it (the four recorders converted into books on 2026-10-26); every other path is in this repository.
 
 ## [R19 crypto breakout and negative-funding squeeze](../../strategies/ausar/r19-crypto-breakout.md)
 

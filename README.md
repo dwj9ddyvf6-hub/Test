@@ -24,10 +24,10 @@ The master desk runs these sleeves on the Femto-lean framework (branch master-de
 | [Ausar](strategies/ausar/) | 24 | Stocks, ETFs, Options, Crypto | 5m to 1mo | 48 | 97 | 21 |  |
 | [Lazarus](strategies/lazarus/) | 19 | Stocks, ETFs | 1h to 1w | 17 | 7 | 54 |  |
 | [Femto-lean](strategies/femto/) | 45 (1 Midna only) | Stocks, ETFs, Options, Crypto | 3m to 1mo | 24 | 32 | 4 |  |
-| [Midna](strategies/midna/) | 15 | Stocks, ETFs, Options, Crypto | 1h to 1mo | 13 | 9 |  |  |
+| [Midna](strategies/midna/) | 17 | Stocks, ETFs, Options, Crypto | 1h to 1mo | 13 | 11 |  |  |
 | [Muse](strategies/muse/) | 12 (2 Midna only) | Stocks, ETFs, Options | 1m to 1d |  | 11 |  |  |
 | [APEX](strategies/apex/) | 33 | ETFs, Options, Crypto | 1d to 1mo | 38 |  |  |  |
-| [Galath / GrokBot](strategies/galath/) | 8 | Stocks | 5m to 1d | 3 | 5 |  |  |
+| [Galath / GrokBot](strategies/galath/) | 10 | Stocks, ETFs | 5m to 1d | 3 | 7 |  |  |
 | [Griffith](strategies/griffith/) | 23 | Stocks, ETFs | 1m to 1mo | 15 | 6 | 3 |  |
 | [Milkman](strategies/milkman/) | 33 | Stocks, ETFs, Options, Futures | 1m to 1mo | 18 | 20 |  | 1 |
 | [Quant research](strategies/quant_research/) | 18 | Stocks, ETFs | 1m to 1mo | 7 | 6 | 5 |  |
@@ -36,7 +36,7 @@ The master desk runs these sleeves on the Femto-lean framework (branch master-de
 | [Qullamaggie](strategies/qullamaggie/) | 3 | Stocks | 1m to 1d | 1 | 4 |  |  |
 | [Sable](strategies/sable/) | 2 | Stocks | 5m to 1d | 2 |  |  |  |
 | [SPAN](strategies/span/) | 1 | Prediction markets | trade prints |  | 1 |  |  |
-| **All** | **259** | | | **204** | **205** | **87** | **1** |
+| **All** | **263** | | | **204** | **209** | **87** | **1** |
 
 Status counts are master-desk rows; one card can hold several rows (its variants).
 
@@ -143,7 +143,7 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 
 </details>
 
-<details><summary><b>Midna</b> · 15</summary>
+<details><summary><b>Midna</b> · 17</summary>
 
 - [Distance-pair shares](strategies/midna/mn-distance-pair.md) · US equities · 1d
 - [EMA4 rising VWAP](strategies/midna/mn-ema4-vwap.md) · US equities · 1d
@@ -159,7 +159,9 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 - [MACD-CCI](strategies/midna/mn-macd-cci.md) · US equities · 1d
 - [QLD weekly timing](strategies/midna/mn-qld-weekly-timing.md) · Leveraged ETF · 1w
 - [QQQ flip5 TZA hedge](strategies/midna/mn-qqq-flip5-tza.md) · Leveraged ETF · 1d
+- [TSMOM 12-1 ETF book](strategies/midna/mn-tsmom-12-1-etf.md) · US ETFs · 1d (every 21 sessions)
 - [Turtle System 1](strategies/midna/mn-turtle.md) · US equities · 1d
+- [Weekly 8/20/50 pullback](strategies/midna/mn-weekly-8-20-50-pullback.md) · US ETFs · 1w signal · 1d management
 
 </details>
 
@@ -218,8 +220,9 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 
 </details>
 
-<details><summary><b>Galath / GrokBot</b> · 8</summary>
+<details><summary><b>Galath / GrokBot</b> · 10</summary>
 
+- [Anna PhD location printer](strategies/galath/galath-anna-phd-printer.md) · US equities and ETFs · 1d
 - [Anna seven-vote printer](strategies/galath/galath-anna-seven-vote-printer.md) · US equities · 1d
 - [CCI correction pullback](strategies/galath/galath-cci-correction.md) · US equities · 1d
 - [Echo swing](strategies/galath/galath-echo-swing.md) · US equities · Posts (3-minute sweeps) · 1d
@@ -227,6 +230,7 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 - [Next-support plan](strategies/galath/galath-next-support-plan.md) · US equities · 1d (1-minute passes)
 - [Scanner book swing](strategies/galath/galath-scanner-book-swing.md) · US equities · 1d · 5m session tape
 - [Sector-first bottom](strategies/galath/galath-sector-first-bottom.md) · US equities · 1d · 5m session tape
+- [Tensor 2 washout / reclaim printer](strategies/galath/galath-tensor2-washout-reclaim.md) · US equities and ETFs · 1h
 - [Washout and PPC coil](strategies/galath/galath-washout-ppc-coil.md) · US equities · 1d (1-minute passes)
 
 </details>
