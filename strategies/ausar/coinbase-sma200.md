@@ -20,12 +20,12 @@ Holds ETH, or BTC and ETH half and half, while each closes above its 200-day ave
 ## Exit
 
 - A symbol whose gate turns off is sold in full at the bid, at any time.
-- Aurelia forward: no exit on the master desk; Midna v3's copy sells it all on a close below the SMA200.
+- Aurelia forward: sells the whole holding at the bid on a daily close below the SMA200, on the master desk (the owner's decision Q41, 2026-10-26) as in Midna v3.
 
 ## Sizing
 
 - Weights: ETH_SMA200 0/1, BTC_ETH_SMA200 0.5/0.5 of post-fee NAV; 0.2% fee per side; lot floors.
-- Aurelia forward: 0.01 BTC at the ask once per UTC day (00:00-00:05) once 200 consecutive completed days exist and the quote is ≤ 30 s old; each order ≤ 10% of a $100,000 budget.
+- Aurelia forward: when flat and the close is above the SMA200, 0.01 BTC at the ask once per UTC day (00:00-00:05) once 200 consecutive completed days exist and the quote is ≤ 30 s old; each order ≤ 10% of a $100,000 budget.
 
 ## Data
 
@@ -37,7 +37,7 @@ Holds ETH, or BTC and ETH half and half, while each closes above its 200-day ave
 |---|---|---|---|
 | ETH_SMA200 | `ausar_eth_sma200_coinbase`; Midna v3 `aster_native_eth_sma200` | ETH | close vs the 200-day SMA |
 | BTC_ETH_SMA200 | `ausar_btc_eth_sma200_coinbase`; Midna v3 `aster_native_btc_eth_sma200` | BTC and ETH, half each | close vs the 200-day SMA |
-| Aurelia forward FWD_COINBASE_SMA200_V1 | `femto_fwd_coinbase_sma200`; Midna v3 `fwd_coinbase_sma200` | 0.01 BTC a day | master desk: none; Midna v3: in above, out below the SMA200 |
+| Aurelia forward FWD_COINBASE_SMA200_V1 | `femto_fwd_coinbase_sma200`; Midna v3 `fwd_coinbase_sma200` | 0.01 BTC a day | in on a close above, out on a close below the SMA200 (master desk since 2026-10-26, and Midna v3) |
 
 Rows: 3 on the master desk, 3 on Midna's desk (ids in `docs/CATALOG.json`).
 

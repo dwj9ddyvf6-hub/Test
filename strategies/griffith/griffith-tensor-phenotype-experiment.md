@@ -16,7 +16,7 @@ Sends each frozen-phenotype prediction through the Griffith desk's bracket path:
 
 - Predictions: the frozen v4 phenotype events, at most 25 a cycle, oldest first, each once.
 - Plan: trigger = the event bar's high, ceiling = trigger + 0.10 ATR(14), stop = its close - 2 ATR(14), target = the ceiling × 1.10 (daily) or × 1.25 (weekly).
-- Order: the planner hands the ceiling (rounded to 8 places) to the overlay as the ask, so the trigger always reads as crossed: when that rounding went up the prediction gets no plan; otherwise a GTC buy limit at the ceiling, armed 7 days (daily) or 28 (weekly), which fills at once while the market is under it.
+- Order: the planner prices on the live ask (or last trade) when the pass has one, else just under the trigger, so a name below the event high gets a stop-limit at the high, capped at the ceiling, and waits for the break; armed 7 days (daily) or 28 (weekly). Until 2026-10-26 the ceiling itself was passed as the price, so every plan read as already crossed and bought at once below the high (the owner's decision Q51 fixed it).
 - Delivery, every regular-session pass (15 minutes): a plan is dropped when the name is held or the ask is at or under its stop and waits while an entry works on the name; otherwise it goes in as a GTC order carrying its stop-loss and take-profit.
 
 ## Exit

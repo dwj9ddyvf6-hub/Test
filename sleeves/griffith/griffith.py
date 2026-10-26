@@ -47,6 +47,7 @@ Named divergences:
     entry lives 90 days (Alpaca's GTC lifetime); positions, open risk and pending names are this sleeve's book."""
 import importlib
 import json
+import math
 import os
 import sys
 import types
@@ -122,6 +123,19 @@ def stop_of(meta):
 def two(x):
     """the source's payload rendering f"{x:.2f}" back to a number."""
     return float(f"{float(x):.2f}")
+
+
+def tensorx_price(item, quotes):
+    """the price a TENSORX decision plans on (the owner's decision Q51, 2026-10-26). The live ask (or last) when this
+    pass has one, as the source does for its SCOPE shard; else just under the trigger, so the plan waits for the break
+    (a stop-limit at the event high, capped at the ceiling). The entry ceiling given as the price read every plan as
+    already crossed: a limit at the ceiling that bought at once below the event high (HOPE and PFS on 2026-10-23)."""
+    q = (quotes or {}).get(item.symbol) or {}
+    live = float(q.get("ask") or q.get("last") or 0)
+    if live > 0:
+        return live
+    trigger = float((item.metrics or {}).get("triggerPrice") or 0)
+    return math.nextafter(trigger, 0.0) if trigger > 0 else float(item.entryReference or 0)
 
 
 class ThreeStrategySleeve(Sleeve):
@@ -211,8 +225,9 @@ class ThreeStrategySleeve(Sleeve):
                 working += max(0.0, float(po["vqty"]) - float(po["filled_v"])) * rec["limit"]
         return max(0.0, float(view.cash) - working)
 
-    def plan_run(self, decisions, equity, buying_power, strategy_risk, held, now):
-        """run_three_strategies' plan -> allocation -> handoff loop for this strategy: [(decision, plan, alloc)]."""
+    def plan_run(self, decisions, equity, buying_power, strategy_risk, held, now, quotes=None):
+        """run_three_strategies' plan -> allocation -> handoff loop for this strategy: [(decision, plan, alloc)].
+        quotes: this pass's live quotes, read by TENSORX decisions (tensorx_price)."""
         from dataclasses import asdict
         V = vendored()
         overlays = V.strategy_execution.ExecutionOverlays()
@@ -237,6 +252,8 @@ class ThreeStrategySleeve(Sleeve):
             if item.strategyId != self.strategy or item.scannerVersion not in active:
                 continue
             quote = float(item.entryReference or 0)
+            if item.strategyId == "TENSOR_PHENOTYPE_EXPERIMENTAL":
+                quote = tensorx_price(item, quotes)
             plan = overlays.build(item, quote, equity, clock=clock,
                                   allow_conditional_wait=aggressive and item.decisionId in allowed,
                                   conditional_min_score=min_score, conditional_engines=engines,

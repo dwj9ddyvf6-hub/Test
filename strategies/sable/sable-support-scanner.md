@@ -43,4 +43,4 @@ Buys a stock holding its completed 5-minute swing support, not stretched and wit
 
 - No earnings filter: the 5-minute quotes carry no earnings flag.
 - Tensor reads are not supplied, so the source's Tensor SELL veto and score badges are off.
-- The source's breakeven move at +1R is reset by the stop floor on every pass, so it never fires.
+- Breakeven at +1R: once the stop is moved to the entry price, it stays there (the owner's decision Q44, 2026-10-26). Before that, the stop floor reset it on every pass, so it never fired.

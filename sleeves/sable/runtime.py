@@ -464,7 +464,10 @@ class Pass:
 
     def _floors(self, pos, q):
         floor_stop = swing_stop_price(pos["avgPrice"], q.get("atr"))
-        if floor_stop is not None and not (number(pos.get("stop")) <= floor_stop):
+        # the owner's decision Q44 (2026-10-26): a stop at breakeven (raised there at +1R) sticks; the source's floor
+        # reset it to avg - 1.6 ATR the first pass the price slipped under +1R, so breakeven never protected a trade
+        at_breakeven = number(pos.get("stop")) >= round2(number(pos["avgPrice"]))
+        if floor_stop is not None and not at_breakeven and not (number(pos.get("stop")) <= floor_stop):
             pos["stop"] = floor_stop
         floor_target = swing_target_price(pos["avgPrice"], q.get("atr"))
         if floor_target is not None and not (number(pos.get("target")) >= floor_target):
