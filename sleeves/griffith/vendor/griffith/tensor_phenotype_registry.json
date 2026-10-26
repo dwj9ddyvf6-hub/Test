@@ -1,0 +1,304 @@
+{
+  "version": "tensor-frozen-phenotype-specifications/4.0.0",
+  "generatedAt": "2026-09-01T07:00:12.323492+00:00",
+  "authority": "FROZEN_SHADOW_RESEARCH_ONLY_NO_STRATEGY_NO_RISK_NO_ALLOCATION_NO_POSITION_NO_ORDER_NO_BROKER",
+  "status": "FROZEN_PENDING_PROSPECTIVE_OBSERVATIONS",
+  "sourcePhase2": "research_archive\\tensor_complete_phenotype_registry_v2.json",
+  "sourcePhase2Sha256": "562b7b5818d3ce2a7bd6a84fd885a9c168967e064629894624b03c869326889f",
+  "sourcePhase2EvidenceHash": "b9a4361d9c7a6ad184249ffe0be97657da8414cefe7f6ea85e35c6e40082b74b",
+  "sourceGitCommit": "63c75de659ea2f192d18bfa5aea812e79bffa8e5",
+  "freezeCutoffEpoch": 1788246012,
+  "featureVersion": "tensor-market-features/1.2.0",
+  "taxonomyVersion": "tensor-phase2-point-in-time-taxonomy/1.0.0",
+  "selectionPolicy": {
+    "count": 4,
+    "sourceTier": "CONFIRMATORY_H4_PLUS_WEEKLY_TIER_A",
+    "timeframe": "1d_and_1wk",
+    "excluded": [
+      {
+        "sourcePhenotypeId": "phenotype-v2:c2dc3b06a0a16df6097e",
+        "reason": "DAILY_TERMINAL_VERTICAL_EXTENSION_OUTSIDE_SWING_BREAKOUT_FREEZE"
+      }
+    ],
+    "rule": "freeze confirmatory H4 Daily Green base expansion plus all non-terminal Weekly Tier-A cells; no outcome-aware parameter changes after this clock"
+  },
+  "phenotypes": [
+    {
+      "id": "tensor-frozen-v4:0ac6fbf4a7c3b9b7e3f8d526",
+      "version": "4.0.0",
+      "enabled": true,
+      "state": "PAPER_EXPERIMENT_FROZEN",
+      "sourcePhenotypeId": "H4_DAILY_GREEN_BASE_EXPANSION",
+      "sourceFamilyId": "G1_DAILY_GREEN_IGNITION",
+      "taxonomyVersion": "H4_DAILY_GREEN_BASE_EXPANSION/1.0.0",
+      "required": [
+        {
+          "path": "frames.1d.barCutoff",
+          "op": "gt",
+          "value": 1788246012
+        },
+        {
+          "path": "frames.1d.featureVersion",
+          "op": "eq",
+          "value": "tensor-market-features/1.2.0"
+        },
+        {
+          "path": "frames.1d.features.currentMarkers",
+          "op": "contains",
+          "value": "buy-green"
+        },
+        {
+          "path": "frames.1d.features.dailyGreenG1.version",
+          "op": "eq",
+          "value": "H4_DAILY_GREEN_BASE_EXPANSION/1.0.0"
+        },
+        {
+          "path": "frames.1d.features.dailyGreenG1.state",
+          "op": "eq",
+          "value": "MATCH"
+        }
+      ],
+      "optional": [],
+      "explanation": "Confirmatory H4 Daily Green ignition: fresh Green above a rising EMA200, compressed base, 20-day breakout, bounded EMA21 extension, and constructive participation.",
+      "automaticInfluence": false,
+      "strategyAuthority": false,
+      "riskAuthority": false,
+      "allocationAuthority": false,
+      "positionAuthority": false,
+      "orderAuthority": false,
+      "brokerAuthority": false
+    },
+    {
+      "id": "tensor-frozen-v3:e268156617c3a4303f9c0eec",
+      "version": "3.0.0",
+      "enabled": true,
+      "state": "SHADOW_FROZEN",
+      "sourcePhenotypeId": "phenotype-v2:ceb2b8daa2a21e959210",
+      "sourceFamilyId": "phenotype-family-v2:b9b6a750fe3c764db9b3",
+      "taxonomyVersion": "tensor-phase2-point-in-time-taxonomy/1.0.0",
+      "required": [
+        {
+          "path": "frames.1wk.barCutoff",
+          "op": "gt",
+          "value": 1788214654
+        },
+        {
+          "path": "frames.1wk.featureVersion",
+          "op": "eq",
+          "value": "tensor-market-features/1.2.0"
+        },
+        {
+          "path": "frames.1wk.features.currentMarkers",
+          "op": "contains",
+          "value": "buy-green"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.state",
+          "op": "eq",
+          "value": "READY"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.preEventPhase",
+          "op": "eq",
+          "value": "EARLY_MARKUP"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.preEventStructure",
+          "op": "eq",
+          "value": "RECOVERY_OR_EARLY_CYCLE"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventEnergy",
+          "op": "eq",
+          "value": "BULLISH_ALIGNED"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventParticipation",
+          "op": "eq",
+          "value": "DEEP_NORMAL_PARTICIPATION"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventEnrichmentSignature",
+          "op": "eq",
+          "value": "enrichment:consensus-buy"
+        }
+      ],
+      "optional": [],
+      "explanation": "Weekly Green early-markup recovery with aligned energy, deep participation, and consensus-buy enrichment.",
+      "automaticInfluence": false,
+      "strategyAuthority": false,
+      "riskAuthority": false,
+      "allocationAuthority": false,
+      "positionAuthority": false,
+      "orderAuthority": false,
+      "brokerAuthority": false
+    },
+    {
+      "id": "tensor-frozen-v3:02c9e5344f8fbab03ab70fa0",
+      "version": "3.0.0",
+      "enabled": true,
+      "state": "SHADOW_FROZEN",
+      "sourcePhenotypeId": "phenotype-v2:aaae09ea665fcfb2c16b",
+      "sourceFamilyId": "phenotype-family-v2:17e760ad0b7f4c1c47b8",
+      "taxonomyVersion": "tensor-phase2-point-in-time-taxonomy/1.0.0",
+      "required": [
+        {
+          "path": "frames.1wk.barCutoff",
+          "op": "gt",
+          "value": 1788214654
+        },
+        {
+          "path": "frames.1wk.featureVersion",
+          "op": "eq",
+          "value": "tensor-market-features/1.2.0"
+        },
+        {
+          "path": "frames.1wk.features.currentMarkers",
+          "op": "contains",
+          "value": "buy-cyan"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.state",
+          "op": "eq",
+          "value": "READY"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.preEventPhase",
+          "op": "eq",
+          "value": "ACCUMULATION_OR_COMPRESSION"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.preEventStructure",
+          "op": "eq",
+          "value": "RECOVERY_OR_EARLY_CYCLE"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventEnergy",
+          "op": "eq",
+          "value": "BULLISH_ALIGNED"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventParticipation",
+          "op": "eq",
+          "value": "DEEP_NORMAL_PARTICIPATION"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventEnrichmentSignature",
+          "op": "eq",
+          "value": "enrichment:consensus-buy"
+        }
+      ],
+      "optional": [],
+      "explanation": "Weekly Cyan accumulation/compression recovery with aligned energy, deep participation, and consensus-buy enrichment.",
+      "automaticInfluence": false,
+      "strategyAuthority": false,
+      "riskAuthority": false,
+      "allocationAuthority": false,
+      "positionAuthority": false,
+      "orderAuthority": false,
+      "brokerAuthority": false
+    },
+    {
+      "id": "tensor-frozen-v3:0c35fb3fe1de40b867132d4f",
+      "version": "3.0.0",
+      "enabled": true,
+      "state": "SHADOW_FROZEN",
+      "sourcePhenotypeId": "phenotype-v2:fb147192f148b8f0b468",
+      "sourceFamilyId": "phenotype-family-v2:b4a9e38d6e2ff91e1223",
+      "taxonomyVersion": "tensor-phase2-point-in-time-taxonomy/1.0.0",
+      "required": [
+        {
+          "path": "frames.1wk.barCutoff",
+          "op": "gt",
+          "value": 1788214654
+        },
+        {
+          "path": "frames.1wk.featureVersion",
+          "op": "eq",
+          "value": "tensor-market-features/1.2.0"
+        },
+        {
+          "path": "frames.1wk.features.currentMarkers",
+          "op": "contains",
+          "value": "buy-cyan"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.state",
+          "op": "eq",
+          "value": "READY"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.preEventPhase",
+          "op": "eq",
+          "value": "EARLY_MARKUP"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.preEventStructure",
+          "op": "eq",
+          "value": "OTHER_OR_MIXED"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventEnergy",
+          "op": "eq",
+          "value": "BULLISH_ALIGNED"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventParticipation",
+          "op": "eq",
+          "value": "DEEP_NORMAL_PARTICIPATION"
+        },
+        {
+          "path": "frames.1wk.features.phenotype.eventEnrichmentSignature",
+          "op": "eq",
+          "value": "enrichment:consensus-buy"
+        }
+      ],
+      "optional": [],
+      "explanation": "Weekly Cyan early-markup transition with aligned energy, deep participation, and consensus-buy enrichment.",
+      "automaticInfluence": false,
+      "strategyAuthority": false,
+      "riskAuthority": false,
+      "allocationAuthority": false,
+      "positionAuthority": false,
+      "orderAuthority": false,
+      "brokerAuthority": false
+    }
+  ],
+  "prospectiveContract": {
+    "eligibility": "first completed event bar strictly after freezeCutoffEpoch",
+    "observation": "append immutable match before any later path is available",
+    "horizonsCompletedBarsByFrame": {
+      "1d": [4, 13, 26],
+      "1wk": [4, 13, 26]
+    },
+    "readouts": [
+      "terminal_return",
+      "mfe",
+      "mae",
+      "capture",
+      "spy_excess",
+      "time_to_10pct",
+      "time_to_25pct"
+    ],
+    "baselines": [
+      "same_signal_nonmatch",
+      "structure_matched_non_signal",
+      "SPY"
+    ],
+    "minimumBeforeInference": {
+      "eventsPerSpecification": 30,
+      "distinctSymbolsPerSpecification": 20,
+      "calendarRegimes": 2
+    },
+    "noParameterChanges": "new hypotheses require a new immutable version and a fresh forward clock"
+  },
+  "automaticInfluence": false,
+  "strategyAuthority": false,
+  "riskAuthority": false,
+  "allocationAuthority": false,
+  "positionAuthority": false,
+  "orderAuthority": false,
+  "brokerAuthority": false,
+  "phenotypesSha256": "236c7dcad3befde57a862ec8a555290c80a5ee0eaf152e4e9c5bdd45f0f940d1",
+  "evidenceHash": "36f7dafd3c51292d5c2c5a60fb6428a2ee290529c944bec081f90f477b9731ed"
+}

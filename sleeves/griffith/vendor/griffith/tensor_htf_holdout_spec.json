@@ -1,0 +1,35 @@
+{
+  "version": "TENSOR_HTF_CONDITIONAL_HOLDOUT_1_0_0",
+  "frozenAt": "2026-08-27T13:25:00Z",
+  "developmentEnd": "2024-12-31",
+  "holdoutStart": "2025-01-01",
+  "authority": "PRESPECIFIED_VALIDATION_ONLY_NO_STRATEGY_NO_RISK_NO_BROKER",
+  "sourceDiscoveryEvidenceHash": "dfd1bb9e514c3d8b8db73090db908cdba03a253eb356516c2ff0653bce12e2c9",
+  "candidates": [
+    {"id": "H1_WEEKLY_CYAN_HIGH_VOL_MID_LIQ", "timeframe": "1wk", "label": "buy-cyan|VOL:HIGH|LIQ:MID", "direction": "LONG"},
+    {"id": "H2_WEEKLY_CYAN_RISING_TREND", "timeframe": "1wk", "label": "buy-cyan|TREND:RISING", "direction": "LONG"},
+    {"id": "H3_WEEKLY_CYAN_FAST_SLOW_BULLISH", "timeframe": "1wk", "label": "buy-cyan|FAST_SLOW_BULLISH", "direction": "LONG"},
+    {"id": "H4_DAILY_GREEN_BASE_EXPANSION", "timeframe": "1d", "label": "buy-green|BASE_EXPANSION_RISING", "direction": "LONG"},
+    {"id": "H5_DAILY_BOUNCE_RISING_TREND", "timeframe": "1d", "label": "dcb-buy|TREND:RISING", "direction": "LONG"},
+    {"id": "H6_DAILY_GREEN_WITH_PARTICIPATION", "timeframe": "1d", "label": "buy-green|WITH:participation-footprint", "direction": "LONG"},
+    {"id": "H7_DAILY_PARTICIPATION_TRANSITION", "timeframe": "1d", "label": "SIGNAL:participation-footprint", "direction": "LONG"},
+    {"id": "H8_WEEKLY_BOUNCE_DURING_CONSENSUS_SELL", "timeframe": "1wk", "label": "dcb-buy|WITH:consensus-sell", "direction": "LONG"}
+  ],
+  "primaryHorizon": {"1d": 20, "1wk": 12},
+  "adverseRoundTripCostBps": 100,
+  "minimumMatureEvents": 20,
+  "minimumMatchedControls": 20,
+  "maximumLargestSymbolShare": 0.15,
+  "gates": [
+    "costAdjustedWinsorizedMeanGreaterThanZero",
+    "costAdjustedMatchedUpliftGreaterThanZero",
+    "benchmarkExcessWinsorizedMeanGreaterThanZero",
+    "medianGreaterThanZero",
+    "positiveRateAtLeastHalf",
+    "largestSymbolShareWithinCap"
+  ],
+  "familyDecision": "No candidate receives authority from a single passing row; multiplicity, overlap, clustering, subperiod stability, and external replication remain separate gates.",
+  "automaticInfluence": false,
+  "brokerAuthority": false
+}
+
