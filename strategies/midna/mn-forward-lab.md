@@ -1,6 +1,6 @@
 # Forward lab accounts (Tensor scan)
 
-Six $20,000 accounts, each buying Tensor Cyan or Green fires that pass its frozen filter, and holding each for its rule's horizon.
+$20,000 accounts, each buying Tensor Cyan or Green fires that pass its frozen filter, and holding each for its rule's horizon.
 
 | | |
 |---|---|
@@ -10,11 +10,11 @@ Six $20,000 accounts, each buying Tensor Cyan or Green fires that pass its froze
 | **Timeframe** | 1d · 1w |
 | **Universe** | Midna's daily panel |
 | **Style** | Tensor signal + filters |
-| **Status** | 7 waiting |
+| **Status** | 5 waiting |
 
 ## Entry
 
-- Rules: daily Cyan with GBM score ≥ the training 90th percentile; weekly Cyan with dollar-volume, breadth, VIX or ADX limits; daily Green $10-20 with dispersion and gap-age limits; weekly Green with skew, SMH-SPY and no FOMC in 5 sessions.
+- Rules: weekly Cyan with dollar-volume, breadth or VIX limits; daily Green $10-20 with dispersion and gap-age limits; weekly Green with skew, SMH-SPY and no FOMC in 5 sessions.
 - Up to 6 hits per account, best score first; entry from 10:00 ET on the session after the signal.
 
 ## Exit
@@ -33,14 +33,12 @@ Six $20,000 accounts, each buying Tensor Cyan or Green fires that pass its froze
 
 | Account (row) | Rule | Hold |
 |---|---|---|
-| gbm-1d-cyan (`midna_d_cyan_gbm`) | daily Cyan, GBM score ≥ cut | 21 |
 | w-cyan-breadth (`midna_w_cyan_quiet_tape`; Lazarus lane `midna_w_cyan_breadth`) | dv ≤ 6.92, slow state 2, breadth ≥ 0.037 | 126 |
 | w-cyan-vix (`midna_w_cyan_mid_vix`) | dv ≤ 7.36, 126d ≥ 44.1%, VIX 13.71-26.38 | 252 |
 | d-green-band (`midna_d_green_band`) | $10-20, dispersion 0.021-0.029, gap age 32-252 | 21 |
 | w-green-smh (`midna_w_green_calm_smh`) | skew -0.68..0.472, SMH-SPY -0.049..0.097, no FOMC | 126 |
-| w-cyan-adx (`midna_w_cyan_high_adx`) | dv ≤ 7.35, 126d ≥ 44.5%, ADX ≥ 25.8 | 126 |
 
-Rows: 7 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
+Rows: 5 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
 
 ## Code
 
@@ -49,4 +47,5 @@ Rows: 7 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
 
 ## Notes
 
+- The lab's other two accounts, gbm-1d-cyan (`midna_d_cyan_gbm`) and w-cyan-adx (`midna_w_cyan_high_adx`), run the same rules as Femto's Daily Cyan GBM and weekly Cyan momentum ADX and are carded there.
 - The master desk drops Midna's desk-wide red-day buy gate (QQQ red, VIX up and the name red) and her desk halt.

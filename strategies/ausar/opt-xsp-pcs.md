@@ -5,12 +5,12 @@ Each Monday, sells an XSP put spread an ATR below the prior close when the optio
 | | |
 |---|---|
 | **Family** | Ausar |
-| **Source** | Ausar R17/R18 options research |
+| **Source** | Milkman Trades' ATR premium spec; Ausar R17/R18 options research; the old swing desk via Femto-lean |
 | **Asset** | Index options |
 | **Timeframe** | 1w |
 | **Universe** | XSP (mini-SPX) |
 | **Style** | Options income |
-| **Status** | 4 waiting |
+| **Status** | 5 waiting |
 
 ## Entry
 
@@ -21,25 +21,35 @@ Each Monday, sells an XSP put spread an ATR below the prior close when the optio
 ## Exit
 
 - Held to the weekly PM expiry and cash-settled.
+- Femto variant: no regime filter; short = prior weekly close - 1 × weekly ATR(14), long 5 points lower, this week's last expiry, credit > 0; held to settlement; a loss of 90% of the wing pauses entries 4 weeks.
 
 ## Sizing
 
 - Contracts = min(NAV × 3% (A) or 1% (B) / max loss, cash / width, displayed sizes).
+- Femto variant: 1 lot, only with book equity ≥ $37,000.
 
 ## Data
 
 - XSP weekly index bars, OPRA XSP put chain and quotes.
+- Femto variant: S&P 500 daily sessions / 10 (Yahoo), the desk's 0-7 DTE XSP put chain.
 
 ## Variants
 
-| Parameter | Values |
-|---|---|
-| Structure | calm (5-point wing) · graded (ATR wing) |
-| Risk | A 3% · B 1% |
+| Variant | Rows | Regime filter | Wing | Size |
+|---|---|---|---|---|
+| Ausar calm A / B | `ausar_opt_xsp_calm_a`, `_calm_b`; Midna v3 `aster_xsp_pcs_calm_a`, `_calm_b` | digital put below median and 75th pct | 5 points | 3% / 1% of NAV at risk |
+| Ausar graded A / B | `ausar_opt_xsp_graded_a`, `_graded_b`; Midna v3 `aster_xsp_pcs_graded_a`, `_graded_b` | digital put below 75th pct | 1.618 / 1.786 ATR | 3% / 1% of NAV at risk |
+| Milkman spec (Femto-lean) | `femto_spx_premium`; Midna v3 `spx_premium` | none | 5 points | 1 lot; 4-week pause after a full loss |
 
-Rows: 4 on the master desk, 4 on Midna's desk (ids in `docs/CATALOG.json`).
+Rows: 5 on the master desk, 5 on Midna's desk (ids in `docs/CATALOG.json`).
 
 ## Code
 
 - **Midna v3**: `desk3/aster_b4.py`
 - **Master desk** (not in this repo): `desk/vendor/ausar_r19/r19_options.py`
+- **Master desk (Femto-lean)** (not in this repo): `desk/sleeves/femto/spx_premium.py`
+- **Midna v3 (Femto-lean)**: `sleeves/spx_premium.py`
+
+## Notes
+
+- Midna v3's `spx_premium` adds an Edge-IMPROVE change (2026-10-24, on by default): no entry when the credit is below a third of the spread's width.
