@@ -58,5 +58,6 @@ Rows: 5 on the master desk, 3 on Midna's desk (ids in `docs/CATALOG.json`).
 
 ## Notes
 
+- The Tensor research [Leader genome](../tensor_research/tr-genome-leader.md) runs the same five tests on any Tensor buy bar, hourly, daily or weekly.
 - The old desk killed the Leader-1d research; the master desk forward-tests it in its long and short form.
 - Midna v3 adds Edge-IMPROVE changes (2026-10-24, on by default): a stale event (daily) or a stale first bar (hourly) is refused.
