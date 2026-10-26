@@ -277,7 +277,7 @@ def entries_paused(meta):
     and latches the flag there; it never re-derives 3-in-20 at entry
     time. In the lean desk the CORE evaluates disaster_pause_check when
     it records a close and latches this flag in meta. Resume only via
-    the owner's explicit decision (the latch is cleared by ruling)."""
+    The owner's explicit decision (the latch is cleared by ruling)."""
     meta = meta or {}
     return bool(meta.get("entries_paused_by_disaster_rule"))
 

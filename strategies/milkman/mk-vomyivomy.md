@@ -10,7 +10,7 @@ Buys a 10-minute pullback to EMA13 within 3 candles of an EMA8/13 bull flip (iVo
 | **Timeframe** | 10m |
 | **Universe** | SPY |
 | **Style** | Intraday pullback |
-| **Status** | waiting |
+| **Status** | 2 waiting |
 
 ## Entry
 
@@ -33,3 +33,7 @@ Buys a 10-minute pullback to EMA13 within 3 candles of an EMA8/13 bull flip (iVo
 ## Code
 
 - **Master desk**: `sleeves/milkman/intraday.py`, `sleeves/milkman/vendor/milkman/mlib.py`, `sleeves/milkman/vendored.py`
+
+## Notes
+
+- Since master-desk commit 78fd79e5 (2026-10-26, after this catalog's pin) each side runs as its own book: `mk_vomyivomy` long, `mk_vomyivomy_short` short.
