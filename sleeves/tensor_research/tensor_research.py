@@ -1115,7 +1115,8 @@ class HandoffBook(G.ThreeStrategySleeve):
         decisions = self.decisions_from(view.extra.get(FEED) or {}, st, now)
         if decisions:
             risk = self.open_risk(view, handoffs, submitted, now)
-            triples = self.plan_run(decisions, float(view.equity), self.buying_power(view, submitted), risk, held, now)
+            triples = self.plan_run(decisions, float(view.equity), self.buying_power(view, submitted), risk, held, now,
+                                    quotes=view.quotes)
             self.arm(triples, handoffs, now)
             st["last_run"] = {"at": now, "decisions": len(decisions), "armed": len(triples)}
         intents = self.deliver(view, handoffs, submitted, held, now) if cal.is_rth(now) else []

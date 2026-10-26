@@ -44,4 +44,4 @@ Buys a washed-out stock still under its 50-day average when it sits on a support
 
 - ETFs are read as context and never bought.
 - Not carried over: the desk pause and 2% daily-loss park, the Edge overlay and the Tensor SELL veto.
-- The source's breakeven move at +1R is reset by the stop floor on every pass, so it never fires.
+- Breakeven at +1R: once the stop is moved to the entry price, it stays there (the owner's decision Q44, 2026-10-26). Before that, the stop floor reset it on every pass, so it never fired.
