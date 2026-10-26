@@ -28,7 +28,7 @@ Strategy (old module docstring, condensed):
   concurrent Phoenix positions; 25% sleeve notional cap (Decision #44).
   De-overlap: an entry day on/before the last exit day is skipped.
   Auto-pause (Decision #49): 3 disaster-stop hits in the trailing 20
-  closed trades halt new entries; resume is John's explicit call only.
+  closed trades halt new entries; resume is the owner's explicit call only.
 
 master-desk — gone under the cutover doctrine: the Decision #8 earnings
 blackout (3 days before through the earnings date; a stale or missing
@@ -277,7 +277,7 @@ def entries_paused(meta):
     and latches the flag there; it never re-derives 3-in-20 at entry
     time. In the lean desk the CORE evaluates disaster_pause_check when
     it records a close and latches this flag in meta. Resume only via
-    John's explicit decision (the latch is cleared by ruling)."""
+    The owner's explicit decision (the latch is cleared by ruling)."""
     meta = meta or {}
     return bool(meta.get("entries_paused_by_disaster_rule"))
 
