@@ -45,5 +45,5 @@ Buys a cheap, liquid stock basing under its long averages when its sector has tu
 ## Notes
 
 - The swing manager's other sells (a broken-then-rejected level, a Wave-B rejection) are re-judged without daily bars, so only a print through the stop confirms them.
-- The +50%-in-a-week trim is not recorded as a trim, so it repeats each pass while that holds, down to one share.
+- At this catalog's pin the +50%-in-a-week trim is not recorded as a trim, so it repeats each pass while that holds, down to one share; master-desk commit 6d6ae54e (2026-10-26) makes every trim fire once per position.
 - Caps count this sleeve's own book only.
