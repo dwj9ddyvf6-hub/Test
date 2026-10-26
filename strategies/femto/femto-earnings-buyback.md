@@ -33,7 +33,7 @@ Buys a call debit spread 8-15 days before earnings on a stock that announced a b
 
 ## Code
 
-- **Master desk** (not in this repo): `desk/sleeves/femto/earnings_buyback.py`, `desk/feedlib/edgar_buyback.py`
+- **Master desk**: `sleeves/quant_research/feedlib/edgar_buyback.py`; not in this repo: `desk/sleeves/femto/earnings_buyback.py`
 - **Midna v3**: `sleeves/earnings_buyback.py`
 
 ## Notes
