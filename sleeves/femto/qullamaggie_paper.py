@@ -1,0 +1,569 @@
+"""Qullamaggie paper test — lean-desk port (Wave D, Decision #119).
+
+EXTRACTED from aurelia_qulla_live.py (the carrier): the reconstruction
+engine (aurelia_qulla_engine.py = Agentic-Trading-Desk qulla_sleeve/desk.py,
+a pandas point-in-time scan) decides; this sleeve carries an ACCEPTED long
+breakout inside its own budget. Rules ported verbatim: long only (side ==
+1); parabolic_short stays closed (no locate); episodic pivots stay closed
+without a first-public timestamp (no events feed: the engine never sees
+one); QQQ/TQQQ/GLD are never traded here (Aurelia owns them); one entry per
+symbol per session (client id qulla-{session}-{symbol}-buy); the $100,000
+budget is the sleeve's own book.
+
+master-desk: the engine is vendored byte-identical (desk/vendor/aurelia_qulla
+/desk.py, DEFAULTS config) and the sleeve runs the engine's own strategy —
+its backtest() is the definition — live on that book:
+
+  screen ... pre-market, from completed daily bars (< today) of QQQ + the
+             carrier's 20 names: the engine's market state (QQQ 10SMA >
+             20SMA, both rising = risk_on; longs only in risk_on), leader
+             ranks (best-horizon percentile >= 0.98), breakout structure
+             (impulse >= 30%, base range <= 28%, tightening <= 1, higher
+             lows, MA support >= 70%, rising 10/20SMA) and $5M ADV -> the
+             watch list (the only names the scan can propose; their
+             1-minute tapes are what is fetched).
+  enter .... every minute of the session: AgenticResearchDesk.scan over
+             today's complete 1-minute tape (the carrier's _minutes law:
+             minute 0 must print, every minute through the last, silent
+             minutes explicit NO_TRADE): 5-min opening range, trigger =
+             max(OR high, pivot), entry = the next trade bar's open (under
+             the trigger: the scan moves on), stop = the low through the
+             signal bar within 1 ATR, 0.35% risk on stressed loss/share,
+             20% name / 100% gross / 25% sector / 4% open-risk / 1% ADV
+             caps, 15 positions; budgets reserved against the session's
+             opening book (exits never release them intraday).
+  manage ... the backtest's: the hard stop (the engine stop); at the close
+             (15:45, market-on-close) 1/3 off a position held >= 3
+             sessions in profit, the residual stop -> breakeven; after the
+             close a close under the 10-day SMA (the 20-day when extended
+             > 1.5 ATR above the 10) with held >= 3 queues the exit for the
+             next open; at the open a book down >= 1.5% on the prior
+             close exits everything and skips the day's scan.
+
+Named divergences: live, a session's triggers reserve budget as they print
+(the backtest reserved the whole day's triggers by score); the scale reads
+the 15:45 price for the close it sells at; sectors are the 20 names' GICS
+sectors (the carrier labelled every name UNKNOWN, which made the 25% sector
+cap a 25% book cap); scale_fraction is the engine's 1/3 (the source's
+config.json 0.3333333333 trimmed one share less on multiples of 3); the
+carrier's market-on-close entries (Aurelia's broker sent only MOC orders)
+are the engine's next-trade-open entries; 1-minute tapes are Yahoo's
+consolidated RTH bars (the carrier read Alpaca IEX).
+
+Inputs via context.extra: "sleeve_state", "meta", "quotes", "forming"
+(today's open), "cash", "bars_1m" (watch list), "nyse_holidays",
+"session_close" (epoch), "eod_session" (the last session whose official
+close is final). Bars: completed daily bars of QQQ + the 20 names."""
+import math
+from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
+
+import pandas as pd
+
+from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
+from ...vendor.aurelia_qulla import desk as engine
+
+ET = ZoneInfo("America/New_York")
+ACCOUNT = "qullamaggie_paper"
+BUDGET_USD = 100_000.0
+AURELIA_SYMBOLS = {"QQQ", "TQQQ", "GLD"}
+PROXY = "QQQ"
+UNIVERSE = ("NVDA", "AVGO", "META", "AMZN", "AAPL", "MSFT", "GOOGL", "TSLA",
+            "AMD", "NFLX", "COST", "LLY", "JPM", "CAT", "GE", "PLTR",
+            "CRWD", "AMAT", "MU", "PANW")
+SECTORS = {"NVDA": "Information Technology", "AVGO": "Information Technology", "AAPL": "Information Technology",
+           "MSFT": "Information Technology", "AMD": "Information Technology", "PLTR": "Information Technology",
+           "CRWD": "Information Technology", "AMAT": "Information Technology", "MU": "Information Technology",
+           "PANW": "Information Technology", "META": "Communication Services", "GOOGL": "Communication Services",
+           "NFLX": "Communication Services", "AMZN": "Consumer Discretionary", "TSLA": "Consumer Discretionary",
+           "COST": "Consumer Staples", "LLY": "Health Care", "JPM": "Financials", "CAT": "Industrials",
+           "GE": "Industrials"}
+CFG = engine.load_config(None)
+SCALE_FROM_S = 15 * 60          # the close pass: close - 15 min .. close - 10 min (before the MOC cutoff)
+SCALE_UNTIL_S = 10 * 60
+OPEN_FROM_MIN = 1               # the open pass: the first pass once the 09:30 minute has printed
+EVENT_COLS = ["date", "symbol", "event_type", "news_verified", "public_timestamp", "source_url", "security_id"]
+DAILY_COLS = ["date", "symbol", "open", "high", "low", "close", "volume"]
+
+CONFIG = SleeveConfig(
+    sleeve_id="qullamaggie_paper", cadence_s=45, universe=UNIVERSE,
+    state_schema={"orders": "list"}, risk_pct=None)
+
+
+def client_id(session, symbol):
+    return f"qulla-{session}-{symbol}-buy"
+
+
+# ---------------------------------------------------------------------------
+# frames for the engine
+# ---------------------------------------------------------------------------
+def _bar_date(b):
+    return datetime.fromtimestamp(float(b["t"]) + 4 * 3600, tz=timezone.utc).date().isoformat()
+
+
+def daily_frame(bars, before=None, tapes=None, today=None):
+    """the engine's daily frame: completed bars (date < `before` when given) of the proxy and the names, plus a
+    session row per taped name (the DataSteward wants the session; features fence to dates < the session)."""
+    rows = []
+    for sym, bl in (bars or {}).items():
+        for b in bl or []:
+            d = _bar_date(b)
+            if before and d >= before:
+                continue
+            rows.append({"date": d, "symbol": sym, "open": float(b["o"]), "high": float(b["h"]), "low": float(b["l"]),
+                         "close": float(b["c"]), "volume": float(b.get("v") or 0.0)})
+    for sym, x in (tapes or {}).items():
+        tr = x[x.bar_status == "TRADE"]
+        if tr.empty:
+            continue
+        rows.append({"date": today, "symbol": sym, "open": float(tr.open.iloc[0]), "high": float(tr.high.max()),
+                     "low": float(tr.low.min()), "close": float(tr.close.iloc[-1]), "volume": float(tr.volume.sum())})
+    df = pd.DataFrame(rows, columns=DAILY_COLS)
+    return df.sort_values(["date", "symbol"]).reset_index(drop=True)
+
+
+def tape(bars1m, sym, today):
+    """the carrier's _minutes law: today's regular-session minute tape from 09:30 (minute 0 must be there), every
+    minute through the last one seen, a minute without a print an explicit NO_TRADE row; None otherwise, or when
+    the engine's own coverage / envelope validation refuses it (fail closed for that name only)."""
+    d = date.fromisoformat(today)
+    open_et = datetime(d.year, d.month, d.day, 9, 30, tzinfo=ET)
+    rows = {}
+    for b in bars1m or []:
+        t = datetime.fromtimestamp(float(b["t"]), tz=ET)
+        if t.date() != d:
+            continue
+        minute = int((t - open_et).total_seconds() // 60)
+        if minute < 0 or minute > 389:
+            continue
+        vol = float(b.get("v") or 0)
+        rows[minute] = None if vol <= 0 else (float(b["o"]), float(b["h"]), float(b["l"]), float(b["c"]), vol)
+    if not rows or min(rows) != 0:
+        return None
+    last = max(rows)
+    out = []
+    for m in range(last + 1):
+        r = rows.get(m)
+        if r is None:
+            out.append({"date": today, "symbol": sym, "minute_from_open": m, "open": None, "high": None, "low": None,
+                        "close": None, "volume": 0, "bar_status": "NO_TRADE", "expected_last_minute": last})
+        else:
+            out.append({"date": today, "symbol": sym, "minute_from_open": m, "open": r[0], "high": r[1], "low": r[2],
+                        "close": r[3], "volume": r[4], "bar_status": "TRADE", "expected_last_minute": last})
+    x = pd.DataFrame(out)
+    for c in ("open", "high", "low", "close", "volume"):
+        x[c] = pd.to_numeric(x[c], errors="coerce")
+    x["security_id"] = sym
+    try:
+        engine._validate_intraday_group(x, sym, today)
+    except ValueError:
+        return None
+    return x
+
+
+def universe_frame(symbols, start):
+    return pd.DataFrame([{"symbol": s, "security_id": s, "valid_from": start, "sector": SECTORS.get(s, "UNKNOWN"),
+                          "borrowable": False} for s in symbols])
+
+
+def _events():
+    return pd.DataFrame(columns=EVENT_COLS)
+
+
+# ---------------------------------------------------------------------------
+# the engine's decisions
+# ---------------------------------------------------------------------------
+def watch_list(daily, today):
+    """(market state, names the engine can propose a breakout for today): risk_on, a leader, the breakout
+    structure and $5M ADV — all from completed sessions (build_proposals' own prefilter, verbatim)."""
+    state, _ = engine.market_state(daily, today, CFG["market_proxy"])
+    long_allowed = state == "risk_on"
+    if CFG.get("market_filter") == "scaled":
+        long_allowed = state in {"risk_on", "caution"}
+    if not long_allowed:
+        return state, []
+    histories = engine.daily_histories(daily, today)
+    rank_h = {s: h for s, h in histories.items() if s != CFG["market_proxy"]}
+    ranks = engine.leader_scores(engine.point_in_time_returns(rank_h))
+    out = []
+    for sym in sorted(rank_h):
+        if sym in AURELIA_SYMBOLS:
+            continue
+        f = engine.stock_features(rank_h[sym], CFG)
+        if not f.get("ready") or f["adv20"] < CFG["min_average_dollar_volume"]:
+            continue
+        if ranks.get(sym, (0.0, 0))[0] < CFG["leader_percentile"]:
+            continue
+        if (f["prior_impulse"] >= CFG["prior_impulse_min_pct"] and f["base_tightness"] <= CFG["base_range_max_pct"]
+                and f["tightening_ratio"] <= CFG["tightening_ratio_max"]
+                and f["higher_low_slope"] >= CFG["higher_low_slope_min"] and f["ma_support"] >= 0.70
+                and f["sma10_rising"] and f["sma20_rising"]):
+            out.append(sym)
+    return state, out
+
+
+def scan(bars, tapes, today, equity, occupied):
+    """AgenticResearchDesk.scan on the session's tapes; the carrier's filter (long breakouts, Aurelia's symbols
+    never). Returns (accepted proposals, audit)."""
+    tapes = {s: x for s, x in (tapes or {}).items() if x is not None and not x.empty}
+    if not tapes:
+        return [], {}
+    daily = daily_frame(bars, before=today, tapes=tapes, today=today)
+    if daily.empty:
+        return [], {}
+    intraday = pd.concat(list(tapes.values()), ignore_index=True)
+    universe = universe_frame(sorted(set(daily.symbol)), str(daily.date.min()))
+    try:
+        accepted, audit, _trace = engine.AgenticResearchDesk(CFG).scan(
+            today, daily, intraday, _events(), universe, float(equity), [dict(p) for p in occupied])
+    except ValueError as e:
+        return [], {"error": str(e)[:200]}
+    return [p for p in accepted if int(p.side) == 1 and p.setup != "parabolic_short"
+            and p.symbol not in AURELIA_SYMBOLS], audit
+
+
+def friction(entry):
+    return entry * 2 * (float(CFG["slippage_bps"]) + float(CFG["commission_bps"])) / 10_000
+
+
+def sessions_held(entry_date, session, holidays):
+    """the backtest's held = day_index - entry_index + 1: trading sessions from the entry session through
+    `session`, both counted."""
+    try:
+        d, end = date.fromisoformat(str(entry_date)[:10]), date.fromisoformat(session)
+    except ValueError:
+        return 0
+    hol = set(holidays or ())
+    n = 0
+    while d <= end:
+        if d.weekday() < 5 and d.isoformat() not in hol:
+            n += 1
+        d += timedelta(days=1)
+    return n
+
+
+def book_of(state):
+    return {s: v["position"] for s, v in (state or {}).items() if isinstance(v, dict) and v.get("position")}
+
+
+def working_of(state):
+    return {s: v["pending_entry"] for s, v in (state or {}).items()
+            if isinstance(v, dict) and v.get("pending_entry") and not v.get("position")}
+
+
+def scale_view(p, st):
+    """(scaled, scale_in_flight, stop): a scale sell that filled (the slice shrank) commits the third and moves
+    the residual stop to breakeven (the backtest: stop = max(stop, entry))."""
+    entry = float(p.get("entry_px") or 0.0)
+    base = p.get("stop_px")
+    if base is None:
+        base = p.get("stop_level")
+    sent = (st or {}).get("scale_sent") or None
+    qty = float(p.get("qty") or 0.0)
+    if p.get("scaled_third"):
+        return True, False, float(p.get("stop_level") or base or entry)
+    if sent and qty < float(sent.get("qty") or 0.0) - 1e-9:
+        return True, False, max(float(base if base is not None else entry), entry)
+    if sent and p.get("exit_submitted"):
+        return False, True, float(base if base is not None else entry)
+    return False, False, float(base if base is not None else entry)
+
+
+def _price(sym, p, forming, quotes, field="o"):
+    f = (forming or {}).get(sym) or {}
+    if f.get(field):
+        return float(f[field])
+    q = (quotes or {}).get(sym) or {}
+    bid, ask, last = q.get("bid"), q.get("ask"), q.get("last")
+    if bid and ask and float(ask) >= float(bid) > 0:
+        return (float(bid) + float(ask)) / 2
+    if last:
+        return float(last)
+    return float(p.get("entry_px") or 0.0)
+
+
+def occupied_row(sym, p, st, mark):
+    """the backtest's _snapshot_occupied row: notional at the mark, risk = qty x (|entry - stop| + gap buffer
+    + round-trip friction)."""
+    entry = float(p.get("entry_px") or 0.0)
+    _s, _f, stop = scale_view(p, st)
+    gap_ps = float(p.get("gap_buffer_pct") or 0.0) * entry
+    qty = float(p.get("qty") or 0.0)
+    return {"symbol": sym, "security_id": sym, "notional": qty * mark, "sector": p.get("sector") or SECTORS.get(sym, "UNKNOWN"),
+            "risk": qty * (abs(entry - stop) + gap_ps + friction(entry))}
+
+
+def open_actions(state, meta, forming, quotes, cash, session, prev_session=None):
+    """the backtest's session open: yesterday's queued trail exits at the open, the open-loss lock (a book down
+    >= max_daily_loss_pct on the prior close exits everything; no scan), then the opening budget snapshot."""
+    book = book_of(state)
+    pend = (meta.get("pending_exits") or {})
+    queued = [s for s in (pend.get("syms") or []) if pend.get("session") == session and s in book]
+    opens = {s: _price(s, p, forming, quotes) for s, p in book.items()}
+    cash_open = float(cash)
+    for s, p in book.items():                               # queued exits close at the open (the backtest's
+        if s in queued:                                     # _close_position: slippage + fee, its own arithmetic)
+            q = float(p.get("qty") or 0.0)
+            cash_open += q * engine._fill_price(opens[s], 1, False, CFG)
+            cash_open -= opens[s] * q * float(CFG["commission_bps"]) / 10_000
+    equity_open = cash_open + sum(float(p.get("qty") or 0.0) * opens[s] for s, p in book.items() if s not in queued)
+    eod = meta.get("eod") or {}
+    prev = eod.get("equity") if (prev_session is None or eod.get("date") == prev_session) else None
+    lock = bool(prev) and equity_open / max(float(prev), 1.0) - 1 <= -float(CFG["max_daily_loss_pct"])
+    out = []
+    for s, p in book.items():
+        if p.get("exit_submitted"):
+            continue
+        if s in queued:
+            out.append(Intent("exit", s, qty_hint=None, price_hint=round(opens[s], 2), signal_key=f"{s}:{session}:trail",
+                              reason="qullamaggie_paper close_below_trailing_MA: queued at the close, sold at the open"))
+        elif lock:
+            out.append(Intent("exit", s, qty_hint=None, price_hint=round(opens[s], 2), signal_key=f"{s}:{session}:lock",
+                              reason="qullamaggie_paper desk_open_loss_lock: book %.2f%% on the prior close"
+                                     % ((equity_open / float(prev) - 1) * 100)))
+    survivors = {} if lock else {s: p for s, p in book.items() if s not in queued}
+    occupied = [occupied_row(s, p, state.get(s) or {}, opens[s]) for s, p in survivors.items()]
+    return out, {"date": session, "equity": equity_open, "occupied": occupied, "lock": lock}
+
+
+def entries(bars, tapes, state, meta, session, forming, quotes, exiting=()):
+    """the backtest's session entries, live: the scan against the opening snapshot plus this session's entries
+    so far (causal budget reservation), filled in trigger order under the position / gross checks (positions
+    leaving this pass no longer count)."""
+    op = meta.get("open") or {}
+    if op.get("date") != session or op.get("lock"):
+        return [], {}
+    book = {s: p for s, p in book_of(state).items() if s not in set(exiting) and not p.get("exit_submitted")}
+    working = working_of(state)
+    today_rows = list(((meta.get("today_entries") or {}).get("rows") or {}).values()) \
+        if (meta.get("today_entries") or {}).get("session") == session else []
+    occupied = list(op.get("occupied") or []) + today_rows
+    props, _audit = scan(bars, tapes, session, max(float(op.get("equity") or 0.0), 1.0), occupied)
+    out, rows = [], {}
+    held = set(book) | set(working)
+    n_pos = len(held)
+    gross = sum(float(p.get("qty") or 0) * _price(s, p, forming, quotes) for s, p in book.items()) + \
+        sum(float(r.get("notional") or 0) for r in today_rows if r["symbol"] not in book)
+    max_pos = min(int(CFG["max_open_positions"]), int(CFG["max_positions_hard"]))
+    for prop in sorted(props, key=lambda p: (int(p.trigger_time.split("+")[-1]), p.security_id)):
+        if n_pos >= max_pos:
+            break
+        if prop.symbol in held or ((state.get(prop.symbol) or {}).get("last_exit_date") or "") == session:
+            continue
+        if gross + prop.notional > max(float(op.get("equity") or 0), 1) * float(CFG["max_gross_exposure_pct"]):
+            continue
+        out.append(Intent(
+            "enter", prop.symbol, qty_hint=int(prop.quantity), price_hint=float(prop.entry),
+            stop=float(prop.stop), exit_rules=(ExitRule("stop", float(prop.stop)),),
+            signal_key=client_id(session, prop.symbol),
+            position_meta={"setup": prop.setup, "sector": prop.sector, "gap_buffer_pct": float(prop.gap_buffer_pct),
+                           "stop_level": float(prop.stop), "entry_ref": float(prop.entry), "score": float(prop.score),
+                           "trigger_time": prop.trigger_time, "market_state": prop.market_state},
+            reason="qullamaggie_paper %s %s: entry %.2f stop %.2f, %s; %s (account=%s budget=%d)"
+                   % (prop.setup, prop.trigger_time, prop.entry, prop.stop, "; ".join(prop.reasons[:2]),
+                      prop.market_state, ACCOUNT, BUDGET_USD)))
+        rows[prop.symbol] = {"symbol": prop.symbol, "security_id": prop.symbol, "notional": float(prop.notional),
+                             "sector": prop.sector, "risk": float(prop.quantity) * float(prop.stressed_loss_per_share)}
+        held.add(prop.symbol)
+        n_pos += 1
+        o = ((forming or {}).get(prop.symbol) or {}).get("o")
+        gross += prop.quantity * (float(o) if o else float(prop.entry))   # the backtest: held at the open mark
+    return out, rows
+
+
+def close_scale(bars, state, quotes, session, holidays):
+    """the backtest's EOD scale, on the 15:45 price: 1/3 (floor, at least 1) of a position held >= scale_days
+    sessions with the price above its entry, sold market-on-close."""
+    out = []
+    for s, p in book_of(state).items():
+        if p.get("exit_submitted"):
+            continue
+        scaled, in_flight, _stop = scale_view(p, state.get(s) or {})
+        if scaled or in_flight:
+            continue
+        hist = [b for b in bars.get(s) or [] if _bar_date(b) < session]
+        if len(hist) + 1 < 20:
+            continue
+        px = _price(s, p, None, quotes)
+        entry = float(p.get("entry_px") or 0.0)
+        held = sessions_held(p.get("entry_date"), session, holidays)
+        if held >= int(CFG["scale_days"]) and px - entry > 0:
+            qty = int(float(p.get("qty") or 0))
+            trim = max(1, int(math.floor(qty * float(CFG["scale_fraction"]))))
+            out.append(Intent("exit", s, qty_hint=trim, price_hint=round(px, 2), signal_key=f"{s}:{session}:scale",
+                              order={"type": "market", "tif": "cls"},
+                              reason="qullamaggie_paper scale_after_strength: %d of %d at the close, held %d "
+                                     "sessions, %.2f > entry %.2f; residual stop -> breakeven"
+                                     % (trim, qty, held, px, entry)))
+    return out
+
+
+def eod_trail(bars, state, session, holidays):
+    """the backtest's EOD trail on `session`'s official close: the 10-day SMA (20-day when the close is more than
+    1.5 ATR above the 10), breached with held >= 3 -> exit queued for the next open. Returns (syms, complete)
+    — complete is False while a scale is still settling (the trail reads the remaining slice)."""
+    out = []
+    for s, p in book_of(state).items():
+        scaled, in_flight, _stop = scale_view(p, state.get(s) or {})
+        if in_flight:
+            return out, False
+        hist = [b for b in bars.get(s) or [] if _bar_date(b) <= session]
+        if not hist or _bar_date(hist[-1]) != session or len(hist) < 20:
+            continue
+        held = sessions_held(p.get("entry_date"), session, holidays)
+        close = float(hist[-1]["c"])
+        c = [float(b["c"]) for b in hist]
+        ma10, ma20 = engine.sma(c, 10), engine.sma(c, 20)
+        h_df = daily_frame({s: hist})
+        atr_abs = float(engine.stock_features(h_df.iloc[:-1], CFG).get("atr_pct", 0.0)) * close if len(hist) > 128 else 0
+        extended = close - ma10 > CFG["extension_threshold_atr"] * max(atr_abs, 0.01)
+        ma = ma20 if extended else ma10
+        if held >= 3 and (close - ma) < 0:
+            out.append(s)
+    return out, True
+
+
+def eod_equity(bars, state, cash, session):
+    """the backtest's _equity at the session's closes: cash + the book at its official closes."""
+    def close_of(s, p):
+        hist = [b for b in bars.get(s) or [] if _bar_date(b) <= session]
+        return float(hist[-1]["c"]) if hist else float(p.get("entry_px") or 0.0)
+    return float(cash) + sum(float(p.get("qty") or 0.0) * close_of(s, p) for s, p in book_of(state).items())
+
+
+def _next_session(session, holidays):
+    d = date.fromisoformat(session) + timedelta(days=1)
+    hol = set(holidays or ())
+    while d.weekday() >= 5 or d.isoformat() in hol:
+        d += timedelta(days=1)
+    return d.isoformat()
+
+
+def _rth(now, session_close):
+    t = datetime.fromtimestamp(float(now), tz=ET)
+    m = t.hour * 60 + t.minute - 570
+    if t.weekday() >= 5 or m < 0 or not session_close or float(now) >= float(session_close):
+        return None
+    return m
+
+
+def _tapes(extra, meta, session):
+    w = meta.get("watch") or {}
+    if w.get("date") != session:
+        return {}
+    b1 = extra.get("bars_1m") or {}
+    out = {}
+    for s in w.get("symbols") or []:
+        x = tape(b1.get(s), s, session)
+        if x is not None:
+            out[s] = x
+    return out
+
+
+def _decide(bars, context):
+    """one pass: (intents, stamps) — the stamps are what next_meta persists."""
+    extra = context.extra or {}
+    state = extra.get("sleeve_state") or {}
+    meta = extra.get("meta") or {}
+    session = context.session
+    now = float(context.now)
+    holidays = extra.get("nyse_holidays") or ()
+    close_ts = extra.get("session_close")
+    forming, quotes = extra.get("forming") or {}, extra.get("quotes") or {}
+    cash = float(extra.get("cash") if extra.get("cash") is not None else context.equity or 0.0)
+    out, st = [], {}
+    eod_s = extra.get("eod_session")
+    if eod_s and (meta.get("eod") or {}).get("date") != eod_s:            # after the close / before the open
+        syms, complete = eod_trail(bars, state, eod_s, holidays)
+        if complete:
+            st["eod"] = {"date": eod_s, "equity": eod_equity(bars, state, cash, eod_s)}
+            st["pending_exits"] = {"session": _next_session(eod_s, holidays), "syms": syms}
+    proxy = [b for b in bars.get(PROXY) or [] if _bar_date(b) < session]
+    if (meta.get("watch") or {}).get("date") != session and proxy and (
+            not eod_s or _bar_date(proxy[-1]) >= min(eod_s, session)):      # the last completed session is in
+        state_m, watch = watch_list(daily_frame(bars, before=session), session)
+        st["watch"] = {"date": session, "symbols": watch, "market_state": state_m}
+    m = _rth(now, close_ts)
+    if m is None:
+        return out, st
+    meta_now = dict(meta, **st)
+    if m >= OPEN_FROM_MIN and (meta.get("open") or {}).get("date") != session:
+        exits, op = open_actions(state, meta_now, forming, quotes, cash, session, prev_session=eod_s)
+        out += exits
+        st["open"] = op
+        meta_now["open"] = op
+    exiting = {i.symbol for i in out if i.kind == "exit"}
+    ents, rows = entries(bars, _tapes(extra, meta_now, session), state, meta_now, session, forming, quotes, exiting)
+    out += ents
+    if rows:
+        te = meta.get("today_entries") or {}
+        prev = dict(te.get("rows") or {}) if te.get("session") == session else {}
+        prev.update(rows)
+        st["today_entries"] = {"session": session, "rows": prev}
+    if close_ts and float(close_ts) - SCALE_FROM_S <= now < float(close_ts) - SCALE_UNTIL_S:
+        out += close_scale(bars, state, quotes, session, holidays)
+    return out, st
+
+
+def _pass(bars, context):
+    """the pass's decision, computed once: signal() and next_meta() read the same one."""
+    extra = context.extra
+    memo = extra.get("_qp_pass") if isinstance(extra, dict) else None
+    if memo is None:
+        memo = _decide(bars, context)
+        if isinstance(extra, dict):
+            extra["_qp_pass"] = memo
+    return memo
+
+
+class QullamaggiePaper(BaseSleeve):
+    CONFIG = CONFIG
+
+    def signal(self, bars, slice_state, context):
+        return list(_pass(bars, context)[0])
+
+
+def signal(bars, slice_state, context):
+    return QullamaggiePaper().signal(bars, slice_state, context)
+
+
+def next_meta(bars, slice_state, context, intents=()):
+    meta = dict((context.extra or {}).get("meta") or {})
+    meta.update(_pass(bars, context)[1])
+    return meta
+
+
+def next_symbol_state(bars, slice_state, context, intents=()):
+    """the backtest's scale bookkeeping: a scale sell is remembered with the slice it came from; the slice
+    shrinking commits it (scaled, residual stop -> breakeven); an unfilled one is dropped."""
+    state = (context.extra or {}).get("sleeve_state") or {}
+    out = {}
+    for sym, st in state.items():
+        if not isinstance(st, dict) or not st.get("scale_sent"):
+            continue
+        p = st.get("position")
+        if not p:
+            out[sym] = {"scale_sent": None}
+            continue
+        scaled, in_flight, be = scale_view(p, st)
+        if scaled:
+            out[sym] = {"scale_sent": None, "pos": {"scaled_third": True, "stop_level": be}}
+        elif not in_flight:
+            out[sym] = {"scale_sent": None}
+    for fi in intents or ():
+        if fi.kind == "exit" and (fi.signal_key or "").endswith(":scale"):
+            p = (state.get(fi.symbol) or {}).get("position") or {}
+            out.setdefault(fi.symbol, {})["scale_sent"] = {"qty": float(p.get("qty") or 0.0), "sell": fi.qty_hint,
+                                                           "at": float(context.now)}
+    return out
+
+
+def stop_levels(bars, slice_state, context):
+    """a scaled slice's residual stop: breakeven (the engine ratchets; it never lowers a stop)."""
+    state = (context.extra or {}).get("sleeve_state") or {}
+    out = {}
+    for sym, p in book_of(state).items():
+        scaled, _f, be = scale_view(p, state.get(sym) or {})
+        if scaled and be:
+            out[sym] = float(be)
+    return out
