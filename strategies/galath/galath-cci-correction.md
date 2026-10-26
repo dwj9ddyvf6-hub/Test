@@ -37,4 +37,4 @@ Buys a stock in a long uptrend after CCI(27) dipped under -100, when CCI turns b
 
 ## Code
 
-- **Master desk (branch cci1)**: `sleeves/galath/grokbot.py`, `sleeves/galath/vendor/cci_correction/cci_correction.py`
+- **Master desk**: `sleeves/galath/grokbot.py`, `sleeves/galath/vendor/cci_correction/cci_correction.py`

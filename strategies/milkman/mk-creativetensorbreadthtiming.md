@@ -33,3 +33,7 @@ Holds IWM when few stocks show strong weekly Tensor votes (breadth at or below i
 ## Code
 
 - **Master desk**: `sleeves/milkman/galath.py`, `sleeves/milkman/vendored.py`, `sleeves/milkman/vendor/milkman/dstrats.py`
+
+## Notes
+
+- The Tensor engine these lanes run (desk/vendor/galath_engine/) is not published in this repo.

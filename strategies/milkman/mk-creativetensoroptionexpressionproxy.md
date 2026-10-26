@@ -38,3 +38,4 @@ Expresses tier-A weekly Tensor Cyan / Green fires with one-year at-the-money cal
 ## Notes
 
 - The study priced the calls by Black-Scholes on realised volatility; the desk buys listed calls.
+- The Tensor engine these lanes run (desk/vendor/galath_engine/) is not published in this repo.
