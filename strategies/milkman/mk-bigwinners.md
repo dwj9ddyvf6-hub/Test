@@ -43,3 +43,7 @@ Buys $1,000 of every liquid, calibrated weekly Tensor Cyan / Green fire, one per
 ## Code
 
 - **Master desk**: `sleeves/milkman/galath.py`, `sleeves/milkman/vendored.py`, `sleeves/milkman/vendor/milkman/dstrats.py`
+
+## Notes
+
+- The Tensor engine these lanes run (desk/vendor/galath_engine/) is not published in this repo.

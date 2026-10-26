@@ -35,3 +35,7 @@ Takes Galath's Tensor lane fires through the Milkman study's add-on rules: four 
 ## Code
 
 - **Master desk**: `sleeves/milkman/galath.py`, `sleeves/milkman/vendored.py`, `sleeves/milkman/vendor/milkman/dstrats.py`
+
+## Notes
+
+- The Tensor engine these lanes run (desk/vendor/galath_engine/) is not published in this repo.

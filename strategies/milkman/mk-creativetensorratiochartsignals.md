@@ -33,3 +33,7 @@ Runs the weekly Tensor engine on each stock's price relative to SPY and buys the
 ## Code
 
 - **Master desk**: `sleeves/milkman/galath.py`, `sleeves/milkman/vendored.py`, `sleeves/milkman/vendor/milkman/dstrats.py`
+
+## Notes
+
+- The Tensor engine these lanes run (desk/vendor/galath_engine/) is not published in this repo.
