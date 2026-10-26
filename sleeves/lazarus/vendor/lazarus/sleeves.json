@@ -1,0 +1,5306 @@
+{
+ "name": "lazarus_sleeves",
+ "schema": 1,
+ "sources": {
+  "MAIN": {
+   "file": "<workspace>/galath-research/shadow/paper_desk/desk_playbook.json",
+   "version": "1.4.13",
+   "sha256": "96491d2654e92bb104ee6eaa58c1d682324894df143cb6f8ce170ebbf23baa08"
+  },
+  "TEST": {
+   "file": "<workspace>/galath-research/shadow/paper_sleeve/sleeve_playbook.json",
+   "version": "1.0.14",
+   "sha256": "cff5a3eae47e4536388368c34bde337f02b62ba6e5a579605c2bffe1dafead97"
+  }
+ },
+ "sleeves": [
+  {
+   "id": "1h",
+   "account": "MAIN",
+   "broker_account": "MAIN",
+   "kind": "1h",
+   "label": "1H Swing",
+   "enabled": true,
+   "state": "live",
+   "status_text": "",
+   "source": {
+    "producer": "tracker (canonical Tensor v698 engine)",
+    "file": "shadow/live/latest_fires_v3.json + shadow/log/ledger.jsonl",
+    "lane": "1h"
+   },
+   "entry": {
+    "policy": "qqq_red_1h",
+    "max_delay_minutes": 30,
+    "limit_band_pct": 3.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the fire unit's calibrated plan (plans component)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1h",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": [
+     "1h-basket"
+    ]
+   },
+   "sizing": {
+    "budget_usd": 51750,
+    "max_slots": 30,
+    "position_usd": 1725,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1725,
+    "min_dv20_usd": 1000000
+   },
+   "research": [],
+   "flags": []
+  },
+  {
+   "id": "1d",
+   "account": "MAIN",
+   "broker_account": "MAIN",
+   "kind": "1d",
+   "label": "1D desk",
+   "enabled": true,
+   "state": "live",
+   "status_text": "",
+   "source": {
+    "producer": "tracker (canonical Tensor v698 engine)",
+    "file": "shadow/live/latest_fires_v3.json + shadow/log/ledger.jsonl",
+    "lane": "1d"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the fire unit's calibrated plan: 1d-basket no stop / 40 sessions; setups E01/E38 +20% all out max 40; R4 +30% sell 1/3 + 2xATR trail max 40; E87/E76/R1-R3 40 se",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 8625,
+    "max_slots": 5,
+    "position_usd": 1725,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1725,
+    "min_dv20_usd": 1000000
+   },
+   "research": [
+    "Galath directive 2026-10-12 20:54 ET",
+    "ENTRY_TIMING_REDOPEN/REPORT.md (conditional on trigger)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "1w",
+   "account": "MAIN",
+   "broker_account": "MAIN",
+   "kind": "1w",
+   "label": "1W desk",
+   "enabled": true,
+   "state": "live",
+   "status_text": "",
+   "source": {
+    "producer": "tracker (canonical Tensor v698 engine)",
+    "file": "shadow/live/latest_fires_v3.json + shadow/log/ledger.jsonl",
+    "lane": "1w"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "calibrated plan: no stop / time exit 52 weeks",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 17877,
+    "max_slots": 14,
+    "position_usd": 1410,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1725,
+    "min_dv20_usd": 1000000
+   },
+   "research": [
+    "Galath directive 2026-10-12 20:54 ET",
+    "ENTRY_TIMING_REDOPEN/REPORT.md (conditional on trigger)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "1dc",
+   "account": "MAIN",
+   "broker_account": "MAIN",
+   "kind": "1d",
+   "label": "Daily Cyan",
+   "enabled": true,
+   "state": "live",
+   "status_text": "",
+   "source": {
+    "producer": "desk_feed (lab_live books / tracker sc_tag)",
+    "file": "shadow/live/desk_extra_fires_v1.json",
+    "lane": "1dc"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the feed fire's plan (no stop / time exit H)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 12500,
+    "max_slots": 68,
+    "position_usd": 700,
+    "position_usd_by_class": {
+     "core_small": 700,
+     "core_micro": 364,
+     "test": 230
+    },
+    "one_share_max_usd": 1000,
+    "cap_pct_of_dv20": 5.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1725,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Galath directive 2026-10-12 20:54 ET",
+    "ENTRY_TIMING_REDOPEN/REPORT.md (conditional on trigger)"
+   ],
+   "flags": [
+    "runs side by side with Test s_mn_gbm_1d_cyan: separate experiment (Galath GO 2026-10-14)"
+   ]
+  },
+  {
+   "id": "1wa",
+   "account": "MAIN",
+   "broker_account": "MAIN",
+   "kind": "1w",
+   "label": "1W Cyan tier A small",
+   "enabled": true,
+   "state": "live",
+   "status_text": "",
+   "source": {
+    "producer": "desk_feed (lab_live books / tracker sc_tag)",
+    "file": "shadow/live/desk_extra_fires_v1.json",
+    "lane": "1wa"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "calibrated plan: no stop / time exit 52 weeks (the feed fire's W52 plan)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 17250,
+    "max_slots": 17,
+    "position_usd": 1000,
+    "position_usd_by_class": {
+     "core": 1000
+    },
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 5.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1725,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Galath directive 2026-10-12 20:54 ET",
+    "ENTRY_TIMING_REDOPEN/REPORT.md (conditional on trigger)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "legacy_exit",
+   "account": "MAIN",
+   "broker_account": "MAIN",
+   "kind": "1d",
+   "label": "legacy exit (hidden)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "",
+   "source": {
+    "producer": "none (exit-only)",
+    "file": null,
+    "lane": "legacy_exit"
+   },
+   "entry": {
+    "policy": "none",
+    "max_delay_minutes": 0,
+    "limit_band_pct": 0.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "each owned position's stored plan (unchanged)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1725,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1725,
+    "min_dv20_usd": 100000
+   },
+   "research": [],
+   "flags": [
+    "exit-only stub (owns legacy BOTZ/IESC until their time exit)"
+   ]
+  },
+  {
+   "id": "s_1dg",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Lab 1D Green trees (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "lab_live books (native Lazarus routing)",
+    "file": "DESK_INTEGRATION/lab_live/out/latest/*.json",
+    "lane": "s_1dg"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 21 sessions)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 8320,
+    "max_slots": 8,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md F1 (1D green full gbm: Sharpe 0.89, alpha +8.2%, null p 0.048) + F2 (next open, 21 sessions)",
+    "shadow/paper_desk/desk_playbook.json 1.4.2-r2 (read-only) lane t_1dg"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_1wlab",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Lab 1W Cyan books (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "lab_live books (native Lazarus routing)",
+    "file": "DESK_INTEGRATION/lab_live/out/latest/*.json",
+    "lane": "s_1wlab"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 126 sessions)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md F1 (4 x 1W cyan books IN, shared budget) + F2 (next open after the week, 126 sessions)",
+    "shadow/paper_desk/desk_playbook.json 1.4.2-r2 (read-only) lane t_1wlab"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_1wsw",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Lab 1W Swing covered (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "lab_live books (native Lazarus routing)",
+    "file": "DESK_INTEGRATION/lab_live/out/latest/*.json",
+    "lane": "s_1wsw"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 126 sessions)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md F1 (1W swing covered search: Sharpe 0.81, alpha +3.7%, null p 0.048) + F2",
+    "shadow/paper_desk/desk_playbook.json 1.4.2-r2 (read-only) lane t_1wsw"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_1wc_micro",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "1W Cyan tier A micro (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_1wc_micro"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1892,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 3 (weekly paper sleeve: 1W Cyan tier A micro +65.5, Q08 micro +134.9)",
+    "DESK_INTEGRATION/EDGE_INVENTORY.md W-CYAN-TIERA-MICRO (W52, red-day close, ADD paper-test $1k)",
+    "shadow/paper_desk/desk_playbook.json 1.4.2-r2 (read-only) lane t_wk (micro half)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_1wc_ml",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "1W Cyan tier A mid/large (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_1wc_ml"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 7974,
+    "max_slots": 7,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 3 (Q07 mid/large tierA +28 [19, 41])",
+    "DESK_INTEGRATION/EDGE_INVENTORY.md W-CYAN-TIERA-MIDLARGE (W52, red-day close)",
+    "shadow/paper_desk/desk_playbook.json 1.4.2-r2 (read-only) lane t_wk (mid/large half)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_1dgp5",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "1D Green under $5 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_1dgp5"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 40 sessions (NS40))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2789,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 3 (Daily: 1D Green sub-$5, K 7, NS40) + F2",
+    "DESK_INTEGRATION/EDGE_INVENTORY.md D-GREEN-SUB5 (OOS +21.2 [10.1, 32.3], WATCH, ADD paper-test $1k)",
+    "shadow/paper_desk/desk_playbook.json 1.4.2-r2 (read-only) lane t_1dgp5"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_rules_1d",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Lab rule 1D (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "lab_live books (native Lazarus routing)",
+    "file": "DESK_INTEGRATION/lab_live/out/latest/*.json",
+    "lane": "s_rules_1d"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = the rule horizon H + 1 sessions)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 73616,
+    "max_slots": 73,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md F1 (43 clean-support frozen rules, CORPUS_AUDIT/outside_lab_orig/olx_rules43.csv) + F2 (MOC next close, hold H+1)",
+    "shadow/paper_desk/desk_playbook.json 1.4.2-r2 (read-only) lane t_rules_1d (K 10 in the F2 sum)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_rules_1w",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Lab rule 1W (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "lab_live books (native Lazarus routing)",
+    "file": "DESK_INTEGRATION/lab_live/out/latest/*.json",
+    "lane": "s_rules_1w"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = the rule horizon H + 1 sessions)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md F1 + F2",
+    "shadow/paper_desk/desk_playbook.json 1.4.2-r2 (read-only) lane t_rules_1w"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_1wg_small",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "1W Green tier A small (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged, log-only fires",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_1wg_small"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52))",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2696,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 3 (1W Green tier A small +61.3 [22.3, 101.1] WATCH; WG holdout FAIL -> paper only) and F2 pending list ('no band for green')",
+    "DESK_INTEGRATION/EDGE_INVENTORY.md W-GREEN-TIERA-SMALL",
+    "SMALLMICRO_RERUN/REPORT.md finding 3"
+   ],
+   "flags": [
+    "staged off: staged, log-only fires",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_moonshot",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Moonshot (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged, log-only fires (inventory thresholds)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_moonshot"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52, inventory) / W78 (draft spec))",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2581,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 3 (Moonshot: W52 43%, DD -48.8, 1% weights)",
+    "DESK_INTEGRATION/EDGE_INVENTORY.md X-MOONSHOT-SLEEVE (1W Cyan px <= $14.94 & depth60 >= 70.35, 10 names, W52)",
+    "MOONSHOT_LANE/MOONSHOT_SLEEVE_spec_DRAFT_v0.json (0.1-DRAFT, NOT frozen: W78, 1W Cyan OR Green, px < $15 & depth60 >= 70, dv20 >= $1M, max 10 names, next open)"
+   ],
+   "flags": [
+    "staged off: staged, log-only fires (inventory thresholds)",
+    "turned ON at cutover 2026-10-14 (was off)",
+    "runs side by side with s_mn_moonshot: separate experiment (Galath GO 2026-10-14)"
+   ]
+  },
+  {
+   "id": "s_1wsw_stress",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "1W Swing stress pockets (test)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "GAP: no live source",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_1wsw_stress"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52))",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1335,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 3 (cheap5+deep70+VIX stress +76, n 1,529; px UNPROVEN -> paper only)",
+    "DESK_INTEGRATION/EDGE_INVENTORY.md W-SWING-CHEAP-DEEP-STRESS (cheap5 + deep70 + VIX>=20 at entry, W52, red-day)",
+    "CORPUS_AUDIT/code/ctx_feats.py (cheap5 = px_fire < 5; deep70 = depth60 >= 70; stress_vix20 = VIX >= 20)"
+   ],
+   "flags": [
+    "placeholder/index: GAP: no live source"
+   ]
+  },
+  {
+   "id": "s_q07_ins2",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 insider2 confluence cells (index)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "INDEX (1.0.3): the cells trade as s_q07w_*ins2* lanes",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07_ins2"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = per cell lane)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.md Q07 insider2 cells -> one lane per cell (s_q07w_*ins2*) in 1.0.3",
+    "DESK_INTEGRATION/TAG_DEFS_FOR_DESK_OPS.md (Research Lab 20:55 ET) + CORPUS_AUDIT/code/ctx_feats.py: tierA, deep70 = depth60 >= 70, mom6 = ret126 >= pre-2020 q67, cheap5 = px_fire < 5, stress_vix20 = V",
+    "ALTDATA_LIVE/out/insider2_{latest,history}.parquet (plugins/form4_insider.py, nightly 18:47 ET); parity out/PARITY_form4_2026-10-05.md: insider2 100% on 2,922 ticker-dates, ins_buyers180 99.97% (Resea"
+   ],
+   "flags": [
+    "placeholder/index: INDEX (1.0.3): the cells trade as s_q07w_*ins2* lanes"
+   ]
+  },
+  {
+   "id": "s_q07_wiki",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 Wikipedia confluence cells (index)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "INDEX (1.0.2): the cells trade as s_q07w_* lanes",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07_wiki"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = per cell lane)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.md Q07 wiki cells -> one lane per cell (s_q07w_*) in 1.0.2",
+    "DESK_INTEGRATION/TAG_DEFS_FOR_DESK_OPS.md (Research Lab 20:55 ET) + CORPUS_AUDIT/code/ctx_feats.py: tierA, deep70 = depth60 >= 70, mom6 = ret126 >= pre-2020 q67, cheap5 = px_fire < 5, stress_vix20 = V",
+    "WIKI_LIVE (quant-research-backup 02777b5e): out/wiki_features_history.parquet + frozen/thresholds.json (wiki_low_q per lane, spike2 2.0); Research Lab: PASSED PARITY (2026-10-05 21:23 ET)"
+   ],
+   "flags": [
+    "placeholder/index: INDEX (1.0.2): the cells trade as s_q07w_* lanes"
+   ]
+  },
+  {
+   "id": "s_wait_q14",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q14 pxcap5 book (WAIT)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "WAIT placeholder",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_wait_q14"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = n/a)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 6 WAIT: OOS 1.41 vs 1.20, needs desk-model"
+   ],
+   "flags": [
+    "placeholder/index: WAIT placeholder"
+   ]
+  },
+  {
+   "id": "s_wait_intraweek",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Intraweek early entry (WAIT)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "WAIT placeholder",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_wait_intraweek"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = n/a)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 6 WAIT: +3.6, needs execution test"
+   ],
+   "flags": [
+    "placeholder/index: WAIT placeholder"
+   ]
+  },
+  {
+   "id": "s_wait_chase",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "CHASE (WAIT)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "WAIT placeholder",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_wait_chase"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = n/a)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 6 WAIT: conflicts with the live near-52w-high avoid"
+   ],
+   "flags": [
+    "placeholder/index: WAIT placeholder"
+   ]
+  },
+  {
+   "id": "s_wait_olx_books",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "OLX R1/R2 books for the other lanes (WAIT)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "WAIT placeholder",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_wait_olx_books"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = n/a)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 6 WAIT: queued"
+   ],
+   "flags": [
+    "placeholder/index: WAIT placeholder"
+   ]
+  },
+  {
+   "id": "s_wait_r2_dcyan",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "R2 Daily Cyan extended (WAIT)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "WAIT placeholder",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_wait_r2_dcyan"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = n/a)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 6 WAIT: running"
+   ],
+   "flags": [
+    "placeholder/index: WAIT placeholder"
+   ]
+  },
+  {
+   "id": "s_wait_flow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "FLOW short volume / FTD / dark-pool (WAIT)",
+   "enabled": false,
+   "state": "dead",
+   "status_text": "WAIT placeholder",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_wait_flow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = n/a)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 0,
+    "max_slots": 0,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/DESK_PLAN.md section 6 WAIT: underpowered, open"
+   ],
+   "flags": [
+    "placeholder/index: WAIT placeholder"
+   ]
+  },
+  {
+   "id": "s_q07w_c52_sm_cheap5_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H52 small cheap5+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c52_sm_cheap5_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H52-small-cheap5+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+wiki_cov w_cyan H52 small red band: n 30, names 19, edge +325.3 [140.9, 527.2], q_fam 0.0137, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c52_sm_deep70_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H52 small deep70+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c52_sm_deep70_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H52-small-deep70+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+wiki_cov w_cyan H52 small red band: n 111, names 62, edge +133.0 [90.5, 182.4], q_fam 5.08e-06, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c52_sm_tierA_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H52 small tierA+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c52_sm_tierA_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H52-small-tierA+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_cov w_cyan H52 small red band: n 106, names 51, edge +148.3 [90.9, 211.7], q_fam 7.9e-05, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c78_sm_deep70_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H78 small deep70+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c78_sm_deep70_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1387,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H78-small-deep70+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+wiki_cov w_cyan H78 small red band: n 102, names 60, edge +120.7 [92.5, 153.8], q_fam 1.36e-09, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c78_sm_tierA_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H78 small tierA+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c78_sm_tierA_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H78-small-tierA+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_cov w_cyan H78 small red band: n 100, names 50, edge +127.3 [85.2, 179.8], q_fam 2.44e-05, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c52_ml_tierA_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H52 midlarge tierA+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c52_ml_tierA_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H52-midlarge-tierA+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_cov w_cyan H52 midlarge red band: n 226, names 137, edge +29.0 [17.3, 43.7], q_fam 0.000339, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c52_ml_tierA_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H52 midlarge tierA+wiki_low (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c52_ml_tierA_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H52-midlarge-tierA+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_low w_cyan H52 midlarge red band: n 66, names 41, edge +35.3 [17.7, 54.0], q_fam 0.0019, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c52_ml_mom6_tierA_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H52 midlarge mom6+tierA+wiki_low (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c52_ml_mom6_tierA_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H52-midlarge-mom6+tierA+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv mom6+tierA+wiki_low w_cyan H52 midlarge red band: n 56, names 36, edge +37.8 [16.6, 60.1], q_fam 0.00487, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c52_ml_mom6_wspike2",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H52 midlarge mom6+wiki_spike2 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c52_ml_mom6_wspike2"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1337,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H52-midlarge-mom6+wiki_spike2 (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv mom6+wiki_spike2 w_cyan H52 midlarge red band: n 41, names 35, edge +56.1 [12.9, 103.7], q_fam 0.0395, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c78_ml_tierA_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H78 midlarge tierA+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c78_ml_tierA_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H78-midlarge-tierA+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_cov w_cyan H78 midlarge red band: n 211, names 130, edge +42.0 [21.1, 64.9], q_fam 0.0017, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c78_ml_tierA_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H78 midlarge tierA+wiki_low (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c78_ml_tierA_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H78-midlarge-tierA+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_low w_cyan H78 midlarge red band: n 62, names 40, edge +59.9 [31.4, 94.9], q_fam 0.00254, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c78_ml_mom6_tierA_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H78 midlarge mom6+tierA+wiki_low (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c78_ml_mom6_tierA_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H78-midlarge-mom6+tierA+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv mom6+tierA+wiki_low w_cyan H78 midlarge red band: n 52, names 35, edge +61.7 [31.6, 95.0], q_fam 0.00222, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c78_ml_deep70_tierA_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H78 midlarge deep70+tierA+wiki_low (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c78_ml_deep70_tierA_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H78-midlarge-deep70+tierA+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+tierA+wiki_low w_cyan H78 midlarge red band: n 47, names 31, edge +49.5 [18.9, 83.4], q_fam 0.013, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g52_sm_tierA_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H52 small tierA+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g52_sm_tierA_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H52-small-tierA+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_cov w_green H52 small red band: n 68, names 48, edge +111.7 [53.5, 174.7], q_fam 0.00249, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g52_sm_deep70_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H52 small deep70+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g52_sm_deep70_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H52-small-deep70+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+wiki_cov w_green H52 small red band: n 65, names 54, edge +118.6 [52.5, 214.5], q_fam 0.0178, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g78_sm_tierA_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H78 small tierA+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g78_sm_tierA_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H78-small-tierA+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_cov w_green H78 small red band: n 62, names 47, edge +184.2 [91.1, 303.1], q_fam 0.00346, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g78_sm_deep70_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H78 small deep70+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g78_sm_deep70_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H78-small-deep70+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+wiki_cov w_green H78 small red band: n 58, names 49, edge +180.8 [82.7, 323.7], q_fam 0.0136, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g52_ml_tierA_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H52 midlarge tierA+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g52_ml_tierA_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H52-midlarge-tierA+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_cov w_green H52 midlarge red band: n 94, names 69, edge +40.9 [24.2, 58.9], q_fam 0.000268, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g78_ml_tierA_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H78 midlarge tierA+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g78_ml_tierA_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2544,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H78-midlarge-tierA+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv tierA+wiki_cov w_green H78 midlarge red band: n 79, names 60, edge +51.0 [26.7, 74.5], q_fam 0.000478, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g52_ml_ats_z1_mom6_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H52 midlarge ats_z1+mom6+wiki_low (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g52_ml_ats_z1_mom6_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1196,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H52-midlarge-ats_z1+mom6+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv ats_z1+mom6+wiki_low w_green H52 midlarge red band: n 42, names 40, edge +27.8 [12.5, 50.0], q_fam 0.0118, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_s52_sm_cheap5_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 small cheap5+wiki_cov (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_sm_cheap5_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-small-cheap5+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+wiki_cov w_swing H52 small red band: n 152, names 26, edge +174.9 [92.4, 285.5], q_fam 0.00578, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_sm_deep70_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 small deep70+wiki_cov (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_sm_deep70_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-small-deep70+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+wiki_cov w_swing H52 small red band: n 407, names 89, edge +85.3 [57.8, 125.3], q_fam 5.21e-05, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_sm_cheap5_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 small cheap5+wiki_cov (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_sm_cheap5_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1194,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-small-cheap5+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+wiki_cov w_swing H78 small red band: n 135, names 24, edge +285.2 [179.7, 417.4], q_fam 0.000124, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_sm_deep70_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 small deep70+wiki_cov (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_sm_deep70_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2265,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-small-deep70+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+wiki_cov w_swing H78 small red band: n 372, names 84, edge +122.9 [88.9, 177.9], q_fam 7.74e-06, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_ml_deep70_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 midlarge deep70+wiki_low (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_ml_deep70_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-midlarge-deep70+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+wiki_low w_swing H52 midlarge red band: n 209, names 49, edge +18.2 [10.1, 26.5], q_fam 0.0023, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_ml_deep70_vix20_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 midlarge deep70+stress_vix20+wiki_low (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_ml_deep70_vix20_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-midlarge-deep70+stress_vix20+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+stress_vix20+wiki_low w_swing H52 midlarge red band: n 140, names 41, edge +21.7 [8.8, 34.0], q_fam 0.00951, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_ml_deep70_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 midlarge deep70+wiki_cov (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_ml_deep70_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 6563,
+    "max_slots": 6,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-midlarge-deep70+wiki_cov (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+wiki_cov w_swing H78 midlarge red band: n 808, names 173, edge +36.1 [22.6, 50.3], q_fam 1.89e-05, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_ml_deep70_mom6_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 midlarge deep70+mom6+wiki_low (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_ml_deep70_mom6_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-midlarge-deep70+mom6+wiki_low (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+mom6+wiki_low w_swing H78 midlarge red band: n 108, names 34, edge +27.3 [17.9, 39.9], q_fam 9.41e-05, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_c52_sm_cheap5_ins2_mom6",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H52 small cheap5+insider2+mom6 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c52_sm_cheap5_ins2_mom6"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H52-small-cheap5+insider2+mom6 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+insider2+mom6 w_cyan H52 small red band: n 36, names 27, edge +178.6 [22.8, 361.7], q_fam 0.114, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c78_sm_deep70_ins2_vix20",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H78 small deep70+insider2+stress_vix20 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c78_sm_deep70_ins2_vix20"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H78-small-deep70+insider2+stress_vix20 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+insider2+stress_vix20 w_cyan H78 small red band: n 61, names 50, edge +57.7 [13.6, 90.6], q_fam 0.189, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_c78_sm_ins2_mom6_vix20",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_cyan H78 small insider2+mom6+stress_vix20 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_c78_sm_ins2_mom6_vix20"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_cyan-H78-small-insider2+mom6+stress_vix20 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv insider2+mom6+stress_vix20 w_cyan H78 small red band: n 88, names 71, edge +54.1 [12.4, 110.3], q_fam 0.234, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g78_sm_deep70_ins2",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H78 small deep70+insider2 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g78_sm_deep70_ins2"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H78-small-deep70+insider2 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+insider2 w_green H78 small red band: n 87, names 83, edge +91.6 [25.6, 188.4], q_fam 0.154, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g52_sm_deep70_ins2_vix20",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H52 small deep70+insider2+stress_vix20 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g52_sm_deep70_ins2_vix20"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H52-small-deep70+insider2+stress_vix20 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+insider2+stress_vix20 w_green H52 small red band: n 46, names 45, edge +109.6 [23.9, 222.8], q_fam 0.253, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g78_sm_cheap5_ins2",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H78 small cheap5+insider2 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g78_sm_cheap5_ins2"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H78-small-cheap5+insider2 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+insider2 w_green H78 small red band: n 46, names 37, edge +142.5 [23.6, 325.5], q_fam 0.172, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g52_sm_ins2_wcov",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H52 small insider2+wiki_cov (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g52_sm_ins2_wcov"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1487,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H52-small-insider2+wiki_cov (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv insider2+wiki_cov w_green H52 small red band: n 69, names 49, edge +72.0 [14.4, 182.4], q_fam 0.121, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g78_mi_cheap5_deep70_ins2",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H78 micro cheap5+deep70+insider2 (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g78_mi_cheap5_deep70_ins2"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H78-micro-cheap5+deep70+insider2 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+deep70+insider2 w_green H78 micro red band: n 56, names 49, edge +39.6 [6.6, 82.0], q_fam 0.126, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_g52_ml_ins2_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_green H52 midlarge insider2+wiki_low (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_g52_ml_ins2_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 3167,
+    "max_slots": 3,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_green-H52-midlarge-insider2+wiki_low (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv insider2+wiki_low w_green H52 midlarge red band: n 85, names 64, edge +6.4 [0.4, 14.2], q_fam 0.102, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_q07w_s78_sm_cheap5_ins2_vix20",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 small cheap5+insider2+stress_vix20 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_sm_cheap5_ins2_vix20"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-small-cheap5+insider2+stress_vix20 (CONFIRMED; ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+insider2+stress_vix20 w_swing H78 small red band: n 91, names 39, edge +194.0 [81.9, 378.7], q_fam 0.0374, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_sm_cheap5_ins2_vix20",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 small cheap5+insider2+stress_vix20 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_sm_cheap5_ins2_vix20"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-small-cheap5+insider2+stress_vix20 (CONFIRMED; ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+insider2+stress_vix20 w_swing H52 small red band: n 101, names 46, edge +178.8 [67.3, 299.8], q_fam 0.0258, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_mi_cheap5_ins2_mom6",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 micro cheap5+insider2+mom6 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_mi_cheap5_ins2_mom6"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-micro-cheap5+insider2+mom6 (CONFIRMED; ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+insider2+mom6 w_swing H78 micro red band: n 331, names 116, edge +66.7 [42.3, 86.8], q_fam 1.61e-06, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_ml_deep70_ins2_vix20",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 midlarge deep70+insider2+stress_vix20 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_ml_deep70_ins2_vix20"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-midlarge-deep70+insider2+stress_vix20 (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+insider2+stress_vix20 w_swing H78 midlarge red band: n 180, names 61, edge +52.7 [26.3, 67.1], q_fam 0.000138, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_ml_deep70_ins2_vix20",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 midlarge deep70+insider2+stress_vix20 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_ml_deep70_ins2_vix20"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-midlarge-deep70+insider2+stress_vix20 (CONFIRMED; ADD paper-test ($1k) -> core candidate)",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+insider2+stress_vix20 w_swing H52 midlarge red band: n 185, names 64, edge +29.7 [11.2, 39.6], q_fam 0.00271, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_sm_deep70_ins2",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 small deep70+insider2 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_sm_deep70_ins2"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-small-deep70+insider2 (UNPROVEN (PROMISING: CI > 0, latest year against); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+insider2 w_swing H78 small red band: n 668, names 221, edge +42.0 [19.5, 67.8], q_fam 0.0116, UNPROVEN (PROMISING: CI > 0, latest year against)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_sm_cheap5_deep70_ins2",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 small cheap5+deep70+insider2 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_sm_cheap5_deep70_ins2"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-small-cheap5+deep70+insider2 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv cheap5+deep70+insider2 w_swing H52 small red band: n 159, names 58, edge +77.5 [16.2, 166.2], q_fam 0.111, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_ml_deep70_glow_ins2",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 midlarge deep70+gamma_low+insider2 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_ml_deep70_glow_ins2"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-midlarge-deep70+gamma_low+insider2 (UNPROVEN (PROMISING: CI > 0, fails family BH); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv deep70+gamma_low+insider2 w_swing H78 midlarge red band: n 35, names 28, edge +47.2 [8.2, 82.3], q_fam 0.207, UNPROVEN (PROMISING: CI > 0, fails family BH)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_ml_ins2_mom6_vix20",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 midlarge insider2+mom6+stress_vix20 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_ml_ins2_mom6_vix20"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1984,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-midlarge-insider2+mom6+stress_vix20 (UNPROVEN (PROMISING: CI > 0, latest year against); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv insider2+mom6+stress_vix20 w_swing H52 midlarge red band: n 277, names 123, edge +10.7 [3.2, 15.8], q_fam 0.0145, UNPROVEN (PROMISING: CI > 0, latest year aga",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s52_ml_ins2_mom6_wlow",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H52 midlarge insider2+mom6+wiki_low (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s52_ml_ins2_mom6_wlow"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H52-midlarge-insider2+mom6+wiki_low (UNPROVEN (PROMISING: CI > 0, latest year against); ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv insider2+mom6+wiki_low w_swing H52 midlarge red band: n 118, names 43, edge +10.8 [3.1, 16.4], q_fam 0.0736, UNPROVEN (PROMISING: CI > 0, latest year against)",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_mi_ats_z1_cheap5",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 micro ats_z1+cheap5 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_mi_ats_z1_cheap5"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-micro-ats_z1+cheap5 (CONFIRMED; ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv ats_z1+cheap5 w_swing H78 micro red band: n 45, names 26, edge +148.0 [55.9, 227.4], q_fam 0.00911, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_q07w_s78_mi_ats_z1_mom6",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Q07 w_swing H78 micro ats_z1+mom6 (test)",
+   "enabled": false,
+   "state": "live",
+   "status_text": "staged-off: input missing",
+   "source": {
+    "producer": "sleeve_feed composer (tracker ledger + alt-data tags)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_q07w_s78_mi_ats_z1_mom6"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))",
+    "hold_from": "fill",
+    "hold_unit_kind": "1w",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "DESK_INTEGRATION/EDGE_INVENTORY.csv Q07-w_swing-H78-micro-ats_z1+mom6 (CONFIRMED; ADD paper-test ($1k))",
+    "CORPUS_AUDIT/out/Q07_confluence_cells.csv ats_z1+mom6 w_swing H78 micro red band: n 31, names 23, edge +166.5 [47.6, 277.7], q_fam 0.0209, CONFIRMED",
+    "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+   ],
+   "flags": [
+    "staged off: staged-off: input missing",
+    "turned ON at cutover 2026-10-14 (was off)"
+   ]
+  },
+  {
+   "id": "s_cl_qm_small",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Breakout leaders small (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "cl_live (ChartsLector screens)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_cl_qm_small"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 90 sessions)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 14491,
+    "max_slots": 14,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "CHARTSLECTOR/RESULTS.md + INTEGRATION_PLAN.md (S2 Qullamaggie screen, no float filter, small band, ext<4 ATR, close>=$5, new entry, H90)",
+    "CHARTSLECTOR/out/grids/S2b_refine_small_1d.csv q_nofloat ext4_px_ge5 H90: train +4.23 excess (t 5.2), OOS +3.66 [2.34, 5.18] (holdout +2.03, fresh +5.17), BH q < 0.01",
+    "CHARTSLECTOR/out/sleeve/cl_lane_replay.csv (same rule on the tracker-engine names) + cl_concurrency_summary.csv (502-session budget replay)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_cl_vmr_qqq",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Market fear rebound (test)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (unarmed: desk staged)",
+   "source": {
+    "producer": "cl_live (ChartsLector screens)",
+    "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+    "lane": "s_cl_vmr_qqq"
+   },
+   "entry": {
+    "policy": "fear_day",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": 5,
+    "no_chase_mult": 1.02,
+    "stock_red": true,
+    "qqq_red": true,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "the sleeve feed fire's plan (no stop / time exit; hold = 5 sessions)",
+    "hold_from": "fill",
+    "hold_unit_kind": "1d",
+    "stop_pct": null,
+    "max_bars": null,
+    "rest": null,
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "CHARTSLECTOR/out/grids/S9c_vmr_long.csv: VIX Mood Ring composite <= 35 -> QQQ open t+1 to close t+5: pre-2022 +2.0 (t 2.2), OOS +2.1 (p 0.01, n 7 events); UNPROVEN (thin, BH q ~0.4 in a 140-test famil",
+    "his script: github.com/ChartsLector/TV-Indicators 'Market Action Pulse & VIX Mood Ring' @196f302 (composite weights 0.35/0.25/0.25/0.15); faithfulness test VMR MAE 0.30-1.16 vs his 116 dashboards"
+   ],
+   "flags": [
+    "fear-day buy rule ADDED 2026-10-14 (Galath GO): no green-day buys; hold counts from the fill (daily fear-day lane rule)"
+   ]
+  },
+  {
+   "id": "s_mn_hourly",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1h",
+   "label": "Midna Hourly (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_hourly"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 30,
+    "limit_band_pct": 3.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: disaster stop 15% / time exit 60 bars",
+    "hold_from": "plan",
+    "hold_unit_kind": "1h",
+    "stop_pct": 15.0,
+    "max_bars": 60,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna rules.ts Hourly / desk.ts",
+    "LANE_CAPS 1h:5 SLOT_USD 5000",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_csmom",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna CS momentum (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_csmom"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: rank exit / circuit -40%",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 63,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna context.ts CONTEXT_RULE / CSMOM_EVERY=63 / top 10% by 126d",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_nostop",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1h",
+   "label": "Midna Nostop (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_nostop"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 30,
+    "limit_band_pct": 3.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: no stop / time exit 60 bars",
+    "hold_from": "plan",
+    "hold_unit_kind": "1h",
+    "stop_pct": 99.0,
+    "max_bars": 60,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna shadow.ts markNostop",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": [
+    "Midna keeps nostop in shadow.nostop; one account cannot hold the same name twice (old playbook flag says shadow_only=false: FLAG)",
+    "turned ON at cutover 2026-10-14 (was shadow)"
+   ]
+  },
+  {
+   "id": "s_mn_hedge",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna QQQ\u2192TZA hedge (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_hedge"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: hedge exit on flip off / max 20 sessions",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 20,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna shadow.ts stepHedge HEDGE_WEIGHT=0.3 HEDGE_MAX_SESSIONS=20",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_moonshot",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Moonshot (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_moonshot"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: no stop / time exit 78 weeks",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": 99.0,
+    "max_bars": 78,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna shadow.ts stepMoonshot MOONSHOT_WEIGHT=0.01",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": [
+    "runs side by side with s_moonshot: separate experiment (Galath GO 2026-10-14)"
+   ]
+  },
+  {
+   "id": "s_mn_kronos",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Kronos (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "shadow-tracked (no broker orders): Needs NeoQuasar/Kronos-base weights+inference (9 chunk parts present on Midna; no loc",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_kronos"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: Kronos topK rebalance / min hold 5",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 5,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna kronos.ts KRONOS_TOPK=4 KRONOS_MODEL NeoQuasar/Kronos-base",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": [
+    "turned ON at cutover 2026-10-14 (was shadow)",
+    "ON with its current forecast (Galath GO 2026-10-14); OPEN ITEM: stale Kronos forecast refresh"
+   ]
+  },
+  {
+   "id": "s_mn_turtle",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Turtle (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_turtle"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: turtle ATR stop / exit10",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna board.ts turtle enter20/enter55 BOARD_MAX_NAMES=4 BOARD_RISK=0.01",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_macd",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna MACD (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_macd"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: MACD down exit",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna board.ts macdUp/macdDown",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_vwap",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna VWAP (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_vwap"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: VWAP down exit",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna board.ts vwapUp/vwapDown",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_faber",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Faber (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_faber"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: Faber below 10m SMA exit",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna quantpedia.ts Faber five ETFs above 10-month average",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_reversal",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Reversal (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_reversal"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: reversal time/rotation exit",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 21,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna quantpedia.ts worst prior-month large caps",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_pairs",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Pairs (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_pairs"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: pairs z-score mean-revert exit",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna quantpedia.ts distance pairs 2\u03c3",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_opt_turtle",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Opt Turtle (Midna port)",
+   "enabled": true,
+   "state": "shadow",
+   "status_text": "shadow-tracked (no broker orders): Listed options book; Test desk is stocks-only \u2014 paper-tracked from option-marks.json,",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_opt_turtle"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: opt turtle (shadow)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna option-books.ts turtle",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": [
+    "options/ladder book: stays shadow on the stocks-only desk (Galath GO 2026-10-14: stocks only)"
+   ]
+  },
+  {
+   "id": "s_mn_opt_reversal",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Opt Reversal (Midna port)",
+   "enabled": true,
+   "state": "shadow",
+   "status_text": "shadow-tracked (no broker orders): Listed options book; Test desk is stocks-only \u2014 paper-tracked, no broker orders",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_opt_reversal"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: opt reversal (shadow)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna option-books.ts reversal",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": [
+    "options/ladder book: stays shadow on the stocks-only desk (Galath GO 2026-10-14: stocks only)"
+   ]
+  },
+  {
+   "id": "s_mn_opt_pairs",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Opt Pairs (Midna port)",
+   "enabled": true,
+   "state": "shadow",
+   "status_text": "shadow-tracked (no broker orders): Listed options book; Test desk is stocks-only \u2014 paper-tracked, no broker orders",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_opt_pairs"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: opt pairs (shadow)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna option-books.ts pairs",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": [
+    "options/ladder book: stays shadow on the stocks-only desk (Galath GO 2026-10-14: stocks only)"
+   ]
+  },
+  {
+   "id": "s_mn_qqq_ladder",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna QQQ Ladder (Midna port)",
+   "enabled": true,
+   "state": "shadow",
+   "status_text": "shadow-tracked (no broker orders): QQQ options ladder; Test desk is stocks-only \u2014 paper-tracked from option-marks/ladder",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_qqq_ladder"
+   },
+   "entry": {
+    "policy": "midna_none",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: ladder mark-to-market (shadow)",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 0,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 1000,
+    "max_slots": 1,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna qqq-ladder.ts LADDER_NAV=1e6 LADDER_QTY=3",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": [
+    "options/ladder book: stays shadow on the stocks-only desk (Galath GO 2026-10-14: stocks only)",
+    "Midna lane with NO buy-block (qqq-ladder: shadow options book)"
+   ]
+  },
+  {
+   "id": "s_mn_gbm_1d_cyan",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Daily cyan trees (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_gbm_1d_cyan"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: no stop / time exit 21 sessions",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 21,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna forward.ts FORWARD_SPECS id=gbm-1d-cyan ruleId=V4-GBM-1D-CYAN-ALL FORWARD_NAV=20000 FORWARD_SLOTS=6",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": [
+    "runs side by side with Main 1dc: separate experiment (Galath GO 2026-10-14)"
+   ]
+  },
+  {
+   "id": "s_mn_w_cyan_breadth",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna W cyan breadth (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_w_cyan_breadth"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: no stop / time exit 126 sessions",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 126,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna forward.ts FORWARD_SPECS id=w-cyan-breadth ruleId=V4-1W-CYAN-RAW-H126-COV-7332415a FORWARD_NAV=20000 FORWARD_SLOTS=6",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_w_cyan_vix",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna W cyan mid-VIX (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_w_cyan_vix"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: no stop / time exit 252 sessions",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 252,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna forward.ts FORWARD_SPECS id=w-cyan-vix ruleId=V4-1W-CYAN-RAW-H252-COV-bcd9f74d FORWARD_NAV=20000 FORWARD_SLOTS=6",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_d_green_band",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna D green $10-20 (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_d_green_band"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: no stop / time exit 21 sessions",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 21,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna forward.ts FORWARD_SPECS id=d-green-band ruleId=V4-1D-GREEN-RAW-H21-ALL-879f9d43 FORWARD_NAV=20000 FORWARD_SLOTS=6",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_w_green_smh",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna W green calm SMH (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_w_green_smh"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: no stop / time exit 126 sessions",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 126,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna forward.ts FORWARD_SPECS id=w-green-smh ruleId=V4-1W-GREEN-TAIL-H126-ALL-fb459d4f FORWARD_NAV=20000 FORWARD_SLOTS=6",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_w_cyan_adx",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna W cyan high ADX (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_w_cyan_adx"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: no stop / time exit 126 sessions",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 99.0,
+    "max_bars": 126,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna forward.ts FORWARD_SPECS id=w-cyan-adx ruleId=V2-1W-CYAN-RAW-H126-f10092bc FORWARD_NAV=20000 FORWARD_SLOTS=6",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills",
+    "live/midna/reference_positions.json (comparison only)"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_hourly_1d",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1d",
+   "label": "Midna Hourly 1D (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_hourly_1d"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: calibrated plan / time exit 40 sessions",
+    "hold_from": "plan",
+    "hold_unit_kind": "1d",
+    "stop_pct": 15.0,
+    "max_bars": 40,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna rules.ts Hourly 1D",
+    "LANE_CAPS 1d:5 MAX_DELAY 65",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills"
+   ],
+   "flags": []
+  },
+  {
+   "id": "s_mn_hourly_1w",
+   "account": "TEST",
+   "broker_account": "TEST_MWJW",
+   "kind": "1w",
+   "label": "Midna Hourly 1W (Midna port)",
+   "enabled": true,
+   "state": "live",
+   "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+   "source": {
+    "producer": "sleeve_midna (Midna entire-branch signal files + Yahoo)",
+    "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+    "lane": "s_mn_hourly_1w"
+   },
+   "entry": {
+    "policy": "midna_block",
+    "max_delay_minutes": 65,
+    "limit_band_pct": 5.0,
+    "limit_buffer_pct": 1.0,
+    "window_sessions": null,
+    "no_chase_mult": null,
+    "stock_red": false,
+    "qqq_red": false,
+    "order": "capped_limit_day"
+   },
+   "exit": {
+    "rule": "Midna plan: calibrated plan / time exit 52 weeks",
+    "hold_from": "plan",
+    "hold_unit_kind": "1w",
+    "stop_pct": 15.0,
+    "max_bars": 52,
+    "rest": "time",
+    "plan_overrides": []
+   },
+   "sizing": {
+    "budget_usd": 2000,
+    "max_slots": 2,
+    "position_usd": 1000,
+    "position_usd_by_class": {},
+    "one_share_max_usd": null,
+    "cap_pct_of_dv20": 1.0,
+    "min_slot_fraction": 0.9,
+    "global_slot_usd": 1000,
+    "min_dv20_usd": 100000
+   },
+   "research": [
+    "Midna rules.ts Hourly 1W",
+    "LANE_CAPS 1w:10 MAX_DELAY 65",
+    "InfinityBlade: faithful Midna rules; start FLAT; no fake feeds/fills"
+   ],
+   "flags": []
+  }
+ ]
+}
