@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "purpose": "Bounded local search for executable original Femto/Midna desk core; no inference from older memory",
+  "searched_at_utc": "2026-10-08T05:39:33.230220+00:00",
+  "conclusion": "No matching original executable core path or content marker was found within the searched saved local inventory. Current remote heads are being checked separately. This does not establish that the user's entire runtime is absent from GitHub, deleted history, or opaque/unindexed archives.",
+  "sqlite": {
+    "path": "/workspace/github-review/catalogue/research-index.sqlite",
+    "index_modified_utc": "2026-10-08T04:51:29.541094+00:00",
+    "file_rows_searched": 279359,
+    "repos_with_file_rows": 21,
+    "ref_counts": {
+      "branch": 85,
+      "tag": 76
+    },
+    "scope_note": "22 repositories in root inventory; empty Codex has no file rows, so SQLite files cover 21 repositories. Queries cover raw and normalized paths, all 85 branch refs and 76 tag refs in this saved index.",
+    "queries": [
+      {
+        "term": "scan_and_trade",
+        "matches": 0,
+        "rows": []
+      },
+      {
+        "term": "calibrator",
+        "matches": 0,
+        "rows": []
+      },
+      {
+        "term": "reconcile_fills",
+        "matches": 0,
+        "rows": []
+      },
+      {
+        "term": "build_snapshot",
+        "matches": 0,
+        "rows": []
+      },
+      {
+        "term": "verify_feed",
+        "matches": 0,
+        "rows": []
+      },
+      {
+        "term": "postmortems",
+        "matches": 0,
+        "rows": []
+      },
+      {
+        "term": "hidden_state",
+        "matches": 0,
+        "rows": []
+      }
+    ],
+    "alpaca_swing_desk_paths": 8811,
+    "alpaca_swing_desk_nonresearch_noncontext_paths": 0,
+    "nonresearch_noncontext_matches": [],
+    "pinned_relevant_refs": [
+      [
+        "Femto",
+        "branch",
+        "main",
+        "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+        3
+      ],
+      [
+        "Midna",
+        "branch",
+        "cursor/lector-desk-f184",
+        "fd0e0a07caaf658b0c349517115e1d5491e9d79e",
+        1999
+      ],
+      [
+        "Midna",
+        "branch",
+        "cursor/paper-desk-f184",
+        "164be062d8ce48da55311fa48d583ddaddda9519",
+        2077
+      ],
+      [
+        "Midna",
+        "branch",
+        "main",
+        "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+        28643
+      ]
+    ]
+  },
+  "archive_member_queries": [
+    {
+      "index": "/workspace/github-review/catalogue/archive-members.jsonl.gz",
+      "rows_searched": 76915,
+      "matching_member_paths": []
+    },
+    {
+      "index": "/workspace/github-review/catalogue/referenced-archive-members.jsonl.gz",
+      "rows_searched": 86077,
+      "matching_member_paths": []
+    }
+  ],
+  "additional_inventory_queries": [
+    {
+      "index": "/workspace/github-review/lfs-references.json",
+      "path_strings_searched": 457,
+      "matches": []
+    },
+    {
+      "index": "/workspace/github-review/release-research-packages.json",
+      "path_strings_searched": 5139,
+      "matches": []
+    },
+    {
+      "index": "/workspace/github-review/release-assets-retrieval.json",
+      "path_strings_searched": 8343,
+      "matches": []
+    }
+  ],
+  "metadata_query": {
+    "tree_and_source_json_files_parsed": 47,
+    "path_records_seen": 206245,
+    "matching_records": [
+      {
+        "metadata": "Midna/tree.json",
+        "path": "workspace__alpaca-swing-desk__desk__research__resurrection__code/run_r3_stop_floors_sleeves.py",
+        "classification": "research study, not runtime"
+      },
+      {
+        "metadata": "Agentic-Trading-Desk/tree.json",
+        "path": "tensor_daily_market_context.py",
+        "classification": "ancestor context source, not original Femto core"
+      },
+      {
+        "metadata": "Agentic-Trading-Desk/tree.json",
+        "path": "tensor_weekly_market_context.py",
+        "classification": "ancestor context source, not original Femto core"
+      }
+    ]
+  },
+  "local_content_query": {
+    "roots": [
+      "repos",
+      "branch-source",
+      "tag-source",
+      "release-research-source",
+      "extracted"
+    ],
+    "extensions": [
+      "py",
+      "sh",
+      "ts",
+      "mjs",
+      "js"
+    ],
+    "fixed_markers": [
+      "femto-",
+      "ALPACA_ENV",
+      "reconcile_fills",
+      "scan_and_trade.py"
+    ],
+    "excluded_directories": [
+      "node_modules",
+      "history",
+      "audit",
+      "research"
+    ],
+    "matching_source_files": [],
+    "scope_note": "Additional runtime-focused body search only. Exclusions mean this is not a content search of all research, history or audit prose."
+  },
+  "container_search_bounds": {
+    "inventory_containers": 628,
+    "member_indexed_containers": 92,
+    "statuses_without_member_index": [
+      {
+        "repo": "foliotend-research-operations-archive",
+        "status": "ReadError",
+        "count": 2
+      },
+      {
+        "repo": "Midna",
+        "status": "container_path_indexed_only",
+        "count": 476
+      },
+      {
+        "repo": "quant-research-backup",
+        "status": "container_path_indexed_only",
+        "count": 58
+      }
+    ],
+    "midna_containers": 476,
+    "midna_container_categories": {
+      "FTD/CNS-fails source data ZIP": 476
+    },
+    "femto_containers": 0,
+    "limitations": [
+      "Names inside unindexed archives were not searched.",
+      "Large split workspace archives, encrypted backups and Git bundles may not expose file paths in these indexes.",
+      "No complete deleted-commit/history sweep was performed.",
+      "This task used saved local snapshots only, not live GitHub queries."
+    ]
+  },
+  "actions": "Read-only filename/index/body search; no app code edits, broker connections, script execution, credentials or external messages."
+}

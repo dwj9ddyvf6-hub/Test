@@ -1,0 +1,1171 @@
+{
+  "title": "Independent NEW Aster analytics design and implementation QA",
+  "implementation_status": "Latest388-line implementation and340-line tests fully read;16 focused tests, six own standard probe families, five child edge probe families and separate MFE overflow probe pass. All verified findings fixed; no open verified defects in scope.",
+  "scope": "Read-only complete latest analytics.py and analytics tests, provider revision/calendar schemas and funding/equity accounting paths. Temporary SQLite + synthetic explicit fixtures only; no app/test/source edits, original desk runs or network.",
+  "baseline_source": {
+    "path": "/workspace/agentic-desk/backend/analytics.py",
+    "sha256": "57015d5e9edee0b8ade9f1b46c1a39b236594583a8a839330d21020c266cf96b",
+    "line_count": 144,
+    "full_read": true
+  },
+  "design_checks": [
+    {
+      "id": "net_trade_statistics",
+      "requirement": "Completed signed book/symbol episodes; exclude partial exits until flat or flip; net cents include all allocated fees. Flats belong in expectancy denominator. Conditional avgwin/avgloss counts; no-loss profit factor null with reason. Preserve fee cents exactly on flips.",
+      "source_line_start": 32,
+      "source_line_end": 62,
+      "excerpt": "\ndef completed_episodes(fills):\n    \"\"\"Count full long/short round trips; a partial exit is not a closed trade.\"\"\"\n    active, complete = {}, []\n    for fill in fills:\n        key = (fill[\"book_id\"], fill[\"symbol\"])\n        quantity = Decimal(str(fill[\"quantity\"])) * (1 if fill[\"side\"] == \"buy\" else -1)\n        episode = active.get(key)\n        if episode is None:\n            active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": quantity, \"direction\": \"long\" if quantity > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": fill[\"realized_cents\"], \"fees_cents\": fill[\"fee_cents\"], \"fill_ids\": [fill[\"id\"]]}\n            continue\n        prior = episode[\"quantity\"]\n        total = prior + quantity\n        crossed = prior * total < 0\n        closing_fee = round(Decimal(fill[\"fee_cents\"]) * abs(prior / quantity)) if crossed else fill[\"fee_cents\"]\n        episode[\"gross_realized_cents\"] += fill[\"realized_cents\"]\n        episode[\"fees_cents\"] += closing_fee\n        episode[\"fill_ids\"].append(fill[\"id\"])\n        if total == 0 or crossed:\n            episode[\"closed_at\"] = fill[\"timestamp\"] or fill[\"observed_at\"]\n            episode[\"gross_pnl\"] = episode.pop(\"gross_realized_cents\") / 100\n            episode[\"fees\"] = episode.pop(\"fees_cents\") / 100\n            episode[\"net_pnl\"] = episode[\"gross_pnl\"] - episode[\"fees\"]\n            episode[\"duration_seconds\"] = max(0, (timepoint(episode[\"closed_at\"]) - timepoint(episode[\"opened_at\"])).total_seconds())\n            episode.pop(\"quantity\")\n            complete.append(episode)\n            active.pop(key)\n            if crossed:\n                active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": total, \"direction\": \"long\" if total > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": 0, \"fees_cents\": fill[\"fee_cents\"] - closing_fee, \"fill_ids\": [fill[\"id\"]]}\n        else:\n            episode[\"quantity\"] = total"
+    },
+    {
+      "id": "daily_frequency",
+      "requirement": "Require contiguous paired XNYS sessions. Missing sessions cannot become a single daily return annualized at252. Report matched/missing dates and cadence.",
+      "source_line_start": 116,
+      "source_line_end": 119,
+      "excerpt": "        rows = [r for r in snapshots if start[\"timestamp\"] <= r[\"timestamp\"] <= end[\"timestamp\"]]\n        result = flow_adjusted_return(rows, flows)\n        if result is None:\n            return {\"coverage\": \"Incomplete or stale intermediate valuations; comparison withheld\"}"
+    },
+    {
+      "id": "finite_variance_and_sample",
+      "requirement": "Volatility sample SD ddof1, n>=2 mathematically; explicit conservative minimum reporting count, count/period/uncertainty. Sharpe null for zero variance; risk-free annual/daily rate0 stated. Beta same aligned observations, covariance/benchmark variance with positive variance and count.",
+      "source_line_start": 116,
+      "source_line_end": 129,
+      "excerpt": "        rows = [r for r in snapshots if start[\"timestamp\"] <= r[\"timestamp\"] <= end[\"timestamp\"]]\n        result = flow_adjusted_return(rows, flows)\n        if result is None:\n            return {\"coverage\": \"Incomplete or stale intermediate valuations; comparison withheld\"}\n        benchmarks = []\n        for sym, (data, bars) in histories.items():\n            first, last = bars[common[0]], bars[common[-1]]\n            adjusted = first.get(\"adjusted_close\") is not None and last.get(\"adjusted_close\") is not None\n            a, b = Decimal(str(first[\"adjusted_close\"] if adjusted else first[\"close\"])), Decimal(str(last[\"adjusted_close\"] if adjusted else last[\"close\"]))\n            if a <= 0 or b <= 0:\n                return {\"coverage\": \"Invalid benchmark prices; comparison withheld\"}\n            value = float((b / a - 1) * 100)\n            benchmarks.append({\"symbol\": sym, \"return_percent\": value, \"excess_return_points\": result - value, \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\", \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"), \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": result, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean end-of-session observations\", \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common)}"
+    },
+    {
+      "id": "cashflow_neutral_drawdown",
+      "requirement": "Use chained cashflow-neutral NAV/return path, not raw account equity. Do not omit zero/negative ruin or stale endpoint; withhold with explicit coverage reason rather than silently shrinking to prior clean range.",
+      "source_line_start": 94,
+      "source_line_end": 129,
+      "excerpt": "            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            close = calendar.get(\"close_at\")\n            date = stamp.astimezone(ZoneInfo(\"America/New_York\")).date().isoformat()\n            if close and stamp >= timepoint(close) and calendar.get(\"session_date\") == date:\n                days[date] = row\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return {}\n            data = json.loads(cached[0])\n            bars = {}\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                date = stamp.astimezone(ZoneInfo(\"America/New_York\")).date().isoformat()\n                bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        if len(common) < 2:\n            return {}\n        start, end = days[common[0]], days[common[-1]]\n        rows = [r for r in snapshots if start[\"timestamp\"] <= r[\"timestamp\"] <= end[\"timestamp\"]]\n        result = flow_adjusted_return(rows, flows)\n        if result is None:\n            return {\"coverage\": \"Incomplete or stale intermediate valuations; comparison withheld\"}\n        benchmarks = []\n        for sym, (data, bars) in histories.items():\n            first, last = bars[common[0]], bars[common[-1]]\n            adjusted = first.get(\"adjusted_close\") is not None and last.get(\"adjusted_close\") is not None\n            a, b = Decimal(str(first[\"adjusted_close\"] if adjusted else first[\"close\"])), Decimal(str(last[\"adjusted_close\"] if adjusted else last[\"close\"]))\n            if a <= 0 or b <= 0:\n                return {\"coverage\": \"Invalid benchmark prices; comparison withheld\"}\n            value = float((b / a - 1) * 100)\n            benchmarks.append({\"symbol\": sym, \"return_percent\": value, \"excess_return_points\": result - value, \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\", \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"), \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": result, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean end-of-session observations\", \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common)}"
+    },
+    {
+      "id": "eod_baseline",
+      "requirement": "Latest after-close observation is not necessarily a close mark; funding/after-hours changes can contaminate close-to-close pair. Select documented bounded close window or withhold daily stats.",
+      "source_line_start": 94,
+      "source_line_end": 108,
+      "excerpt": "            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            close = calendar.get(\"close_at\")\n            date = stamp.astimezone(ZoneInfo(\"America/New_York\")).date().isoformat()\n            if close and stamp >= timepoint(close) and calendar.get(\"session_date\") == date:\n                days[date] = row\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return {}\n            data = json.loads(cached[0])\n            bars = {}\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])"
+    },
+    {
+      "id": "time_normalization",
+      "requirement": "Compare UTC-aware datetimes, not mixed ISOstrings; validate both prior/current snapshots. Funding boundaries need observed pre/post valuations.",
+      "source_line_start": 16,
+      "source_line_end": 29,
+      "excerpt": "def flow_adjusted_return(snapshots, flows):\n    \"\"\"Chain valued subperiods; deposits are removed at their recorded boundary.\n\n    The engine records a valuation immediately before and after each funding.\n    Old data without those valuations has an explicit timing limitation.\n    \"\"\"\n    if len(snapshots) < 2:\n        return None\n    growth = Decimal(1)\n    for prior, current in zip(snapshots, snapshots[1:]):\n        if prior[\"equity_cents\"] <= 0 or current[\"missing_marks\"] or current.get(\"stale_marks\") != 0:\n            return None\n        amount = sum((Decimal(f[\"amount_cents\"]) for f in flows if prior[\"timestamp\"] < f[\"timestamp\"] <= current[\"timestamp\"]), Decimal(0))\n        growth *= (Decimal(current[\"equity_cents\"]) - amount) / Decimal(prior[\"equity_cents\"])"
+    },
+    {
+      "id": "benchmark_consistency",
+      "requirement": "Single coherent provider/revision/adjustment convention across every interval. Check truncated/stale/forming bars and session labels; UTC-midnight vendor labels require explicit normalization. Prices finite/positive.",
+      "source_line_start": 103,
+      "source_line_end": 128,
+      "excerpt": "            if not cached:\n                return {}\n            data = json.loads(cached[0])\n            bars = {}\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                date = stamp.astimezone(ZoneInfo(\"America/New_York\")).date().isoformat()\n                bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        if len(common) < 2:\n            return {}\n        start, end = days[common[0]], days[common[-1]]\n        rows = [r for r in snapshots if start[\"timestamp\"] <= r[\"timestamp\"] <= end[\"timestamp\"]]\n        result = flow_adjusted_return(rows, flows)\n        if result is None:\n            return {\"coverage\": \"Incomplete or stale intermediate valuations; comparison withheld\"}\n        benchmarks = []\n        for sym, (data, bars) in histories.items():\n            first, last = bars[common[0]], bars[common[-1]]\n            adjusted = first.get(\"adjusted_close\") is not None and last.get(\"adjusted_close\") is not None\n            a, b = Decimal(str(first[\"adjusted_close\"] if adjusted else first[\"close\"])), Decimal(str(last[\"adjusted_close\"] if adjusted else last[\"close\"]))\n            if a <= 0 or b <= 0:\n                return {\"coverage\": \"Invalid benchmark prices; comparison withheld\"}\n            value = float((b / a - 1) * 100)\n            benchmarks.append({\"symbol\": sym, \"return_percent\": value, \"excess_return_points\": result - value, \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\", \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"), \"baseline_date\": common[0], \"through_date\": common[-1]})"
+    },
+    {
+      "id": "trade_provenance",
+      "requirement": "Observed_at replay order can differ from execution source order; old/unknown broker opening baseline and unobserved fees need completeness flags and conservative metrics.",
+      "source_line_start": 32,
+      "source_line_end": 62,
+      "excerpt": "\ndef completed_episodes(fills):\n    \"\"\"Count full long/short round trips; a partial exit is not a closed trade.\"\"\"\n    active, complete = {}, []\n    for fill in fills:\n        key = (fill[\"book_id\"], fill[\"symbol\"])\n        quantity = Decimal(str(fill[\"quantity\"])) * (1 if fill[\"side\"] == \"buy\" else -1)\n        episode = active.get(key)\n        if episode is None:\n            active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": quantity, \"direction\": \"long\" if quantity > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": fill[\"realized_cents\"], \"fees_cents\": fill[\"fee_cents\"], \"fill_ids\": [fill[\"id\"]]}\n            continue\n        prior = episode[\"quantity\"]\n        total = prior + quantity\n        crossed = prior * total < 0\n        closing_fee = round(Decimal(fill[\"fee_cents\"]) * abs(prior / quantity)) if crossed else fill[\"fee_cents\"]\n        episode[\"gross_realized_cents\"] += fill[\"realized_cents\"]\n        episode[\"fees_cents\"] += closing_fee\n        episode[\"fill_ids\"].append(fill[\"id\"])\n        if total == 0 or crossed:\n            episode[\"closed_at\"] = fill[\"timestamp\"] or fill[\"observed_at\"]\n            episode[\"gross_pnl\"] = episode.pop(\"gross_realized_cents\") / 100\n            episode[\"fees\"] = episode.pop(\"fees_cents\") / 100\n            episode[\"net_pnl\"] = episode[\"gross_pnl\"] - episode[\"fees\"]\n            episode[\"duration_seconds\"] = max(0, (timepoint(episode[\"closed_at\"]) - timepoint(episode[\"opened_at\"])).total_seconds())\n            episode.pop(\"quantity\")\n            complete.append(episode)\n            active.pop(key)\n            if crossed:\n                active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": total, \"direction\": \"long\" if total > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": 0, \"fees_cents\": fill[\"fee_cents\"] - closing_fee, \"fill_ids\": [fill[\"id\"]]}\n        else:\n            episode[\"quantity\"] = total"
+    },
+    {
+      "id": "snapshot_consistency",
+      "requirement": "Current trading.snapshot and subsequent fills/equity/flow reads should use one database view to avoid account/performance mismatch during concurrent fills.",
+      "source_line_start": 69,
+      "source_line_end": 87,
+      "excerpt": "\n    def snapshot(self):\n        current = self.trading.snapshot()\n        reports = []\n        with self.store.connect() as con:\n            all_fills = [dict(r) for r in con.execute(\"SELECT * FROM p_fills ORDER BY observed_at,rowid\")]\n            episodes = completed_episodes(all_fills)\n            for book in current[\"books\"]:\n                bid = book[\"id\"]\n                samples = [e for e in episodes if e[\"book_id\"] == bid]\n                returns = [dict(r) for r in con.execute(\"SELECT * FROM p_equity WHERE book_id=? ORDER BY timestamp,rowid\", (bid,))]\n                flows = [dict(r) for r in con.execute(\"SELECT * FROM p_fundings WHERE book_id=? ORDER BY timestamp\", (bid,))]\n                report = {\"book_id\": bid, \"book_name\": book[\"name\"], \"account\": book[\"account\"], \"closed_roundtrips\": len(samples), \"wins\": sum(e[\"net_pnl\"] > 0 for e in samples), \"losses\": sum(e[\"net_pnl\"] < 0 for e in samples), \"win_rate_percent\": sum(e[\"net_pnl\"] > 0 for e in samples) * 100 / len(samples) if samples else None, \"closed_trade_net_pnl\": sum(e[\"net_pnl\"] for e in samples), \"return_percent\": None, \"benchmarks\": [], \"coverage\": \"Awaiting two clean end-of-session valuations and matching benchmark bars\", \"profitability_claim\": False}\n                if book[\"broker\"] == \"local\":\n                    report.update(self._aligned(con, returns, flows))\n                else:\n                    report[\"coverage\"] = \"Broker account cashflow history is incomplete; no account return is inferred\"\n                reports.append(report)\n        return {\"books\": reports, \"completed_trades\": episodes[-1000:], \"benchmark_definitions\": {\"QQQ\": \"Nasdaq-100 ETF\", \"SPY\": \"S&P 500 ETF proxy\"}, \"return_method\": \"Chain of valued cashflow-adjusted subperiod returns, measured between common end-of-session baselines\", \"strategy_count\": 0, \"scope\": \"Measured evidence; outperformance is not a prediction or proof of durable edge\"}"
+    },
+    {
+      "id": "mfe_mae_coverage",
+      "requirement": "Sparse manual quotes/endpoints cannot establish true extrema. Use actual interval-contained timestamped complete intraday path with documented cadence/session coverage; daily highs cannot describe arbitrary intraday holds.",
+      "source_line_start": 32,
+      "source_line_end": 62,
+      "excerpt": "\ndef completed_episodes(fills):\n    \"\"\"Count full long/short round trips; a partial exit is not a closed trade.\"\"\"\n    active, complete = {}, []\n    for fill in fills:\n        key = (fill[\"book_id\"], fill[\"symbol\"])\n        quantity = Decimal(str(fill[\"quantity\"])) * (1 if fill[\"side\"] == \"buy\" else -1)\n        episode = active.get(key)\n        if episode is None:\n            active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": quantity, \"direction\": \"long\" if quantity > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": fill[\"realized_cents\"], \"fees_cents\": fill[\"fee_cents\"], \"fill_ids\": [fill[\"id\"]]}\n            continue\n        prior = episode[\"quantity\"]\n        total = prior + quantity\n        crossed = prior * total < 0\n        closing_fee = round(Decimal(fill[\"fee_cents\"]) * abs(prior / quantity)) if crossed else fill[\"fee_cents\"]\n        episode[\"gross_realized_cents\"] += fill[\"realized_cents\"]\n        episode[\"fees_cents\"] += closing_fee\n        episode[\"fill_ids\"].append(fill[\"id\"])\n        if total == 0 or crossed:\n            episode[\"closed_at\"] = fill[\"timestamp\"] or fill[\"observed_at\"]\n            episode[\"gross_pnl\"] = episode.pop(\"gross_realized_cents\") / 100\n            episode[\"fees\"] = episode.pop(\"fees_cents\") / 100\n            episode[\"net_pnl\"] = episode[\"gross_pnl\"] - episode[\"fees\"]\n            episode[\"duration_seconds\"] = max(0, (timepoint(episode[\"closed_at\"]) - timepoint(episode[\"opened_at\"])).total_seconds())\n            episode.pop(\"quantity\")\n            complete.append(episode)\n            active.pop(key)\n            if crossed:\n                active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": total, \"direction\": \"long\" if total > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": 0, \"fees_cents\": fill[\"fee_cents\"] - closing_fee, \"fill_ids\": [fill[\"id\"]]}\n        else:\n            episode[\"quantity\"] = total"
+    },
+    {
+      "id": "mfe_mae_variable_holdings",
+      "requirement": "Scale-ins/partial exits make first-entry-price excursion different from evolving cashP&L. Withhold or label price-based observed bounds precisely; cash excursions require signed position/fee replay.",
+      "source_line_start": 32,
+      "source_line_end": 62,
+      "excerpt": "\ndef completed_episodes(fills):\n    \"\"\"Count full long/short round trips; a partial exit is not a closed trade.\"\"\"\n    active, complete = {}, []\n    for fill in fills:\n        key = (fill[\"book_id\"], fill[\"symbol\"])\n        quantity = Decimal(str(fill[\"quantity\"])) * (1 if fill[\"side\"] == \"buy\" else -1)\n        episode = active.get(key)\n        if episode is None:\n            active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": quantity, \"direction\": \"long\" if quantity > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": fill[\"realized_cents\"], \"fees_cents\": fill[\"fee_cents\"], \"fill_ids\": [fill[\"id\"]]}\n            continue\n        prior = episode[\"quantity\"]\n        total = prior + quantity\n        crossed = prior * total < 0\n        closing_fee = round(Decimal(fill[\"fee_cents\"]) * abs(prior / quantity)) if crossed else fill[\"fee_cents\"]\n        episode[\"gross_realized_cents\"] += fill[\"realized_cents\"]\n        episode[\"fees_cents\"] += closing_fee\n        episode[\"fill_ids\"].append(fill[\"id\"])\n        if total == 0 or crossed:\n            episode[\"closed_at\"] = fill[\"timestamp\"] or fill[\"observed_at\"]\n            episode[\"gross_pnl\"] = episode.pop(\"gross_realized_cents\") / 100\n            episode[\"fees\"] = episode.pop(\"fees_cents\") / 100\n            episode[\"net_pnl\"] = episode[\"gross_pnl\"] - episode[\"fees\"]\n            episode[\"duration_seconds\"] = max(0, (timepoint(episode[\"closed_at\"]) - timepoint(episode[\"opened_at\"])).total_seconds())\n            episode.pop(\"quantity\")\n            complete.append(episode)\n            active.pop(key)\n            if crossed:\n                active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": total, \"direction\": \"long\" if total > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": 0, \"fees_cents\": fill[\"fee_cents\"] - closing_fee, \"fill_ids\": [fill[\"id\"]]}\n        else:\n            episode[\"quantity\"] = total"
+    },
+    {
+      "id": "invalid_or_missing_history",
+      "requirement": "Missing benchmark or marks must retain null results and coverage metadata; no fabricated prices, benchmark alpha, strategy/edge claims or automatic action.",
+      "source_line_start": 81,
+      "source_line_end": 87,
+      "excerpt": "                report = {\"book_id\": bid, \"book_name\": book[\"name\"], \"account\": book[\"account\"], \"closed_roundtrips\": len(samples), \"wins\": sum(e[\"net_pnl\"] > 0 for e in samples), \"losses\": sum(e[\"net_pnl\"] < 0 for e in samples), \"win_rate_percent\": sum(e[\"net_pnl\"] > 0 for e in samples) * 100 / len(samples) if samples else None, \"closed_trade_net_pnl\": sum(e[\"net_pnl\"] for e in samples), \"return_percent\": None, \"benchmarks\": [], \"coverage\": \"Awaiting two clean end-of-session valuations and matching benchmark bars\", \"profitability_claim\": False}\n                if book[\"broker\"] == \"local\":\n                    report.update(self._aligned(con, returns, flows))\n                else:\n                    report[\"coverage\"] = \"Broker account cashflow history is incomplete; no account return is inferred\"\n                reports.append(report)\n        return {\"books\": reports, \"completed_trades\": episodes[-1000:], \"benchmark_definitions\": {\"QQQ\": \"Nasdaq-100 ETF\", \"SPY\": \"S&P 500 ETF proxy\"}, \"return_method\": \"Chain of valued cashflow-adjusted subperiod returns, measured between common end-of-session baselines\", \"strategy_count\": 0, \"scope\": \"Measured evidence; outperformance is not a prediction or proof of durable edge\"}"
+    }
+  ],
+  "implementation_review": {
+    "sources": [
+      {
+        "path": "/workspace/agentic-desk/backend/analytics.py",
+        "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+        "line_count": 388,
+        "full_read": true,
+        "functions": [
+          {
+            "name": "timepoint",
+            "line": 21,
+            "end_line": 25
+          },
+          {
+            "name": "clean",
+            "line": 28,
+            "end_line": 29
+          },
+          {
+            "name": "nav_curve",
+            "line": 32,
+            "end_line": 55
+          },
+          {
+            "name": "flow_adjusted_return",
+            "line": 58,
+            "end_line": 61
+          },
+          {
+            "name": "finite_number",
+            "line": 64,
+            "end_line": 68
+          },
+          {
+            "name": "metric",
+            "line": 71,
+            "end_line": 76
+          },
+          {
+            "name": "trade_metrics",
+            "line": 79,
+            "end_line": 96
+          },
+          {
+            "name": "unavailable_risk",
+            "line": 99,
+            "end_line": 107
+          },
+          {
+            "name": "risk_metrics",
+            "line": 110,
+            "end_line": 154
+          },
+          {
+            "name": "completed_episodes",
+            "line": 157,
+            "end_line": 189
+          },
+          {
+            "name": "analytics_router",
+            "line": 376,
+            "end_line": 388
+          },
+          {
+            "name": "item",
+            "line": 84,
+            "end_line": 85
+          },
+          {
+            "name": "__init__",
+            "line": 193,
+            "end_line": 194
+          },
+          {
+            "name": "snapshot",
+            "line": 196,
+            "end_line": 239
+          },
+          {
+            "name": "_has_table",
+            "line": 242,
+            "end_line": 243
+          },
+          {
+            "name": "_aligned",
+            "line": 245,
+            "end_line": 320
+          },
+          {
+            "name": "_excursion",
+            "line": 322,
+            "end_line": 373
+          },
+          {
+            "name": "reports",
+            "line": 380,
+            "end_line": 381
+          },
+          {
+            "name": "projection",
+            "line": 384,
+            "end_line": 386
+          },
+          {
+            "name": "withheld",
+            "line": 246,
+            "end_line": 247
+          },
+          {
+            "name": "withheld",
+            "line": 324,
+            "end_line": 325
+          }
+        ]
+      },
+      {
+        "path": "/workspace/agentic-desk/tests/test_analytics.py",
+        "sha256": "401035a1547bf04814e826430cfc6f4946059b679ec242b44bd1317006041136",
+        "line_count": 340,
+        "full_read": true,
+        "functions": [
+          {
+            "name": "test_funding_is_not_a_trading_return",
+            "line": 16,
+            "end_line": 26
+          },
+          {
+            "name": "test_only_completed_roundtrip_counts_as_a_win",
+            "line": 28,
+            "end_line": 37
+          },
+          {
+            "name": "test_flip_closes_old_episode_and_keeps_new_position_open",
+            "line": 39,
+            "end_line": 45
+          },
+          {
+            "name": "test_benchmarks_use_same_clean_eod_period_and_withhold_stale_history",
+            "line": 47,
+            "end_line": 64
+          },
+          {
+            "name": "test_net_trade_statistics_include_fees_flats_and_exact_cents",
+            "line": 66,
+            "end_line": 88
+          },
+          {
+            "name": "test_flip_fee_allocation_preserves_total_cents",
+            "line": 90,
+            "end_line": 97
+          },
+          {
+            "name": "test_timezone_normalization_and_unbracketed_funding_withheld",
+            "line": 99,
+            "end_line": 107
+          },
+          {
+            "name": "_archive",
+            "line": 109,
+            "end_line": 117
+          },
+          {
+            "name": "_sessions",
+            "line": 119,
+            "end_line": 126
+          },
+          {
+            "name": "_valuation",
+            "line": 128,
+            "end_line": 130
+          },
+          {
+            "name": "test_replicated_daily_exposure_beta_and_zero_variance_denominators",
+            "line": 132,
+            "end_line": 166
+          },
+          {
+            "name": "test_session_gap_is_not_annualized_as_a_daily_return",
+            "line": 168,
+            "end_line": 184
+          },
+          {
+            "name": "test_finite_vendor_prices_cannot_overflow_benchmark_response",
+            "line": 186,
+            "end_line": 202
+          },
+          {
+            "name": "test_cashflow_adjusted_drawdown_retains_ruin_and_excludes_deposit",
+            "line": 204,
+            "end_line": 227
+          },
+          {
+            "name": "test_unitized_nav_records_negative_equity_without_hiding_drawdown",
+            "line": 229,
+            "end_line": 245
+          },
+          {
+            "name": "test_overnight_valuation_does_not_become_exchange_close",
+            "line": 247,
+            "end_line": 259
+          },
+          {
+            "name": "test_excursion_requires_exact_complete_raw_intraday_coverage",
+            "line": 261,
+            "end_line": 293
+          },
+          {
+            "name": "test_excursion_rejects_ambiguous_raw_basis_and_finite_price_ratio_overflow",
+            "line": 295,
+            "end_line": 321
+          },
+          {
+            "name": "test_empty_and_broker_reports_withhold_unverified_metrics",
+            "line": 323,
+            "end_line": 336
+          },
+          {
+            "name": "fill",
+            "line": 29,
+            "end_line": 30
+          },
+          {
+            "name": "fill",
+            "line": 67,
+            "end_line": 70
+          },
+          {
+            "name": "revision",
+            "line": 271,
+            "end_line": 272
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "exact_net_trade_statistics",
+        "verified_contract": "Completed signed book/symbol episodes preserve whole cents across flips; flats enter expectancy denominator; no-loss PF withheld; conditional win/loss averages and sample counts.",
+        "evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 157,
+            "line_end": 189,
+            "excerpt": "def completed_episodes(fills):\n    \"\"\"Count full long/short round trips; a partial exit is not a closed trade.\"\"\"\n    active, complete = {}, []\n    for fill in fills:\n        key = (fill[\"book_id\"], fill[\"symbol\"])\n        quantity = Decimal(str(fill[\"quantity\"])) * (1 if fill[\"side\"] == \"buy\" else -1)\n        episode = active.get(key)\n        if episode is None:\n            active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": quantity, \"direction\": \"long\" if quantity > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": fill[\"realized_cents\"], \"fees_cents\": fill[\"fee_cents\"], \"fill_ids\": [fill[\"id\"]]}\n            continue\n        prior = episode[\"quantity\"]\n        total = prior + quantity\n        crossed = prior * total < 0\n        closing_fee = int((Decimal(fill[\"fee_cents\"]) * abs(prior / quantity)).quantize(Decimal(1), rounding=ROUND_HALF_UP)) if crossed else fill[\"fee_cents\"]\n        episode[\"gross_realized_cents\"] += fill[\"realized_cents\"]\n        episode[\"fees_cents\"] += closing_fee\n        episode[\"fill_ids\"].append(fill[\"id\"])\n        if total == 0 or crossed:\n            episode[\"closed_at\"] = fill[\"timestamp\"] or fill[\"observed_at\"]\n            gross_cents, fee_cents = episode.pop(\"gross_realized_cents\"), episode.pop(\"fees_cents\")\n            episode[\"net_pnl_cents\"] = gross_cents - fee_cents\n            episode[\"gross_pnl\"] = gross_cents / 100\n            episode[\"fees\"] = fee_cents / 100\n            episode[\"net_pnl\"] = episode[\"net_pnl_cents\"] / 100\n            episode[\"duration_seconds\"] = max(0, (timepoint(episode[\"closed_at\"]) - timepoint(episode[\"opened_at\"])).total_seconds())\n            episode.pop(\"quantity\")\n            complete.append(episode)\n            active.pop(key)\n            if crossed:\n                active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": total, \"direction\": \"long\" if total > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": 0, \"fees_cents\": fill[\"fee_cents\"] - closing_fee, \"fill_ids\": [fill[\"id\"]]}\n        else:\n            episode[\"quantity\"] = total\n    return complete"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 79,
+            "line_end": 96,
+            "excerpt": "def trade_metrics(samples, complete=True):\n    pnl = [Decimal(e[\"net_pnl_cents\"]) / 100 if \"net_pnl_cents\" in e\n           else Decimal(str(e[\"net_pnl\"])) for e in samples]\n    wins, losses = [v for v in pnl if v > 0], [v for v in pnl if v < 0]\n    reason = None if complete else \"Broker opening inventory and fee completeness are not independently verified\"\n    def item(value, unit, count, method, empty):\n        return metric(value if complete else None, unit, count, 1, method, reason or empty)\n    return {\n        \"net_expectancy\": item(float(sum(pnl) / len(pnl)) if pnl else None, \"USD\", len(pnl),\n                               \"Mean recorded net P/L per completed flat-to-flat episode, including flats\", \"No completed round trips\"),\n        \"profit_factor\": item(float(sum(wins) / abs(sum(losses))) if losses else None, \"ratio\", len(pnl),\n                              \"Sum positive net episode P/L divided by absolute sum negative net episode P/L\",\n                              \"No losing completed round trips; finite profit factor is undefined\" if pnl else \"No completed round trips\"),\n        \"average_net_win\": item(float(sum(wins) / len(wins)) if wins else None, \"USD\", len(wins),\n                                \"Mean net P/L conditional on a positive completed episode\", \"No winning completed round trips\"),\n        \"average_net_loss\": item(float(sum(losses) / len(losses)) if losses else None, \"USD\", len(losses),\n                                 \"Mean signed net P/L conditional on a negative completed episode\", \"No losing completed round trips\"),\n    }"
+          }
+        ],
+        "previous_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 144,
+            "line_end": 176,
+            "excerpt": "def completed_episodes(fills):\n    \"\"\"Count full long/short round trips; a partial exit is not a closed trade.\"\"\"\n    active, complete = {}, []\n    for fill in fills:\n        key = (fill[\"book_id\"], fill[\"symbol\"])\n        quantity = Decimal(str(fill[\"quantity\"])) * (1 if fill[\"side\"] == \"buy\" else -1)\n        episode = active.get(key)\n        if episode is None:\n            active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": quantity, \"direction\": \"long\" if quantity > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": fill[\"realized_cents\"], \"fees_cents\": fill[\"fee_cents\"], \"fill_ids\": [fill[\"id\"]]}\n            continue\n        prior = episode[\"quantity\"]\n        total = prior + quantity\n        crossed = prior * total < 0\n        closing_fee = int((Decimal(fill[\"fee_cents\"]) * abs(prior / quantity)).quantize(Decimal(1), rounding=ROUND_HALF_UP)) if crossed else fill[\"fee_cents\"]\n        episode[\"gross_realized_cents\"] += fill[\"realized_cents\"]\n        episode[\"fees_cents\"] += closing_fee\n        episode[\"fill_ids\"].append(fill[\"id\"])\n        if total == 0 or crossed:\n            episode[\"closed_at\"] = fill[\"timestamp\"] or fill[\"observed_at\"]\n            gross_cents, fee_cents = episode.pop(\"gross_realized_cents\"), episode.pop(\"fees_cents\")\n            episode[\"net_pnl_cents\"] = gross_cents - fee_cents\n            episode[\"gross_pnl\"] = gross_cents / 100\n            episode[\"fees\"] = fee_cents / 100\n            episode[\"net_pnl\"] = episode[\"net_pnl_cents\"] / 100\n            episode[\"duration_seconds\"] = max(0, (timepoint(episode[\"closed_at\"]) - timepoint(episode[\"opened_at\"])).total_seconds())\n            episode.pop(\"quantity\")\n            complete.append(episode)\n            active.pop(key)\n            if crossed:\n                active[key] = {\"book_id\": key[0], \"symbol\": key[1], \"quantity\": total, \"direction\": \"long\" if total > 0 else \"short\", \"opened_at\": fill[\"timestamp\"] or fill[\"observed_at\"], \"gross_realized_cents\": 0, \"fees_cents\": fill[\"fee_cents\"] - closing_fee, \"fill_ids\": [fill[\"id\"]]}\n        else:\n            episode[\"quantity\"] = total\n    return complete"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 71,
+            "line_end": 88,
+            "excerpt": "def trade_metrics(samples, complete=True):\n    pnl = [Decimal(e[\"net_pnl_cents\"]) / 100 if \"net_pnl_cents\" in e\n           else Decimal(str(e[\"net_pnl\"])) for e in samples]\n    wins, losses = [v for v in pnl if v > 0], [v for v in pnl if v < 0]\n    reason = None if complete else \"Broker opening inventory and fee completeness are not independently verified\"\n    def item(value, unit, count, method, empty):\n        return metric(value if complete else None, unit, count, 1, method, reason or empty)\n    return {\n        \"net_expectancy\": item(float(sum(pnl) / len(pnl)) if pnl else None, \"USD\", len(pnl),\n                               \"Mean recorded net P/L per completed flat-to-flat episode, including flats\", \"No completed round trips\"),\n        \"profit_factor\": item(float(sum(wins) / abs(sum(losses))) if losses else None, \"ratio\", len(pnl),\n                              \"Sum positive net episode P/L divided by absolute sum negative net episode P/L\",\n                              \"No losing completed round trips; finite profit factor is undefined\" if pnl else \"No completed round trips\"),\n        \"average_net_win\": item(float(sum(wins) / len(wins)) if wins else None, \"USD\", len(wins),\n                                \"Mean net P/L conditional on a positive completed episode\", \"No winning completed round trips\"),\n        \"average_net_loss\": item(float(sum(losses) / len(losses)) if losses else None, \"USD\", len(losses),\n                                 \"Mean signed net P/L conditional on a negative completed episode\", \"No losing completed round trips\"),\n    }"
+          }
+        ]
+      },
+      {
+        "id": "unitized_cashflow_neutral_NAV",
+        "verified_contract": "Deposits buy units using adjacent clean pre-flow NAV. Multiple funding events do not inflate performance. Intermediate zero/negative NAV remains observable; recapitalization at nonpositive unit price withheld.",
+        "evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 32,
+            "line_end": 55,
+            "excerpt": "def nav_curve(snapshots, flows):\n    \"\"\"Unitized clean NAV; deposits buy units at the adjacent pre-flow value.\n\n    Keeping units, rather than multiplying ratios, preserves a loss to zero\n    and later marks without dividing by a zero intermediate equity.\n    \"\"\"\n    if len(snapshots) < 2 or not clean(snapshots[0]) or snapshots[0][\"equity_cents\"] <= 0:\n        return None\n    units, curve = Decimal(snapshots[0][\"equity_cents\"]), [Decimal(1)]\n    for prior, current in zip(snapshots, snapshots[1:]):\n        if not clean(current):\n            return None\n        left, right = timepoint(prior[\"timestamp\"]), timepoint(current[\"timestamp\"])\n        deposits = [f for f in flows if left < timepoint(f[\"timestamp\"]) <= right]\n        if any(timepoint(f[\"timestamp\"]) - left > timedelta(seconds=5)\n               or right - timepoint(f[\"timestamp\"]) > timedelta(seconds=5) for f in deposits):\n            return None\n        amount = sum((Decimal(f[\"amount_cents\"]) for f in deposits), Decimal(0))\n        if amount:\n            if curve[-1] <= 0:\n                return None  # A recapitalization at nonpositive NAV has no unit price.\n            units += amount / curve[-1]\n        curve.append(Decimal(current[\"equity_cents\"]) / units)\n    return curve"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 58,
+            "line_end": 61,
+            "excerpt": "def flow_adjusted_return(snapshots, flows):\n    \"\"\"Clean unitized return, with deposits removed at their valued boundary.\"\"\"\n    curve = nav_curve(snapshots, flows)\n    return float((curve[-1] - 1) * 100) if curve is not None else None"
+          }
+        ],
+        "previous_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 31,
+            "line_end": 54,
+            "excerpt": "def nav_curve(snapshots, flows):\n    \"\"\"Unitized clean NAV; deposits buy units at the adjacent pre-flow value.\n\n    Keeping units, rather than multiplying ratios, preserves a loss to zero\n    and later marks without dividing by a zero intermediate equity.\n    \"\"\"\n    if len(snapshots) < 2 or not clean(snapshots[0]) or snapshots[0][\"equity_cents\"] <= 0:\n        return None\n    units, curve = Decimal(snapshots[0][\"equity_cents\"]), [Decimal(1)]\n    for prior, current in zip(snapshots, snapshots[1:]):\n        if not clean(current):\n            return None\n        left, right = timepoint(prior[\"timestamp\"]), timepoint(current[\"timestamp\"])\n        deposits = [f for f in flows if left < timepoint(f[\"timestamp\"]) <= right]\n        if any(timepoint(f[\"timestamp\"]) - left > timedelta(seconds=5)\n               or right - timepoint(f[\"timestamp\"]) > timedelta(seconds=5) for f in deposits):\n            return None\n        amount = sum((Decimal(f[\"amount_cents\"]) for f in deposits), Decimal(0))\n        if amount:\n            if curve[-1] <= 0:\n                return None  # A recapitalization at nonpositive NAV has no unit price.\n            units += amount / curve[-1]\n        curve.append(Decimal(current[\"equity_cents\"]) / units)\n    return curve"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 57,
+            "line_end": 60,
+            "excerpt": "def flow_adjusted_return(snapshots, flows):\n    \"\"\"Clean unitized return, with deposits removed at their valued boundary.\"\"\"\n    curve = nav_curve(snapshots, flows)\n    return float((curve[-1] - 1) * 100) if curve is not None else None"
+          }
+        ]
+      },
+      {
+        "id": "daily_sample_and_alignment",
+        "verified_contract": "Require contiguous common XNYS session pairs. Two-return sample SD; 20-return descriptive annualization/Sharpe/beta gate, explicit RF0 and252 conventions; gaps/zero variance withhold ratios.",
+        "evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 110,
+            "line_end": 154,
+            "excerpt": "def risk_metrics(daily, benchmark_daily, curve, gap=False, daily_reason=None):\n    count = len(daily)\n    metrics = unavailable_risk(\"Insufficient clean daily observations\")\n    reason = daily_reason or (\"Missing exchange sessions; multi-session returns are not treated as daily\" if gap else None)\n    enough = count >= 2 and reason is None\n    sd = statistics.stdev(daily) if enough else None\n    metrics[\"daily_volatility_percent\"] = metric(sd * 100 if sd is not None else None, \"percent\", count, 2,\n        metrics[\"daily_volatility_percent\"][\"method\"], reason or \"At least two contiguous daily returns required\")\n    for key in (\"annualized_volatility_percent\", \"sharpe_ratio\"):\n        value = None\n        why = reason or f\"At least {MIN_DAILY_RETURNS} contiguous daily returns required; this is a descriptive display gate\"\n        if enough and count >= MIN_DAILY_RETURNS:\n            if key == \"annualized_volatility_percent\":\n                value = sd * math.sqrt(252) * 100\n            elif sd > 0:\n                value = statistics.mean(daily) / sd * math.sqrt(252)\n            else:\n                why = \"Zero daily variance; Sharpe denominator is zero\"\n        metrics[key] = metric(value, metrics[key][\"unit\"], count, MIN_DAILY_RETURNS, metrics[key][\"method\"], why)\n    if curve is not None:\n        peak, worst = Decimal(1), Decimal(0)\n        for nav in curve:\n            peak = max(peak, nav)\n            worst = max(worst, (peak - nav) / peak)\n        metrics[\"max_drawdown_percent\"] = metric(float(worst * 100), \"percent\", len(curve), 2,\n            metrics[\"max_drawdown_percent\"][\"method\"])\n    for sym in (\"SPY\", \"QQQ\"):\n        values = benchmark_daily.get(sym, [])\n        value, why = None, reason or f\"At least {MIN_DAILY_RETURNS} matching contiguous daily return pairs required\"\n        if reason is None and len(values) == count and count >= MIN_DAILY_RETURNS:\n            try:\n                variance = statistics.variance(values)\n            except (OverflowError, ValueError):\n                variance = None\n            if variance is None or not finite_number(variance):\n                why = \"Nonfinite benchmark variance; beta withheld\"\n            elif variance > 0:\n                x, y = statistics.mean(daily), statistics.mean(values)\n                covariance = sum((a - x) * (b - y) for a, b in zip(daily, values)) / (count - 1)\n                value = covariance / variance\n            else:\n                why = \"Benchmark daily variance is zero; beta is undefined\"\n        key = \"beta_\" + sym.lower()\n        metrics[key] = metric(value, \"ratio\", min(count, len(values)), MIN_DAILY_RETURNS, metrics[key][\"method\"], why)\n    return metrics"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 245,
+            "line_end": 320,
+            "excerpt": "    def _aligned(self, con, snapshots, flows):\n        def withheld(reason):\n            return {\"coverage\": reason, \"metrics\": unavailable_risk(reason)}\n        days = {}\n        for row in snapshots:\n            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            date = stamp.astimezone(NY).date().isoformat()\n            close = timepoint(calendar[\"close_at\"]) if calendar.get(\"close_at\") else None\n            # First recorded valuation in a bounded close window; never an overnight mark.\n            if close and close <= stamp <= close + CLOSE_WINDOW and calendar[\"session_date\"] == date:\n                days.setdefault(date, row)\n        if not self._has_table(con, \"a_bar_cache\"):\n            return withheld(\"No archived daily benchmark history\")\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data,fetched_at FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return withheld(\"Missing archived daily history for \" + sym)\n            data = json.loads(cached[\"data\"])\n            if data.get(\"truncated\"):\n                return withheld(\"Truncated \" + sym + \" history; complete aligned sampling is not verified\")\n            bars = {}\n            fetched = timepoint(cached[\"fetched_at\"])\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                # Some vendors encode a session-date label as UTC midnight.\n                date = stamp.date().isoformat() if stamp.time().replace(tzinfo=None).isoformat() == \"00:00:00\" else stamp.astimezone(NY).date().isoformat()\n                session = exchange_calendar(datetime.fromisoformat(date).replace(hour=12, tzinfo=NY))\n                if session[\"is_session\"] and timepoint(session[\"close_at\"]) <= fetched:\n                    bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        # Exclude initial genuinely unfunded zero days; retain losses to zero after funding.\n        while common and days[common[0]][\"equity_cents\"] == 0 and not any(timepoint(f[\"timestamp\"]) <= timepoint(days[common[0]][\"timestamp\"]) for f in flows):\n            common.pop(0)\n        if len(common) < 2:\n            return withheld(\"At least two matching close-window valuations and completed benchmark sessions required\")\n        start, end = days[common[0]], days[common[-1]]\n        left, right = timepoint(start[\"timestamp\"]), timepoint(end[\"timestamp\"])\n        rows = [r for r in snapshots if left <= timepoint(r[\"timestamp\"]) <= right]\n        curve = nav_curve(rows, flows)\n        if curve is None:\n            return withheld(\"Stale/missing marks, nonpositive opening NAV or funding without adjacent clean pre/post valuations; comparison withheld\")\n        value = float((curve[-1] - 1) * 100)\n        if not finite_number(value):\n            return withheld(\"Nonfinite cashflow-adjusted return; comparison withheld\")\n        daily, benchmark_daily, benchmarks, daily_reason = [], {}, [], None\n        gap = any(exchange_calendar(timepoint(days[b][\"timestamp\"]))[\"previous_session\"] != a for a, b in zip(common, common[1:]))\n        for a, b in zip(common, common[1:]):\n            t0, t1 = timepoint(days[a][\"timestamp\"]), timepoint(days[b][\"timestamp\"])\n            part = [r for r in snapshots if t0 <= timepoint(r[\"timestamp\"]) <= t1]\n            result = flow_adjusted_return(part, flows)\n            if result is None:\n                daily_reason = \"Nonpositive daily opening NAV or incomplete daily flow coverage; percentage daily risk statistics withheld\"\n            else:\n                daily.append(result / 100)\n        for sym, (data, bars) in histories.items():\n            adjusted = all(bars[d].get(\"adjusted_close\") is not None for d in common)\n            field = \"adjusted_close\" if adjusted else \"close\"\n            prices = [Decimal(str(bars[d][field])) for d in common]\n            if any(not price.is_finite() or price <= 0 for price in prices):\n                return withheld(\"Invalid benchmark prices; comparison withheld\")\n            benchmark_daily[sym] = [float(b / a - 1) for a, b in zip(prices, prices[1:])]\n            bench = float((prices[-1] / prices[0] - 1) * 100)\n            if not all(finite_number(v) for v in [bench, value - bench, *benchmark_daily[sym]]):\n                return withheld(\"Nonfinite benchmark return after price-ratio calculation; comparison withheld\")\n            benchmarks.append({\"symbol\": sym, \"return_percent\": bench, \"excess_return_points\": value - bench,\n                               \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\",\n                               \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"),\n                               \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": value, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean observations within five minutes after session close; exact exchange-close marks are not inferred\",\n                \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common),\n                \"daily_return_coverage\": {\"returns\": len(daily), \"contiguous_sessions\": not gap, \"reason\": daily_reason,\n                    \"baseline_date\": common[0], \"through_date\": common[-1], \"close_window_seconds\": int(CLOSE_WINDOW.total_seconds())},\n                \"metrics\": risk_metrics(daily, benchmark_daily, curve, gap, daily_reason)}"
+          }
+        ],
+        "previous_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 102,
+            "line_end": 141,
+            "excerpt": "def risk_metrics(daily, benchmark_daily, curve, gap=False, daily_reason=None):\n    count = len(daily)\n    metrics = unavailable_risk(\"Insufficient clean daily observations\")\n    reason = daily_reason or (\"Missing exchange sessions; multi-session returns are not treated as daily\" if gap else None)\n    enough = count >= 2 and reason is None\n    sd = statistics.stdev(daily) if enough else None\n    metrics[\"daily_volatility_percent\"] = metric(sd * 100 if sd is not None else None, \"percent\", count, 2,\n        metrics[\"daily_volatility_percent\"][\"method\"], reason or \"At least two contiguous daily returns required\")\n    for key in (\"annualized_volatility_percent\", \"sharpe_ratio\"):\n        value = None\n        why = reason or f\"At least {MIN_DAILY_RETURNS} contiguous daily returns required; this is a descriptive display gate\"\n        if enough and count >= MIN_DAILY_RETURNS:\n            if key == \"annualized_volatility_percent\":\n                value = sd * math.sqrt(252) * 100\n            elif sd > 0:\n                value = statistics.mean(daily) / sd * math.sqrt(252)\n            else:\n                why = \"Zero daily variance; Sharpe denominator is zero\"\n        metrics[key] = metric(value, metrics[key][\"unit\"], count, MIN_DAILY_RETURNS, metrics[key][\"method\"], why)\n    if curve is not None:\n        peak, worst = Decimal(1), Decimal(0)\n        for nav in curve:\n            peak = max(peak, nav)\n            worst = max(worst, (peak - nav) / peak)\n        metrics[\"max_drawdown_percent\"] = metric(float(worst * 100), \"percent\", len(curve), 2,\n            metrics[\"max_drawdown_percent\"][\"method\"])\n    for sym in (\"SPY\", \"QQQ\"):\n        values = benchmark_daily.get(sym, [])\n        value, why = None, reason or f\"At least {MIN_DAILY_RETURNS} matching contiguous daily return pairs required\"\n        if reason is None and len(values) == count and count >= MIN_DAILY_RETURNS:\n            variance = statistics.variance(values)\n            if variance > 0:\n                x, y = statistics.mean(daily), statistics.mean(values)\n                covariance = sum((a - x) * (b - y) for a, b in zip(daily, values)) / (count - 1)\n                value = covariance / variance\n            else:\n                why = \"Benchmark daily variance is zero; beta is undefined\"\n        key = \"beta_\" + sym.lower()\n        metrics[key] = metric(value, \"ratio\", min(count, len(values)), MIN_DAILY_RETURNS, metrics[key][\"method\"], why)\n    return metrics"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 232,
+            "line_end": 303,
+            "excerpt": "    def _aligned(self, con, snapshots, flows):\n        def withheld(reason):\n            return {\"coverage\": reason, \"metrics\": unavailable_risk(reason)}\n        days = {}\n        for row in snapshots:\n            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            date = stamp.astimezone(NY).date().isoformat()\n            close = timepoint(calendar[\"close_at\"]) if calendar.get(\"close_at\") else None\n            # First recorded valuation in a bounded close window; never an overnight mark.\n            if close and close <= stamp <= close + CLOSE_WINDOW and calendar[\"session_date\"] == date:\n                days.setdefault(date, row)\n        if not self._has_table(con, \"a_bar_cache\"):\n            return withheld(\"No archived daily benchmark history\")\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data,fetched_at FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return withheld(\"Missing archived daily history for \" + sym)\n            data = json.loads(cached[\"data\"])\n            if data.get(\"truncated\"):\n                return withheld(\"Truncated \" + sym + \" history; complete aligned sampling is not verified\")\n            bars = {}\n            fetched = timepoint(cached[\"fetched_at\"])\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                # Some vendors encode a session-date label as UTC midnight.\n                date = stamp.date().isoformat() if stamp.time().replace(tzinfo=None).isoformat() == \"00:00:00\" else stamp.astimezone(NY).date().isoformat()\n                session = exchange_calendar(datetime.fromisoformat(date).replace(hour=12, tzinfo=NY))\n                if session[\"is_session\"] and timepoint(session[\"close_at\"]) <= fetched:\n                    bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        # Exclude initial genuinely unfunded zero days; retain losses to zero after funding.\n        while common and days[common[0]][\"equity_cents\"] == 0 and not any(timepoint(f[\"timestamp\"]) <= timepoint(days[common[0]][\"timestamp\"]) for f in flows):\n            common.pop(0)\n        if len(common) < 2:\n            return withheld(\"At least two matching close-window valuations and completed benchmark sessions required\")\n        start, end = days[common[0]], days[common[-1]]\n        left, right = timepoint(start[\"timestamp\"]), timepoint(end[\"timestamp\"])\n        rows = [r for r in snapshots if left <= timepoint(r[\"timestamp\"]) <= right]\n        curve = nav_curve(rows, flows)\n        if curve is None:\n            return withheld(\"Stale/missing marks, nonpositive opening NAV or funding without adjacent clean pre/post valuations; comparison withheld\")\n        value = float((curve[-1] - 1) * 100)\n        daily, benchmark_daily, benchmarks, daily_reason = [], {}, [], None\n        gap = any(exchange_calendar(timepoint(days[b][\"timestamp\"]))[\"previous_session\"] != a for a, b in zip(common, common[1:]))\n        for a, b in zip(common, common[1:]):\n            t0, t1 = timepoint(days[a][\"timestamp\"]), timepoint(days[b][\"timestamp\"])\n            part = [r for r in snapshots if t0 <= timepoint(r[\"timestamp\"]) <= t1]\n            result = flow_adjusted_return(part, flows)\n            if result is None:\n                daily_reason = \"Nonpositive daily opening NAV or incomplete daily flow coverage; percentage daily risk statistics withheld\"\n            else:\n                daily.append(result / 100)\n        for sym, (data, bars) in histories.items():\n            adjusted = all(bars[d].get(\"adjusted_close\") is not None for d in common)\n            field = \"adjusted_close\" if adjusted else \"close\"\n            prices = [Decimal(str(bars[d][field])) for d in common]\n            if any(not price.is_finite() or price <= 0 for price in prices):\n                return withheld(\"Invalid benchmark prices; comparison withheld\")\n            benchmark_daily[sym] = [float(b / a - 1) for a, b in zip(prices, prices[1:])]\n            bench = float((prices[-1] / prices[0] - 1) * 100)\n            benchmarks.append({\"symbol\": sym, \"return_percent\": bench, \"excess_return_points\": value - bench,\n                               \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\",\n                               \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"),\n                               \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": value, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean observations within five minutes after session close; exact exchange-close marks are not inferred\",\n                \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common),\n                \"daily_return_coverage\": {\"returns\": len(daily), \"contiguous_sessions\": not gap, \"reason\": daily_reason,\n                    \"baseline_date\": common[0], \"through_date\": common[-1], \"close_window_seconds\": int(CLOSE_WINDOW.total_seconds())},\n                \"metrics\": risk_metrics(daily, benchmark_daily, curve, gap, daily_reason)}"
+          }
+        ]
+      },
+      {
+        "id": "recorded_drawdown",
+        "verified_contract": "Peak-to-trough unitized NAV preserves ruin and below-zero losses, including transient intraday values. Reports observed clean path rather than unseen extrema.",
+        "evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 32,
+            "line_end": 55,
+            "excerpt": "def nav_curve(snapshots, flows):\n    \"\"\"Unitized clean NAV; deposits buy units at the adjacent pre-flow value.\n\n    Keeping units, rather than multiplying ratios, preserves a loss to zero\n    and later marks without dividing by a zero intermediate equity.\n    \"\"\"\n    if len(snapshots) < 2 or not clean(snapshots[0]) or snapshots[0][\"equity_cents\"] <= 0:\n        return None\n    units, curve = Decimal(snapshots[0][\"equity_cents\"]), [Decimal(1)]\n    for prior, current in zip(snapshots, snapshots[1:]):\n        if not clean(current):\n            return None\n        left, right = timepoint(prior[\"timestamp\"]), timepoint(current[\"timestamp\"])\n        deposits = [f for f in flows if left < timepoint(f[\"timestamp\"]) <= right]\n        if any(timepoint(f[\"timestamp\"]) - left > timedelta(seconds=5)\n               or right - timepoint(f[\"timestamp\"]) > timedelta(seconds=5) for f in deposits):\n            return None\n        amount = sum((Decimal(f[\"amount_cents\"]) for f in deposits), Decimal(0))\n        if amount:\n            if curve[-1] <= 0:\n                return None  # A recapitalization at nonpositive NAV has no unit price.\n            units += amount / curve[-1]\n        curve.append(Decimal(current[\"equity_cents\"]) / units)\n    return curve"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 110,
+            "line_end": 154,
+            "excerpt": "def risk_metrics(daily, benchmark_daily, curve, gap=False, daily_reason=None):\n    count = len(daily)\n    metrics = unavailable_risk(\"Insufficient clean daily observations\")\n    reason = daily_reason or (\"Missing exchange sessions; multi-session returns are not treated as daily\" if gap else None)\n    enough = count >= 2 and reason is None\n    sd = statistics.stdev(daily) if enough else None\n    metrics[\"daily_volatility_percent\"] = metric(sd * 100 if sd is not None else None, \"percent\", count, 2,\n        metrics[\"daily_volatility_percent\"][\"method\"], reason or \"At least two contiguous daily returns required\")\n    for key in (\"annualized_volatility_percent\", \"sharpe_ratio\"):\n        value = None\n        why = reason or f\"At least {MIN_DAILY_RETURNS} contiguous daily returns required; this is a descriptive display gate\"\n        if enough and count >= MIN_DAILY_RETURNS:\n            if key == \"annualized_volatility_percent\":\n                value = sd * math.sqrt(252) * 100\n            elif sd > 0:\n                value = statistics.mean(daily) / sd * math.sqrt(252)\n            else:\n                why = \"Zero daily variance; Sharpe denominator is zero\"\n        metrics[key] = metric(value, metrics[key][\"unit\"], count, MIN_DAILY_RETURNS, metrics[key][\"method\"], why)\n    if curve is not None:\n        peak, worst = Decimal(1), Decimal(0)\n        for nav in curve:\n            peak = max(peak, nav)\n            worst = max(worst, (peak - nav) / peak)\n        metrics[\"max_drawdown_percent\"] = metric(float(worst * 100), \"percent\", len(curve), 2,\n            metrics[\"max_drawdown_percent\"][\"method\"])\n    for sym in (\"SPY\", \"QQQ\"):\n        values = benchmark_daily.get(sym, [])\n        value, why = None, reason or f\"At least {MIN_DAILY_RETURNS} matching contiguous daily return pairs required\"\n        if reason is None and len(values) == count and count >= MIN_DAILY_RETURNS:\n            try:\n                variance = statistics.variance(values)\n            except (OverflowError, ValueError):\n                variance = None\n            if variance is None or not finite_number(variance):\n                why = \"Nonfinite benchmark variance; beta withheld\"\n            elif variance > 0:\n                x, y = statistics.mean(daily), statistics.mean(values)\n                covariance = sum((a - x) * (b - y) for a, b in zip(daily, values)) / (count - 1)\n                value = covariance / variance\n            else:\n                why = \"Benchmark daily variance is zero; beta is undefined\"\n        key = \"beta_\" + sym.lower()\n        metrics[key] = metric(value, \"ratio\", min(count, len(values)), MIN_DAILY_RETURNS, metrics[key][\"method\"], why)\n    return metrics"
+          }
+        ],
+        "previous_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 31,
+            "line_end": 54,
+            "excerpt": "def nav_curve(snapshots, flows):\n    \"\"\"Unitized clean NAV; deposits buy units at the adjacent pre-flow value.\n\n    Keeping units, rather than multiplying ratios, preserves a loss to zero\n    and later marks without dividing by a zero intermediate equity.\n    \"\"\"\n    if len(snapshots) < 2 or not clean(snapshots[0]) or snapshots[0][\"equity_cents\"] <= 0:\n        return None\n    units, curve = Decimal(snapshots[0][\"equity_cents\"]), [Decimal(1)]\n    for prior, current in zip(snapshots, snapshots[1:]):\n        if not clean(current):\n            return None\n        left, right = timepoint(prior[\"timestamp\"]), timepoint(current[\"timestamp\"])\n        deposits = [f for f in flows if left < timepoint(f[\"timestamp\"]) <= right]\n        if any(timepoint(f[\"timestamp\"]) - left > timedelta(seconds=5)\n               or right - timepoint(f[\"timestamp\"]) > timedelta(seconds=5) for f in deposits):\n            return None\n        amount = sum((Decimal(f[\"amount_cents\"]) for f in deposits), Decimal(0))\n        if amount:\n            if curve[-1] <= 0:\n                return None  # A recapitalization at nonpositive NAV has no unit price.\n            units += amount / curve[-1]\n        curve.append(Decimal(current[\"equity_cents\"]) / units)\n    return curve"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 102,
+            "line_end": 141,
+            "excerpt": "def risk_metrics(daily, benchmark_daily, curve, gap=False, daily_reason=None):\n    count = len(daily)\n    metrics = unavailable_risk(\"Insufficient clean daily observations\")\n    reason = daily_reason or (\"Missing exchange sessions; multi-session returns are not treated as daily\" if gap else None)\n    enough = count >= 2 and reason is None\n    sd = statistics.stdev(daily) if enough else None\n    metrics[\"daily_volatility_percent\"] = metric(sd * 100 if sd is not None else None, \"percent\", count, 2,\n        metrics[\"daily_volatility_percent\"][\"method\"], reason or \"At least two contiguous daily returns required\")\n    for key in (\"annualized_volatility_percent\", \"sharpe_ratio\"):\n        value = None\n        why = reason or f\"At least {MIN_DAILY_RETURNS} contiguous daily returns required; this is a descriptive display gate\"\n        if enough and count >= MIN_DAILY_RETURNS:\n            if key == \"annualized_volatility_percent\":\n                value = sd * math.sqrt(252) * 100\n            elif sd > 0:\n                value = statistics.mean(daily) / sd * math.sqrt(252)\n            else:\n                why = \"Zero daily variance; Sharpe denominator is zero\"\n        metrics[key] = metric(value, metrics[key][\"unit\"], count, MIN_DAILY_RETURNS, metrics[key][\"method\"], why)\n    if curve is not None:\n        peak, worst = Decimal(1), Decimal(0)\n        for nav in curve:\n            peak = max(peak, nav)\n            worst = max(worst, (peak - nav) / peak)\n        metrics[\"max_drawdown_percent\"] = metric(float(worst * 100), \"percent\", len(curve), 2,\n            metrics[\"max_drawdown_percent\"][\"method\"])\n    for sym in (\"SPY\", \"QQQ\"):\n        values = benchmark_daily.get(sym, [])\n        value, why = None, reason or f\"At least {MIN_DAILY_RETURNS} matching contiguous daily return pairs required\"\n        if reason is None and len(values) == count and count >= MIN_DAILY_RETURNS:\n            variance = statistics.variance(values)\n            if variance > 0:\n                x, y = statistics.mean(daily), statistics.mean(values)\n                covariance = sum((a - x) * (b - y) for a, b in zip(daily, values)) / (count - 1)\n                value = covariance / variance\n            else:\n                why = \"Benchmark daily variance is zero; beta is undefined\"\n        key = \"beta_\" + sym.lower()\n        metrics[key] = metric(value, \"ratio\", min(count, len(values)), MIN_DAILY_RETURNS, metrics[key][\"method\"], why)\n    return metrics"
+          }
+        ]
+      },
+      {
+        "id": "bounded_close_marks",
+        "verified_contract": "Baseline is first observed valuation within five minutes after exchange close; no overnight mark substitution. UTC-aware timestamps and daily session-label normalization.",
+        "evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 21,
+            "line_end": 25,
+            "excerpt": "def timepoint(value):\n    stamp = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\n    if stamp.tzinfo is None or stamp.utcoffset() is None:\n        raise ValueError(\"Timestamp has no timezone\")\n    return stamp.astimezone(UTC)"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 245,
+            "line_end": 320,
+            "excerpt": "    def _aligned(self, con, snapshots, flows):\n        def withheld(reason):\n            return {\"coverage\": reason, \"metrics\": unavailable_risk(reason)}\n        days = {}\n        for row in snapshots:\n            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            date = stamp.astimezone(NY).date().isoformat()\n            close = timepoint(calendar[\"close_at\"]) if calendar.get(\"close_at\") else None\n            # First recorded valuation in a bounded close window; never an overnight mark.\n            if close and close <= stamp <= close + CLOSE_WINDOW and calendar[\"session_date\"] == date:\n                days.setdefault(date, row)\n        if not self._has_table(con, \"a_bar_cache\"):\n            return withheld(\"No archived daily benchmark history\")\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data,fetched_at FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return withheld(\"Missing archived daily history for \" + sym)\n            data = json.loads(cached[\"data\"])\n            if data.get(\"truncated\"):\n                return withheld(\"Truncated \" + sym + \" history; complete aligned sampling is not verified\")\n            bars = {}\n            fetched = timepoint(cached[\"fetched_at\"])\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                # Some vendors encode a session-date label as UTC midnight.\n                date = stamp.date().isoformat() if stamp.time().replace(tzinfo=None).isoformat() == \"00:00:00\" else stamp.astimezone(NY).date().isoformat()\n                session = exchange_calendar(datetime.fromisoformat(date).replace(hour=12, tzinfo=NY))\n                if session[\"is_session\"] and timepoint(session[\"close_at\"]) <= fetched:\n                    bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        # Exclude initial genuinely unfunded zero days; retain losses to zero after funding.\n        while common and days[common[0]][\"equity_cents\"] == 0 and not any(timepoint(f[\"timestamp\"]) <= timepoint(days[common[0]][\"timestamp\"]) for f in flows):\n            common.pop(0)\n        if len(common) < 2:\n            return withheld(\"At least two matching close-window valuations and completed benchmark sessions required\")\n        start, end = days[common[0]], days[common[-1]]\n        left, right = timepoint(start[\"timestamp\"]), timepoint(end[\"timestamp\"])\n        rows = [r for r in snapshots if left <= timepoint(r[\"timestamp\"]) <= right]\n        curve = nav_curve(rows, flows)\n        if curve is None:\n            return withheld(\"Stale/missing marks, nonpositive opening NAV or funding without adjacent clean pre/post valuations; comparison withheld\")\n        value = float((curve[-1] - 1) * 100)\n        if not finite_number(value):\n            return withheld(\"Nonfinite cashflow-adjusted return; comparison withheld\")\n        daily, benchmark_daily, benchmarks, daily_reason = [], {}, [], None\n        gap = any(exchange_calendar(timepoint(days[b][\"timestamp\"]))[\"previous_session\"] != a for a, b in zip(common, common[1:]))\n        for a, b in zip(common, common[1:]):\n            t0, t1 = timepoint(days[a][\"timestamp\"]), timepoint(days[b][\"timestamp\"])\n            part = [r for r in snapshots if t0 <= timepoint(r[\"timestamp\"]) <= t1]\n            result = flow_adjusted_return(part, flows)\n            if result is None:\n                daily_reason = \"Nonpositive daily opening NAV or incomplete daily flow coverage; percentage daily risk statistics withheld\"\n            else:\n                daily.append(result / 100)\n        for sym, (data, bars) in histories.items():\n            adjusted = all(bars[d].get(\"adjusted_close\") is not None for d in common)\n            field = \"adjusted_close\" if adjusted else \"close\"\n            prices = [Decimal(str(bars[d][field])) for d in common]\n            if any(not price.is_finite() or price <= 0 for price in prices):\n                return withheld(\"Invalid benchmark prices; comparison withheld\")\n            benchmark_daily[sym] = [float(b / a - 1) for a, b in zip(prices, prices[1:])]\n            bench = float((prices[-1] / prices[0] - 1) * 100)\n            if not all(finite_number(v) for v in [bench, value - bench, *benchmark_daily[sym]]):\n                return withheld(\"Nonfinite benchmark return after price-ratio calculation; comparison withheld\")\n            benchmarks.append({\"symbol\": sym, \"return_percent\": bench, \"excess_return_points\": value - bench,\n                               \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\",\n                               \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"),\n                               \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": value, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean observations within five minutes after session close; exact exchange-close marks are not inferred\",\n                \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common),\n                \"daily_return_coverage\": {\"returns\": len(daily), \"contiguous_sessions\": not gap, \"reason\": daily_reason,\n                    \"baseline_date\": common[0], \"through_date\": common[-1], \"close_window_seconds\": int(CLOSE_WINDOW.total_seconds())},\n                \"metrics\": risk_metrics(daily, benchmark_daily, curve, gap, daily_reason)}"
+          }
+        ],
+        "previous_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 20,
+            "line_end": 24,
+            "excerpt": "def timepoint(value):\n    stamp = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\n    if stamp.tzinfo is None or stamp.utcoffset() is None:\n        raise ValueError(\"Timestamp has no timezone\")\n    return stamp.astimezone(UTC)"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 232,
+            "line_end": 303,
+            "excerpt": "    def _aligned(self, con, snapshots, flows):\n        def withheld(reason):\n            return {\"coverage\": reason, \"metrics\": unavailable_risk(reason)}\n        days = {}\n        for row in snapshots:\n            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            date = stamp.astimezone(NY).date().isoformat()\n            close = timepoint(calendar[\"close_at\"]) if calendar.get(\"close_at\") else None\n            # First recorded valuation in a bounded close window; never an overnight mark.\n            if close and close <= stamp <= close + CLOSE_WINDOW and calendar[\"session_date\"] == date:\n                days.setdefault(date, row)\n        if not self._has_table(con, \"a_bar_cache\"):\n            return withheld(\"No archived daily benchmark history\")\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data,fetched_at FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return withheld(\"Missing archived daily history for \" + sym)\n            data = json.loads(cached[\"data\"])\n            if data.get(\"truncated\"):\n                return withheld(\"Truncated \" + sym + \" history; complete aligned sampling is not verified\")\n            bars = {}\n            fetched = timepoint(cached[\"fetched_at\"])\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                # Some vendors encode a session-date label as UTC midnight.\n                date = stamp.date().isoformat() if stamp.time().replace(tzinfo=None).isoformat() == \"00:00:00\" else stamp.astimezone(NY).date().isoformat()\n                session = exchange_calendar(datetime.fromisoformat(date).replace(hour=12, tzinfo=NY))\n                if session[\"is_session\"] and timepoint(session[\"close_at\"]) <= fetched:\n                    bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        # Exclude initial genuinely unfunded zero days; retain losses to zero after funding.\n        while common and days[common[0]][\"equity_cents\"] == 0 and not any(timepoint(f[\"timestamp\"]) <= timepoint(days[common[0]][\"timestamp\"]) for f in flows):\n            common.pop(0)\n        if len(common) < 2:\n            return withheld(\"At least two matching close-window valuations and completed benchmark sessions required\")\n        start, end = days[common[0]], days[common[-1]]\n        left, right = timepoint(start[\"timestamp\"]), timepoint(end[\"timestamp\"])\n        rows = [r for r in snapshots if left <= timepoint(r[\"timestamp\"]) <= right]\n        curve = nav_curve(rows, flows)\n        if curve is None:\n            return withheld(\"Stale/missing marks, nonpositive opening NAV or funding without adjacent clean pre/post valuations; comparison withheld\")\n        value = float((curve[-1] - 1) * 100)\n        daily, benchmark_daily, benchmarks, daily_reason = [], {}, [], None\n        gap = any(exchange_calendar(timepoint(days[b][\"timestamp\"]))[\"previous_session\"] != a for a, b in zip(common, common[1:]))\n        for a, b in zip(common, common[1:]):\n            t0, t1 = timepoint(days[a][\"timestamp\"]), timepoint(days[b][\"timestamp\"])\n            part = [r for r in snapshots if t0 <= timepoint(r[\"timestamp\"]) <= t1]\n            result = flow_adjusted_return(part, flows)\n            if result is None:\n                daily_reason = \"Nonpositive daily opening NAV or incomplete daily flow coverage; percentage daily risk statistics withheld\"\n            else:\n                daily.append(result / 100)\n        for sym, (data, bars) in histories.items():\n            adjusted = all(bars[d].get(\"adjusted_close\") is not None for d in common)\n            field = \"adjusted_close\" if adjusted else \"close\"\n            prices = [Decimal(str(bars[d][field])) for d in common]\n            if any(not price.is_finite() or price <= 0 for price in prices):\n                return withheld(\"Invalid benchmark prices; comparison withheld\")\n            benchmark_daily[sym] = [float(b / a - 1) for a, b in zip(prices, prices[1:])]\n            bench = float((prices[-1] / prices[0] - 1) * 100)\n            benchmarks.append({\"symbol\": sym, \"return_percent\": bench, \"excess_return_points\": value - bench,\n                               \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\",\n                               \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"),\n                               \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": value, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean observations within five minutes after session close; exact exchange-close marks are not inferred\",\n                \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common),\n                \"daily_return_coverage\": {\"returns\": len(daily), \"contiguous_sessions\": not gap, \"reason\": daily_reason,\n                    \"baseline_date\": common[0], \"through_date\": common[-1], \"close_window_seconds\": int(CLOSE_WINDOW.total_seconds())},\n                \"metrics\": risk_metrics(daily, benchmark_daily, curve, gap, daily_reason)}"
+          }
+        ]
+      },
+      {
+        "id": "coherent_benchmarks",
+        "verified_contract": "Each benchmark uses one archived revision and uniform adjusted-close basis if all matched samples have it, otherwise uniform raw close with dividend limitation. Truncated/incomplete/future-closing sessions withheld.",
+        "evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 245,
+            "line_end": 320,
+            "excerpt": "    def _aligned(self, con, snapshots, flows):\n        def withheld(reason):\n            return {\"coverage\": reason, \"metrics\": unavailable_risk(reason)}\n        days = {}\n        for row in snapshots:\n            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            date = stamp.astimezone(NY).date().isoformat()\n            close = timepoint(calendar[\"close_at\"]) if calendar.get(\"close_at\") else None\n            # First recorded valuation in a bounded close window; never an overnight mark.\n            if close and close <= stamp <= close + CLOSE_WINDOW and calendar[\"session_date\"] == date:\n                days.setdefault(date, row)\n        if not self._has_table(con, \"a_bar_cache\"):\n            return withheld(\"No archived daily benchmark history\")\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data,fetched_at FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return withheld(\"Missing archived daily history for \" + sym)\n            data = json.loads(cached[\"data\"])\n            if data.get(\"truncated\"):\n                return withheld(\"Truncated \" + sym + \" history; complete aligned sampling is not verified\")\n            bars = {}\n            fetched = timepoint(cached[\"fetched_at\"])\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                # Some vendors encode a session-date label as UTC midnight.\n                date = stamp.date().isoformat() if stamp.time().replace(tzinfo=None).isoformat() == \"00:00:00\" else stamp.astimezone(NY).date().isoformat()\n                session = exchange_calendar(datetime.fromisoformat(date).replace(hour=12, tzinfo=NY))\n                if session[\"is_session\"] and timepoint(session[\"close_at\"]) <= fetched:\n                    bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        # Exclude initial genuinely unfunded zero days; retain losses to zero after funding.\n        while common and days[common[0]][\"equity_cents\"] == 0 and not any(timepoint(f[\"timestamp\"]) <= timepoint(days[common[0]][\"timestamp\"]) for f in flows):\n            common.pop(0)\n        if len(common) < 2:\n            return withheld(\"At least two matching close-window valuations and completed benchmark sessions required\")\n        start, end = days[common[0]], days[common[-1]]\n        left, right = timepoint(start[\"timestamp\"]), timepoint(end[\"timestamp\"])\n        rows = [r for r in snapshots if left <= timepoint(r[\"timestamp\"]) <= right]\n        curve = nav_curve(rows, flows)\n        if curve is None:\n            return withheld(\"Stale/missing marks, nonpositive opening NAV or funding without adjacent clean pre/post valuations; comparison withheld\")\n        value = float((curve[-1] - 1) * 100)\n        if not finite_number(value):\n            return withheld(\"Nonfinite cashflow-adjusted return; comparison withheld\")\n        daily, benchmark_daily, benchmarks, daily_reason = [], {}, [], None\n        gap = any(exchange_calendar(timepoint(days[b][\"timestamp\"]))[\"previous_session\"] != a for a, b in zip(common, common[1:]))\n        for a, b in zip(common, common[1:]):\n            t0, t1 = timepoint(days[a][\"timestamp\"]), timepoint(days[b][\"timestamp\"])\n            part = [r for r in snapshots if t0 <= timepoint(r[\"timestamp\"]) <= t1]\n            result = flow_adjusted_return(part, flows)\n            if result is None:\n                daily_reason = \"Nonpositive daily opening NAV or incomplete daily flow coverage; percentage daily risk statistics withheld\"\n            else:\n                daily.append(result / 100)\n        for sym, (data, bars) in histories.items():\n            adjusted = all(bars[d].get(\"adjusted_close\") is not None for d in common)\n            field = \"adjusted_close\" if adjusted else \"close\"\n            prices = [Decimal(str(bars[d][field])) for d in common]\n            if any(not price.is_finite() or price <= 0 for price in prices):\n                return withheld(\"Invalid benchmark prices; comparison withheld\")\n            benchmark_daily[sym] = [float(b / a - 1) for a, b in zip(prices, prices[1:])]\n            bench = float((prices[-1] / prices[0] - 1) * 100)\n            if not all(finite_number(v) for v in [bench, value - bench, *benchmark_daily[sym]]):\n                return withheld(\"Nonfinite benchmark return after price-ratio calculation; comparison withheld\")\n            benchmarks.append({\"symbol\": sym, \"return_percent\": bench, \"excess_return_points\": value - bench,\n                               \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\",\n                               \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"),\n                               \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": value, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean observations within five minutes after session close; exact exchange-close marks are not inferred\",\n                \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common),\n                \"daily_return_coverage\": {\"returns\": len(daily), \"contiguous_sessions\": not gap, \"reason\": daily_reason,\n                    \"baseline_date\": common[0], \"through_date\": common[-1], \"close_window_seconds\": int(CLOSE_WINDOW.total_seconds())},\n                \"metrics\": risk_metrics(daily, benchmark_daily, curve, gap, daily_reason)}"
+          }
+        ],
+        "previous_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 232,
+            "line_end": 303,
+            "excerpt": "    def _aligned(self, con, snapshots, flows):\n        def withheld(reason):\n            return {\"coverage\": reason, \"metrics\": unavailable_risk(reason)}\n        days = {}\n        for row in snapshots:\n            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            date = stamp.astimezone(NY).date().isoformat()\n            close = timepoint(calendar[\"close_at\"]) if calendar.get(\"close_at\") else None\n            # First recorded valuation in a bounded close window; never an overnight mark.\n            if close and close <= stamp <= close + CLOSE_WINDOW and calendar[\"session_date\"] == date:\n                days.setdefault(date, row)\n        if not self._has_table(con, \"a_bar_cache\"):\n            return withheld(\"No archived daily benchmark history\")\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data,fetched_at FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return withheld(\"Missing archived daily history for \" + sym)\n            data = json.loads(cached[\"data\"])\n            if data.get(\"truncated\"):\n                return withheld(\"Truncated \" + sym + \" history; complete aligned sampling is not verified\")\n            bars = {}\n            fetched = timepoint(cached[\"fetched_at\"])\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                # Some vendors encode a session-date label as UTC midnight.\n                date = stamp.date().isoformat() if stamp.time().replace(tzinfo=None).isoformat() == \"00:00:00\" else stamp.astimezone(NY).date().isoformat()\n                session = exchange_calendar(datetime.fromisoformat(date).replace(hour=12, tzinfo=NY))\n                if session[\"is_session\"] and timepoint(session[\"close_at\"]) <= fetched:\n                    bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        # Exclude initial genuinely unfunded zero days; retain losses to zero after funding.\n        while common and days[common[0]][\"equity_cents\"] == 0 and not any(timepoint(f[\"timestamp\"]) <= timepoint(days[common[0]][\"timestamp\"]) for f in flows):\n            common.pop(0)\n        if len(common) < 2:\n            return withheld(\"At least two matching close-window valuations and completed benchmark sessions required\")\n        start, end = days[common[0]], days[common[-1]]\n        left, right = timepoint(start[\"timestamp\"]), timepoint(end[\"timestamp\"])\n        rows = [r for r in snapshots if left <= timepoint(r[\"timestamp\"]) <= right]\n        curve = nav_curve(rows, flows)\n        if curve is None:\n            return withheld(\"Stale/missing marks, nonpositive opening NAV or funding without adjacent clean pre/post valuations; comparison withheld\")\n        value = float((curve[-1] - 1) * 100)\n        daily, benchmark_daily, benchmarks, daily_reason = [], {}, [], None\n        gap = any(exchange_calendar(timepoint(days[b][\"timestamp\"]))[\"previous_session\"] != a for a, b in zip(common, common[1:]))\n        for a, b in zip(common, common[1:]):\n            t0, t1 = timepoint(days[a][\"timestamp\"]), timepoint(days[b][\"timestamp\"])\n            part = [r for r in snapshots if t0 <= timepoint(r[\"timestamp\"]) <= t1]\n            result = flow_adjusted_return(part, flows)\n            if result is None:\n                daily_reason = \"Nonpositive daily opening NAV or incomplete daily flow coverage; percentage daily risk statistics withheld\"\n            else:\n                daily.append(result / 100)\n        for sym, (data, bars) in histories.items():\n            adjusted = all(bars[d].get(\"adjusted_close\") is not None for d in common)\n            field = \"adjusted_close\" if adjusted else \"close\"\n            prices = [Decimal(str(bars[d][field])) for d in common]\n            if any(not price.is_finite() or price <= 0 for price in prices):\n                return withheld(\"Invalid benchmark prices; comparison withheld\")\n            benchmark_daily[sym] = [float(b / a - 1) for a, b in zip(prices, prices[1:])]\n            bench = float((prices[-1] / prices[0] - 1) * 100)\n            benchmarks.append({\"symbol\": sym, \"return_percent\": bench, \"excess_return_points\": value - bench,\n                               \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\",\n                               \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"),\n                               \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": value, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean observations within five minutes after session close; exact exchange-close marks are not inferred\",\n                \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common),\n                \"daily_return_coverage\": {\"returns\": len(daily), \"contiguous_sessions\": not gap, \"reason\": daily_reason,\n                    \"baseline_date\": common[0], \"through_date\": common[-1], \"close_window_seconds\": int(CLOSE_WINDOW.total_seconds())},\n                \"metrics\": risk_metrics(daily, benchmark_daily, curve, gap, daily_reason)}"
+          }
+        ]
+      },
+      {
+        "id": "consistent_DB_view",
+        "verified_contract": "Single read transaction spans account/fills/episodes/equity/fundings. Broker metrics/top-level win/net fields withheld for incomplete basis and fee provenance.",
+        "evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 196,
+            "line_end": 239,
+            "excerpt": "    def snapshot(self):\n        reports = []\n        with self.store.connect() as con:\n            con.execute(\"BEGIN\")\n            all_fills = [dict(r) for r in con.execute(\"SELECT * FROM p_fills ORDER BY observed_at,rowid\")]\n            episodes = completed_episodes(all_fills)\n            fill_map = {f[\"id\"]: f for f in all_fills}\n            for episode in episodes:\n                episode[\"excursion\"] = self._excursion(con, episode, fill_map)\n            for row in con.execute(\"SELECT * FROM p_books ORDER BY created_at\"):\n                book = dict(row)\n                bid = book[\"id\"]\n                account = self.trading._account(con, row, datetime.now(UTC))[0]\n                samples = [e for e in episodes if e[\"book_id\"] == bid]\n                returns = [dict(r) for r in con.execute(\"SELECT * FROM p_equity WHERE book_id=? ORDER BY timestamp,rowid\", (bid,))]\n                flows = [dict(r) for r in con.execute(\"SELECT * FROM p_fundings WHERE book_id=? ORDER BY timestamp\", (bid,))]\n                reason = \"Awaiting clean end-of-session valuations and matching benchmark bars\"\n                report = {\"book_id\": bid, \"book_name\": book[\"name\"], \"account\": account,\n                          \"closed_roundtrips\": len(samples), \"wins\": sum(e[\"net_pnl_cents\"] > 0 for e in samples),\n                          \"losses\": sum(e[\"net_pnl_cents\"] < 0 for e in samples),\n                          \"win_rate_percent\": sum(e[\"net_pnl_cents\"] > 0 for e in samples) * 100 / len(samples) if samples else None,\n                          \"closed_trade_net_pnl\": sum(e[\"net_pnl_cents\"] for e in samples) / 100,\n                          \"return_percent\": None, \"benchmarks\": [], \"coverage\": reason, \"profitability_claim\": False,\n                          \"metrics\": {**trade_metrics(samples, book[\"broker\"] == \"local\"), **unavailable_risk(reason)},\n                          \"trade_accounting_coverage\": {\"status\": \"recorded_local_fees\" if book[\"broker\"] == \"local\" else \"unverified_broker_basis_and_fees\",\n                              \"scope\": \"Local completed episodes include all recorded fees; broker starting inventory and fee completeness must be independently established\"},\n                          \"risk_assumptions\": {\"risk_free_annual_rate\": 0, \"sessions_per_year\": 252,\n                              \"minimum_daily_returns\": MIN_DAILY_RETURNS,\n                              \"scope\": \"Descriptive close-window observations; the sample gate is not a significance test or claim of future profitability\",\n                              \"annualization_assumption\": \"Conventional sqrt(252) scaling assumes stable daily second moments and negligible serial covariance; no autocorrelation correction is inferred\"}}\n                if book[\"broker\"] == \"local\":\n                    aligned = self._aligned(con, returns, flows)\n                    report[\"metrics\"].update(aligned.pop(\"metrics\"))\n                    report.update(aligned)\n                else:\n                    report[\"coverage\"] = \"Broker cashflow, initial inventory and fee coverage are incomplete; account returns and net trade statistics are withheld\"\n                    for key in (\"wins\", \"losses\", \"win_rate_percent\", \"closed_trade_net_pnl\"):\n                        report[key] = None\n                    report[\"metrics\"].update(unavailable_risk(report[\"coverage\"]))\n                reports.append(report)\n        return {\"books\": reports, \"completed_trades\": episodes[-1000:],\n                \"benchmark_definitions\": {\"QQQ\": \"Nasdaq-100 ETF\", \"SPY\": \"S&P 500 ETF proxy\"},\n                \"return_method\": \"Chain of clean valued cashflow-adjusted subperiod returns between common session-close-window baselines; deposits require adjacent pre/post valuations\",\n                \"strategy_count\": 0, \"scope\": \"Measured evidence; outperformance is not a prediction or proof of durable edge\"}"
+          }
+        ],
+        "previous_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 183,
+            "line_end": 226,
+            "excerpt": "    def snapshot(self):\n        reports = []\n        with self.store.connect() as con:\n            con.execute(\"BEGIN\")\n            all_fills = [dict(r) for r in con.execute(\"SELECT * FROM p_fills ORDER BY observed_at,rowid\")]\n            episodes = completed_episodes(all_fills)\n            fill_map = {f[\"id\"]: f for f in all_fills}\n            for episode in episodes:\n                episode[\"excursion\"] = self._excursion(con, episode, fill_map)\n            for row in con.execute(\"SELECT * FROM p_books ORDER BY created_at\"):\n                book = dict(row)\n                bid = book[\"id\"]\n                account = self.trading._account(con, row, datetime.now(UTC))[0]\n                samples = [e for e in episodes if e[\"book_id\"] == bid]\n                returns = [dict(r) for r in con.execute(\"SELECT * FROM p_equity WHERE book_id=? ORDER BY timestamp,rowid\", (bid,))]\n                flows = [dict(r) for r in con.execute(\"SELECT * FROM p_fundings WHERE book_id=? ORDER BY timestamp\", (bid,))]\n                reason = \"Awaiting clean end-of-session valuations and matching benchmark bars\"\n                report = {\"book_id\": bid, \"book_name\": book[\"name\"], \"account\": account,\n                          \"closed_roundtrips\": len(samples), \"wins\": sum(e[\"net_pnl_cents\"] > 0 for e in samples),\n                          \"losses\": sum(e[\"net_pnl_cents\"] < 0 for e in samples),\n                          \"win_rate_percent\": sum(e[\"net_pnl_cents\"] > 0 for e in samples) * 100 / len(samples) if samples else None,\n                          \"closed_trade_net_pnl\": sum(e[\"net_pnl_cents\"] for e in samples) / 100,\n                          \"return_percent\": None, \"benchmarks\": [], \"coverage\": reason, \"profitability_claim\": False,\n                          \"metrics\": {**trade_metrics(samples, book[\"broker\"] == \"local\"), **unavailable_risk(reason)},\n                          \"trade_accounting_coverage\": {\"status\": \"recorded_local_fees\" if book[\"broker\"] == \"local\" else \"unverified_broker_basis_and_fees\",\n                              \"scope\": \"Local completed episodes include all recorded fees; broker starting inventory and fee completeness must be independently established\"},\n                          \"risk_assumptions\": {\"risk_free_annual_rate\": 0, \"sessions_per_year\": 252,\n                              \"minimum_daily_returns\": MIN_DAILY_RETURNS,\n                              \"scope\": \"Descriptive close-window observations; the sample gate is not a significance test or claim of future profitability\",\n                              \"annualization_assumption\": \"Conventional sqrt(252) scaling assumes stable daily second moments and negligible serial covariance; no autocorrelation correction is inferred\"}}\n                if book[\"broker\"] == \"local\":\n                    aligned = self._aligned(con, returns, flows)\n                    report[\"metrics\"].update(aligned.pop(\"metrics\"))\n                    report.update(aligned)\n                else:\n                    report[\"coverage\"] = \"Broker cashflow, initial inventory and fee coverage are incomplete; account returns and net trade statistics are withheld\"\n                    for key in (\"wins\", \"losses\", \"win_rate_percent\", \"closed_trade_net_pnl\"):\n                        report[key] = None\n                    report[\"metrics\"].update(unavailable_risk(report[\"coverage\"]))\n                reports.append(report)\n        return {\"books\": reports, \"completed_trades\": episodes[-1000:],\n                \"benchmark_definitions\": {\"QQQ\": \"Nasdaq-100 ETF\", \"SPY\": \"S&P 500 ETF proxy\"},\n                \"return_method\": \"Chain of clean valued cashflow-adjusted subperiod returns between common session-close-window baselines; deposits require adjacent pre/post valuations\",\n                \"strategy_count\": 0, \"scope\": \"Measured evidence; outperformance is not a prediction or proof of durable edge\"}"
+          }
+        ]
+      },
+      {
+        "id": "genuine_vendor_interval_excursion",
+        "verified_contract": "Only two equal-quantity precise fills wholly within one regular session; exact contiguous raw OHLC bar starts/ends and observed-after-close archive. Missing, forming, adjusted, truncated, partial-size and misaligned histories withheld. Vendor feed, revision, finality and exchange-coverage limitations returned.",
+        "evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 322,
+            "line_end": 373,
+            "excerpt": "    def _excursion(self, con, episode, fill_map):\n        scope = \"Gross vendor-observed instrument price excursion from actual fixed-size entry; timestamp-complete raw regular-session OHLC interval, not certified consolidated-market extrema; excludes fees\"\n        def withheld(reason):\n            return {\"mfe_percent\": None, \"mae_percent\": None, \"status\": \"withheld\", \"reason\": reason, \"scope\": scope}\n        fills = [fill_map[fid] for fid in episode[\"fill_ids\"]]\n        if len(fills) != 2 or any(not f.get(\"timestamp\") for f in fills):\n            return withheld(\"Changing position size or imprecise execution times; exact fixed-size holding interval unavailable\")\n        if Decimal(str(fills[0][\"quantity\"])) != Decimal(str(fills[1][\"quantity\"])):\n            return withheld(\"Position flip or unequal opening/closing quantities; fixed-size excursion not inferred\")\n        opened, closed = timepoint(episode[\"opened_at\"]), timepoint(episode[\"closed_at\"])\n        session = exchange_calendar(opened)\n        if not session[\"is_session\"] or closed <= opened or opened < timepoint(session[\"open_at\"]) or closed > timepoint(session[\"close_at\"]):\n            return withheld(\"Holding interval is not wholly within one regular exchange session\")\n        if not self._has_table(con, \"a_bar_revisions\"):\n            return withheld(\"No archived complete intraday bars; sparse quotes cannot establish interval extrema\")\n        durations = {\"1m\": 60, \"5m\": 300, \"15m\": 900, \"30m\": 1800, \"60m\": 3600}\n        archived = con.execute(\"SELECT * FROM a_bar_revisions WHERE symbol=? ORDER BY observed_at DESC LIMIT 200\", (episode[\"symbol\"],)).fetchall()\n        nonfinite_excursion = False\n        for revision in archived:\n            seconds = durations.get(revision[\"interval\"])\n            if seconds is None:\n                continue\n            data = json.loads(revision[\"data\"])\n            if data.get(\"truncated\") or revision[\"adjustment\"].strip().lower() not in RAW_OHLC_BASES:\n                # Adjusted OHLC may not share the actual execution-price basis.\n                continue\n            bars = sorted(data.get(\"bars\", []), key=lambda b: timepoint(b[\"timestamp\"]))\n            inside = [b for b in bars if opened <= timepoint(b[\"timestamp\"]) < closed]\n            if not inside or timepoint(inside[0][\"timestamp\"]) != opened or timepoint(inside[-1][\"timestamp\"]) + timedelta(seconds=seconds) != closed:\n                continue\n            if any(timepoint(b[\"timestamp\"]) - timepoint(a[\"timestamp\"]) != timedelta(seconds=seconds) for a, b in zip(inside, inside[1:])):\n                continue\n            if timepoint(revision[\"observed_at\"]) < closed:\n                continue\n            prices = [Decimal(str(b[field])) for b in inside for field in (\"low\", \"high\")]\n            entry, exit_price = Decimal(str(fills[0][\"price\"])), Decimal(str(fills[1][\"price\"]))\n            if entry <= 0 or any(not v.is_finite() or v <= 0 for v in prices) or any(Decimal(str(b[\"low\"])) > Decimal(str(b[\"high\"])) for b in inside):\n                continue\n            low, high = min(prices + [entry, exit_price]), max(prices + [entry, exit_price])\n            favorable, adverse = (high - entry, entry - low) if episode[\"direction\"] == \"long\" else (entry - low, high - entry)\n            mfe, mae = float(favorable / entry * 100), float(adverse / entry * 100)\n            if not finite_number(mfe) or not finite_number(mae):\n                nonfinite_excursion = True\n                continue\n            return {\"mfe_percent\": mfe, \"mae_percent\": mae,\n                    \"status\": \"available\", \"reason\": None, \"scope\": scope, \"bar_count\": len(inside),\n                    \"interval\": revision[\"interval\"], \"revision_id\": revision[\"id\"], \"source\": revision[\"source\"],\n                    \"observed_at\": revision[\"observed_at\"], \"opened_at\": episode[\"opened_at\"], \"closed_at\": episode[\"closed_at\"],\n                    \"provider\": revision[\"provider\"], \"finality\": data.get(\"finality\", \"provisional_vendor_observation\"),\n                    \"completeness\": data.get(\"completeness\", {\"status\": \"timestamp_complete_holding_interval\", \"exchange_coverage\": \"not independently certified\"}),\n                    \"feed_scope\": \"Alpaca IEX observations\" if revision[\"provider\"] == \"alpaca\" else revision[\"source\"]}\n        return withheld(\"Nonfinite vendor price-excursion ratio withheld\" if nonfinite_excursion else \"No complete explicitly raw intraday-bar revision exactly covers the holding interval; sparse quotes, daily ranges, overlapping bars and unknown adjustment bases are insufficient\")"
+          }
+        ],
+        "previous_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+            "line_start": 305,
+            "line_end": 351,
+            "excerpt": "    def _excursion(self, con, episode, fill_map):\n        scope = \"Gross vendor-observed instrument price excursion from actual fixed-size entry; timestamp-complete raw regular-session OHLC interval, not certified consolidated-market extrema; excludes fees\"\n        def withheld(reason):\n            return {\"mfe_percent\": None, \"mae_percent\": None, \"status\": \"withheld\", \"reason\": reason, \"scope\": scope}\n        fills = [fill_map[fid] for fid in episode[\"fill_ids\"]]\n        if len(fills) != 2 or any(not f.get(\"timestamp\") for f in fills):\n            return withheld(\"Changing position size or imprecise execution times; exact fixed-size holding interval unavailable\")\n        if Decimal(str(fills[0][\"quantity\"])) != Decimal(str(fills[1][\"quantity\"])):\n            return withheld(\"Position flip or unequal opening/closing quantities; fixed-size excursion not inferred\")\n        opened, closed = timepoint(episode[\"opened_at\"]), timepoint(episode[\"closed_at\"])\n        session = exchange_calendar(opened)\n        if not session[\"is_session\"] or closed <= opened or opened < timepoint(session[\"open_at\"]) or closed > timepoint(session[\"close_at\"]):\n            return withheld(\"Holding interval is not wholly within one regular exchange session\")\n        if not self._has_table(con, \"a_bar_revisions\"):\n            return withheld(\"No archived complete intraday bars; sparse quotes cannot establish interval extrema\")\n        durations = {\"1m\": 60, \"5m\": 300, \"15m\": 900, \"30m\": 1800, \"60m\": 3600}\n        archived = con.execute(\"SELECT * FROM a_bar_revisions WHERE symbol=? ORDER BY observed_at DESC LIMIT 200\", (episode[\"symbol\"],)).fetchall()\n        for revision in archived:\n            seconds = durations.get(revision[\"interval\"])\n            if seconds is None:\n                continue\n            data = json.loads(revision[\"data\"])\n            if data.get(\"truncated\") or \"raw\" not in revision[\"adjustment\"].lower():\n                # Adjusted OHLC may not share the actual execution-price basis.\n                continue\n            bars = sorted(data.get(\"bars\", []), key=lambda b: timepoint(b[\"timestamp\"]))\n            inside = [b for b in bars if opened <= timepoint(b[\"timestamp\"]) < closed]\n            if not inside or timepoint(inside[0][\"timestamp\"]) != opened or timepoint(inside[-1][\"timestamp\"]) + timedelta(seconds=seconds) != closed:\n                continue\n            if any(timepoint(b[\"timestamp\"]) - timepoint(a[\"timestamp\"]) != timedelta(seconds=seconds) for a, b in zip(inside, inside[1:])):\n                continue\n            if timepoint(revision[\"observed_at\"]) < closed:\n                continue\n            prices = [Decimal(str(b[field])) for b in inside for field in (\"low\", \"high\")]\n            entry, exit_price = Decimal(str(fills[0][\"price\"])), Decimal(str(fills[1][\"price\"]))\n            if entry <= 0 or any(not v.is_finite() or v <= 0 for v in prices) or any(Decimal(str(b[\"low\"])) > Decimal(str(b[\"high\"])) for b in inside):\n                continue\n            low, high = min(prices + [entry, exit_price]), max(prices + [entry, exit_price])\n            favorable, adverse = (high - entry, entry - low) if episode[\"direction\"] == \"long\" else (entry - low, high - entry)\n            return {\"mfe_percent\": float(favorable / entry * 100), \"mae_percent\": float(adverse / entry * 100),\n                    \"status\": \"available\", \"reason\": None, \"scope\": scope, \"bar_count\": len(inside),\n                    \"interval\": revision[\"interval\"], \"revision_id\": revision[\"id\"], \"source\": revision[\"source\"],\n                    \"observed_at\": revision[\"observed_at\"], \"opened_at\": episode[\"opened_at\"], \"closed_at\": episode[\"closed_at\"],\n                    \"provider\": revision[\"provider\"], \"finality\": data.get(\"finality\", \"provisional_vendor_observation\"),\n                    \"completeness\": data.get(\"completeness\", {\"status\": \"timestamp_complete_holding_interval\", \"exchange_coverage\": \"not independently certified\"}),\n                    \"feed_scope\": \"Alpaca IEX observations\" if revision[\"provider\"] == \"alpaca\" else revision[\"source\"]}\n        return withheld(\"No complete raw intraday-bar revision exactly covers the holding interval; sparse quotes, daily ranges and overlapping bars are insufficient\")"
+          }
+        ]
+      }
+    ],
+    "validation": {
+      "focused_command": "python -m unittest tests.test_analytics -q",
+      "focused_result": "16 tests passed including finite benchmark ratio and ambiguous raw/nonfinite excursion regressions",
+      "independent_script": "/tmp/aster-analytics-independent-probes.py",
+      "independent_results": {
+        "multiple_deposits_unitized": {
+          "curve": [
+            "1",
+            "1.5",
+            "1.5",
+            "0.75",
+            "0.75",
+            "0.9"
+          ],
+          "return": -10.0,
+          "max_drawdown": 50.0
+        },
+        "ruin_negative_recovery": {
+          "curve": [
+            "1",
+            "0",
+            "-0.2",
+            "0.3"
+          ],
+          "return": -70,
+          "max_drawdown": 120
+        },
+        "nonpositive_recapitalization_withheld": true,
+        "aligned_beta_and_daily_risk": {
+          "beta_spy": 1.7499999999999998,
+          "beta_qqq": null,
+          "daily_sd_percent": 4.014775342734831,
+          "sharpe": 0.39540214610299906,
+          "gap_beta_withheld": true
+        },
+        "net_sample_arithmetic": {
+          "net_expectancy": 0.0375,
+          "profit_factor": 2.0,
+          "average_net_win": 0.3,
+          "average_net_loss": -0.075
+        },
+        "excursion_complete_raw_interval": {
+          "short_mfe": 6.0,
+          "short_mae": 4.0,
+          "forming_adjusted_truncated_withheld": true
+        }
+      },
+      "child_independent_script": "/tmp/aster_analytics_independent_probes.py",
+      "child_baseline_results": {
+        "source": "/workspace/agentic-desk/backend/analytics.py",
+        "source_sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+        "safety": "Temporary SQLite state, pure numeric helpers and installed exchange calendar only; no external network or real brokers; no app/test edits.",
+        "results": [
+          {
+            "probe": "unitized_deposit_neutrality_and_nonpositive_NAV",
+            "observed": {
+              "cashflow_curve": [
+                "1",
+                "1.2",
+                "1.2",
+                "1.08"
+              ],
+              "return_percent": 8.0,
+              "drawdown_percent": 10.0,
+              "ruin_curve": [
+                "1",
+                "0",
+                "-0.5",
+                "0.25"
+              ],
+              "ruin_return_percent": -75.0,
+              "ruin_drawdown_percent": 150.0,
+              "zero_NAV_recapitalization": null
+            },
+            "passed": true
+          },
+          {
+            "probe": "gap_beta_and_annualization",
+            "observed": {
+              "gap_values": {
+                "daily_volatility_percent": null,
+                "annualized_volatility_percent": null,
+                "sharpe_ratio": null,
+                "max_drawdown_percent": 0.0,
+                "beta_spy": null,
+                "beta_qqq": null
+              },
+              "continuous_beta": 2.0,
+              "constant_benchmark_beta": null
+            },
+            "passed": true
+          },
+          {
+            "probe": "finite_benchmark_prices_overflow_return",
+            "observed": {
+              "return_percent": 10.0,
+              "benchmarks": [
+                {
+                  "symbol": "QQQ",
+                  "return_percent": "inf (nonfinite observed baseline float)",
+                  "excess_return_points": "-inf (nonfinite observed baseline float)",
+                  "scope": "Raw close price return; dividend adjustments unavailable",
+                  "source": "Finite-price isolated fixture",
+                  "revision_id": null,
+                  "baseline_date": "2026-10-05",
+                  "through_date": "2026-10-06"
+                },
+                {
+                  "symbol": "SPY",
+                  "return_percent": "inf (nonfinite observed baseline float)",
+                  "excess_return_points": "-inf (nonfinite observed baseline float)",
+                  "scope": "Raw close price return; dividend adjustments unavailable",
+                  "source": "Finite-price isolated fixture",
+                  "revision_id": null,
+                  "baseline_date": "2026-10-05",
+                  "through_date": "2026-10-06"
+                }
+              ],
+              "strict_JSON_encodable": false,
+              "encoding_error": "Out of range float values are not JSON compliant: inf"
+            },
+            "passed": false
+          },
+          {
+            "probe": "exact_intraday_interval_and_missing_coverage",
+            "observed": {
+              "exact": {
+                "mfe_percent": 4.0,
+                "mae_percent": 4.0,
+                "status": "available",
+                "reason": null,
+                "scope": "Gross vendor-observed instrument price excursion from actual fixed-size entry; timestamp-complete raw regular-session OHLC interval, not certified consolidated-market extrema; excludes fees",
+                "bar_count": 3,
+                "interval": "1m",
+                "revision_id": "probe-revision",
+                "source": "Isolated fixture",
+                "observed_at": "2026-10-06T14:05:00Z",
+                "opened_at": "2026-10-06T14:00:00Z",
+                "closed_at": "2026-10-06T14:03:00Z",
+                "provider": "fixture",
+                "finality": "provisional_vendor_observation",
+                "completeness": {
+                  "status": "timestamp_complete_holding_interval",
+                  "exchange_coverage": "not independently certified"
+                },
+                "feed_scope": "Isolated fixture"
+              },
+              "gap_status": "withheld",
+              "truncated_status": "withheld",
+              "adjusted_status": "withheld"
+            },
+            "passed": true
+          },
+          {
+            "probe": "raw_adjustment_provenance_ambiguous_label",
+            "observed": {
+              "adjustment": "split-adjusted OHLC; raw basis unavailable",
+              "result": {
+                "mfe_percent": 4.0,
+                "mae_percent": 4.0,
+                "status": "available",
+                "reason": null,
+                "scope": "Gross vendor-observed instrument price excursion from actual fixed-size entry; timestamp-complete raw regular-session OHLC interval, not certified consolidated-market extrema; excludes fees",
+                "bar_count": 3,
+                "interval": "1m",
+                "revision_id": "probe-revision",
+                "source": "Isolated fixture",
+                "observed_at": "2026-10-06T14:05:00Z",
+                "opened_at": "2026-10-06T14:00:00Z",
+                "closed_at": "2026-10-06T14:03:00Z",
+                "provider": "fixture",
+                "finality": "provisional_vendor_observation",
+                "completeness": {
+                  "status": "timestamp_complete_holding_interval",
+                  "exchange_coverage": "not independently certified"
+                },
+                "feed_scope": "Isolated fixture"
+              }
+            },
+            "passed": false
+          }
+        ]
+      },
+      "child_final_results": {
+        "source": "/workspace/agentic-desk/backend/analytics.py",
+        "source_sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+        "safety": "Temporary SQLite state, pure numeric helpers and installed exchange calendar only; no external network or real brokers; no app/test edits.",
+        "results": [
+          {
+            "probe": "unitized_deposit_neutrality_and_nonpositive_NAV",
+            "observed": {
+              "cashflow_curve": [
+                "1",
+                "1.2",
+                "1.2",
+                "1.08"
+              ],
+              "return_percent": 8.0,
+              "drawdown_percent": 10.0,
+              "ruin_curve": [
+                "1",
+                "0",
+                "-0.5",
+                "0.25"
+              ],
+              "ruin_return_percent": -75.0,
+              "ruin_drawdown_percent": 150.0,
+              "zero_NAV_recapitalization": null
+            },
+            "passed": true
+          },
+          {
+            "probe": "gap_beta_and_annualization",
+            "observed": {
+              "gap_values": {
+                "daily_volatility_percent": null,
+                "annualized_volatility_percent": null,
+                "sharpe_ratio": null,
+                "max_drawdown_percent": 0.0,
+                "beta_spy": null,
+                "beta_qqq": null
+              },
+              "continuous_beta": 2.0,
+              "constant_benchmark_beta": null
+            },
+            "passed": true
+          },
+          {
+            "probe": "finite_benchmark_prices_overflow_return",
+            "observed": {
+              "return_percent": null,
+              "benchmarks": [],
+              "strict_JSON_encodable": true,
+              "encoding_error": null
+            },
+            "passed": true
+          },
+          {
+            "probe": "exact_intraday_interval_and_missing_coverage",
+            "observed": {
+              "exact": {
+                "mfe_percent": 4.0,
+                "mae_percent": 4.0,
+                "status": "available",
+                "reason": null,
+                "scope": "Gross vendor-observed instrument price excursion from actual fixed-size entry; timestamp-complete raw regular-session OHLC interval, not certified consolidated-market extrema; excludes fees",
+                "bar_count": 3,
+                "interval": "1m",
+                "revision_id": "probe-revision",
+                "source": "Isolated fixture",
+                "observed_at": "2026-10-06T14:05:00Z",
+                "opened_at": "2026-10-06T14:00:00Z",
+                "closed_at": "2026-10-06T14:03:00Z",
+                "provider": "fixture",
+                "finality": "provisional_vendor_observation",
+                "completeness": {
+                  "status": "timestamp_complete_holding_interval",
+                  "exchange_coverage": "not independently certified"
+                },
+                "feed_scope": "Isolated fixture"
+              },
+              "gap_status": "withheld",
+              "truncated_status": "withheld",
+              "adjusted_status": "withheld"
+            },
+            "passed": true
+          },
+          {
+            "probe": "raw_adjustment_provenance_ambiguous_label",
+            "observed": {
+              "adjustment": "split-adjusted OHLC; raw basis unavailable",
+              "result": {
+                "mfe_percent": null,
+                "mae_percent": null,
+                "status": "withheld",
+                "reason": "No complete explicitly raw intraday-bar revision exactly covers the holding interval; sparse quotes, daily ranges, overlapping bars and unknown adjustment bases are insufficient",
+                "scope": "Gross vendor-observed instrument price excursion from actual fixed-size entry; timestamp-complete raw regular-session OHLC interval, not certified consolidated-market extrema; excludes fees"
+              }
+            },
+            "passed": true
+          }
+        ]
+      },
+      "mfe_overflow_final_result": {
+        "status": "withheld",
+        "mfe_percent": null,
+        "mae_percent": null,
+        "reason": "Nonfinite vendor price-excursion ratio withheld",
+        "strict_JSON_safe": true
+      },
+      "mfe_overflow_script": "/tmp/aster-mfe-overflow-probe.py",
+      "owner_reported_HTTP": "Owner separately reports16 analytics +10 HTTP tests passed (26 total); independent reviewer reran16 analytics only."
+    },
+    "findings": [
+      {
+        "id": "label_vendor_excursion",
+        "classification": "provenance precision",
+        "status": "fixed and source/assertion verified",
+        "description": "Scope now vendor-observed interval extrema rather than consolidated-market true extrema. Provider/finality/completeness/feed scope are preserved; no claimed finality or exchange-certified coverage."
+      },
+      {
+        "id": "benchmark_nonfinite_ratio",
+        "severity": "medium",
+        "status": "fixed and independently verified",
+        "description": "Finite-positive extreme benchmark values overflow ratio/excess conversion, generating Infinity and strict JSON serialization failure.",
+        "evidence_results": "/tmp/aster_analytics_independent_results.json",
+        "additional_occurrence": "MFE overflow confirmed independently: entry0.01 and finite raw high1e308 yields available Infinity; strict JSON fails. /tmp/aster-mfe-overflow-probe.py",
+        "scope": "Benchmark and MFE/MAE public ratio fields",
+        "fix": "Withhold nonfinite benchmark and MFE/MAE outputs; explicit finite conversion/variance guard",
+        "final_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 245,
+            "line_end": 320,
+            "excerpt": "    def _aligned(self, con, snapshots, flows):\n        def withheld(reason):\n            return {\"coverage\": reason, \"metrics\": unavailable_risk(reason)}\n        days = {}\n        for row in snapshots:\n            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            date = stamp.astimezone(NY).date().isoformat()\n            close = timepoint(calendar[\"close_at\"]) if calendar.get(\"close_at\") else None\n            # First recorded valuation in a bounded close window; never an overnight mark.\n            if close and close <= stamp <= close + CLOSE_WINDOW and calendar[\"session_date\"] == date:\n                days.setdefault(date, row)\n        if not self._has_table(con, \"a_bar_cache\"):\n            return withheld(\"No archived daily benchmark history\")\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data,fetched_at FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return withheld(\"Missing archived daily history for \" + sym)\n            data = json.loads(cached[\"data\"])\n            if data.get(\"truncated\"):\n                return withheld(\"Truncated \" + sym + \" history; complete aligned sampling is not verified\")\n            bars = {}\n            fetched = timepoint(cached[\"fetched_at\"])\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                # Some vendors encode a session-date label as UTC midnight.\n                date = stamp.date().isoformat() if stamp.time().replace(tzinfo=None).isoformat() == \"00:00:00\" else stamp.astimezone(NY).date().isoformat()\n                session = exchange_calendar(datetime.fromisoformat(date).replace(hour=12, tzinfo=NY))\n                if session[\"is_session\"] and timepoint(session[\"close_at\"]) <= fetched:\n                    bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        # Exclude initial genuinely unfunded zero days; retain losses to zero after funding.\n        while common and days[common[0]][\"equity_cents\"] == 0 and not any(timepoint(f[\"timestamp\"]) <= timepoint(days[common[0]][\"timestamp\"]) for f in flows):\n            common.pop(0)\n        if len(common) < 2:\n            return withheld(\"At least two matching close-window valuations and completed benchmark sessions required\")\n        start, end = days[common[0]], days[common[-1]]\n        left, right = timepoint(start[\"timestamp\"]), timepoint(end[\"timestamp\"])\n        rows = [r for r in snapshots if left <= timepoint(r[\"timestamp\"]) <= right]\n        curve = nav_curve(rows, flows)\n        if curve is None:\n            return withheld(\"Stale/missing marks, nonpositive opening NAV or funding without adjacent clean pre/post valuations; comparison withheld\")\n        value = float((curve[-1] - 1) * 100)\n        if not finite_number(value):\n            return withheld(\"Nonfinite cashflow-adjusted return; comparison withheld\")\n        daily, benchmark_daily, benchmarks, daily_reason = [], {}, [], None\n        gap = any(exchange_calendar(timepoint(days[b][\"timestamp\"]))[\"previous_session\"] != a for a, b in zip(common, common[1:]))\n        for a, b in zip(common, common[1:]):\n            t0, t1 = timepoint(days[a][\"timestamp\"]), timepoint(days[b][\"timestamp\"])\n            part = [r for r in snapshots if t0 <= timepoint(r[\"timestamp\"]) <= t1]\n            result = flow_adjusted_return(part, flows)\n            if result is None:\n                daily_reason = \"Nonpositive daily opening NAV or incomplete daily flow coverage; percentage daily risk statistics withheld\"\n            else:\n                daily.append(result / 100)\n        for sym, (data, bars) in histories.items():\n            adjusted = all(bars[d].get(\"adjusted_close\") is not None for d in common)\n            field = \"adjusted_close\" if adjusted else \"close\"\n            prices = [Decimal(str(bars[d][field])) for d in common]\n            if any(not price.is_finite() or price <= 0 for price in prices):\n                return withheld(\"Invalid benchmark prices; comparison withheld\")\n            benchmark_daily[sym] = [float(b / a - 1) for a, b in zip(prices, prices[1:])]\n            bench = float((prices[-1] / prices[0] - 1) * 100)\n            if not all(finite_number(v) for v in [bench, value - bench, *benchmark_daily[sym]]):\n                return withheld(\"Nonfinite benchmark return after price-ratio calculation; comparison withheld\")\n            benchmarks.append({\"symbol\": sym, \"return_percent\": bench, \"excess_return_points\": value - bench,\n                               \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\",\n                               \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"),\n                               \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": value, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean observations within five minutes after session close; exact exchange-close marks are not inferred\",\n                \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common),\n                \"daily_return_coverage\": {\"returns\": len(daily), \"contiguous_sessions\": not gap, \"reason\": daily_reason,\n                    \"baseline_date\": common[0], \"through_date\": common[-1], \"close_window_seconds\": int(CLOSE_WINDOW.total_seconds())},\n                \"metrics\": risk_metrics(daily, benchmark_daily, curve, gap, daily_reason)}"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 322,
+            "line_end": 373,
+            "excerpt": "    def _excursion(self, con, episode, fill_map):\n        scope = \"Gross vendor-observed instrument price excursion from actual fixed-size entry; timestamp-complete raw regular-session OHLC interval, not certified consolidated-market extrema; excludes fees\"\n        def withheld(reason):\n            return {\"mfe_percent\": None, \"mae_percent\": None, \"status\": \"withheld\", \"reason\": reason, \"scope\": scope}\n        fills = [fill_map[fid] for fid in episode[\"fill_ids\"]]\n        if len(fills) != 2 or any(not f.get(\"timestamp\") for f in fills):\n            return withheld(\"Changing position size or imprecise execution times; exact fixed-size holding interval unavailable\")\n        if Decimal(str(fills[0][\"quantity\"])) != Decimal(str(fills[1][\"quantity\"])):\n            return withheld(\"Position flip or unequal opening/closing quantities; fixed-size excursion not inferred\")\n        opened, closed = timepoint(episode[\"opened_at\"]), timepoint(episode[\"closed_at\"])\n        session = exchange_calendar(opened)\n        if not session[\"is_session\"] or closed <= opened or opened < timepoint(session[\"open_at\"]) or closed > timepoint(session[\"close_at\"]):\n            return withheld(\"Holding interval is not wholly within one regular exchange session\")\n        if not self._has_table(con, \"a_bar_revisions\"):\n            return withheld(\"No archived complete intraday bars; sparse quotes cannot establish interval extrema\")\n        durations = {\"1m\": 60, \"5m\": 300, \"15m\": 900, \"30m\": 1800, \"60m\": 3600}\n        archived = con.execute(\"SELECT * FROM a_bar_revisions WHERE symbol=? ORDER BY observed_at DESC LIMIT 200\", (episode[\"symbol\"],)).fetchall()\n        nonfinite_excursion = False\n        for revision in archived:\n            seconds = durations.get(revision[\"interval\"])\n            if seconds is None:\n                continue\n            data = json.loads(revision[\"data\"])\n            if data.get(\"truncated\") or revision[\"adjustment\"].strip().lower() not in RAW_OHLC_BASES:\n                # Adjusted OHLC may not share the actual execution-price basis.\n                continue\n            bars = sorted(data.get(\"bars\", []), key=lambda b: timepoint(b[\"timestamp\"]))\n            inside = [b for b in bars if opened <= timepoint(b[\"timestamp\"]) < closed]\n            if not inside or timepoint(inside[0][\"timestamp\"]) != opened or timepoint(inside[-1][\"timestamp\"]) + timedelta(seconds=seconds) != closed:\n                continue\n            if any(timepoint(b[\"timestamp\"]) - timepoint(a[\"timestamp\"]) != timedelta(seconds=seconds) for a, b in zip(inside, inside[1:])):\n                continue\n            if timepoint(revision[\"observed_at\"]) < closed:\n                continue\n            prices = [Decimal(str(b[field])) for b in inside for field in (\"low\", \"high\")]\n            entry, exit_price = Decimal(str(fills[0][\"price\"])), Decimal(str(fills[1][\"price\"]))\n            if entry <= 0 or any(not v.is_finite() or v <= 0 for v in prices) or any(Decimal(str(b[\"low\"])) > Decimal(str(b[\"high\"])) for b in inside):\n                continue\n            low, high = min(prices + [entry, exit_price]), max(prices + [entry, exit_price])\n            favorable, adverse = (high - entry, entry - low) if episode[\"direction\"] == \"long\" else (entry - low, high - entry)\n            mfe, mae = float(favorable / entry * 100), float(adverse / entry * 100)\n            if not finite_number(mfe) or not finite_number(mae):\n                nonfinite_excursion = True\n                continue\n            return {\"mfe_percent\": mfe, \"mae_percent\": mae,\n                    \"status\": \"available\", \"reason\": None, \"scope\": scope, \"bar_count\": len(inside),\n                    \"interval\": revision[\"interval\"], \"revision_id\": revision[\"id\"], \"source\": revision[\"source\"],\n                    \"observed_at\": revision[\"observed_at\"], \"opened_at\": episode[\"opened_at\"], \"closed_at\": episode[\"closed_at\"],\n                    \"provider\": revision[\"provider\"], \"finality\": data.get(\"finality\", \"provisional_vendor_observation\"),\n                    \"completeness\": data.get(\"completeness\", {\"status\": \"timestamp_complete_holding_interval\", \"exchange_coverage\": \"not independently certified\"}),\n                    \"feed_scope\": \"Alpaca IEX observations\" if revision[\"provider\"] == \"alpaca\" else revision[\"source\"]}\n        return withheld(\"Nonfinite vendor price-excursion ratio withheld\" if nonfinite_excursion else \"No complete explicitly raw intraday-bar revision exactly covers the holding interval; sparse quotes, daily ranges, overlapping bars and unknown adjustment bases are insufficient\")"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 64,
+            "line_end": 68,
+            "excerpt": "def finite_number(value):\n    try:\n        return math.isfinite(float(value))\n    except (OverflowError, ValueError, TypeError):\n        return False"
+          }
+        ]
+      },
+      {
+        "id": "raw_basis_substring",
+        "severity": "low",
+        "status": "fixed and independently verified",
+        "description": "Contradictory adjusted label with text raw basis unavailable passes raw substring check; current known providers do not emit this label.",
+        "evidence_results": "/tmp/aster_analytics_independent_results.json",
+        "fix": "Accept only explicit known RAW_OHLC_BASES rather than raw substring; unknown or contradictory basis withheld",
+        "final_evidence": [
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 245,
+            "line_end": 320,
+            "excerpt": "    def _aligned(self, con, snapshots, flows):\n        def withheld(reason):\n            return {\"coverage\": reason, \"metrics\": unavailable_risk(reason)}\n        days = {}\n        for row in snapshots:\n            stamp = timepoint(row[\"timestamp\"])\n            calendar = exchange_calendar(stamp)\n            date = stamp.astimezone(NY).date().isoformat()\n            close = timepoint(calendar[\"close_at\"]) if calendar.get(\"close_at\") else None\n            # First recorded valuation in a bounded close window; never an overnight mark.\n            if close and close <= stamp <= close + CLOSE_WINDOW and calendar[\"session_date\"] == date:\n                days.setdefault(date, row)\n        if not self._has_table(con, \"a_bar_cache\"):\n            return withheld(\"No archived daily benchmark history\")\n        histories = {}\n        for sym in (\"QQQ\", \"SPY\"):\n            cached = con.execute(\"SELECT data,fetched_at FROM a_bar_cache WHERE symbol=? AND interval='1d' ORDER BY fetched_at DESC LIMIT 1\", (sym,)).fetchone()\n            if not cached:\n                return withheld(\"Missing archived daily history for \" + sym)\n            data = json.loads(cached[\"data\"])\n            if data.get(\"truncated\"):\n                return withheld(\"Truncated \" + sym + \" history; complete aligned sampling is not verified\")\n            bars = {}\n            fetched = timepoint(cached[\"fetched_at\"])\n            for bar in data.get(\"bars\", []):\n                stamp = timepoint(bar[\"timestamp\"])\n                # Some vendors encode a session-date label as UTC midnight.\n                date = stamp.date().isoformat() if stamp.time().replace(tzinfo=None).isoformat() == \"00:00:00\" else stamp.astimezone(NY).date().isoformat()\n                session = exchange_calendar(datetime.fromisoformat(date).replace(hour=12, tzinfo=NY))\n                if session[\"is_session\"] and timepoint(session[\"close_at\"]) <= fetched:\n                    bars[date] = bar\n            histories[sym] = (data, bars)\n        common = sorted(set(days).intersection(*(set(bars) for _, bars in histories.values())))\n        # Exclude initial genuinely unfunded zero days; retain losses to zero after funding.\n        while common and days[common[0]][\"equity_cents\"] == 0 and not any(timepoint(f[\"timestamp\"]) <= timepoint(days[common[0]][\"timestamp\"]) for f in flows):\n            common.pop(0)\n        if len(common) < 2:\n            return withheld(\"At least two matching close-window valuations and completed benchmark sessions required\")\n        start, end = days[common[0]], days[common[-1]]\n        left, right = timepoint(start[\"timestamp\"]), timepoint(end[\"timestamp\"])\n        rows = [r for r in snapshots if left <= timepoint(r[\"timestamp\"]) <= right]\n        curve = nav_curve(rows, flows)\n        if curve is None:\n            return withheld(\"Stale/missing marks, nonpositive opening NAV or funding without adjacent clean pre/post valuations; comparison withheld\")\n        value = float((curve[-1] - 1) * 100)\n        if not finite_number(value):\n            return withheld(\"Nonfinite cashflow-adjusted return; comparison withheld\")\n        daily, benchmark_daily, benchmarks, daily_reason = [], {}, [], None\n        gap = any(exchange_calendar(timepoint(days[b][\"timestamp\"]))[\"previous_session\"] != a for a, b in zip(common, common[1:]))\n        for a, b in zip(common, common[1:]):\n            t0, t1 = timepoint(days[a][\"timestamp\"]), timepoint(days[b][\"timestamp\"])\n            part = [r for r in snapshots if t0 <= timepoint(r[\"timestamp\"]) <= t1]\n            result = flow_adjusted_return(part, flows)\n            if result is None:\n                daily_reason = \"Nonpositive daily opening NAV or incomplete daily flow coverage; percentage daily risk statistics withheld\"\n            else:\n                daily.append(result / 100)\n        for sym, (data, bars) in histories.items():\n            adjusted = all(bars[d].get(\"adjusted_close\") is not None for d in common)\n            field = \"adjusted_close\" if adjusted else \"close\"\n            prices = [Decimal(str(bars[d][field])) for d in common]\n            if any(not price.is_finite() or price <= 0 for price in prices):\n                return withheld(\"Invalid benchmark prices; comparison withheld\")\n            benchmark_daily[sym] = [float(b / a - 1) for a, b in zip(prices, prices[1:])]\n            bench = float((prices[-1] / prices[0] - 1) * 100)\n            if not all(finite_number(v) for v in [bench, value - bench, *benchmark_daily[sym]]):\n                return withheld(\"Nonfinite benchmark return after price-ratio calculation; comparison withheld\")\n            benchmarks.append({\"symbol\": sym, \"return_percent\": bench, \"excess_return_points\": value - bench,\n                               \"scope\": \"Vendor adjusted-close return\" if adjusted else \"Raw close price return; dividend adjustments unavailable\",\n                               \"source\": data.get(\"source\"), \"revision_id\": data.get(\"revision_id\"),\n                               \"baseline_date\": common[0], \"through_date\": common[-1]})\n        return {\"return_percent\": value, \"benchmarks\": benchmarks, \"coverage\": \"Aligned clean observations within five minutes after session close; exact exchange-close marks are not inferred\",\n                \"baseline_at\": start[\"timestamp\"], \"through_at\": end[\"timestamp\"], \"matched_sessions\": len(common),\n                \"daily_return_coverage\": {\"returns\": len(daily), \"contiguous_sessions\": not gap, \"reason\": daily_reason,\n                    \"baseline_date\": common[0], \"through_date\": common[-1], \"close_window_seconds\": int(CLOSE_WINDOW.total_seconds())},\n                \"metrics\": risk_metrics(daily, benchmark_daily, curve, gap, daily_reason)}"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 322,
+            "line_end": 373,
+            "excerpt": "    def _excursion(self, con, episode, fill_map):\n        scope = \"Gross vendor-observed instrument price excursion from actual fixed-size entry; timestamp-complete raw regular-session OHLC interval, not certified consolidated-market extrema; excludes fees\"\n        def withheld(reason):\n            return {\"mfe_percent\": None, \"mae_percent\": None, \"status\": \"withheld\", \"reason\": reason, \"scope\": scope}\n        fills = [fill_map[fid] for fid in episode[\"fill_ids\"]]\n        if len(fills) != 2 or any(not f.get(\"timestamp\") for f in fills):\n            return withheld(\"Changing position size or imprecise execution times; exact fixed-size holding interval unavailable\")\n        if Decimal(str(fills[0][\"quantity\"])) != Decimal(str(fills[1][\"quantity\"])):\n            return withheld(\"Position flip or unequal opening/closing quantities; fixed-size excursion not inferred\")\n        opened, closed = timepoint(episode[\"opened_at\"]), timepoint(episode[\"closed_at\"])\n        session = exchange_calendar(opened)\n        if not session[\"is_session\"] or closed <= opened or opened < timepoint(session[\"open_at\"]) or closed > timepoint(session[\"close_at\"]):\n            return withheld(\"Holding interval is not wholly within one regular exchange session\")\n        if not self._has_table(con, \"a_bar_revisions\"):\n            return withheld(\"No archived complete intraday bars; sparse quotes cannot establish interval extrema\")\n        durations = {\"1m\": 60, \"5m\": 300, \"15m\": 900, \"30m\": 1800, \"60m\": 3600}\n        archived = con.execute(\"SELECT * FROM a_bar_revisions WHERE symbol=? ORDER BY observed_at DESC LIMIT 200\", (episode[\"symbol\"],)).fetchall()\n        nonfinite_excursion = False\n        for revision in archived:\n            seconds = durations.get(revision[\"interval\"])\n            if seconds is None:\n                continue\n            data = json.loads(revision[\"data\"])\n            if data.get(\"truncated\") or revision[\"adjustment\"].strip().lower() not in RAW_OHLC_BASES:\n                # Adjusted OHLC may not share the actual execution-price basis.\n                continue\n            bars = sorted(data.get(\"bars\", []), key=lambda b: timepoint(b[\"timestamp\"]))\n            inside = [b for b in bars if opened <= timepoint(b[\"timestamp\"]) < closed]\n            if not inside or timepoint(inside[0][\"timestamp\"]) != opened or timepoint(inside[-1][\"timestamp\"]) + timedelta(seconds=seconds) != closed:\n                continue\n            if any(timepoint(b[\"timestamp\"]) - timepoint(a[\"timestamp\"]) != timedelta(seconds=seconds) for a, b in zip(inside, inside[1:])):\n                continue\n            if timepoint(revision[\"observed_at\"]) < closed:\n                continue\n            prices = [Decimal(str(b[field])) for b in inside for field in (\"low\", \"high\")]\n            entry, exit_price = Decimal(str(fills[0][\"price\"])), Decimal(str(fills[1][\"price\"]))\n            if entry <= 0 or any(not v.is_finite() or v <= 0 for v in prices) or any(Decimal(str(b[\"low\"])) > Decimal(str(b[\"high\"])) for b in inside):\n                continue\n            low, high = min(prices + [entry, exit_price]), max(prices + [entry, exit_price])\n            favorable, adverse = (high - entry, entry - low) if episode[\"direction\"] == \"long\" else (entry - low, high - entry)\n            mfe, mae = float(favorable / entry * 100), float(adverse / entry * 100)\n            if not finite_number(mfe) or not finite_number(mae):\n                nonfinite_excursion = True\n                continue\n            return {\"mfe_percent\": mfe, \"mae_percent\": mae,\n                    \"status\": \"available\", \"reason\": None, \"scope\": scope, \"bar_count\": len(inside),\n                    \"interval\": revision[\"interval\"], \"revision_id\": revision[\"id\"], \"source\": revision[\"source\"],\n                    \"observed_at\": revision[\"observed_at\"], \"opened_at\": episode[\"opened_at\"], \"closed_at\": episode[\"closed_at\"],\n                    \"provider\": revision[\"provider\"], \"finality\": data.get(\"finality\", \"provisional_vendor_observation\"),\n                    \"completeness\": data.get(\"completeness\", {\"status\": \"timestamp_complete_holding_interval\", \"exchange_coverage\": \"not independently certified\"}),\n                    \"feed_scope\": \"Alpaca IEX observations\" if revision[\"provider\"] == \"alpaca\" else revision[\"source\"]}\n        return withheld(\"Nonfinite vendor price-excursion ratio withheld\" if nonfinite_excursion else \"No complete explicitly raw intraday-bar revision exactly covers the holding interval; sparse quotes, daily ranges, overlapping bars and unknown adjustment bases are insufficient\")"
+          },
+          {
+            "path": "/workspace/agentic-desk/backend/analytics.py",
+            "sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+            "line_start": 64,
+            "line_end": 68,
+            "excerpt": "def finite_number(value):\n    try:\n        return math.isfinite(float(value))\n    except (OverflowError, ValueError, TypeError):\n        return False"
+          }
+        ]
+      }
+    ],
+    "limits": [
+      "All metrics describe observed samples; minimum20 is an engineering display gate, not statistical significance or evidence of future profitability.",
+      "Risk-free annual rate0 and conventional sqrt252 scaling are explicit assumptions; no inferred serial-correlation correction.",
+      "Close-window observations can differ from exact exchange-close marks; sparse/missing marks never imply complete intraday coverage.",
+      "Broker cashflows, initial inventory and observed fee completeness remain unverified; corresponding metrics are withheld.",
+      "Gross instrument excursions derive from recorded vendor feed and price basis, exclude fees and do not certify consolidated-market extrema.",
+      "Historical bar revisions are provisional vendor observations unless source proves otherwise."
+    ],
+    "source_history": [
+      {
+        "path": "/workspace/agentic-desk/backend/analytics.py",
+        "sha256": "486b21b08b5953776c70811d16b5d3c60a8c96d4ce087c07adbd59a673b26788",
+        "line_count": 366,
+        "full_read": true,
+        "functions": [
+          {
+            "name": "timepoint",
+            "line": 20,
+            "end_line": 24
+          },
+          {
+            "name": "clean",
+            "line": 27,
+            "end_line": 28
+          },
+          {
+            "name": "nav_curve",
+            "line": 31,
+            "end_line": 54
+          },
+          {
+            "name": "flow_adjusted_return",
+            "line": 57,
+            "end_line": 60
+          },
+          {
+            "name": "metric",
+            "line": 63,
+            "end_line": 68
+          },
+          {
+            "name": "trade_metrics",
+            "line": 71,
+            "end_line": 88
+          },
+          {
+            "name": "unavailable_risk",
+            "line": 91,
+            "end_line": 99
+          },
+          {
+            "name": "risk_metrics",
+            "line": 102,
+            "end_line": 141
+          },
+          {
+            "name": "completed_episodes",
+            "line": 144,
+            "end_line": 176
+          },
+          {
+            "name": "analytics_router",
+            "line": 354,
+            "end_line": 366
+          },
+          {
+            "name": "item",
+            "line": 76,
+            "end_line": 77
+          },
+          {
+            "name": "__init__",
+            "line": 180,
+            "end_line": 181
+          },
+          {
+            "name": "snapshot",
+            "line": 183,
+            "end_line": 226
+          },
+          {
+            "name": "_has_table",
+            "line": 229,
+            "end_line": 230
+          },
+          {
+            "name": "_aligned",
+            "line": 232,
+            "end_line": 303
+          },
+          {
+            "name": "_excursion",
+            "line": 305,
+            "end_line": 351
+          },
+          {
+            "name": "reports",
+            "line": 358,
+            "end_line": 359
+          },
+          {
+            "name": "projection",
+            "line": 362,
+            "end_line": 364
+          },
+          {
+            "name": "withheld",
+            "line": 233,
+            "end_line": 234
+          },
+          {
+            "name": "withheld",
+            "line": 307,
+            "end_line": 308
+          }
+        ]
+      },
+      {
+        "path": "/workspace/agentic-desk/tests/test_analytics.py",
+        "sha256": "6bf8797dcc7a99ccd1383fd353a1879981f060a78b6433417d66c7ef7bbddfe2",
+        "line_count": 294,
+        "full_read": true,
+        "functions": [
+          {
+            "name": "test_funding_is_not_a_trading_return",
+            "line": 16,
+            "end_line": 26
+          },
+          {
+            "name": "test_only_completed_roundtrip_counts_as_a_win",
+            "line": 28,
+            "end_line": 37
+          },
+          {
+            "name": "test_flip_closes_old_episode_and_keeps_new_position_open",
+            "line": 39,
+            "end_line": 45
+          },
+          {
+            "name": "test_benchmarks_use_same_clean_eod_period_and_withhold_stale_history",
+            "line": 47,
+            "end_line": 64
+          },
+          {
+            "name": "test_net_trade_statistics_include_fees_flats_and_exact_cents",
+            "line": 66,
+            "end_line": 88
+          },
+          {
+            "name": "test_flip_fee_allocation_preserves_total_cents",
+            "line": 90,
+            "end_line": 97
+          },
+          {
+            "name": "test_timezone_normalization_and_unbracketed_funding_withheld",
+            "line": 99,
+            "end_line": 107
+          },
+          {
+            "name": "_archive",
+            "line": 109,
+            "end_line": 117
+          },
+          {
+            "name": "_sessions",
+            "line": 119,
+            "end_line": 126
+          },
+          {
+            "name": "_valuation",
+            "line": 128,
+            "end_line": 130
+          },
+          {
+            "name": "test_replicated_daily_exposure_beta_and_zero_variance_denominators",
+            "line": 132,
+            "end_line": 166
+          },
+          {
+            "name": "test_session_gap_is_not_annualized_as_a_daily_return",
+            "line": 168,
+            "end_line": 184
+          },
+          {
+            "name": "test_cashflow_adjusted_drawdown_retains_ruin_and_excludes_deposit",
+            "line": 186,
+            "end_line": 209
+          },
+          {
+            "name": "test_unitized_nav_records_negative_equity_without_hiding_drawdown",
+            "line": 211,
+            "end_line": 227
+          },
+          {
+            "name": "test_overnight_valuation_does_not_become_exchange_close",
+            "line": 229,
+            "end_line": 241
+          },
+          {
+            "name": "test_excursion_requires_exact_complete_raw_intraday_coverage",
+            "line": 243,
+            "end_line": 275
+          },
+          {
+            "name": "test_empty_and_broker_reports_withhold_unverified_metrics",
+            "line": 277,
+            "end_line": 290
+          },
+          {
+            "name": "fill",
+            "line": 29,
+            "end_line": 30
+          },
+          {
+            "name": "fill",
+            "line": 67,
+            "end_line": 70
+          },
+          {
+            "name": "revision",
+            "line": 253,
+            "end_line": 254
+          }
+        ]
+      }
+    ]
+  }
+}

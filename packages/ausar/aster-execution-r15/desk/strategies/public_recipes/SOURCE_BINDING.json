@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-09T18:44:29.484658+00:00",
+  "sources": [
+    {
+      "strategy": "ai_volume",
+      "pine_path": "sources/AI_Volume_Strategy.pine",
+      "pine_sha256": "d83e7f5990090f0dce9dc4ac08292b459f019c661620ca6c57c6e783128f07d1",
+      "upstream_archive_path": "qqq-outperformer-screen/public-source-research/AI_Volume_Strategy.pine",
+      "original_traderdev_parity": false
+    },
+    {
+      "strategy": "iu_body",
+      "pine_path": "sources/IU_BIG_BODY_BAR.pine",
+      "pine_sha256": "d3fafcced33085d54a7a50e669d9543d3cc5de47e2121c1d81327fdddb045048",
+      "upstream_archive_path": "qqq-outperformer-screen/public-source-research/IU_BIG_BODY_BAR.pine",
+      "original_traderdev_parity": false
+    },
+    {
+      "strategy": "tomazetti_rsi2",
+      "pine_path": "sources/TOMAZETTI_RSI2.pine",
+      "pine_sha256": "b8d8e844e2cddd2897ac3726b1c3c0ddb5add48eea2787b146bae018b0d356b4",
+      "upstream_archive_path": "qqq-outperformer-screen/public-source-research/TOMAZETTI_RSI2.pine",
+      "original_traderdev_parity": false
+    }
+  ],
+  "standard_default_quantity_policy": "AI/IU declarations omit quantity overrides; adapter fixed1 is an explicitly recorded standard-default reproduction choice without compiler parity. Config equity_percent changes source sizing and is labelled an allocation override. RSI2 declaration explicitly100 percent equity.",
+  "non_source_execution_overlays": [
+    "quote freshness10s",
+    "entry deadline300s",
+    "bar decision lag300s",
+    "strict receipt/observation/fill causality",
+    "paper contract and fee capability",
+    "short borrow/funding proof",
+    "sequential reversal flatten then re-entry",
+    "partial opening fill remainder cancellation",
+    "external cashflow obligations/journal-bound equity settled cash"
+  ]
+}

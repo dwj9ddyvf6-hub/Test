@@ -1,0 +1,271 @@
+{
+  "id": "02_paths",
+  "name": "TRACE: Tensor Residual Accumulation and Continuation/Exhaustion",
+  "version": "1.0",
+  "status": "UNTESTED_RESEARCH_SPECIFICATION",
+  "freeze_date": "2026-10-08",
+  "design_defaults_are_hypotheses": true,
+  "mechanism": {
+    "economic_hypothesis": "Persistent participation pressure preceding repricing may imply delayed supply clearance; break-then-pressure may imply chasing. Renewal after stalled progress may distinguish continued sponsorship from exhaustion.",
+    "observable_boundary": "Close-location volume is a disclosed pressure proxy, not observed buyer intent or aggressor-signed order flow.",
+    "specific_prediction": "Conditional on endpoints, Tensor/momentum state, extension and costs, pressure-before-acceptance has lower first-passage failure than CHASE; negative pressure renewal after a price stall has lower remaining hold value."
+  },
+  "universe": {
+    "market": "US exchange-listed common shares",
+    "exclusions": [
+      "ADRs",
+      "ETFs",
+      "options",
+      "futures",
+      "short positions"
+    ],
+    "min_price_usd": 10,
+    "min_60session_median_dollar_volume_usd": 50000000,
+    "min_daily_history": 252,
+    "min_weekly_history": 72,
+    "eligibility_refresh": "monthly point-in-time",
+    "delistings": "included with terminal payouts"
+  },
+  "horizon": {
+    "entry_decision": "daily at16:10 America/New_York after provider daily finality",
+    "max_holding_sessions": 20,
+    "feature_windows": {
+      "hourly_completed_RTH_slots": 28,
+      "daily_sessions": 20,
+      "completed_weeks": 12
+    },
+    "hourly_clock": "09:30\u201310:30 through14:30\u201315:30 plus15:30\u201316:00; explicit half-hour last slot",
+    "weekly_clock": "exclude incomplete current exchange-calendar week"
+  },
+  "features": {
+    "factor_residual": "r_i - a*d_j - b_SPY*r_SPY - b_sector*r_sector; hourly regression on slots from prior60sessions excluding path window; d_j=slotminutes/390; daily d_j=1 and weekly d_j=1 in week units",
+    "price_channel": "cumulative factor residual divided by pre-window stdev(e/sqrt(d_j))*sqrt(sum_window(d_j)); positive train-frozen floor",
+    "pressure_increment": "clip((2C-H-L)/(H-L) * V/prior_same-slot_median_volume,-5,5); zero for H=L",
+    "pressure_channel": "cumulative pressure increment/sqrt(L)",
+    "volume_normalization": "prior20sessions same intraday slot; prior20bars at daily/weekly scale; denominator ends before path window",
+    "path_interpolation": "aligned straight segments; no imposed intrabar flow-first staircases",
+    "area": "0.5 * sum(q_previous*delta_p - p_previous*delta_q)",
+    "clock": "cumulative d_j/sum_window(d_j), dimensionless elapsed trading-time fraction",
+    "phase_contrast": "recentered second-half area minus first-half area under same pre-window scales",
+    "baseline_B": [
+      "Tensor vote/conflict",
+      "exact marker/episode age",
+      "EMA21/55/200 distances/slopes",
+      "ATR fraction",
+      "5/20/60 session return",
+      "cumulative q",
+      "terminal p",
+      "compression",
+      "RVOL",
+      "sector return",
+      "clock/price area",
+      "clock/pressure area"
+    ],
+    "orthogonalization": "training-only ridge area prediction on B; residual/MAD_train with positive floor",
+    "additional_dimension": 8,
+    "additional_block": [
+      "3full-scale residual areas",
+      "3phase-contrast residuals",
+      "H_hour*H_day",
+      "H_day*H_week"
+    ],
+    "corporate_actions": "as-of split-adjusted prices/volume, causal total-return signal chain; raw executable barriers and separately accrued distributions",
+    "hourly_first_return": "sessionopen to firstslotclose, excludes overnight jump; later slots use preceding slot close"
+  },
+  "signal": {
+    "model": "multinomial ridge logistic on B +8 features; CONTINUE/FAIL/EXPIRE",
+    "target": "first-fill price +3cutoffATR first vs first-fill price -1.5cutoffATR protective stop;20sessions expiry; final average cost used only for realized PnL",
+    "calibration": "one temperature fit on matured separate chronological calibration window; outputs scores until OOS probability calibration supported",
+    "expected_net_value": "sum(class_score * training class-conditional net payoff mean)",
+    "uncertainty": "one-sided90% lower bound from calendar-week block bootstrap; uncertainty of estimated mean, not guaranteed realized profit",
+    "arm_min_lower_bound_return": 0.0025,
+    "arm_min_continue_minus_fail": 0.15,
+    "causal_phase": {
+      "box": "previous20session high/low frozen before daily20bar window",
+      "pressure_established": "first q>=1 while abs(p)<=0.5 and close inside frozen box",
+      "acceptance": "two consecutive completed closes above frozen box high",
+      "entry_sequence": "pressure event before acceptance, acceptance ended within3sessions, no intervening close below frozen box low",
+      "control": "break-then-pressure CHASE"
+    }
+  },
+  "entry": {
+    "window": "next session09:35\u201309:45 New_York",
+    "limit": "initial limit cutoff close+0.5cutoffATR; after first fill reset remaining buy limit<=first-fill price",
+    "volume_participation_cap": 0.01,
+    "max_spread_bp": 15,
+    "halt_gap_unfilled": "cancel zero-fill attempt or unfilled balance; preserve actual filled shares",
+    "partial_fill": "cancel unfilled remainder at09:45; retain all filled shares even if partial notional below1000USD",
+    "fill_price": "first-fill price freezes barriers immediately; final actual average cost determines PnL without retroactive barrier changes",
+    "episode_population": "every broad eligible flat cutoff;>=20session spacing per symbol in historical discovery; no winner-only labels; no-fill attempts separately reported",
+    "minimum_planned_notional_usd": 1000,
+    "barrier_during_acquisition": "cancel remaining buys and exit actual filled shares; idempotent order cleanup",
+    "volume_clock": "only cumulative minute volume actually observed by fill time; no final-minute future-volume allocation"
+  },
+  "exit": {
+    "initial_protective_stop_atr": 1.5,
+    "fixed_profit_target_atr": 3,
+    "age_exit": "after20sessions at next executable morning window",
+    "renewal_failure": "3closes without new closing high AND negative hourly residual phase contrast AND negative sum pressure increments over same3sessions",
+    "area_flip_alone": "never an exit",
+    "remaining_value_model": "fixed ridge on prior mature episodes; original age, barrier distances, phase block, renewal flag; labels original fixed-barrier continuation rather than optimal retrospective exit",
+    "value_exit": "90% lower bound incremental retain-versus-next-window-liquidation below0 at2successive daily cutoffs",
+    "stop_target_ordering": "minute/quote chronology; ambiguous same-OHLC-bar stop first; gaps actual attainable fill",
+    "cooldown_sessions": 20,
+    "pyramiding": false,
+    "initial_protective_stop_reference": "first-fill price; ATR known at preceding daily cutoff",
+    "fixed_target_reference": "first-fill price; ATR known at preceding daily cutoff"
+  },
+  "portfolio": {
+    "research_capital_usd": 1000000,
+    "long_only": true,
+    "max_gross": 1,
+    "max_leverage": 1,
+    "max_names": 15,
+    "max_name_weight": 0.08,
+    "max_sector_weight": 0.25,
+    "planned_loss_budget_NAV": 0.0025,
+    "shares_formula": "min(0.0025NAV/(1.5ATR),0.08NAV/P,capacity)",
+    "planned_risk_not_loss_guarantee": true,
+    "volatility_cap_annual": 0.2,
+    "covariance_estimation": "past60daily returns",
+    "cash": "record actual broker cash yield; no substitute strategy"
+  },
+  "costs": {
+    "modeled_per_side": "fees + halfquotedspread + eta*sigma_day*sqrt(Q/ADV)",
+    "eta": "calibrated on older executions only",
+    "unobserved_execution_floor_bp_per_side": 15,
+    "stress_bp_per_side": [
+      30,
+      50
+    ],
+    "max_trade_fraction_trailing_ADV": 0.005,
+    "max_participation_1min_volume": 0.01,
+    "capacity_is_design_hypothesis": true
+  },
+  "timeline": {
+    "signal_known_at": "daily provider-confirmed bar +16:10 receipt",
+    "factor_scaling_known_at": "before relevant path window starts",
+    "engine": "v690 source42fc461ef0327a3a7394f0a7cc37fadcc88816b0 frozen recipe; historical retrospective backcast, immutable per-cutoff prefixes",
+    "fit_known_at": "before outer calibration/test; matured labels only",
+    "entry_known_at": "next-session09:35quotes/volume",
+    "no_future_inputs": [
+      "incomplete weekly bars",
+      "later checkpoints",
+      "future pivots/peaks",
+      "outcome-selected images",
+      "future split factors",
+      "same-window optimizer schedules"
+    ]
+  },
+  "novel_contribution": {
+    "claim": "Proposed endpoint/Tensor-conditional multiscale order premium with causal pressure-before-price-acceptance transition and entry/renewal-retention asymmetry.",
+    "not_claimed": [
+      "new path signature mathematics",
+      "invention of Levy flow-price ordering",
+      "Tensor invention",
+      "universal originality",
+      "measured profitability",
+      "benchmark superiority",
+      "prize-winning achievement"
+    ]
+  },
+  "prior_art": [
+    {
+      "title": "Levy Area Flow Sequencer Flow Price Lead Lag",
+      "url": "https://in.tradingview.com/script/xdbT7OAw-Levy-Area-Flow-Sequencer-Flow-Price-Lead-Lag/",
+      "evidence_boundary": "indexed_primary_author_snippet; direct canonical open failed"
+    },
+    {
+      "title": "Path Signatures for Lead-Lag Detection",
+      "url": "https://www.mql5.com/en/articles/23548",
+      "evidence_boundary": "primary article selected full math/preprocessing/limitations content"
+    },
+    {
+      "title": "LES-CE \u00b7 Lyons Signature Cascade",
+      "url": "https://trendspider.com/trading-tools-store/indicators/6a7252-les-ce-%C2%B7-lyons-signature-cascade/",
+      "evidence_boundary": "primary product description; proprietary source not read"
+    },
+    {
+      "title": "Signature Trading: A Path-Dependent Extension of the Mean-Variance Framework with Exogenous Signals",
+      "url": "https://arxiv.org/html/2308.15135v1",
+      "evidence_boundary": "previous archived primary theory inspection, supplemented current search metadata"
+    },
+    {
+      "title": "A Signature Decomposition Method for Pair Trading",
+      "url": "https://arxiv.org/html/2505.05332v2",
+      "evidence_boundary": "archived substantive primary methods/table inspection"
+    },
+    {
+      "title": "Prism Cascade/Strata response and path-signature proposals",
+      "commit": "69cd96247c92866011dbca56ae0c2a406c35c3c7"
+    },
+    {
+      "title": "Griffith temporal grammar and winner-phenotype doctrine",
+      "commit": "4c8c179c5988d6e603c1f3c5f28f93e2344ca225"
+    }
+  ],
+  "validation": {
+    "status": "NOT_EXECUTED",
+    "refit": "every6months",
+    "outer": "5years training;6months calibration;6months outertest;roll6months",
+    "inner": "3 expanding chronological splits; ridge penalty {0.1,1,10}",
+    "purge": "all overlapping outcome intervals purged;21session maturity gap at boundary",
+    "sensitivity": "additional12week gap and unseen-symbol fold",
+    "baselines": [
+      "exact frozen Tensor-only",
+      "v690sidecar3of5",
+      "B-only logistic",
+      "liquid momentum and sector relative momentum",
+      "unresidualized area",
+      "8dim lagged price-pressure model",
+      "B+8matched-dimensional placebo features"
+    ],
+    "exit_ablation": "TRACE exit versus fixed-barrier exit on each entry baseline",
+    "order_controls": "preserve execution price tape; permute pressure order with same increments/endpoints; reverse both feature channels; compare CHASE and label-free chronology controls",
+    "scaling_controls": "dollars/cents, split-adjusted shares, dimensionless clock; train-only rotations/scales",
+    "primary_success": "net terminal wealth AND CAGR beat both dividend-inclusive SPY andQQQ on identical account calendar/cash under realistic costs; risk attribution required",
+    "secondary": [
+      "drawdown",
+      "factor alpha",
+      "turnover",
+      "capacity",
+      "calibration",
+      "retained realized gain",
+      "missed bull participation"
+    ],
+    "prospective_observation_gate": {
+      "independent_mature_episodes": 100,
+      "symbols": 40,
+      "months": 12,
+      "gate_is_not_statistical_proof": true
+    },
+    "historical_archive": "already-viewed discovery context; not untouched holdout",
+    "trials": "all feature/default/engine changes registered",
+    "inner_projection": "each inner fold trains its own scalers/area projections/payoff models; no outer-wide fitting across validation",
+    "factorial_ablation": "preregistered2x2:8dimorderblockon/off x pressure-before-acceptancegateon/off; separate retention ablation"
+  },
+  "dependencies": [
+    "point-in-time US equity master including delistings and distributions",
+    "final regular-session hourly/daily/weekly bars",
+    "executable quotes/minute data and real fill receipts",
+    "as-of sector classification and ETF histories",
+    "exact v690 prefix/finality parity fixtures",
+    "immutable feature/model/decision receipts",
+    "archived broker cash yield and account cost ledger"
+  ],
+  "kill_conditions": [
+    "no net order-feature increment beyondB",
+    "exposure/latency matching removes apparent edge",
+    "double-cost or capacity test fails",
+    "unseen-symbol/regime benefit reverses",
+    "calibration collapses",
+    "retention overlay reduces realized wealth",
+    "stale/finality revisions alter original decisions",
+    "profitability requires optimistic touches",
+    "primary wealth objective fails against either benchmark"
+  ],
+  "artifacts": {
+    "narrative": "strategies/02_paths.md",
+    "provenance": "research/paths_provenance.json"
+  }
+}
