@@ -1,0 +1,38 @@
+{
+ "backtest": "NONE (owner ruling: live paper record is the test)",
+ "config": {
+  "cadence_s": 60,
+  "inputs": [
+   "bars",
+   "bars_1min",
+   "bars:QQQ:1Min",
+   "positions",
+   "quotes",
+   "session_fills"
+  ],
+  "parked": false,
+  "session": "rth"
+ },
+ "files": {
+  "adapters/trullas_v06.py": "fbedc1aff9e557a438881305eb9776ff91c0e920fa39fa696d9783991a8ce643",
+  "adapters3/trullas_v06.py": "efbf7761e737bf6149f4666a86ab1808c75444bbaef5b39c2ea4fb1484e5854e",
+  "sleeves/trullas_divergence.py (shared machinery, primary behavior proven identical on golden fixture)": "6f6b7d59818b429192be738dd33728091a8dd487e05931d7e777091d38cf8a9f",
+  "sleeves/trullas_v06.py": "ad28d680003291fcceefb6a81d90d2428c266c3a9d3b1968ef8643e17b7af9e5",
+  "tests/test_trullas_variants_blockers.py": "112f8517dbb8d9e614d5fab7d74d13168198295400470956b15756f30c1442cb"
+ },
+ "installed": "2026-10-29",
+ "joint": "rsi_zone_only False -> True (sizing only)",
+ "paper_only": true,
+ "sleeve": "trullas_v06",
+ "slice_usd": 10000.0,
+ "spec": {
+  "path": "~/workspace/goals/ai-top50-pattern-study/files/TRULLAS-VARIANTS-SPEC-2026-10-29.md",
+  "primary_spec": "TRULLAS-SPEC-2026-10-25.md v1.0 FROZEN",
+  "version": "v1.0 FROZEN 2026-10-29"
+ },
+ "subtitle": "S6: RSI counted only when leaving an extreme zone",
+ "test_evidence": {
+  "file": "tests/test_trullas_variants_blockers.py",
+  "note": "per-variant one-joint fixture difference + config/INPUTS wiring + primary identity + unconfirmed-pivot guard; see BUGLOG_2026-10-29.md TRULLAS-VARIANTS-INSTALL-20261029"
+ }
+}

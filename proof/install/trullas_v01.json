@@ -1,0 +1,38 @@
+{
+ "backtest": "NONE (owner ruling: live paper record is the test)",
+ "config": {
+  "cadence_s": 60,
+  "inputs": [
+   "bars",
+   "bars_5min",
+   "bars:QQQ:5Min",
+   "positions",
+   "quotes",
+   "session_fills"
+  ],
+  "parked": false,
+  "session": "rth"
+ },
+ "files": {
+  "adapters/trullas_v01.py": "0daeed2a15c5f87a9b78a4459d36a3daf19a0df7ae72d6ab804f0aa4e42a851f",
+  "adapters3/trullas_v01.py": "09eea1b869727cf02495b2f34334733fbf9e6cc205b38397c5867edf2b87bdf6",
+  "sleeves/trullas_divergence.py (shared machinery, primary behavior proven identical on golden fixture)": "6f6b7d59818b429192be738dd33728091a8dd487e05931d7e777091d38cf8a9f",
+  "sleeves/trullas_v01.py": "4803b3a98de03066b3edc5c23ceeffd2a67db18f9cf48fcc9f28b5baa3736ffb",
+  "tests/test_trullas_variants_blockers.py": "112f8517dbb8d9e614d5fab7d74d13168198295400470956b15756f30c1442cb"
+ },
+ "installed": "2026-10-29",
+ "joint": "adapter timeframe 1Min -> 5Min (native QQQ 5Min SIP); strategy params = primary",
+ "paper_only": true,
+ "sleeve": "trullas_v01",
+ "slice_usd": 10000.0,
+ "spec": {
+  "path": "~/workspace/goals/ai-top50-pattern-study/files/TRULLAS-VARIANTS-SPEC-2026-10-29.md",
+  "primary_spec": "TRULLAS-SPEC-2026-10-25.md v1.0 FROZEN",
+  "version": "v1.0 FROZEN 2026-10-29"
+ },
+ "subtitle": "S1: 5-minute bars",
+ "test_evidence": {
+  "file": "tests/test_trullas_variants_blockers.py",
+  "note": "per-variant one-joint fixture difference + config/INPUTS wiring + primary identity + unconfirmed-pivot guard; see BUGLOG_2026-10-29.md TRULLAS-VARIANTS-INSTALL-20261029"
+ }
+}
