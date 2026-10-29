@@ -1,0 +1,75 @@
+{
+  "generated_at": "2026-10-08T07:44:13.073766+00:00",
+  "phase": "Final frozen source recheck",
+  "checks": [
+    {
+      "finding_id": "IR-01",
+      "probe": "original 93-byte continuous notification response",
+      "elapsed_seconds": 8.002501016999304,
+      "deadline_seconds": 8,
+      "requests_received": 1,
+      "client_connection_closed": true,
+      "result": {
+        "state": "DeliveryFailure",
+        "ambiguous": true,
+        "retryable": false,
+        "message": "Delivery transport failed"
+      },
+      "passed": true
+    },
+    {
+      "finding_id": "IR-02",
+      "probe": "manual reconcile after clock regression",
+      "post_repair_task": {
+        "status": "completed",
+        "error": null
+      },
+      "passed": true
+    },
+    {
+      "finding_id": "IR-04",
+      "probe": "original concurrent journal checkpoint regression",
+      "newer_checkpoint": 2,
+      "final_checkpoint": 2,
+      "latest_event": 2,
+      "passed": true
+    },
+    {
+      "finding_id": "IR-03",
+      "probe": "original overlapping cumulative broker snapshots",
+      "reconcile_errors": [],
+      "public_realized_pnl": null,
+      "public_realized_coverage": "withheld",
+      "position_realized": null,
+      "fill_realized_values": [
+        null,
+        null
+      ],
+      "fill_raw_realized_cents": [
+        null,
+        null
+      ],
+      "verified_position_basis": 20.0,
+      "passed": true
+    }
+  ],
+  "source_hashes_before": {
+    "backend/store.py": "b2185cc723b3a1f93ffb4529f0266c913549c336488e05d1ab1fe5c495923375",
+    "backend/trading.py": "c2d1fd60d0356ec5c9511d65b4a80851c99d043f995fc62e5d51f2800e8fac8e",
+    "backend/notifications.py": "4bc3887da37053750f30f3c173b477e45a76d71639041ddaa08179ea989d1ab5",
+    "backend/reasoning.py": "07be30b3c7637e623afe98e2b6207e207122f5f96719d88f131f7a1eb71331ca",
+    "backend/worker.py": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995",
+    "backend/http_transport.py": "aa7528c69c7dd2ec5e7ccdacff2261f7f37717a238310e9524c011ab1268cea8"
+  },
+  "source_hashes_after": {
+    "backend/store.py": "b2185cc723b3a1f93ffb4529f0266c913549c336488e05d1ab1fe5c495923375",
+    "backend/trading.py": "c2d1fd60d0356ec5c9511d65b4a80851c99d043f995fc62e5d51f2800e8fac8e",
+    "backend/notifications.py": "4bc3887da37053750f30f3c173b477e45a76d71639041ddaa08179ea989d1ab5",
+    "backend/reasoning.py": "07be30b3c7637e623afe98e2b6207e207122f5f96719d88f131f7a1eb71331ca",
+    "backend/worker.py": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995",
+    "backend/http_transport.py": "aa7528c69c7dd2ec5e7ccdacff2261f7f37717a238310e9524c011ab1268cea8"
+  },
+  "sources_unchanged": true,
+  "all_passed": true,
+  "default_state_changed": false
+}

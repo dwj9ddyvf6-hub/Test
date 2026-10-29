@@ -1,0 +1,2385 @@
+{
+  "title": "Independent NEW Aster policy lab and read-only research DAG review",
+  "scope": "Read-only full implementation source and critical tests; isolated temporary SQLite/FastAPI/fake-provider probes only; no original Femto execution, application edits, external messages or real financial transport.",
+  "status": "All six concrete findings fixed and independently verified; no open verified defects in reviewed scope",
+  "sources": [
+    {
+      "path": "/workspace/agentic-desk/backend/lab.py",
+      "sha256": "09bc9ce148471cb82f92431f1c59b47c4edd67cc692650d1630c6eea96b18f39",
+      "line_count": 556,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "lab_router",
+          "line": 488,
+          "end_line": 556
+        },
+        {
+          "name": "__init__",
+          "line": 87,
+          "end_line": 110
+        },
+        {
+          "name": "bind",
+          "line": 112,
+          "end_line": 114
+        },
+        {
+          "name": "_json",
+          "line": 117,
+          "end_line": 118
+        },
+        {
+          "name": "_hash",
+          "line": 121,
+          "end_line": 122
+        },
+        {
+          "name": "_message",
+          "line": 124,
+          "end_line": 132
+        },
+        {
+          "name": "message",
+          "line": 134,
+          "end_line": 136
+        },
+        {
+          "name": "cursor",
+          "line": 138,
+          "end_line": 147
+        },
+        {
+          "name": "alert",
+          "line": 149,
+          "end_line": 165
+        },
+        {
+          "name": "resolve_key",
+          "line": 167,
+          "end_line": 172
+        },
+        {
+          "name": "update_alert",
+          "line": 174,
+          "end_line": 183
+        },
+        {
+          "name": "register",
+          "line": 185,
+          "end_line": 191
+        },
+        {
+          "name": "study",
+          "line": 193,
+          "end_line": 201
+        },
+        {
+          "name": "study_update",
+          "line": 203,
+          "end_line": 217
+        },
+        {
+          "name": "artifact",
+          "line": 219,
+          "end_line": 227
+        },
+        {
+          "name": "incident",
+          "line": 229,
+          "end_line": 234
+        },
+        {
+          "name": "proposal",
+          "line": 236,
+          "end_line": 251
+        },
+        {
+          "name": "decision",
+          "line": 253,
+          "end_line": 267
+        },
+        {
+          "name": "apply",
+          "line": 269,
+          "end_line": 301
+        },
+        {
+          "name": "_policy_actor",
+          "line": 304,
+          "end_line": 305
+        },
+        {
+          "name": "_policy_guard",
+          "line": 308,
+          "end_line": 313
+        },
+        {
+          "name": "rollback",
+          "line": 315,
+          "end_line": 332
+        },
+        {
+          "name": "_finish_rollback",
+          "line": 334,
+          "end_line": 345
+        },
+        {
+          "name": "_resume_rollback",
+          "line": 347,
+          "end_line": 362
+        },
+        {
+          "name": "_observe_proposals",
+          "line": 364,
+          "end_line": 399
+        },
+        {
+          "name": "record_agent_review",
+          "line": 401,
+          "end_line": 405
+        },
+        {
+          "name": "proposal_get",
+          "line": 407,
+          "end_line": 416
+        },
+        {
+          "name": "operate",
+          "line": 418,
+          "end_line": 460
+        },
+        {
+          "name": "snapshot",
+          "line": 462,
+          "end_line": 481
+        },
+        {
+          "name": "export",
+          "line": 483,
+          "end_line": 485
+        },
+        {
+          "name": "snapshot",
+          "line": 492,
+          "end_line": 493
+        },
+        {
+          "name": "message",
+          "line": 496,
+          "end_line": 497
+        },
+        {
+          "name": "cursor",
+          "line": 500,
+          "end_line": 501
+        },
+        {
+          "name": "acknowledge",
+          "line": 504,
+          "end_line": 505
+        },
+        {
+          "name": "resolve",
+          "line": 508,
+          "end_line": 509
+        },
+        {
+          "name": "register",
+          "line": 512,
+          "end_line": 513
+        },
+        {
+          "name": "study_update",
+          "line": 516,
+          "end_line": 517
+        },
+        {
+          "name": "artifact",
+          "line": 520,
+          "end_line": 521
+        },
+        {
+          "name": "read_artifact",
+          "line": 524,
+          "end_line": 529
+        },
+        {
+          "name": "incident",
+          "line": 532,
+          "end_line": 533
+        },
+        {
+          "name": "close_incident",
+          "line": 536,
+          "end_line": 542
+        },
+        {
+          "name": "proposal",
+          "line": 545,
+          "end_line": 546
+        },
+        {
+          "name": "decide",
+          "line": 549,
+          "end_line": 550
+        },
+        {
+          "name": "apply",
+          "line": 553,
+          "end_line": 554
+        },
+        {
+          "name": "guard",
+          "line": 309,
+          "end_line": 312
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/research_workflows.py",
+      "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+      "line_count": 255,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "workflow_router",
+          "line": 203,
+          "end_line": 255
+        },
+        {
+          "name": "__init__",
+          "line": 15,
+          "end_line": 23
+        },
+        {
+          "name": "encode",
+          "line": 26,
+          "end_line": 27
+        },
+        {
+          "name": "register",
+          "line": 29,
+          "end_line": 64
+        },
+        {
+          "name": "get",
+          "line": 66,
+          "end_line": 71
+        },
+        {
+          "name": "configure",
+          "line": 73,
+          "end_line": 78
+        },
+        {
+          "name": "_enqueue",
+          "line": 80,
+          "end_line": 88
+        },
+        {
+          "name": "enqueue",
+          "line": 90,
+          "end_line": 96
+        },
+        {
+          "name": "retry",
+          "line": 98,
+          "end_line": 108
+        },
+        {
+          "name": "cancel",
+          "line": 110,
+          "end_line": 120
+        },
+        {
+          "name": "operate",
+          "line": 122,
+          "end_line": 187
+        },
+        {
+          "name": "snapshot",
+          "line": 189,
+          "end_line": 200
+        },
+        {
+          "name": "snapshot",
+          "line": 224,
+          "end_line": 225
+        },
+        {
+          "name": "register",
+          "line": 228,
+          "end_line": 229
+        },
+        {
+          "name": "configure",
+          "line": 232,
+          "end_line": 233
+        },
+        {
+          "name": "run",
+          "line": 236,
+          "end_line": 237
+        },
+        {
+          "name": "retry",
+          "line": 240,
+          "end_line": 241
+        },
+        {
+          "name": "cancel",
+          "line": 244,
+          "end_line": 245
+        },
+        {
+          "name": "node_result",
+          "line": 248,
+          "end_line": 253
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/research.py",
+      "sha256": "2119b1b9a3268c9758e0aca551b4b9fd07eb339103232e2593e5d5efa3fb6ffc",
+      "line_count": 201,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "research_router",
+          "line": 179,
+          "end_line": 201
+        },
+        {
+          "name": "__init__",
+          "line": 28,
+          "end_line": 40
+        },
+        {
+          "name": "_fetch",
+          "line": 42,
+          "end_line": 50
+        },
+        {
+          "name": "_record",
+          "line": 52,
+          "end_line": 58
+        },
+        {
+          "name": "headlines",
+          "line": 60,
+          "end_line": 77
+        },
+        {
+          "name": "filings",
+          "line": 79,
+          "end_line": 104
+        },
+        {
+          "name": "collect",
+          "line": 106,
+          "end_line": 133
+        },
+        {
+          "name": "operate",
+          "line": 135,
+          "end_line": 139
+        },
+        {
+          "name": "search",
+          "line": 141,
+          "end_line": 163
+        },
+        {
+          "name": "snapshot",
+          "line": 165,
+          "end_line": 172
+        },
+        {
+          "name": "export",
+          "line": 174,
+          "end_line": 176
+        },
+        {
+          "name": "snapshot",
+          "line": 184,
+          "end_line": 185
+        },
+        {
+          "name": "search",
+          "line": 188,
+          "end_line": 191
+        },
+        {
+          "name": "collect",
+          "line": 198,
+          "end_line": 199
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_lab.py",
+      "sha256": "982c59a6b7d370986930fa362841bae02ef60dadf685d9ea0ab998a601f57f29",
+      "line_count": 291,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "setUp",
+          "line": 16,
+          "end_line": 19
+        },
+        {
+          "name": "tearDown",
+          "line": 21,
+          "end_line": 22
+        },
+        {
+          "name": "registration",
+          "line": 24,
+          "end_line": 25
+        },
+        {
+          "name": "test_append_only_inbox_and_durable_reader_cursor",
+          "line": 27,
+          "end_line": 37
+        },
+        {
+          "name": "test_preregistration_is_immutable_and_rejections_remain",
+          "line": 39,
+          "end_line": 51
+        },
+        {
+          "name": "test_artifacts_have_content_hash_and_exact_source_pin",
+          "line": 53,
+          "end_line": 56
+        },
+        {
+          "name": "test_proposal_cannot_install_strategy_and_requires_valid_decision",
+          "line": 58,
+          "end_line": 69
+        },
+        {
+          "name": "test_alert_deduplication_acknowledgement_and_recovery",
+          "line": 71,
+          "end_line": 79
+        },
+        {
+          "name": "test_operational_handoffs_do_not_duplicate_or_create_trades",
+          "line": 81,
+          "end_line": 88
+        },
+        {
+          "name": "test_approved_policy_applies_then_guard_restores_its_before_state",
+          "line": 90,
+          "end_line": 105
+        },
+        {
+          "name": "test_policy_guard_preserves_a_newer_operator_policy",
+          "line": 107,
+          "end_line": 118
+        },
+        {
+          "name": "test_policy_guard_does_not_act_on_incomplete_or_stale_marks",
+          "line": 120,
+          "end_line": 132
+        },
+        {
+          "name": "test_rollback_recovers_committed_policy_without_replacing_later_operator_update",
+          "line": 134,
+          "end_line": 153
+        },
+        {
+          "name": "test_applied_policy_is_recovered_from_its_exact_actor_after_interruption",
+          "line": 155,
+          "end_line": 166
+        },
+        {
+          "name": "test_observer_cannot_reset_active_apply_or_overwrite_concurrent_rollback",
+          "line": 168,
+          "end_line": 188
+        },
+        {
+          "name": "test_expired_apply_token_cannot_change_policy_after_rollback_decision",
+          "line": 190,
+          "end_line": 207
+        },
+        {
+          "name": "test_stale_observer_preserves_a_fresh_application_token",
+          "line": 209,
+          "end_line": 235
+        },
+        {
+          "name": "test_completed_agent_review_preserves_one_artifact_and_one_message",
+          "line": 237,
+          "end_line": 244
+        },
+        {
+          "name": "setUp",
+          "line": 248,
+          "end_line": 250
+        },
+        {
+          "name": "tearDown",
+          "line": 252,
+          "end_line": 253
+        },
+        {
+          "name": "test_source_times_hashes_and_repeated_collection_are_preserved",
+          "line": 255,
+          "end_line": 266
+        },
+        {
+          "name": "test_source_failure_does_not_fabricate_receipts_or_success",
+          "line": 268,
+          "end_line": 274
+        },
+        {
+          "name": "test_sec_source_identity_and_accession_are_stored",
+          "line": 276,
+          "end_line": 287
+        },
+        {
+          "name": "interleaved",
+          "line": 174,
+          "end_line": 180
+        },
+        {
+          "name": "expired_worker",
+          "line": 196,
+          "end_line": 202
+        },
+        {
+          "name": "concurrent_replacement",
+          "line": 219,
+          "end_line": 229
+        },
+        {
+          "name": "fetch",
+          "line": 277,
+          "end_line": 281
+        },
+        {
+          "name": "guarded",
+          "line": 183,
+          "end_line": 184
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_research_workflows.py",
+      "sha256": "534894b64475a47bf41871878e1533a31c8e5b7d4e10caad9c676c3d3a695167",
+      "line_count": 132,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "setUp",
+          "line": 14,
+          "end_line": 21
+        },
+        {
+          "name": "tearDown",
+          "line": 23,
+          "end_line": 24
+        },
+        {
+          "name": "plan",
+          "line": 26,
+          "end_line": 27
+        },
+        {
+          "name": "test_dependency_runs_once_with_durable_receipts_and_no_financial_effects",
+          "line": 29,
+          "end_line": 45
+        },
+        {
+          "name": "test_failed_source_blocks_dependent_and_retry_preserves_failure_receipt",
+          "line": 47,
+          "end_line": 61
+        },
+        {
+          "name": "test_active_lease_fences_duplicate_then_expired_read_recovers",
+          "line": 63,
+          "end_line": 76
+        },
+        {
+          "name": "test_rejects_financial_tools_and_forward_or_cyclic_dependencies",
+          "line": 78,
+          "end_line": 82
+        },
+        {
+          "name": "test_stale_history_fails_and_cancel_fences_inflight_source_result",
+          "line": 84,
+          "end_line": 102
+        },
+        {
+          "name": "test_explicit_enabled_schedule_runs_without_operator_cycle",
+          "line": 104,
+          "end_line": 111
+        },
+        {
+          "name": "test_real_api_routes_validate_and_export_workflow_receipts",
+          "line": 113,
+          "end_line": 128
+        },
+        {
+          "name": "concurrent",
+          "line": 67,
+          "end_line": 69
+        },
+        {
+          "name": "cancel_during_read",
+          "line": 93,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/app.py",
+      "sha256": "e9fa4410463c083420eee834863398b0b7f859b875f73cb1dd32c4759c502b46",
+      "line_count": 255,
+      "full_read": false,
+      "functions": [
+        {
+          "name": "create_app",
+          "line": 29,
+          "end_line": 252
+        },
+        {
+          "name": "lifespan",
+          "line": 44,
+          "end_line": 53
+        },
+        {
+          "name": "desk_error",
+          "line": 71,
+          "end_line": 72
+        },
+        {
+          "name": "provider_error",
+          "line": 75,
+          "end_line": 76
+        },
+        {
+          "name": "validation_error",
+          "line": 79,
+          "end_line": 92
+        },
+        {
+          "name": "desk",
+          "line": 95,
+          "end_line": 96
+        },
+        {
+          "name": "autonomous_snapshot",
+          "line": 99,
+          "end_line": 100
+        },
+        {
+          "name": "create_book",
+          "line": 103,
+          "end_line": 104
+        },
+        {
+          "name": "fund_book",
+          "line": 107,
+          "end_line": 108
+        },
+        {
+          "name": "set_book",
+          "line": 111,
+          "end_line": 112
+        },
+        {
+          "name": "set_portfolio_policy",
+          "line": 115,
+          "end_line": 116
+        },
+        {
+          "name": "submit_intent",
+          "line": 119,
+          "end_line": 120
+        },
+        {
+          "name": "cancel_intent",
+          "line": 123,
+          "end_line": 124
+        },
+        {
+          "name": "reconcile",
+          "line": 127,
+          "end_line": 128
+        },
+        {
+          "name": "autonomous_runtime",
+          "line": 131,
+          "end_line": 132
+        },
+        {
+          "name": "autonomous_cycle",
+          "line": 135,
+          "end_line": 136
+        },
+        {
+          "name": "schedule",
+          "line": 139,
+          "end_line": 140
+        },
+        {
+          "name": "retry_job",
+          "line": 143,
+          "end_line": 144
+        },
+        {
+          "name": "market_calendar",
+          "line": 147,
+          "end_line": 148
+        },
+        {
+          "name": "market_bars",
+          "line": 151,
+          "end_line": 152
+        },
+        {
+          "name": "market_revision_manifest",
+          "line": 155,
+          "end_line": 156
+        },
+        {
+          "name": "market_revision_page",
+          "line": 159,
+          "end_line": 160
+        },
+        {
+          "name": "market_revision_continue",
+          "line": 163,
+          "end_line": 164
+        },
+        {
+          "name": "funding",
+          "line": 167,
+          "end_line": 168
+        },
+        {
+          "name": "watch",
+          "line": 171,
+          "end_line": 172
+        },
+        {
+          "name": "unwatch",
+          "line": 175,
+          "end_line": 176
+        },
+        {
+          "name": "quote",
+          "line": 179,
+          "end_line": 180
+        },
+        {
+          "name": "order",
+          "line": 183,
+          "end_line": 184
+        },
+        {
+          "name": "approve",
+          "line": 187,
+          "end_line": 188
+        },
+        {
+          "name": "cancel_order",
+          "line": 191,
+          "end_line": 192
+        },
+        {
+          "name": "task",
+          "line": 195,
+          "end_line": 196
+        },
+        {
+          "name": "cancel_task",
+          "line": 199,
+          "end_line": 200
+        },
+        {
+          "name": "cycle",
+          "line": 203,
+          "end_line": 204
+        },
+        {
+          "name": "runtime",
+          "line": 207,
+          "end_line": 208
+        },
+        {
+          "name": "settings",
+          "line": 211,
+          "end_line": 212
+        },
+        {
+          "name": "strategies",
+          "line": 215,
+          "end_line": 216
+        },
+        {
+          "name": "health",
+          "line": 219,
+          "end_line": 223
+        },
+        {
+          "name": "market_history",
+          "line": 226,
+          "end_line": 227
+        },
+        {
+          "name": "export",
+          "line": 230,
+          "end_line": 238
+        },
+        {
+          "name": "frontend",
+          "line": 241,
+          "end_line": 250
+        },
+        {
+          "name": "safe",
+          "line": 82,
+          "end_line": 91
+        }
+      ],
+      "scope": "Router/lifecycle/export integration only"
+    }
+  ],
+  "features": [
+    {
+      "id": "policy_operator_boundary",
+      "contract": "Policy proposals accept operational fields only; approval and application remain separate explicit actions. Auto rollback requires an explicitly supplied guard and complete fresh marks.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "b3917fa1d4f459018ba808424d5e2e05a8acf08446b7e0220233e380613a9d6d",
+          "line_start": 232,
+          "line_end": 267,
+          "excerpt": "            con.execute(\"INSERT INTO lab_incidents VALUES(?,?,?,?,?,'open',?,NULL)\", (rid, payload[\"title\"], payload[\"severity\"], payload[\"evidence\"], payload.get(\"book_id\"), ts))\n            self.store.event(con, \"incident_recorded\", \"operator\", payload[\"title\"], {\"incident_id\": rid, \"book_id\": payload.get(\"book_id\")})\n        return {\"id\": rid, **payload, \"status\": \"open\", \"created_at\": ts}\n\n    def proposal(self, payload):\n        # Strategy activation is not a possible proposal operation.\n        allowed = {\"gross_exposure_cap\", \"symbol_exposure_cap\", \"drawdown_alert_percent\", \"drawdown_brake_percent\", \"slippage_bps\", \"fees_per_order\", \"max_fill_quantity\"}\n        if set(payload.get(\"policy_patch\", {})) - allowed:\n            raise DeskError(\"Proposals may change documented operational risk/execution parameters only\", 422)\n        if payload.get(\"policy_patch\") and not payload.get(\"book_id\"):\n            raise DeskError(\"A policy proposal requires a book identity\", 422)\n        if payload.get(\"rollback_drawdown_pct\") and not payload.get(\"policy_patch\"):\n            raise DeskError(\"Rollback guard requires an explicit policy proposal\", 422)\n        rid, ts = identifier(), now()\n        with self.store.transaction() as con:\n            if payload.get(\"study_id\") and not con.execute(\"SELECT 1 FROM lab_studies WHERE id=?\", (payload[\"study_id\"],)).fetchone():\n                raise DeskError(\"Study not found\", 404)\n            con.execute(\"INSERT INTO lab_proposals(id,proposal,status,created_at,updated_at,before_policy,applied_policy_hash) VALUES(?,?, 'pending',?,?,NULL,NULL)\", (rid, self._json(payload), ts, ts))\n            self.store.event(con, \"proposal_recorded\", \"operator\", payload[\"title\"], {\"proposal_id\": rid})\n        return {\"id\": rid, \"proposal\": payload, \"status\": \"pending\", \"created_at\": ts}\n\n    def decision(self, rid, decision, reason):\n        if decision == \"rollback\":\n            return self.rollback(rid, reason, actor=\"operator\")\n        with self.store.transaction() as con:\n            row = con.execute(\"SELECT * FROM lab_proposals WHERE id=?\", (rid,)).fetchone()\n            if not row:\n                raise DeskError(\"Proposal not found\", 404)\n            transitions = {\"pending\": {\"approved\", \"rejected\"}, \"approved\": {\"accepted\"}, \"observing\": {\"accepted\"}}\n            if decision not in transitions.get(row[\"status\"], set()):\n                raise DeskError(\"Proposal decision does not match its current stage\")\n            con.execute(\"INSERT INTO lab_decisions VALUES(?,?,?,?,?,?)\", (identifier(), rid, decision, reason, \"operator\", now()))\n            # Approval is a concrete signed decision; application is a separate explicit action.\n            con.execute(\"UPDATE lab_proposals SET status=?,updated_at=? WHERE id=?\", (decision, now(), rid))\n            self.store.event(con, \"proposal_decision\", \"operator\", reason, {\"proposal_id\": rid, \"decision\": decision})\n        return self.proposal_get(rid)"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "b3917fa1d4f459018ba808424d5e2e05a8acf08446b7e0220233e380613a9d6d",
+          "line_start": 374,
+          "line_end": 396,
+          "excerpt": "            account = book.get(\"account\", {})\n            if account.get(\"missing_marks\") != 0 or account.get(\"stale_marks\") != 0:\n                self.alert(\"proposal-marks:\" + row[\"id\"], \"warning\", \"Policy observation guard awaits complete fresh marks\", {\"proposal_id\": row[\"id\"], \"book_id\": bid})\n                continue\n            self.resolve_key(\"proposal-marks:\" + row[\"id\"])\n            drawdown = account.get(\"drawdown_percent\")\n            if drawdown is None or drawdown < guard:\n                continue\n            try:\n                self.rollback(row[\"id\"], \"Operator-approved observation guard reached: drawdown \" + str(drawdown) + \"%\", actor=\"calibration_guard\")\n                self.alert(\"proposal-rollback:\" + row[\"id\"], \"warning\", \"Approved operational policy automatically rolled back\", {\"proposal_id\": row[\"id\"], \"book_id\": bid})\n            except DeskError:\n                self.alert(\"proposal-conflict:\" + row[\"id\"], \"warning\", \"Policy observation guard requires operator review; a newer policy was preserved\", {\"proposal_id\": row[\"id\"], \"book_id\": bid})\n\n    def record_agent_review(self, con, task, result):\n        \"\"\"Journal completed coordinator work in the same task transaction.\"\"\"\n        self._message(con, {\"sender\": \"research_coordinator\", \"recipient\": \"chief_of_staff\", \"topic\": task[\"title\"], \"body\": result[:30000], \"source\": \"durable task:\" + task[\"id\"], \"confidence\": \"unassessed\"}, \"task-review:\" + task[\"id\"])\n        sha = self._hash(result)\n        con.execute(\"INSERT OR IGNORE INTO lab_artifacts VALUES(?,NULL,?,?,?,?,?,?)\", (\"task-\" + task[\"id\"], task[\"title\"], result, sha, \"Completed operational/research task\", \"local-task:\" + task[\"id\"], now()))\n\n    def proposal_get(self, rid):\n        with self.store.connect() as con:\n            row = con.execute(\"SELECT * FROM lab_proposals WHERE id=?\", (rid,)).fetchone()"
+        }
+      ]
+    },
+    {
+      "id": "policy_durable_recovery",
+      "contract": "Unique persisted stage tokens fence every application, recovery and rollback; policy authority is checked inside the same TradingDesk.set_book SQL write transaction. Exact token-qualified policy history recovers committed effects without replay over newer operator policy.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "09bc9ce148471cb82f92431f1c59b47c4edd67cc692650d1630c6eea96b18f39",
+          "line_start": 269,
+          "line_end": 313,
+          "excerpt": "    def apply(self, rid):\n        if not self.trading:\n            raise DeskError(\"Trading engine is unavailable\", 503)\n        proposal = self.proposal_get(rid)\n        if proposal[\"status\"] == \"observing\":\n            return proposal\n        if proposal[\"status\"] != \"approved\":\n            raise DeskError(\"Only an operator-approved proposal can be applied\")\n        payload = proposal[\"proposal\"]\n        if not payload.get(\"policy_patch\"):\n            raise DeskError(\"This is a research proposal; it has no executable policy change\", 422)\n        book = next((b for b in self.trading.snapshot()[\"books\"] if b[\"id\"] == payload[\"book_id\"]), None)\n        if not book:\n            raise DeskError(\"Proposal book not found\", 404)\n        before = {\"policy\": book[\"policy\"], \"policy_hash\": book[\"policy_hash\"], \"policy_version\": book[\"policy_version\"]}\n        token = identifier()\n        with self.store.transaction() as con:\n            # The durable record precedes the policy change. If the worker dies,\n            # the exact versioned policy actor identifies the committed effect.\n            changed = con.execute(\"UPDATE lab_proposals SET status='applying',before_policy=?,stage_until=?,stage_token=?,updated_at=? WHERE id=? AND status='approved'\", (self._json(before), time.time() + 120, token, now(), rid)).rowcount\n            if not changed:\n                raise DeskError(\"Proposal has already changed stage\")\n        try:\n            updated = self.trading.set_book(payload[\"book_id\"], {\"policy\": payload[\"policy_patch\"]}, expected_hash=before[\"policy_hash\"], actor=\"proposal:\" + rid + \":\" + token, transaction_guard=self._policy_guard(rid, \"applying\", token))\n        except Exception:\n            with self.store.transaction() as con:\n                con.execute(\"UPDATE lab_proposals SET status='approved',updated_at=? WHERE id=? AND status='applying' AND stage_token=?\", (now(), rid, token))\n            raise\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE lab_proposals SET status='observing',applied_policy_hash=?,stage_until=0,updated_at=? WHERE id=? AND status='applying' AND stage_token=?\", (updated[\"policy_hash\"], now(), rid, token)).rowcount\n            if changed:\n                self.store.event(con, \"proposal_applied\", \"operator\", \"Approved operational policy entered observation\", {\"proposal_id\": rid, \"book_id\": payload[\"book_id\"], \"policy_hash\": updated[\"policy_hash\"]})\n        return self.proposal_get(rid)\n\n    @staticmethod\n    def _policy_actor(prefix, rid, token):\n        return prefix + rid + (\":\" + token if token else \"\")\n\n    @staticmethod\n    def _policy_guard(rid, status, token):\n        def guard(con):\n            row = con.execute(\"SELECT status,stage_token FROM lab_proposals WHERE id=?\", (rid,)).fetchone()\n            if not row or row[\"status\"] != status or row[\"stage_token\"] != token:\n                raise DeskError(\"Policy proposal authority changed; stale work cannot change policy\")\n        return guard"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "09bc9ce148471cb82f92431f1c59b47c4edd67cc692650d1630c6eea96b18f39",
+          "line_start": 334,
+          "line_end": 381,
+          "excerpt": "    def _finish_rollback(self, proposal, reason, actor):\n        rid, payload = proposal[\"id\"], proposal[\"proposal\"]\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE lab_proposals SET status='rolled_back',updated_at=? WHERE id=? AND status=? AND stage_token IS ?\", (now(), rid, proposal[\"status\"], proposal[\"stage_token\"])).rowcount\n            if not changed:\n                current = con.execute(\"SELECT status FROM lab_proposals WHERE id=?\", (rid,)).fetchone()\n                if current and current[0] == \"rolled_back\":\n                    return self.proposal_get(rid)\n                raise DeskError(\"Proposal changed stage before rollback completion\")\n            con.execute(\"INSERT INTO lab_decisions VALUES(?,?,?,?,?,?)\", (identifier(), rid, \"rollback\", reason, actor, now()))\n            self.store.event(con, \"proposal_rolled_back\", actor, reason, {\"proposal_id\": rid, \"book_id\": payload.get(\"book_id\")})\n        return self.proposal_get(rid)\n\n    def _resume_rollback(self, proposal):\n        rid, payload = proposal[\"id\"], proposal[\"proposal\"]\n        policy_actor = self._policy_actor(\"proposal_rollback:\", rid, proposal[\"stage_token\"])\n        with self.store.connect() as con:\n            restored = con.execute(\"SELECT 1 FROM p_policy_history WHERE book_id=? AND actor=?\", (payload[\"book_id\"], policy_actor)).fetchone()\n        if not restored:\n            patch = {key: proposal[\"before_policy\"][\"policy\"][key] for key in payload[\"policy_patch\"]}\n            try:\n                self.trading.set_book(payload[\"book_id\"], {\"policy\": patch}, expected_hash=proposal[\"applied_policy_hash\"], actor=policy_actor, transaction_guard=self._policy_guard(rid, \"rolling_back\", proposal[\"stage_token\"]))\n            except DeskError:\n                with self.store.transaction() as con:\n                    con.execute(\"UPDATE lab_proposals SET status='observing',updated_at=? WHERE id=? AND status='rolling_back' AND stage_token=?\", (now(), rid, proposal[\"stage_token\"]))\n                raise\n        # The exact committed actor proves restoration even if a later operator\n        # update exists. Never replay restoration over that newer policy.\n        return self._finish_rollback(proposal, proposal[\"rollback_reason\"], proposal[\"rollback_actor\"])\n\n    def _observe_proposals(self, books):\n        with self.store.connect() as con:\n            rows = [dict(r) for r in con.execute(\"SELECT * FROM lab_proposals WHERE status IN ('applying','observing','rolling_back')\")]\n        for row in rows:\n            payload = json.loads(row[\"proposal\"])\n            bid = payload.get(\"book_id\")\n            if row[\"status\"] == \"rolling_back\":\n                try:\n                    self._resume_rollback(self.proposal_get(row[\"id\"]))\n                except DeskError:\n                    self.alert(\"proposal-conflict:\" + row[\"id\"], \"warning\", \"Interrupted policy rollback requires operator review; a newer policy was preserved\", {\"proposal_id\": row[\"id\"], \"book_id\": bid})\n                continue\n            if row[\"status\"] == \"applying\":\n                with self.store.transaction() as con:\n                    history = con.execute(\"SELECT hash FROM p_policy_history WHERE book_id=? AND actor=? ORDER BY version DESC LIMIT 1\", (bid, self._policy_actor(\"proposal:\", row[\"id\"], row[\"stage_token\"]))).fetchone()\n                    if not history and row[\"stage_until\"] > time.time():\n                        continue\n                    con.execute(\"UPDATE lab_proposals SET status=?,applied_policy_hash=?,updated_at=? WHERE id=? AND status='applying' AND stage_token IS ?\", (\"observing\" if history else \"approved\", history[0] if history else None, now(), row[\"id\"], row[\"stage_token\"]))"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/trading.py",
+          "sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46",
+          "line_start": 156,
+          "line_end": 173,
+          "excerpt": "    def set_book(self, book_id, payload, expected_hash=None, actor=\"operator\", transaction_guard=None):\n        # All policy writes come from this operator route, never from workers/models.\n        changes = payload.get(\"policy\", payload)\n        if not isinstance(changes, dict):\n            raise DeskError(\"policy must be an object\", 422)\n        acknowledgements = changes.get(\"acknowledge_external_symbols\", [])\n        unknown = set(changes) - set(POLICY) - {\"acknowledge_external_symbols\"}\n        if unknown:\n            raise DeskError(\"Unknown book policy fields: \" + \", \".join(sorted(unknown)), 422)\n        if not isinstance(acknowledgements, list) or len(acknowledgements) > 100 or any(not isinstance(item, str) for item in acknowledgements):\n            raise DeskError(\"acknowledge_external_symbols must be a bounded list\", 422)\n        acknowledged = [symbol(s) for s in acknowledgements]\n        with self.store.transaction() as con:\n            if transaction_guard is not None:\n                transaction_guard(con)\n            book = self._book(con, book_id)\n            if expected_hash is not None and book[\"policy_hash\"] != expected_hash:\n                raise DeskError(\"Book policy changed since approval; compare-and-swap refused the stale update\")"
+        }
+      ]
+    },
+    {
+      "id": "bounded_immutable_DAG",
+      "contract": "1\u201312 predefined read-only nodes, ordered backward-only dependencies, immutable canonical plan hash, 900\u2013604800-second cadence, at most four scheduled enqueues and one executed node per pass.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 27,
+          "line_end": 63,
+          "excerpt": "        return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False)\n\n    def register(self, title, nodes, interval_seconds=3600):\n        if not title.strip() or len(title) > 200 or not 1 <= len(nodes) <= 12:\n            raise DeskError(\"Research plans require a title and 1\u201312 bounded nodes\", 422)\n        if not 900 <= interval_seconds <= 604800:\n            raise DeskError(\"Research cadence must be between 900 and 604800 seconds\", 422)\n        seen, validated = set(), []\n        for node in nodes:\n            nid, tool, params, needs = node[\"id\"], node[\"tool\"], dict(node.get(\"params\", {})), node.get(\"needs\", [])\n            if not nid or len(nid) > 80 or nid in seen or any(dep not in seen for dep in needs):\n                raise DeskError(\"Nodes need unique identities and dependencies earlier in the plan\", 422)\n            if tool not in self.TOOLS:\n                raise DeskError(\"Unregistered research tool; financial and arbitrary execution tools are unavailable\", 422)\n            if tool == \"source_collection\":\n                if set(params) != {\"symbols\"} or not isinstance(params[\"symbols\"], list) or not 1 <= len(params[\"symbols\"]) <= 2:\n                    raise DeskError(\"Source collection accepts one or two symbols\", 422)\n                params[\"symbols\"] = [symbol(s) for s in params[\"symbols\"]]\n            elif tool == \"bar_history\":\n                if set(params) - {\"symbol\", \"range\", \"interval\"} or \"symbol\" not in params:\n                    raise DeskError(\"Bar history requires symbol with optional range/interval\", 422)\n                params[\"symbol\"] = symbol(params[\"symbol\"])\n                from .providers import BAR_INTERVALS, BAR_DAYS\n                if params.get(\"range\", \"1mo\") not in BAR_DAYS or params.get(\"interval\", \"1d\") not in BAR_INTERVALS:\n                    raise DeskError(\"Unsupported bounded bar range or interval\", 422)\n            elif tool == \"catalogue_search\":\n                if set(params) != {\"query\"} or not isinstance(params[\"query\"], str) or not 1 <= len(params[\"query\"]) <= 500:\n                    raise DeskError(\"Catalogue query must contain 1\u2013500 characters\", 422)\n            elif params:\n                raise DeskError(\"Evidence summary consumes only completed dependency receipts\", 422)\n            seen.add(nid)\n            validated.append({\"id\": nid, \"tool\": tool, \"params\": params, \"needs\": list(dict.fromkeys(needs))})\n        plan, rid = self.encode(validated), identifier()\n        digest = hashlib.sha256(plan.encode()).hexdigest()\n        with self.store.transaction() as con:\n            con.execute(\"INSERT INTO research_workflows VALUES(?,?,?,?,0,?,?,?)\", (rid, title, plan, digest, interval_seconds, 0, now()))\n            self.store.event(con, \"research_workflow_registered\", \"operator\", title, {\"workflow_id\": rid, \"plan_hash\": digest})"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 123,
+          "line_end": 153,
+          "excerpt": "        \"\"\"One bounded node per pass; persisted lease fences concurrent workers.\"\"\"\n        epoch, selected = time.time(), None\n        with self.store.transaction() as con:\n            for workflow in con.execute(\"SELECT * FROM research_workflows WHERE enabled=1 AND next_due<=? ORDER BY next_due LIMIT 4\", (epoch,)).fetchall():\n                self._enqueue(con, workflow)\n                con.execute(\"UPDATE research_workflows SET next_due=? WHERE id=?\", (epoch + workflow[\"interval_seconds\"], workflow[\"id\"]))\n            con.execute(\"UPDATE research_nodes SET status='queued',lease_token=NULL WHERE status='running' AND lease_until<=?\", (epoch,))\n            runs = con.execute(\"SELECT r.*,w.plan,w.plan_hash FROM research_runs r JOIN research_workflows w ON w.id=r.workflow_id WHERE r.status IN ('queued','running') ORDER BY r.created_at LIMIT 100\").fetchall()\n            for run in runs:\n                states = {r[\"node_id\"]: dict(r) for r in con.execute(\"SELECT * FROM research_nodes WHERE run_id=?\", (run[\"id\"],))}\n                # Serialize nodes within a run to preserve failure/retry lineage.\n                if any(r[\"status\"] == \"running\" for r in states.values()):\n                    continue\n                for node in json.loads(run[\"plan\"]):\n                    row = states[node[\"id\"]]\n                    if row[\"status\"] != \"queued\" or not all(states[d][\"status\"] == \"completed\" for d in node[\"needs\"]):\n                        continue\n                    token = identifier()\n                    con.execute(\"UPDATE research_nodes SET status='running',attempt=attempt+1,lease_until=?,lease_token=? WHERE run_id=? AND node_id=?\", (epoch + 120, token, run[\"id\"], node[\"id\"]))\n                    con.execute(\"UPDATE research_runs SET status='running' WHERE id=?\", (run[\"id\"],))\n                    selected = (dict(run), node, states, token, row[\"attempt\"] + 1)\n                    break\n                if selected:\n                    break\n        if not selected:\n            return {\"processed\": False}\n        run, node, states, token, attempt = selected\n        status, error = \"completed\", None\n        try:\n            params = node[\"params\"]\n            if node[\"tool\"] == \"source_collection\":"
+        }
+      ]
+    },
+    {
+      "id": "leased_read_only_execution",
+      "contract": "Persisted 120-second node lease and unique token prevent duplicate commit after cancellation or supersession. Only source collection, provider bars, read-only catalogue lookup and factual dependency summaries are exposed; no shell, orders or policy tools.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 12,
+          "line_end": 23,
+          "excerpt": "class ResearchWorkflows:\n    TOOLS = (\"source_collection\", \"bar_history\", \"catalogue_search\", \"evidence_summary\")\n\n    def __init__(self, research):\n        self.research, self.store = research, research.store\n        with self.store.connect() as con:\n            con.executescript(\"\"\"\n              CREATE TABLE IF NOT EXISTS research_workflows(id TEXT PRIMARY KEY,title TEXT NOT NULL,plan TEXT NOT NULL,plan_hash TEXT NOT NULL,enabled INTEGER NOT NULL,interval_seconds INTEGER NOT NULL,next_due REAL NOT NULL,created_at TEXT NOT NULL);\n              CREATE TABLE IF NOT EXISTS research_runs(id TEXT PRIMARY KEY,workflow_id TEXT NOT NULL REFERENCES research_workflows(id),status TEXT NOT NULL,created_at TEXT NOT NULL,completed_at TEXT);\n              CREATE TABLE IF NOT EXISTS research_nodes(run_id TEXT NOT NULL REFERENCES research_runs(id),node_id TEXT NOT NULL,status TEXT NOT NULL,attempt INTEGER NOT NULL,lease_until REAL NOT NULL,lease_token TEXT,result TEXT,error TEXT,PRIMARY KEY(run_id,node_id));\n              CREATE TABLE IF NOT EXISTS research_node_receipts(id TEXT PRIMARY KEY,run_id TEXT NOT NULL,node_id TEXT NOT NULL,attempt INTEGER NOT NULL,status TEXT NOT NULL,content TEXT NOT NULL,sha256 TEXT NOT NULL,created_at TEXT NOT NULL);\n            \"\"\")"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 123,
+          "line_end": 199,
+          "excerpt": "        \"\"\"One bounded node per pass; persisted lease fences concurrent workers.\"\"\"\n        epoch, selected = time.time(), None\n        with self.store.transaction() as con:\n            for workflow in con.execute(\"SELECT * FROM research_workflows WHERE enabled=1 AND next_due<=? ORDER BY next_due LIMIT 4\", (epoch,)).fetchall():\n                self._enqueue(con, workflow)\n                con.execute(\"UPDATE research_workflows SET next_due=? WHERE id=?\", (epoch + workflow[\"interval_seconds\"], workflow[\"id\"]))\n            con.execute(\"UPDATE research_nodes SET status='queued',lease_token=NULL WHERE status='running' AND lease_until<=?\", (epoch,))\n            runs = con.execute(\"SELECT r.*,w.plan,w.plan_hash FROM research_runs r JOIN research_workflows w ON w.id=r.workflow_id WHERE r.status IN ('queued','running') ORDER BY r.created_at LIMIT 100\").fetchall()\n            for run in runs:\n                states = {r[\"node_id\"]: dict(r) for r in con.execute(\"SELECT * FROM research_nodes WHERE run_id=?\", (run[\"id\"],))}\n                # Serialize nodes within a run to preserve failure/retry lineage.\n                if any(r[\"status\"] == \"running\" for r in states.values()):\n                    continue\n                for node in json.loads(run[\"plan\"]):\n                    row = states[node[\"id\"]]\n                    if row[\"status\"] != \"queued\" or not all(states[d][\"status\"] == \"completed\" for d in node[\"needs\"]):\n                        continue\n                    token = identifier()\n                    con.execute(\"UPDATE research_nodes SET status='running',attempt=attempt+1,lease_until=?,lease_token=? WHERE run_id=? AND node_id=?\", (epoch + 120, token, run[\"id\"], node[\"id\"]))\n                    con.execute(\"UPDATE research_runs SET status='running' WHERE id=?\", (run[\"id\"],))\n                    selected = (dict(run), node, states, token, row[\"attempt\"] + 1)\n                    break\n                if selected:\n                    break\n        if not selected:\n            return {\"processed\": False}\n        run, node, states, token, attempt = selected\n        status, error = \"completed\", None\n        try:\n            params = node[\"params\"]\n            if node[\"tool\"] == \"source_collection\":\n                result = self.research.collect(params[\"symbols\"], force=True)\n                if any(r[\"errors\"] for r in result[\"results\"]):\n                    raise RuntimeError(\"Source collection incomplete\")\n            elif node[\"tool\"] == \"bar_history\":\n                if not self.research.providers:\n                    raise RuntimeError(\"Market provider unavailable\")\n                result = self.research.providers.bars(params[\"symbol\"], range=params.get(\"range\", \"1mo\"), interval=params.get(\"interval\", \"1d\"))\n                if not result.get(\"bars\") or result.get(\"stale\") or result.get(\"stale_cache\"):\n                    raise RuntimeError(\"Fresh requested bar history unavailable\")\n            elif node[\"tool\"] == \"catalogue_search\":\n                result = self.research.search(params[\"query\"])\n                if not result[\"configured\"]:\n                    raise RuntimeError(\"Repository catalogue unconfigured\")\n            else:\n                result = {\"scope\": \"Factual dependency evidence, not an investment conclusion\", \"plan_hash\": run[\"plan_hash\"], \"dependencies\": {d: json.loads(states[d][\"result\"]) for d in node[\"needs\"]}, \"strategy_count\": 0}\n            encoded = self.encode(result)\n            if len(encoded.encode()) > 1_500_000:\n                raise RuntimeError(\"Research result too large\")\n        except Exception:\n            status, error = \"failed\", \"Read-only research node failed; inspect configuration/source availability and retry\"\n            encoded = self.encode({\"error\": error, \"tool\": node[\"tool\"]})\n        digest = hashlib.sha256(encoded.encode()).hexdigest()\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE research_nodes SET status=?,result=?,error=?,lease_until=0,lease_token=NULL WHERE run_id=? AND node_id=? AND lease_token=?\", (status, encoded, error, run[\"id\"], node[\"id\"], token)).rowcount\n            if not changed:\n                return {\"processed\": True, \"discarded\": \"Lease superseded; result not committed\"}\n            con.execute(\"INSERT INTO research_node_receipts VALUES(?,?,?,?,?,?,?,?)\", (identifier(), run[\"id\"], node[\"id\"], attempt, status, encoded, digest, now()))\n            if status == \"failed\":\n                con.execute(\"UPDATE research_nodes SET status='blocked' WHERE run_id=? AND status='queued'\", (run[\"id\"],))\n                con.execute(\"UPDATE research_runs SET status='failed',completed_at=? WHERE id=?\", (now(), run[\"id\"]))\n            elif not con.execute(\"SELECT 1 FROM research_nodes WHERE run_id=? AND status!='completed'\", (run[\"id\"],)).fetchone():\n                con.execute(\"UPDATE research_runs SET status='completed',completed_at=? WHERE id=?\", (now(), run[\"id\"]))\n            self.store.event(con, \"research_node_receipt\", \"research_coordinator\", \"Read-only node \" + status, {\"run_id\": run[\"id\"], \"node_id\": node[\"id\"], \"attempt\": attempt, \"sha256\": digest, \"plan_hash\": run[\"plan_hash\"]})\n        return {\"processed\": True, \"run_id\": run[\"id\"], \"node_id\": node[\"id\"], \"status\": status}\n\n    def snapshot(self):\n        with self.store.connect() as con:\n            workflows = [{**dict(r), \"plan\": json.loads(r[\"plan\"]), \"enabled\": bool(r[\"enabled\"])} for r in con.execute(\"SELECT * FROM research_workflows ORDER BY created_at DESC LIMIT 100\")]\n            runs = []\n            for row in con.execute(\"SELECT * FROM research_runs ORDER BY created_at DESC LIMIT 100\"):\n                run = dict(row)\n                run[\"nodes\"] = []\n                for item in con.execute(\"SELECT * FROM research_nodes WHERE run_id=? ORDER BY rowid\", (row[\"id\"],)):\n                    result = item[\"result\"]\n                    run[\"nodes\"].append({**dict(item), \"lease_token\": None, \"result\": json.loads(result) if result and len(result) <= 12000 else None, \"result_bytes\": len(result.encode()) if result else 0, \"result_sha256\": hashlib.sha256(result.encode()).hexdigest() if result else None, \"result_omitted\": bool(result and len(result) > 12000)})\n                runs.append(run)"
+        }
+      ]
+    },
+    {
+      "id": "manual_retry_preserves_evidence",
+      "contract": "Failed node blocks pending run nodes; explicit retry resets failed/blocked nodes but retains attempts and immutable prior receipts. Summary consumes completed dependency results and carries original plan hash.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 96,
+          "line_end": 109,
+          "excerpt": "        return {\"run_id\": run_id, \"workflow_id\": rid, \"status\": \"queued\"}\n\n    def retry(self, rid):\n        with self.store.transaction() as con:\n            row = con.execute(\"SELECT status FROM research_runs WHERE id=?\", (rid,)).fetchone()\n            if not row:\n                raise DeskError(\"Research run not found\", 404)\n            if row[0] != \"failed\":\n                raise DeskError(\"Only failed research runs can be retried\")\n            con.execute(\"UPDATE research_nodes SET status='queued',lease_until=0,lease_token=NULL,error=NULL WHERE run_id=? AND status IN ('failed','blocked')\", (rid,))\n            con.execute(\"UPDATE research_runs SET status='queued',completed_at=NULL WHERE id=?\", (rid,))\n            self.store.event(con, \"research_run_retry\", \"operator\", \"Read-only nodes retried; prior receipts retained\", {\"run_id\": rid})\n        return {\"run_id\": rid, \"status\": \"queued\"}\n"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 170,
+          "line_end": 199,
+          "excerpt": "            if len(encoded.encode()) > 1_500_000:\n                raise RuntimeError(\"Research result too large\")\n        except Exception:\n            status, error = \"failed\", \"Read-only research node failed; inspect configuration/source availability and retry\"\n            encoded = self.encode({\"error\": error, \"tool\": node[\"tool\"]})\n        digest = hashlib.sha256(encoded.encode()).hexdigest()\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE research_nodes SET status=?,result=?,error=?,lease_until=0,lease_token=NULL WHERE run_id=? AND node_id=? AND lease_token=?\", (status, encoded, error, run[\"id\"], node[\"id\"], token)).rowcount\n            if not changed:\n                return {\"processed\": True, \"discarded\": \"Lease superseded; result not committed\"}\n            con.execute(\"INSERT INTO research_node_receipts VALUES(?,?,?,?,?,?,?,?)\", (identifier(), run[\"id\"], node[\"id\"], attempt, status, encoded, digest, now()))\n            if status == \"failed\":\n                con.execute(\"UPDATE research_nodes SET status='blocked' WHERE run_id=? AND status='queued'\", (run[\"id\"],))\n                con.execute(\"UPDATE research_runs SET status='failed',completed_at=? WHERE id=?\", (now(), run[\"id\"]))\n            elif not con.execute(\"SELECT 1 FROM research_nodes WHERE run_id=? AND status!='completed'\", (run[\"id\"],)).fetchone():\n                con.execute(\"UPDATE research_runs SET status='completed',completed_at=? WHERE id=?\", (now(), run[\"id\"]))\n            self.store.event(con, \"research_node_receipt\", \"research_coordinator\", \"Read-only node \" + status, {\"run_id\": run[\"id\"], \"node_id\": node[\"id\"], \"attempt\": attempt, \"sha256\": digest, \"plan_hash\": run[\"plan_hash\"]})\n        return {\"processed\": True, \"run_id\": run[\"id\"], \"node_id\": node[\"id\"], \"status\": status}\n\n    def snapshot(self):\n        with self.store.connect() as con:\n            workflows = [{**dict(r), \"plan\": json.loads(r[\"plan\"]), \"enabled\": bool(r[\"enabled\"])} for r in con.execute(\"SELECT * FROM research_workflows ORDER BY created_at DESC LIMIT 100\")]\n            runs = []\n            for row in con.execute(\"SELECT * FROM research_runs ORDER BY created_at DESC LIMIT 100\"):\n                run = dict(row)\n                run[\"nodes\"] = []\n                for item in con.execute(\"SELECT * FROM research_nodes WHERE run_id=? ORDER BY rowid\", (row[\"id\"],)):\n                    result = item[\"result\"]\n                    run[\"nodes\"].append({**dict(item), \"lease_token\": None, \"result\": json.loads(result) if result and len(result) <= 12000 else None, \"result_bytes\": len(result.encode()) if result else 0, \"result_sha256\": hashlib.sha256(result.encode()).hexdigest() if result else None, \"result_omitted\": bool(result and len(result) > 12000)})\n                runs.append(run)"
+        }
+      ]
+    },
+    {
+      "id": "explicit_cancel",
+      "contract": "Run cancellation persists terminal run/node state and clears active leases; in-flight result cannot produce a workflow receipt. Disabling workflow changes future cadence only. Underlying read-only collectors can finish their own source receipts/cache while workflow result is discarded.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 71,
+          "line_end": 78,
+          "excerpt": "            return {**dict(row), \"plan\": json.loads(row[\"plan\"]), \"enabled\": bool(row[\"enabled\"])}\n\n    def configure(self, rid, enabled):\n        self.get(rid)\n        with self.store.transaction() as con:\n            con.execute(\"UPDATE research_workflows SET enabled=?,next_due=? WHERE id=?\", (int(enabled), time.time(), rid))\n            self.store.event(con, \"research_workflow_configured\", \"operator\", \"Research scheduling changed\", {\"workflow_id\": rid, \"enabled\": enabled})\n        return self.get(rid)"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 110,
+          "line_end": 121,
+          "excerpt": "    def cancel(self, rid):\n        with self.store.transaction() as con:\n            row = con.execute(\"SELECT status FROM research_runs WHERE id=?\", (rid,)).fetchone()\n            if not row:\n                raise DeskError(\"Research run not found\", 404)\n            if row[0] not in {\"queued\", \"running\", \"cancelled\"}:\n                raise DeskError(\"Completed or failed research runs retain their status\")\n            con.execute(\"UPDATE research_nodes SET status='cancelled',lease_until=0,lease_token=NULL WHERE run_id=? AND status IN ('queued','running')\", (rid,))\n            con.execute(\"UPDATE research_runs SET status='cancelled',completed_at=? WHERE id=? AND status!='cancelled'\", (now(), rid))\n            self.store.event(con, \"research_run_cancelled\", \"operator\", \"Read-only run cancelled; prior receipts retained\", {\"run_id\": rid})\n        return {\"run_id\": rid, \"status\": \"cancelled\"}\n"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 181,
+          "line_end": 191,
+          "excerpt": "            if status == \"failed\":\n                con.execute(\"UPDATE research_nodes SET status='blocked' WHERE run_id=? AND status='queued'\", (run[\"id\"],))\n                con.execute(\"UPDATE research_runs SET status='failed',completed_at=? WHERE id=?\", (now(), run[\"id\"]))\n            elif not con.execute(\"SELECT 1 FROM research_nodes WHERE run_id=? AND status!='completed'\", (run[\"id\"],)).fetchone():\n                con.execute(\"UPDATE research_runs SET status='completed',completed_at=? WHERE id=?\", (now(), run[\"id\"]))\n            self.store.event(con, \"research_node_receipt\", \"research_coordinator\", \"Read-only node \" + status, {\"run_id\": run[\"id\"], \"node_id\": node[\"id\"], \"attempt\": attempt, \"sha256\": digest, \"plan_hash\": run[\"plan_hash\"]})\n        return {\"processed\": True, \"run_id\": run[\"id\"], \"node_id\": node[\"id\"], \"status\": status}\n\n    def snapshot(self):\n        with self.store.connect() as con:\n            workflows = [{**dict(r), \"plan\": json.loads(r[\"plan\"]), \"enabled\": bool(r[\"enabled\"])} for r in con.execute(\"SELECT * FROM research_workflows ORDER BY created_at DESC LIMIT 100\")]"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research.py",
+          "sha256": "2119b1b9a3268c9758e0aca551b4b9fd07eb339103232e2593e5d5efa3fb6ffc",
+          "line_start": 52,
+          "line_end": 58,
+          "excerpt": "    def _record(self, sym, kind, source, payload, source_time=None):\n        encoded = json.dumps(payload, sort_keys=True, separators=(\",\", \":\"), allow_nan=False)\n        sha = hashlib.sha256(encoded.encode()).hexdigest()\n        rid = hashlib.sha256((sym + kind + source + sha).encode()).hexdigest()\n        with self.store.transaction() as con:\n            con.execute(\"INSERT OR IGNORE INTO research_receipts VALUES(?,?,?,?,?,?,?,?)\", (rid, sym, kind, source, source_time, now(), encoded, sha))\n        return {\"id\": rid, \"kind\": kind, \"symbol\": sym, \"sha256\": sha}"
+        }
+      ]
+    },
+    {
+      "id": "source_provenance_and_bounds",
+      "contract": "Source receipts are hash-addressed; HTTP bounded to 8 seconds/2 MB; each pass collects two due symbols; catalogue opens SQLite mode=ro with literal query bindings. Research export includes workflow runs/nodes/receipts.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research.py",
+          "sha256": "2119b1b9a3268c9758e0aca551b4b9fd07eb339103232e2593e5d5efa3fb6ffc",
+          "line_start": 42,
+          "line_end": 58,
+          "excerpt": "    def _fetch(self, url, headers=None):\n        if self.transport:\n            return self.transport(url, headers or {})\n        req = urllib.request.Request(url, headers={\"User-Agent\": \"AsterDesk/1.0\", **(headers or {})})\n        with urllib.request.urlopen(req, timeout=8) as response:\n            body = response.read(self.MAX_BYTES + 1)\n            if len(body) > self.MAX_BYTES:\n                raise RuntimeError(\"Research response exceeded its size limit\")\n            return body\n\n    def _record(self, sym, kind, source, payload, source_time=None):\n        encoded = json.dumps(payload, sort_keys=True, separators=(\",\", \":\"), allow_nan=False)\n        sha = hashlib.sha256(encoded.encode()).hexdigest()\n        rid = hashlib.sha256((sym + kind + source + sha).encode()).hexdigest()\n        with self.store.transaction() as con:\n            con.execute(\"INSERT OR IGNORE INTO research_receipts VALUES(?,?,?,?,?,?,?,?)\", (rid, sym, kind, source, source_time, now(), encoded, sha))\n        return {\"id\": rid, \"kind\": kind, \"symbol\": sym, \"sha256\": sha}"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research.py",
+          "sha256": "2119b1b9a3268c9758e0aca551b4b9fd07eb339103232e2593e5d5efa3fb6ffc",
+          "line_start": 106,
+          "line_end": 163,
+          "excerpt": "    def collect(self, symbols=None, force=False):\n        if symbols is None:\n            with self.store.connect() as con:\n                symbols = [r[0] for r in con.execute(\"SELECT symbol FROM watchlist ORDER BY symbol\")]\n        symbols = list(dict.fromkeys(symbol(s) for s in symbols))[:2]\n        results = []\n        for sym in symbols:\n            key = \"research:\" + sym\n            with self.store.connect() as con:\n                row = con.execute(\"SELECT * FROM research_collection WHERE key=?\", (key,)).fetchone()\n            if row and not force and row[\"next_due\"] > time.time():\n                continue\n            with self.store.transaction() as con:\n                con.execute(\"INSERT INTO research_collection(key,last_attempt,next_due) VALUES(?,?,?) ON CONFLICT(key) DO UPDATE SET last_attempt=excluded.last_attempt,next_due=excluded.next_due\", (key, now(), time.time() + self.interval))\n            result = {\"symbol\": sym, \"sources\": {}, \"errors\": []}\n            for name, collector in ((\"headlines\", self.headlines), (\"filings\", self.filings)):\n                try:\n                    result[\"sources\"][name] = collector(sym)\n                except Exception:\n                    # URLs/headers and provider responses may contain private data; only\n                    # a bounded source label reaches status, never transport internals.\n                    result[\"errors\"].append(name + \" collection failed; will retry\")\n            success = bool(result[\"sources\"].get(\"headlines\")) or result[\"sources\"].get(\"filings\", {}).get(\"status\") == \"collected\"\n            with self.store.transaction() as con:\n                con.execute(\"UPDATE research_collection SET last_success=CASE WHEN ? THEN ? ELSE last_success END,last_error=?,next_due=? WHERE key=?\", (success, now(), \"; \".join(result[\"errors\"]) or None, time.time() + (self.interval if success else 900), key))\n                self.store.event(con, \"research_collection\", \"data_steward\", \"Collected research observations for \" + sym if success else \"Research collection incomplete for \" + sym, {\"symbol\": sym, \"successful\": success, \"sources\": list(result[\"sources\"]), \"errors\": result[\"errors\"]})\n            results.append(result)\n        return {\"results\": results, \"strategy_count\": 0, \"trade_decisions\": 0}\n\n    def operate(self):\n        # Rotate through due symbols; a failed first ticker cannot starve the rest.\n        with self.store.connect() as con:\n            symbols = [r[0] for r in con.execute(\"SELECT w.symbol FROM watchlist w LEFT JOIN research_collection r ON r.key='research:'||w.symbol WHERE r.next_due IS NULL OR r.next_due<=? ORDER BY COALESCE(r.next_due,0),w.symbol LIMIT 2\", (time.time(),))]\n        return {**self.collect(symbols), \"workflow\": self.workflows.operate()}\n\n    def search(self, query, limit=25):\n        if not self.index_path:\n            return {\"configured\": False, \"results\": [], \"detail\": \"Set ASTER_RESEARCH_INDEX to the saved repository catalogue SQLite file\"}\n        path = Path(self.index_path)\n        if not path.is_file():\n            raise DeskError(\"Configured research index is unavailable\", 503)\n        tokens = [token for token in query.strip().split() if token][:8]\n        if not tokens:\n            return {\"configured\": True, \"results\": []}\n        uri = path.resolve().as_uri() + \"?mode=ro\"\n        with sqlite3.connect(uri, uri=True, timeout=3) as con:\n            con.row_factory = sqlite3.Row\n            clauses, params = [], []\n            for token in tokens:\n                # Literal LIKE metacharacters are escaped; query is not executable SQL.\n                literal = token.replace(\"\\\\\", \"\\\\\\\\\").replace(\"%\", \"\\\\%\").replace(\"_\", \"\\\\_\")\n                clauses.append(\"(f.path LIKE ? ESCAPE '\\\\' OR f.title LIKE ? ESCAPE '\\\\' OR f.catalogue_terms LIKE ? ESCAPE '\\\\')\")\n                params += [\"%\" + literal + \"%\"] * 3\n            sql = \"SELECT f.id,f.repo,f.path,f.blob_sha,f.kind,f.title,f.local_source FROM files f WHERE \" + \" AND \".join(clauses) + \" ORDER BY f.on_default DESC,f.repo,f.path LIMIT ?\"\n            rows = [dict(r) for r in con.execute(sql, params + [min(50, max(1, limit))])]\n            for row in rows:\n                row[\"refs\"] = [dict(r) for r in con.execute(\"SELECT ref_type,ref,commit_sha FROM locations WHERE file_id=? LIMIT 5\", (row[\"id\"],))]\n        return {\"configured\": True, \"results\": rows, \"scope\": \"Read-only catalogue path and provenance search; no trading decisions\"}"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research.py",
+          "sha256": "2119b1b9a3268c9758e0aca551b4b9fd07eb339103232e2593e5d5efa3fb6ffc",
+          "line_start": 174,
+          "line_end": 181,
+          "excerpt": "    def export(self):\n        with self.store.connect() as con:\n            return {name: [dict(r) for r in con.execute(\"SELECT * FROM \" + name)] for name in (\"research_receipts\", \"research_collection\", \"research_workflows\", \"research_runs\", \"research_nodes\", \"research_node_receipts\")}\n\n\ndef research_router(research):\n    router = APIRouter(prefix=\"/api/research\")\n    router.include_router(workflow_router(research.workflows), prefix=\"\")"
+        }
+      ]
+    },
+    {
+      "id": "real_API_integration",
+      "contract": "Research router exposes register/configure/run/retry/cancel and node-result routes; app binds Lab and Research into runtime and joins snapshots/export. Actual HTTP tests pass with isolated DB and workers disabled.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 218,
+          "line_end": 255,
+          "excerpt": "        interval_seconds: int = Field(default=3600, ge=900, le=604800)\n\n    class Enabled(Strict):\n        enabled: bool\n\n    @router.get(\"/workflows\")\n    def snapshot():\n        return engine.snapshot()\n\n    @router.post(\"/workflows\")\n    def register(body: Plan):\n        return engine.register(body.title, [n.model_dump() for n in body.nodes], body.interval_seconds)\n\n    @router.patch(\"/workflows/{rid}\")\n    def configure(rid: str, body: Enabled):\n        return engine.configure(rid, body.enabled)\n\n    @router.post(\"/workflows/{rid}/run\")\n    def run(rid: str):\n        return engine.enqueue(rid)\n\n    @router.post(\"/runs/{rid}/retry\")\n    def retry(rid: str):\n        return engine.retry(rid)\n\n    @router.post(\"/runs/{rid}/cancel\")\n    def cancel(rid: str):\n        return engine.cancel(rid)\n\n    @router.get(\"/runs/{rid}/nodes/{nid}\")\n    def node_result(rid: str, nid: str):\n        with engine.store.connect() as con:\n            row = con.execute(\"SELECT * FROM research_nodes WHERE run_id=? AND node_id=?\", (rid, nid)).fetchone()\n            if not row:\n                raise DeskError(\"Research node not found\", 404)\n            return {**dict(row), \"lease_token\": None, \"result\": json.loads(row[\"result\"]) if row[\"result\"] else None}\n\n    return router"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research.py",
+          "sha256": "2119b1b9a3268c9758e0aca551b4b9fd07eb339103232e2593e5d5efa3fb6ffc",
+          "line_start": 179,
+          "line_end": 201,
+          "excerpt": "def research_router(research):\n    router = APIRouter(prefix=\"/api/research\")\n    router.include_router(workflow_router(research.workflows), prefix=\"\")\n\n    @router.get(\"\")\n    def snapshot():\n        return research.snapshot()\n\n    @router.get(\"/library\")\n    def search(q: str = \"\", limit: int = 25):\n        if len(q) > 500:\n            raise DeskError(\"Library query is too long\", 422)\n        return research.search(q, limit)\n\n    class Collection(BaseModel):\n        model_config = ConfigDict(extra=\"forbid\")\n        symbols: list[str] = Field(max_length=2)\n\n    @router.post(\"/collect\")\n    def collect(body: Collection):\n        return research.collect(body.symbols, force=True)\n\n    return router"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/app.py",
+          "sha256": "e9fa4410463c083420eee834863398b0b7f859b875f73cb1dd32c4759c502b46",
+          "line_start": 34,
+          "line_end": 66,
+          "excerpt": "    lab = Lab(store)\n    autonomy = AutonomyRuntime(store, trading, lab, reasoning)\n    research = Research(store, providers=autonomy.providers)\n    lab.bind(trading, research)\n    analytics = Analytics(store, trading)\n    notifications = NotificationDispatcher(store, lab)\n    autonomy.bind_notifications(notifications)\n    worker.trading, worker.lab, worker.research, worker.providers = trading, lab, research, autonomy.providers\n\n    @asynccontextmanager\n    async def lifespan(application):\n        if start_worker:\n            worker.start()\n            autonomy.start()\n        try:\n            yield\n        finally:\n            if start_worker:\n                autonomy.stop()\n                worker.stop()\n\n    application = FastAPI(title=\"Aster Desk\", version=\"1.0.0\", lifespan=lifespan)\n    application.state.store = store\n    application.state.worker = worker\n    application.state.reasoning = reasoning\n    application.state.trading = trading\n    application.state.lab = lab\n    application.state.autonomy = autonomy\n    application.state.research = research\n    application.state.analytics = analytics\n    application.state.notifications = notifications\n    application.include_router(lab_router(lab))\n    application.include_router(research_router(research))"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "title": "Live policy application was mistaken for interruption and rollback overwritten",
+      "baseline": "Observer immediately returned uncommitted applying to approved; old caller then wrote observing unconditionally. Isolated thread pause reproduced rollback stage rolled_back followed by final observing and changed fees.",
+      "status": "fixed and independently verified, including expired live case F5",
+      "fix": "120-second stage grace; compare-and-set apply/rollback completion",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "b3917fa1d4f459018ba808424d5e2e05a8acf08446b7e0220233e380613a9d6d",
+          "line_start": 283,
+          "line_end": 301,
+          "excerpt": "        before = {\"policy\": book[\"policy\"], \"policy_hash\": book[\"policy_hash\"], \"policy_version\": book[\"policy_version\"]}\n        with self.store.transaction() as con:\n            # The durable record precedes the policy change. If the worker dies,\n            # the exact versioned policy actor identifies the committed effect.\n            changed = con.execute(\"UPDATE lab_proposals SET status='applying',before_policy=?,stage_until=?,updated_at=? WHERE id=? AND status='approved'\", (self._json(before), time.time() + 120, now(), rid)).rowcount\n            if not changed:\n                raise DeskError(\"Proposal has already changed stage\")\n        try:\n            updated = self.trading.set_book(payload[\"book_id\"], {\"policy\": payload[\"policy_patch\"]}, expected_hash=before[\"policy_hash\"], actor=\"proposal:\" + rid)\n        except Exception:\n            with self.store.transaction() as con:\n                con.execute(\"UPDATE lab_proposals SET status='approved',updated_at=? WHERE id=? AND status='applying'\", (now(), rid))\n            raise\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE lab_proposals SET status='observing',applied_policy_hash=?,stage_until=0,updated_at=? WHERE id=? AND status='applying'\", (updated[\"policy_hash\"], now(), rid)).rowcount\n            if changed:\n                self.store.event(con, \"proposal_applied\", \"operator\", \"Approved operational policy entered observation\", {\"proposal_id\": rid, \"book_id\": payload[\"book_id\"], \"policy_hash\": updated[\"policy_hash\"]})\n        return self.proposal_get(rid)\n"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "b3917fa1d4f459018ba808424d5e2e05a8acf08446b7e0220233e380613a9d6d",
+          "line_start": 359,
+          "line_end": 373,
+          "excerpt": "                    self._resume_rollback(self.proposal_get(row[\"id\"]))\n                except DeskError:\n                    self.alert(\"proposal-conflict:\" + row[\"id\"], \"warning\", \"Interrupted policy rollback requires operator review; a newer policy was preserved\", {\"proposal_id\": row[\"id\"], \"book_id\": bid})\n                continue\n            if row[\"status\"] == \"applying\":\n                with self.store.transaction() as con:\n                    history = con.execute(\"SELECT hash FROM p_policy_history WHERE book_id=? AND actor=? ORDER BY version DESC LIMIT 1\", (bid, \"proposal:\" + row[\"id\"])).fetchone()\n                    if not history and row[\"stage_until\"] > time.time():\n                        continue\n                    con.execute(\"UPDATE lab_proposals SET status=?,applied_policy_hash=?,updated_at=? WHERE id=? AND status='applying'\", (\"observing\" if history else \"approved\", history[0] if history else None, now(), row[\"id\"]))\n                continue\n            guard = payload.get(\"rollback_drawdown_pct\")\n            book = next((b for b in books if b[\"id\"] == bid), None)\n            if guard is None or not book:\n                continue"
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "severity": "medium",
+      "title": "Workflow accepted provider-unsupported bar parameters",
+      "baseline": "max/1h registered then provider rejected; workflow validation had a separate inconsistent allowlist.",
+      "status": "fixed and independently verified",
+      "fix": "Use actual provider BAR_DAYS and BAR_INTERVALS; 1h rejected at registration. Current provider max support exists; no claim max is currently invalid.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 45,
+          "line_end": 51,
+          "excerpt": "            elif tool == \"bar_history\":\n                if set(params) - {\"symbol\", \"range\", \"interval\"} or \"symbol\" not in params:\n                    raise DeskError(\"Bar history requires symbol with optional range/interval\", 422)\n                params[\"symbol\"] = symbol(params[\"symbol\"])\n                from .providers import BAR_INTERVALS, BAR_DAYS\n                if params.get(\"range\", \"1mo\") not in BAR_DAYS or params.get(\"interval\", \"1d\") not in BAR_INTERVALS:\n                    raise DeskError(\"Unsupported bounded bar range or interval\", 422)"
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "title": "Stale retained provider cache recorded as completed research node",
+      "baseline": "Provider result stale_cache=true and error was accepted because workflow checked only stale.",
+      "status": "fixed and independently verified",
+      "fix": "Explicitly reject stale_cache along with stale and empty bars.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 157,
+          "line_end": 163,
+          "excerpt": "            elif node[\"tool\"] == \"bar_history\":\n                if not self.research.providers:\n                    raise RuntimeError(\"Market provider unavailable\")\n                result = self.research.providers.bars(params[\"symbol\"], range=params.get(\"range\", \"1mo\"), interval=params.get(\"interval\", \"1d\"))\n                if not result.get(\"bars\") or result.get(\"stale\") or result.get(\"stale_cache\"):\n                    raise RuntimeError(\"Fresh requested bar history unavailable\")\n            elif node[\"tool\"] == \"catalogue_search\":"
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "severity": "medium",
+      "title": "No explicit run cancellation endpoint",
+      "baseline": "Disabling cadence left queued execution active and no cancellation API existed. Disable behavior now explicitly documented as future cadence only.",
+      "status": "fixed and independently verified",
+      "fix": "Durable run cancellation clears tokens and all pending/running nodes; late commits discarded.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 110,
+          "line_end": 121,
+          "excerpt": "    def cancel(self, rid):\n        with self.store.transaction() as con:\n            row = con.execute(\"SELECT status FROM research_runs WHERE id=?\", (rid,)).fetchone()\n            if not row:\n                raise DeskError(\"Research run not found\", 404)\n            if row[0] not in {\"queued\", \"running\", \"cancelled\"}:\n                raise DeskError(\"Completed or failed research runs retain their status\")\n            con.execute(\"UPDATE research_nodes SET status='cancelled',lease_until=0,lease_token=NULL WHERE run_id=? AND status IN ('queued','running')\", (rid,))\n            con.execute(\"UPDATE research_runs SET status='cancelled',completed_at=? WHERE id=? AND status!='cancelled'\", (now(), rid))\n            self.store.event(con, \"research_run_cancelled\", \"operator\", \"Read-only run cancelled; prior receipts retained\", {\"run_id\": rid})\n        return {\"run_id\": rid, \"status\": \"cancelled\"}\n"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/research_workflows.py",
+          "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+          "line_start": 243,
+          "line_end": 246,
+          "excerpt": "    @router.post(\"/runs/{rid}/cancel\")\n    def cancel(rid: str):\n        return engine.cancel(rid)\n"
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "severity": "high",
+      "title": "Expired old apply caller can change policy after operator rollback",
+      "status": "fixed and independently verified",
+      "reproduction": "Pause apply before trading.set_book; force stage_until=0 to model a still-live caller whose 120-second grace expired; observer resets applying to approved; operator rollback changes stage to rolled_back; resume old set_book. Final stage stays rolled_back yet fees become 2. This is an isolated NEW-code test with fake interruption and no broker calls.",
+      "expected": "Stale/withdrawn application must be fenced before policy effect commits, in same policy transaction.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "b3917fa1d4f459018ba808424d5e2e05a8acf08446b7e0220233e380613a9d6d",
+          "line_start": 287,
+          "line_end": 299,
+          "excerpt": "            changed = con.execute(\"UPDATE lab_proposals SET status='applying',before_policy=?,stage_until=?,updated_at=? WHERE id=? AND status='approved'\", (self._json(before), time.time() + 120, now(), rid)).rowcount\n            if not changed:\n                raise DeskError(\"Proposal has already changed stage\")\n        try:\n            updated = self.trading.set_book(payload[\"book_id\"], {\"policy\": payload[\"policy_patch\"]}, expected_hash=before[\"policy_hash\"], actor=\"proposal:\" + rid)\n        except Exception:\n            with self.store.transaction() as con:\n                con.execute(\"UPDATE lab_proposals SET status='approved',updated_at=? WHERE id=? AND status='applying'\", (now(), rid))\n            raise\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE lab_proposals SET status='observing',applied_policy_hash=?,stage_until=0,updated_at=? WHERE id=? AND status='applying'\", (updated[\"policy_hash\"], now(), rid)).rowcount\n            if changed:\n                self.store.event(con, \"proposal_applied\", \"operator\", \"Approved operational policy entered observation\", {\"proposal_id\": rid, \"book_id\": payload[\"book_id\"], \"policy_hash\": updated[\"policy_hash\"]})"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "b3917fa1d4f459018ba808424d5e2e05a8acf08446b7e0220233e380613a9d6d",
+          "line_start": 364,
+          "line_end": 369,
+          "excerpt": "                with self.store.transaction() as con:\n                    history = con.execute(\"SELECT hash FROM p_policy_history WHERE book_id=? AND actor=? ORDER BY version DESC LIMIT 1\", (bid, \"proposal:\" + row[\"id\"])).fetchone()\n                    if not history and row[\"stage_until\"] > time.time():\n                        continue\n                    con.execute(\"UPDATE lab_proposals SET status=?,applied_policy_hash=?,updated_at=? WHERE id=? AND status='applying'\", (\"observing\" if history else \"approved\", history[0] if history else None, now(), row[\"id\"]))\n                continue"
+        }
+      ],
+      "result": {
+        "observer_stage": "approved",
+        "rollback": "rolled_back",
+        "application_result": "rolled_back",
+        "final_stage": "rolled_back",
+        "final_fees": 2.0
+      },
+      "fix": "Unique stage token with same-transaction set_book authority guard and token-conditional apply/rollback/recovery state updates",
+      "final_evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "09bc9ce148471cb82f92431f1c59b47c4edd67cc692650d1630c6eea96b18f39",
+          "line_start": 284,
+          "line_end": 313,
+          "excerpt": "        token = identifier()\n        with self.store.transaction() as con:\n            # The durable record precedes the policy change. If the worker dies,\n            # the exact versioned policy actor identifies the committed effect.\n            changed = con.execute(\"UPDATE lab_proposals SET status='applying',before_policy=?,stage_until=?,stage_token=?,updated_at=? WHERE id=? AND status='approved'\", (self._json(before), time.time() + 120, token, now(), rid)).rowcount\n            if not changed:\n                raise DeskError(\"Proposal has already changed stage\")\n        try:\n            updated = self.trading.set_book(payload[\"book_id\"], {\"policy\": payload[\"policy_patch\"]}, expected_hash=before[\"policy_hash\"], actor=\"proposal:\" + rid + \":\" + token, transaction_guard=self._policy_guard(rid, \"applying\", token))\n        except Exception:\n            with self.store.transaction() as con:\n                con.execute(\"UPDATE lab_proposals SET status='approved',updated_at=? WHERE id=? AND status='applying' AND stage_token=?\", (now(), rid, token))\n            raise\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE lab_proposals SET status='observing',applied_policy_hash=?,stage_until=0,updated_at=? WHERE id=? AND status='applying' AND stage_token=?\", (updated[\"policy_hash\"], now(), rid, token)).rowcount\n            if changed:\n                self.store.event(con, \"proposal_applied\", \"operator\", \"Approved operational policy entered observation\", {\"proposal_id\": rid, \"book_id\": payload[\"book_id\"], \"policy_hash\": updated[\"policy_hash\"]})\n        return self.proposal_get(rid)\n\n    @staticmethod\n    def _policy_actor(prefix, rid, token):\n        return prefix + rid + (\":\" + token if token else \"\")\n\n    @staticmethod\n    def _policy_guard(rid, status, token):\n        def guard(con):\n            row = con.execute(\"SELECT status,stage_token FROM lab_proposals WHERE id=?\", (rid,)).fetchone()\n            if not row or row[\"status\"] != status or row[\"stage_token\"] != token:\n                raise DeskError(\"Policy proposal authority changed; stale work cannot change policy\")\n        return guard"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "09bc9ce148471cb82f92431f1c59b47c4edd67cc692650d1630c6eea96b18f39",
+          "line_start": 334,
+          "line_end": 381,
+          "excerpt": "    def _finish_rollback(self, proposal, reason, actor):\n        rid, payload = proposal[\"id\"], proposal[\"proposal\"]\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE lab_proposals SET status='rolled_back',updated_at=? WHERE id=? AND status=? AND stage_token IS ?\", (now(), rid, proposal[\"status\"], proposal[\"stage_token\"])).rowcount\n            if not changed:\n                current = con.execute(\"SELECT status FROM lab_proposals WHERE id=?\", (rid,)).fetchone()\n                if current and current[0] == \"rolled_back\":\n                    return self.proposal_get(rid)\n                raise DeskError(\"Proposal changed stage before rollback completion\")\n            con.execute(\"INSERT INTO lab_decisions VALUES(?,?,?,?,?,?)\", (identifier(), rid, \"rollback\", reason, actor, now()))\n            self.store.event(con, \"proposal_rolled_back\", actor, reason, {\"proposal_id\": rid, \"book_id\": payload.get(\"book_id\")})\n        return self.proposal_get(rid)\n\n    def _resume_rollback(self, proposal):\n        rid, payload = proposal[\"id\"], proposal[\"proposal\"]\n        policy_actor = self._policy_actor(\"proposal_rollback:\", rid, proposal[\"stage_token\"])\n        with self.store.connect() as con:\n            restored = con.execute(\"SELECT 1 FROM p_policy_history WHERE book_id=? AND actor=?\", (payload[\"book_id\"], policy_actor)).fetchone()\n        if not restored:\n            patch = {key: proposal[\"before_policy\"][\"policy\"][key] for key in payload[\"policy_patch\"]}\n            try:\n                self.trading.set_book(payload[\"book_id\"], {\"policy\": patch}, expected_hash=proposal[\"applied_policy_hash\"], actor=policy_actor, transaction_guard=self._policy_guard(rid, \"rolling_back\", proposal[\"stage_token\"]))\n            except DeskError:\n                with self.store.transaction() as con:\n                    con.execute(\"UPDATE lab_proposals SET status='observing',updated_at=? WHERE id=? AND status='rolling_back' AND stage_token=?\", (now(), rid, proposal[\"stage_token\"]))\n                raise\n        # The exact committed actor proves restoration even if a later operator\n        # update exists. Never replay restoration over that newer policy.\n        return self._finish_rollback(proposal, proposal[\"rollback_reason\"], proposal[\"rollback_actor\"])\n\n    def _observe_proposals(self, books):\n        with self.store.connect() as con:\n            rows = [dict(r) for r in con.execute(\"SELECT * FROM lab_proposals WHERE status IN ('applying','observing','rolling_back')\")]\n        for row in rows:\n            payload = json.loads(row[\"proposal\"])\n            bid = payload.get(\"book_id\")\n            if row[\"status\"] == \"rolling_back\":\n                try:\n                    self._resume_rollback(self.proposal_get(row[\"id\"]))\n                except DeskError:\n                    self.alert(\"proposal-conflict:\" + row[\"id\"], \"warning\", \"Interrupted policy rollback requires operator review; a newer policy was preserved\", {\"proposal_id\": row[\"id\"], \"book_id\": bid})\n                continue\n            if row[\"status\"] == \"applying\":\n                with self.store.transaction() as con:\n                    history = con.execute(\"SELECT hash FROM p_policy_history WHERE book_id=? AND actor=? ORDER BY version DESC LIMIT 1\", (bid, self._policy_actor(\"proposal:\", row[\"id\"], row[\"stage_token\"]))).fetchone()\n                    if not history and row[\"stage_until\"] > time.time():\n                        continue\n                    con.execute(\"UPDATE lab_proposals SET status=?,applied_policy_hash=?,updated_at=? WHERE id=? AND status='applying' AND stage_token IS ?\", (\"observing\" if history else \"approved\", history[0] if history else None, now(), row[\"id\"], row[\"stage_token\"]))"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/trading.py",
+          "sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46",
+          "line_start": 156,
+          "line_end": 173,
+          "excerpt": "    def set_book(self, book_id, payload, expected_hash=None, actor=\"operator\", transaction_guard=None):\n        # All policy writes come from this operator route, never from workers/models.\n        changes = payload.get(\"policy\", payload)\n        if not isinstance(changes, dict):\n            raise DeskError(\"policy must be an object\", 422)\n        acknowledgements = changes.get(\"acknowledge_external_symbols\", [])\n        unknown = set(changes) - set(POLICY) - {\"acknowledge_external_symbols\"}\n        if unknown:\n            raise DeskError(\"Unknown book policy fields: \" + \", \".join(sorted(unknown)), 422)\n        if not isinstance(acknowledgements, list) or len(acknowledgements) > 100 or any(not isinstance(item, str) for item in acknowledgements):\n            raise DeskError(\"acknowledge_external_symbols must be a bounded list\", 422)\n        acknowledged = [symbol(s) for s in acknowledgements]\n        with self.store.transaction() as con:\n            if transaction_guard is not None:\n                transaction_guard(con)\n            book = self._book(con, book_id)\n            if expected_hash is not None and book[\"policy_hash\"] != expected_hash:\n                raise DeskError(\"Book policy changed since approval; compare-and-swap refused the stale update\")"
+        }
+      ],
+      "final_result": {
+        "observer_stage": "approved",
+        "rollback": "rolled_back",
+        "application_result": "Policy proposal authority changed; stale work cannot change policy",
+        "final_stage": "rolled_back",
+        "final_fees": 0
+      }
+    },
+    {
+      "id": "F6",
+      "severity": "medium",
+      "title": "Stale observer reset a newer live apply stage",
+      "status": "fixed and independently verified",
+      "reproduction": "Observer A captured expired applying tokenA, paused before transaction; observer B recovered A to approved; fresh apply B staged live tokenB; resume observer A. Before fix it reset tokenB to approved and aborted the fresh explicit application, though policy effect was safely fenced.",
+      "fix": "Recovery UPDATE and rollback completion CAS include exact stage_token IS captured token.",
+      "evidence": [
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "09bc9ce148471cb82f92431f1c59b47c4edd67cc692650d1630c6eea96b18f39",
+          "line_start": 334,
+          "line_end": 342,
+          "excerpt": "    def _finish_rollback(self, proposal, reason, actor):\n        rid, payload = proposal[\"id\"], proposal[\"proposal\"]\n        with self.store.transaction() as con:\n            changed = con.execute(\"UPDATE lab_proposals SET status='rolled_back',updated_at=? WHERE id=? AND status=? AND stage_token IS ?\", (now(), rid, proposal[\"status\"], proposal[\"stage_token\"])).rowcount\n            if not changed:\n                current = con.execute(\"SELECT status FROM lab_proposals WHERE id=?\", (rid,)).fetchone()\n                if current and current[0] == \"rolled_back\":\n                    return self.proposal_get(rid)\n                raise DeskError(\"Proposal changed stage before rollback completion\")"
+        },
+        {
+          "path": "/workspace/agentic-desk/backend/lab.py",
+          "sha256": "09bc9ce148471cb82f92431f1c59b47c4edd67cc692650d1630c6eea96b18f39",
+          "line_start": 376,
+          "line_end": 381,
+          "excerpt": "            if row[\"status\"] == \"applying\":\n                with self.store.transaction() as con:\n                    history = con.execute(\"SELECT hash FROM p_policy_history WHERE book_id=? AND actor=? ORDER BY version DESC LIMIT 1\", (bid, self._policy_actor(\"proposal:\", row[\"id\"], row[\"stage_token\"]))).fetchone()\n                    if not history and row[\"stage_until\"] > time.time():\n                        continue\n                    con.execute(\"UPDATE lab_proposals SET status=?,applied_policy_hash=?,updated_at=? WHERE id=? AND status='applying' AND stage_token IS ?\", (\"observing\" if history else \"approved\", history[0] if history else None, now(), row[\"id\"], row[\"stage_token\"]))"
+        }
+      ],
+      "final_result": {
+        "fresh_stage_before": "applying",
+        "stage_after_stale_observer": "applying",
+        "fresh_token_unchanged": true,
+        "stale_apply_refused": true,
+        "fresh_apply_completed": true,
+        "final_fees": 2.0
+      },
+      "probe_script": "/tmp/aster-stale-observer-probe.py"
+    }
+  ],
+  "validation": {
+    "focused_unittest_command": "python -m unittest tests.test_analytics tests.test_lab tests.test_research_workflows -q",
+    "result": "36 tests passed; analytics tests are separate reviewed scope",
+    "independent_baseline_results": {
+      "live_apply_recovery_race": {
+        "observer_stage": "approved",
+        "rollback_stage": "rolled_back",
+        "final_stage": "observing",
+        "final_fees": 2.0,
+        "decisions": [
+          "approved",
+          "rollback"
+        ]
+      },
+      "stale_cache_accepted": {
+        "processed": true,
+        "run_id": "515dc4bbfacd4db3806f0b8688f13b39",
+        "node_id": "bars",
+        "status": "completed"
+      },
+      "invalid_params": {
+        "registered": true,
+        "execution": {
+          "processed": true,
+          "run_id": "97defb79828c472888ef28e593aa75c3",
+          "node_id": "bars",
+          "status": "failed"
+        }
+      },
+      "disable_not_cancel": {
+        "execution": {
+          "processed": true,
+          "run_id": "9a1b12cd245c4f89ac19e4906de2f017",
+          "node_id": "node",
+          "status": "completed"
+        },
+        "cancel_method": false
+      },
+      "retry_dependency_receipts": {
+        "initial": {
+          "processed": true,
+          "run_id": "5403c53b04c649ffbd730f33e36762df",
+          "node_id": "a",
+          "status": "failed"
+        },
+        "retry_node": {
+          "processed": true,
+          "run_id": "5403c53b04c649ffbd730f33e36762df",
+          "node_id": "a",
+          "status": "completed"
+        },
+        "summary": {
+          "processed": true,
+          "run_id": "5403c53b04c649ffbd730f33e36762df",
+          "node_id": "b",
+          "status": "completed"
+        },
+        "receipts": [
+          {
+            "node_id": "a",
+            "attempt": 1,
+            "status": "failed",
+            "sha256": "118dba2aeb44953d03ac282b17662a8b5c68ed519637a2df794678d606d079c5"
+          },
+          {
+            "node_id": "a",
+            "attempt": 2,
+            "status": "completed",
+            "sha256": "81fceaa5707d4ce65d77368b1a4d40fe17d90c5bcad6fb10c8a428452b584427"
+          },
+          {
+            "node_id": "b",
+            "attempt": 1,
+            "status": "completed",
+            "sha256": "0345da01158006ebe7a7bc67d3b25714f28e4162def98e56c278bf7fc3e762ba"
+          }
+        ]
+      }
+    },
+    "independent_fix_results": {
+      "live_application": {
+        "observer_stage": "applying",
+        "rollback": "Proposal is not awaiting decision or observation",
+        "application_result": "observing",
+        "final_stage": "observing",
+        "final_fees": 2.0
+      },
+      "expired_live_application": {
+        "observer_stage": "approved",
+        "rollback": "rolled_back",
+        "application_result": "rolled_back",
+        "final_stage": "rolled_back",
+        "final_fees": 2.0
+      },
+      "committed_rollback_newer_policy": {
+        "stage": "rolled_back",
+        "fees": 7.0,
+        "rollback_decisions": 1
+      },
+      "cancel_fences_result": {
+        "middle": {
+          "run_id": "faeb71852d714fcbb098d1ee611d526e",
+          "status": "cancelled"
+        },
+        "late": {
+          "processed": true,
+          "discarded": "Lease superseded; result not committed"
+        },
+        "run_status": "cancelled",
+        "nodes": [
+          {
+            "node_id": "a",
+            "status": "cancelled",
+            "attempt": 1,
+            "lease_token": null
+          },
+          {
+            "node_id": "b",
+            "status": "cancelled",
+            "attempt": 0,
+            "lease_token": null
+          }
+        ],
+        "receipts": []
+      },
+      "lease_supersession_fences_result": {
+        "middle": {
+          "processed": true,
+          "run_id": "0a86cf68d53c41ff8e75084779898300",
+          "node_id": "a",
+          "status": "completed"
+        },
+        "late": {
+          "processed": true,
+          "discarded": "Lease superseded; result not committed"
+        },
+        "run_status": "running",
+        "nodes": [
+          {
+            "node_id": "a",
+            "status": "completed",
+            "attempt": 2,
+            "lease_token": null
+          },
+          {
+            "node_id": "b",
+            "status": "queued",
+            "attempt": 0,
+            "lease_token": null
+          }
+        ],
+        "receipts": [
+          {
+            "node_id": "a",
+            "status": "completed",
+            "attempt": 2
+          }
+        ]
+      },
+      "stale_rejected": {
+        "processed": true,
+        "run_id": "ce450552ef6c4c9a98b11d8d7fcfcf79",
+        "node_id": "bars",
+        "status": "failed"
+      },
+      "invalid_params_rejected": true,
+      "retry_immutable_and_no_orders": {
+        "old_receipt_unchanged": true,
+        "hashes_match": true,
+        "attempts": [
+          [
+            "a",
+            1,
+            "failed"
+          ],
+          [
+            "a",
+            2,
+            "completed"
+          ],
+          [
+            "b",
+            1,
+            "completed"
+          ]
+        ],
+        "financial_counts": {
+          "p_intents": 0,
+          "p_fills": 0,
+          "p_policy_history": 1
+        },
+        "plan_hash_unchanged": true
+      },
+      "api_cancel": {
+        "register": 200,
+        "cancel": 200,
+        "node_status": "cancelled"
+      }
+    },
+    "probe_script": "/tmp/aster-lab-workflow-fixed-probes.py",
+    "final_focused_command": "python -m unittest tests.test_analytics tests.test_lab tests.test_research_workflows -q",
+    "final_focused_result": "38 tests passed: 14 analytics plus 24 Lab/DAG",
+    "final_independent_fix_results": {
+      "live_application": {
+        "observer_stage": "applying",
+        "rollback": "Proposal is not awaiting decision or observation",
+        "application_result": "observing",
+        "final_stage": "observing",
+        "final_fees": 2.0
+      },
+      "expired_live_application": {
+        "observer_stage": "approved",
+        "rollback": "rolled_back",
+        "application_result": "Policy proposal authority changed; stale work cannot change policy",
+        "final_stage": "rolled_back",
+        "final_fees": 0
+      },
+      "committed_rollback_newer_policy": {
+        "stage": "rolled_back",
+        "fees": 7.0,
+        "rollback_decisions": 1
+      },
+      "cancel_fences_result": {
+        "middle": {
+          "run_id": "d058b008b3784f9fbd780786c4c1ef4a",
+          "status": "cancelled"
+        },
+        "late": {
+          "processed": true,
+          "discarded": "Lease superseded; result not committed"
+        },
+        "run_status": "cancelled",
+        "nodes": [
+          {
+            "node_id": "a",
+            "status": "cancelled",
+            "attempt": 1,
+            "lease_token": null
+          },
+          {
+            "node_id": "b",
+            "status": "cancelled",
+            "attempt": 0,
+            "lease_token": null
+          }
+        ],
+        "receipts": []
+      },
+      "lease_supersession_fences_result": {
+        "middle": {
+          "processed": true,
+          "run_id": "584d1e15e8b44ae8aeb1f1d9d18f89da",
+          "node_id": "a",
+          "status": "completed"
+        },
+        "late": {
+          "processed": true,
+          "discarded": "Lease superseded; result not committed"
+        },
+        "run_status": "running",
+        "nodes": [
+          {
+            "node_id": "a",
+            "status": "completed",
+            "attempt": 2,
+            "lease_token": null
+          },
+          {
+            "node_id": "b",
+            "status": "queued",
+            "attempt": 0,
+            "lease_token": null
+          }
+        ],
+        "receipts": [
+          {
+            "node_id": "a",
+            "status": "completed",
+            "attempt": 2
+          }
+        ]
+      },
+      "stale_rejected": {
+        "processed": true,
+        "run_id": "13cbb9b863594a1d8d9cf85dba9be895",
+        "node_id": "bars",
+        "status": "failed"
+      },
+      "invalid_params_rejected": true,
+      "retry_immutable_and_no_orders": {
+        "old_receipt_unchanged": true,
+        "hashes_match": true,
+        "attempts": [
+          [
+            "a",
+            1,
+            "failed"
+          ],
+          [
+            "a",
+            2,
+            "completed"
+          ],
+          [
+            "b",
+            1,
+            "completed"
+          ]
+        ],
+        "financial_counts": {
+          "p_intents": 0,
+          "p_fills": 0,
+          "p_policy_history": 1
+        },
+        "plan_hash_unchanged": true
+      },
+      "api_cancel": {
+        "register": 200,
+        "cancel": 200,
+        "node_status": "cancelled"
+      }
+    },
+    "final_probe_script": "/tmp/aster-lab-workflow-final-probes.py",
+    "latest_lab_DAG_result": "25 tests passed including stale observer token regression",
+    "latest_lab_DAG_command": "python -m unittest tests.test_lab tests.test_research_workflows -q"
+  },
+  "limits": [
+    "No guarantee of source availability, exchange-certified history, vendor finality, statistical edge or profitability.",
+    "Read-only node leases fence workflow result commits; source collection may persist truthful underlying observations before cancelled result discard.",
+    "Workflow retry is explicit; no automatic failed-node retries or strategy/financial tools.",
+    "Reviewed working-tree source hashes identify exact snapshots, rather than a finalized Git commit."
+  ],
+  "source_history": [
+    {
+      "path": "/workspace/agentic-desk/backend/lab.py",
+      "snapshot": "/tmp/aster-fixed-lab.py",
+      "sha256": "b3917fa1d4f459018ba808424d5e2e05a8acf08446b7e0220233e380613a9d6d",
+      "line_count": 543,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "lab_router",
+          "line": 475,
+          "end_line": 543
+        },
+        {
+          "name": "__init__",
+          "line": 87,
+          "end_line": 110
+        },
+        {
+          "name": "bind",
+          "line": 112,
+          "end_line": 114
+        },
+        {
+          "name": "_json",
+          "line": 117,
+          "end_line": 118
+        },
+        {
+          "name": "_hash",
+          "line": 121,
+          "end_line": 122
+        },
+        {
+          "name": "_message",
+          "line": 124,
+          "end_line": 132
+        },
+        {
+          "name": "message",
+          "line": 134,
+          "end_line": 136
+        },
+        {
+          "name": "cursor",
+          "line": 138,
+          "end_line": 147
+        },
+        {
+          "name": "alert",
+          "line": 149,
+          "end_line": 165
+        },
+        {
+          "name": "resolve_key",
+          "line": 167,
+          "end_line": 172
+        },
+        {
+          "name": "update_alert",
+          "line": 174,
+          "end_line": 183
+        },
+        {
+          "name": "register",
+          "line": 185,
+          "end_line": 191
+        },
+        {
+          "name": "study",
+          "line": 193,
+          "end_line": 201
+        },
+        {
+          "name": "study_update",
+          "line": 203,
+          "end_line": 217
+        },
+        {
+          "name": "artifact",
+          "line": 219,
+          "end_line": 227
+        },
+        {
+          "name": "incident",
+          "line": 229,
+          "end_line": 234
+        },
+        {
+          "name": "proposal",
+          "line": 236,
+          "end_line": 251
+        },
+        {
+          "name": "decision",
+          "line": 253,
+          "end_line": 267
+        },
+        {
+          "name": "apply",
+          "line": 269,
+          "end_line": 300
+        },
+        {
+          "name": "rollback",
+          "line": 302,
+          "end_line": 319
+        },
+        {
+          "name": "_finish_rollback",
+          "line": 321,
+          "end_line": 332
+        },
+        {
+          "name": "_resume_rollback",
+          "line": 334,
+          "end_line": 349
+        },
+        {
+          "name": "_observe_proposals",
+          "line": 351,
+          "end_line": 386
+        },
+        {
+          "name": "record_agent_review",
+          "line": 388,
+          "end_line": 392
+        },
+        {
+          "name": "proposal_get",
+          "line": 394,
+          "end_line": 403
+        },
+        {
+          "name": "operate",
+          "line": 405,
+          "end_line": 447
+        },
+        {
+          "name": "snapshot",
+          "line": 449,
+          "end_line": 468
+        },
+        {
+          "name": "export",
+          "line": 470,
+          "end_line": 472
+        },
+        {
+          "name": "snapshot",
+          "line": 479,
+          "end_line": 480
+        },
+        {
+          "name": "message",
+          "line": 483,
+          "end_line": 484
+        },
+        {
+          "name": "cursor",
+          "line": 487,
+          "end_line": 488
+        },
+        {
+          "name": "acknowledge",
+          "line": 491,
+          "end_line": 492
+        },
+        {
+          "name": "resolve",
+          "line": 495,
+          "end_line": 496
+        },
+        {
+          "name": "register",
+          "line": 499,
+          "end_line": 500
+        },
+        {
+          "name": "study_update",
+          "line": 503,
+          "end_line": 504
+        },
+        {
+          "name": "artifact",
+          "line": 507,
+          "end_line": 508
+        },
+        {
+          "name": "read_artifact",
+          "line": 511,
+          "end_line": 516
+        },
+        {
+          "name": "incident",
+          "line": 519,
+          "end_line": 520
+        },
+        {
+          "name": "close_incident",
+          "line": 523,
+          "end_line": 529
+        },
+        {
+          "name": "proposal",
+          "line": 532,
+          "end_line": 533
+        },
+        {
+          "name": "decide",
+          "line": 536,
+          "end_line": 537
+        },
+        {
+          "name": "apply",
+          "line": 540,
+          "end_line": 541
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/research_workflows.py",
+      "snapshot": "/tmp/aster-fixed-research_workflows.py",
+      "sha256": "760ac88c6632e71233fe0ead52abd0a14c161534810ed9f1c9b196852974dcd2",
+      "line_count": 255,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "workflow_router",
+          "line": 203,
+          "end_line": 255
+        },
+        {
+          "name": "__init__",
+          "line": 15,
+          "end_line": 23
+        },
+        {
+          "name": "encode",
+          "line": 26,
+          "end_line": 27
+        },
+        {
+          "name": "register",
+          "line": 29,
+          "end_line": 64
+        },
+        {
+          "name": "get",
+          "line": 66,
+          "end_line": 71
+        },
+        {
+          "name": "configure",
+          "line": 73,
+          "end_line": 78
+        },
+        {
+          "name": "_enqueue",
+          "line": 80,
+          "end_line": 88
+        },
+        {
+          "name": "enqueue",
+          "line": 90,
+          "end_line": 96
+        },
+        {
+          "name": "retry",
+          "line": 98,
+          "end_line": 108
+        },
+        {
+          "name": "cancel",
+          "line": 110,
+          "end_line": 120
+        },
+        {
+          "name": "operate",
+          "line": 122,
+          "end_line": 187
+        },
+        {
+          "name": "snapshot",
+          "line": 189,
+          "end_line": 200
+        },
+        {
+          "name": "snapshot",
+          "line": 224,
+          "end_line": 225
+        },
+        {
+          "name": "register",
+          "line": 228,
+          "end_line": 229
+        },
+        {
+          "name": "configure",
+          "line": 232,
+          "end_line": 233
+        },
+        {
+          "name": "run",
+          "line": 236,
+          "end_line": 237
+        },
+        {
+          "name": "retry",
+          "line": 240,
+          "end_line": 241
+        },
+        {
+          "name": "cancel",
+          "line": 244,
+          "end_line": 245
+        },
+        {
+          "name": "node_result",
+          "line": 248,
+          "end_line": 253
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/research.py",
+      "snapshot": "/workspace/agentic-desk/backend/research.py",
+      "sha256": "2119b1b9a3268c9758e0aca551b4b9fd07eb339103232e2593e5d5efa3fb6ffc",
+      "line_count": 201,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "research_router",
+          "line": 179,
+          "end_line": 201
+        },
+        {
+          "name": "__init__",
+          "line": 28,
+          "end_line": 40
+        },
+        {
+          "name": "_fetch",
+          "line": 42,
+          "end_line": 50
+        },
+        {
+          "name": "_record",
+          "line": 52,
+          "end_line": 58
+        },
+        {
+          "name": "headlines",
+          "line": 60,
+          "end_line": 77
+        },
+        {
+          "name": "filings",
+          "line": 79,
+          "end_line": 104
+        },
+        {
+          "name": "collect",
+          "line": 106,
+          "end_line": 133
+        },
+        {
+          "name": "operate",
+          "line": 135,
+          "end_line": 139
+        },
+        {
+          "name": "search",
+          "line": 141,
+          "end_line": 163
+        },
+        {
+          "name": "snapshot",
+          "line": 165,
+          "end_line": 172
+        },
+        {
+          "name": "export",
+          "line": 174,
+          "end_line": 176
+        },
+        {
+          "name": "snapshot",
+          "line": 184,
+          "end_line": 185
+        },
+        {
+          "name": "search",
+          "line": 188,
+          "end_line": 191
+        },
+        {
+          "name": "collect",
+          "line": 198,
+          "end_line": 199
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_lab.py",
+      "snapshot": "/workspace/agentic-desk/tests/test_lab.py",
+      "sha256": "592fd331cd5c93fb7385dbf5cea473ad1eb4e39722bf657cb99748c1edb61513",
+      "line_count": 262,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "setUp",
+          "line": 15,
+          "end_line": 18
+        },
+        {
+          "name": "tearDown",
+          "line": 20,
+          "end_line": 21
+        },
+        {
+          "name": "registration",
+          "line": 23,
+          "end_line": 24
+        },
+        {
+          "name": "test_append_only_inbox_and_durable_reader_cursor",
+          "line": 26,
+          "end_line": 36
+        },
+        {
+          "name": "test_preregistration_is_immutable_and_rejections_remain",
+          "line": 38,
+          "end_line": 50
+        },
+        {
+          "name": "test_artifacts_have_content_hash_and_exact_source_pin",
+          "line": 52,
+          "end_line": 55
+        },
+        {
+          "name": "test_proposal_cannot_install_strategy_and_requires_valid_decision",
+          "line": 57,
+          "end_line": 68
+        },
+        {
+          "name": "test_alert_deduplication_acknowledgement_and_recovery",
+          "line": 70,
+          "end_line": 78
+        },
+        {
+          "name": "test_operational_handoffs_do_not_duplicate_or_create_trades",
+          "line": 80,
+          "end_line": 87
+        },
+        {
+          "name": "test_approved_policy_applies_then_guard_restores_its_before_state",
+          "line": 89,
+          "end_line": 104
+        },
+        {
+          "name": "test_policy_guard_preserves_a_newer_operator_policy",
+          "line": 106,
+          "end_line": 117
+        },
+        {
+          "name": "test_policy_guard_does_not_act_on_incomplete_or_stale_marks",
+          "line": 119,
+          "end_line": 131
+        },
+        {
+          "name": "test_rollback_recovers_committed_policy_without_replacing_later_operator_update",
+          "line": 133,
+          "end_line": 152
+        },
+        {
+          "name": "test_applied_policy_is_recovered_from_its_exact_actor_after_interruption",
+          "line": 154,
+          "end_line": 165
+        },
+        {
+          "name": "test_observer_cannot_reset_active_apply_or_overwrite_concurrent_rollback",
+          "line": 167,
+          "end_line": 187
+        },
+        {
+          "name": "test_expired_apply_token_cannot_change_policy_after_rollback_decision",
+          "line": 189,
+          "end_line": 206
+        },
+        {
+          "name": "test_completed_agent_review_preserves_one_artifact_and_one_message",
+          "line": 208,
+          "end_line": 215
+        },
+        {
+          "name": "setUp",
+          "line": 219,
+          "end_line": 221
+        },
+        {
+          "name": "tearDown",
+          "line": 223,
+          "end_line": 224
+        },
+        {
+          "name": "test_source_times_hashes_and_repeated_collection_are_preserved",
+          "line": 226,
+          "end_line": 237
+        },
+        {
+          "name": "test_source_failure_does_not_fabricate_receipts_or_success",
+          "line": 239,
+          "end_line": 245
+        },
+        {
+          "name": "test_sec_source_identity_and_accession_are_stored",
+          "line": 247,
+          "end_line": 258
+        },
+        {
+          "name": "interleaved",
+          "line": 173,
+          "end_line": 179
+        },
+        {
+          "name": "expired_worker",
+          "line": 195,
+          "end_line": 201
+        },
+        {
+          "name": "fetch",
+          "line": 248,
+          "end_line": 252
+        },
+        {
+          "name": "guarded",
+          "line": 182,
+          "end_line": 183
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_research_workflows.py",
+      "snapshot": "/workspace/agentic-desk/tests/test_research_workflows.py",
+      "sha256": "534894b64475a47bf41871878e1533a31c8e5b7d4e10caad9c676c3d3a695167",
+      "line_count": 132,
+      "full_read": true,
+      "functions": [
+        {
+          "name": "setUp",
+          "line": 14,
+          "end_line": 21
+        },
+        {
+          "name": "tearDown",
+          "line": 23,
+          "end_line": 24
+        },
+        {
+          "name": "plan",
+          "line": 26,
+          "end_line": 27
+        },
+        {
+          "name": "test_dependency_runs_once_with_durable_receipts_and_no_financial_effects",
+          "line": 29,
+          "end_line": 45
+        },
+        {
+          "name": "test_failed_source_blocks_dependent_and_retry_preserves_failure_receipt",
+          "line": 47,
+          "end_line": 61
+        },
+        {
+          "name": "test_active_lease_fences_duplicate_then_expired_read_recovers",
+          "line": 63,
+          "end_line": 76
+        },
+        {
+          "name": "test_rejects_financial_tools_and_forward_or_cyclic_dependencies",
+          "line": 78,
+          "end_line": 82
+        },
+        {
+          "name": "test_stale_history_fails_and_cancel_fences_inflight_source_result",
+          "line": 84,
+          "end_line": 102
+        },
+        {
+          "name": "test_explicit_enabled_schedule_runs_without_operator_cycle",
+          "line": 104,
+          "end_line": 111
+        },
+        {
+          "name": "test_real_api_routes_validate_and_export_workflow_receipts",
+          "line": 113,
+          "end_line": 128
+        },
+        {
+          "name": "concurrent",
+          "line": 67,
+          "end_line": 69
+        },
+        {
+          "name": "cancel_during_read",
+          "line": 93,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/app.py",
+      "snapshot": "/workspace/agentic-desk/backend/app.py",
+      "sha256": "e9fa4410463c083420eee834863398b0b7f859b875f73cb1dd32c4759c502b46",
+      "line_count": 255,
+      "full_read": false,
+      "functions": [
+        {
+          "name": "create_app",
+          "line": 29,
+          "end_line": 252
+        },
+        {
+          "name": "lifespan",
+          "line": 44,
+          "end_line": 53
+        },
+        {
+          "name": "desk_error",
+          "line": 71,
+          "end_line": 72
+        },
+        {
+          "name": "provider_error",
+          "line": 75,
+          "end_line": 76
+        },
+        {
+          "name": "validation_error",
+          "line": 79,
+          "end_line": 92
+        },
+        {
+          "name": "desk",
+          "line": 95,
+          "end_line": 96
+        },
+        {
+          "name": "autonomous_snapshot",
+          "line": 99,
+          "end_line": 100
+        },
+        {
+          "name": "create_book",
+          "line": 103,
+          "end_line": 104
+        },
+        {
+          "name": "fund_book",
+          "line": 107,
+          "end_line": 108
+        },
+        {
+          "name": "set_book",
+          "line": 111,
+          "end_line": 112
+        },
+        {
+          "name": "set_portfolio_policy",
+          "line": 115,
+          "end_line": 116
+        },
+        {
+          "name": "submit_intent",
+          "line": 119,
+          "end_line": 120
+        },
+        {
+          "name": "cancel_intent",
+          "line": 123,
+          "end_line": 124
+        },
+        {
+          "name": "reconcile",
+          "line": 127,
+          "end_line": 128
+        },
+        {
+          "name": "autonomous_runtime",
+          "line": 131,
+          "end_line": 132
+        },
+        {
+          "name": "autonomous_cycle",
+          "line": 135,
+          "end_line": 136
+        },
+        {
+          "name": "schedule",
+          "line": 139,
+          "end_line": 140
+        },
+        {
+          "name": "retry_job",
+          "line": 143,
+          "end_line": 144
+        },
+        {
+          "name": "market_calendar",
+          "line": 147,
+          "end_line": 148
+        },
+        {
+          "name": "market_bars",
+          "line": 151,
+          "end_line": 152
+        },
+        {
+          "name": "market_revision_manifest",
+          "line": 155,
+          "end_line": 156
+        },
+        {
+          "name": "market_revision_page",
+          "line": 159,
+          "end_line": 160
+        },
+        {
+          "name": "market_revision_continue",
+          "line": 163,
+          "end_line": 164
+        },
+        {
+          "name": "funding",
+          "line": 167,
+          "end_line": 168
+        },
+        {
+          "name": "watch",
+          "line": 171,
+          "end_line": 172
+        },
+        {
+          "name": "unwatch",
+          "line": 175,
+          "end_line": 176
+        },
+        {
+          "name": "quote",
+          "line": 179,
+          "end_line": 180
+        },
+        {
+          "name": "order",
+          "line": 183,
+          "end_line": 184
+        },
+        {
+          "name": "approve",
+          "line": 187,
+          "end_line": 188
+        },
+        {
+          "name": "cancel_order",
+          "line": 191,
+          "end_line": 192
+        },
+        {
+          "name": "task",
+          "line": 195,
+          "end_line": 196
+        },
+        {
+          "name": "cancel_task",
+          "line": 199,
+          "end_line": 200
+        },
+        {
+          "name": "cycle",
+          "line": 203,
+          "end_line": 204
+        },
+        {
+          "name": "runtime",
+          "line": 207,
+          "end_line": 208
+        },
+        {
+          "name": "settings",
+          "line": 211,
+          "end_line": 212
+        },
+        {
+          "name": "strategies",
+          "line": 215,
+          "end_line": 216
+        },
+        {
+          "name": "health",
+          "line": 219,
+          "end_line": 223
+        },
+        {
+          "name": "market_history",
+          "line": 226,
+          "end_line": 227
+        },
+        {
+          "name": "export",
+          "line": 230,
+          "end_line": 238
+        },
+        {
+          "name": "frontend",
+          "line": 241,
+          "end_line": 250
+        },
+        {
+          "name": "safe",
+          "line": 82,
+          "end_line": 91
+        }
+      ]
+    }
+  ]
+}

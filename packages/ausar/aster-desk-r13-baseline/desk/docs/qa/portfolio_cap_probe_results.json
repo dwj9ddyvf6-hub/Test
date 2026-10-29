@@ -1,0 +1,136 @@
+{
+  "generated_at": "2026-10-08T06:34:19.684244+00:00",
+  "safety": "Temporary SQLite files and fake providers only. No network or real broker calls.",
+  "results": [
+    {
+      "probe": "cross_instance_atomic_reservations",
+      "expected": "Exactly one $100 intent across 16 concurrent submissions and 8 books",
+      "observed": {
+        "accepted": 1,
+        "projected": 100.0
+      },
+      "passed": true
+    },
+    {
+      "probe": "explicit_price_envelope",
+      "expected": "Reject at $20 and reserve $30 for quote=$10, limit=$25, stop=$30",
+      "observed": {
+        "error": "Operator portfolio gross exposure cap would be exceeded",
+        "projected": 30.0
+      },
+      "passed": true
+    },
+    {
+      "probe": "missing_mark_truthful_view_and_gate",
+      "expected": "Global/affected-book values null, unaffected empty book zero, fresh unrelated entry rejected",
+      "observed": {
+        "valuation": "incomplete",
+        "global": null,
+        "affected": null,
+        "unaffected": 0.0,
+        "error": "Portfolio entry gate requires coherent fresh marks and known broker state: AAPL: A timestamped price is required for order validation"
+      },
+      "passed": true
+    },
+    {
+      "probe": "partial_fill_not_double_counted",
+      "expected": "Observed $30 plus remaining $70 gives projected $100",
+      "observed": {
+        "gross": 30.0,
+        "projected": 100.0
+      },
+      "passed": true
+    },
+    {
+      "probe": "cancellation_retains_capacity_until_confirmed",
+      "expected": "Project $100 until actual terminal cancellation, then $30",
+      "observed": {
+        "before": 100.0,
+        "pending_cancel": 100.0,
+        "after_terminal": 30.0
+      },
+      "passed": true
+    },
+    {
+      "probe": "accepted_entry_missing_quote",
+      "expected": "Existing entry cancellation requested when enabled cap cannot value missing mark",
+      "observed": {
+        "cancel_calls": 1,
+        "intent_status": "cancel_requested",
+        "valuation": "incomplete",
+        "projected": null
+      },
+      "passed": true
+    },
+    {
+      "probe": "accepted_entry_failed_reconciliation",
+      "expected": "Existing accepted entry remains cancellable after cap reduction despite failed account read",
+      "observed": {
+        "cancel_calls": 1,
+        "intent_status": "cancel_requested",
+        "error": null,
+        "remote_status": "canceled"
+      },
+      "passed": true
+    },
+    {
+      "probe": "foreign_live_nested_order",
+      "expected": "Unattributed active nested broker order makes pending exposure unknown and gates entries",
+      "observed": {
+        "valuation": "incomplete",
+        "projected": null,
+        "reasons": [
+          "Unattributed broker orders make pending exposure unknown for book b9085b177642471087c9dc0412016389"
+        ],
+        "entry_error": "Portfolio entry gate requires coherent fresh marks and known broker state: Unattributed broker orders make pending exposure unknown for book b9085b177642471087c9dc0412016389"
+      },
+      "passed": true
+    },
+    {
+      "probe": "owned_protection_against_flat_position",
+      "expected": "Active protective sell with flat broker position makes pending exposure unknown and gates entries",
+      "observed": {
+        "valuation": "incomplete",
+        "projected": null,
+        "reasons": [
+          "Broker protection no longer matches held exposure for book c8819ec25f684b5181d7d152454a5626"
+        ],
+        "entry_error": "Portfolio entry gate requires coherent fresh marks and known broker state: Broker protection no longer matches held exposure for book c8819ec25f684b5181d7d152454a5626"
+      },
+      "passed": true
+    },
+    {
+      "probe": "owned_protection_exceeds_remaining_position",
+      "expected": "Protective quantity 10 against actual held 5 makes pending exposure unknown",
+      "observed": {
+        "valuation": "incomplete",
+        "projected": null,
+        "reasons": [
+          "Broker protection no longer matches held exposure for book 5001cfd64bc94a7b841a2fb4335a9452"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "probe": "matched_native_oco_not_double_counted",
+      "expected": "Correctly matched OCO exits produce complete $100 observed/projected exposure",
+      "observed": {
+        "valuation": "complete",
+        "gross": 100.0,
+        "projected": 100.0,
+        "reasons": []
+      },
+      "passed": true
+    },
+    {
+      "probe": "halted_short_cover_survives_global_unknown",
+      "expected": "Explicit reducing cover fills under halt, exceeded cap and unrelated unknown broker state",
+      "observed": {
+        "fills": 1,
+        "status": "filled",
+        "positions": []
+      },
+      "passed": true
+    }
+  ]
+}

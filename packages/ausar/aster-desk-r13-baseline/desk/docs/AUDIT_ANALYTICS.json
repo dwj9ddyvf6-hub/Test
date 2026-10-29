@@ -1,0 +1,496 @@
+{
+  "title": "Full Aster analytics audit and repairs",
+  "generated_at": "2026-10-08T07:23:56.744881+00:00",
+  "baseline_commit": "32f6f14dccd1e8831f7ba276da037e8490e2ebf8",
+  "baseline_analytics_sha256": "16891dcdfac31249331a5ddaa570cbc45e0f9b2b33b9fbb6b8fe0f9508b659db",
+  "status": "All seven confirmed analytics findings repaired; no unresolved confirmed defect within this audit scope",
+  "scope": "Complete analytics runtime, routing and focused test body inspection; supporting financial/provider schemas and frontend report consumption inspected. Isolated explicit synthetic databases and read-only vendor archive verification. No provider/broker order or external notification actions.",
+  "inspection_inventory": [
+    {
+      "path": "backend/analytics.py",
+      "sha256": "4736a8894ac3cb80efd4f1d0cd1ef132d70be86d05a73ab8139f5c45ba9633b6",
+      "line_count": 517,
+      "inspection": "Every line and executable body read; no skipped functions",
+      "functions": [
+        {
+          "name": "timepoint",
+          "line": 23,
+          "end_line": 29
+        },
+        {
+          "name": "clean",
+          "line": 32,
+          "end_line": 33
+        },
+        {
+          "name": "nav_curve",
+          "line": 36,
+          "end_line": 69
+        },
+        {
+          "name": "flow_adjusted_return",
+          "line": 72,
+          "end_line": 75
+        },
+        {
+          "name": "finite_number",
+          "line": 78,
+          "end_line": 82
+        },
+        {
+          "name": "metric",
+          "line": 85,
+          "end_line": 90
+        },
+        {
+          "name": "trade_metrics",
+          "line": 93,
+          "end_line": 110
+        },
+        {
+          "name": "unavailable_risk",
+          "line": 113,
+          "end_line": 121
+        },
+        {
+          "name": "risk_metrics",
+          "line": 124,
+          "end_line": 168
+        },
+        {
+          "name": "completed_episodes",
+          "line": 171,
+          "end_line": 209
+        },
+        {
+          "name": "analytics_router",
+          "line": 505,
+          "end_line": 517
+        },
+        {
+          "name": "item",
+          "line": 98,
+          "end_line": 99
+        },
+        {
+          "name": "__init__",
+          "line": 213,
+          "end_line": 214
+        },
+        {
+          "name": "snapshot",
+          "line": 216,
+          "end_line": 288
+        },
+        {
+          "name": "_has_table",
+          "line": 291,
+          "end_line": 292
+        },
+        {
+          "name": "_verified_revision",
+          "line": 295,
+          "end_line": 331
+        },
+        {
+          "name": "_aligned",
+          "line": 333,
+          "end_line": 447
+        },
+        {
+          "name": "_excursion",
+          "line": 449,
+          "end_line": 502
+        },
+        {
+          "name": "reports",
+          "line": 509,
+          "end_line": 510
+        },
+        {
+          "name": "projection",
+          "line": 513,
+          "end_line": 515
+        },
+        {
+          "name": "withheld",
+          "line": 334,
+          "end_line": 335
+        },
+        {
+          "name": "withheld",
+          "line": 451,
+          "end_line": 452
+        }
+      ]
+    },
+    {
+      "path": "tests/test_analytics.py",
+      "sha256": "7837d3aef774c259ae406265080793a10ac1bbf55423f4c0c4cbb2b3ceb19668",
+      "line_count": 556,
+      "inspection": "Every line and executable body read; no skipped functions",
+      "functions": [
+        {
+          "name": "test_funding_is_not_a_trading_return",
+          "line": 17,
+          "end_line": 27
+        },
+        {
+          "name": "test_only_completed_roundtrip_counts_as_a_win",
+          "line": 29,
+          "end_line": 38
+        },
+        {
+          "name": "test_flip_closes_old_episode_and_keeps_new_position_open",
+          "line": 40,
+          "end_line": 46
+        },
+        {
+          "name": "test_benchmarks_use_same_clean_eod_period_and_withhold_stale_history",
+          "line": 48,
+          "end_line": 64
+        },
+        {
+          "name": "test_net_trade_statistics_include_fees_flats_and_exact_cents",
+          "line": 66,
+          "end_line": 88
+        },
+        {
+          "name": "test_flip_fee_allocation_preserves_total_cents",
+          "line": 90,
+          "end_line": 97
+        },
+        {
+          "name": "test_timezone_normalization_and_unbracketed_funding_withheld",
+          "line": 99,
+          "end_line": 107
+        },
+        {
+          "name": "_revision",
+          "line": 109,
+          "end_line": 124
+        },
+        {
+          "name": "_archive",
+          "line": 126,
+          "end_line": 135
+        },
+        {
+          "name": "_sessions",
+          "line": 137,
+          "end_line": 144
+        },
+        {
+          "name": "_valuation",
+          "line": 146,
+          "end_line": 148
+        },
+        {
+          "name": "test_replicated_daily_exposure_beta_and_zero_variance_denominators",
+          "line": 150,
+          "end_line": 184
+        },
+        {
+          "name": "test_session_gap_is_not_annualized_as_a_daily_return",
+          "line": 186,
+          "end_line": 202
+        },
+        {
+          "name": "test_finite_vendor_prices_cannot_overflow_benchmark_response",
+          "line": 204,
+          "end_line": 220
+        },
+        {
+          "name": "test_cashflow_adjusted_drawdown_retains_ruin_and_excludes_deposit",
+          "line": 222,
+          "end_line": 245
+        },
+        {
+          "name": "test_unitized_nav_records_negative_equity_without_hiding_drawdown",
+          "line": 247,
+          "end_line": 263
+        },
+        {
+          "name": "test_overnight_valuation_does_not_become_exchange_close",
+          "line": 265,
+          "end_line": 277
+        },
+        {
+          "name": "test_excursion_requires_exact_complete_raw_intraday_coverage",
+          "line": 279,
+          "end_line": 312
+        },
+        {
+          "name": "test_excursion_rejects_ambiguous_raw_basis_and_finite_price_ratio_overflow",
+          "line": 314,
+          "end_line": 342
+        },
+        {
+          "name": "test_empty_and_broker_reports_withhold_unverified_metrics",
+          "line": 344,
+          "end_line": 357
+        },
+        {
+          "name": "test_shorter_chart_refresh_does_not_shrink_aligned_baseline",
+          "line": 359,
+          "end_line": 376
+        },
+        {
+          "name": "test_revision_pair_maximizes_common_coverage",
+          "line": 378,
+          "end_line": 394
+        },
+        {
+          "name": "test_max_history_before_calendar_start_preserves_desk_dates",
+          "line": 396,
+          "end_line": 409
+        },
+        {
+          "name": "test_corrupted_daily_cache_and_revision_are_withheld",
+          "line": 411,
+          "end_line": 438
+        },
+        {
+          "name": "test_excursion_rejects_corruption_and_hash_bound_incoherent_ohlc",
+          "line": 440,
+          "end_line": 466
+        },
+        {
+          "name": "test_ambiguous_funding_timestamps_and_redeemed_units_are_withheld",
+          "line": 468,
+          "end_line": 474
+        },
+        {
+          "name": "test_broker_flattening_sequences_do_not_expose_verified_net_samples",
+          "line": 476,
+          "end_line": 502
+        },
+        {
+          "name": "test_clock_rollback_preserves_causal_episodes_and_withholds_time_statistics",
+          "line": 504,
+          "end_line": 531
+        },
+        {
+          "name": "test_equity_and_funding_append_clock_rollback_is_not_hidden_by_sorting",
+          "line": 533,
+          "end_line": 552
+        },
+        {
+          "name": "fill",
+          "line": 30,
+          "end_line": 31
+        },
+        {
+          "name": "fill",
+          "line": 67,
+          "end_line": 70
+        },
+        {
+          "name": "revision",
+          "line": 289,
+          "end_line": 291
+        }
+      ]
+    }
+  ],
+  "supporting_paths_read": [
+    "AGENTS.md",
+    "backend/trading.py: funding, signed-fill accounting, equity snapshots, account valuation and reconciliation ordering",
+    "backend/providers.py: calendar, cache/revision persistence and integrity paths",
+    "frontend/src/Autonomy.tsx: report, metric and completed-excursion rendering",
+    "docs/ANALYTICS_QA_REVIEW.json: historical baseline review"
+  ],
+  "findings": [
+    {
+      "id": "A01",
+      "status": "repaired",
+      "problem": "Latest short chart fetch silently replaced a longer benchmark reporting baseline",
+      "repair": "Choose whole verified QQQ/SPY revision pair with maximum common recorded close-window coverage; prefer newest receipt only on a coverage tie",
+      "regressions": [
+        "test_shorter_chart_refresh_does_not_shrink_aligned_baseline",
+        "test_revision_pair_maximizes_common_coverage"
+      ]
+    },
+    {
+      "id": "A02",
+      "status": "repaired",
+      "problem": "Direct analytics archive reads bypassed immutable SHA validation, trusted mismatched metadata and incoherent OHLC, and could fail on malformed JSON",
+      "repair": "Validate canonical SHA, revision identity, matching cache content, source/adjustment metadata, receipt timestamps, provider-asof agreement, positive coherent OHLC, adjusted prices, volume and monotonic unique bar labels; reject malformed or corrupt sources with coverage reasons",
+      "regressions": [
+        "test_corrupted_daily_cache_and_revision_are_withheld",
+        "test_excursion_rejects_corruption_and_hash_bound_incoherent_ohlc"
+      ]
+    },
+    {
+      "id": "A03",
+      "status": "repaired",
+      "problem": "Legitimate max-range vendor history beginning in 1999 raised DateOutOfBounds against the bundled calendar",
+      "repair": "Match calendar metadata only for dates actually represented by supported recorded desk close-window observations",
+      "regressions": [
+        "test_max_history_before_calendar_start_preserves_desk_dates"
+      ]
+    },
+    {
+      "id": "A04",
+      "status": "repaired",
+      "problem": "Broker report metrics withheld unknown basis/fees, but completed-trade receipts still exposed unverified net P/L, inferred round-trip counts and potentially incorrect holding extrema",
+      "repair": "Label recorded flattening sequences, withhold broker round-trip counts/net fields and excursions until opening inventory and complete accounting are established",
+      "regressions": [
+        "test_broker_flattening_sequences_do_not_expose_verified_net_samples"
+      ]
+    },
+    {
+      "id": "A05",
+      "status": "repaired",
+      "problem": "Funding sharing a valuation timestamp could be misreported as a 100% trading gain because pre/post ordering was unknowable",
+      "repair": "Withhold cashflow-adjusted NAV on ambiguous funding/valuation boundaries. Also defend the helper against zero or negative remaining units; withdrawals remain unsupported by the funding API",
+      "regressions": [
+        "test_ambiguous_funding_timestamps_and_redeemed_units_are_withheld"
+      ]
+    },
+    {
+      "id": "A06",
+      "status": "repaired",
+      "problem": "Sorting financial rows by observed wall-clock time could reorder causal fills after clock rollback, merge two episodes into one and hide equity/funding chronology ambiguity",
+      "repair": "Read fills, equity and fundings in immutable rowid append order; retain causal cent accounting and expose monotonic clock-coverage flags; withhold time-based return/risk/duration/extrema on backward recorded timestamps",
+      "regressions": [
+        "test_clock_rollback_preserves_causal_episodes_and_withholds_time_statistics",
+        "test_equity_and_funding_append_clock_rollback_is_not_hidden_by_sorting"
+      ]
+    },
+    {
+      "id": "A07",
+      "status": "repaired",
+      "problem": "Repeated calendar evaluation and full-history rescans grew report time with each equity heartbeat and daily-return interval",
+      "repair": "Normalize timestamps once, memoize exchange metadata per recorded date, and use bisect boundaries for cashflows and daily equity slices; preserve causal append chronology",
+      "regressions": [
+        "All 25 analytics tests",
+        "Independent 21,021-row scaling/metric-equality probe"
+      ]
+    }
+  ],
+  "verification": {
+    "command": ".venv/bin/python -m unittest tests.test_analytics -v",
+    "exit_code": 0,
+    "tests_passed": 25,
+    "baseline_tests": 16,
+    "new_regression_methods": 9,
+    "test_log": "artifacts/audit-analytics-tests.log",
+    "before_after": {
+      "scope": "Isolated synthetic before/after reproductions against local release HEAD; no broker/provider actions",
+      "cases": [
+        {
+          "scenario": "short_chart",
+          "before": {
+            "matched_sessions": 2,
+            "return_percent": 3.4482758620689653,
+            "closed_roundtrips": 0,
+            "closed_trade_net_pnl": 0.0
+          },
+          "after": {
+            "matched_sessions": 21,
+            "return_percent": 200.0,
+            "closed_roundtrips": 0,
+            "closed_trade_net_pnl": 0.0
+          }
+        },
+        {
+          "scenario": "corrupt_benchmark",
+          "before": {
+            "matched_sessions": 2,
+            "return_percent": 10.0,
+            "closed_roundtrips": 0,
+            "closed_trade_net_pnl": 0.0,
+            "QQQ_return": 899.0
+          },
+          "after": {
+            "matched_sessions": null,
+            "return_percent": null,
+            "closed_roundtrips": 0,
+            "closed_trade_net_pnl": 0.0,
+            "QQQ_return": null
+          }
+        },
+        {
+          "scenario": "pre_calendar_history",
+          "before": {
+            "exception": "DateOutOfBounds"
+          },
+          "after": {
+            "matched_sessions": 2,
+            "return_percent": 10.0,
+            "closed_roundtrips": 0,
+            "closed_trade_net_pnl": 0.0
+          }
+        },
+        {
+          "scenario": "unverified_broker",
+          "before": {
+            "matched_sessions": null,
+            "return_percent": null,
+            "closed_roundtrips": 1,
+            "closed_trade_net_pnl": null,
+            "episode_net_pnl": 50.0
+          },
+          "after": {
+            "matched_sessions": null,
+            "return_percent": null,
+            "closed_roundtrips": null,
+            "closed_trade_net_pnl": null,
+            "episode_net_pnl": null
+          }
+        },
+        {
+          "scenario": "ambiguous_funding_timestamp",
+          "before": 100.0,
+          "after": null
+        }
+      ]
+    },
+    "arithmetic_invariants": {
+      "scope": "Seeded synthetic arithmetic invariants; no broker/provider actions",
+      "seed": 20261008,
+      "fills": 506,
+      "closed_episodes": 53,
+      "books": 2,
+      "symbols": 3,
+      "cashflow_identity_checks": 100,
+      "expected_net_cents": -56108,
+      "actual_net_cents": -56108,
+      "signed_episode_fee_conservation": "passed",
+      "cashflow_unitization": "passed"
+    },
+    "history_scaling": {
+      "scope": "Isolated synthetic 21-session equity-history scaling probe",
+      "equity_rows": 21021,
+      "matched_sessions": 21,
+      "daily_returns": 20,
+      "baseline_seconds": 7.078149,
+      "audited_seconds": 0.224808,
+      "speedup": 31.49,
+      "metric_equality": "passed",
+      "no_broker_provider_actions": true
+    },
+    "actual_vendor_archive_read_only_probe": {
+      "database": "data/aster.sqlite opened mode=ro",
+      "revisions": 3,
+      "verified": 3,
+      "rejected": 0
+    },
+    "curated_probe_evidence": [
+      "verification/audit-analytics-before-after.json",
+      "verification/audit-analytics-invariants.json",
+      "verification/audit-analytics-performance.json"
+    ]
+  },
+  "remaining_limits": [
+    "No strategy is installed; no investment edge or future outperformance is inferred",
+    "Local fills remain quote-based simulations, not consolidated exchange executions",
+    "Broker opening inventory, full cashflow history and fees are unverified, so related performance remains withheld",
+    "MFE/MAE require exact complete raw intraday holding coverage; vendor observations remain provisional and are not certified market extrema",
+    "Daily descriptive annualization needs contiguous matching observations and 20 daily returns; its sample gate is not statistical significance",
+    "The benchmark pair remains QQQ/SPY; reported baseline dates identify actual common observations",
+    "Backward ledger timestamps now withhold time-based statistics; the audit does not fabricate a clock-correction history",
+    "Functional review and regression probes are not a formal proof that every possible defect has been eliminated"
+  ]
+}
