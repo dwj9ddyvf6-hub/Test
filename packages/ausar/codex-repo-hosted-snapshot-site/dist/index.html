@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111418">
+  <meta name="description" content="Ausar's public paper-trading terminal: market context, positions and account-level performance with private identifiers removed.">
+  <title>Ausar | Public Paper Desk</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="preconnect" href="https://s3.tradingview.com" crossorigin>
+  <link rel="preconnect" href="https://www.tradingview.com" crossorigin>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to terminal</a>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Ausar public paper desk home">
+        <span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span><i></i></span>
+        <span class="brand-wordmark">Ausar<span class="brand-period">.</span></span>
+      </a>
+      <nav class="top-nav" aria-label="Terminal sections">
+        <a href="#markets">Markets</a>
+        <a href="#portfolio">Paper portfolio</a>
+        <a href="#positions">Positions</a>
+      </nav>
+      <div class="header-meta"><span class="paper-status"><i></i> PAPER ONLY</span><time id="local-clock">--:--:--</time></div>
+    </header>
+
+    <section class="market-tape" aria-label="Market prices">
+      <div class="tape-label"><span class="tape-live"></span><span>MARKET TAPE</span><span class="tape-source">TRADINGVIEW</span></div>
+      <div class="tradingview-widget-container ticker-widget">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+        {
+          "symbols": [
+            {"proName":"AMEX:SPY","title":"S&P 500 ETF"},
+            {"proName":"NASDAQ:QQQ","title":"Nasdaq-100 ETF"},
+            {"proName":"COINBASE:BTCUSD","title":"Bitcoin / USD"},
+            {"proName":"COINBASE:ETHUSD","title":"Ether / USD"}
+          ],
+          "showSymbolLogo": true,
+          "isTransparent": false,
+          "displayMode": "adaptive",
+          "colorTheme": "dark",
+          "locale": "en"
+        }
+        </script>
+      </div>
+      <span class="tape-caveat">Exchange delays may apply</span>
+    </section>
+
+    <main id="main">
+      <section class="hero" id="dashboard">
+        <div class="hero-copy">
+          <div class="eyebrow"><span></span> AUSAR / PAPER TRADING DESK</div>
+          <h1>Dashboard</h1>
+          <p>Market context, current paper exposure, and measured results in one view.</p>
+        </div>
+        <div class="hero-aside">
+          <div class="as-of-label">DESK SNAPSHOT</div>
+          <time id="snapshot-time">Awaiting observation</time>
+          <div class="snapshot-health"><i id="snapshot-dot"></i><span id="snapshot-label">CHECKING</span><span id="snapshot-age">—</span></div>
+          <button id="refresh-button" type="button"><span aria-hidden="true">↻</span> Recheck published data</button>
+        </div>
+      </section>
+
+      <section class="notice" role="note">
+        <strong>Paper only.</strong>
+        <span>Open positions and account-level performance are shown without personal identifiers. Market charts refresh through TradingView; desk figures refresh when a new timestamped Ausar snapshot is published.</span>
+      </section>
+
+      <section class="overview" id="portfolio" aria-labelledby="portfolio-title">
+        <div class="section-head">
+          <div><span class="section-kicker">PORTFOLIO / CONSOLIDATED BY CURRENCY</span><h2 id="portfolio-title">Paper portfolio</h2></div>
+          <span id="portfolio-observed" class="observed-label">No desk observation yet</span>
+        </div>
+        <div class="kpi-grid">
+          <article class="kpi-card"><span class="kpi-label">PAPER EQUITY</span><strong id="total-equity">—</strong><small id="equity-detail">Awaiting desk feed</small></article>
+          <article class="kpi-card"><span class="kpi-label">OPEN POSITIONS</span><strong id="position-count">—</strong><small id="position-detail">Position count from latest snapshot</small></article>
+          <article class="kpi-card"><span class="kpi-label">REALIZED P&amp;L</span><strong id="realized-pnl">—</strong><small>Closed-book accounting</small></article>
+          <article class="kpi-card"><span class="kpi-label">UNREALIZED P&amp;L</span><strong id="unrealized-pnl">—</strong><small>Current marked positions</small></article>
+        </div>
+        <div class="kpi-grid secondary-kpis">
+          <article class="kpi-card"><span class="kpi-label">MARKET VALUE</span><strong id="market-value">—</strong><small>Open position value</small></article>
+          <article class="kpi-card"><span class="kpi-label">AVAILABLE CASH</span><strong id="available-cash">—</strong><small>Paper books only</small></article>
+          <article class="kpi-card"><span class="kpi-label">CLOSED ROUND TRIPS</span><strong id="closed-trades">—</strong><small id="win-loss-detail">Win / loss count</small></article>
+          <article class="kpi-card"><span class="kpi-label">FEES RECORDED</span><strong id="fees">—</strong><small>Reported by paper ledger</small></article>
+        </div>
+        <p class="accounting-note" id="accounting-note">Currency totals stay separate. Returns and benchmark comparisons are shown only when the desk reports a comparable measure.</p>
+      </section>
+
+      <section class="book-performance section-block" aria-labelledby="book-title">
+        <div class="section-head">
+          <div><span class="section-kicker">INDEPENDENT PAPER BOOKS</span><h2 id="book-title">Performance by book</h2></div>
+          <div class="head-count"><strong id="book-count">—</strong><span>paper books</span></div>
+        </div>
+        <div class="table-scroll">
+          <table id="books-table">
+            <thead><tr><th>PUBLIC LABEL</th><th>CURRENCY</th><th>EQUITY</th><th>CASH</th><th>MARKET VALUE</th><th>GROSS EXPOSURE</th><th>REALIZED P&amp;L</th><th>UNREALIZED P&amp;L</th><th>CLOSED NET P&amp;L</th><th>RETURN</th><th>CLOSED TRIPS</th><th>WIN RATE</th><th>SHARPE</th><th>PROFIT FACTOR</th><th>MAX DD</th><th>QQQ EXCESS</th><th>SPY EXCESS</th></tr></thead>
+            <tbody id="books-body"><tr><td colspan="17" class="empty-row">Ausar paper-book data is not connected yet.</td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-footnote"><span>Book names and account identifiers are replaced with stable public labels.</span><span id="strategy-count-label">Strategy count: —</span><span class="table-scroll-hint">Swipe horizontally to inspect all book metrics.</span></div>
+      </section>
+
+      <section class="positions section-block" id="positions" aria-labelledby="positions-title">
+        <div class="section-head">
+          <div><span class="section-kicker">CURRENT EXPOSURE / PAPER FILLS</span><h2 id="positions-title">Open positions</h2></div>
+          <span id="positions-updated" class="observed-label">Not observed</span>
+        </div>
+        <div class="table-scroll">
+          <table id="positions-table">
+            <thead><tr><th>PUBLIC BOOK</th><th>SYMBOL</th><th>QUANTITY</th><th>MARK</th><th>MARKET VALUE</th><th>UNREALIZED P&amp;L</th><th>QUOTE</th></tr></thead>
+            <tbody id="positions-body"><tr><td colspan="7" class="empty-row">Ausar positions are not connected yet.</td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-footnote"><span>All quantities, values, and P&amp;L shown here belong to simulated paper books.</span><span>Quote freshness is reported per position.</span><span class="table-scroll-hint">Swipe horizontally to inspect all columns.</span></div>
+      </section>
+
+      <section class="systems section-block" aria-labelledby="systems-title">
+        <div class="section-head">
+          <div><span class="section-kicker">AUTONOMOUS DESK / RECENT OBSERVATIONS</span><h2 id="systems-title">Desk pulse</h2></div>
+          <span class="observed-label" id="systems-observed">Status not observed</span>
+        </div>
+        <div class="system-grid">
+          <article class="system-card"><div class="system-card-head"><span class="system-mark">A</span><span id="main-state" class="system-pill unknown">UNOBSERVED</span></div><strong>Main desk worker</strong><small id="main-heartbeat">No current observation</small></article>
+          <article class="system-card"><div class="system-card-head"><span class="system-mark wave-mark">W</span><span id="wave-state" class="system-pill unknown">UNOBSERVED</span></div><strong>Wave evaluator</strong><small id="wave-heartbeat">No current observation</small></article>
+          <article class="system-card"><div class="system-card-head"><span class="system-mark ai-mark">AI</span><span id="brief-state" class="system-pill unknown">UNOBSERVED</span></div><strong>Research brief cadence</strong><small id="brief-detail">No current observation</small></article>
+          <article class="system-card"><div class="system-card-head"><span class="system-mark market-mark">M</span><span id="market-state" class="system-pill unknown">UNOBSERVED</span></div><strong>Market-data service</strong><small id="market-detail">No current observation</small></article>
+        </div>
+      </section>
+
+      <section class="market-grid" id="markets" aria-label="Market context and event calendar">
+        <article class="surface chart-panel">
+          <div class="section-head compact-head"><div><span class="section-kicker">REFERENCE CHART / NASDAQ-100 ETF</span><h2>QQQ</h2></div><a class="market-tag" href="https://www.tradingview.com/chart/?symbol=NASDAQ%3AQQQ" target="_blank" rel="noopener noreferrer">NASDAQ · ETF · OPEN CHART ↗</a></div>
+          <div class="tradingview-widget-container chart-widget"><div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {"autosize":true,"symbol":"NASDAQ:QQQ","interval":"D","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","allow_symbol_change":true,"calendar":false,"backgroundColor":"#171b21","gridColor":"rgba(255,255,255,0.06)","support_host":"https://www.tradingview.com"}
+            </script>
+          </div>
+        </article>
+        <article class="surface calendar-panel">
+          <div class="section-head compact-head"><div><span class="section-kicker">MACRO / EVENT AWARENESS</span><h2>US economic calendar</h2></div><a class="market-tag" href="https://www.tradingview.com/economic-calendar/" target="_blank" rel="noopener noreferrer">EVENTS · OPEN CALENDAR ↗</a></div>
+          <div class="tradingview-widget-container calendar-widget"><div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+            {"colorTheme":"dark","isTransparent":false,"width":"100%","height":"500","locale":"en","importanceFilter":"-1,0,1","countryFilter":"us","displayMode":"regular","timezone":"Etc/UTC"}
+            </script>
+          </div>
+        </article>
+      </section>
+
+      <section class="footnotes surface">
+        <div><span class="section-kicker">READING THE NUMBERS</span><h2>Clear scope, honest timestamps.</h2></div>
+        <div class="footnote-copy">
+          <p>This terminal shows simulated account equity, cash, paper positions, and ledger-reported performance. A return or risk statistic appears only when its sample and accounting coverage are sufficient; a blank value is not zero.</p>
+          <p>QQQ and SPY comparisons require aligned, distribution-aware benchmark history. No relative-return number is inferred from a raw market quote or an incomplete book record.</p>
+          <p>US-listed ETF shares and native crypto spot markets have different sessions, instruments, and settlement structures. They remain separate in the display.</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Quick navigation">
+      <a href="#dashboard" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5.5 9.5V21h13V9.5M9 21v-7h6v7"></path></svg><span>Dashboard</span></a>
+      <a href="#portfolio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16"></path><circle cx="7" cy="5" r="1.5"></circle><circle cx="16" cy="12" r="1.5"></circle><circle cx="10" cy="19" r="1.5"></circle></svg><span>Portfolio</span></a>
+      <a href="#positions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg><span>Positions</span></a>
+      <a href="#markets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18 8 12l4 3 8-9"></path><path d="M15 6h5v5"></path><path d="M3 21h18"></path></svg><span>Markets</span></a>
+      <a href="#systems"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"></path><circle cx="12" cy="12" r="6"></circle><path d="m9.5 12 1.7 1.7 3.7-4"></path></svg><span>Desk pulse</span></a>
+    </nav>
+    <footer class="site-footer"><a class="footer-brand" href="./"><span class="brand-symbol tiny-symbol" aria-hidden="true"><span></span><span></span><span></span><i></i></span> Ausar</a><span>Public paper-trading view · no real-money orders</span><span class="footer-right"><span id="footer-check">AUTO CHECK · 30 SEC</span><span>MARKET DATA BY TRADINGVIEW</span></span></footer>
+  </div>
+</body>
+</html>
