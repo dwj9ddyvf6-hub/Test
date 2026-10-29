@@ -71,6 +71,37 @@ CONFIG = SleeveConfig(
 )
 
 
+# ------------------------------------------------------------- params
+# Variant parameter bundle (INVESTANDBEFREE-DMAC-VARIANTS-SPEC-
+# 2026-10-29, FROZEN). Defaults are the frozen base values field
+# for field; the base sleeve uses PRIMARY_PARAMS and its behavior
+# is unchanged (identity proven on the golden fixtures pre/post
+# refactor, INVESTANDBEFREE-DMAC-VARIANTS-BUILD.md). Each variant
+# subclass overrides exactly the field(s) of its ONE changed axis.
+from dataclasses import dataclass, replace as _dc_replace  # noqa: E402
+
+
+@dataclass(frozen=True)
+class DmacParams:
+    # Stack, slowest first; entry_tf must be a member. Base:
+    # weekly > daily > h4, entry on daily.
+    stack_order: tuple = ("weekly", "daily", "h4")
+    entry_tf: str = "daily"
+    min_dte: int = MIN_DTE
+    strike_mode: str = "atm"  # "atm" | "deep_itm_2pct"
+    flat_by_close: bool = False
+    flat_time_et: str = "15:55"
+    premium_macd: bool = False
+    premium_warmup: int = 40
+
+
+PRIMARY_PARAMS = DmacParams()
+
+
+def variant_params(**kw):
+    return _dc_replace(PRIMARY_PARAMS, **kw)
+
+
 # ------------------------------------------------------------------ utils
 def _number(v):
     if isinstance(v, bool):
@@ -118,6 +149,8 @@ def _period_end(t, timeframe):
     date and end at the next Monday 00:00 ET."""
     if timeframe == "1Hour":
         return t + 3600.0
+    if timeframe in ("1Min", "5Min", "15Min", "30Min"):
+        return t + int(timeframe[:-3]) * 60.0
     dt = datetime.fromtimestamp(t, tz=ET)
     if timeframe == "1Week":
         end_day = dt.date() - timedelta(days=dt.weekday()) \
@@ -253,19 +286,80 @@ def aggregate_4h(hourly_bars):
     return out
 
 
+def aggregate_intraday(source_bars, minutes):
+    """RTH buckets of `minutes` from 5-minute bars. Buckets are
+    anchored at 09:30 ET within each ET session date, hold exactly
+    minutes/5 consecutive 5-minute bars (300s apart), and are
+    emitted only when complete. Output bars carry t of the last
+    bar, o of the first, h/l extremes, c of the last, summed v.
+    The caller passes CLOSED 5-minute bars only, so every emitted
+    bucket is closed. A 240-minute bucket is 09:30-13:30 ET; the
+    rest of the session never completes one and is not emitted."""
+    per = minutes // 5
+    rows = []
+    for row in source_bars or []:
+        if not isinstance(row, dict):
+            continue
+        t = _bar_time(row)
+        vals = [_number(row.get(k)) for k in ("o", "h", "l", "c")]
+        if t is None or any(v is None for v in vals):
+            continue
+        dt = datetime.fromtimestamp(t, tz=ET)
+        if not (RTH_START <= dt.time() < RTH_END):
+            continue
+        rows.append({"t": t, "o": vals[0], "h": vals[1], "l": vals[2],
+                     "c": vals[3], "v": _number(row.get("v")) or 0.0})
+    rows.sort(key=lambda b: b["t"])
+    buckets = {}
+    for b in rows:
+        dt = datetime.fromtimestamp(b["t"], tz=ET)
+        open_ts = datetime.combine(dt.date(), RTH_START,
+                                   tzinfo=ET).timestamp()
+        idx = int((b["t"] - open_ts) // (minutes * 60))
+        buckets.setdefault((dt.date(), idx), []).append(b)
+    out = []
+    for (day, idx) in sorted(buckets):
+        chunk = buckets[(day, idx)]
+        if len(chunk) != per:
+            continue
+        open_ts = datetime.combine(day, RTH_START,
+                                   tzinfo=ET).timestamp()
+        if chunk[0]["t"] != open_ts + idx * minutes * 60:
+            continue
+        if any(chunk[j + 1]["t"] - chunk[j]["t"] != 300
+               for j in range(per - 1)):
+            continue
+        out.append({"t": chunk[-1]["t"], "o": chunk[0]["o"],
+                    "h": max(b["h"] for b in chunk),
+                    "l": min(b["l"] for b in chunk),
+                    "c": chunk[-1]["c"],
+                    "v": sum(b["v"] for b in chunk)})
+    out.sort(key=lambda b: b["t"])
+    return out
+
+
+def evaluate_stack(closes_by_tf, stack_order):
+    """Generic dominance: per-timeframe alignments for the tfs in
+    `stack_order` (slowest first) plus dominant_tf/dominant_dir
+    (the slowest aligned timeframe, or None)."""
+    dirs = {tf: alignment_of(closes_by_tf.get(tf) or [])
+            for tf in stack_order}
+    dominant_tf = dominant_dir = None
+    for tf in stack_order:
+        if dirs[tf] is not None:
+            dominant_tf, dominant_dir = tf, dirs[tf]
+            break
+    return {**dirs, "dominant_tf": dominant_tf,
+            "dominant_dir": dominant_dir}
+
+
 def evaluate_timeframes(daily_closes, weekly_closes, h4_closes):
     """Per-timeframe alignments and dominance. Returns a dict with
     keys weekly/daily/h4 (directions or None), dominant_tf and
     dominant_dir (slowest aligned timeframe, or None)."""
-    dirs = {"weekly": alignment_of(weekly_closes),
-            "daily": alignment_of(daily_closes),
-            "h4": alignment_of(h4_closes)}
-    dominant_tf = dominant_dir = None
-    for tf in ("weekly", "daily", "h4"):
-        if dirs[tf] is not None:
-            dominant_tf, dominant_dir = tf, dirs[tf]
-            break
-    return {**dirs, "dominant_tf": dominant_tf, "dominant_dir": dominant_dir}
+    return evaluate_stack(
+        {"weekly": weekly_closes, "daily": daily_closes,
+         "h4": h4_closes}, ("weekly", "daily", "h4"))
 
 
 def _crossed(closes, direction, wilder):
@@ -337,7 +431,8 @@ def _dte(expiry, session_iso):
         return None
 
 
-def select_contract(chain, quotes, spot, session_iso, direction):
+def select_contract(chain, quotes, spot, session_iso, direction,
+                    min_dte=None, strike_mode="atm"):
     """Nearest expiry >= 30 calendar days out, then nearest-to-the-
     money strike (ties: lower strike), for the direction's right.
     Returns None when no chain row passes the quote gate:
@@ -356,7 +451,7 @@ def select_contract(chain, quotes, spot, session_iso, direction):
         if expiry is None or strike is None or not occ:
             continue
         dte = _dte(expiry, session_iso)
-        if dte is None or dte < MIN_DTE:
+        if dte is None or dte < (MIN_DTE if min_dte is None else min_dte):
             continue
         q = (quotes or {}).get(occ) or {}
         bid = _number(q.get("bid")) if q.get("bid") is not None else _number(row.get("bid"))
@@ -372,6 +467,16 @@ def select_contract(chain, quotes, spot, session_iso, direction):
         return None
     best_expiry = min(c["dte"] for c in cands)
     at_exp = [c for c in cands if c["dte"] == best_expiry]
+    if strike_mode == "deep_itm_2pct":
+        if direction == 1:
+            deep = [c for c in at_exp if c["strike"] <= 0.98 * spot]
+            if not deep:
+                return None
+            return max(deep, key=lambda c: c["strike"])
+        deep = [c for c in at_exp if c["strike"] >= 1.02 * spot]
+        if not deep:
+            return None
+        return min(deep, key=lambda c: c["strike"])
     return min(at_exp, key=lambda c: (abs(c["strike"] - spot), c["strike"]))
 
 
@@ -404,57 +509,88 @@ def partial_qty(qty, entry_premium, current_premium):
 
 
 # ---------------------------------------------------------------- sleeve
+def _flat_time(params):
+    hh, mm = params.flat_time_et.split(":")
+    return _dtime(int(hh), int(mm))
+
+
 class InvestAndBeFreeDmacSleeve(BaseSleeve):
     CONFIG = CONFIG
+    PARAMS = PRIMARY_PARAMS
+    REASON_LABEL = "investandbefree_dmac"
 
     def signal(self, bars, slice_state, ctx):
+        params = self.PARAMS
         extra = ctx.extra or {}
         sleeve_state = extra.get("sleeve_state") or {}
         dmac_state = dict(extra.get("dmac_state") or {})
         self.dmac_state = dmac_state
-        self.last_evaluation = {"sleeve": CONFIG.sleeve_id,
+        self.last_evaluation = {"sleeve": self.CONFIG.sleeve_id,
                                 "session": ctx.session, "state": "scanning"}
         weekly_map = extra.get("bars_weekly") or {}
         h1_map = extra.get("bars_1h") or {}
+        m5_map = extra.get("bars_5min") or extra.get("bars_5m") or {}
         chains = extra.get("chains") or {}
         quotes = extra.get("quotes") or {}
         equity = _number(ctx.equity) or 0.0
         intents = []
         now = float(ctx.now)
+        intraday = params.entry_tf == "m30"
         for sym in SYMBOLS:
-            daily = closed_bars(bars.get(sym) or [], "1Day", now)
-            daily_closes = _closes(daily)
-            weekly_closes = _closes(closed_bars(
-                weekly_map.get(sym) or [], "1Week", now))
-            h4 = aggregate_4h(closed_bars(
-                h1_map.get(sym) or [], "1Hour", now))
-            h4_closes = _closes(h4)
-            frames = evaluate_timeframes(daily_closes, weekly_closes, h4_closes)
+            if intraday:
+                src = closed_bars(m5_map.get(sym) or [], "5Min", now)
+                closes_by = {
+                    "m15": _closes(aggregate_intraday(src, 15)),
+                    "m30": _closes(aggregate_intraday(src, 30)),
+                    "h4": _closes(aggregate_intraday(src, 240))}
+                entry_closes = closes_by["m30"]
+                has_entry_bars = bool(entry_closes)
+            else:
+                daily = closed_bars(bars.get(sym) or [], "1Day", now)
+                daily_closes = _closes(daily)
+                closes_by = {"daily": daily_closes}
+                if "weekly" in params.stack_order:
+                    closes_by["weekly"] = _closes(closed_bars(
+                        weekly_map.get(sym) or [], "1Week", now))
+                if "h4" in params.stack_order:
+                    closes_by["h4"] = _closes(aggregate_4h(closed_bars(
+                        h1_map.get(sym) or [], "1Hour", now)))
+                entry_closes = daily_closes
+                has_entry_bars = bool(daily)
+            frames = evaluate_stack(closes_by, params.stack_order)
             st = sleeve_state.get(sym) or {}
             pos = st.get("position") if isinstance(st, dict) else None
             if pos:
-                out = self._manage(sym, pos, frames, daily_closes,
-                                   quotes, ctx.session)
+                out = self._manage(sym, pos, frames, entry_closes,
+                                   quotes, ctx.session, now=now)
                 if out is not None:
                     intents.append(out)
                 continue
-            if not daily:
+            if not has_entry_bars:
                 continue
-            if frames["dominant_dir"] is None or frames["daily"] is None:
+            if params.flat_by_close and now is not None and \
+                    datetime.fromtimestamp(now, tz=ET).time() >= _flat_time(params):
+                self.last_evaluation.setdefault("blocked", {})[sym] = \
+                    "flat_by_close_window"
+                continue
+            entry_dir = frames.get(params.entry_tf)
+            if frames["dominant_dir"] is None or entry_dir is None:
                 self.last_evaluation.setdefault("blocked", {})[sym] = \
                     "no_alignment_or_dominance"
                 continue
-            if frames["dominant_dir"] != frames["daily"]:
+            if frames["dominant_dir"] != entry_dir:
                 self.last_evaluation.setdefault("blocked", {})[sym] = \
                     "dominant_daily_disagreement"
                 continue
-            direction = frames["daily"]
-            trigger = find_trigger(daily_closes, direction)
+            direction = entry_dir
+            trigger = find_trigger(entry_closes, direction)
             if trigger is None:
                 continue
-            spot = daily_closes[-1]
+            spot = entry_closes[-1]
             sel = select_contract(chains.get(sym), quotes, spot,
-                                  ctx.session, direction)
+                                  ctx.session, direction,
+                                  min_dte=params.min_dte,
+                                  strike_mode=params.strike_mode)
             if sel is None:
                 self.last_evaluation.setdefault("blocked", {})[sym] = \
                     "no_qualifying_contract"
@@ -468,13 +604,17 @@ class InvestAndBeFreeDmacSleeve(BaseSleeve):
                     "expiry": sel["expiry"], "entry_premium": sel["ask"],
                     "qty": qty, "direction": direction,
                     "partial_done": False}
+            if params.premium_macd:
+                plan["premium_samples"] = []
+                plan["premium_occ"] = sel["occ"]
             dmac_state[sym] = plan
             self.last_evaluation["state"] = "entry_intent"
             intents.append(Intent(
                 "enter", sym, qty=qty, price_hint=round(spot, 2),
-                reason="investandbefree_dmac %s %s: occ=%s strike=%.2f "
+                reason="%s %s %s: occ=%s strike=%.2f "
                        "expiry=%s ask=%.2f qty=%d trigger=%s dominant=%s"
-                       % ("long_call" if direction == 1 else "long_put",
+                       % (self.REASON_LABEL,
+                          "long_call" if direction == 1 else "long_put",
                           sym, sel["occ"], sel["strike"], sel["expiry"],
                           sel["ask"], qty, trigger, frames["dominant_tf"]),
                 side="buy", position_intent="buy_to_open",
@@ -482,16 +622,19 @@ class InvestAndBeFreeDmacSleeve(BaseSleeve):
         self.dmac_state = dmac_state
         return intents
 
-    def _manage(self, sym, pos, frames, daily_closes, quotes, session):
-        """One exit intent, or None. Order: premium stop, dominant
-        break, partial (+100%), runner exit (MACD-E cross against or
-        5 DTE). An alignment reading of None (no alignment on that
-        layer, including a complete loss of alignment on every
-        timeframe) counts as a break, not as 'no change': exit rule
-        (2) is a break of the alignment the position was opened
-        under. The runner ignores 4H flips while daily alignment
-        holds: only a daily alignment break (flip or loss) closes
-        it on alignment."""
+    def _manage(self, sym, pos, frames, daily_closes, quotes, session,
+                now=None):
+        """One exit intent, or None. Order: (intraday variants:
+        flat-by-close first), premium stop, dominant break,
+        partial (+100%), runner exit (MACD-E cross against or
+        5 DTE). An alignment reading of None counts as a break.
+        The runner ignores 4H flips while the entry timeframe's
+        alignment holds (daily-layer hold for the base).
+        Premacd variant: the held contract's mid is accrued once
+        per call (one cycle) into dmac_state; after the warmup
+        sample count a premium MACD-E cross against replaces both
+        the dominant-break and the runner cross exits."""
+        params = self.PARAMS
         qty = int(float(pos.get("qty") or 0))
         if qty <= 0:
             return None
@@ -503,15 +646,46 @@ class InvestAndBeFreeDmacSleeve(BaseSleeve):
         bid, ask = _number(q.get("bid")), _number(q.get("ask"))
         mid = (bid + ask) / 2.0 if bid and ask else None
         dte = _dte(pos.get("expiry"), session) if pos.get("expiry") else None
+        # --- premacd accrual + premium cross (variant axis only)
+        warmed = False
+        prem_cross = False
+        if params.premium_macd:
+            stored = self.dmac_state.get(sym) or {}
+            samples = list(pos.get("premium_samples")
+                           or stored.get("premium_samples") or [])
+            if stored.get("premium_occ") not in (None, occ) \
+                    and not pos.get("premium_samples"):
+                samples = []
+            if mid is not None and now is not None:
+                samples.append({"t": float(now), "mid": float(mid)})
+            st = dict(stored)
+            for k in ("occ", "strike", "expiry", "entry_premium",
+                      "qty", "direction", "partial_done"):
+                if pos.get(k) is not None:
+                    st[k] = pos.get(k)
+            st["premium_samples"] = samples
+            st["premium_occ"] = occ
+            self.dmac_state[sym] = st
+            warmed = len(samples) >= params.premium_warmup
+            if warmed:
+                prem_closes = [smp["mid"] for smp in samples]
+                prem_cross = _crossed(prem_closes, -direction,
+                                      wilder=False)
         reason = None
         sell_qty = qty
-        if mid is not None and entry > 0 and mid <= PREMIUM_STOP_FRAC * entry:
+        if params.flat_by_close and now is not None and \
+                datetime.fromtimestamp(now, tz=ET).time() >= _flat_time(params):
+            reason = "flat_by_close_1555"
+        elif mid is not None and entry > 0 and mid <= PREMIUM_STOP_FRAC * entry:
             reason = "premium_stop_50pct"
-        elif not partial_done and frames["dominant_dir"] != direction:
-            reason = "dominant_alignment_break"
-        elif partial_done and frames["daily"] != direction:
-            reason = "daily_alignment_break_runner"
-        elif not partial_done and mid is not None and entry > 0:
+        elif params.premium_macd and warmed and prem_cross:
+            reason = "premium_macd_cross_against"
+        elif not params.premium_macd or not warmed:
+            if not partial_done and frames["dominant_dir"] != direction:
+                reason = "dominant_alignment_break"
+            elif partial_done and frames.get(params.entry_tf) != direction:
+                reason = "daily_alignment_break_runner"
+        if reason is None and not partial_done and mid is not None and entry > 0:
             sell = partial_qty(qty, entry, mid)
             if sell:
                 if sell >= qty:
@@ -520,8 +694,11 @@ class InvestAndBeFreeDmacSleeve(BaseSleeve):
                     reason = "partial_100pct"
                     sell_qty = sell
         if reason is None and partial_done:
-            if _crossed(daily_closes, -direction, wilder=False):
-                reason = "runner_macde_cross_against"
+            if not (params.premium_macd and warmed):
+                if _crossed(daily_closes, -direction, wilder=False):
+                    reason = "runner_macde_cross_against"
+                elif dte is not None and dte <= RUNNER_EXIT_DTE:
+                    reason = "runner_5dte"
             elif dte is not None and dte <= RUNNER_EXIT_DTE:
                 reason = "runner_5dte"
         if reason is None:
@@ -529,14 +706,17 @@ class InvestAndBeFreeDmacSleeve(BaseSleeve):
             return None
         if reason == "partial_100pct":
             self.dmac_state.setdefault(sym, {})["partial_done"] = True
+            if params.premium_macd:
+                # keep accrued samples alongside the partial flag
+                self.dmac_state[sym].setdefault("premium_samples", [])
             self.last_evaluation["state"] = "partial_exit"
         else:
             self.dmac_state.pop(sym, None)
             self.last_evaluation["state"] = "exit"
         return Intent(
             "exit", sym, qty=sell_qty, price_hint=round(mid, 2) if mid else None,
-            reason="investandbefree_dmac exit: %s occ=%s qty=%d"
-                   % (reason, occ, sell_qty),
+            reason="%s exit: %s occ=%s qty=%d"
+                   % (self.REASON_LABEL, reason, occ, sell_qty),
             side="sell", position_intent="sell_to_close")
 
 
