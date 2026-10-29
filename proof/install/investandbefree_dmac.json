@@ -1,0 +1,85 @@
+{
+ "config": {
+  "cadence_s": 3600,
+  "inputs": [
+   "bars",
+   "bars:*:1Day",
+   "bars:*:1Hour",
+   "bars:*:1Week",
+   "options",
+   "positions",
+   "quotes",
+   "session_fills"
+  ],
+  "parked": false,
+  "session": "rth"
+ },
+ "deviations": [
+  "Vendor event-calendar gate NOT implemented in v1 (index ETFs have no earnings; no macro calendar producer wired for this sleeve) - named in the desk spec doc.",
+  "No ladder fallback entries (source SPEC section 4 rule 5).",
+  "No overbought/oversold runner exit; runner exits are the daily MACD-E cross-against and 5 DTE."
+ ],
+ "edge_status": "UNPROVEN - live paper record is the test; no backtest claimed",
+ "feeding_proof": {
+  "cure": "desk3/warm.py: EXTRA_TF_FETCHES weekly window 500 -> 1000 calendar days (~143 weekly bars); INTRADAY_FETCHES gained targeted ('SPY','1Hour',200) and ('QQQ','1Hour',200) entries (~140 RTH sessions). Window arithmetic is pinned by blocker tests; the widened counts land at the next warm cycle.",
+  "door": "desk3/warm.py WarmBars (state/warm_bars.json) via snapshot bars keys; options via the established 'options' producer input",
+  "fixture_drive": "Blocker TestAdapterDrive drives adapters3.investandbefree_dmac.evaluate on a full snapshot view (daily + weekly bars, options chain/quotes) and produces exactly one entry intent for the ATM 30-DTE call at qty 4, with dmac_state.json round-tripped.",
+  "observed_at_build": "state/warm_bars.json fetched 2026-10-29T15:05:50Z: SPY/QQQ 1Day 346 rows each (>= 300 needed), 1Week 72 rows each (short of 120), 1Hour 359 rows each (~51 sessions, short of 120 sessions)"
+ },
+ "files": {
+  "adapters/investandbefree_dmac.py": "6c39ed5f7750b3cca838fa1865394410bcbe847328452ca7af2243a6345b0061",
+  "adapters3/investandbefree_dmac.py": "5aee4407cc0ed21e22a325645feb250ea1773c30a7f6ef4bce8f107979732d04",
+  "sleeves/investandbefree_dmac.py": "9f6268daec6520e67ffa95da4d971b6c6ad76ee41362a4afd1ab31ee635daf9f",
+  "tests/test_investandbefree_dmac_blockers.py": "9f2211e6fef540c36afbb7424fdb82a9c0d9850b08cb4a53116481114f8e34eb"
+ },
+ "frozen_parameters": {
+  "macd_e": "standard exponential smoothing for every component",
+  "macd_periods": [
+   12,
+   26,
+   9
+  ],
+  "macd_w": "Wilder smoothing for every component",
+  "max_positions": 2,
+  "min_dte": 30,
+  "partial_trigger_mult": 2.0,
+  "premium_budget_usd": 2000.0,
+  "premium_cap_frac_of_slice": 0.25,
+  "premium_stop_frac": 0.5,
+  "quote_gate_frac": 0.1,
+  "runner_exit_dte": 5,
+  "symbols": [
+   "SPY",
+   "QQQ"
+  ],
+  "variant": "long-term (daily entry timeframe)"
+ },
+ "gate": {
+  "note": "After the 2026-10-29 closed-bars repair: run_regression_blockers.sh rc=0 on the final tree; unittest discover 'Ran 1406 tests' (1401 at install + 5 repair blockers).",
+  "result": "GREEN",
+  "tests": 1406
+ },
+ "installed": "2026-10-29",
+ "repairs": [
+  {
+   "date": "2026-10-29",
+   "id": "INVESTANDBEFREE-DMAC-CLOSEDBARS-20261029",
+   "what": "Verifier failure 1 (blocking): closed-bars-only was violated at the live boundary (forming daily/weekly/hourly bars consumed). Cure: core closed_bars() period-end filter applied in signal() to daily/weekly/1Hour and again in the adapter; bars without a readable timestamp are dropped. Failure 2: total alignment loss (dominant_dir None) produced no exit; _manage now treats None as a break in both the dominant-break and runner daily-break branches. 5 new gate-wired blockers, fail-first proven; BUGLOG_2026-10-29.md entry INVESTANDBEFREE-DMAC-CLOSEDBARS-20261029."
+  }
+ ],
+ "paper_only": true,
+ "provenance": "Clean-room extraction of a public double-MACD method (source SPEC: opt/rea-teardowns/investandbefree/SPEC.md), installed by owner order 2026-10-29. Extracted: double-MACD pair (Wilder + exponential), long-term stack 4H/daily/weekly, alignment/dominance concepts, crossover and curl triggers, long-premium-only, +100% partial into a runner, daily-layer hold, USD 2,000 worked-example budget. Recreated defaults: 12/26/9 periods, ATM strike, 30-day expiry bound, 50% premium stop, budget/cap sizing, 10% spread gate, exact step forms, 5-DTE runner bound.",
+ "sleeve": "investandbefree_dmac",
+ "slice_usd": 10000.0,
+ "spec": {
+  "path": "INVESTANDBEFREE-DMAC-SPEC-2026-10-29.md",
+  "version": "FROZEN 2026-10-29"
+ },
+ "test_evidence": {
+  "fail_first": "QUOTE_GATE_FRAC 0.10 -> 0.50 fails the spread-gate test; PREMIUM_STOP_FRAC 0.50 -> 0.10 fails the premium-stop test; both restored byte-identical and 23/23 re-proven (a stale .pyc from a same-second restore was cleared first). Repair blockers (2026-10-29): the 5 closed-bars / alignment-loss tests all failed on the pre-cure code (the mid-session adapter drive emitted the opposite-direction put off the forming daily bar) and pass after the cure.",
+  "file": "tests/test_investandbefree_dmac_blockers.py",
+  "golden": "Independent in-test MACD implementation plus hand-embedded goldens for the crafted 35-close series (MACD-E line 3.552095 / signal 3.506225; MACD-W line 3.008849 / signal 2.305244; the two smoothings diverge by 0.543 on the line). Crossover fixture: quadratic bull run, 3 bars of -5, +30 close (independent check: MACD-E diff prev <= 0 < last). Curl fixture: 2 bars of -5, +15 close, no signal cross. Entry math: ask 5.0 -> qty floor(2000/500) = 4 under the 2500 cap. Partial: qty 4 at 2x entry sells ceil(4*5/10) = 2 leaving 2; qty 1 is a full exit.",
+  "result": "28/28 OK",
+  "tests": 28
+ }
+}
