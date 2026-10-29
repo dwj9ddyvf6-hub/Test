@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vendor Delivery Profiles — Group 3 of 8 — Muse Desk</title><style>
+:root{color-scheme:dark}
+body{background:#0b0e13;color:#dbe2ec;font-family:Georgia,'Times New Roman',serif;margin:0;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 64px}
+header{border-bottom:2px solid #2dd4bf;padding-bottom:14px;margin-bottom:8px}
+h1{font-size:30px;margin:0 0 6px;color:#f2f6fb}
+.sub{color:#93a4bb;font-size:15px;margin:0}
+nav.top{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+nav.top a{background:#131926;border:1px solid #26314a;color:#a5f3e8;text-decoration:none;
+ padding:6px 12px;border-radius:999px;font-size:13.5px;font-family:Helvetica,Arial,sans-serif}
+nav.top a:hover{border-color:#2dd4bf}
+article h1{font-size:26px;color:#f2f6fb;border-bottom:1px solid #26314a;padding-bottom:8px}
+article h2{font-size:21px;color:#7dd3fc;margin-top:34px}
+article h3{font-size:17.5px;color:#a5f3e8;margin-top:26px}
+article h4{font-size:15.5px;color:#fbbf24}
+article a{color:#7dd3fc}
+article code{background:#131926;padding:1px 5px;border-radius:4px;font-size:.92em}
+article pre{background:#0f141f;border:1px solid #26314a;border-radius:8px;padding:12px;overflow-x:auto}
+article pre code{background:none;padding:0}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;
+ font-family:Helvetica,Arial,sans-serif}
+article th,article td{border:1px solid #26314a;padding:6px 9px;text-align:left;vertical-align:top}
+article th{background:#131926;color:#a5f3e8}
+article blockquote{border-left:3px solid #2dd4bf;margin:16px 0;padding:2px 16px;color:#b8c6da}
+article hr{border:none;border-top:1px solid #26314a;margin:28px 0}
+footer{border-top:1px solid #26314a;margin-top:44px;padding-top:14px;color:#7c8da6;font-size:13.5px}
+footer a{color:#7dd3fc}
+.pager{display:flex;justify-content:space-between;margin-top:36px;font-family:Helvetica,Arial,sans-serif;font-size:14px}
+.pager a{color:#a5f3e8;text-decoration:none}
+</style></head>
+<body><div class="wrap">
+<header><h1>Vendor Delivery Profiles — Group 3 of 8</h1><p class="sub">How each vendor in this group packages its product: the unit it sells, its cadence, its free surface, and how it converts readers into buyers.</p></header>
+<nav class="top"><a href="index.html">The Study</a><a href="profiles-g1.html">Profiles 1</a><a href="profiles-g2.html">Profiles 2</a><a href="profiles-g3.html">Profiles 3</a><a href="profiles-g4.html">Profiles 4</a><a href="profiles-g5.html">Profiles 5</a><a href="profiles-g6.html">Profiles 6</a><a href="profiles-g7.html">Profiles 7</a><a href="profiles-g8.html">Profiles 8</a><a href="../morning-map/">Morning Map</a><a href="../desk-terminal-live/">Terminal</a></nav>
+<article><h1>Funnel Profiles — Group g3</h1>
+<p>Source: TEARDOWN.md (and SPEC.md where present) in each vendor folder under <code>rea-teardowns/</code>. Facts are teardown-evidenced unless marked (live). No live pages were needed for this group.</p>
+<h2>danelfin</h2>
+<ul>
+<li><strong>product:</strong> AI Score (1–10) stock/ETF scoring platform — probability of beating the benchmark over the next 3 months.</li>
+<li><strong>surfaces:</strong> Web dashboard (Next.js); realtime updates for logged-in users via Mercure/SSE; portfolio sync via Plaid and SnapTrade; API on Elite (API Expert). No mobile/Discord/Telegram evidenced.</li>
+<li><strong>unit:</strong> A stock report: AI Score plus Fundamental / Technical / Sentiment / Low Risk subscores and a ranked list of named alpha signals (positive/negative). Separately, a Trade Ideas list.</li>
+<li><strong>cadence:</strong> Daily — model relearns daily from trailing 252 market days (US) / 500 (Europe); scores and signal lists refreshed daily.</li>
+<li><strong>mode:</strong> Pull (dashboard checked by user), with realtime push inside the logged-in session.</li>
+<li><strong>curation:</strong> Algorithmic — hundreds of decision trees over 10,000+ features from ~900 indicators; no human picks.</li>
+<li><strong>free_surface:</strong> Free tier: 10 reports/mo, 1 portfolio × 5 names, top-2 long Trade Ideas.</li>
+<li><strong>paywall:</strong> Count/feature wall in the client-shipped entitlement matrix. Plus lifts portfolios/reports and Trade Ideas depth; Pro adds CSV export and Trading Parameters; Elite adds unlimited portfolios, API (10,000 calls/mo) and historical scores since 2017 on request.</li>
+<li><strong>conversion:</strong> Four tiers — Free / Plus $22/mo / Pro $59/mo / Elite $134/mo on annual billing; 30-day money-back; auto-renew.</li>
+<li><strong>actionability:</strong> Score alone needs interpretation; Trade Ideas are pre-filtered (only signals with ≥60% historical win rate long / ≥60% loss rate short since 2017 are surfaced). No entry/stop/target evidenced in the teardown.</li>
+<li><strong>trust_record:</strong> Vendor backtest: Best Stocks strategy +456% vs S&amp;P 500 +228% (2017–2026), strategy construction fully specified; plus a self-run “AI Score Audit” dashboard (audit subdomain, own API/data, not independent). Audit found: figures were restated when simulations were rerun (disclosed in fine print), vintage-score provenance for the backtest unproven, European headline sample arithmetic does not reconcile.</li>
+</ul>
+<h2>tipranks</h2>
+<ul>
+<li><strong>product:</strong> Research platform built on the Smart Score (1–10) aggregating analyst, insider, blogger, crowd, hedge-fund, news, technical and fundamental datasets; plus analyst rankings and newsletters.</li>
+<li><strong>surfaces:</strong> Web; AI chat / AI Analyst panel; MCP endpoint for agents (<code>mcp.tipranks.com</code>, linked in nav); broker OAuth linking (Questrade, TradeStation); paid newsletters as add-ons. Heavy ad stack on free tier.</li>
+<li><strong>unit:</strong> A stock page panel: Smart Score (8–10 Outperform / 4–7 Neutral / 1–3 Underperform) with eight factor tiles, analyst consensus and average price target with upside %.</li>
+<li><strong>cadence:</strong> Server-updated, score carries an update-date field; no intraday cadence claimed in teardown evidence.</li>
+<li><strong>mode:</strong> Pull.</li>
+<li><strong>curation:</strong> Hybrid by ontology — algorithmic composite of human-opinion/positioning datasets (6 of 8 factors); only technicals (SMA 20/200 + 12m momentum) and fundamentals (ROE + asset growth) are market/financial data.</li>
+<li><strong>free_surface:</strong> Free/basic access funded by ads; the rating and factor tiles are visible on public stock pages (e.g. AAPL panel in teardown).</li>
+<li><strong>paywall:</strong> Premium / Ultimate gate depth, analyst-ranking customisation (benchmark/period on Ultimate) and ad removal. TR-Plus is a low-price ad-free tier ($5.90/mo; ad-free yearly $9/yr in client config).</li>
+<li><strong>conversion:</strong> List in shipped client config: Premium $359/yr ($29.95/mo billed annually, $34.95 monthly, 3-year $718), Ultimate $599/yr ($49.95/mo); priced upgrade ladder Premium→Ultimate $240; newsletters $200–$400/yr add-ons (Smart Investor $299/yr etc.); 30-day money-back on yearly plans; affiliate discount pages exist outside base config.</li>
+<li><strong>actionability:</strong> Band + price target gives direction and upside, but no entry/stop/exit rule; user must decide position and timing.</li>
+<li><strong>trust_record:</strong> Hindsight display only — performance is the vendor’s own backtest. Its own footer disclaimer, on every page, states it is retroactively applied, developed with hindsight, adjustable until past returns are maximised, gross of fees/costs, and not returns any investor attained. No public as-was score archive.</li>
+</ul>
+<h2>vectorvest</h2>
+<ul>
+<li><strong>product:</strong> Stock rating and market-timing subscription: RV / RS / RT ratings (0.00–2.00) combined into VST, with Buy/Sell/Hold and a per-stock stop price.</li>
+<li><strong>surfaces:</strong> Subscriber application (VectorVest 7 / VectorVest Online and named modules: ProTrader, RoboTrader, ProfitLocker Pro, Options Analyzer, RealTime); marketing site is WordPress brochure only — there is no product logic on the public web. Broker linking inside the paid product via Yodlee (per privacy policy).</li>
+<li><strong>unit:</strong> A per-stock rating card: RV, RS, RT, VST, Buy/Sell/Hold recommendation and recommended stop; plus a market-timing call that gates buying.</li>
+<li><strong>cadence:</strong> Daily, end-of-day on lower tiers (Launchpad data 15-min delayed); Premium is real-time US data.</li>
+<li><strong>mode:</strong> Pull (rank/sort in the application).</li>
+<li><strong>curation:</strong> Algorithmic — VST formula published verbatim (root-sum-of-squares of RV/RS/RT, re-scaled to 0–2); RV/RS/RT internals sealed.</li>
+<li><strong>free_surface:</strong> Free stock-analysis report via a lead-capture form (symbol autocomplete; email + symbol submitted by GET to the legacy application).</li>
+<li><strong>paywall:</strong> All ratings behind subscription. Launchpad: 9,500+ US stocks; Enhanced/Premium: 16,000+ across US/CA/AU/EU.</li>
+<li><strong>conversion:</strong> Trial funnel with inconsistent prices on the vendor’s own pages: header “30 days for only $9.95”, plan cards $0.99 (Launchpad) / $9.95 (Enhanced/Premium). Then Launchpad $49.99/mo or $499/yr, Enhanced $99/mo or $995/yr, Premium $149/mo or $1,495/yr (“save up to $293” annual). Auto-renews; subscriber agreement says no refunds on termination, Refund Policy carves out trial-fee refund within 30 days only.</li>
+<li><strong>actionability:</strong> Highest in this subgroup for a rating product: an explicit Buy/Sell/Hold plus a stop price and a market-timing gate (“check sells/stops, check market, buy top-VST only if timing favourable”) — actionable without further interpretation, apart from sizing.</li>
+<li><strong>trust_record:</strong> Hindsight display: +2,139% vs S&amp;P 500 +209% (2000–2025) on home, +1,071% on the Market Launchpad page, “15% average annual” over inconsistent windows (20+ vs 16 years); dated timing-call list (e.g. sells in 2000, 2007, 2020, 2021). No priced call list, portfolio or audit public; vendor’s offered verification is inside its own paid platform, i.e. self-verification.</li>
+</ul>
+<h2>kavout</h2>
+<ul>
+<li><strong>product:</strong> Kai Score (also sold institutionally as K Score), a 1–9 ML stock rank, plus AI agents (InvestGPT and six others) and a SignalDB factor storefront.</li>
+<li><strong>surfaces:</strong> Web app; institutional delivery by API/CSV and via IEX Cloud Premium Data; SignalDB storefront on the same site. No mobile/Discord/Telegram evidenced.</li>
+<li><strong>unit:</strong> A score (1–9, 9 = highest expected outperformance) per stock, and LLM agent outputs/reports consumed against research credits; Smart Signals lists and AI Stock Picker top picks.</li>
+<li><strong>cadence:</strong> Daily — score delivery and refresh both stated “Daily”; history claimed from 2011-12-30.</li>
+<li><strong>mode:</strong> Pull, with watchlist/signal notification endpoints shipped in the client.</li>
+<li><strong>curation:</strong> Algorithmic — 200+ factors in named families (Value, Quality, Growth, Momentum, Profitability, Volatility, Size, plus technical, insider/options and text inputs) combined by regression/classification/deep-learning models; weights sealed, whitepaper only on sales request.</li>
+<li><strong>free_surface:</strong> Free plan: 10 research credits, 1 agent class of access, US stocks/ETFs, crypto and forex with limited metrics (per pricing page/client config).</li>
+<li><strong>paywall:</strong> Credit wall, not a feature wall alone: Pro 1,000 credits/mo, Premium 3,000/mo, Max in code/Stripe tables at 2.5× Premium. Agents, AI Stock Picker, Smart Signals and Smart Money sit behind Pro+; Factor Portfolio Builder / Guru Portfolios behind Premium.</li>
+<li><strong>conversion:</strong> Pro $20/mo list / $16/mo annual-billed, Premium $49/mo / $39/mo annual-billed; credit top-up packs (e.g. 1,000 credits / $10); SignalDB unbundling ($39/mo per signal, bundle $199/mo vs $351 list; K Score data from $1,500/mo); FirstPromoter affiliate script. Friction: pricing page says cancel anytime/no hidden fees, Terms §11 says no refunds regardless of reason, even on immediate cancellation.</li>
+<li><strong>actionability:</strong> A rank and agent prose only; no systematic entry/stop/target in public evidence. The marketing InvestGPT showcase that appears to give levels is a hard-coded scripted demo (typed on a 200 ms timer) quoting stale prices — not a live unit.</li>
+<li><strong>trust_record:</strong> Nothing — the notable absence in this group. No performance figures, backtests or outcome records published anywhere on kavout.com; claim audit rates score-predicts-outperformance UNVERIFIABLE. Marketing trust substitutes are testimonials, award badges from 2016–17, and “trusted by professionals / quant funds” assertions with no counterparty named.</li>
+</ul>
+<h2>simplywallst</h2>
+<ul>
+<li><strong>product:</strong> Visual fundamental-analysis platform: the Snowflake score (5 axes × 6 binary checks = 30) plus a house DCF fair-value estimate.</li>
+<li><strong>surfaces:</strong> Web app (React SPA, GraphQL API); Community Narratives (user-built fair-value models); “Charlie” AI assistant; portfolio/broker sync via Plaid, Passiv and Sharesight.</li>
+<li><strong>unit:</strong> A company report page: Snowflake polygon (Valuation / Future Growth / Past Performance / Financial Health / Dividends, each 0–6), the individual pass/fail checks behind it, and a fair-value figure with % over/undervalued.</li>
+<li><strong>cadence:</strong> Pull, refreshed on new company/analyst data; Value also moves with price; industry averages recomputed weekly.</li>
+<li><strong>mode:</strong> Pull.</li>
+<li><strong>curation:</strong> Algorithmic checklist — and uniquely, the full model is published by the vendor (GitHub model document linked from its help centre): all 30 checks, thresholds and four DCF variants specified.</li>
+<li><strong>free_surface:</strong> Free: 5 reports/mo, 1 portfolio × 10 holdings, screener limited to top-4 results; 7-day Premium trial, no card at signup.</li>
+<li><strong>paywall:</strong> Volume/depth wall: Premium 30 reports/mo, 3 portfolios × 30, broker sync; Unlimited unlimited reports/portfolios plus Excel &amp; PDF export and S&amp;P Global data labelling. Paid prices are geo/client-rendered and were not confirmed from public text in the teardown.</li>
+<li><strong>conversion:</strong> Free → trial → tier ladder, with an affiliate programme (Rewardful) on the marketing site. No scarcity or performance-led selling evidenced.</li>
+<li><strong>actionability:</strong> Deliberately low: the vendor states the Snowflake is not a buy/sell recommendation and the platform is not investment advice. The unit gives a fair-value gap and a checklist; entry/stop/target are the user’s problem.</li>
+<li><strong>trust_record:</strong> Nothing, by design — no backtest, win-rate or outperformance claim found on any page examined. Claim audit instead catches documentation drift: live Value checks differ from the published set, AAPL’s live Dividend 0/6 cannot be reproduced from the published checks, and AAPL carried two different “fair value” figures the same day ($328.09 overview vs $276.20 DCF page) with no on-page reconciliation.</li>
+</ul>
+<h2>ainvest</h2>
+<ul>
+<li><strong>product:</strong> Bundle of AI-branded products around the “Aime” LLM analyst: Magic Signal, Trend Sight / Peak Seeker, Magic Portfolios, and Options Pilot (5-pillar options scoring).</li>
+<li><strong>surfaces:</strong> Web (marketing, labs/Options Pilot, broker-connect and premium-screener subdomains); mobile app-store subscriptions for standalone indicators; broker linking via Plaid (TradeStation, Webull, Public named on connect page); newsletter subscribe endpoint in the Options Pilot client.</li>
+<li><strong>unit:</strong> Three units: (1) a Magic Signal for the next session (mid-to-long-term horizon, up to ~a quarter); (2) an Options Pilot symbol card — five pillar scores (Value, Sentiment, Activity, Liquidity, Timing, each 0–10; composite is the plain mean, verified from payloads), gamma-wall levels and strategy-idea cards with win-rate badges; (3) an Aime chat answer, metered by question quota.</li>
+<li><strong>cadence:</strong> Daily batch — Magic Signal refreshed at market close for the next session (explicitly not intraday/real-time in the vendor knowledge base); Options Pilot scores are dated daily snapshots (207–208 files per universe in the manifest).</li>
+<li><strong>mode:</strong> Pull (app/dashboard, chat on demand).</li>
+<li><strong>curation:</strong> Algorithmic signals (formulas sealed server-side) plus LLM chat; pillar ingredient sets are published, the mapping to 0–10 is sealed.</li>
+<li><strong>free_surface:</strong> Delay is the free product: anonymous users get compact scores only (overall + direction, no pillars) and a gated strategy index; UOA flow delayed 60 days for anonymous callers (payload declares <code>delay_days: 60</code>), gamma walls delayed by tier, Informed Accumulation delayed up to 2 months, with a free hedge-watch limit.</li>
+<li><strong>paywall:</strong> Recency/depth wall (remove the delay, unlock pillars/strategy index), plus standalone indicator subscriptions and AIME+ tiers.</li>
+<li><strong>conversion:</strong> AIME+ Pro $199.99/yr and Premium $399.99/yr framed with $100 / $300 “coupon” discounts; Magic Signal standalone $12.99/mo, $33.99/qtr, $96.99/yr; TrendSight $24.99/mo to $134.99/yr (refund only within 24 hours); quota upsell — Copilot Basic 500 regular + 100 in-depth questions, Professional unlimited regular / 500 in-depth / 3× speed. Auto-renew; indicator products “do not support refunds without a valid reason”. Prices conflict across vendor surfaces (an Aime-generated page quotes a third price set).</li>
+<li><strong>actionability:</strong> Mixed: Options Pilot strategy cards + gamma levels are the closest to actionable; Magic Signal is directional with no entry/stop/target evidenced, and an Aime-generated page claiming real-time day-trading use is refuted by the vendor’s own knowledge base.</li>
+<li><strong>trust_record:</strong> Vendor-served live scoreboard that undercuts its own badges: track-record endpoint reports 52,476 resolved trades at 51.49% win rate with <code>withOptionPnl: 0</code> (no trade carries option P&amp;L, resolution rule undisclosed); UOA payload headline is 46.06% win rate, median −6.49%, aggregate tracked P&amp;L −$181.1M, after excluding 806 no-fill and 2,086 missing-data trades. Per-strategy badges (e.g. Short Put 84.7%, Short Call 76.9% vs Long Put 27.7%) track premium-selling structure, not demonstrated signal skill.</li>
+</ul>
+<h2>chaikin</h2>
+<ul>
+<li><strong>product:</strong> Chaikin Power Gauge rating (20 factors, 4 components × 5) for 5,000+ stocks and 2,300 ETFs, sold mainly through the Power Gauge Report publication and a members platform.</li>
+<li><strong>surfaces:</strong> Members web app (React SPA) with screener, watchlists, portfolios, alerts and an AI-chat service; marketing site is a brochure/funnel; institutional datafile via Bloomberg; the same model underlies Nasdaq Chaikin indexes. No public pricing page — sales run through <code>secure.</code> funnel/presentation pages.</li>
+<li><strong>unit:</strong> A rating (Very Bullish / Bullish / Neutral / Bearish / Very Bearish, from seven equal septiles of a 1–100 industry/Russell 3000 rank, clipped by a long-term-trend overlay to Neutral+ / Neutral−), with per-factor grades; and, in the Report, a model portfolio of picks.</li>
+<li><strong>cadence:</strong> Daily — recalculated every weekday (refreshed weekday mornings and once Saturday).</li>
+<li><strong>mode:</strong> Hybrid: pull in the members screener; push via the Report publication.</li>
+<li><strong>curation:</strong> Algorithmic rating (weights sealed; calculations run by Portfolio123 on S&amp;P Compustat data — both named by the vendor); human/editorial layer in the Report portfolio. Nasdaq index variant publishes group weights (Financials 35% / Experts 30% / Earnings 20% / Technicals 15%); whether retail uses them is unstated.</li>
+<li><strong>free_surface:</strong> No free tier evidenced in the teardown — marketing and methodology/help content only.</li>
+<li><strong>paywall:</strong> Everything product-side behind membership; Earnings Quality is locked behind a further upgrade inside the base Report.</li>
+<li><strong>conversion:</strong> Funnel-only pricing: $149 first year against a $499/yr list, 30-day money-back guarantee (subscription only, per reviews/Terms deferral); renewal is stated inconsistently ($199/yr in one review table, $499/yr charged per member reviews/BBB complaints); legacy platform tier $595/qtr or $1,595/yr with 14-day trial (single-source); sister publications upsold far above (e.g. $2,500 charter / $5,000 list reported).</li>
+<li><strong>actionability:</strong> Rating gives a 3–6 month directional outlook, not entry/stop/target; the Report portfolio gives names to act on, but position management is the member’s.</li>
+<li><strong>trust_record:</strong> Survivorship by construction in the flagship record: the model-portfolio page shows open positions only and closed trades drop off the dashboard (two independent member accounts, uncontradicted by the client); no complete dated closed-trade ledger is published, so the portfolio record is unverifiable by design. “Over ten years of independent backtesting” names no tester or report; the one quantified index study is a Nasdaq backtest ending Mar 2018, mostly pre-inception simulated history.</li>
+</ul>
+<h2>zenratings</h2>
+<ul>
+<li><strong>product:</strong> Zen Ratings by WallStreetZen: an A–F letter grade from 115 factors in 7 components, plus Due Diligence checklists and a Top Analysts database.</li>
+<li><strong>surfaces:</strong> Web (Rails + React) with screener, watchlists and followed-analyst tools; separate paid services alongside (Zen Investor newsletter, Zen Options). Research-only — no broker linking or execution in this product.</li>
+<li><strong>unit:</strong> A stock page: Zen Rating (A = top 5% “Strong Buy”, B = next 15%, C = mid 60%, D = next 15%, F = bottom 5%), seven component grades, and a Due Diligence Score (33- or 38-point industry checklist).</li>
+<li><strong>cadence:</strong> Daily re-ranking over 4,600+ stocks (backtest protocol ranks on Saturday, rebalances monthly).</li>
+<li><strong>mode:</strong> Pull; the rating itself is used as the Premium upsell modal in the client.</li>
+<li><strong>curation:</strong> Algorithmic composite of mostly conventional fundamental families (Financials 26, Growth 22, Momentum 22, Value 21, Sentiment 14, Safety 6, AI 1, plus 3 vendor-disclosed size-bonus factors = 115). The “AI” factor is 1 of 115 — a neural network with no architecture/features public.</li>
+<li><strong>free_surface:</strong> Metered Basic tier — 10 free Due Diligence stock views observed on a public stock page (“10/10 free stocks”).</li>
+<li><strong>paywall:</strong> Meter wall: views/reports run out, Premium unlocks the rating/screener depth.</li>
+<li><strong>conversion:</strong> $1, 14-day trial; Premium $59/mo monthly vs $19.50/mo billed yearly ($234/yr, framed “save 60%” — arithmetic is ~67%); Zen Investor newsletter upsell at $99/yr. Money-back guarantee is inconsistent on the vendor’s own pages: 90 days (home) vs 30 days (blog pricing blocks).</li>
+<li><strong>actionability:</strong> Grade is labelled Strong Buy at the top band but carries no entry/stop/target or follow-up record for an individual name; interpretation and execution are entirely the user’s.</li>
+<li><strong>trust_record:</strong> Two irreconcilable live vintages of the same headline: superseded backtest +32.52%/yr (2003–2024) still printed on live pages (including alongside the new figure on the AI-investing page) vs current disclosed +28.50%/yr for A-rated stocks (2006–2025; B +17.17%, C +5.11%, D −6.47%, F −12.86%). Homepage welds the new return to the old start year (“since 2003”). The current Performance page is comparatively explicit — monthly rebalancing, fills at high/low average, trading costs explicitly not taken into account, returns “entirely the product of computer models” — but vintage/survivorship handling is unaddressed and there is no as-was rating archive.</li>
+</ul>
+<h2>prospero</h2>
+<ul>
+<li><strong>product:</strong> Prospero.ai: 10 cross-sectional signals (5 long-term, 5 short-term), each scored 0–100, over US stocks/ETFs.</li>
+<li><strong>surfaces:</strong> Mobile app only (iOS/Android) — there is no web app (<code>app.</code> redirects to marketing, <code>/app</code> is a store-download page); Webflow marketing/Learning Center site; Substack newsletters (investing, bi-weekly; trading, near-daily); Discord and support portal linked from the site. Not a brokerage — no deposits, orders or custody in any public artifact.</li>
+<li><strong>unit:</strong> A per-stock signal score (≥80 high / ≤20 low on every signal) in the app; “Our Picks” lists (Long/Short-Term Bull/Bear, criteria stated in-app only); and dated newsletter picks.</li>
+<li><strong>cadence:</strong> Mixed by signal: Net Options Sentiment and both Breakouts every 2–5 min; Net Social Sentiment every 30–60 min; Short Pressure ≥4×/market day; Profitability/Growth up to a few times/day; Market Similarity, Net Institutional Flow and Dark Pool Rating daily. Long-term signals target 6 months–2 years (optimised to 1 year); short-term ~1–2 months.</li>
+<li><strong>mode:</strong> Hybrid: pull in the app; push via the near-daily/bi-weekly Substack newsletters.</li>
+<li><strong>curation:</strong> Algorithmic — published input families only (options pricing dynamics, social engagement/sentiment, 13F/13G filings, dark-pool frequency size-normalised to shares outstanding, short demand vs price resilience); formulas, universe count and data vendors sealed/unnamed.</li>
+<li><strong>free_surface:</strong> Everything: signals are free, stated “always will be” in the vendor’s support article; App Store $0 with no in-app purchases listed; newsletters free to read via Substack links in the fetched pages.</li>
+<li><strong>paywall:</strong> None live. No pricing page exists (<code>/pricing</code> is the site 404).</li>
+<li><strong>conversion:</strong> No checkout funnel for signals. Stated/planned monetisation is future premium interpretation/convenience features plus sale of aggregated, anonymised survey data (support article, 2024, stating no active revenue at writing); a Republic crowdfund banner now runs on the homepage. Funnel is therefore app installs + newsletter subscribers, not payment.</li>
+<li><strong>actionability:</strong> Scores plus a published confluence template (e.g. high Net Social + Net Options + Net Institutional Flow with low Dark Pool + Short Pressure as the bullish pattern); no entry/stop/target published on the web, and Our Picks criteria are in-app only. Unusually, data lags are printed on the signal pages themselves: dark-pool prints up to 24 hours late, 13F flow at least 6 weeks stale.</li>
+<li><strong>trust_record:</strong> Vendor-asserted, internally inconsistent hindsight: “12.9x outperformance” with no methodology/period/pick list; investing newsletter 60% win rate and +81% annualised (2025, as of 07/15/25) on some pages vs 85% (as of 7/17) on another, 2024 given as both 76% and 77%; a third, stale model-portfolio series on the short-term page. Footer disclaimer (server-rendered) reclassifies all results as simulated/hypothetical signal-model results, not actual trading. The dated Substack posts are the only point-in-time public record; signal values have no as-was archive.</li>
+</ul>
+<h2>stockrover</h2>
+<ul>
+<li><strong>product:</strong> Fundamentals screening and rating platform: four 0–100 Scores (Value, Growth, Quality, Sentiment), a separate 0–100 Ratings system, Fair Value / Margin of Safety, and a large screener library.</li>
+<li><strong>surfaces:</strong> Web application behind login (<code>app.stockrover.com</code>); WordPress/Elementor marketing/checkout shell (Braintree-tokenised checkout, Google sign-in). Brokerage linking via Yodlee (named on the data-attribution page, not in the Terms’ sharing text).</li>
+<li><strong>unit:</strong> A screener result / stock report: score and rating values with their published input lists, Fair Value vs price (Margin of Safety %), and standard constructions printed with bands (Piotroski F-Score, Altman Z-Score, Beneish M-Score, named-investor models). In ranked screening, the unit is the user’s own weighted model — tooltip exposes each criterion’s raw value, percentile and contribution.</li>
+<li><strong>cadence:</strong> Pull, on demand in the application; no refresh cadence for scores is stated in public evidence examined.</li>
+<li><strong>mode:</strong> Pull — a do-it-yourself research tool.</li>
+<li><strong>curation:</strong> Hybrid: vendor algorithmic scores/ratings (intra-factor weights and DCF forecast build sealed) plus user-weighted screening.</li>
+<li><strong>free_surface:</strong> 14-day free trial; public methodology/help/blog content (which carries the full score input lists). No ongoing free tier evidenced.</li>
+<li><strong>paywall:</strong> Depth/breadth wall by tier (annual-equivalent): Premium $29/mo, Premium Plus $49, Ultimate $79, Ultimate Pro $149 (monthly billing $34/$70/$99/$199); metric counts 400+ / 700+ / 800+ / 800+, fundamentals history 5/10/20/20 years, real-time quotes only on Ultimate tiers “where available”. Vendor pages contradict each other on coverage (14,000+ vs 8,500+ stocks) and top-tier limits (60 vs 30 broker connections; 1,000 vs “300+” screeners).</li>
+<li><strong>conversion:</strong> Tier ladder + trial; anti-conversion friction is explicit and pre-acknowledged at signup: no refunds, regardless of reason, no exceptions.</li>
+<li><strong>actionability:</strong> Deliberately none at vendor level — the vendor states it does not make picks and does not promise outperformance. Fair Value/Margin of Safety is a reference for the user’s own decision; no entry/stop/target or follow-up record.</li>
+<li><strong>trust_record:</strong> Nothing — no performance, return, win-rate or accuracy claims found anywhere on the fetched public pages, the cleanest marketing record in this group. The one flattering display is disclosed by the vendor itself: screener performance charts plot today’s passing tickers equal-weighted and rebalanced daily over history (survivorship/look-ahead by construction), and its FAQs state historical screening does not account for survivorship and is not backtesting. Data providers are named: Morningstar (statements), FRED, Zacks, Intrinio, Quandl, Yodlee.</li>
+</ul>
+<h2>intellectia</h2>
+<ul>
+<li><strong>product:</strong> Subscription AI research/trading platform: AI Stock Picker, SwingMax, QuantAI, Daytrading Center, Alphio AI copilot/agent, copy trading and broker-connected order placement.</li>
+<li><strong>surfaces:</strong> Web app (<code>app.intellectia.ai</code>), crypto/agent surface rebranding to <code>app.alphio.ai</code>, marketing site; live market data over WebSockets in the client; broker connection via SnapTrade (Webull and Alpaca named in marketing); mobile app ratings badges shown on home (not independently checked).</li>
+<li><strong>unit:</strong> Current unit is a weekly top-10 list: 10 long-only picks published Monday 08:00 ET, held through the week. Plus credit-metered copilot chat answers and swing/day-trading signal surfaces. The retired unit was a daily top-5 (buy pre-market, sell at close, 20% of funds per name).</li>
+<li><strong>cadence:</strong> Weekly for the Picker; real-time data plumbing for the trading surfaces.</li>
+<li><strong>mode:</strong> Pull on a fixed weekly publication schedule, inside the app; broker/copy-trading features act in-platform once connected.</li>
+<li><strong>curation:</strong> Algorithmic, as described only in grandiose, mutually inconsistent vendor copy: “LLM + algorithms” (Picker), “XGBoost, MLP networks, and LLM” (SwingMax), “reinforcement learning, generative adversarial networks, and quantum-inspired optimization” (QuantAI) — no code, weights or selection function in any public artifact.</li>
+<li><strong>free_surface:</strong> Free tier with 400 credits total.</li>
+<li><strong>paywall:</strong> Credit + tier wall: Basic 2,500 credits/mo, Pro 5,000, Max 10,000, Expert 22,500; the Picker was Pro+ under the old design. Expensive add-ons sit on top (below).</li>
+<li><strong>conversion:</strong> $1 for a 7-day trial — non-refundable and auto-converting; Basic $14.95/mo or $11.96/mo yearly-equivalent, Pro $29.95 / $23.96, Max $49.95 / $39.96, Expert $89.95 / $71.96; add-ons QuantAI Watchlist $499.99/yr, SwingMax Portfolio $499.99/yr, Public Filing Tracker $319.95/yr, Backtest Playground $29.99/mo; payments via Paddle and FastSpring; affiliate attribution (Impact) in the client; heavy multi-network ad pixels on marketing. Refund policy is harsh and consistent across FAQ/Terms: no refunds for monthly plans, upgrades, crypto payments or after trial conversion.</li>
+<li><strong>actionability:</strong> Nominally the highest in this group — a named buy list on a stated schedule, plus in-platform Market/Limit order placement and copy trading through a connected brokerage. No stop/target or sizing rule is published for the current weekly product, and actual order-path behaviour is behind authentication, unverified.</li>
+<li><strong>trust_record:</strong> A backtest presented as a record, quoted inconsistently: the flagship “120%+ annual return” appears as 100%+, 111%, 120%+, 127.8%/127.82% on the vendor’s own surfaces, 142% in syndicated promotional copy and “over 200%” in a third-party review — with no dated, as-issued pick ledger public, a tutorial that frames the Performance tab as backtested performance “updated daily”, and a homepage line that backtests are historical only. The record was accumulated under the retired daily intraday design; the vendor’s own tutorial page contains a leftover editorial note recording the switch to weekly holding, so continuity of the record across the change is unverifiable. Current product pages, to their credit, explicitly disavow a Swing win rate — contradicting legacy blog furniture on the same domain (“70% BACKTESTED ACCURACY!”, an 80% testimonial).</li>
+</ul>
+<h2>tickernerd</h2>
+<ul>
+<li><strong>product:</strong> Systematic factor-ranking service: the daily Ticker Nerd Rank (0–100) for ~4,600 US stocks, the Ticker Nerd 20 equal-weight model portfolio, per-stock forecast/Read pages, and the free Monday Market Radar email.</li>
+<li><strong>surfaces:</strong> Web (Next.js SSR site) with a public Score Explorer; members shell on a separate subdomain (Clerk auth, Stripe billing link); free email newsletter (Resend). No broker custody or execution — members trade the model themselves if they choose.</li>
+<li><strong>unit:</strong> A rank row: ticker, Rank (percentile of a composite) and nine factor percentiles in fixed order (Revisions, Value, Momentum, Quality, Accruals, Issuance, Growth, Size, Volatility); a dated per-stock “Read” brief; and the portfolio unit — 20 highest-ranked names from a published ~1,500-name liquid/eligible pool, equal-weight, reviewed every four weeks with a rank-decay buffer (typically 1–2 changes).</li>
+<li><strong>cadence:</strong> Daily rank; portfolio review every 4 weeks; Market Radar weekly (Monday).</li>
+<li><strong>mode:</strong> Hybrid: pull (explorer/stock pages) + push (Monday email; membership portfolio).</li>
+<li><strong>curation:</strong> Algorithmic — rules decide every portfolio trade; the vendor states AI drafts the briefs and “never picks a stock”. Composite recomputes from the public file as near-even-weighted (rank correlates 0.972 with the equal-weight mean of the nine factor percentiles); exact formulas/weights for the ~50 underlying measurements are sealed and stated to be the product.</li>
+<li><strong>free_surface:</strong> The largest in this group: the entire current rank dataset is a public static file (<code>/stock/scores.json</code>, 4,634 rows at fetch) fetchable by anyone, plus free stock pages and the free Market Radar email. The homepage worked example (NVDA Rank 75 with its nine factors, dated 24 Oct 2026) matches the file byte-for-byte.</li>
+<li><strong>paywall:</strong> A single membership wall gating the model portfolio, its ledger and briefs — there is explicitly “no higher tier behind them”.</li>
+<li><strong>conversion:</strong> One tier: US$199/yr or US$39/mo, with a dated, publicly announced rise to US$399/yr on 1 November 2026; 30-day full refund, no questions asked (Terms and join FAQ agree); auto-renew with a reminder a week ahead; affiliate programme (Rewardful). An affiliate review’s $99/yr figure is stale/self-contradictory and is not the vendor’s current price.</li>
+<li><strong>actionability:</strong> Rank alone needs interpretation; the paid portfolio is directly followable (20 named, equal-weight names, published eligibility and next-session-average fill convention in the methodology). No per-name stop/target is published.</li>
+<li><strong>trust_record:</strong> Best-labelled in this group: every performance figure on the join page is stamped “Simulated before 20 July 2026, live since. Backtested figures are hypothetical and were not traded” — figures as at 25 Oct 2026: Ticker Nerd 20 +26.6% LTM vs S&amp;P 500 Equal Weight +15.3%, since-2005 annualised +12.5% vs +9.9%, 2022 −7.7% vs −11.6% printed alongside. Live record is only ~3 months, the full ledger (stated 509 closed trades, “every loss published too”) is members-only so completeness is unverifiable, and the simulation runs on point-in-time Compustat/FactSet while the live site names TwelveData/EDGAR — a disclosed seam. The widely repeated “AppLovin +400%” story and the old Top-10 / three-stage framing belong to the pre-2024 service, appear nowhere on the current site, and are refuted as a description of the current product.</li>
+</ul></article>
+<div class="pager"><a href="profiles-g2.html">&larr; Profiles 2</a><a href="profiles-g4.html">Profiles 4 &rarr;</a></div>
+<footer>Research by Muse Desk. This study of how trading products are packaged and
+delivered is what the <a href="../morning-map/">Morning Map</a> and the Morgue Engine
+were built from.</footer>
+</div></body></html>

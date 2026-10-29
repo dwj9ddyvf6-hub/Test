@@ -1,0 +1,457 @@
+{
+ "aurelia_gold": {
+  "name": "Gold Allocation",
+  "summary": "Adjusts how much is held in a gold fund, following the same signal system as the Nasdaq allocation.",
+  "explainer": "This strategy watches a single gold signal supplied to the desk, which says how much exposure to gold is wanted, alongside a separate Nasdaq signal that shares the same overall pot of money. It buys shares in a fund that holds physical gold when the gold signal has moved at least 0.20 away from what is currently held. Gold is held one-for-one, with no borrowed or multiplied exposure, and the combined Nasdaq and gold holdings are kept within a shared limit. It sells gold fund shares when the signal falls, and it sells all of them when the gold signal reaches zero.",
+  "instruments": "US ETFs",
+  "category": "Systematic funds"
+ },
+ "aurelia_ndx": {
+  "name": "Nasdaq Allocation",
+  "summary": "Adjusts how much is held in Nasdaq funds, using a triple-strength fund for exposure above 100%.",
+  "explainer": "This strategy watches a single Nasdaq strength signal supplied to the desk, which says how much exposure to large US technology-heavy stocks is wanted, from none upward. It buys when that signal has moved at least 0.20 away from what is currently held, or buys a new holding whenever its target changes. Exposure up to 100% is held in a Nasdaq fund; above that, part moves into a fund that moves three times as much. At least 2% sits in a short-term Treasury fund when money is left over. It sells when the signal falls, and it sells everything in this part when the signal reaches zero.",
+  "instruments": "US ETFs",
+  "category": "Systematic funds"
+ },
+ "beatendown": {
+  "name": "Beaten-Down Winners",
+  "summary": "Buys screened past winners that have fallen at least 20% from their 52-week high, then holds for 13 weeks.",
+  "explainer": "It watches a weekly screen of stocks that have already passed the desk's quality and strength checks, looking for ones whose price has been beaten down to 80% or less of their highest weekly close of the past 52 weeks \u2014 at least 20% below the high. Among those, it ranks candidates by how many of nine frozen winner patterns are present at once, combining things like big weekly moves, leadership within their industry group, and strong momentum readings; there is no minimum count, the count only sets the order. It holds at most ten positions, pauses new buys around Federal Reserve meetings and at year-end, and sells each holding after 91 days, about 13 weeks. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Pullbacks & mean reversion"
+ },
+ "bilbo_options": {
+  "name": "Compression Breakout Calls",
+  "summary": "Buys a call option when a large, well-known stock breaks upward out of a tight hourly price range.",
+  "explainer": "This strategy watches 20 U.S. stocks on hourly charts for periods when price squeezes into a tight, compressed range. The first five compressed hours form a range, watched for up to ten days. It buys one call option \u2014 a contract giving the right to buy the stock at an agreed price by an agreed date \u2014 when the first hour out of the squeeze closes above that range's high, between 10 a.m. and 3 p.m. on a weekday, with the stock above its 21-day average. The call expires in 21 to 37 days, aimed above the current price. It sells if price closes below the range's low, gives back most of a large gain, after ten trading days, or near expiry.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "capitulation": {
+  "name": "Capitulation Reversal",
+  "summary": "Buys the first sign of a turnaround after a panic sell-off climax, in halves, and exits fast.",
+  "explainer": "It watches hourly price bars, hunting for a panic climax: an hourly momentum gauge below 20, volume on the climax bar more than double the previous 20 bars, a low within 2% of the stock's 200-day average, and big daily swings \u2014 average movement above 5%. Entries also wait until the desk's fear gauge reads fearful enough. It buys at the close of the first rising bar after the climax, taking half the position first and adding the rest when the 5-day average rises through the 20-day average within five sessions. It sells at the first of: the day's average traded price, a 5% gain, an 8% loss, or three trading days; a safety stop closes it on a 25% fall from entry. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Pullbacks & mean reversion"
+ },
+ "capitulation_options": {
+  "name": "Capitulation Reversal Calls",
+  "summary": "Buys a short-dated call option when a stock shows signs of a panic sell-off ending and starting to recover.",
+  "explainer": "This strategy watches U.S. stocks for a five-part sign that a panic sell-off is ending: hourly momentum fell below 20, an extreme reading; selling volume was more than twice the previous 20 hours; the low landed within 2% of the stock's 200-day average; the next hourly bar turned green with momentum rising; and the stock's daily price swings exceed 5% of its price. When all five align, it buys one call option \u2014 a call gains in value when the price rises \u2014 expiring within seven days, priced about 2% above the current stock price. It sells when the option gains 75%, when one day remains before expiry (the date the option runs out), or if the stock falls 3% from entry. It trades stock options.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "confluence": {
+  "name": "Winner Confluence",
+  "summary": "Buys screened stocks where at least two of nine winner patterns line up at once, then holds for 13 weeks.",
+  "explainer": "It watches a weekly screen of stocks that have passed the desk's quality and strength checks, and scores each one against nine frozen winner patterns. Each pattern combines three ingredients \u2014 things like a big weekly price move, leadership within its industry group, a weak dollar backdrop, and strong momentum readings. It buys only when at least two of the nine patterns are firing on the same stock, and it ranks candidates by how many are firing, most first. It holds at most ten positions and pauses new buys around Federal Reserve meetings and in the last sessions of the year. It sells each holding after 91 days, about 13 weeks. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Rule-based systems"
+ },
+ "daily_cyan_gbm": {
+  "name": "Daily Model Score",
+  "summary": "Buys the stocks a machine-learning model scores highest each day, and holds each one for 21 trading sessions.",
+  "explainer": "It watches daily market data across a broad stock universe and feeds those features into a machine-learning model that gives every stock a score each day, grading how attractive its recent pattern looks compared with everything the model has learned. It buys when a stock's score clears a high bar \u2014 roughly the top tenth of all scores \u2014 and the stock trades at 5 dollars or more, taking the highest scores first. There is no signal from a single chart pattern here; the model's ranking is the signal. It sells each holding at the close of the 21st trading session after purchase, whatever the price has done in between. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Rule-based systems"
+ },
+ "donchian": {
+  "name": "Donchian Breakout",
+  "summary": "A classic trend-following breakout strategy: buy a close above the 20-day high, ride it, exit below the 10-day low.",
+  "explainer": "Named for Richard Donchian, this approach watches the highest and lowest prices over a set period: it tracks high, low and closing prices across the desk's stock basket, tracking each stock's highest high of the last 20 days and lowest low of the last 10 days. It buys when a stock closes above that 20-day high \u2014 a breakout to new ground. Once in, it follows the trend with a trailing stop set at twice the stock's typical daily price movement below the price. It sells when the stock closes below its 10-day low, when that trailing stop is reached, or after 20 trading days, and a safety stop sells any holding that falls 25% from its purchase price. It holds at most eight positions. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "donchian_crypto": {
+  "name": "Solana Donchian Breakout",
+  "summary": "The same classic breakout rules, run on Solana in 15-minute bars, one position at a time.",
+  "explainer": "Named for Richard Donchian, this approach watches Solana's price in 15-minute bars around the clock, tracking the highest high of the last 20 bars and the lowest low of the last 10 bars once at least 40 bars are available. It buys when Solana closes above that 20-bar high, a breakout \u2014 an equal high does not count \u2014 and only when the breakout bar traded volume. It holds a single position, with no time limit on a trade. It sells when the price closes below the 10-bar low, or when the low of a bar touches a trailing stop set at twice Solana's typical price movement, whichever happens first. It trades crypto on paper only.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "earnings_buyback": {
+  "name": "Buyback Before Earnings",
+  "summary": "Buys options on a company that recently announced a large share buyback, shortly before its earnings report.",
+  "explainer": "This strategy watches for a share buyback of at least 5% of the company, filed 15 to 30 days before a scheduled earnings report, in stocks priced at $10 or more. It buys eight to fifteen days before earnings, using options that expire 30 to 45 days out and always after the report, so the position is held through earnings. It prefers a two-part call spread about 10% wide (a spread pairs a bought option with a sold one, capping the most that can be made or lost), or buys a single call about 2% above the current price. It sells 15 trading days after earnings, when the trade gains 50%, if it loses 50%, or with five days left before expiry. It trades stock options.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "em_1587": {
+  "name": "The 15.87 Rule (SPY)",
+  "summary": "Draws five price lines for SPY each morning from yesterday's VIX using Azrael's 15.87 Rule; fades the outer lines on quiet days and trades joint SPY and QQQ breakouts on busier days, always flat by 11:30 a.m.",
+  "explainer": "This strategy trades S&P 500 index options using a system published by the trader Azrael, called the 15.87 Rule. The desk cannot trade the index itself, so the system runs on SPY, a fund that tracks the index, and every result is a SPY result. Before the open it uses yesterday's fear gauge (the VIX) divided by 15.87 to draw five price lines for the day: two outer walls, two inner shelves, and the middle magnet line. Quiet days, it buys near a wall expecting price to drift back to the magnet. Busier days, it trades only when SPY and QQQ break out of their opening ranges together. Every trade closes by 11:30 a.m.",
+  "instruments": "Index options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "ema_vwap": {
+  "name": "VWAP Pullback",
+  "summary": "Buys stocks trading at least 2% below their 20-day average traded price (VWAP \u2014 the day's average traded price, weighted by how much traded at each price), expecting a snap back to that average.",
+  "explainer": "It watches daily prices across the desk's stock basket and keeps a running 20-day average of each stock's traded price, weighted by volume \u2014 that average is the VWAP in the strategy's name, the price level where most recent trading actually happened. It buys when a stock's latest close sits at least 2% below that average, treating the gap as a short-term overreaction. It sells as soon as the price climbs back to or above that average price, its main exit. It also sells at a 5% gain, an 8% loss, or after five trading days, and a safety stop sells any holding down 25% from its purchase price. It holds at most eight positions at a time. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Pullbacks & mean reversion"
+ },
+ "ema_vwap_options": {
+  "name": "Below-Average-Price Call Spreads",
+  "summary": "Buys a two-part call spread when a stock has fallen at least 2% below its recent average traded price.",
+  "explainer": "This strategy compares each U.S. stock's closing price with its average traded price over the past 20 days, weighted by how much stock changed hands. It buys a call spread \u2014 a call gains in value when the price rises, and a spread pairs a bought option with a sold one, with limited cost and limited profit \u2014 when the close sits at least 2% below that average, betting on a bounce back. The spread uses options expiring in 14 to 30 days, bought about 2% above the current price and sold about 6% higher. It sells when the spread reaches half its maximum profit, when price climbs back to that average, after 21 days, or with seven days left before expiry. It trades stock options.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "fear_premium": {
+  "name": "Fear Premium Put Spreads",
+  "summary": "Sells a two-part put spread after a sharp one-day drop in a fast-moving stock, collecting the premium \u2014 the payment received for selling an option \u2014 for the fear.",
+  "explainer": "This strategy watches the ten stocks that move the most compared with the Nasdaq-100 fund over the past 60 days, plus two aggressive leveraged funds. After a stock falls at least 5% in a single day and its 14-day momentum reading is below 50, it sells a put spread \u2014 a put gains in value when the price falls, and a spread is a paired option trade that collects payment upfront with limited risk \u2014 using options expiring in 25 to 35 days. The sold put sits about 7% below the closing price, with a protective bought put about 10% lower. It closes the trade at half its maximum profit, after eight days, or with 21 days left before expiry. It trades stock options.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 income"
+ },
+ "free_etf": {
+  "name": "Scheduled ETF Baskets",
+  "summary": "Buys set baskets of exchange-traded funds in fixed proportions, on a set schedule near the market open.",
+  "explainer": "This strategy watches set baskets of exchange-traded funds, each with fixed proportions for its holdings, and checks that a full year, 252 trading days, of daily price history is available for every fund in a basket. It buys only between 9:35 and 9:40 a.m. Eastern, on scheduled days at the start of a basket and in the first five trading days of a month, and only when the gap between buying and selling prices is small. Spending is capped at $25,000 in a day. It sells when a holding is above its target proportion, and those sales can happen outside the morning buying window.",
+  "instruments": "US ETFs",
+  "category": "Systematic funds"
+ },
+ "free_kraken_ada_basis": {
+  "name": "Cardano Price Alignment Monitor",
+  "summary": "Watches whether Cardano's futures-style and cash prices on Kraken line up, and records the result \u2014 it never places a trade.",
+  "explainer": "This strategy watches Cardano, known as ADA, on the Kraken exchange, comparing its futures-style contract price with its cash market price to check that the two line up. The long price history it would need for that check is not currently collected, so today it cannot complete the comparison. It never buys and never sells: there is no buy trigger and no exit rule, because placing trades was never part of its job. Instead, each hour it records a status saying the history it needs is not available yet, so the gap is visible rather than hidden. It tracks crypto on paper.",
+  "instruments": "None \u2014 records checks only",
+  "category": "Crypto"
+ },
+ "free_kraken_ada_breakdown": {
+  "name": "Cardano Breakdown Short",
+  "summary": "Sells Cardano short on paper when its price breaks below its lowest level of the past 20 four-hour periods.",
+  "explainer": "This strategy watches Cardano, a cryptocurrency, in four-hour price periods on the Kraken exchange, using its dollar perpetual contract, which tracks the price without an expiry date. It sells short, meaning it bets on a fall, when a four-hour period closes below the lowest low of the previous 20 periods, about three and a third days. The sale happens eight hours after that period opened, at a live quoted price, and is for one contract on paper only. It buys back to close the position 16 hours after the entry was due, whatever the price has done by then.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "free_kraken_ada_crowded": {
+  "name": "Cardano Crowded Breakdown Short",
+  "summary": "Sells Cardano short on Kraken only when its price breaks down and buyers look crowded, then covers 16 hours later.",
+  "explainer": "This strategy watches Cardano, known as ADA, through a futures-style contract on the Kraken exchange, using four-hour price bars plus an hourly cost that traders pay to hold long positions (long means owned \u2014 a position that gains when the price rises). It sells short, a bet that the price will fall, only when two things line up: a bar closes below the lowest low of the previous 20 bars, and buyers look crowded \u2014 the latest hourly funding cost is above zero and higher than three quarters of the past 90 days of readings, with at least 30 readings on record. The trade is one contract, and it buys back to close 16 hours after entry. It trades crypto on paper.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "free_kraken_enj_spot": {
+  "name": "Enjin Spot Watch on Kraken",
+  "summary": "Watches Enjin Coin's live cash market on Kraken and records its best prices, but never places a trade.",
+  "explainer": "This strategy watches Enjin Coin, known as ENJ, on the Kraken exchange, checking the live list of buy and sell offers for the coin priced in US dollars. It is a watch-only strategy, because ENJ has no futures-style contract on Kraken, only a cash market. So it never opens a buy or a short trade, and there is no sell or exit rule to run. Instead, it records the best buy and sell prices when the order list is live and healthy. If that list is empty, or the best buy price sits above the best sell price, it records that the feed is not usable and takes no action. It tracks crypto on paper.",
+  "instruments": "None \u2014 records checks only",
+  "category": "Crypto"
+ },
+ "free_kraken_link_basis": {
+  "name": "Chainlink Price Alignment Monitor",
+  "summary": "Watches whether Chainlink's futures-style and cash prices on Kraken line up, and records the result \u2014 it never places a trade.",
+  "explainer": "This strategy watches Chainlink, known as LINK, on the Kraken exchange, comparing its futures-style contract price with its cash market price to check that the two line up. The long price history it would need for that check is not currently collected, so today it cannot complete the comparison. It never buys and never sells: there is no buy trigger and no exit rule, because placing trades was never part of its job. Instead, each hour it records a status saying the history it needs is not available yet, so the gap is visible rather than hidden. It tracks crypto on paper.",
+  "instruments": "None \u2014 records checks only",
+  "category": "Crypto"
+ },
+ "free_kraken_link_breakdown": {
+  "name": "Chainlink Breakdown Short on Kraken",
+  "summary": "Sells Chainlink short on Kraken after its price breaks below the lowest low of the past 20 four-hour bars, then covers 16 hours later.",
+  "explainer": "This strategy watches Chainlink, known as LINK, through a futures-style contract on the Kraken exchange, using four-hour price bars. It needs at least 22 completed bars before it acts. It opens a short trade, a bet that the price will fall, when a bar closes below the lowest low of the previous 20 bars. The trade starts eight hours after that signal bar opened, at a live quoted price, for one contract. It closes the short 16 hours after the entry time, whatever the price has done by then. It trades crypto on paper.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "free_kraken_link_crowded": {
+  "name": "Chainlink Crowded Breakdown Short",
+  "summary": "Sells Chainlink short on Kraken only when its price breaks down and buyers look crowded, then covers 16 hours later.",
+  "explainer": "This strategy watches Chainlink, known as LINK, through a futures-style contract on the Kraken exchange, using four-hour price bars plus an hourly cost that traders pay to hold long positions (long means owned \u2014 a position that gains when the price rises). It sells short, a bet that the price will fall, only when two things line up: a bar closes below the lowest low of the previous 20 bars, and buyers look crowded \u2014 the latest hourly funding cost is above zero and higher than three quarters of the past 90 days of readings, with at least 30 readings on record. The trade is one contract, and it buys back to close 16 hours after entry. It trades crypto on paper.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "free_opt_own_iv": {
+  "name": "Volatility Straddle",
+  "summary": "Buys a call and a put together when expected price swings look larger than option prices suggest.",
+  "explainer": "This strategy watches a forecast of how much a stock is likely to swing, compared with the swing level built into its option prices. It buys when that forecast is more than 2 points above the level in the option prices. It then buys both a call option, which gains if the stock rises, and a put option, which gains if it falls, at the same strike price \u2014 the agreed price at which the option lets you buy or sell \u2014 closest to the current stock price. Buying a call and a put together like this is called a straddle. The two are always bought together, never one alone. It sells both after ten trading sessions, or at expiry if that comes first.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "free_opt_pair": {
+  "name": "Paired Options Trade",
+  "summary": "Buys options on two different stocks together, sized using a ratio fixed in advance from past prices.",
+  "explainer": "This strategy watches two different underlying stocks as a pair, and the balance between them, which is worked out in advance from their earlier closing prices and then frozen so it cannot shift mid-trade. It buys only when that balance has been frozen in advance and both sides of the pair are available together. It buys one option on each of the two stocks at the same time, so the trade is on the pair together rather than on either stock alone. If one side cannot be completed, the completed side is closed. It sells both sides after ten trading sessions.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "free_opt_parity": {
+  "name": "Options Price Check",
+  "summary": "Checks whether call and put prices line up fairly with each other, and never places a trade.",
+  "explainer": "This strategy watches the prices of call and put options on the same stock, with the same strike price (the agreed price at which the option lets you buy or sell) and expiry date (the date the option runs out), and checks whether those prices line up with each other the way they normally should. A call gains when a stock rises and a put gains when it falls, so their prices are closely linked. It never triggers a buy: when it finds a gap between the two prices, it records what converting one position into the other would notionally cost, purely as a check. It never triggers a sell or exit either, because it holds no position. It trades no instruments.",
+  "instruments": "None \u2014 records checks only",
+  "category": "Rule-based systems"
+ },
+ "free_opt_release": {
+  "name": "Verified Event Straddle",
+  "summary": "Buys a call and a put together only on a day with a verified public event for that stock.",
+  "explainer": "This strategy watches for a verified public event scheduled for today, such as a confirmed company announcement, using a checked event timestamp rather than a rumour or an unverified listing. It buys only when such a verified event is loaded for today's session. It then buys both a call option, which gains if the stock rises, and a put option, which gains if it falls, at the same strike price \u2014 the agreed price at which the option lets you buy or sell. Buying a call and a put together like this is called a straddle. The two are always bought together, never one alone. It sells both in the trading session after the event, or at expiry if that comes first.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "free_opt_tail": {
+  "name": "Sharp Drop Put",
+  "summary": "Buys one put option when a stock falls 3% or more in a single day.",
+  "explainer": "This strategy watches how far a stock has fallen during the current trading day, looking for an unusually sharp drop rather than a slow drift lower. It buys when the stock is down 3% or more on the day and a fresh option price is available. It buys one put option, which gains in value if the stock keeps falling, so the position can help offset further losses. It sells the put after five trading sessions, if it has lost 50% of the premium paid for it (premium is simply the price paid for an option), or at expiry \u2014 the date the option runs out \u2014 if that comes first.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "free_opt_wheel": {
+  "name": "Cash-Secured Put Wheel",
+  "summary": "Sells one put option only when enough cash is set aside to buy the shares if required.",
+  "explainer": "This strategy sells one put option only when the cash set aside is at least the option's strike price (the agreed price at which the option lets you buy or sell) multiplied by 100, which is the full cost of buying 100 shares at that price. If the price falls and the shares are assigned \u2014 the seller must buy the 100 shares at the strike price \u2014 the holder then owns those shares. Later steps, including selling call options against shares owned this way, follow from that assignment rather than from this first sale. The 'wheel' is the repeating cycle of selling a put, possibly buying the shares, then selling calls against them.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 income"
+ },
+ "fwd_alpaca_ada_rsi2": {
+  "name": "Cardano Oversold Bounce",
+  "summary": "Buys Cardano on hourly bars when a fast strength gauge drops below 10 while the price stays above its 200-bar average.",
+  "explainer": "This strategy watches Cardano, known as ADA, priced in US dollars, on one-hour price bars, and it needs 200 completed bars before it can act. It buys when a two-period strength gauge called RSI falls below 10, showing a sharp short-term drop, while the price still sits above its 200-bar average and below its 5-bar average, and the average of that gauge stays below 30. It acts only within five minutes of a bar closing, on a fresh quote. It sells when the price closes back above its 5-bar average. There is no emergency stop, and each trade uses up to 10% of the money set aside for it. It trades crypto on paper.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "fwd_alpaca_enj_iu_body": {
+  "name": "Enjin Pair Watch",
+  "summary": "Set up for Enjin Coin priced in US dollars, but it places no trades because that pair is not listed on the exchange it checks.",
+  "explainer": "This strategy is set up to watch Enjin Coin, known as ENJ, priced in US dollars, but it currently places no trades at all. The pair it was built to trade is not listed on the exchange it checks, and no different coin is substituted in its place, so there is no buy trigger it can act on today. Because it never buys, it also has no sell or exit rule running. It simply stays blocked and reports why: the ENJ and US dollar pair cannot be found on that exchange. If the pair is ever listed, that would be a new decision, not an automatic start. It tracks crypto on paper.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "fwd_alpaca_link_ai_volume": {
+  "name": "Chainlink Volume Surge",
+  "summary": "Buys Chainlink on four-hour bars when trading volume jumps above twice its average, then sells on the fifth bar.",
+  "explainer": "This strategy watches Chainlink, known as LINK, priced in US dollars, on four-hour price bars, and it needs 60 completed bars before it can act. It buys when trading volume rises above twice its smoothed average volume, while the price closes above its smoothed average price and above where that bar opened, a sign buyers stepped in with unusual force. It acts only within five minutes of a bar closing, and only on a fresh, orderly quote. It sells on the fifth completed bar of the trade, counting the bar it entered on, so each holding lasts about 20 hours. There is no emergency stop. It trades crypto on paper.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "fwd_coinbase_sma200": {
+  "name": "Bitcoin Daily Buyer on Coinbase",
+  "summary": "PARKED (2026-10-16 \u2014 no SMA200 comparison or exit exists in its source chain; it submits nothing). Once a day, after checking 200 straight days of Bitcoin prices and a fresh quote, it buys a small fixed amount of Bitcoin.",
+  "explainer": "This strategy watches Bitcoin priced in US dollars on Coinbase, using daily price bars. Once a day, in the first five minutes after midnight UTC (5 hours ahead of New York), it checks that it holds a full run of 200 completed daily bars in a row, with no missing days, and that it has a fresh price quote no more than 30 seconds old. When those checks pass, it buys a small fixed amount, 0.01 Bitcoin, once for that day, and the same day never triggers twice. It sets no profit target and has no built-in sell rule in its code, so holdings are closed only outside this strategy's own signals. It trades crypto on paper.",
+  "instruments": "Crypto (paper)",
+  "category": "Crypto"
+ },
+ "gate_1h": {
+  "name": "Daily Leader, Hourly Entry",
+  "summary": "Takes the desk's strongest daily leadership signals and times the entry on hourly bars, holding for 20 hourly bars.",
+  "explainer": "It watches daily prices for stocks with at least a year of trading history, looking for a leadership event: a day when a stock earns a high leadership score and passes the desk's daily strength test. When that event fires, it switches to hourly bars from regular market hours and buys on the first hourly bar after the event day, using the finer timeframe purely to time the entry. New entries in the same stock are spaced at least 20 hourly bars apart so one event cannot trigger repeated buys. It sells after 20 hourly bars in the trade, and a safety stop sells any holding that falls 25% below its purchase price. It holds at most ten positions. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "iron_condor": {
+  "name": "Range-Bound Option Income",
+  "summary": "Sells options on both sides of a stock when option prices look unusually expensive, profiting if the stock stays in a range.",
+  "explainer": "This strategy checks whether option prices on a small list of U.S. stocks are unusually expensive versus the stock's own past year, a ranking above 50 out of 100. When they are, with no earnings report due within 45 days and the market fear gauge at or below 35, it sells a four-part option trade expiring in 30 to 45 days: one put (which gains in value when the price falls) sold below the price and one call (which gains in value when the price rises) sold above it, each with a cheaper protective option bought farther away. It collects payment upfront. It closes at half the maximum profit, if the loss reaches twice the payment collected, after 21 days, or with seven days left. It trades stock options.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 income"
+ },
+ "leader_d": {
+  "name": "Daily Leaders in a Weak Market",
+  "summary": "Buys daily leadership signals only while the broad market is in a downtrend, then holds for 20 trading days.",
+  "explainer": "It watches daily prices for stocks with at least a year of trading history, looking for a leadership event: a day when a stock earns a high leadership score and passes the desk's daily strength test. It acts on those events only while the S&P 500 fund SPY is in a downtrend \u2014 weakness in the broad market is a requirement, not a warning \u2014 and SPY itself is never bought by this strategy. Each event can trigger only one purchase, and it holds at most ten positions at a time. It sells each holding after 20 trading days, and a safety stop sells any holding that falls 25% below its purchase price. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "leader_sc": {
+  "name": "Small-Cap Leaders on Weak Days",
+  "summary": "Buys small, lightly traded stocks flagged as leaders while the broad market is falling, then holds them for about a month.",
+  "explainer": "This strategy watches the smallest, least heavily traded tenth of stocks, measured by their average weekly trading value over the past year, and it also watches whether the broad market is in a falling period. It buys when a stock in that small-company group is newly flagged by the desk's daily leader screen during that weak market period, and only if the stock has at least a year of trading history. It holds up to ten stocks at once. It sells each stock after about 20 trading days, roughly one month, and it also places a safety exit 25% below the purchase price in case the stock falls sharply.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "leaps_momentum": {
+  "name": "Long-Term Momentum Options",
+  "summary": "Copies the desk's momentum stock picks using long-dated call options instead of shares.",
+  "explainer": "This strategy watches the desk's separate momentum stock list, which holds the stocks currently favoured for their rising trends. It buys when a stock is on that list, choosing a call option, which gains in value when the price rises, with an expiry \u2014 the date the option runs out \u2014 at least a year away, priced deep below the stock's current price, and costing no more than 5% of the account for that stock. It holds up to eight stocks this way, and it may also sell short-term call options above them for extra income. It sells when a stock leaves the momentum list, when the option falls 30% from what was paid, or when under 60 days remain before that expiry date.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "legends_ema": {
+  "name": "QQQ Trend-Day Move",
+  "summary": "Trades only QQQ, and only after a strong trend day when its price never touched its 20-period average line.",
+  "explainer": "This strategy watches only QQQ, a fund that tracks 100 large US technology-heavy companies, using its 15-minute price bars during regular market hours. It looks for a strong trend day: a day when the price moved mostly in one direction, covering at least about 77% of the day's full high-to-low range, and when the price never once touched its 20-period average line during that day. When both happen, it trades at the next morning's open back toward the average line \u2014 the opposite direction to that trend day (a reversion trade). It aims to exit at that average line, protects the trade with a stop based on half of QQQ's average daily range over the past 14 days, and closes everything by 3:59 pm Eastern.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "momentum": {
+  "name": "Six-Month Momentum Leaders",
+  "summary": "Ranks stocks by their past six months of gains and buys the strongest tenth, avoiding stressed or eventful market days.",
+  "explainer": "This strategy watches a broad list of US stocks and ranks them by how much each one gained over the past 126 trading days, about six months. It buys the strongest tenth, up to ten stocks, but only from stocks priced at $5 or more that trade at least $1 million a day on average. It pauses new buys when market fear is high or jumping, around major central bank meetings, late on Fridays, and near year-end. It sells a stock if it falls 40% from its purchase price, and the list is reviewed about every 63 trading days, roughly every three months.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "momentum_rotation": {
+  "name": "Weekly Momentum Rotation",
+  "summary": "Every week, it holds the five stocks with the strongest gains over the past 60 days, in equal amounts.",
+  "explainer": "This strategy watches a broad list of US stocks and ranks them by their total gain over the past 60 trading days. Once a week it buys the top five ranked stocks it does not already own, putting about 20% of the money set aside for this strategy into each one, so the five are held in roughly equal amounts. At that same weekly check, it sells any holding that has slipped below 10th place in the ranking, or that can no longer be ranked. Each purchase also carries a safety exit 25% below its purchase price in case the stock falls sharply.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "morning_dip": {
+  "name": "Morning Dip in QQQ",
+  "summary": "On calm, orderly mornings, it places a buy order for QQQ about one typical dip below the current price.",
+  "explainer": "This strategy watches only QQQ, a fund that tracks 100 large US technology-heavy companies, using three-minute price bars between 10:00 am and noon Eastern. It measures how orderly the morning move has been over the last 16 bars, and it only acts when that movement is clean and directional rather than choppy. It then places a buy order one average price swing, measured over 14 bars, below the latest price. The target is the middle of the bar that triggered the setup, and a stop sits below the buy price. Unfilled orders are cancelled after nine minutes, filled trades are closed within 15 minutes, and everything is flat by noon.",
+  "instruments": "US stocks",
+  "category": "Pullbacks & mean reversion"
+ },
+ "phase_daily": {
+  "name": "Quiet Range Breakout",
+  "summary": "Waits while a stock trades in an unusually quiet, narrow range, then buys if it breaks above that range.",
+  "explainer": "This strategy watches stocks for quiet periods, when the daily price range squeezes unusually narrow compared with the stock's normal movement. It marks the highest and lowest prices of the first five quiet days as a box. It buys if, within the next 20 trading days, the price rises above the top of that box while the stock was already closing above its 21-day average price, and only if the price has not first fallen to the bottom of the box. It holds up to ten stocks. It sells when the price falls below a rising safety line based on the 50-day average price.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "phoenix": {
+  "name": "Phoenix Breakout",
+  "summary": "Buys breakouts to new 20-day highs in a flat-to-weak market, waiting for the first red day to enter.",
+  "explainer": "It watches daily prices for a fixed list of 19 well-known stocks and index funds, and it also tracks the S&P 500 fund SPY as its market gauge. A buy signal forms when a stock closes above its highest close of the previous 20 days while SPY is flat or down over the trailing 60 days. It does not buy immediately: it waits for the first red day \u2014 a close below that day's open \u2014 within the next five sessions, and it stays away around company earnings reports. It sells at the close of the 20th trading day after entry, with a safety stop that sells if the price ever falls 25% below the purchase price. It trades US stocks and index funds.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "po10_qqq": {
+  "name": "PO10 Nasdaq Extremes (QQQ)",
+  "summary": "Buys or shorts QQQ shares when a momentum gauge on ten-minute bars closes past its extreme lines during the morning; exits when the gauge crosses the opposite extreme, or at the close.",
+  "explainer": "This is the trader Milkman's PO10 system, run here in QQQ shares. The original trades Nasdaq futures contracts, which this account cannot trade, so QQQ shares stand in for them and every result is a QQQ result. A momentum gauge (the Saty Phase Oscillator) is computed on ten-minute QQQ bars, premarket included. When a ten-minute bar closes above +100 the system buys; below -100 it shorts. Entries happen only between 9:30 and 11:00 a.m. Eastern. It exits when a bar closes past the opposite extreme, and whatever is still open is sold at 3:59 p.m. By design there is no stop-loss and no profit target. Each trade is sized to move like two micro Nasdaq futures contracts.",
+  "instruments": "US stocks",
+  "category": "Rule-based systems"
+ },
+ "qqq_put_ladder": {
+  "name": "QQQ Weekly Put Ladder",
+  "summary": "Sells three cash-backed QQQ put options about once a week, far below the current price, and manages each layer as expiry \u2014 the date the option runs out \u2014 nears.",
+  "explainer": "This strategy watches QQQ, a fund of 100 Nasdaq companies. Its puts sit at different prices and dates, like rungs of a ladder. Once a week, if QQQ is not down over five trading days, it sells three puts expiring in 45 days, struck far below the price, so they gain value only if QQQ falls a long way. Each sale is cash-backed; it holds at most 12 contracts. Near 21 days left, it moves a winning layer to a higher strike if QQQ rose and the put halved in value, and moves or closes a pressured layer. It buys back any put at five days left. It trades stock options.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 income"
+ },
+ "qullamaggie": {
+  "name": "Leader Breakout",
+  "summary": "Buys the market's strongest stocks after a big run and a tight pause, when they break out in the first minutes of the day.",
+  "explainer": "This strategy watches stocks that rank in the top 2% for gains over the past month, three months, or six months, and that trade at least $5 million a day on average. It looks for a stock that has already risen at least 30% over about three months, then paused for 10 days in a narrow range no wider than 28%, with the range getting tighter and prices holding near their 10-day and 20-day averages. It buys when the price breaks above that pause in the first five minutes of trading. It sells a third after three or more profitable days, and sells the rest if the price falls below its stop or below its 10-day or 20-day average.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "qullamaggie_paper": {
+  "name": "Leader Breakout \u2014 Second Run",
+  "summary": "A second, separate run of the Leader Breakout approach, carrying accepted breakout buys onto the paper account inside its own fixed budget.",
+  "explainer": "This strategy watches the same kind of stocks as the desk's Leader Breakout strategy: strong, heavily traded US stocks breaking out of a tight pause after a big run. A separate scan prepares the possible buys and checks each one first. This second run buys only long positions it has accepted, skips short bets, and never trades the three funds QQQ, TQQQ or GLD, which belong to another part of the desk, and never buys the same stock twice in one session. All of its buys together must fit inside a fixed $100,000 budget of its own. Positions it opens are then managed under the same breakout rules, including the stop price recorded with each buy. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "red_day_reversal": {
+  "name": "Red-Day Reversal",
+  "summary": "Buys strong stocks that have just had a sharp one-day drop, looking for a quick bounce within three days.",
+  "explainer": "This strategy watches stocks that are still trading above their average price of the past 200 days, which keeps it focused on stocks in longer-term uptrends. It buys when a stock falls 3% or more in a single day and a short-term strength gauge called RSI, measured over two days, drops to 10 or below, a sign the selling may be overdone. It holds no more than eight stocks at once and avoids buying just before a company reports earnings. It sells when the stock rises 4% from the purchase price, falls 2% below it, or after three trading days, whichever comes first.",
+  "instruments": "US stocks",
+  "category": "Pullbacks & mean reversion"
+ },
+ "rsi_meanrev": {
+  "name": "Oversold Bounce",
+  "summary": "Buys stocks whose short-term strength gauge has fallen to an extreme low, looking for a bounce back up.",
+  "explainer": "This strategy watches US stocks for signs that recent selling has gone too far, too fast. It uses a short-term strength gauge called RSI, measured over two days, which scores a stock from 0 to 100 based on its recent gains and losses. It buys when that score falls to 10 or below. It holds no more than eight stocks at once, and each position is kept small. It sells when the stock rises 5% from the purchase price, falls 8% below it, or after five trading days have passed, whichever happens first. If none of those happen sooner, the time limit ends the trade.",
+  "instruments": "US stocks",
+  "category": "Pullbacks & mean reversion"
+ },
+ "rsi_meanrev_options": {
+  "name": "Oversold Snapback Call Spreads",
+  "summary": "Buys a two-part call spread when a stock in a long-term uptrend becomes extremely oversold over two days.",
+  "explainer": "This strategy watches U.S. stocks that are still in a long-term uptrend, with price above their 200-day average, for a sudden short-term washout. It buys a call spread, a paired option trade with limited cost and limited profit, when a very fast two-day momentum reading drops below 10, an extremely oversold level. The spread uses options expiring in 14 to 30 days, bought at or just below the current price and sold at a strike about 8% higher (the strike is the agreed price at which the option lets you buy or sell). It sells when the spread reaches half its maximum profit, when that momentum reading climbs above 70, showing the snapback has run its course, or with seven days left before expiry. It trades stock options.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "rule_1d_cyan_smallcap": {
+  "name": "Small-Cap Pattern Signal, $5 to $10",
+  "summary": "Buys small companies priced between $5 and $10 when a daily pattern model flags them, then holds for about a month.",
+  "explainer": "This strategy watches small US companies whose shares trade between $5 and $10, that trade at least $1 million a day on average over the past 20 days, and whose total company value is below roughly $2.4 billion. A computer model scores each stock's daily price pattern, and the strategy buys only when that model raises its specific one-day flag and two of its pattern readings fall inside set ranges. If the company's value is unknown, it does not buy. It holds up to ten stocks at once and sells each one after 21 trading days, about one month, regardless of whether it has risen or fallen in the meantime.",
+  "instruments": "US stocks",
+  "category": "Rule-based systems"
+ },
+ "rule_1d_green_tom": {
+  "name": "Turn-of-Month Momentum",
+  "summary": "Buys strong stocks showing a fresh daily buy signal right around the turn of the month, then holds for about three months.",
+  "explainer": "This strategy watches liquid U.S. stocks priced at $5 or more, with at least $1 million in average daily dollar trading over 20 days, for a strong daily buy signal. It buys at the next session's close only when three extra checks pass: the date is the last trading day of the month or one of the first three trading days of the next month, the stock's return over roughly six months is at least 65%, and a short-term price-dispersion score \u2014 how widely recent prices are spread out \u2014 sits in a narrow band between about 2.1% and 2.9%. It sells after 63 trading days, roughly three months. It trades U.S. stocks.",
+  "instruments": "US stocks",
+  "category": "Rule-based systems"
+ },
+ "rule_1h_cyan_raw": {
+  "name": "Hourly Breakout Burst",
+  "summary": "Buys a stock for a few hours after an unusually powerful one-hour buy signal while chip stocks are trending up.",
+  "explainer": "This strategy watches a fixed basket of liquid U.S. stocks priced at $5 or more, with at least $1 million in average daily dollar trading, on one-hour charts. It buys on the next hourly bar when a strong hourly buy signal fires and that hour was exceptionally forceful: the hour's price range is at least 2.05 times the stock's typical 14-hour range, a momentum oscillator's two lines are separated by at least 6.88 points, and a major semiconductor fund is in a weekly uptrend. It sells after seven hourly bars. It holds at most ten positions at once and trades U.S. stocks.",
+  "instruments": "US stocks",
+  "category": "Rule-based systems"
+ },
+ "rule_1w_cyan_mom_adx": {
+  "name": "Weekly Momentum Trend",
+  "summary": "Buys strongly rising stocks after a weekly buy signal confirms a powerful, well-established uptrend, then holds for about six months.",
+  "explainer": "This strategy watches liquid U.S. stocks priced at $5 or more, with at least $1 million in average daily dollar trading over 20 days, for a strong weekly buy signal. It buys at the next session's close only when the trend behind the signal is powerful and proven: the stock has gained at least about 44% over the past 126 trading days, a trend-strength reading is at least 25.8, which marks a firmly established trend, and the stock's trading-volume measure stays below a set ceiling. It sells after 126 trading days, roughly six months. It holds at most ten positions and trades U.S. stocks.",
+  "instruments": "US stocks",
+  "category": "Rule-based systems"
+ },
+ "rule_1w_swing_beta_wt": {
+  "name": "Weekly High-Beta Swing",
+  "summary": "Buys fast-moving, market-sensitive stocks after a weekly swing signal, then holds for about six months.",
+  "explainer": "This strategy watches liquid U.S. stocks priced at $5 or more, with at least $1 million in average daily dollar trading over 20 days, for a weekly swing buy signal. It buys at the next session's close only when the stock tends to move much more than the broad market, moving at least 1.35 times as much as the S&P 500 fund (that market-sensitivity measure is called beta \u2014 high-beta stocks move more than the market), a momentum oscillator reading is at least 25.9, and a set of trend averages is rising with a slope of at least about 0.95%. It sells after 126 trading days, roughly six months. It holds at most ten positions and trades U.S. stocks.",
+  "instruments": "US stocks",
+  "category": "Rule-based systems"
+ },
+ "saty_day": {
+  "name": "Saty Day Trading",
+  "summary": "Trades SPY options intraday on a fixed set of price levels drawn from yesterday's close: buys when price reaches the day's gate level, sells at set targets, and is flat by the close.",
+  "explainer": "A day-trading system on one stock index fund. Before the open it draws a ladder of price levels from yesterday's close and the recent daily range. If the price climbs to the buying level above yesterday's close, it buys a call option expiring that same day; if it falls to the matching level below, it buys a put option. It sells half at the middle level and the rest at the higher targets, sells everything if a ten-minute bar closes back through the nearest level, and closes whatever is left before the end of the day. Nothing is held overnight.",
+  "instruments": "Index options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "saty_sol": {
+  "name": "Saty Day Trading \u2014 ChatGPT Design",
+  "summary": "The ChatGPT-designed version of the same Saty day system: trades SPY options intraday between fixed levels from yesterday's close, one position at a time, at most half a percent of its account in premium on a position, flat by the close.",
+  "explainer": "A second design of the Saty day-trading system, written by ChatGPT from the same research and run alongside the desk's own version. Before the open it draws a ladder from yesterday's close: a trigger level, buying levels above and below, and a target. It buys a call or put at the first crossing of a buying level, sells everything at the target, and sells everything if a ten-minute bar closes through the trigger. A bullish rule buys on a three-minute close above the trigger. One position at a time; trades stop for the day if down one percent. It trades SPY options expiring in two to four days. Its preferred index-options version cannot run here (no live index feed, no OPRA data), so it runs its named SPY research-book profile.",
+  "instruments": "Index options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "saty_sol_0dte": {
+  "name": "Saty Day Trading \u2014 ChatGPT Design, Same-Day Expiry",
+  "summary": "The ChatGPT-designed Saty day system in a same-day-expiry version: trades SPY options expiring that day between fixed levels from yesterday's close, one position at a time, at most half a percent of its account in premium on a position, flat by the close.",
+  "explainer": "A same-day-expiry version of the ChatGPT-designed Saty day system, added at the owner's request. Before the open it draws the same ladder from yesterday's close: a trigger level, buying levels above and below, and a target. It buys a call or put at the first crossing of a buying level, sells everything at the target, and sells everything if a ten-minute bar closes through the trigger. A bullish rule buys on a three-minute close above the trigger. One position at a time; trading stops for the day if down one percent. The original version, trading options expiring in two to four days, runs unchanged beside it.",
+  "instruments": "Index options",
+  "category": "Options \u2014 directional & hedges"
+ },
+ "snapback": {
+  "name": "Beaten-Down Small-Cap Snapback",
+  "summary": "Buys small, beaten-down stocks that have fallen at least 20% in 13 weeks and still trade in wide daily swings.",
+  "explainer": "This strategy watches the smallest, least heavily traded tenth of stocks, measured by their average weekly trading value over the past year. It looks for stocks that have fallen 20% or more over the past 13 weeks, that are not sitting right at their lowest price of the past year, and whose daily price swings over the past 20 days are among the widest in that small-company group. It buys the stocks that match all of those conditions, ranked by how wide their daily swings are. It then holds each stock for 91 days, about three months, before selling, and it waits before buying the same stock again.",
+  "instruments": "US stocks",
+  "category": "Pullbacks & mean reversion"
+ },
+ "spx_premium": {
+  "name": "Weekly Index Premium",
+  "summary": "Sells a weekly put spread on XSP, a mini S&P 500 index, priced one week of typical movement below the market.",
+  "explainer": "This strategy watches the S&P 500 through its smaller traded version, using the prior week's close and its average weekly movement over 14 weeks. It sells on the first trading day of the week, at about 10 a.m. Eastern, but only if the account is worth at least $37,000 and the sale brings in a positive credit. It sells a put option (a put gains in value when the price falls) about one average weekly move below the prior close, and buys a second put 5 points lower for protection, both expiring that week. It holds the pair until the week's last trading day, when both are closed for settlement. If a week's trade loses at least 90% of the 5-point width, it sits out four weeks before selling again.",
+  "instruments": "Index options",
+  "category": "Options \u2014 income"
+ },
+ "tensor_red_dip": {
+  "name": "Tensor Red-Day Dips",
+  "summary": "Buys strong swing signals from Tensor, the desk's pattern-scoring engine, only on fear days, when the market is down sharply and the stock itself is red too.",
+  "explainer": "It watches two things at once: how far the Nasdaq-100 fund QQQ has fallen during the day, and the fresh swing signals coming from the desk's pattern-scoring engine. It buys only on a fear day \u2014 QQQ down at least 1.5% on the day \u2014 and only when the stock itself is also down that day and its signal carries a confidence score of at least 7. It holds at most five positions at a time. It sells as soon as any one of three things happens: the stock rises 3% from the purchase price, falls 8% from it, or the third trading day after purchase arrives. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Tensor strategies"
+ },
+ "tensor_swing": {
+  "name": "Tensor Swing",
+  "summary": "Buys high-confidence swing setups, graded by Tensor, the desk's pattern-scoring engine, on fearful red days \u2014 dips in rising stocks and reversals after deep falls.",
+  "explainer": "It watches hourly price charts across its stock universe, using a pattern-scoring engine that grades each stock for swing setups such as pullbacks and reversals. It puts a stock forward as a buy only when the engine's confidence score reaches at least 7, the stock is not held, and it has not run too far and turned euphoric. The strategy's own rules also sell: it exits on a bearish trigger, on a time stop, and at its target. It trades US stocks.",
+  "instruments": "US stocks",
+  "category": "Tensor strategies"
+ },
+ "ts_momentum_decile": {
+  "name": "One-Year Momentum Top Tenth",
+  "summary": "Once a month, it buys the tenth of stocks with the best one-year gains, spread evenly and with no single industry taking over.",
+  "explainer": "This strategy watches a broad list of US stocks and ranks them by their gain over the past 252 trading days, about one year. Once a month it buys the top tenth of that ranking, but only stocks with at least a year of history whose typical daily trading value \u2014 the median over the past 63 trading days \u2014 is at least $1 million, leaving out stocks with a suspicious pattern of long flat periods followed by an extreme jump. The money is spread evenly across the chosen stocks, and no single known industry group may make up more than a quarter of the holdings. It has no price-based stop; instead, it sells any stock that drops out of the top tenth at the next monthly check.",
+  "instruments": "US stocks",
+  "category": "Breakout & momentum"
+ },
+ "vix_hedge": {
+  "name": "Market Crash Insurance",
+  "summary": "Buys long-dated call options on a volatility fund when markets are calm, as insurance against a sudden crash.",
+  "explainer": "This strategy watches the market's fear gauge, which tracks expected stock-market swings. When markets are complacent, with the gauge below 16 or sitting in its lowest quarter of the past 30 days, it buys call options (a call gains in value when the price rises) on a volatility fund that tends to jump when fear spikes. The options expire in 60 to 110 days, aimed near 90, with a strike price \u2014 the agreed price at which the option lets you buy or sell \u2014 about 20% above the fund's current price, and the position is kept small at about 1% of the account. It sells if the options double in value, if the fear gauge spikes above 30, or when 21 days remain before expiry. It trades stock options.",
+  "instruments": "Stock options",
+  "category": "Options \u2014 directional & hedges"
+ }
+}

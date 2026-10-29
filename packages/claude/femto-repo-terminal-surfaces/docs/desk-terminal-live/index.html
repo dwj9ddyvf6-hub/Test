@@ -1,0 +1,1898 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Muse Desk is a paper trading research desk: 65 automated strategies running on a paper account, with every figure read live from the broker account and the desk's permanent record.">
+  <meta name="theme-color" content="#131722">
+  <link rel="canonical" href="https://dwj9ddyvf6-hub.github.io/Femto/docs/desk-terminal-live/">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Muse Desk">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Muse Desk">
+  <meta property="og:title" content="Muse Desk">
+  <meta property="og:description" content="Muse Desk is a paper trading research desk: 65 automated strategies running on a paper account, with every figure read live from the broker account and the desk's permanent record.">
+  <meta property="og:url" content="https://dwj9ddyvf6-hub.github.io/Femto/docs/desk-terminal-live/">
+  <meta property="og:image" content="https://dwj9ddyvf6-hub.github.io/Femto/docs/desk-terminal-live/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Muse Desk — a paper trading research desk">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Muse Desk">
+  <meta name="twitter:description" content="Muse Desk is a paper trading research desk: 65 automated strategies running on a paper account, with every figure read live from the broker account and the desk's permanent record.">
+  <meta name="twitter:image" content="https://dwj9ddyvf6-hub.github.io/Femto/docs/desk-terminal-live/og-card.png">
+  <title>Muse Desk</title>
+<style>
+    :root {
+      color-scheme: dark;
+      --bg:#0e1312; --panel:#161d1b; --panel-2:#1e2624; --ink:#e7ebe8; --ink-dim:#b4bab5; --muted:#8c948d;
+      --line:#27302d; --line-strong:#414d47; --gold:#c9a24d; --gold-text:#dcbc72; --accent:#34c3a5; --accent-pale:#14332b;
+      --positive:#2ea86f; --positive-bg:#122a1e; --negative:#e05d55; --negative-bg:#2f1d1f;
+      --warning:#d9a441; --warning-bg:#2c2312; --info:#6398cf; --info-bg:#182635;
+      --track:#212a27;
+      --sans:"Aptos", "Avenir Next", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+      --display:"Iowan Old Style", Charter, Georgia, serif;
+      --mono:"SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background-color:var(--bg);background-image:radial-gradient(1100px 480px at 50% -120px,#1a2a24 0,rgba(26,42,36,0) 70%);background-repeat:no-repeat;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    button{font:inherit}
+    .shell{max-width:1480px;margin:0 auto;padding:26px 20px 68px}
+    .masthead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:36px;align-items:end;padding:12px 2px 23px;border-top:4px solid var(--accent);border-bottom:1px solid var(--line-strong)}
+    h1{margin:0;font-family:var(--display);font-size:clamp(31px,3.7vw,50px);line-height:1.02;letter-spacing:-.035em;font-weight:700}
+    .byline{margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.5}
+    .snapshot{text-align:right;color:var(--muted);font-size:11px;line-height:1.5;letter-spacing:.07em;text-transform:uppercase}.snapshot strong{display:block;margin:3px 0 1px;color:var(--ink);font-family:var(--mono);font-size:14px;letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums}
+    .statusbar{display:flex;flex-wrap:wrap;gap:8px;padding:14px 0 0}
+    .badge{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border:1px solid var(--line);border-radius:3px;background:var(--panel);font-size:12px;font-weight:600;letter-spacing:.025em;text-transform:uppercase;white-space:nowrap}
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+    .badge.good .dot{background:var(--positive)}.badge.warn .dot{background:var(--warning)}.badge.bad .dot{background:var(--negative)}
+    .tabs{display:flex;gap:2px;position:sticky;top:0;z-index:20;width:max-content;margin:18px 0 22px;border:1px solid var(--line-strong);border-radius:3px;background:rgba(19,23,34,.97);padding:3px}
+    .tab{appearance:none;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);padding:10px 19px 9px;font-size:12px;font-weight:700;letter-spacing:.075em;cursor:pointer}
+    .tab:hover{color:var(--ink);background:var(--panel)}.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);background:var(--panel)}
+    .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+    .tabpanel[hidden]{display:none}
+    .grid{display:grid;gap:18px}.grid.two{grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr)}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:3px;min-width:0}
+    .panel + .panel,.grid + .panel,.panel + .grid{margin-top:18px}
+    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 20px 16px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+    .panel-head h2,.panel-head h3{margin:0;font-size:16px;line-height:1.25;letter-spacing:.055em;text-transform:uppercase;font-weight:700}
+    .panel-head p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+    .panel-body{padding:20px}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line)}
+    .metric{padding:22px 20px 20px;border-right:1px solid var(--line)}.metric:last-child{border-right:0}
+    .metric-label{display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px}
+    .metric-value{font-family:var(--mono);font-size:clamp(22px,2.35vw,32px);font-weight:600;letter-spacing:-.035em;white-space:nowrap;font-variant-numeric:tabular-nums slashed-zero}
+    .metric-sub{display:block;margin-top:6px;font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.45}
+    .positive{color:var(--positive)!important}.negative{color:var(--negative)!important}.muted{color:var(--muted)!important}
+    .num{font-family:var(--mono);font-variant-numeric:tabular-nums slashed-zero}
+    .exposure-meter{position:relative;height:10px;background:var(--track);border:1px solid var(--line);border-radius:2px;overflow:hidden;margin:14px 0 8px}.exposure-meter span{display:block;height:100%;background:var(--accent)}.exposure-meter i{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.72)}.exposure-meter i:nth-of-type(1){left:25%}.exposure-meter i:nth-of-type(2){left:50%}.exposure-meter i:nth-of-type(3){left:75%}
+    .kv{display:grid;grid-template-columns:minmax(130px,1fr) auto;gap:10px 18px;align-items:baseline}.kv > div:nth-child(odd){color:var(--muted)}.kv > div:nth-child(even){text-align:right;font-family:var(--mono);font-weight:650;font-size:14px;font-variant-numeric:tabular-nums}.kv.emphasis > div:nth-child(even){font-size:16px;font-weight:750;color:var(--ink)}
+    .table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.5}th{text-align:left;color:var(--muted);font-size:11px;letter-spacing:.045em;text-transform:uppercase;font-weight:600;background:var(--panel-2);border-bottom:1px solid var(--line);padding:10px 12px;white-space:nowrap}td{border-bottom:1px solid var(--line);padding:11px 12px;vertical-align:top}tbody tr:nth-child(even){background:#1a212e}tbody tr:last-child td{border-bottom:0}td.num,th.num{text-align:right;white-space:nowrap}td.symbol{font-family:var(--mono);font-weight:700;overflow-wrap:anywhere}td.positive,td.negative{font-size:14px;font-weight:750}td.pnl-major.positive{background:var(--positive-bg);box-shadow:inset 3px 0 0 var(--positive)}td.pnl-major.negative{background:var(--negative-bg);box-shadow:inset 3px 0 0 var(--negative)}
+    .pill{display:inline-block;border:1px solid var(--line);border-radius:2px;padding:3px 6px;font-size:11px;line-height:1.25;font-weight:600;text-transform:uppercase;letter-spacing:.02em;background:var(--panel-2);white-space:nowrap}.pill.good{color:var(--positive);background:var(--positive-bg);border-color:#1e4d3e}.pill.info{color:var(--info);background:var(--info-bg);border-color:#2b4156}
+    .sleeves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.sleeve{position:relative;padding:19px 20px 18px;border-bottom:1px solid var(--line);min-width:0}.sleeve:nth-child(odd){border-right:1px solid var(--line)}.sleeve:nth-last-child(-n+2){border-bottom:0}.sleeve-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.sleeve h3{font-family:var(--display);font-size:18px;line-height:1.25;letter-spacing:-.01em;margin:0}.sleeve p{font-size:13px;line-height:1.6;color:var(--muted);margin:8px 0 0;max-width:72ch}.sleeve-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:12px}
+    .footnote{margin:18px 2px 0;color:var(--muted);font-size:12px;line-height:1.55}
+    .mast-tools{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+    .explainer{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+    .explainer summary{cursor:pointer;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.04em;padding:6px 0;list-style:none}
+    .explainer p{margin-top:8px}
+    .explainer .explainer-inst{color:var(--ink);font-weight:600;font-size:12px}
+    .feature-explainer{margin:12px 20px 16px;border:1px solid var(--line);border-radius:3px;padding:2px 14px 10px;background:var(--panel-2)}
+    .feature-explainer.fx-body{margin:0 0 14px}
+    .feature-explainer .explainer-body p{font-size:13.5px;line-height:1.6;color:var(--ink-dim);margin:6px 0 0}
+    .feature-explainer summary{font-size:12.5px;text-transform:none;letter-spacing:.02em}
+    .pipeline{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:4px 0 20px}
+    .pipe-step{flex:1 1 120px;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:3px;padding:12px 14px}
+    .pipe-step strong{display:block;font-size:14px;margin-bottom:4px}
+    .pipe-step span{color:var(--muted);font-size:12px;line-height:1.5;display:block}
+    .pipe-arrow{align-self:center;color:var(--accent);font-weight:700;font-size:18px}
+    .arch-section{margin-bottom:22px}
+    .arch-section h3{font-size:15px;margin:0 0 8px;letter-spacing:.03em}
+    .arch-section p,.arch-section li{font-size:14px;line-height:1.65;color:var(--ink-dim)}
+    .arch-section ul,.arch-section ol{margin:6px 0 6px 20px;padding:0}
+    .unavailable{border:1px solid var(--line-strong);border-radius:3px;padding:18px;background:var(--panel-2)}
+    @media (max-width:900px){.grid.two{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.metric:nth-child(2){border-right:0}.metric:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+    @media (max-width:640px){body{font-size:15px;line-height:1.55}.shell{padding:14px 10px 44px}.masthead{grid-template-columns:1fr;gap:14px;padding-bottom:16px}.mast-tools{align-items:flex-start}.snapshot{text-align:left}.tabs{width:auto;margin:14px -7px 16px;padding:3px;gap:0}.tab{flex:1;padding:10px 3px 9px;font-size:11px}.metrics{grid-template-columns:1fr 1fr}.metric{padding:15px 13px}.metric-value{font-size:19px}.panel-head,.panel-body{padding-left:13px;padding-right:13px}.panel-head h2,.panel-head h3{font-size:14px}.sleeves{grid-template-columns:1fr}.sleeve{padding:15px 13px}.sleeve:nth-child(odd){border-right:0}.sleeve:nth-last-child(2){border-bottom:1px solid var(--line)}.table-wrap{overflow-x:visible}.table-wrap table,.table-wrap thead,.table-wrap tbody,.table-wrap th,.table-wrap td,.table-wrap tr{display:block}.table-wrap thead{display:none}.table-wrap tr{padding:9px 12px;border-bottom:1px solid var(--line)}.table-wrap tr:last-child{border-bottom:0}.table-wrap td{display:grid;grid-template-columns:minmax(96px,.42fr) minmax(0,1fr);gap:12px;border:0;padding:5px 0;text-align:left!important;white-space:normal!important}.table-wrap td:before{content:attr(data-label);color:var(--muted);font:600 11px/1.5 var(--sans);text-transform:uppercase;letter-spacing:.035em}.table-wrap td.symbol{font-size:14px}}
+    @media (max-width:460px){.metric-value{font-size:18px}}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  
+    .pos-legend{margin:0;padding:12px 20px;border-bottom:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.55}
+    .group-head td{background:var(--accent-pale);font-weight:700;font-size:13px}
+    .group-total td{font-weight:700;border-top:2px solid var(--line-strong)}
+    .glossary{margin:0 20px 18px;border:1px solid var(--line);border-radius:3px;padding:14px 18px;background:var(--panel)}
+    .glossary h3{margin:0 0 8px;font-size:14px;letter-spacing:.04em;text-transform:uppercase}
+    .glossary ul{margin:0;padding:0;list-style:none;columns:2;column-gap:32px}
+    .glossary li{margin:0 0 7px;font-size:13.5px;line-height:1.5;break-inside:avoid}
+    @media (max-width:700px){.glossary ul{columns:1}}
+
+    .strat-tools{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;padding:16px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+    .tool-field{display:flex;flex-direction:column;gap:5px;flex:1 1 220px;min-width:0}
+    .tool-field label{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+    .tool-field input,.tool-field select{font:inherit;font-size:14px;padding:9px 10px;border:1px solid var(--line-strong);border-radius:3px;background:var(--panel);color:var(--ink);width:100%}
+    .tool-field input:focus-visible,.tool-field select:focus-visible,.tool-btn:focus-visible,.back-top:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .tool-actions{display:flex;flex-wrap:wrap;gap:8px}
+    .tool-btn{appearance:none;border:1px solid var(--line-strong);border-radius:3px;background:var(--panel-2);color:var(--ink);padding:9px 13px;font-size:13px;font-weight:600;cursor:pointer}
+    .tool-btn:hover{background:var(--accent-pale)}
+    .strat-count{flex:1 1 100%;margin:0;color:var(--muted);font-size:13px}
+    .sleeves.grouped{display:block}
+    .cat-group{border-bottom:1px solid var(--line)}
+    .cat-group:last-child{border-bottom:0}
+    .cat-head{margin:0;padding:14px 20px 4px;font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+    .cat-head .cat-count{color:var(--muted);font-weight:600;letter-spacing:0;text-transform:none}
+    .strat-empty{padding:22px 20px;color:var(--muted);font-size:14px}
+    .back-top{position:fixed;right:18px;bottom:18px;z-index:30;border:1px solid var(--line-strong);border-radius:3px;background:var(--accent);color:#fff;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+    .back-top[hidden]{display:none}
+    .meter-scale{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-family:var(--mono);margin:2px 0 10px}
+    .stack{margin:12px 0 6px}
+    .stack-bar{display:flex;height:14px;border:1px solid var(--line);border-radius:2px;overflow:hidden;background:var(--track)}
+    .stack-bar span{display:block;height:100%;min-width:2px}
+    .stack-legend{margin:8px 0 0;padding:0;list-style:none}
+    .stack-legend li{display:flex;align-items:baseline;gap:8px;font-size:13px;margin:4px 0}
+    .stack-legend .sw{flex:0 0 10px;width:10px;height:10px;border-radius:2px;align-self:center}
+    .stack-legend .sv{margin-left:auto;font-family:var(--mono);font-weight:650;white-space:nowrap}
+    .catmix{padding:16px 20px 6px;border-bottom:1px solid var(--line)}
+    .catmix h3{margin:0 0 10px;font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink)}
+    .catmix-row{display:grid;grid-template-columns:minmax(150px,240px) 1fr 34px;gap:10px;align-items:center;margin:5px 0;font-size:12.5px}
+    .catmix-row .cm-name{color:var(--ink-dim)}
+    .catmix-track{height:9px;background:var(--track);border-radius:2px;overflow:hidden}
+    .catmix-fill{display:block;height:100%}
+    .catmix-row .cm-n{font-family:var(--mono);text-align:right;color:var(--muted)}
+    .sleeve.holding{box-shadow:inset 4px 0 0 var(--positive);background:#17281f}
+    .sharebar{display:inline-block;vertical-align:middle;width:52px;height:7px;background:var(--track);border-radius:2px;overflow:hidden;margin-right:7px}
+    .sharebar i{display:block;height:100%;background:var(--accent)}
+    @media (max-width:640px){.catmix{padding:13px}.catmix-row{grid-template-columns:minmax(110px,1fr) 1fr 30px}}
+    @media (max-width:640px){.strat-tools{padding:13px}.tool-field{flex:1 1 100%}.cat-head{padding-left:13px;padding-right:13px}}
+
+    /* ===== Polish pass: depth, motion, states, richness ===== */
+    ::selection{background:var(--accent-pale);color:var(--ink)}
+    body{background:linear-gradient(180deg,#181e2c 0,var(--bg) 340px)}
+    .panel{box-shadow:0 1px 2px rgba(29,42,37,.05),0 4px 14px rgba(29,42,37,.04)}
+    .tabs{box-shadow:0 2px 8px rgba(29,42,37,.10)}
+    .masthead{background:linear-gradient(180deg,rgba(227,238,233,.55),rgba(227,238,233,0));padding-left:10px;padding-right:10px;margin:0 -10px}
+    .brand-mark{display:inline-block;vertical-align:-6px;margin-right:12px}
+    .tab,.tool-btn,.back-top,.explainer summary{transition:background-color .15s ease,color .15s ease,border-color .15s ease,transform .1s ease}
+    .tab:focus-visible{outline-offset:2px}
+    .tool-btn:active,.back-top:active{transform:translateY(1px);background:var(--accent-pale)}
+    .tab:active{background:var(--accent-pale)}
+    .exposure-meter span,.stack-bar span,.catmix-fill,.sharebar i{transition:width .45s ease}
+    tbody tr{transition:background-color .12s ease}
+    tbody tr:hover{background:var(--accent-pale)}
+    tbody tr:nth-child(even){background:var(--panel-2)}
+    tbody tr.group-head:hover,tbody tr.group-total:hover{background:inherit}
+    .explainer summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .explainer summary::after{content:"\25B8";float:right;color:var(--accent);font-size:11px}
+    .explainer[open ] summary::after{content:"\25BE"}
+    .sleeve{transition:background-color .15s ease}
+    .sleeve:hover{background:var(--panel-2)}
+    .sleeve.holding:hover{background:#1a2f24}
+    .unavailable{border-left:4px solid var(--warning);background:var(--warning-bg);padding:20px}
+    .unavailable strong{font-size:15px}
+    .glossary{border-radius:3px}
+    .sleeve:nth-last-child(-n+2){border-bottom:1px solid var(--line)}
+    .sleeve:last-child{border-bottom:0}
+    .sleeve:nth-last-child(2):nth-child(even){border-bottom:0}
+    @media (max-width:640px){.sleeve:nth-last-child(2):nth-child(even){border-bottom:1px solid var(--line)}.sleeve:last-child{border-bottom:0}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+    .skel{background:var(--track);border-radius:2px;animation:pulse 1.6s ease-in-out infinite}
+    .loading-note{color:var(--muted);font-size:13.5px;display:flex;align-items:center;gap:9px;padding:6px 0}
+    .loading-note::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite;flex:0 0 9px}
+    .metric-skel{height:86px;margin:22px 20px 20px}
+    #accountMetrics{min-height:128px}
+    #positions{min-height:120px}
+    .empty-state{text-align:center;padding:30px 20px;color:var(--muted);font-size:14px}
+    .empty-state .empty-dot{display:block;width:11px;height:11px;border-radius:50%;background:var(--gold);margin:0 auto 10px}
+    .empty-state button{margin-top:12px}
+    .strat-empty{text-align:center;padding:30px 20px}
+    .noscript-note{margin:16px 0}
+    .tab svg{vertical-align:-2px;margin-right:6px}
+    .metric-label svg{vertical-align:-2px;margin-right:5px}
+    footer.site-footer{margin:26px 2px 0;padding-top:16px;border-top:1px solid var(--line-strong);color:var(--muted);font-size:12.5px;line-height:1.6;display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline}
+    footer.site-footer .foot-brand{font-family:var(--display);font-size:15px;color:var(--ink);font-weight:700}
+    footer.site-footer a{color:var(--accent);font-weight:600}
+    .waffle{display:flex;flex-wrap:wrap;gap:5px;padding:14px 20px 4px}
+    .waffle i{width:13px;height:13px;border-radius:50%;border:2px solid;display:block}
+    .waffle-note{padding:6px 20px 12px;color:var(--muted);font-size:13px;border-bottom:1px solid var(--line)}
+    .matrix-wrap{overflow-x:auto;padding:6px 20px 16px}
+    table.matrix{font-size:12px;width:auto;min-width:100%}
+    table.matrix td{text-align:center;font-family:var(--mono);border-bottom:1px solid var(--line);padding:7px 9px}
+    table.matrix th{white-space:normal}
+    .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0 20px}
+    .tl-phase{border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:3px;padding:10px 12px;background:var(--panel-2)}
+    .tl-phase h4{margin:0 0 7px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+    .tl-phase span{display:block;font-size:12.5px;line-height:1.45;margin:5px 0 5px 12px;position:relative}
+    .tl-phase span::before{content:"";position:absolute;left:-12px;top:6px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+    .hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin:12px 0 6px}
+    .hub-piece{border:1px solid var(--line-strong);border-radius:3px;padding:11px 12px;background:var(--panel-2);font-size:12.5px}
+    .hub-piece strong{display:block;font-size:13.5px;margin-bottom:3px}
+    .hub-piece.broker{background:var(--accent);color:#052e22;border-color:var(--accent)}
+    .hub-piece.broker span{color:#0b3d2c}
+    .hub-piece.ledger{border-color:var(--gold);background:var(--warning-bg)}
+    .expiry-strip{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);font-size:13px}
+    .expiry-strip .exp-chip{border:1px solid var(--line-strong);border-radius:2px;padding:4px 9px;background:var(--panel-2);font-family:var(--mono);font-size:12.5px}
+    .equation{display:flex;gap:8px;align-items:stretch;margin-top:14px;flex-wrap:wrap}
+    .eq-block{border:1px solid var(--line-strong);border-radius:3px;padding:10px 12px;background:var(--panel-2);min-width:110px;flex:1 1 110px}
+    .eq-block.total{background:var(--accent-pale);border-color:var(--accent)}
+    .eq-block b{display:block;font-family:var(--mono);font-size:15px}
+    .eq-block span{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+    .eq-op{align-self:center;font-size:19px;font-weight:700;color:var(--accent)}
+    @media (max-width:640px){.pipeline .pipe-arrow{transform:rotate(90deg);align-self:center;margin:0 auto}.timeline{grid-template-columns:1fr 1fr}}
+    @media (prefers-reduced-motion:reduce){.skel,.loading-note::before{animation:none}.tab,.tool-btn,.back-top,.explainer summary,.exposure-meter span,.stack-bar span,.catmix-fill,.sharebar i,tbody tr{transition:none}}
+    @media print{.tabs,.back-top,.strat-tools{display:none!important}body{background:#fff;color:#1d2a25}.panel{box-shadow:none;background:#fff}}
+
+    /* ===== Polish pass 2 ===== */
+    .panel,.tabpanel>section{scroll-margin-top:64px}
+    .tabs{width:100%;background:var(--bg);border-radius:3px}
+    .masthead{background:linear-gradient(135deg,#0d3b2f,#101623 78%);color:#eef3f0;border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:3px;padding:22px 22px 20px;margin:0}
+    .masthead h1{color:#fff}.masthead .byline{color:#cfe3da}
+    .masthead .snapshot{color:#b9d2c7}.masthead .snapshot strong{color:#fff}
+    .masthead .badge{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.35);color:#eef6f1}
+    .masthead .badge .dot{background:#d9e8e1}.masthead .badge.good .dot{background:#34c3a5}
+    .hero-value{font-family:var(--display)!important;font-size:clamp(44px,4.6vw,56px)!important;font-weight:700;letter-spacing:-.02em}
+    .metric.hero{grid-column:span 2}
+    .exposure-band{padding:16px 20px 14px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+    .exposure-band .eb-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13px}
+    .exposure-band .eb-head b{font-family:var(--mono);font-variant-numeric:tabular-nums slashed-zero}
+    .exposure-meter{overflow:visible}
+    .exposure-meter .endcap{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:var(--accent);border:2px solid var(--panel);box-shadow:0 0 0 1px var(--accent);transform:translate(-50%,-50%)}
+    .exposure-meter .pctlab{position:absolute;top:-4px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap;transform:translateX(8px)}
+    .sleeve{padding:15px 20px 14px;border-top:3px solid var(--line)}
+    .sleeve p.summary{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .sleeve h3{font-size:16.5px}
+    .cat-glyph{display:inline-flex;width:20px;height:20px;border-radius:3px;color:#fff;align-items:center;justify-content:center;font:700 10px/1 var(--mono);flex:0 0 20px;margin-right:8px;vertical-align:-4px}
+    .inst-cap{display:block;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.02em}
+    .idle-state{font-size:11.5px;color:var(--muted);white-space:nowrap}
+    .cat-head{position:sticky;top:56px;z-index:5;background:var(--panel);padding-top:12px;padding-bottom:8px}
+    .cat-jump{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 20px;border-bottom:1px solid var(--line);font-size:12.5px}
+    .cat-jump a{color:var(--ink);text-decoration:none;font-weight:600}.cat-jump a:hover{text-decoration:underline}
+    .cat-jump .jd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+    .mix-close{border-top:1px solid var(--line);margin-top:6px}
+    .mix-close>h3{margin:0;padding:16px 20px 0;font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+    .waffle{gap:0}.wf-cluster{display:flex;flex-wrap:wrap;gap:5px;margin-right:14px;position:relative;padding-bottom:16px}
+    .wf-cluster em{position:absolute;left:0;bottom:0;font:700 9px/1 var(--mono);font-style:normal;color:var(--muted);letter-spacing:.05em}
+    .cm-glyph{display:inline-flex;width:16px;height:16px;border-radius:3px;color:#fff;align-items:center;justify-content:center;font:700 8.5px/1 var(--mono);margin-right:7px;vertical-align:-3px}
+    .catmix-row .cm-n{font-variant-numeric:tabular-nums slashed-zero;white-space:nowrap}
+    table.matrix th.rowh{border-left:4px solid var(--line)}
+    .arch-card{border:1px solid var(--line);border-radius:3px;background:var(--panel);padding:20px 22px;margin:0 0 18px;box-shadow:0 1px 2px rgba(29,42,37,.05)}
+    .arch-card h3{font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin:0 0 10px}
+    .arch-card h3 .secno{color:var(--gold-text);font-family:var(--mono);margin-right:9px}
+    .arch-card p,.arch-card li{font-size:15.5px;line-height:1.65;color:var(--ink-dim)}
+    .arch-card.safety{border-left:4px solid var(--warning);background:var(--warning-bg)}
+    .arch-card h4{font-size:14.5px;margin:16px 0 6px;color:var(--ink)}
+    .arch-card table.conn{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px}
+    .arch-card table.conn th,.arch-card table.conn td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;line-height:1.5}
+    .arch-card table.conn th{background:var(--panel);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+    .brief-card{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:3px;background:var(--panel);padding:18px 22px;margin:0 0 18px}
+    .brief-card h3{font-size:15px;margin:0 0 8px}
+    .brief-card p{font-size:15px;line-height:1.65;color:var(--ink-dim)}
+    .brief-card a{font-weight:700}
+    .tl-time{display:block;font-family:var(--mono);font-size:11px;color:var(--gold-text);font-weight:700;margin-top:2px}
+    .hub-note{text-align:center;color:var(--muted);font-size:12.5px;margin:2px 0 8px}
+    td.symbol .sym-label{font-family:var(--sans);font-weight:700;font-size:13.5px;display:block}
+    td.symbol .sym-raw{font-family:var(--mono);font-weight:400;font-size:11.5px;color:var(--muted);display:block;margin-top:2px;overflow-wrap:anywhere}
+    .badge,.pill{font-size:11.5px;border-radius:3px}
+    .back-top{background:var(--panel);color:var(--accent);border:1px solid var(--line-strong);box-shadow:0 2px 8px rgba(29,42,37,.10)}
+    .panel-head.tint-gold{background:var(--warning-bg)}.panel-head.tint-green{background:var(--accent-pale)}
+    .foot-rule{display:flex;height:4px;margin:26px 2px 0;border-radius:2px;overflow:hidden}
+    .foot-rule i{flex:1;background:var(--accent)}.foot-rule b{flex:1;background:var(--gold)}
+    .mast-waffle{display:flex;flex-wrap:wrap;gap:3px;max-width:190px;margin-top:10px}
+    .mast-waffle i{width:8px;height:8px;border-radius:50%;border:1.5px solid;display:block}
+    .pipe-step,.unavailable{border-radius:3px}
+    @media (max-width:640px){.metric.hero{grid-column:span 2}.cat-head{top:52px}}
+    /* Best setups + market context (feed-driven; panels stay hidden
+       until the feed carries the data) */
+    .setups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+    .setup-card{border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:3px;background:var(--panel);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+    .setup-top{display:flex;align-items:center;gap:10px}
+    .setup-rank{font-family:var(--mono);color:var(--muted);font-size:13px}
+    .setup-top h3{margin:0;font-size:19px;letter-spacing:.01em}
+    .setup-top .pill{margin-left:auto}
+    .setup-status{margin:0;display:flex;align-items:center;gap:8px}
+    .setup-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .setup-levels div{background:var(--panel-2);border:1px solid var(--line);border-radius:3px;padding:6px 9px}
+    .setup-levels span{display:block;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .setup-levels b{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+    .setup-reasons{margin:0;padding-left:17px;font-size:13.5px;color:var(--ink)}
+    .setup-reasons li{margin:2px 0}
+    .setup-sources{margin:0;font-size:12.5px;color:var(--muted)}
+    /* Stage B — the card's distillation leads its text: thesis,
+       then the one-line plan strip; the gut-call pill sits beside
+       the score pill (no auto margin of its own). */
+    .setup-top .gut-for,.setup-top .gut-against,.setup-top .gut-mixed{margin-left:0}
+    .setup-thesis{margin:0;font-size:14.5px;line-height:1.55;color:var(--ink)}
+    .setup-call{margin:0;font-size:16px;line-height:1.5;font-weight:600;color:var(--ink)}
+    .setup-why{margin:0;font-size:13.5px;line-height:1.55;color:var(--muted)}
+    .setup-card .setup-chart{margin:2px 0}
+    .setup-post{background:var(--panel-2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:3px;padding:10px 12px}
+    .setup-post p{margin:0 0 8px;font-size:13.5px;line-height:1.55;color:var(--ink-dim)}
+    .setup-post p:last-child{margin-bottom:0}
+    .setup-post p:first-child{color:var(--ink)}
+    .call-basis{margin:0;font-size:12.5px;line-height:1.5;color:var(--muted)}
+    .conv-high{background:rgba(46,160,113,.18);color:#7bd9a8;border:1px solid rgba(46,160,113,.45)}
+    .conv-mid{background:rgba(38,166,154,.14);color:#7fd4c9;border:1px solid rgba(38,166,154,.4)}
+    .conv-lean{background:rgba(224,190,98,.12);color:var(--gold);border:1px solid rgba(224,190,98,.4)}
+    .setup-planstrip{margin:0;font-family:var(--mono);font-size:13px;line-height:1.5;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:3px;padding:7px 10px}
+    .setup-actions{display:flex;gap:8px;margin-top:auto}
+    .completed-head{margin:22px 0 4px;font-size:15px;letter-spacing:.02em}
+    .completed-sub{margin:0 0 10px;font-size:13px;color:var(--muted);max-width:76ch;line-height:1.5}
+    .completed-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 2px;border-top:1px solid var(--line);font-size:14px}
+    .completed-sym{font-weight:700;font-size:15px}
+    .completed-facts{font-family:var(--mono);font-size:13.5px;font-variant-numeric:tabular-nums}
+    .completed-row .muted{margin-left:auto}
+    /* Addition 5 — the Desk read + on-demand/closed sections */
+    .pill.gut-for{color:var(--positive);background:var(--positive-bg);border-color:#1e4d3e}
+    .pill.gut-against{color:var(--negative);background:var(--negative-bg);border-color:#5a2b2b}
+    .pill.gut-mixed{color:var(--info);background:var(--info-bg);border-color:#2b4156}
+    .dr-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+    .dr-grade{font-size:12.5px;color:var(--ink-dim)}
+    .dr-para{font-size:14.5px;line-height:1.65;color:var(--ink);max-width:78ch}
+    .dr-list{margin:6px 0;padding-left:0;list-style:none}
+    .dr-list li{margin:7px 0;font-size:14px;line-height:1.55;color:var(--ink-dim)}
+    .dr-list .dr-factor{font-weight:700;color:var(--ink)}
+    .dr-stance{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-left:6px}
+    .dr-stance.for{color:var(--positive)} .dr-stance.against{color:var(--negative)} .dr-stance.weighed{color:var(--ink-dim)}
+    .dr-conflict{border-left:3px solid var(--warning);padding-left:10px}
+    .dr-law{font-size:12.5px;color:var(--ink-dim);margin-top:10px}
+    .aux-rows{display:flex;flex-direction:column;gap:10px}
+    .aux-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;border:1px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--panel-2)}
+    .aux-row .aux-sym{font-weight:800;font-size:16px}
+    .aux-row .aux-meta{font-size:13px;color:var(--ink-dim)}
+    .aux-row .aux-verdict{flex:1 1 260px;font-size:13.5px;color:var(--ink)}
+    .flash{animation:setupflash 2.2s ease-out}
+    @keyframes setupflash{0%{box-shadow:0 0 0 3px var(--gold)}100%{box-shadow:0 0 0 0 rgba(189,142,47,0)}}
+    .alerts-box{text-align:right;max-width:300px}
+    .alerts-btn{white-space:nowrap}
+    .alerts-note{margin:6px 0 0;font-size:12.5px;color:var(--muted);line-height:1.45}
+    .mkt-regime{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+    .mkt-idxs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:12px}
+    .mkt-idx{background:var(--panel-2);border:1px solid var(--line);border-radius:3px;padding:9px 12px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+    .mkt-idx span{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+    .mkt-idx b{font-family:var(--mono);font-size:16px}
+    .mkt-idx i{font-style:normal;font-weight:700;font-size:13px}
+    .mkt-idx em{font-style:normal;font-size:12px;color:var(--muted)}
+    .positive{color:var(--positive)}.negative{color:var(--negative)}
+    .mkt-ev{margin:0 0 4px;padding-left:17px;font-size:13.5px}
+    .lector-h{margin:16px 0 8px;font-size:15px}
+    .lector-table{width:100%;border-collapse:collapse;font-size:14px}
+    .lector-table th,.lector-table td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+    .lector-table td.num,.lector-table th.num{text-align:right;font-family:var(--mono)}
+    @media (max-width:640px){.alerts-box{text-align:left;max-width:none}}
+    /* Setup detail view (brief-driven; degrades to the card's data
+       when a setup has no brief in the feed) */
+    .setup-card{cursor:pointer}
+    .pill.warn{color:var(--warning);background:var(--warning-bg);border-color:#6b5518}
+    .pill.bad{color:var(--negative);background:var(--negative-bg);border-color:#6e3238}
+    #setupDetail .panel-head{align-items:center}
+    .setup-chart{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:3px;background:var(--panel-2)}
+    .setup-chart-cap{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
+    .setup-detail-sec h3{font-size:15px;margin:20px 0 8px;letter-spacing:.02em}
+    .setup-story p{font-size:15.5px;line-height:1.65;color:var(--ink-dim);max-width:76ch;margin:8px 0}
+    .brief-gap{border:1px dashed var(--line-strong);border-radius:3px;padding:10px 12px;color:var(--muted);font-size:13.5px;line-height:1.5;background:var(--panel-2)}
+    .lens-list{display:flex;flex-direction:column}
+    .lens-row{display:grid;grid-template-columns:minmax(170px,230px) auto 1fr;gap:5px 14px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line)}
+    .lens-row:last-child{border-bottom:0}
+    .lens-name{font-weight:700;font-size:14px}
+    .lens-ev{margin:0;font-size:14px;line-height:1.55;color:var(--ink-dim)}
+    .setup-inv{margin:0;padding-left:18px;font-size:14.5px;line-height:1.6;color:var(--ink-dim)}
+    .setup-inv li{margin:4px 0}
+    /* Stage B — the PLAN block: the detail's first section, the
+       refined distillation in front of all the depth below it */
+    .plan-block{border:1px solid var(--line-strong);border-top:3px solid var(--gold);border-radius:3px;background:var(--panel-2);padding:4px 16px 14px;margin-top:16px}
+    .plan-action{font-size:16.5px;font-weight:700;line-height:1.5;color:var(--ink);margin:6px 0}
+    .plan-why{font-size:14.5px;line-height:1.6;color:var(--ink-dim);margin:0 0 10px;max-width:76ch}
+    .plan-cells{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+    .plan-cells div{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:6px 9px}
+    .plan-cells span{display:block;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .plan-cells b{font-family:var(--mono);font-size:14.5px;font-variant-numeric:tabular-nums}
+    .plan-cells small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+    .plan-meta{font-size:13px;color:var(--muted);margin:10px 0 0;line-height:1.55}
+    .dr-change{font-size:14.5px;line-height:1.6;color:var(--ink);margin:0 0 8px}
+    /* Chart read section: the desk's technical read of the chart
+       above — pattern name leads, evidence grouped beneath it */
+    .chart-read{border-top:2px solid var(--line-strong);margin-top:22px;padding-top:4px}
+    .cr-pattern{font-size:21px;font-weight:800;color:var(--ink);margin:4px 0 2px;letter-spacing:.01em;line-height:1.3}
+    .cr-group{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);margin:14px 0 4px}
+    .cr-bullets{margin:0;padding-left:18px}
+    .cr-bullets li{font-size:14.5px;line-height:1.6;color:var(--ink-dim);margin:3px 0}
+    /* Addition 4: the meta line (pattern tier + confirmation
+       state), the Level-1 at-a-glance list, and the Level-2
+       expander for the full read */
+    .cr-meta{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 6px}
+    .cr-l1 li{color:var(--ink)}
+    details.cr-more{margin-top:10px}
+    details.cr-more summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--accent);padding:6px 0}
+    details.cr-more summary:hover{text-decoration:underline}
+    .setup-strats{display:flex;flex-wrap:wrap;gap:8px}
+    .setup-method{margin-top:26px;border-top:2px solid var(--line-strong);padding-top:8px}
+    .setup-method h3{font-size:16px;margin:14px 0 8px;letter-spacing:.02em}
+    .setup-method p,.setup-method li{font-size:14.5px;line-height:1.65;color:var(--ink-dim);max-width:78ch}
+    .setup-method ul{margin:6px 0 6px 20px;padding:0}
+    .setup-method li{margin:8px 0}
+    @media (max-width:640px){.lens-row{grid-template-columns:1fr auto}.lens-ev{grid-column:1/-1}}
+    /* ===== Visual pass: dark theme companions — card sparklines,
+       market index charts, lector rank bars, position P&L bars ===== */
+    .setup-spark{display:block;width:100%;height:40px}
+    .setup-spark polyline{fill:none;stroke-width:1.6}
+    .mkt-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-bottom:14px}
+    .mkt-chart{margin:0;min-width:0}
+    .mkt-chart img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:3px;background:var(--bg)}
+    .mkt-chart figcaption{margin:6px 0 0;font-size:12.5px;color:var(--muted);line-height:1.45}
+    .lector-score{display:flex;align-items:center;gap:9px;justify-content:flex-end}
+    .lector-bar{display:inline-block;width:74px;height:7px;background:var(--track);border-radius:2px;overflow:hidden;flex:0 0 74px}
+    .lector-bar i{display:block;height:100%;background:var(--accent)}
+    .pnl-bar{position:relative;display:block;height:5px;margin-top:5px;background:var(--track);border-radius:2px;overflow:hidden;min-width:56px}
+    .pnl-bar::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--line-strong)}
+    .pnl-bar i{position:absolute;top:0;bottom:0}
+    .pnl-bar i.pos{background:var(--positive)}
+    .pnl-bar i.neg{background:var(--negative)}
+    @media (max-width:640px){.mkt-charts{grid-template-columns:1fr}.lector-bar{width:52px;flex-basis:52px}}
+  </style>
+</head>
+<body>
+  <main class="shell" id="top">
+    <header class="masthead">
+      <div>
+        <h1><svg class="brand-mark" width="40" height="40" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="8" fill="#0d5243"/><path d="M40 10a20 20 0 1 0 14 33A23 23 0 0 1 40 10z" fill="#c9a24d"/><circle cx="45" cy="42" r="3" fill="#e8f0ea"/></svg>Muse Desk</h1>
+        <p class="byline">A paper trading research desk</p>
+        <div class="statusbar" id="statusbar"></div><details class="explainer feature-explainer" data-explainer="masthead"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> The bar at the top names the desk, shows that this is a paper account, counts the strategies, shows when the figures were made, and shows a row of small dots, one per strategy.</p><p><strong>How it is worked out:</strong> The strategy count is the number of strategies in the desk&rsquo;s strategy list. The snapshot time is the time the figures file was made, shown in New York time. Each dot is coloured by its strategy&rsquo;s kind, using the colours from the strategy list, and a dot is filled only when that strategy currently holds at least one position.</p></div></details><details class="explainer feature-explainer" data-explainer="page-updates"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> This page holds no numbers of its own. Every figure is loaded from the desk&rsquo;s published data files, so what you see is the desk&rsquo;s own record, not a page-side estimate.</p><p><strong>How it is worked out:</strong> The desk rebuilds its figures file every 5 minutes. This page checks for a new file every 60 seconds, only while the page is visible, and redraws only when the file&rsquo;s time stamp has changed. A rebuild is skipped when the records behind it have not changed. Before anything is published, the totals are checked against their own rows &mdash; a mismatch stops the publish &mdash; and the whole file passes one final check that removes internal codes and rewrites wording into plain words. The time stamp shown is moved forward to the newest item inside the file, so the stamp never claims to be older than its own contents.</p></div></details>
+      </div>
+      <div class="mast-tools">
+        <div class="mast-waffle" id="mastWaffle" aria-hidden="true"></div><div class="snapshot"><span>Snapshot</span><strong id="snapshotTime">—</strong><span>Updated every 5 minutes in market hours</span></div>
+      </div>
+    </header>
+    <noscript><div class="unavailable noscript-note"><strong>This page needs JavaScript to show the desk's figures.</strong><p>Every number on Muse Desk is loaded live from the desk's records. With JavaScript switched off, nothing here is current — please enable JavaScript and reload to see the desk as it stands.</p></div></noscript>
+
+    <nav class="tabs" role="tablist" aria-label="Terminal sections">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="pulse" id="tab-pulse"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-7 4 14 2-7h6"/></svg>OVERVIEW</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="model" id="tab-model"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>STRATEGIES</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="architecture" id="tab-architecture"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V8l8-5 8 5v13"/><path d="M2 21h20"/><path d="M10 21v-6h4v6"/></svg>ARCHITECTURE</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="explainer" id="tab-explainer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3c.2-1.2 1.2-2 2.5-2 1.4 0 2.5 1 2.5 2.2 0 1.7-2.4 1.9-2.4 3.5"/><circle cx="12" cy="17.2" r="0.6" fill="currentColor"/></svg>HOW IT&rsquo;S JUDGED</button>
+    </nav>
+
+    <section class="tabpanel" role="tabpanel" id="pulse" aria-labelledby="tab-pulse">
+      <section class="panel" id="setupsPanel" hidden>
+        <div class="panel-head tint-green"><div><h2>Best setups</h2><p>The desk's strongest current buy setups &mdash; names the desk has not entered yet, still intact and still in range, ranked by how many independent strategies agree on them, whether the desk's pattern engine confirms them, and how clean the entry looks. A name leaves this list the moment the desk enters it (it becomes a position, in the Position book below), its setup breaks, it runs too far, or its plan expires &mdash; and every departure is listed under the board with its reason. Every point of every score is explained on its card.</p></div>
+          <div class="alerts-box">
+            <button type="button" class="tool-btn alerts-btn" id="alertsBtn">Enable alerts</button>
+            <p class="alerts-note" id="alertsNote" role="status" aria-live="polite"></p><details class="explainer feature-explainer fx-body" data-explainer="alerts"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> This button turns on phone alerts for new desk entries, so a new position is announced instead of waiting to be noticed on the page.</p><p><strong>How it is worked out:</strong> Alerts work only in the installed app, with notifications allowed. The page makes a 6-digit pairing code with a secure random number: 100,000 plus the remainder of the random number divided by 900,000. It then registers this device with the public key printed in the page code and sends the registration and the code to the relay address printed in the page code. On the desk side, an alert is created by comparing the earlier and new figures files: an alert means a name newly appears as entered, never just a name shown again.</p></div></details>
+          </div>
+        </div>
+        <div class="panel-body">
+          <details class="explainer feature-explainer fx-body" data-explainer="best-setups"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> The desk&rsquo;s strongest current buy setups, ranked. Each card shows the rank, the tier and score, whether the desk is watching or bought today, the last close, a small price chart, the entry, stop and target, the top reasons, and which strategies selected it.</p><p><strong>How it is worked out:</strong> The score is out of 100, and every point must have a recorded reason or the scoring stops with an error. Agreement between different strategy groups: 1 group 6 points, 2 groups 16, 3 groups 24, 4 or more 30. Pattern engine: a confirmed swing pattern adds 14 when it is at most 3 trading days old, 4 when 4 to 10 days old, and 0 when older; pattern context only adds 7. Chart-review board: 10 points at a board score of 75 or more, 7 at 65 or more, 4 at 55 or more, 2 below that. Already entered by the desk: 12. An entry that was tried and turned away for a money reason only: 4. Fit with the market: on a fear or red day, a dip setup 8 and any other kind 3; in a rising market, momentum 6 and a dip 3; in a falling market, a dip 2 and any other kind minus 6; in a sideways market, 2. Reset at support: 8 when the close is within 1% either side of the 20-day average, 4 when the close is within one average daily range of that average or on the recent swing-low area. Stop distance, measured in 14-day average daily ranges: 1.5 to 2.5 ranges scores 8, 2.5 to 4 scores 5, 1 to 1.5 scores 2, under 1 range loses 4, over 4 ranges scores 1. Taken away: a run of 15% to 25% in 10 trading days loses 10; a close more than 2.5 ranges above the 20-day average loses 8; a close below the 20-day swing low loses 15. A name up 25% or more in 10 trading days has its finished score multiplied by 0.7. Tiers: 75 or more is Top tier, 55 or more is Strong, 35 or more is Watch, and below 35 a name does not appear at all. Before a name is shown, its plan is checked: the board and the plan must agree on where the setup came from; prices must run in order &mdash; stop below buy low, buy low at or below buy high, buy high below first target, first target below final target, all above zero; the reward-to-risk shown is recomputed from the plan and must match within 0.01; an option package&rsquo;s most that can be lost or gained is recomputed from its parts; the plan must not have expired; and the headline reward divided by risk must be at least 1.0 or the name does not appear (option packages are governed by their spread checks instead). The small chart is the last up to 30 daily closes, with a gold dashed line at the entry price when that price falls inside the chart&rsquo;s range; with no price series, no chart is drawn.</p></div></details><div class="setups-grid" id="setupsGrid"></div>
+          <p class="footnote" id="setupsNotes"></p>
+          <div id="setupsNoCall" hidden>
+            <h3 class="completed-head">On the radar &mdash; no call yet</h3>
+            <p class="completed-sub">Names the desk is watching where the evidence does not add up to a call. One honest line each &mdash; no card until the desk can say what it expects.</p>
+            <details class="explainer feature-explainer fx-body" data-explainer="radar-no-call"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> Board names whose full read reached no call. They scored enough to be watched, but the whole-picture read did not add up to a call, so they are listed here with one plain line each.</p><p><strong>How it is worked out:</strong> A name is placed here when its full read carries the no-call flag. When the evidence behind a read is incomplete, the read is held back and only the held state and its plain reason are published. Names here are never dressed up as calls.</p></div></details><div id="noCallList"></div>
+          </div>
+          <div id="scorecardBand" hidden>
+            <h3 class="completed-head">Call record</h3>
+            <details class="explainer feature-explainer fx-body" data-explainer="call-record"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> One line counting the desk&rsquo;s published calls: how many were made since the starting date shown, how many are still open, how many are closed, how many left the board, and the average result of the closed calls that carry a result.</p><p><strong>How it is worked out:</strong> A call is a name the board published that is still open, or that later left the board because it was entered, expired, or was ended by its closing line. Names that were held back were never published and are never counted. The three parts must add up exactly to the number made. The average result, in R (one R is the amount risked on the trade), is printed only next to its count and the dates of the first and last calls, and the closed list is capped at 50.</p></div></details><p class="completed-sub" id="scorecardLine"></p>
+          </div>
+          <div id="setupsDepartures" hidden>
+            <h3 class="completed-head">Recently closed</h3>
+            <p class="completed-sub">Every name that leaves this list, with the reason and the outcome &mdash; kept here for at least five trading days, and permanently in the desk's record, so nothing quietly disappears.</p>
+            <details class="explainer feature-explainer fx-body" data-explainer="recently-closed"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> Every name that has left the Best Setups board, with the reason, the date, and the outcome when there is one.</p><p><strong>How it is worked out:</strong> Each departure is added to a permanent record that is only ever added to. This list shows the last 5 trading days present in that record. For a name entered and closed the same day, the outcome in R is (exit price minus entry price) divided by (entry price minus stop). For a name held longer, the outcome is the amount-weighted average result of that name&rsquo;s closed trades whose entry and exit dates span the departure. Otherwise the row simply says the position is open, or that it was closed.</p></div></details><div id="departuresList"></div>
+          </div>
+        </div>
+      </section>
+      <section class="panel" id="ondemandPanel" hidden>
+        <div class="panel-head"><div><h2>On-demand reads</h2><p>Full Desk reads the desk produced on request, for any stock — the same whole-picture read the daily setups get, written when asked and published here.</p></div></div>
+        <div class="panel-body" id="ondemandBody"></div><details class="explainer feature-explainer" data-explainer="on-demand"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> Full desk reads made on request, for any stock, newest first. Each one is the same whole-picture read the daily setups get.</p><p><strong>How it is worked out:</strong> The list is capped at 20 reads, newest first. Each read is built by the same builder that builds the daily full reads, and there is no separate scoring for a requested read.</p></div></details>
+      </section>
+      <section class="panel" id="marketPanel" hidden>
+        <div class="panel-head"><div><h2>Market and top-ranked stocks</h2><p>Where the market stands today, and the stocks the desk's chart-review board ranks highest.</p></div></div>
+        <div class="panel-body" id="marketBody"></div><details class="explainer feature-explainer" data-explainer="market-readouts"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> Where the market stands: index charts for the S&amp;P 500 and Nasdaq 100 funds, a label for the market&rsquo;s direction, a fear-day label, the fear gauge, and for each index the close, the day&rsquo;s move, and how far it sits from its 50-day average.</p><p><strong>How it is worked out:</strong> For each index: the close is the last daily close; the day move is the last day&rsquo;s percentage change; the distance from the 50-day average is (close divided by the 50-day average of closes, minus 1) times 100. Market direction is read from the Nasdaq 100 fund only: close above its 50-day average and a 20-day rise above +2% is a rising market; close below its average and a 20-day fall below &minus;2% is a falling market; anything else is sideways. The 20-day move is the percentage change over 20 trading days. A fear day is any day when the S&amp;P fund falls more than 1.5%, or the fear gauge rises more than 15% in a day, or the fear gauge closes at 25 or more, or either fund has a red day while the fear gauge is at 20 or more. The fear gauge is the VIX index, read from daily closes from a public data source because the broker does not carry it. The index charts are daily charts with the 20-, 50- and 200-day averages and the recent high and low drawn. A chart is held back when its own last close differs from the panel&rsquo;s close by more than 0.01, so the panel never shows two disagreeing numbers.</p></div></details>
+      </section>
+      <section class="panel" id="morguePanel">
+        <div class="panel-head tint-green"><div><h2>Morgue Engine</h2><p>Three measuring instruments the desk built for itself: a map of dealer positioning in the big index funds, a scored feed of the day&rsquo;s options prints, and a ranked board of the strongest stock setups across 1,838 names. Every figure here was written into a permanent, add-only record before it was shown. The engine measures; it does not place trades.</p></div></div>
+        <p style="margin:10px 16px 0;font-size:14px"><a href="../morning-map/">The Morning Map — the positioning map and the qualified board as their own page →</a> <a href="../funnel-study/" style="color:#7dd3fc">The Funnel Study — how the corpus delivers</a></p>
+        <div class="panel-body" id="morgueBody"><p class="muted">Loading&hellip;</p></div>
+        <details class="explainer feature-explainer" data-explainer="morgue-engine"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> The desk&rsquo;s own positioning map, flow tape and setup board, rebuilt from measuring tools whose workings were published or recovered in full, and run on the desk&rsquo;s own market data. Nothing here is bought from a vendor, and no figure is shown that was not recorded first.</p><p><strong>How it is worked out:</strong> The Map adds up, for each index fund, the options dealers are likely holding: for every contract, its sensitivity to price moves times its open interest, with call contracts counted positive and put contracts negative. The total, in dollars per 1% move, says whether dealer hedging is likely to calm moves or amplify them; the walls are the strike prices with the largest call and put totals, and the flip is the price where the total changes sign. The short-sale ratio is the share of off-exchange volume sold short, from the free daily exchange file, a day behind. The Tape scores every options print of the day for the three funds: a heat score for size, urgency and unusualness, and a running total of premium, signed by whether each print lifted the offer or hit the bid. The Board scores all 1,838 names from eight groups of evidence &mdash; price action, relative strength, volume, trend, nearby support and resistance, sector strength, positioning and market conditions. A name qualifies only when at least five of the eight groups confirm, its score is at least 65 out of 100, at least 70% of the evidence could actually be measured, and it passes a liquidity and trend screen. A name with too little measurable evidence is left off the board rather than guessed at. The trigger prices come from an average-range ladder built on the previous close: the first trigger sits about a quarter of an average day&rsquo;s range above it.</p></div></details>
+      </section>
+      <section class="panel" id="setupDetail" hidden>
+        <div class="panel-head tint-green"><div><h2 id="setupDetailTitle">The full read</h2><p id="setupDetailSub"></p></div>
+          <button type="button" class="tool-btn" id="setupDetailBack">&larr; Today&rsquo;s setups</button>
+        </div>
+        <div class="panel-body">
+          <div id="setupDetailBody"></div><details class="explainer feature-explainer fx-body" data-explainer="full-read"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> The full read behind one setup: its charts, its plan, the desk&rsquo;s whole-picture call, how it got here, the chart read, a lens-by-lens table, the wave count, the levels, what would end the setup, the strategies behind it, and two past-record lines.</p><p><strong>How it is worked out:</strong> Reads are built over the stock&rsquo;s last 320 daily bars, split-adjusted (about 6 months on the chart, plus the longer history the 200-day average needs). The call: experts for each family of evidence file a signed view &mdash; a direction times a weight. The balance is the sum of (direction times weight) divided by the sum of the weights. A balance of 0.45 or more reads strongly for, 0.18 or more for, &minus;0.45 or less strongly against, &minus;0.18 or less against, and anything in between is mixed. A mixed result is settled in a fixed order: price structure first, then momentum confirmed by volume, then the wider context. A failed ending line caps the call at against. The five strongest directional voices by weight decide; the rest are considered. A voice from a method that has not yet earned a proven record has its weight capped at 1.0 when the deciding voices are chosen. Incomplete evidence is refused: only the held state and its plain reason are published. Past-case line: when this shape has been measured over the desk&rsquo;s 1,838-stock list, the read says &lsquo;In past cases of this shape, the target was reached before the ending line in X% of N cases&rsquo;; when the count is thin or unmeasured, a plain line says so, or nothing is printed. A single projected target also carries its measured rate of being reached first. Strategy record line: the plan strategy&rsquo;s closed-trade record &mdash; win rate, number of trades, average result in R, and its dates &mdash; shown as evidence in the read only; it never adds to the score and never opens or closes a gate. Wave count: a turning point counts only at the bar that confirms it, 2 bars after the extreme; a swing must be at least 1.5 times the 14-day average daily range, with at least 3 bars between turning points; Fibonacci levels are allowed a 7% tolerance. The count comes out as active, unclear, no valid count, or ended, with a price that would end it; its fit score is a ranking index, never a chance, and the wave voice is one of the capped, not-yet-proven voices in the call. Levels shown: entry, stop and target from the plan, the last close, the 20-day average, and the recent 20-session swing low. Charts: the price pane draws the pattern boundaries, the levels, a Fibonacci retracement grid, the buy zone and the expected path; the volume pane, a 14-day relative strength pane (Wilder&rsquo;s method), and a momentum pane are worked out over the same closes. A difference between price and an indicator is drawn only where the chart-read record carries one; a used-up difference is not drawn; and there is at most one such label per pane. Phones get a smaller, purpose-built picture of the same read.</p></div></details>
+          <div class="setup-method" id="setupMethod">
+            <h3>How a setup earns its place</h3>
+            <p>No single signal is trusted on its own. A stock becomes a setup here when several different ways of reading it point the same way at the same time. The desk reads the whole picture at once, never one signal at a time. Every setup is scored out of 100 across the lenses below, and every point is explained on its brief &mdash; nothing is a black box.</p>
+            <ul>
+              <li><strong>Independent agreement.</strong> The desk runs dozens of strategies built on different ideas. When strategies that share nothing &mdash; different signals, different mathematics &mdash; select the same stock on the same day, that agreement is the strongest evidence the desk knows. Close cousins count once, so one family cannot stuff the ballot box.</li>
+              <li><strong>The pattern engine.</strong> A dedicated engine grades swing patterns: the shapes prices make as they base, pull back and turn. A fresh, confirmed pattern adds serious weight. No pattern, no points from this lens.</li>
+              <li><strong>The chart-review board.</strong> An independent nightly ranking of chart quality across a fixed board of stocks. It is background, never a trigger: it can support a setup the other lenses found, but it can never create one by itself.</li>
+              <li><strong>The market&rsquo;s mood.</strong> The same setup means different things in different markets. Washed-out dips are at their best in fearful, falling markets; momentum needs a rising one. The desk reads the broad market first and scores the fit.</li>
+              <li><strong>A price sitting at a level.</strong> Setups score higher when the price has pulled back and reset onto something real &mdash; its recent average, or the zone of its recent lows &mdash; instead of dangling mid-range.</li>
+              <li><strong>The shape of the risk.</strong> A good setup knows where it is wrong. A defined exit level, far enough away that ordinary noise will not trigger it but close enough to cap the loss, earns points; a stop so tight that a normal day would shake it out loses them.</li>
+              <li><strong>The warning signs.</strong> Some things count against a setup no matter how many lenses agree: a price that has already spiked hard in a few sessions, one stretched far above its average, or one that has broken below its recent lows. Each of those deductions exists because that exact pattern has burned traders before.</li>
+            </ul>
+            <p>The brief above walks the lenses for this one stock: the chart as it looked when the setup fired, the evidence lens by lens, and the list of what would end the setup. The list itself is a research starting point &mdash; the evidence is published with every setup so you can check the desk&rsquo;s work and decide for yourself.</p>
+            <h3>The whole-picture read</h3>
+            <p>Every brief also carries a <strong>Desk read</strong>. It weighs everything the desk measures for the stock: the chart and its shape, volume, momentum, the wider market, and how fresh the data is. The few things that decide the call are named first. Where the evidence points both ways, the brief says so. Anything the desk does not measure for this stock is listed too. The read ends with what would change the call.</p>
+            <p>The Desk read is a weighed judgment, and it is deliberately kept <strong>out</strong> of the score: the number above never moves because of it. Every read is written into a permanent record before the outcome can be known, and the desk scores its past reads against what prices did over the following one, five and ten sessions. Only if that recorded track record earns it — by review and ruling, not by default — would the read ever be given weight in the ranking. Until then it is published so its judgment can be checked like everything else here.</p>
+            <p>The wider tape is measured the same way, every night, over the desk&rsquo;s own scanned universe: how many stocks are rising and how many sit above their own averages, the market&rsquo;s fear gauges combined into one mood reading, whether traders are reaching for risk or hiding from it across six benchmark pairings, which sectors and themes are leading and which are fading, and a five-check pulse on the two big index funds. Those readings sit in the market panel above and are weighed into every Desk read.</p>
+          </div>
+        </div>
+      </section>
+      <div class="panel">
+        <div class="metrics" id="accountMetrics"><div class="skel metric-skel"></div><div class="skel metric-skel"></div><div class="skel metric-skel"></div><div class="skel metric-skel"></div></div>
+        <div class="exposure-band" id="exposureBand" hidden></div><details class="explainer feature-explainer" data-explainer="account-metrics"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> The headline account numbers: the account value, the cash, and how many positions are open, with a note of how many strategies are holding.</p><p><strong>How it is worked out:</strong> The account value, cash and buying power are the broker&rsquo;s own figures for the paper account, printed as reported. The open position count is the number of position rows published below. The &lsquo;strategies holding&rsquo; count is the number of strategies whose held value is above zero.</p></div></details>
+        <div class="panel-body" id="feedUnavailable" hidden>
+          <div class="unavailable"><strong>Data unavailable right now.</strong>
+          <p>The desk's latest figures could not be loaded, so nothing is shown here rather than old numbers. This page checks again automatically.</p></div>
+        </div>
+      </div>
+      <div class="grid two">
+        <section class="panel">
+          <div class="panel-head"><div><h2>Exposure</h2><p>The total value of everything the desk currently holds, and how much of the account that makes up.</p></div></div>
+          <div class="panel-body" id="exposure"><p class="loading-note">Loading the latest figures…</p></div><details class="explainer feature-explainer" data-explainer="exposure"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> How much of the account is held in open positions: the gross held value, its percentage of the account with a meter, and a bar showing how the held value splits by strategy.</p><p><strong>How it is worked out:</strong> Gross held value is the sum of the absolute market value of every published position row. A row with no market value adds nothing, and no second estimate (such as quantity times entry price) is ever used instead. The percentage is 100 times the gross value divided by the account value, rounded to one decimal place, using the account value &mdash; not a set budget. Each strategy&rsquo;s value is the sum of the absolute values of its rows, and its share of the bar is that value divided by the total gross value.</p></div></details>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><h2>Account</h2><p>The paper account, as reported by the broker.</p></div></div>
+          <div class="panel-body" id="accountDetail"><p class="loading-note">Loading the latest figures…</p></div><details class="explainer feature-explainer" data-explainer="account-panel"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> The paper account in detail, as reported by the broker: its status, the cash held, the value held in positions, a bar showing cash against held value, the buying power, and the cash plus held equals account sum.</p><p><strong>How it is worked out:</strong> Value held in positions is the signed sum of the published rows&rsquo; market values &mdash; gains add, short positions subtract. It is blank when rows exist but none carries a market value, and zero when the book is empty. A broker status of Active is shown as &lsquo;Active &mdash; open and trading normally&rsquo;. Buying power is the broker&rsquo;s figure, printed as reported.</p></div></details>
+        </section>
+      </div>
+      <section class="panel">
+        <div class="panel-head tint-gold"><div><h2>The desk's permanent record</h2><p>Every action the desk takes is written into one record that is only ever added to, never rewritten. This is what is in it.</p></div></div>
+        <div class="panel-body" id="ledgerPanel"><p class="loading-note">Loading the latest figures…</p></div><details class="explainer feature-explainer" data-explainer="permanent-record"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> A count of everything in the desk&rsquo;s permanent record, split by kind of record, with each kind&rsquo;s share.</p><p><strong>How it is worked out:</strong> The counts are a straight count of every line in the desk&rsquo;s add-only record. The total is the line count, and each kind is counted by its label: completed trades, journal entries, price records, nightly checks against the broker, trade reviews, and positions brought in at the start. A line that is not a proper record is skipped, never guessed at, and each share is that kind&rsquo;s count divided by the total, times 100.</p></div></details>
+      </section>
+      <section class="panel">
+        <div class="panel-head tint-green"><div><h2>Position book</h2><p id="positionCount"></p></div><span class="pill info" id="brokerPill">Live from the broker</span></div>
+        <p class="pos-legend">Each option contract covers 100 shares, so an option priced at $1.11 is worth $111 per contract. Rows grouped under one heading are parts of a single trade, with a combined total underneath. Words like call, put and strike are explained in the “Words we use” list on the Strategies tab.</p>
+        <div class="table-wrap" id="positions"><p class="loading-note panel-body">Loading the latest figures…</p></div><details class="explainer feature-explainer" data-explainer="position-book"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> Every open position: the stock (options are written out in plain words), the strategy, the quantity, whether it is owned or sold first, the average entry, the current price, the market value, its share of the book, and its open profit or loss. Parts of one option trade are grouped under one heading with a combined total, and there is a total row for the whole book.</p><p><strong>How it is worked out:</strong> A position is long (owned) when its quantity is above zero, and short (sold first) otherwise. Share of book is the row&rsquo;s absolute market value divided by the sum of absolute market values of all rows, times 100. The profit-or-loss bar width is the row&rsquo;s absolute open result divided by the largest absolute open result in the book, times 50% &mdash; half the bar on each side of zero. An option code is read as: the leading letters are the stock, the next six digits are the expiry date, C means call and P means put, and the last digits divided by 1,000 are the agreed price. Option parts are grouped by the same strategy, the same stock, and the same expiry date. One option contract covers 100 shares. Totals are sums of the rows shown, only.</p></div></details>
+        <div id="enteredPlans" hidden>
+          <h3 class="completed-head">Entered today &mdash; the plans these positions are managed by</h3>
+          <p class="completed-sub">These names were on the Best Setups list until the desk entered them. Entering a name moves it here: it is a position now, not a setup.</p>
+          <div id="enteredList"></div>
+        </div>
+        <div id="setupsCompleted" hidden>
+          <h3 class="completed-head">Closed today</h3>
+          <p class="completed-sub">These trades were entered and closed again today, so each one is finished. They are results, not current setups &mdash; they are listed here with the positions for the day's record.</p>
+          <div id="completedList"></div>
+        </div><details class="explainer feature-explainer" data-explainer="entered-closed"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> Two day lists inside the Position book. &lsquo;Entered today&rsquo; shows the plans the positions the desk entered today are managed by. &lsquo;Closed today&rsquo; shows today&rsquo;s finished round trips: bought and sold again the same day.</p><p><strong>How it is worked out:</strong> For an entered name, the stop shown is the plan&rsquo;s trading stop, never the emergency backstop. The target comes from the plan&rsquo;s exit target when the row itself carries none. The time bought and the quantity still held come from the broker&rsquo;s position row &mdash; one source for both. When more than one strategy holds the same stock, a plain note on the row says so. An entered row with no target in any place carries an explicit note saying the target is missing, instead of a silent blank. A held read publishes only the held state and its plain reason. Closed rows reuse reads already made today &mdash; from today&rsquo;s reads, then reads carried forward, then the earlier cycle&rsquo;s &mdash; and no new read is ever built for a finished name.</p></div></details>
+      </section>
+    </section>
+
+    <section class="tabpanel" role="tabpanel" id="model" aria-labelledby="tab-model" hidden>
+      <section class="panel">
+        <div class="panel-head"><div><h2>Strategies</h2><p>Every strategy the desk runs, and what each one is doing now. Select “How this strategy works” on any card for a plain-English explanation.</p></div></div>
+        <div class="panel-body" id="algoUnavailable" hidden><div class="unavailable"><strong>Strategy descriptions unavailable right now.</strong><p>The plain-English descriptions could not be loaded, so no strategy cards are shown here rather than incomplete ones. This page checks again automatically.</p></div></div>
+        <div class="strat-tools" id="stratTools">
+          <div class="tool-field">
+            <label for="stratSearch">Search strategies</label>
+            <input type="search" id="stratSearch" placeholder="Try condor, volatility, crypto…" autocomplete="off">
+          </div>
+          <div class="tool-field">
+            <label for="stratCategory">Category</label>
+            <select id="stratCategory"></select>
+          </div>
+          <div class="tool-actions">
+            <button type="button" class="tool-btn" id="stratExpand">Expand all</button>
+            <button type="button" class="tool-btn" id="stratCollapse">Collapse all</button>
+            <button type="button" class="tool-btn" id="stratClear">Clear</button>
+          </div>
+          <p class="strat-count" id="stratCount" role="status" aria-live="polite"></p>
+        </div>
+        <details class="explainer feature-explainer" data-explainer="strategies"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> One card per strategy: its plain name, a two-line summary, its kind, what it trades, whether it is holding positions now, and an expandable &lsquo;How this strategy works&rsquo; note on the card itself.</p><p><strong>How it is worked out:</strong> The card words &mdash; name, summary, longer explanation, what it trades, and kind &mdash; are written entries in the desk&rsquo;s strategy list, one entry per strategy (63 entries when this note was written); they are words, not worked-out numbers. Whether a card says Holding or No positions comes from the live figures: holding means that strategy&rsquo;s position count is above zero. The kinds are a fixed list of eight: Tensor strategies; Breakout and momentum; Pullbacks and mean reversion; Rule-based systems; Options &mdash; income; Options &mdash; directional and hedges; Systematic funds; and Crypto. Search matches only when every word typed appears somewhere in the name, summary, what it trades, longer explanation, kind, or the strategy&rsquo;s name with its underscores read as spaces. The kind filter and the search apply together. Each strategy&rsquo;s own trading rules are its own; the card&rsquo;s expandable note is the plain-English place for them.</p></div></details><div class="sleeves" id="sleeves"><p class="loading-note panel-body">Loading the strategy list…</p></div>
+        <div class="strat-empty empty-state" id="stratEmpty" hidden><span class="empty-dot" aria-hidden="true"></span><span id="stratEmptyText">No strategies match — try a different word or category.</span><br><button type="button" class="tool-btn" id="stratEmptyClear">Clear search and category</button></div>
+        <div class="mix-close"><h3>The mix, in pictures</h3><div class="waffle" id="waffle" role="img" aria-label="One dot per strategy, coloured by kind; a filled dot means the strategy currently holds positions"></div><p class="waffle-note" id="waffleNote"></p><div class="catmix" id="catMix"></div><div class="catmix" id="instMix"></div><div id="catMatrix"></div><details class="explainer feature-explainer fx-body" data-explainer="mix-pictures"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> Pictures of the strategy mix: one dot per strategy grouped by kind, bars for how many strategies sit in each kind, bars for what the desk trades, and a grid crossing kind with what it trades.</p><p><strong>How it is worked out:</strong> These are pure counts &mdash; no trading maths. A kind bar&rsquo;s length is its count divided by the largest kind&rsquo;s count, and the share printed is its count divided by the total number of strategies. The &lsquo;what the desk trades&rsquo; bars count strategies by the what-it-trades entry on their cards. A grid cell is the number of strategies with that kind and that what-it-trades pair, and its shading deepens as the count grows. In the dot picture, a filled dot means that strategy&rsquo;s position count is above zero.</p></div></details></div>
+        <div class="cat-jump" id="catJump" hidden></div>
+        <div class="glossary"><h3>Words we use</h3><ul><li><strong>Option:</strong> a contract giving the right to buy or sell something at an agreed price, by an agreed date.</li><li><strong>Call:</strong> an option that gains in value when the price rises.</li><li><strong>Put:</strong> an option that gains in value when the price falls.</li><li><strong>Strike:</strong> the agreed price at which an option lets you buy or sell.</li><li><strong>Premium:</strong> simply the price paid for an option — or the payment collected when one is sold.</li><li><strong>Spread:</strong> a paired option trade — one option bought and one sold on the same stock — so the most that can be made or lost is capped.</li><li><strong>Contract:</strong> one option contract covers 100 shares.</li><li><strong>Long:</strong> owned — the desk bought it and gains when the price rises.</li><li><strong>Short:</strong> sold first, as a bet the price will fall, and bought back later.</li><li><strong>Expiry:</strong> the date an option runs out.</li><li><strong>Straddle:</strong> buying a call and a put together on the same stock.</li><li><strong>Wheel:</strong> the repeating cycle of selling a put, possibly buying the shares, then selling calls against them.</li><li><strong>Ladder:</strong> options stacked at different prices and dates, like rungs of a ladder.</li><li><strong>Beta:</strong> a measure of how much a stock moves compared with the whole market; high-beta stocks move more.</li><li><strong>Bar:</strong> one period's price summary — where the price opened, its high, its low, and where it closed.</li><li><strong>ETF:</strong> a fund traded like a stock, holding a basket of shares or assets.</li><li><strong>Tensor:</strong> the desk's name for its pattern-scoring engine, which grades stocks for swing setups.</li><li><strong>VWAP:</strong> the day's average traded price, weighted by how much traded at each price.</li></ul><details class="explainer feature-explainer fx-body" data-explainer="glossary"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> Plain-English definitions of the words used across this page, from Option and Strike to Tensor and the day&rsquo;s average traded price.</p><p><strong>How it is worked out:</strong> This list is fixed written text; nothing in it is worked out from live figures. Its contract definition &mdash; one option contract covers 100 shares &mdash; is the same rule the Position book uses.</p></div></details></div>
+      </section>
+    </section>
+
+    <section class="tabpanel" role="tabpanel" id="architecture" aria-labelledby="tab-architecture" hidden>
+      <section class="panel"><div class="panel-head"><div><h2>Architecture</h2><p>How this desk works, in plain English</p></div></div>
+      <div class="panel-body" id="architectureBody"><p class="muted">Loading…</p></div><details class="explainer feature-explainer" data-explainer="architecture"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> How the desk is put together: a seven-step flow picture, a hub picture, numbered sections in plain English, a daily-rhythm timeline, and a highlighted safety section.</p><p><strong>How it is worked out:</strong> The section words are fixed written notes, loaded with the page and set out by a small page-side formatter (bold, bullets and numbered lists). The flow picture is a fixed seven steps: Data, Scheduler, Strategies, Broker, Risk accounting, Record, Terminal. The timeline is display only: the page sorts the bold job names in the Automations section into four parts of the day &mdash; Before the open, During market hours, Evening and nightly, and Weekly &mdash; using a fixed word-to-time table. The timeline itself works out nothing about trading; the real job times live in the desk&rsquo;s job list.</p></div></details></section>
+    </section>
+
+    <section class="tabpanel" role="tabpanel" id="explainer" aria-labelledby="tab-explainer" hidden>
+      <section class="panel"><div class="panel-head"><div><h2>How it&rsquo;s judged</h2><p>How the whole desk works, and how its calls are made — the long version, in plain English</p></div></div>
+      <div class="panel-body" id="explainerBody"><p class="muted">Loading…</p></div><details class="explainer feature-explainer" data-explainer="judged"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> The long plain-English document behind this page: what the desk is, how it works end to end, how a Best Setup is made, every connection the desk uses, how to build your own, and a glossary &mdash; plus a link to the full architecture brief.</p><p><strong>How it is worked out:</strong> This is explanatory writing, not a worked-out figure: six fixed sections and a 20-row list of every connection the desk uses, loaded with the page. The methods it describes are the ones set out in the Best Setups and Full read notes above.</p></div></details></section>
+    </section>
+
+    <div class="foot-rule" aria-hidden="true"><i></i><b></b></div><footer class="site-footer"><span class="foot-brand"><svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true" style="vertical-align:-4px;margin-right:7px"><rect width="64" height="64" rx="8" fill="#0d5243"/><path d="M40 10a20 20 0 1 0 14 33A23 23 0 0 1 40 10z" fill="#c9a24d"/><circle cx="45" cy="42" r="3" fill="#e8f0ea"/></svg>Muse Desk</span><span>Paper-trading research desk. Figures are updated every 5 minutes during market hours from the desk's own records.</span><span id="footerTime"></span><a href="#architecture" data-tablink="tab-architecture">How the desk works</a><a href="#explainer" data-tablink="tab-explainer">How it&rsquo;s judged</a><a href="#top" id="footTop">Back to top</a></footer>
+    <button type="button" class="back-top" id="backTop" hidden>↑ Back to top</button>
+  </main>
+
+<script id="terminal-app">
+(function(){
+  'use strict';
+  // Push alerts configuration. Filled in when the terminal is
+  // connected to the desk's alert relay; empty values are safe —
+  // the Enable alerts flow completes on the device and shows its
+  // fallback message instead of posting anywhere.
+  var PUSH_CONFIG = { vapidPublicKey: "BFFdwC7N-IAXO-75Q2O9bMCU4dOE92gpxamj1gLZcei5GfeHzF-wADC7esrTE9jxqe22uZd25yo0g2dcjHy3wXs", relayUrl: "https://ntfy.envs.net/musedesk-pair-51f5db303a4344bda58e89c15d47110a" };
+  function $(id){return document.getElementById(id);}
+  function esc(s){return String(s==null?'—':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function money(v,dec){if(v==null||v==='')return '—';dec=(dec==null?2:dec);return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:dec,maximumFractionDigits:dec}).format(Number(v));}
+  function pct(v,dec){if(v==null||v==='')return '—';return Number(v).toFixed(dec==null?1:dec)+'%';}
+  function fmtTime(v){if(!v)return '—';var x=new Date(v);if(isNaN(x))return String(v);return new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZone:'America/New_York'}).format(x)+' ET';}
+  // Tabs
+  document.querySelectorAll('[role="tab"]').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('[role="tab"]').forEach(function(x){x.setAttribute('aria-selected',String(x===t));});
+      var pid=t.getAttribute('aria-controls');
+      document.querySelectorAll('[role="tabpanel"]').forEach(function(p){p.hidden=p.id!==pid;});
+    });
+  });
+  var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var UNDERLYING_NAMES={VXX:'a volatility fund',XSP:'a mini S&P 500 index',QQQ:'a fund of 100 large Nasdaq companies',SPX:'the S&P 500 index',SPY:'a fund tracking the S&P 500 index'};
+  function parseOption(sym){
+    var m=String(sym||'').match(/^([A-Z]+)(\d{2})(\d{2})(\d{2})([CP])(\d{8})$/);
+    if(!m)return null;
+    var yr=2000+Number(m[2]), mo=Number(m[3]), dy=Number(m[4]);
+    if(mo<1||mo>12||dy<1||dy>31)return null;
+    return {underlying:m[1],expiryKey:m[2]+m[3]+m[4],type:m[5],strike:Number(m[6])/1000,
+      label:m[1]+(UNDERLYING_NAMES[m[1]]?' \u2014 '+UNDERLYING_NAMES[m[1]]:'')+' \u00b7 '+(m[5]==='C'?'call':'put')+' \u00b7 strike $'+(Number(m[6])/1000).toFixed(2)+' \u00b7 expires '+MONTHS[mo-1]+' '+dy+', '+yr};
+  }
+  function decodeSymbol(sym){var o=parseOption(sym);return o?o.label:sym;}
+  var ALGO={};
+  var ALGO_FAILED=false;
+  function renderFeed(d){
+    $('feedUnavailable').hidden=true;
+    var bp2=$('brokerPill'); if(bp2)bp2.hidden=false;
+    var genTs=Date.parse(d.generated_at_utc||'');
+    $('snapshotTime').textContent=(genTs&&(Date.now()-genTs)>7.5*60000)
+      ?'Delayed \u2014 last updated '+fmtTime(d.generated_at_utc)
+      :fmtTime(d.generated_at_utc);
+    $('statusbar').innerHTML='<span class="badge good"><span class="dot"></span>Paper account</span>'
+      +'<span class="badge"><span class="dot"></span>'+esc(((d.desk||{}).sleeve_order||[]).length)+' strategies</span>'
+      ;
+    var a=d.account||{}, ex=d.exposure||{};
+    var MICONS=['<circle cx="12" cy="12" r="9"/><path d="M12 7v10M15 9.5c-.6-1-1.7-1.5-3-1.5-1.7 0-3 .9-3 2.2 0 2.9 6 1.6 6 4.3 0 1.3-1.3 2.2-3 2.2-1.3 0-2.4-.5-3-1.5"/>','<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/>','<path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5z"/>','<path d="M4 19V5M4 19h16"/><path d="M8 16v-5M12 16V8M16 16v-3"/>'];
+    function micon(i){return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+MICONS[i]+'</svg>';}
+    var holdStrats=Object.keys(ex.by_sleeve||{}).filter(function(k){return Number(ex.by_sleeve[k])>0;}).length;
+    var metrics=[['Account value',money(a.equity),'Total value of the paper account',1],
+                 ['Cash',money(a.cash),'Money not currently invested',0],
+                 ['Open positions',String(d.position_count),holdStrats+' strategies holding \u00b7 '+d.position_count+' position'+(d.position_count===1?'':'s'),0]];
+    $('accountMetrics').innerHTML=metrics.map(function(m,i){return '<div class="metric'+(m[3]?' hero':'')+'"><span class="metric-label">'+micon(m[3]?0:(i+1))+'</span><span class="metric-value'+(m[3]?' hero-value':'')+'">'+esc(m[1])+'</span><span class="metric-sub">'+esc(m[2])+'</span></div>';}).join('');
+    var eb=$('exposureBand'); if(eb){var gp2=Number(ex.gross_pct); if(!isFinite(gp2))gp2=0; var scaleMax=gp2>100?Math.ceil(gp2/100)*100:100; var mw2=Math.max(0,gp2/scaleMax*100); eb.hidden=false; eb.innerHTML='<div class="eb-head"><span>Exposure \u2014 share of the account held in open positions</span><b>Gross exposure '+pct(gp2,1)+'</b></div><div class="exposure-meter" role="img" aria-label="Share of account held in open positions: '+esc(pct(gp2,1))+'"><span style="width:'+mw2+'%"></span><i></i><i></i><i></i>'+(gp2<8?'<span class="endcap" style="left:'+mw2+'%"></span><span class="pctlab" style="left:'+mw2+'%">'+pct(gp2,1)+' held \u2014 almost all cash</span>':'')+'</div><div class="meter-scale"><span>0%</span><span>'+(scaleMax*0.25)+'%</span><span>'+(scaleMax*0.5)+'%</span><span>'+(scaleMax*0.75)+'%</span><span>'+scaleMax+'%</span></div>';}
+    var mwf=$('mastWaffle'); if(mwf&&typeof ALGO==='object'){mwf.innerHTML=sleeveOrder().map(function(k){var c=catColor((ALGO[k]||{}).category);var h=((d.sleeves||{})[k]||{}).position_count>0;return '<i style="border-color:'+c+';background:'+(h?c:'transparent')+'"></i>';}).join('');}
+    var ft=$('footerTime'); if(ft)ft.textContent='Snapshot: '+fmtTime(d.generated_at_utc)+'.';
+    var grossPct=Number(ex.gross_pct); if(!isFinite(grossPct))grossPct=0; var scaleMax2=grossPct>100?Math.ceil(grossPct/100)*100:100; var meterW=Math.max(0,grossPct/scaleMax2*100);
+    $('exposure').innerHTML='<div class="kv emphasis"><div>Gross (longs plus shorts)</div><div>'+money(ex.gross_notional)+'</div>'
+      +'<div>Share of account</div><div>'+pct(ex.gross_pct,1)+'</div></div>'
+      +'<div class="exposure-meter" role="img" aria-label="Share of account held in open positions: '+esc(pct(ex.gross_pct,1))+'"><span style="width:'+meterW+'%"></span><i></i><i></i><i></i></div>'
+      +'<div class="meter-scale"><span>0%</span><span>'+(scaleMax2*0.25)+'%</span><span>'+(scaleMax2*0.5)+'%</span><span>'+(scaleMax2*0.75)+'%</span><span>'+scaleMax2+'%</span></div>'
+      +(grossPct<8?'<p class="footnote" style="margin-top:2px">Almost all of the account is currently in cash — only '+Object.keys(ex.by_sleeve||{}).filter(function(k){return Number(ex.by_sleeve[k])>0;}).length+' of '+(((d.desk||{}).sleeve_order||[]).length)+' strategies are holding anything.</p>':'')
+      + bySleeveHtml(ex)
+      +'<p class="footnote">The total value held is the combined market value of every open position, added up without netting winners against losers.</p>';
+    function bySleeveHtml(ex){
+      var bs=ex.by_sleeve||{}, keys=Object.keys(bs).filter(function(k){return Number(bs[k])>0;});
+      var tot=keys.reduce(function(s,k){return s+Number(bs[k]);},0);
+      if(!keys.length||!(tot>0))return '';
+      var cols=['#34c3a5','#cfa14a','#6398cf','#a583c7','#dd8a57','#57b7c7','#97bd63','#e0655f'];
+      var segs=keys.map(function(k,i){var w=Number(bs[k])/tot*100;return '<span style="width:'+w+'%;background:'+cols[i%cols.length]+'"></span>';}).join('');
+      var leg=keys.map(function(k,i){var nm=(ALGO[k]||{}).name||k;return '<li><span class="sw" style="background:'+cols[i%cols.length]+'"></span>'+esc(nm)+'<span class="sv">'+money(bs[k])+' \u00b7 '+pct(Number(bs[k])/tot*100,1)+'</span></li>';}).join('');
+      return '<div class="stack"><p style="margin:0 0 2px;font-size:13px;color:var(--muted)">Where the held value sits, by strategy:</p><div class="stack-bar" role="img" aria-label="Held value split by strategy">'+segs+'</div><ul class="stack-legend">'+leg+'</ul></div>';
+    }
+    var statusTxt=(String(a.status||'').toUpperCase()==='ACTIVE')?'Active — open and trading normally':(a.status||'—');
+    var eqN=Number(a.equity), cashN=Number(a.cash);
+    var heldNet=Number(a.positions_value);
+    if(!isFinite(heldNet)){
+      var posRows=d.positions||[];
+      var rowsSum=posRows.reduce(function(s,p){return s+(p.market_value!=null?Number(p.market_value):0);},0);
+      heldNet=(posRows.length&&isFinite(rowsSum))?rowsSum:NaN;
+    }
+    var acctHtml='<div class="kv"><div>Status</div><div style="font-family:var(--sans);font-size:13px">'+esc(statusTxt)+'</div>'
+      +'<div>Cash held</div><div>'+money(a.cash)+'</div>'
+      +'<div>Value held in positions</div><div>'+(isFinite(heldNet)?money(heldNet):'—')+'</div></div>';
+    if(isFinite(cashN)&&isFinite(heldNet)&&(cashN+heldNet)>0){
+      var tot=cashN+heldNet, cw=Math.max(0,Math.min(100,cashN/tot*100)), hw=Math.max(0,Math.min(100,heldNet/tot*100));
+      acctHtml+='<div class="stack"><div class="stack-bar" role="img" aria-label="Account made up of '+pct(cashN/eqN*100,1)+' cash and '+pct(heldNet/eqN*100,1)+' held in positions"><span style="width:'+cw+'%;background:var(--accent)"></span><span style="width:'+hw+'%;background:var(--gold)"></span></div>'
+        +'<ul class="stack-legend"><li><span class="sw" style="background:var(--accent)"></span>Cash<span class="sv">'+money(a.cash)+' \u00b7 '+pct(cashN/eqN*100,1)+' of account</span></li>'
+        +'<li><span class="sw" style="background:var(--gold)"></span>Held in positions<span class="sv">'+money(heldNet)+' \u00b7 '+pct(heldNet/eqN*100,1)+' of account</span></li></ul></div>';
+    }
+    acctHtml+='<div class="kv" style="margin-top:12px"><div>Buying power</div><div>'+money(a.buying_power)+'</div></div><p class="footnote">Buying power is what is available to open new positions — the broker allows buying beyond the cash balance on this account.</p>';
+    if(isFinite(eqN)&&isFinite(cashN)&&isFinite(heldNet)){
+      acctHtml+='<div class="equation" role="img" aria-label="Cash '+money(cashN)+' plus value held '+money(heldNet)+' equals account value '+money(eqN)+'"><div class="eq-block"><span>Cash</span><b>'+money(cashN)+'</b></div><span class="eq-op" aria-hidden="true">+</span><div class="eq-block"><span>Value held (net)</span><b>'+money(heldNet)+'</b></div><span class="eq-op" aria-hidden="true">=</span><div class="eq-block total"><span>Account value</span><b>'+money(eqN)+'</b></div></div>';
+    }
+    $('accountDetail').innerHTML=acctHtml;
+    var lp=$('ledgerPanel');
+    if(lp){
+      var lc=d.ledger_counts||{}, bk=lc.by_kind||{};
+      var KIND=[['fill','Completed trades (fills)'],['journal','Journal entries'],['tick','Price records'],['nightly_reconcile','Nightly checks against the broker'],['outcome','Trade reviews'],['import_position','Positions brought in at the start']];
+      var ltot=Number(lc.total)||KIND.reduce(function(s,x){return s+Number(bk[x[0]]||0);},0);
+      var lcols=['#34c3a5','#6398cf','#cfa14a','#a583c7','#97bd63','#e0655f','#8a8f98'];
+      var present=KIND.filter(function(x){return Number(bk[x[0]]||0)>0;});
+      var lrows=present.map(function(x){return [x[1],Number(bk[x[0]]||0)];});
+      var lsum=lrows.reduce(function(s,x){return s+x[1];},0);
+      if(ltot>lsum)lrows.push(['All other records',ltot-lsum]);
+      if(ltot>0&&lrows.length){
+        lp.innerHTML='<div class="kv emphasis"><div>Records in total</div><div>'+ltot.toLocaleString('en-US')+'</div></div><div class="stack"><div class="stack-bar" role="img" aria-label="What the record is made of: '+lrows.map(function(x){return x[0]+' '+x[1].toLocaleString('en-US');}).join(', ')+'">'
+          +lrows.map(function(x,i){return '<span style="width:'+(x[1]/ltot*100)+'%;background:'+lcols[i%lcols.length]+'"></span>';}).join('')+'</div><ul class="stack-legend">'
+          +lrows.map(function(x,i){return '<li><span class="sw" style="background:'+lcols[i%lcols.length]+'"></span>'+esc(x[0])+'<span class="sv">'+x[1].toLocaleString('en-US')+' \u00b7 '+pct(x[1]/ltot*100,1)+'</span></li>';}).join('')+'</ul></div>';
+      } else { lp.innerHTML='<p class="muted">The record count is not available in this snapshot.</p>'; }
+    }
+    $('positionCount').textContent=d.position_count+' open positions';
+    if(!d.positions.length){$('positions').innerHTML='<div class="empty-state"><span class="empty-dot" aria-hidden="true"></span>No open positions right now — the desk is waiting for its next setup.</div>';}
+    else{
+      function fmtPL(v){if(v==null)return '\u2014';return (Number(v)>=0?'+':'')+money(v);}
+      function plCls(v){return v==null?'':(Number(v)>=0?' pnl-major positive':' pnl-major negative');}
+      var maxPl=d.positions.reduce(function(m2,p){return p.unrealized_pl!=null?Math.max(m2,Math.abs(Number(p.unrealized_pl))):m2;},0);
+      function plBar(v){
+        if(v==null||!(maxPl>0))return '';
+        var w=Math.abs(Number(v))/maxPl*50, pos=Number(v)>=0;
+        var style=pos?('left:50%;width:'+w+'%'):('left:'+(50-w)+'%;width:'+w+'%');
+        return '<span class="pnl-bar" role="img" aria-label="Open result sized against the largest open result in the book"><i class="'+(pos?'pos':'neg')+'" style="'+style+'"></i></span>';
+      }
+      function rowHtml(p){
+        var o=parseOption(p.symbol);
+        var strat=ALGO_FAILED?'Strategy name unavailable':((ALGO[p.sleeve]||{}).name||'Strategy name unavailable');
+        var qtyNum=Math.abs(Number(p.qty));
+        var qtyTxt=qtyNum+' '+(o?'contract':'share')+(qtyNum===1?'':'s');
+        var sideTxt=(p.side==='short'||Number(p.qty)<0)?'Short (sold first)':'Long (owned)';
+        var share=(bookAbs>0&&p.market_value!=null)?(Math.abs(Number(p.market_value))/bookAbs*100):null;
+        var symCell=o?('<span class="sym-label">'+esc(decodeSymbol(p.symbol))+'</span><span class="sym-raw">'+esc(p.symbol)+'</span>'):esc(p.symbol);
+        return '<tr><td data-label="Symbol" class="symbol">'+symCell+'</td><td data-label="Strategy">'+esc(strat)+'</td>'
+          +'<td data-label="Quantity" class="num">'+esc(qtyTxt)+'</td><td data-label="Side">'+esc(sideTxt)+'</td>'
+          +'<td data-label="Average entry" class="num">'+money(p.avg_entry)+'</td><td data-label="Current price" class="num">'+money(p.current)+'</td>'
+          +'<td data-label="Market value" class="num">'+money(p.market_value)+'</td>'
+          +'<td data-label="Share of book" class="num">'+(share==null?'—':'<span class="sharebar" aria-hidden="true"><i style="width:'+Math.min(100,share)+'%"></i></span>'+pct(share,1))+'</td>'
+          +'<td data-label="Open profit or loss" class="num'+plCls(p.unrealized_pl)+'">'+esc(fmtPL(p.unrealized_pl))+plBar(p.unrealized_pl)+'</td></tr>';
+      }
+      var bookAbs=d.positions.reduce(function(s,p){return s+(p.market_value!=null?Math.abs(Number(p.market_value)):0);},0);
+      var blocks=[], byKey={};
+      d.positions.forEach(function(p,idx){
+        var o=parseOption(p.symbol);
+        var key=o?((p.sleeve||'')+'|'+o.underlying+'|'+o.expiryKey):('row|'+idx);
+        if(!byKey[key]){byKey[key]={opt:o,rows:[]};blocks.push(byKey[key]);}
+        byKey[key].rows.push(p);
+      });
+      var html='';
+      blocks.forEach(function(b){
+        if(b.opt&&b.rows.length>1){
+          var typeWord=b.rows.every(function(p){return parseOption(p.symbol).type===b.opt.type;})?(b.opt.type==='C'?'call':'put')+' spread':'option spread';
+          html+='<tr class="group-head"><td colspan="9">'+esc(b.opt.underlying+' '+typeWord+' \u2014 '+b.rows.length+' parts of one trade')+'</td></tr>';
+          html+=b.rows.map(rowHtml).join('');
+          var cmv=0, cpl=0, hasMv=false, hasPl=false;
+          b.rows.forEach(function(p){if(p.market_value!=null){cmv+=Number(p.market_value);hasMv=true;} if(p.unrealized_pl!=null){cpl+=Number(p.unrealized_pl);hasPl=true;}});
+          html+='<tr class="group-total"><td colspan="6">Combined</td><td class="num">'+(hasMv?money(cmv):'\u2014')+'</td><td class="num"></td><td class="num'+plCls(hasPl?cpl:null)+'">'+(hasPl?fmtPL(cpl):'\u2014')+'</td></tr>';
+        } else {
+          html+=b.rows.map(rowHtml).join('');
+        }
+      });
+      var tMv=0,tPl=0,tHasMv=false,tHasPl=false;
+      d.positions.forEach(function(p){if(p.market_value!=null){tMv+=Number(p.market_value);tHasMv=true;} if(p.unrealized_pl!=null){tPl+=Number(p.unrealized_pl);tHasPl=true;}});
+      html+='<tr class="group-total"><td colspan="6">Total — whole book</td><td class="num">'+(tHasMv?money(tMv):'\u2014')+'</td><td class="num"></td><td class="num'+plCls(tHasPl?tPl:null)+'">'+(tHasPl?fmtPL(tPl):'\u2014')+'</td></tr>';
+      var expSeen={}, expList=[];
+      d.positions.forEach(function(p){var o=parseOption(p.symbol); if(o&&!expSeen[o.expiryKey]){expSeen[o.expiryKey]=true; expList.push(o);}});
+      var expHtml=expList.length?'<div class="expiry-strip"><strong>Option expiry dates:</strong>'+expList.map(function(o){return '<span class="exp-chip">'+esc(MONTHS[Number(o.expiryKey.slice(2,4))-1]+' '+Number(o.expiryKey.slice(4,6))+', '+(2000+Number(o.expiryKey.slice(0,2))))+'</span>';}).join('')+'<span class="muted">Each chip is a date on which an open option runs out.</span></div>':'';
+      $('positions').innerHTML=expHtml+'<table><thead><tr><th>Symbol</th><th>Strategy</th><th class="num">Quantity</th><th>Side</th><th class="num">Average entry</th><th class="num">Current price</th><th class="num">Market value</th><th class="num">Share of book (net)</th><th class="num">Open profit or loss</th></tr></thead><tbody>'+html+'</tbody></table>';
+    }
+    FEED=d;
+    renderStrategies();
+    /* The on-demand section renders BEFORE renderSetups: it ends by
+       applying the URL hash, and the #/ondemand deep links resolve
+       against the map this render fills. */
+    renderOndemandReads(d);
+    renderSetups(d);
+    renderMarket(d);
+  }
+  var TAXONOMY=['Tensor strategies','Breakout & momentum','Pullbacks & mean reversion','Rule-based systems','Options \u2014 income','Options \u2014 directional & hedges','Systematic funds','Crypto'];
+  var FEED=null;
+  function sleeveOrder(){return FEED?((FEED.desk||{}).sleeve_order||Object.keys(FEED.sleeves||{})):[];}
+  function categoryCounts(){
+    var counts={}; TAXONOMY.forEach(function(c){counts[c]=0;});
+    sleeveOrder().forEach(function(k){var c=(ALGO[k]||{}).category; if(c in counts)counts[c]++;});
+    return counts;
+  }
+  function buildCategoryOptions(){
+    var sel=$('stratCategory'); if(!sel)return;
+    var cur=sel.value||'all', counts=categoryCounts(), total=sleeveOrder().length;
+    sel.innerHTML='<option value="all">All strategies ('+total+')</option>'+TAXONOMY.map(function(c){
+      return '<option value="'+esc(c)+'">'+esc(c)+' ('+counts[c]+')</option>';
+    }).join('');
+    sel.value=(cur==='all'||cur in counts)?cur:'all';
+  }
+  var CAT_COLORS={'Tensor strategies':'#a583c7','Breakout & momentum':'#dd8a57','Pullbacks & mean reversion':'#6398cf','Rule-based systems':'#97bd63','Options \u2014 income':'#34c3a5','Options \u2014 directional & hedges':'#82a8c9','Systematic funds':'#cfa14a','Crypto':'#e0655f'};
+  function catColor(c){return CAT_COLORS[c]||'#34c3a5';}
+  var CAT_TEXT={'Systematic funds':'#e0be62'};
+  function catText(c){return CAT_TEXT[c]||catColor(c);}
+  var CAT_GLYPH={'Tensor strategies':'T','Breakout & momentum':'B','Pullbacks & mean reversion':'P','Rule-based systems':'R','Options \u2014 income':'OI','Options \u2014 directional & hedges':'OD','Systematic funds':'S','Crypto':'C'};
+  function catGlyph(c){return '<span class="cat-glyph" style="background:'+catColor(c)+'" aria-hidden="true">'+esc(CAT_GLYPH[c]||'?')+'</span>';}
+  function catGlyphSm(c){return '<span class="cm-glyph" style="background:'+catColor(c)+'" aria-hidden="true">'+esc(CAT_GLYPH[c]||'?')+'</span>';}
+  function renderCatMix(){
+    var host=$('catMix'); if(!host)return;
+    var counts=categoryCounts(), total=sleeveOrder().length;
+    if(!total){host.innerHTML='';return;}
+    var max=Math.max.apply(null,TAXONOMY.map(function(c){return counts[c];}).concat([1]));
+    host.innerHTML='<h3>'+total+' strategies across '+TAXONOMY.length+' kinds</h3>'+TAXONOMY.map(function(c){
+      return '<div class="catmix-row"><span class="cm-name">'+catGlyphSm(c)+esc(c)+'</span><span class="catmix-track"><span class="catmix-fill" style="width:'+(counts[c]/max*100)+'%;background:'+catColor(c)+'"></span></span><span class="cm-n num">'+counts[c]+' \u00b7 '+pct(counts[c]/total*100,1)+'</span></div>';
+    }).join('');
+  }
+  function renderWaffle(){
+    var host=$('waffle'); if(!host)return;
+    var order=sleeveOrder();
+    host.innerHTML=TAXONOMY.map(function(c){
+      var ks=order.filter(function(k){return (ALGO[k]||{}).category===c;});
+      if(!ks.length)return '';
+      return '<span class="wf-cluster">'+ks.map(function(k){var s=(FEED.sleeves||{})[k]||{position_count:0};var col=catColor(c);var holding=s.position_count>0;return '<i title="'+esc((ALGO[k]||{}).name||k)+' ('+esc(c)+')" style="border-color:'+col+';background:'+(holding?col:'transparent')+'"></i>';}).join('')+'<em>'+esc(CAT_GLYPH[c]||'')+' \u00b7 '+esc(c)+'</em></span>';
+    }).join('');
+    var held=order.filter(function(k){return ((FEED.sleeves||{})[k]||{}).position_count>0;}).length;
+    var note=$('waffleNote');
+    if(note)note.textContent='Each dot is one strategy, grouped by kind (initials below each group). A filled dot is holding positions right now: '+held+' of '+order.length+' strategies are holding, '+(order.length-held)+' are waiting.';
+    host.setAttribute('aria-label','One dot per strategy, grouped by kind: '+held+' of '+order.length+' currently holding positions');
+  }
+  function renderInstMix(){
+    var host=$('instMix'); if(!host)return;
+    var counts={}, total=0;
+    sleeveOrder().forEach(function(k){var ins=(ALGO[k]||{}).instruments; if(ins){counts[ins]=(counts[ins]||0)+1; total++;}});
+    var keys=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];});
+    if(!total){host.innerHTML='';return;}
+    var max=Math.max.apply(null,keys.map(function(k2){return counts[k2];}).concat([1]));
+    var cols=['#34c3a5','#6398cf','#cfa14a','#a583c7','#97bd63','#e0655f'];
+    host.innerHTML='<h3>What the desk trades</h3>'+keys.map(function(k2,i){
+      return '<div class="catmix-row"><span class="cm-name">'+esc(k2==='None \u2014 records checks only'?'Monitors \u2014 no trades, records checks only':k2)+'</span><span class="catmix-track"><span class="catmix-fill" style="width:'+(counts[k2]/max*100)+'%;background:'+cols[i%cols.length]+'"></span></span><span class="cm-n">'+counts[k2]+'</span></div>';
+    }).join('');
+  }
+  function renderMatrix(){
+    var host=$('catMatrix'); if(!host)return;
+    var insts=[]; sleeveOrder().forEach(function(k){var i2=(ALGO[k]||{}).instruments; if(i2&&insts.indexOf(i2)===-1)insts.push(i2);});
+    if(!insts.length){host.innerHTML='';return;}
+    var head='<tr><th>Kind \u00d7 what it trades</th>'+insts.map(function(i2){return '<th>'+esc(i2.replace('None \u2014 records checks only','Monitors'))+'</th>';}).join('')+'</tr>';
+    var rows=TAXONOMY.map(function(c){
+      var cells=insts.map(function(i2){
+        var n=sleeveOrder().filter(function(k){var a=ALGO[k]||{}; return a.category===c&&a.instruments===i2;}).length;
+        var al=n?Math.min(.92,.18+n*.16):0; var bg=n?('background:rgba(46,189,155,'+al+');color:'+(al>=.6?'#06231b':'var(--ink)')):'color:var(--muted)';
+        return '<td style="'+bg+'">'+(n||'\u00b7')+'</td>';
+      }).join('');
+      return '<tr><th class="rowh" style="color:'+catText(c)+';border-left-color:'+catColor(c)+'">'+esc(c)+'</th>'+cells+'</tr>';
+    }).join('');
+    host.innerHTML='<div class="catmix" style="border-bottom:0"><h3>Kinds and what they trade, together</h3></div><div class="matrix-wrap"><table class="matrix"><thead>'+head+'</thead><tbody>'+rows+'</tbody></table></div>';
+  }
+  function cardHtml(k,showCat,grouped){
+    var s=(FEED.sleeves||{})[k]||{positions:[],position_count:0};
+    var algo=ALGO[k];
+    var name=algo?algo.name:'Strategy name unavailable';
+    var summary=algo?algo.summary:'A plain-English description is not available yet.';
+    var expl=algo?'<details class="explainer"><summary>How this strategy works</summary><p>'+esc(algo.explainer)+'</p><p class="explainer-inst">Trades: '+esc(algo.instruments)+'</p></details>':'';
+    var holding=s.position_count>0;
+    var col=catColor(algo&&algo.category);
+    var stateHtml=holding?'<span class="pill good">Holding '+s.position_count+' position'+(s.position_count===1?'':'s')+'</span>':'<span class="idle-state">No positions</span>';
+    var inst=algo&&algo.instruments?'<span class="inst-cap">'+esc(algo.instruments==='None \u2014 records checks only'?'Monitors \u2014 no trades, records checks only':algo.instruments)+'</span>':'';
+    var cat=(showCat&&algo&&algo.category)?'<span class="pill" style="color:'+catText(algo.category)+';border-color:'+col+'">'+esc(algo.category)+'</span>':'';
+    return '<article class="sleeve'+(holding?' holding':'')+'" data-sleeve="'+esc(k)+'" style="border-top-color:'+col+'"><div class="sleeve-top"><h3>'+(algo?catGlyph(algo.category):'')+esc(name)+inst+'</h3>'+stateHtml+'</div><p class="summary">'+esc(summary)+'</p>'+expl
+      +(cat?'<div class="sleeve-meta">'+cat+'</div>':'')+'</article>';
+  }
+  function matchesQuery(k,q){
+    if(!q)return true;
+    var algo=ALGO[k]||{};
+    var hay=((algo.name||'')+' '+(algo.summary||'')+' '+(algo.instruments||'')+' '+(algo.explainer||'')+' '+(algo.category||'')+' '+k.replace(/_/g,' ')).toLowerCase();
+    return q.toLowerCase().split(/\s+/).filter(Boolean).every(function(term){return hay.indexOf(term)!==-1;});
+  }
+  function visibleSleeves(){
+    var sel=$('stratCategory'), cat=sel?sel.value:'all';
+    var inp=$('stratSearch'), q=inp?inp.value.trim():'';
+    return sleeveOrder().filter(function(k){
+      return (cat==='all'||(ALGO[k]||{}).category===cat)&&matchesQuery(k,q);
+    });
+  }
+  function renderStrategies(){
+    var host=$('sleeves'); if(!host||!FEED)return;
+    $('algoUnavailable').hidden=!ALGO_FAILED;
+    var tools=$('stratTools'); if(tools)tools.hidden=ALGO_FAILED;
+    if(ALGO_FAILED){host.innerHTML='';var ce=$('stratEmpty'); if(ce)ce.hidden=true; var cc=$('stratCount'); if(cc)cc.textContent=''; return;}
+    buildCategoryOptions();
+    var order=sleeveOrder(), vis=visibleSleeves();
+    var sel=$('stratCategory'), cat=sel?sel.value:'all';
+    var inp=$('stratSearch'), q=inp?inp.value.trim():'';
+    var grouped=(cat==='all'&&!q);
+    host.classList.toggle('grouped',grouped);
+    if(grouped){
+      host.innerHTML=TAXONOMY.map(function(c){
+        var ks=vis.filter(function(k){return (ALGO[k]||{}).category===c;});
+        if(!ks.length)return '';
+        return '<section class="cat-group" id="cat-'+esc(CAT_GLYPH[c]||c)+'"><h3 class="cat-head" style="color:'+catText(c)+';border-left:4px solid '+catColor(c)+';padding-left:12px">'+esc(c)+' <span class="cat-count">\u00b7 '+ks.length+' strateg'+(ks.length===1?'y':'ies')+'</span></h3><div class="sleeves">'+ks.map(function(k){return cardHtml(k,false,true);}).join('')+'</div></section>';
+      }).join('');
+    } else {
+      host.innerHTML=vis.map(function(k){return cardHtml(k,true);}).join('');
+    }
+    renderCatMix(); renderWaffle(); renderInstMix(); renderMatrix();
+    var jr=$('catJump'); if(jr){var tools2=$('stratTools'); if(tools2&&jr.previousElementSibling!==tools2&&tools2.parentNode){tools2.parentNode.insertBefore(jr,tools2.nextSibling);} if(grouped){jr.hidden=false; jr.innerHTML=TAXONOMY.map(function(c){var n=vis.filter(function(k){return (ALGO[k]||{}).category===c;}).length; return n?'<a href="#cat-'+esc(CAT_GLYPH[c]||c)+'"><span class="jd" style="background:'+catColor(c)+'"></span>'+esc(c)+' ('+n+')</a>':'';}).join('');} else {jr.hidden=true; jr.innerHTML='';}}
+    var cnt=$('stratCount'); if(cnt)cnt.textContent='Showing '+vis.length+' of '+order.length+' strategies';
+    var emp=$('stratEmpty'); if(emp){emp.hidden=vis.length>0; if(!vis.length){var et=$('stratEmptyText'); if(et)et.textContent='No strategies match'+(q?' \u201c'+q+'\u201d':'')+(cat!=='all'?' in '+cat:'')+' \u2014 try a different word or category.';}}
+  }
+  function feedFailed(){
+    $('feedUnavailable').hidden=false;
+    var bp=$('brokerPill'); if(bp)bp.hidden=true;
+    var un='<div class="unavailable"><strong>Data unavailable right now.</strong><p>The latest figures could not be loaded, so this panel is empty rather than showing old numbers.</p></div>';
+    $('exposure').innerHTML=un; $('accountDetail').innerHTML=un;
+    $('positions').innerHTML='<div class="panel-body">'+un+'</div>';
+    var pc=$('positionCount'); if(pc)pc.textContent='';
+    $('statusbar').innerHTML='<span class="badge warn"><span class="dot"></span>Data unavailable — showing no figures rather than old ones</span>';
+  }
+  function validFeed(j){
+    if(!j||typeof j!=='object')return false;
+    if(!j.generated_at_utc)return false;
+    if(!j.account||!(Number(j.account.equity)>0))return false;
+    if(!Array.isArray(j.positions)||j.positions.length!==j.position_count)return false;
+    return true;
+  }
+  var lastGen='';
+  function poll(){
+    fetch('../desk-terminal-feed.json?t='+Date.now(),{cache:'no-store'})
+      .then(function(r){if(!r.ok)throw new Error('feed http '+r.status);return r.json();})
+      .then(function(j){ if(!validFeed(j)){feedFailed();return;} if(j.generated_at_utc!==lastGen){lastGen=j.generated_at_utc;renderFeed(j);} })
+      .catch(function(){ if(!lastGen)feedFailed(); });
+  }
+  function rich(body){
+    var lines=String(body||'').split('\n'), html='', list=null;
+    function closeList(){if(list){html+='</'+list+'>';list=null;}}
+    lines.forEach(function(ln){
+      var t=ln.trim();
+      if(!t){closeList();return;}
+      var bullet=t.match(/^-\s+(.*)$/), num=t.match(/^\d+\.\s+(.*)$/);
+      var item=bullet?bullet[1]:(num?num[1]:null), want=bullet?'ul':(num?'ol':null);
+      if(item!==null){ if(list!==want){closeList();html+='<'+want+'>';list=want;}
+        html+='<li>'+esc(item).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')+'</li>'; return; }
+      closeList();
+      html+='<p>'+esc(t).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')+'</p>';
+    });
+    closeList(); return html;
+  }
+  var steps=[['Data','Prices arrive from the broker and other data sources throughout the day.'],
+             ['Scheduler','The desk\'s clock wakes the right jobs at the right times.'],
+             ['Strategies','Each strategy checks its own rules and decides whether to buy, sell, or wait.'],
+             ['Broker','The only part that talks to the broker — approved orders are sent to the paper account.'],
+             ['Risk accounting','Keeps track of how much each strategy holds, and the desk in total.'],
+             ['Record','Every fill is written into one permanent record.'],
+             ['Terminal','This page is built from that record and the live broker account, refreshed every 5 minutes during market hours.']];
+  var pipe='<div class="pipeline" role="img" aria-label="The seven pieces of the desk, in flow order: Data, Scheduler, Strategies, Broker, Risk accounting, Record, Terminal">'
+    + steps.map(function(s,i){return (i?'<span class="pipe-arrow" aria-hidden="true">\u2192</span>':'')+'<div class="pipe-step"><strong>'+esc(s[0])+'</strong><span>'+esc(s[1])+'</span></div>';}).join('')+'</div>';
+  fetch('../architecture.json?t='+Date.now(),{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('architecture http '+r.status);return r.json();})
+    .then(function(j){
+      var el=$('architectureBody'); if(!el)return;
+      var PHASES=[['Before the open','Premarket|premarket'],['During market hours','Market scans|Exit sweeps|refreshes every 5 minutes'],['Evening and nightly','nightly|Nightly|heartbeat|Heartbeat|backup'],['Weekly','drills|Drills|weekly']];
+      function timelineHtml(sec){
+        var items=[];
+        String((sec&&sec.body)||'').split('\n').forEach(function(ln){var mm=ln.trim().match(/^-\s+\*\*(.+?)\*\*/); if(mm)items.push(mm[1].replace(/\.$/,''));});
+        if(items.length<4)return '';
+        var cols=PHASES.map(function(ph){
+          var mine=items.filter(function(it){return ph[1].split('|').some(function(kw){return it.toLowerCase().indexOf(kw.toLowerCase())===0||it.toLowerCase().indexOf(kw.toLowerCase())!==-1;});});
+          var TIMES={'premarket':'before the open','market scans':'during market hours','exit sweeps':'every few minutes','refreshes every 5 minutes':'every 5 minutes','nightly reconciliation':'nightly','nightly review':'nightly','nightly research':'nightly','heartbeat':'around the clock','nightly backup':'nightly','regular drills':'weekly'};
+          return '<div class="tl-phase"><h4>'+esc(ph[0])+'</h4>'+(mine.length?mine.map(function(it){var tm='';Object.keys(TIMES).forEach(function(kw){if(it.toLowerCase().indexOf(kw)!==-1)tm=TIMES[kw];});return '<span>'+esc(it)+(tm?'<span class="tl-time">'+esc(tm)+'</span>':'')+'</span>';}).join(''):'<span>Nothing scheduled in this part of the day</span>')+'</div>';
+        }).join('');
+        return '<div class="timeline" role="img" aria-label="The desk\'s daily rhythm: jobs grouped by the part of the day they run in">'+cols+'</div>';
+      }
+      var hub='<p class="hub-note">Strategies state what they want \u2192 the Broker talks to the broker \u2192 every fill is written to the record.</p><div class="hub" role="img" aria-label="The seven core pieces of the desk; the Broker piece is the only one that talks to the broker, and every piece writes to the record">'+steps.map(function(s){
+        var cls=s[0]==='Broker'?'hub-piece broker':(s[0]==='Record'?'hub-piece ledger':'hub-piece');
+        return '<div class="'+cls+'"><strong>'+esc(s[0])+'</strong><span>'+esc(s[1])+'</span></div>';
+      }).join('')+'</div><p class="footnote">One structure matters most: only the Broker piece talks to the broker, and every piece writes what it does into the record.</p>';
+      el.innerHTML=pipe+hub+(j.sections||[]).map(function(s,idx){
+        var extra=(s.heading==='The automations')?timelineHtml(s):'';
+        var cls=s.heading==='Safety by design'?'arch-card safety':'arch-card';
+        return '<div class="'+cls+' arch-section"><h3><span class="secno">'+String(idx+1).padStart(2,'0')+'</span>'+esc(s.heading)+'</h3>'+extra+rich(s.body)+'</div>';
+      }).join('');
+    })
+    .catch(function(){ var el=$('architectureBody'); if(el)el.innerHTML=pipe+'<div class="unavailable"><strong>Architecture notes unavailable right now.</strong><p>The notes could not be loaded, so nothing is shown here rather than an incomplete picture.</p></div>'; });
+  // --- How it's judged: the long explainer (static JSON, degrade gracefully) ---
+  function richFull(body, connHtml){
+    var lines=String(body||'').split('\n'), html='', list=null;
+    function closeList(){if(list){html+='</'+list+'>';list=null;}}
+    function fmt(t){return esc(t).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+?)\*/g,'<em>$1</em>');}
+    lines.forEach(function(ln){
+      var t=ln.trim();
+      if(!t){closeList();return;}
+      if(t==='[[CONNECTIONS]]'){closeList();html+=connHtml||'';return;}
+      var h=t.match(/^##\s+(.*)$/);
+      if(h){closeList();html+='<h4>'+fmt(h[1])+'</h4>';return;}
+      var bullet=t.match(/^-\s+(.*)$/), num=t.match(/^\d+\.\s+(.*)$/);
+      var item=bullet?bullet[1]:(num?num[1]:null), want=bullet?'ul':(num?'ol':null);
+      if(item!==null){ if(list!==want){closeList();html+='<'+want+'>';list=want;}
+        html+='<li>'+fmt(item)+'</li>'; return; }
+      closeList();
+      html+='<p>'+fmt(t)+'</p>';
+    });
+    closeList(); return html;
+  }
+  fetch('../explainer.json?t='+Date.now(),{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('explainer http '+r.status);return r.json();})
+    .then(function(j){
+      var el=$('explainerBody'); if(!el)return;
+      var connHtml='';
+      if((j.connections||[]).length){
+        connHtml='<table class="conn"><thead><tr><th>Connection</th><th>What the desk uses it for</th><th>How it is reached</th><th>If it vanished</th></tr></thead><tbody>'
+          +j.connections.map(function(c){return '<tr><td><strong>'+esc(c.name)+'</strong></td><td>'+esc(c.use)+'</td><td>'+esc(c.access)+'</td><td>'+esc(c.if_gone)+'</td></tr>';}).join('')+'</tbody></table>';
+      }
+      var briefHtml='';
+      if(j.brief&&j.brief.href){
+        briefHtml='<div class="brief-card"><h3>'+esc(j.brief.heading||'The brief')+'</h3><p>'+esc(j.brief.body||'')+'</p><p><a href="./'+esc(j.brief.href)+'">'+esc(j.brief.label||'Read the brief')+'</a></p></div>';
+      }
+      el.innerHTML='<div class="arch-card"><p>'+esc(j.intro||'')+'</p></div>'
+        +(j.sections||[]).map(function(s,idx){
+          return '<div class="arch-card arch-section"><h3><span class="secno">'+String(idx+1).padStart(2,'0')+'</span>'+esc(s.heading)+'</h3>'+richFull(s.body,connHtml)+'</div>';
+        }).join('')+briefHtml;
+    })
+    .catch(function(){ var el=$('explainerBody'); if(el)el.innerHTML='<div class="unavailable"><strong>The long explanation is unavailable right now.</strong><p>It could not be loaded, so nothing is shown here rather than an incomplete picture.</p></div>'; });
+  // --- Best setups + market context (feed-driven, degrade gracefully) ---
+  function flashEl(el){ if(!el)return; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  function gotoStrategy(key){
+    if(!key)return;
+    var tab=$('tab-model'); if(tab)tab.click();
+    var ss=$('stratSearch'); if(ss)ss.value='';
+    var sc2=$('stratCategory'); if(sc2)sc2.value='all';
+    renderStrategies();
+    var el=document.querySelector('article[data-sleeve="'+key+'"]');
+    if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); flashEl(el); }
+  }
+  function applyHash(){
+    var h=window.location.hash||'';
+    var m=h.match(/^#setup-([A-Za-z0-9.\-]+)$/);
+    if(m){ var sym=m[1].toUpperCase();
+      if(SETUPS[sym]){ openSetupDetail(sym); return; }
+      var card=$('setup-'+sym); if(card){ card.scrollIntoView({block:'center'}); flashEl(card); } return; }
+    m=h.match(/^#\/ondemand\/([A-Za-z0-9.]+(?:-[A-Za-z0-9.]+)*?)-(\d{4}-\d{2}-\d{2})$/);
+    if(m){ var key=m[1].toUpperCase()+'|'+m[2]; if(ONDEMAND[key]){ openOndemandDetail(key); return; } }
+    m=h.match(/^#strategy-([A-Za-z0-9_\-]+)$/i);
+    if(m)gotoStrategy(m[1]);
+  }
+  var SETUPS={};
+  var DETAIL_SYM=null;
+  // Card sparkline: the brief's own recent closes, drawn as an
+  // inline SVG. No brief (or no series in it) -> no sparkline;
+  // one is never invented. The entry price, when the brief
+  // carries it and it falls inside the window, is a gold dash.
+  function sparkSvg(s){
+    var b=(s.brief&&typeof s.brief==='object')?s.brief:null;
+    var raw=(b&&Array.isArray(b.spark_closes))?b.spark_closes:[];
+    var cs=raw.filter(function(v){return isFinite(Number(v));}).map(Number);
+    if(cs.length<2)return '';
+    var min=Math.min.apply(null,cs), max=Math.max.apply(null,cs);
+    if(!(max>min))max=min+1;
+    var W=264,H=38,PAD=3;
+    function X(i){return (i/(cs.length-1)*W).toFixed(1);}
+    function Y(v){return (H-PAD-((Number(v)-min)/(max-min))*(H-2*PAD)).toFixed(1);}
+    var pts=cs.map(function(v,i){return X(i)+','+Y(v);}).join(' ');
+    var up=cs[cs.length-1]>=cs[0];
+    var col=up?'#26a69a':'#ef5350';
+    var chgTxt=cs[0]?(Math.abs(cs[cs.length-1]/cs[0]-1)*100).toFixed(1)+'% ':'';
+    var entry=(b.levels&&isFinite(Number(b.levels.entry)))?Number(b.levels.entry):(isFinite(Number(s.entry))?Number(s.entry):null);
+    var tick='';
+    if(entry!=null&&entry>=min&&entry<=max){
+      tick='<line x1="0" y1="'+Y(entry)+'" x2="'+W+'" y2="'+Y(entry)+'" stroke="#e0be62" stroke-width="1" stroke-dasharray="4 3" opacity="0.85"/><circle cx="'+(W-2)+'" cy="'+Y(entry)+'" r="2.2" fill="#e0be62"/>';
+    }
+    return '<svg class="setup-spark" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" role="img" aria-label="Recent closes: '+(up?'up ':'down ')+chgTxt+'over the last '+cs.length+' sessions'+(tick?'; the gold dashed line marks the entry price':'')+'"><polyline points="'+pts+'" stroke="'+col+'"/>'+tick+'</svg>';
+  }
+  // Stage B (SA-8/SA-12): the plan strip — one line, the whole
+  // distillation, built only from the brief's plan object.
+  function convChip(tc){
+    if(!tc||!tc.conviction_word)return '';
+    var cls=tc.conviction_word==='High conviction'?'conv-high'
+      :(tc.conviction_word==='Conviction'?'conv-mid':'conv-lean');
+    return '<span class="pill '+cls+'">'+esc(tc.conviction_word)+'</span>';
+  }
+  function planStripText(p){
+    var bits=[];
+    if(p.entry_zone){
+      bits.push(p.status==='Entered'
+        ?('In at '+money(p.entry_zone.anchor))
+        :('Buy zone '+money(p.entry_zone.lo)+'\u2013'+money(p.entry_zone.hi)));
+    }
+    if(p.stop&&p.stop.price!=null)bits.push('Stop '+money(p.stop.price));
+    (p.targets||[]).forEach(function(t){bits.push(t.label+' '+money(t.price));});
+    if(p.risk_reward&&p.risk_reward.headline_r!=null)bits.push('R '+p.risk_reward.headline_r+' to the final objective');
+    if(p.instrument&&p.instrument.max_loss!=null)bits.push('Max loss '+money(p.instrument.max_loss));
+    if(p.instrument&&p.instrument.max_gain!=null)bits.push('Max gain '+money(p.instrument.max_gain));
+    if(p.invalidation&&p.invalidation.price!=null)
+      bits.push('Wrong if it closes below '+money(p.invalidation.price));
+    if(!bits.length)return p.entry_note||'';
+    return bits.join(' \u00b7 ');
+  }
+  /* THE CARD (Amendment A-2 (§12)): the brief's post text,
+     rendered as the post it is — paragraphs, nothing added. */
+  function postHtml(post){
+    if(!post)return '';
+    return '<div class="setup-post">'+String(post).split(/\n\n+/).map(function(p){
+      return '<p>'+esc(p)+'</p>';
+    }).join('')+'</div>';
+  }
+  // Stage B (SA-8/SA-13): the PLAN block — the first section of
+  // the detail view. One object, the same one the card strip
+  // reads: action, why, entry zone, stop, targets, the one
+  // governing line, conviction, validity. Nothing else on the
+  // page competes with it for first attention.
+  function planBlockHtml(b){
+    var p=(b&&typeof b==='object')?b.plan:null;
+    if(!p||typeof p!=='object')return '';
+    function cellS(label,val,sub){
+      return '<div><span>'+label+'</span><b>'+esc(val)+'</b>'
+        +(sub?'<small>'+esc(sub)+'</small>':'')+'</div>';
+    }
+    var cells='';
+    if(p.entry_zone){
+      cells+=cellS('Buy zone',
+        money(p.entry_zone.lo)
+          +(p.entry_zone.hi!==p.entry_zone.lo?'\u2013'+money(p.entry_zone.hi):''),
+        p.entry_zone.basis||'');
+    }
+    if(p.spread_rows&&p.spread_rows.length){
+      // an options spread: no "Stop" cell — the thesis row
+      // (underlying, reference only) and the executable spread
+      // exit rule render as their own lines below the cells
+    } else if(p.stop){
+      cells+=cellS('Invalidation',
+        p.stop.price!=null?money(p.stop.price):'\u2014',
+        p.stop.structure||'');
+    }
+    (p.targets||[]).forEach(function(t){
+      cells+=cellS('Target '+t.label, money(t.price), t.basis||'');
+    });
+    if(p.invalidation&&p.invalidation.price!=null){
+      cells+=cellS('Invalidation',
+        money(p.invalidation.price),
+        'the one line that ends this setup');
+    }
+    var spreadHtml='';
+    (p.spread_rows||[]).forEach(function(r){
+      spreadHtml+='<p class="plan-why"><b>'+esc(r.label)+':</b> '+esc(r.text||'')+'</p>';
+    });
+    // Derivation Program (2026-10-16): the plan's stop roles, the
+    // strategy's own exit program, and a measured objective
+    // against the plan — each rendered from its own plan field.
+    var derivHtml='';
+    if(p.backstop&&p.backstop.text)derivHtml+='<p class="plan-why">'+esc(p.backstop.text)+'</p>';
+    if(p.exit_program&&p.exit_program.text)derivHtml+='<p class="plan-why">'+esc(p.exit_program.text)+'</p>';
+    if(p.conflict&&p.conflict.text)derivHtml+='<p class="plan-why"><b>Against the plan:</b> '+esc(p.conflict.text)+'</p>';
+    function prettyDate(iso){
+      var m=String(iso||'').match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if(!m)return String(iso||'');
+      var mo=Number(m[2]), dy=Number(m[3]);
+      if(mo<1||mo>12||dy<1||dy>31)return String(iso||'');
+      return MONTHS[mo-1]+' '+dy+', '+m[1];
+    }
+    var spreadFactsHtml='';
+    if(p.instrument&&p.instrument.max_loss!=null){
+      var ins=p.instrument;
+      var sf=[];
+      sf.push('Max loss '+money(ins.max_loss));
+      if(ins.max_gain!=null)sf.push('Max gain '+money(ins.max_gain));
+      if(ins.breakeven!=null)sf.push('Breakeven '+money(ins.breakeven));
+      if(ins.debit_per_share!=null&&ins.net_per_contract!=null)sf.push('Debit '+money(ins.net_per_contract)+' per contract');
+      else if(ins.credit_per_share!=null&&ins.net_per_contract!=null)sf.push('Credit '+money(ins.net_per_contract)+' per contract');
+      if(ins.expiry)sf.push('Expires '+prettyDate(ins.expiry)+(ins.dte!=null?' ('+ins.dte+' days)':''));
+      if(ins.manage_by)sf.push('Manage by '+prettyDate(ins.manage_by));
+      var sfText=sf.join(' \u00b7 ');
+      if(ins.manage_note)sfText+=' '+ins.manage_note;
+      spreadFactsHtml='<p class="plan-meta">'+esc(sfText)+'</p>';
+    }
+    var meta=[];
+    if(p.as_of_text)meta.push(p.as_of_text);
+    if(p.risk_reward&&p.risk_reward.text)meta.push(p.risk_reward.text);
+    if(p.risk_reward&&p.risk_reward.justification)meta.push(p.risk_reward.justification);
+    if(p.targets_note)meta.push(p.targets_note);
+    if(p.implied_note)meta.push(p.implied_note);
+    if(p.valid&&p.valid.text)meta.push(p.valid.text);
+    if(p.instrument&&p.instrument.help)meta.push(p.instrument.help);
+    if(p.expires_text)meta.push(p.expires_text);
+    if(p.provenance&&p.provenance.plan_version>1){
+      meta.push('Plan version '+p.provenance.plan_version);
+      if(p.provenance.change_note)meta.push(p.provenance.change_note);
+    }
+    return '<div class="setup-detail-sec plan-block"><h3>The plan</h3>'
+      +(b.stale?'<p class="plan-why"><b>Stale — awaiting refresh.</b> This plan is from an earlier scoring pass.</p>':'')
+      +'<p class="plan-action">'+esc(p.action||'')+'</p>'
+      +(p.instrument&&p.instrument.text?'<p class="plan-why">'+esc(p.instrument.text)+'</p>':'')
+      +spreadFactsHtml
+      +(cells?'<div class="plan-cells">'+cells+'</div>':'')
+      +spreadHtml
+      +derivHtml
+      +(p.risk_reward&&p.risk_reward.badge?'<p class="plan-why"><b>'+esc(p.risk_reward.badge)+'.</b></p>':'')
+      +(p.entry_note?'<p class="plan-why">'+esc(p.entry_note)+'</p>':'')
+      +(meta.length?'<p class="plan-meta">'+esc(meta.join(' '))+'</p>':'')
+      +'</div>';
+  }
+  function renderSetups(d){
+    var panel=$('setupsPanel'); if(!panel)return;
+    var setups=Array.isArray(d.setups)?d.setups:[];
+    var completed=Array.isArray(d.setups_completed)?d.setups_completed:[];
+    var entered=Array.isArray(d.entered_setups)?d.entered_setups:[];
+    var departures=Array.isArray(d.departures)?d.departures:[];
+    setups.forEach(function(s){ if(s&&s.symbol)SETUPS[s.symbol]=s; });
+    entered.forEach(function(s){ if(s&&s.symbol)SETUPS[s.symbol]=s; });
+    // The position-surface sections (entered plans, closed today)
+    // live in the Position book panel and render even when the
+    // board itself is empty; the departures strip renders with
+    // the board panel below.
+    renderEntered(entered);
+    renderCompleted(completed);
+    renderDepartures(departures);
+    var scb=$('scorecardBand'), scl=$('scorecardLine');
+    if(scb&&scl&&d.scorecard&&d.scorecard.line){scl.textContent=d.scorecard.line; scb.hidden=false;}
+    if(!setups.length&&!departures.length){ panel.hidden=true; return; }
+    panel.hidden=false;
+    var grid=$('setupsGrid'); if(grid){
+    /* PRODUCT REDESIGN (§11) + THE CARD (A-2): the face is
+       the card image + its post when the brief carries them
+       (the A-1 text face is the fallback), one door to the
+       full read. A name whose brief carries no call gets no
+       card: it drops to the one-line bucket. */
+    var nocall=[];
+    grid.innerHTML=setups.length?setups.map(function(s){
+      var names=(s.sources||[]).map(function(k){return (ALGO[k]||{}).name||k;});
+      function lvl(label,v){return v==null?'':'<div><span>'+label+'</span><b>'+money(v)+'</b></div>';}
+      var held=s.status==='entered';
+      var brf=(s.brief&&typeof s.brief==='object')?s.brief:null;
+      var plan=(brf&&brf.plan&&typeof brf.plan==='object')?brf.plan:null;
+      var tc=(brf&&brf.the_call&&typeof brf.the_call==='object')?brf.the_call:null;
+      if(tc&&tc.no_call){ nocall.push(s); return ''; }
+      var strip=plan?planStripText(plan):'';
+      /* THE CARD (Amendment A-2 (§12)) is the face when the brief carries
+         one: the image holds the call, the why and the strip,
+         so the HTML face adds only the post text — the same
+         facts are never told twice on the card. Without a
+         card, the A-1 text face below stands as the fallback. */
+      var hasCard=!!(brf&&brf.card);
+      var chartImg='';
+      if(hasCard){
+        chartImg='<img class="setup-chart" src="'+esc(brf.card)+'" alt="The desk\u2019s card for '+esc(s.symbol)+' — the call, the plan drawn on the chart, and what proves it wrong">'
+          +postHtml(brf.card_post);
+      } else if(brf&&(brf.chart_plan||brf.chart)){
+        chartImg='<img class="setup-chart" src="'+esc(brf.chart_plan||brf.chart)+'" alt="Plan chart for '+esc(s.symbol)+' — entry zone, stop, objectives and invalidation">';
+      }
+      return '<article class="setup-card" id="setup-'+esc(s.symbol)+'">'
+        +'<div class="setup-top"><span class="setup-rank">#'+esc(s.rank)+'</span><h3>'+esc(s.symbol)+'</h3>'
+        +(tc?convChip(tc):'<span class="pill">'+esc(s.tier)+' \u00b7 '+esc(s.score)+'</span>')+'</div>'
+        +'<p class="setup-status">'+(held?'<span class="pill good">Bought today</span>':'<span class="pill info">Watching</span>')
+        +(s.last_close!=null?'<span class="muted">Last close '+money(s.last_close)+'</span>':'')
+        +' <span class="muted">'+esc(s.tier)+' \u00b7 score '+esc(s.score)+'</span></p>'
+        +(!hasCard&&tc&&tc.expectation?'<p class="setup-call">'+esc(tc.expectation)+'</p>'
+          :(!hasCard&&plan&&plan.action?'<p class="setup-call">'+esc(plan.action)+'</p>':''))
+        +(!hasCard&&tc&&tc.why&&tc.why.length?'<p class="setup-why">'+esc(tc.why.join(' '))+'</p>'
+          :(!hasCard&&!tc&&plan&&plan.why?'<p class="setup-why">'+esc(plan.why)+'</p>':''))
+        +(!hasCard&&strip?'<p class="setup-planstrip">'+esc(strip)+'</p>':'')
+        +(chartImg||sparkSvg(s))
+        +(!plan?'<div class="setup-levels">'+lvl('Entry',s.entry)+lvl(s.instrument&&s.instrument.type==='options_package'?'Thesis level (reference)':'Stop',s.stop)+lvl('Target',s.target)+'</div>':'')
+        +'<p class="setup-sources">Selected by: '+esc(names.join(', ')||'\u2014')+'</p>'
+        +'<div class="setup-actions">'
+        +'<button type="button" class="tool-btn" data-setup-detail="'+esc(s.symbol)+'">The full read</button>'
+        +(held?'<button type="button" class="tool-btn" data-view-position="1">View position</button>':'')
+        +'</div></article>';
+    }).join(''):'<p class="muted">No actionable setups on the latest pass &mdash; nothing qualifies right now that the desk has not already entered and that is still intact and in range. Where names went is listed below.</p>';
+    var ncBox=$('setupsNoCall'), ncList=$('noCallList');
+    if(ncBox&&ncList){
+      if(nocall.length){
+        ncBox.hidden=false;
+        ncList.innerHTML=nocall.map(function(s){
+          var tc=s.brief.the_call;
+          return '<div class="completed-row"><span class="completed-sym">'+esc(s.symbol)+'</span>'
+            +'<span class="completed-facts">'+esc(tc.no_call_line||'No call yet.')+'</span></div>';
+        }).join('');
+      } else { ncBox.hidden=true; }
+    }
+    var notes=$('setupsNotes'); if(notes)notes.textContent=(d.notes||[]).join(' ');
+    grid.querySelectorAll('[data-sleeve-link]').forEach(function(b){
+      b.addEventListener('click',function(){ gotoStrategy(b.getAttribute('data-sleeve-link')); });
+    });
+    grid.querySelectorAll('[data-view-position]').forEach(function(b){
+      b.addEventListener('click',function(){
+        var pos=$('positions');
+        if(pos){ pos.scrollIntoView({behavior:'smooth',block:'start'}); flashEl(pos); }
+      });
+    });
+    grid.querySelectorAll('[data-setup-detail]').forEach(function(b){
+      b.addEventListener('click',function(){ openSetupDetail(b.getAttribute('data-setup-detail')); });
+    });
+    grid.querySelectorAll('.setup-card').forEach(function(card){
+      card.addEventListener('click',function(ev){
+        if(ev.target.closest('button'))return;
+        openSetupDetail(card.id.replace(/^setup-/,''));
+      });
+    });
+    }
+    applyHash();
+  }
+  // Entered today: names the desk entered, with the plan each
+  // position is managed by — rendered in the Position book panel.
+  // Absent or empty in the feed -> the section stays hidden.
+  function renderEntered(list){
+    var box=$('enteredPlans'); if(!box)return;
+    var el=$('enteredList'); if(!el)return;
+    if(!list.length){ box.hidden=true; return; }
+    box.hidden=false;
+    el.innerHTML=list.map(function(s){
+      var brf=(s.brief&&typeof s.brief==='object')?s.brief:null;
+      var plan=(brf&&brf.plan&&typeof brf.plan==='object')?brf.plan:null;
+      var what=(brf&&brf.the_call&&brf.the_call.expectation)?brf.the_call.expectation
+        :((plan&&plan.instrument&&plan.instrument.text)?plan.instrument.text:((plan&&plan.action)?plan.action:''));
+      return '<div class="completed-row">'
+        +'<span class="completed-sym">'+esc(s.symbol)+'</span>'
+        +(what?'<span class="completed-facts">'+esc(what)+'</span>':'')
+        +(brf&&brf.stale?'<span class="pill warn">Stale — awaiting refresh</span>':'')
+        +(s.held&&s.held.state==='held'?'<span class="pill warn">Held — no call published</span>'+((s.held.reason||s.held.board_line)?'<span class="completed-facts">'+esc(s.held.reason||s.held.board_line)+'</span>':''):'')
+        +(s.instrument&&s.instrument.type==='options_package'?'<span class="pill info">Options spread, not shares</span>':'')
+        +'<span class="pill good">Position</span>'
+        +(brf?'<button type="button" class="tool-btn" data-setup-detail="'+esc(s.symbol)+'">See the full setup</button>':'')
+        +'</div>';
+    }).join('');
+    el.querySelectorAll('[data-setup-detail]').forEach(function(b){
+      b.addEventListener('click',function(){ openSetupDetail(b.getAttribute('data-setup-detail')); });
+    });
+  }
+  // Left the board: the departures strip — every name that came
+  // off the published board, with its one-line reason.
+  function renderDepartures(list){
+    var box=$('setupsDepartures'); if(!box)return;
+    var el=$('departuresList'); if(!el)return;
+    if(!list.length){ box.hidden=true; return; }
+    box.hidden=false;
+    el.innerHTML=list.map(function(x){
+      return '<div class="completed-row">'
+        +'<span class="completed-sym">'+esc(x.symbol)+'</span>'
+        +'<span class="completed-facts">'+esc(x.text||x.reason||'')+'</span>'
+        +'</div>';
+    }).join('');
+  }
+  // Today's completed round trips: a record of the day, rendered
+  // with the positions (results, not the shortlist). Absent or
+  // empty in the feed -> the section stays hidden and the page
+  // renders exactly as before.
+  function renderCompleted(list){
+    var box=$('setupsCompleted'); if(!box)return;
+    var el=$('completedList'); if(!el)return;
+    if(!list.length){ box.hidden=true; return; }
+    box.hidden=false;
+    el.innerHTML=list.map(function(c){
+      var prices=(c.exit_prices||[]).filter(function(p){return p!=null;});
+      var facts=(c.entry!=null?'In '+money(c.entry):'')
+        +(prices.length?' &rarr; out '+prices.map(function(p){return money(p);}).join(', '):'');
+      var outcome=c.exit_target?'Reached its profit target':(c.exit_stop?'Stopped out':'Exited today');
+      var pill=c.exit_target?'good':(c.exit_stop?'bad':'info');
+      return '<div class="completed-row">'
+        +'<span class="completed-sym">'+esc(c.symbol)+'</span>'
+        +(facts?'<span class="completed-facts">'+facts+'</span>':'')
+        +'<span class="pill '+pill+'">'+outcome+'</span>'
+        +'<span class="muted">Score '+esc(c.score)+' &middot; '+esc(c.tier)+'</span>'
+        +'</div>';
+    }).join('');
+  }
+  // --- Setup detail view: the full brief behind one setup ---
+  var VGOOD={'Agree':1,'Confirmed':1,'Supportive':1,'Bought':1,'At a level':1,'Sound':1,'Pass':1};
+  var VWARN={'Caution':1,'Tight':1,'Wide but workable':1,'Very wide':1,'Single voice':1,'Context only':1,'Attempted':1,'Neutral':1,'Mid-range':1,'Recorded':1,'Symmetrical triangle':1,'Ascending triangle':1,'Descending triangle':1,'Rising wedge':1,'Falling wedge':1,'Rising channel':1,'Falling channel':1,'Horizontal channel':1,'Bull flag':1,'Bear flag':1,'Bull pennant':1,'Bear pennant':1,'Horizontal base':1};
+  var VBAD={'Fail':1,'Against':1,'Inside noise':1,'Lost trendline support':1};
+  function verdictPill(v){
+    var cls=VGOOD[v]?'good':(VBAD[v]?'bad':(VWARN[v]?'warn':'info'));
+    /* Addition 4 verdict forms: an unconfirmed pattern and a
+       warning-stage break are caution, and the elite pattern
+       names (which arrive with variant suffixes) are context —
+       none of them may fall through to a neutral pill that
+       undersells what the lens said. */
+    if(cls==='info'){
+      if(/— forming, unconfirmed$/.test(v))cls='warn';
+      else if(v==='Trendline break — warning')cls='warn';
+      else if(/^Double (bottom|top) /.test(v))cls='warn';
+      else if(['Cup with handle','Rounding bottom','Head-and-shoulders bottom','Head-and-shoulders top','Selling climax + base'].indexOf(v)>=0)cls='warn';
+    }
+    return '<span class="pill '+cls+'">'+esc(v)+'</span>';
+  }
+  /* Addition 5 — the Desk read (holistic synthesis + gut call).
+     The call sits BESIDE the score, never inside it: this section
+     renders the verdict and the evidence balance that produced
+     it, with the conflicts first-class and every other measured
+     factor listed as considered-and-weighed. */
+  function gutPill(call){
+    var cls=(call==='strongly for'||call==='for')?'gut-for'
+      :(call==='against'||call==='strongly against')?'gut-against':'gut-mixed';
+    return '<span class="pill '+cls+'">Desk read: '+esc(call||'mixed')+'</span>';
+  }
+  function stanceWord(st){
+    return st>0?'<span class="dr-stance for">For</span>'
+      :st<0?'<span class="dr-stance against">Against</span>'
+      :'<span class="dr-stance weighed">Weighed</span>';
+  }
+  function deskReadHtml(dr){
+    if(!dr||typeof dr!=='object')return '';
+    function row(it){
+      return '<li><span class="dr-factor">'+esc(it.factor)+'</span>'
+        +stanceWord(it.stance)
+        +(it.gap?' <span class="dr-stance weighed">Not measured</span>':'')
+        +'<br>'+esc(it.reading)+'</li>';
+    }
+    var conf=(dr.level1||[]).filter(function(i){return i.disposition==='conflict';});
+    var dec=(dr.level1||[]).filter(function(i){return i.disposition==='decisive';});
+    var html='<div class="setup-detail-sec desk-read"><h3>Desk read — the whole picture</h3>'
+      +'<div class="dr-head">'+gutPill(dr.call)
+      +'<span class="dr-grade">'+esc(dr.grade||'')+'</span></div>'
+      +(dr.change_call?'<p class="dr-change">'+esc(dr.change_call)+'</p>':'')
+      +(dr.paragraph?'<p class="dr-para">'+esc(dr.paragraph)+'</p>':'')
+      +(dec.length?'<h4 class="cr-group">What decides it</h4><ul class="dr-list">'
+        +dec.map(row).join('')+'</ul>':'')
+      +(conf.length?'<h4 class="cr-group">Where the evidence fights itself</h4><ul class="dr-list">'
+        +conf.map(function(i){return '<li class="dr-conflict"><span class="dr-factor">'
+          +esc(i.factor)+'</span><br>'+esc(i.reading)+'</li>';}).join('')+'</ul>':'')
+      +((dr.level2||[]).length?'<details class="cr-more"><summary>Also considered — everything else the desk measured</summary><ul class="dr-list">'
+        +dr.level2.map(row).join('')+'</ul></details>':'')
+      +'<p class="dr-law">The Desk read is the desk&rsquo;s weighed judgment across everything it measures. It does not change this setup&rsquo;s score or its place in the ranking — every read is recorded before outcomes are known and scored against what the stock does next, and the read earns weight in the ranking only if that record, once reviewed, says it should.</p>'
+      +'</div>';
+    return html;
+  }
+  var ONDEMAND={};
+  function showAuxDetail(title,sub,obj,hash){
+    var panel=$('setupDetail'); if(!panel)return;
+    DETAIL_SYM=null;
+    $('setupDetailTitle').textContent=title;
+    $('setupDetailSub').textContent=sub;
+    $('setupDetailBody').innerHTML=setupDetailHtml(obj);
+    panel.hidden=false;
+    panel.querySelectorAll('[data-sleeve-link]').forEach(function(btn){
+      btn.addEventListener('click',function(){ gotoStrategy(btn.getAttribute('data-sleeve-link')); });
+    });
+    if(window.location.hash!==hash){ try{ history.replaceState(null,'',hash); }catch(e){} }
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+    flashEl(panel);
+  }
+  function openOndemandDetail(key){
+    var e=ONDEMAND[key]; if(!e||!e.brief)return;
+    showAuxDetail(e.symbol+' — the on-demand read',
+      'Read on '+e.session+' · '+(e.brief.desk_read?('Desk read: '+e.brief.desk_read.call+' · '+e.brief.desk_read.grade):''),
+      {symbol:e.symbol,brief:e.brief,sources:[]},
+      '#/ondemand/'+e.symbol+'-'+e.session);
+  }
+  function renderOndemandReads(d){
+    var panel=$('ondemandPanel'); if(!panel)return;
+    var rows=Array.isArray(d.ondemand_reads)?d.ondemand_reads:[];
+    ONDEMAND={};
+    if(!rows.length){ panel.hidden=true; $('ondemandBody').innerHTML=''; return; }
+    panel.hidden=false;
+    $('ondemandBody').innerHTML='<div class="aux-rows">'+rows.map(function(e){
+      var key=e.symbol+'|'+e.session; ONDEMAND[key]=e;
+      return '<div class="aux-row"><span class="aux-sym">'+esc(e.symbol)+'</span>'
+        +gutPill(e.gut_call)
+        +'<span class="aux-meta">'+esc(e.session)+'</span>'
+        +'<span class="aux-verdict">'+esc(e.verdict||'')+'</span>'
+        +(e.brief?'<button type="button" class="tool-btn" data-ondemand="'+esc(key)+'">Read it</button>':'')
+        +'</div>';
+    }).join('')+'</div>';
+    $('ondemandBody').querySelectorAll('[data-ondemand]').forEach(function(btn){
+      btn.addEventListener('click',function(){ openOndemandDetail(btn.getAttribute('data-ondemand')); });
+    });
+  }
+  function setupDetailHtml(s){
+    var b=(s.brief&&typeof s.brief==='object')?s.brief:null;
+    var lv=(b&&b.levels)?b.levels:s;
+    function cell(label,v){return '<div><span>'+label+'</span><b>'+(v==null?'—':money(v))+'</b></div>';}
+    var tc=(b&&b.the_call&&typeof b.the_call==='object')?b.the_call:null;
+    var html='';
+    /* PRODUCT REDESIGN (§11): ONE expansion, story-first order —
+       the plan chart (hero), the call, the plan in full, then
+       the evidence. Nothing is told twice. */
+    if(b&&b.card){
+      html+='<img class="setup-chart" src="'+esc(b.card)+'" alt="The desk\u2019s card for '+esc(s.symbol)+' — the call, the plan drawn on the chart, and what proves it wrong">'
+        +'<p class="setup-chart-cap">The card — the call and the plan as the desk states them, with the post the desk publishes for this setup. The full read follows below.</p>'
+        +postHtml(b.card_post);
+    } else if(b&&b.chart_plan){
+      html+='<img class="setup-chart" src="'+esc(b.chart_plan)+'" alt="Plan chart for '+esc(s.symbol)+' — entry zone, stop, objectives and the line that ends the setup">'
+        +'<p class="setup-chart-cap">The plan, drawn — the entry zone, the stop, the objectives, and the line that ends the setup. The desk&rsquo;s full annotated chart read is in the evidence below.</p>';
+    }
+    if(tc&&!tc.no_call){
+      html+='<div class="setup-detail-sec"><h3>The call</h3>'
+        +(tc.expectation?'<p class="setup-call">'+esc(tc.expectation)+'</p>':'')
+        +(tc.conviction_word?'<p>'+convChip(tc)+' <span class="call-basis">'+esc(tc.basis||'')+'</span></p>':'')
+        +(tc.record?'<p class="call-basis">'+esc(tc.record)+'</p>':'')
+        +(tc.calibration_sentence&&(b.card_post||'').indexOf(tc.calibration_sentence)<0?'<p class="call-basis">'+esc(tc.calibration_sentence)+'</p>':'')
+        +(tc.what_changes_it?'<p><b>What would change the call:</b> '+esc(tc.what_changes_it)+'</p>':'')
+        +'</div>';
+    } else if(tc&&tc.no_call){
+      html+='<div class="setup-detail-sec"><h3>No call on this name</h3><p>'+esc(tc.no_call_line||'')+'</p>'
+        +(tc.calibration_sentence?'<p class="call-basis">'+esc(tc.calibration_sentence)+'</p>':'')+'</div>';
+    }
+    html+=planBlockHtml(b);
+    if(b){
+      var story=Array.isArray(b.setup_story)?b.setup_story:(b.setup_story?[b.setup_story]:[]);
+      /* The story's first two paragraphs are the filing facts;
+         its third was the old template picture paragraph, which
+         the call's why replaces — it is not told twice. */
+      var facts=tc?story.slice(0,2):story;
+      if(facts.length){
+        html+='<div class="setup-detail-sec setup-story"><h3>How it got here</h3>'
+          +facts.map(function(p){return '<p>'+esc(p)+'</p>';}).join('')+'</div>';
+      }
+    }
+    if(b&&b.chart){
+      var _annotated=(b.chart_panels||[]).indexOf('rsi')>=0;
+      /* Phones get the mobile chart (a smaller, purpose-built
+         render of the same read) when the brief carries one. */
+      html+='<div class="setup-detail-sec"><h3>The full chart read, drawn</h3>'
+        +(b.chart_mobile
+        ?'<picture><source media="(max-width:640px)" srcset="'+esc(b.chart_mobile)+'">'
+          +'<img class="setup-chart" src="'+esc(b.chart)+'" alt="Price chart for '+esc(s.symbol)+' with the setup&rsquo;s levels marked"></picture>'
+        :'<img class="setup-chart" src="'+esc(b.chart)+'" alt="Price chart for '+esc(s.symbol)+' with the setup&rsquo;s levels marked">')
+        +'<p class="setup-chart-cap">The chart as it looked when this setup was briefed'
+        +((b.chart_panels||[]).indexOf('hourly')>=0?' — daily bars above, the most recent hours below':'')
+        +(_annotated?'. Everything the desk&rsquo;s chart reader measured is drawn on it: the pattern boundaries, the levels, the retracement grid, the buy zone, the plan&rsquo;s lines, and the RSI panel with any divergence marked at its pivots.'
+                    :'. Lines mark the plan&rsquo;s entry, stop and target, the line that ends the setup, the averages and the recent low the brief uses.')
+        +'</p></div>';
+    } else if(b&&b.chart_gap){
+      html+='<p class="brief-gap">'+esc(b.chart_gap)+'</p>';
+    }
+    if(b&&b.desk_read){
+      html+=deskReadHtml(b.desk_read);
+    }
+    if(b){
+      var crd=(b.chart_read&&typeof b.chart_read==='object')?b.chart_read:null;
+      if(crd&&(crd.bullets||[]).length){
+        var groups=[],byGroup={};
+        crd.bullets.forEach(function(bl){
+          var g=bl.group||'The read';
+          if(!byGroup[g]){byGroup[g]=[];groups.push(g);}
+          byGroup[g].push(bl.text);
+        });
+        /* Level 1 (the at-a-glance read) first, then the full
+           grouped detail — rendered open: the full read IS the
+           one expansion now (§11), so no second door inside it.
+           Briefs without layers fall back to the plain grouped
+           render. */
+        var l1=(crd.level1||[]),l2=crd.level2||crd.bullets;
+        var g2=[],bg2={};
+        l2.forEach(function(bl){
+          var g=bl.group||'The read';
+          if(!bg2[g]){bg2[g]=[];g2.push(g);}
+          bg2[g].push(bl.text);
+        });
+        html+='<div class="setup-detail-sec chart-read"><h3>Chart read</h3>'
+          +(crd.pattern?'<p class="cr-pattern">'+esc(crd.pattern)+'</p>':'')
+          +(crd.meta?'<p class="cr-meta">'+esc(crd.meta)+'</p>':'')
+          +(l1.length?'<ul class="cr-bullets cr-l1">'
+            +l1.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')
+            +'</ul>':'')
+          +(l1.length
+            ?g2.map(function(g){
+                return '<h4 class="cr-group">'+esc(g)+'</h4><ul class="cr-bullets">'
+                  +bg2[g].map(function(t){return '<li>'+esc(t)+'</li>';}).join('')
+                  +'</ul>';
+              }).join('')
+            :groups.map(function(g){
+              return '<h4 class="cr-group">'+esc(g)+'</h4><ul class="cr-bullets">'
+                +byGroup[g].map(function(t){return '<li>'+esc(t)+'</li>';}).join('')
+                +'</ul>';
+            }).join(''))
+          +'</div>';
+      }
+      if((b.lens_walkthrough||[]).length){
+        html+='<div class="setup-detail-sec"><h3>Lens by lens — how this setup scored</h3><div class="lens-list">'
+          +b.lens_walkthrough.map(function(e){
+            return '<div class="lens-row"><span class="lens-name">'+esc(e.lens)+'</span>'
+              +verdictPill(e.verdict)
+              +'<p class="lens-ev">'+esc(e.evidence)+'</p></div>';
+          }).join('')+'</div></div>';
+      }
+      /* Elliott wave section (Elliott Program): the brief's wave
+         read stated straight — headline, then the count's own
+         lines (invalidation, target zones, guideline fit). */
+      var ewv=(b.elliott&&typeof b.elliott==='object')?b.elliott:null;
+      if(ewv&&ewv.headline){
+        var ewHead=ewv.headline.replace(/^Elliott wave: /,'');
+        html+='<div class="setup-detail-sec elliott-read"><h3>Elliott wave</h3>'
+          +'<p class="cr-pattern">'+esc(ewHead.charAt(0).toUpperCase()+ewHead.slice(1))+'</p>'
+          +((ewv.lines||[]).length?'<ul class="cr-bullets">'
+            +ewv.lines.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')
+            +'</ul>':'')
+          +'</div>';
+      }
+    }
+    if(!b){
+      html+='<div class="setup-detail-sec"><h3>The levels</h3><div class="setup-levels">'
+        +cell('Entry',lv.entry)+cell(s.instrument&&s.instrument.type==='options_package'?'Thesis level (reference)':'Stop',lv.stop)+cell('Target',lv.target)
+        +cell('Last close',lv.last_close)
+        +'</div></div>';
+    } else if(b.levels&&(b.levels.ema20!=null||b.levels.swing_low_20!=null)){
+      /* The plan's own numbers live in The plan above; the two
+         extra measured levels ride as one record line (§11:
+         no fact told twice). */
+      html+='<p class="call-basis">Also on the record: '
+        +(b.levels.ema20!=null?'20-day average '+money(b.levels.ema20):'')
+        +(b.levels.ema20!=null&&b.levels.swing_low_20!=null?' \u00b7 ':'')
+        +(b.levels.swing_low_20!=null?'recent swing low '+money(b.levels.swing_low_20):'')
+        +'</p>';
+    }
+    if(!b) {
+      var reasons=(s.reasons||[]).map(function(r){return '<li>'+esc(r)+'</li>';}).join('');
+      html+='<div class="setup-detail-sec"><h3>Why the desk flagged it</h3>'
+        +(reasons?'<ul class="setup-reasons">'+reasons+'</ul>':'')
+        +'<p class="brief-gap">The full written brief for this setup is not part of this snapshot yet — what is shown here is the summary from its card.</p></div>';
+    }
+    var names=(s.sources||[]);
+    if(names.length){
+      html+='<div class="setup-detail-sec"><h3>The strategies behind it</h3><div class="setup-strats">'
+        +names.map(function(k){return '<button type="button" class="tool-btn" data-sleeve-link="'+esc(k)+'">'+esc((ALGO[k]||{}).name||k)+'</button>';}).join('')
+        +'</div></div>';
+    }
+    return html;
+  }
+  function openSetupDetail(sym){
+    var s=SETUPS[sym]; var panel=$('setupDetail'); if(!s||!panel)return;
+    if(DETAIL_SYM===sym&&!panel.hidden){ panel.scrollIntoView({block:'start'}); return; }
+    DETAIL_SYM=sym;
+    $('setupDetailTitle').textContent=sym+' — the full read';
+    $('setupDetailSub').textContent='#'+s.rank+' · '+s.tier+' · score '+s.score
+      +(s.status==='entered'?' · Bought today':' · Watching')
+      +((s.brief&&s.brief.as_of)?' · briefed '+s.brief.as_of:'');
+    $('setupDetailBody').innerHTML=setupDetailHtml(s);
+    panel.hidden=false;
+    panel.querySelectorAll('[data-sleeve-link]').forEach(function(btn){
+      btn.addEventListener('click',function(){ gotoStrategy(btn.getAttribute('data-sleeve-link')); });
+    });
+    if(window.location.hash!=='#setup-'+sym){ try{ history.replaceState(null,'','#setup-'+sym); }catch(e){} }
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+    flashEl(panel);
+  }
+  function closeSetupDetail(){
+    var panel=$('setupDetail'); if(panel)panel.hidden=true;
+    DETAIL_SYM=null;
+    try{ history.replaceState(null,'',window.location.pathname+window.location.search); }catch(e){}
+    var grid=$('setupsGrid'); if(grid)grid.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function renderMarket(d){
+  var FEATURE_EXPLAINERS={
+    'wider-tape':{what:'Plain-English lines about the wider market, measured every night: how broad the rise or fall is, a mood reading, whether traders are reaching for risk, which themes are leading, and a pulse check on the big index funds.',how:'Breadth is counted over the desk\u2019s scanned stock list, including its 1,838-name list, with no single combined breadth score: risers, fallers and unchanged names; the share of names above their own 20-, 50- and 200-day averages; names up or down at least 4% on the day; and thrust counts \u2014 names with a 34-day move of at least +13% or at most \u221213%, and a 63-day move of at least +25% or at most \u221225%. The McClellan oscillator is a 19-day smoothed average of daily net risers minus a 39-day smoothed average. Mood reading: four parts weighted 35% the fear gauge, 25% the fear gauge divided by its 3-month version, 25% a skew measure, and 15% a second fear gauge; each part is 100 minus that measure\u2019s rank over the last 252 trading days, as a percentage; a part whose newest data is more than about 4 to 5 days old is marked unavailable. Risk appetite: exactly six published ratio pairs; a pair reads risk-on when its ratio sits above its 20-day average, read in the pair\u2019s stated direction (one bond pair is read the other way). Theme rotation: each theme is placed against the S&amp;P fund into one of four boxes \u2014 Leading, Weakening, Lagging, Improving \u2014 by where its lines sit against the 100 mark. Index pulse: five checks \u2014 price above a rising 5-day average; a daily buy (close above the 10-day average, which is above the 20-day average); a weekly buy (weekly close above the 10-week average, which is above the 20-week average, with the 10-week average rising); and breadth rising, or attempting to rise, from the summed and oscillator breadth measures. Every part stands on its own: a missing input marks only that part unavailable, and the rest still publish. Prices come from the broker\u2019s daily data; the fear and skew measures come from daily closes from a public source, because the broker does not carry them.'},
+    'chart-review-board':{what:'A nightly ranking of stocks by chart-pattern quality, from the desk\u2019s chart-review board. The top 15 are shown, with a score and a bar whose length is the score as a percentage.',how:'The board is refreshed every night at 6:06 pm New York time, over a fixed list of 55 stocks, using split-adjusted daily prices from the broker. Its score can add at most 10 of the 100 points in a Best Setup score (see the Best Setups note). The board\u2019s own weighting was fitted on a snapshot from October 2, 2026, so its order is a helpful ranking, not a promise: it is background for the desk\u2019s strategies, never a buy signal on its own. The exact weighting the board uses to turn a chart into its score is kept in the board\u2019s own records, outside this page \u2014 this note states only what this page can show and check.'},
+    'pullback-screener':{what:'Stocks that have pulled back a little from their one-year high, are still rising overall, and have settled into a tight, quiet bar. For each full pass, the buy-above price is the tight bar\u2019s high and the stop-below price is its low. A second list shows names simply near their one-year high.',how:'Daily bars only, from the broker\u2019s full-market daily data, over the desk\u2019s 1,838-stock list. A stock with fewer than 260 trading days of history is reported as not enough history, and a stock whose prices could not be loaded is reported as no data \u2014 neither is silently dropped. The year high is the highest high of the last 252 trading days including today, and the pullback percentage is (year high minus close) divided by year high, times 100, shown as a positive number. A weighted average uses the factor 2 divided by (days plus 1), started from the simple average of the first days of closes. A name passes only when all six checks pass: (1) the pullback is between 5% and 15% inclusive; (2) the average daily range percentage is above 4 \u2014 the average over 20 days of (high minus low) divided by that day\u2019s close, times 100; (3) the close is above the 50-day weighted average, and that average is rising \u2014 today\u2019s average is above the average 5 days ago, with equality failing; (4) within the last 3 days, some day touched the 11- or 21-day average (that day\u2019s low at or below that day\u2019s average times 1.01) while check 3 held on that same day; (5) within the last 3 days there is an inside bar (high at or below the earlier high, and low at or above the earlier low) or a tight bar (high minus low at or below 0.6 times the average range in points, where range in points is the range percentage divided by 100, times today\u2019s close); and (6) the buy-above and stop-below prices come from one and the same governing bar \u2014 the most recent qualifying bar \u2014 never mixed across bars; with no qualifying bar, check 5 fails and no prices are shown. Every scanned name also carries its full six-check pass-or-fail list. The near-the-high quick filter (10% to start with, adjustable) changes only what is displayed, never a verdict. Also shown, over 20 days: average volume, today\u2019s volume, the percentage change (close divided by the earlier close, minus 1, times 100), average dollar volume (average volume times close, divided by 1,000,000), and the up-to-down volume ratio (volume on up-close days divided by volume on down-close days, flat days excluded from both; zero down volume with up volume above zero shows as infinity, and both zero shows as blank).'}
+  };
+  function explainerHtml(id){
+    var e=FEATURE_EXPLAINERS[id]; if(!e)return '';
+    return '<details class="explainer feature-explainer fx-body" data-explainer="'+id+'"><summary>What this is and how it is worked out</summary><div class="explainer-body"><p><strong>What this is:</strong> '+e.what+'</p><p><strong>How it is worked out:</strong> '+e.how+'</p></div></details>';
+  }
+    var panel=$('marketPanel'); if(!panel)return;
+    var mc=d.market_context||null;
+    var lector=Array.isArray(d.lector_top)?d.lector_top:[];
+    var pullback=Array.isArray(d.pullback_top)?d.pullback_top:[];
+    var pullbackNear=Array.isArray(d.pullback_near)?d.pullback_near:[];
+    if(!mc&&!lector.length&&!pullback.length&&!pullbackNear.length){ panel.hidden=true; return; }
+    panel.hidden=false;
+    var html='';
+    if(mc&&mc.charts&&(mc.charts.spy||mc.charts.qqq)){
+      function mchart(src2,cap){
+        return src2?'<figure class="mkt-chart"><img src="'+esc(src2)+'" alt="'+esc(cap)+' daily price chart with its 20-, 50- and 200-day averages and the recent high and low drawn" loading="lazy"><figcaption>'+esc(cap)+' — daily bars with the 20-, 50- and 200-day averages and the recent high and low drawn.</figcaption></figure>':'';
+      }
+      html+='<div class="mkt-charts">'+mchart(mc.charts.spy,'S&P 500 (SPY)')+mchart(mc.charts.qqq,'Nasdaq 100 (QQQ)')+'</div>';
+    }
+    if(mc){
+      function idx(label,o){
+        if(!o)return '';
+        var dp=Number(o.day_pct);
+        return '<div class="mkt-idx"><span>'+label+'</span><b>'+money(o.close,2)+'</b>'
+          +'<i class="'+(dp>=0?'positive':'negative')+'">'+(dp>=0?'+':'')+pct(dp,2)+'</i>'
+          +'<em>'+pct(o.vs_sma50_pct,1)+' vs its 50-day average</em></div>';
+      }
+      html+='<div class="mkt-regime"><span class="pill info">Market regime: '+esc(mc.regime||'\u2014')+'</span>'
+        +(mc.fear_day?'<span class="pill warn">Fear day \u2014 a sharp market drop</span>':'')
+        +(mc.vix?'<span class="pill">Fear gauge (VIX) '+esc(mc.vix.close)+' ('+(Number(mc.vix.change_pct)>=0?'+':'')+pct(mc.vix.change_pct,1)+' today)</span>':'')
+        +'</div>'
+        +'<div class="mkt-idxs">'+idx('S&amp;P 500 (SPY)',mc.spy)+idx('Nasdaq 100 (QQQ)',mc.qqq)+'</div>'
+        +((mc.regime_evidence||[]).length?'<ul class="mkt-ev">'+mc.regime_evidence.map(function(e){return '<li>'+esc(e)+'</li>';}).join('')+'</ul>':'');
+    }
+    if(mc&&Array.isArray(mc.measurements)&&mc.measurements.length){
+      html+='<h3 class="lector-h">The wider tape — measured every night</h3>'
+        +'<ul class="mkt-ev">'+mc.measurements.map(function(e){return '<li>'+esc(e)+'</li>';}).join('')+'</ul>'
+        +(mc.measurements_as_of?'<p class="footnote">Measured on the desk&rsquo;s own scanned universe after the close of '+esc(mc.measurements_as_of)+'.</p>':'');
+      html+=explainerHtml('wider-tape');
+    }
+    if(lector.length){
+      html+='<h3 class="lector-h">Top-ranked stocks \u2014 the desk\u2019s chart-review board</h3>'
+        +'<div class="table-wrap"><table class="lector-table"><thead><tr><th>Rank</th><th>Stock</th><th class="num">Opportunity score</th></tr></thead><tbody>'
+        +lector.map(function(r){return '<tr><td>'+esc(r.rank)+'</td><td><strong>'+esc(r.symbol)+'</strong></td><td class="num"><span class="lector-score"><span class="lector-bar" aria-hidden="true"><i style="width:'+Math.max(0,Math.min(100,Number(r.score)||0))+'%"></i></span>'+esc(r.score)+'</span></td></tr>';}).join('')
+        +'</tbody></table></div>'
+        +'<p class="footnote">Ranked nightly by the desk\u2019s chart-review board for chart-pattern quality. A high rank is background for the desk\u2019s strategies, never a buy signal on its own.</p>';
+      html+=explainerHtml('chart-review-board');
+    }
+    if(pullback.length||pullbackNear.length){
+      function pbRow(r,full){
+        return '<tr><td><strong>'+esc(r.symbol)+'</strong></td>'
+          +'<td class="num">'+money(r.price,2)+'</td>'
+          +'<td class="num">'+money(r.high_52w,2)+'</td>'
+          +'<td class="num">'+pct(r.pullback_pct,1)+'</td>'
+          +'<td class="num">'+pct(r.adr_pct,1)+'</td>'
+          +(full?'<td class="num">'+money(r.trigger,2)+'</td><td class="num">'+money(r.stop,2)+'</td>':'')
+          +'</tr>';
+      }
+      html+='<h3 class="lector-h">Pullback screener</h3>'
+        +'<p class="footnote">Stocks that pulled back a little from their one-year high, are still rising overall, and have settled into a tight, quiet bar. For each one, the buy-above price is the tight bar\u2019s high and the stop-below price is its low.</p>';
+      if(pullback.length){
+        html+='<div class="table-wrap"><table class="lector-table"><thead><tr><th>Stock</th><th class="num">Price</th><th class="num">One-year high</th><th class="num">Below high</th><th class="num">Daily range</th><th class="num">Buy above</th><th class="num">Stop below</th></tr></thead><tbody>'
+          +pullback.map(function(r){return pbRow(r,true);}).join('')
+          +'</tbody></table></div>';
+      }
+      if(pullbackNear.length){
+        html+='<h3 class="lector-h">Also near their one-year high</h3>'
+          +'<div class="table-wrap"><table class="lector-table"><thead><tr><th>Stock</th><th class="num">Price</th><th class="num">One-year high</th><th class="num">Below high</th><th class="num">Daily range</th></tr></thead><tbody>'
+          +pullbackNear.map(function(r){return pbRow(r,false);}).join('')
+          +'</tbody></table></div>';
+      }
+      if(d.pullback_as_of){
+        html+='<p class="footnote">Checked after the close of '+esc(d.pullback_as_of)+' across the desk\u2019s full stock list'
+          +(d.pullback_counts&&d.pullback_counts.full_pass!=null?': '+esc(d.pullback_counts.full_pass)+' stocks passed every check':'')
+          +'.</p>';
+      }
+      html+=explainerHtml('pullback-screener');
+    }
+    $('marketBody').innerHTML=html;
+  }
+  // --- Alerts: native push for the installed terminal ---
+  function urlB64ToUint8Array(b64){
+    var pad='='.repeat((4-b64.length%4)%4);
+    var s=(b64+pad).replace(/-/g,'+').replace(/_/g,'/');
+    var raw=window.atob(s), arr=new Uint8Array(raw.length);
+    for(var i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);
+    return arr;
+  }
+  function newPairingCode(){
+    var a=new Uint32Array(1);
+    window.crypto.getRandomValues(a);
+    return String(100000+(a[0]%900000));
+  }
+  function alertsNote(t){ var n=$('alertsNote'); if(n)n.textContent=t||''; }
+  function initAlerts(){
+    var btn=$('alertsBtn'); if(!btn)return;
+    if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window)){
+      btn.disabled=true;
+      alertsNote('Alerts are not supported in this browser.');
+      return;
+    }
+    var installed=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+    if(!installed){
+      btn.disabled=true;
+      alertsNote('Install Muse Desk to your home screen to enable alerts.');
+      return;
+    }
+    if(Notification.permission==='denied'){
+      btn.disabled=true;
+      alertsNote('Notifications are turned off for Muse Desk \u2014 you can switch them on in your browser settings.');
+      return;
+    }
+    btn.addEventListener('click',function(){
+      btn.disabled=true;
+      alertsNote('Turning on alerts\u2026');
+      var code=newPairingCode();
+      Notification.requestPermission().then(function(perm){
+        if(perm!=='granted'){
+          btn.disabled=false;
+          alertsNote(perm==='denied'
+            ?'Notifications are turned off for Muse Desk \u2014 you can switch them on in your browser settings.'
+            :'Alerts were not turned on.');
+          return;
+        }
+        navigator.serviceWorker.ready.then(function(reg){
+          if(!PUSH_CONFIG.vapidPublicKey)throw new Error('alerts not connected yet');
+          return reg.pushManager.getSubscription().then(function(existing){
+            return existing||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64ToUint8Array(PUSH_CONFIG.vapidPublicKey)});
+          });
+        }).then(function(sub){
+          if(!PUSH_CONFIG.relayUrl)throw new Error('alerts not connected yet');
+          return fetch(PUSH_CONFIG.relayUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({subscription:sub.toJSON(),pairing_code:code})});
+        }).then(function(){
+          btn.textContent='Alerts on';
+          alertsNote('Alerts are on. Your pairing code is '+code+' \u2014 the desk will finish the connection and send a test alert shortly.');
+        }).catch(function(){
+          btn.textContent='Alerts on';
+          alertsNote('Alerts are set up on this device \u2014 your pairing code is '+code+'. Tell the desk \u2018alerts are on\u2019 and it will finish the connection.');
+        });
+      }).catch(function(){
+        btn.disabled=false;
+        alertsNote('Alerts were not turned on \u2014 please try again.');
+      });
+    });
+  }
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    });
+  }
+  initAlerts();
+  var _sdb=$('setupDetailBack'); if(_sdb)_sdb.addEventListener('click',closeSetupDetail);
+  window.addEventListener('hashchange',applyHash);
+  // Strategy toolbar wiring
+  var _ss=$('stratSearch'); if(_ss)_ss.addEventListener('input',renderStrategies);
+  var _sc=$('stratCategory'); if(_sc)_sc.addEventListener('change',renderStrategies);
+  var _cl=$('stratClear'); if(_cl)_cl.addEventListener('click',function(){if(_ss)_ss.value='';if(_sc)_sc.value='all';renderStrategies();if(_ss)_ss.focus();});
+  var _ex=$('stratExpand'); if(_ex)_ex.addEventListener('click',function(){document.querySelectorAll('#sleeves details.explainer').forEach(function(d){d.open=true;});});
+  var _co=$('stratCollapse'); if(_co)_co.addEventListener('click',function(){document.querySelectorAll('#sleeves details.explainer').forEach(function(d){d.open=false;});});
+  var _bt=$('backTop');
+  if(_bt){window.addEventListener('scroll',function(){_bt.hidden=window.scrollY<600;},{passive:true});_bt.addEventListener('click',function(){var rm=window.matchMedia('(prefers-reduced-motion: reduce)').matches;window.scrollTo({top:0,behavior:rm?'auto':'smooth'});});}
+  var _ec=$('stratEmptyClear'); if(_ec)_ec.addEventListener('click',function(){var c=$('stratClear'); if(c)c.click();});
+  document.querySelectorAll('[data-tablink]').forEach(function(a){a.addEventListener('click',function(ev){ev.preventDefault();var t=$(a.getAttribute('data-tablink')); if(t)t.click(); window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});});
+  var _ft2=$('footTop'); if(_ft2)_ft2.addEventListener('click',function(ev){ev.preventDefault();window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});
+  fetch('../algorithms.json?t='+Date.now(),{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('algorithms http '+r.status);return r.json();})
+    .then(function(j){ALGO=j||{};ALGO_FAILED=false;})
+    .catch(function(){ALGO={};ALGO_FAILED=true;})
+    .then(function(){ poll(); setInterval(function(){if(!document.hidden)poll();},60000); });
+})();
+</script>
+<script>
+(function(){
+  function h(tag, cls, text){var e=document.createElement(tag); if(cls)e.className=cls; if(text!=null)e.textContent=text; return e;}
+  function money(v, unit){var s=(v<0?'\u2212$':'$')+Math.abs(v).toLocaleString('en-US')+unit; return s;}
+  fetch('../morgue-feed.json?t='+Date.now(),{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('morgue http '+r.status);return r.json();})
+    .then(function(d){
+      var body=document.getElementById('morgueBody'); if(!body)return;
+      body.textContent='';
+      var stamp=h('p','muted','As of the close on '+d.as_of_session+' \u00b7 refreshed '+new Date(d.generated_at_utc).toLocaleString('en-US')+'.');
+      body.appendChild(stamp);
+      if(d.scorecard){
+        body.appendChild(h('h3','completed-head','The record so far \u2014 graded in public'));
+        var sc=d.scorecard;
+        body.appendChild(h('p',null,sc.counters.units_published+' published units so far; '+sc.counters.units_graded+' have matured enough to grade. Every figure below is worked out from the written record at the moment this page loads \u2014 nothing is typed in by hand.'));
+        var qb=sc.board.qualified;
+        body.appendChild(h('p',null,'Qualified board rows ('+qb.n_logged+' logged) \u2014 1 day: '+qb.horizons['1d']+' \u00b7 5 days: '+qb.horizons['5d']+' \u00b7 21 days: '+qb.horizons['21d']));
+        if(sc.map.state==='graded'){
+          body.appendChild(h('p',null,'Map grades over '+sc.map.cards_graded+' graded cards: call wall held '+sc.map.call_wall_held_pct+'% of the time, put wall held '+sc.map.put_wall_held_pct+'%, flip level respected '+sc.map.flip_respected_pct+'%.'));
+        } else {
+          body.appendChild(h('p',null,'Map grades: '+sc.map.line+'.'));
+        }
+      }
+      body.appendChild(h('h3','completed-head','The Map \u2014 dealer positioning'));
+      var t1=h('table');
+      var head=h('tr'); ['Fund','Price','Net exposure per 1%','Call wall','Put wall','Flip level','Short-sale ratio'].forEach(function(x){head.appendChild(h('th',null,x));}); t1.appendChild(head);
+      d.map.forEach(function(m){var tr=h('tr');
+        [m.symbol, m.spot.toFixed(2), money(m.net_gex_b,'B'), m.call_wall, m.put_wall, (m.flip==null?'\u2014':m.flip), (m.dix==null?'\u2014':m.dix.toFixed(3))].forEach(function(x){tr.appendChild(h('td',null,String(x)));});
+        t1.appendChild(tr);});
+      body.appendChild(t1);
+      body.appendChild(h('p','muted','Negative exposure means dealer hedging is likely to amplify moves rather than calm them. Short-sale ratio is from the exchange file dated '+(d.map[0]?d.map[0].dix_date:'')+'.'));
+      body.appendChild(h('h3','completed-head','The Tape \u2014 today\u2019s scored options prints'));
+      d.tape.forEach(function(tp){
+        var line=tp.symbol+': '+tp.prints.toLocaleString('en-US')+' prints, '+money(tp.total_premium_m,'M')+' total premium, '+money(tp.net_premium_m,'M')+' net signed premium, '+tp.high_heat+' high-heat prints, '+tp.golden_sweeps+' golden sweeps.';
+        body.appendChild(h('p',null,line));
+        tp.top_alerts.forEach(function(a){
+          body.appendChild(h('p','muted','Largest print: '+a.contract+' \u2014 $'+a.premium.toLocaleString('en-US')+', heat '+a.heat+', '+a.sentiment+'.'));
+        });
+      });
+      body.appendChild(h('h3','completed-head','The Board \u2014 qualified setups'));
+      var mc=d.board.summary.market_context;
+      body.appendChild(h('p',null,'Market conditions: regime '+mc.marketRegime+' of 100, breadth '+mc.marketBreadth+'%, breakout follow-through '+mc.breakoutFollowThrough+'%. '+d.board.summary.qualified+' of '+d.board.summary.scored+' scored names passed every gate; '+d.board.summary.insufficient_data+' had too little evidence to score.'));
+      var t2=h('table');
+      var head2=h('tr'); ['Stock','Sector','Close','Score','Groups confirming','Trigger','Trigger price','Support','Resistance'].forEach(function(x){head2.appendChild(h('th',null,x));}); t2.appendChild(head2);
+      d.board.qualified.forEach(function(rw){var tr=h('tr');
+        [rw.symbol, rw.sector||'\u2014', rw.close.toFixed(2), rw.score, rw.confirming+' of 8', (rw.triggers.length?rw.triggers.join('; '):'\u2014'), (rw.trigger_up==null?'\u2014':rw.trigger_up), (rw.support==null?'\u2014':rw.support), (rw.resistance==null?'\u2014':rw.resistance)].forEach(function(x){tr.appendChild(h('td',null,String(x)));});
+        t2.appendChild(tr);});
+      body.appendChild(t2);
+      body.appendChild(h('p','muted','A row is a measurement, not an instruction: the engine does not place trades, and a name appears only when its evidence passed every gate above.'));
+      var fullWrap=h('div');
+      var fullBtn=h('button',null,'Show the full ranked list \u2014 every scored name, rejects included');
+      fullBtn.setAttribute('type','button');
+      var fullDiv=h('div'); fullDiv.style.display='none'; fullDiv.style.maxHeight='480px'; fullDiv.style.overflowY='auto';
+      var fullLoaded=false;
+      fullBtn.addEventListener('click',function(){
+        var open=fullDiv.style.display!=='none';
+        fullDiv.style.display=open?'none':'block';
+        fullBtn.textContent=open?'Show the full ranked list \u2014 every scored name, rejects included':'Hide the full ranked list';
+        if(open||fullLoaded)return; fullLoaded=true;
+        fullDiv.appendChild(h('p','muted','Loading\u2026'));
+        fetch('../board-full.json?t='+Date.now(),{cache:'no-store'})
+          .then(function(r){if(!r.ok)throw new Error('full http '+r.status);return r.json();})
+          .then(function(f){
+            fullDiv.textContent='';
+            fullDiv.appendChild(h('p','muted','Full board as of the close on '+f.as_of_session+': '+f.rows.length+' names. Qualified names passed every gate; the rest show exactly which gate they failed. Names marked insufficient data had too little measurable evidence to score and were not guessed at.'));
+            var t3=h('table');
+            var hd=h('tr'); ['Stock','Close','Score','Groups confirming','Evidence measured','Qualified','Gate outcome'].forEach(function(x){hd.appendChild(h('th',null,x));}); t3.appendChild(hd);
+            f.rows.forEach(function(rw){var tr=h('tr');
+              if(rw.insufficient_data){[rw.symbol,'\u2014','\u2014','\u2014','\u2014','\u2014','insufficient data'].forEach(function(x){tr.appendChild(h('td',null,String(x)));});}
+              else{[rw.symbol, rw.close.toFixed(2), rw.score, rw.confirming+' of 8', rw.dc+'%', (rw.qualified?'yes':'no'), (rw.qualified?'passed every gate':rw.gate_fails.join('; '))].forEach(function(x){tr.appendChild(h('td',null,String(x)));});}
+              t3.appendChild(tr);});
+            fullDiv.appendChild(t3);
+          })
+          .catch(function(){fullDiv.textContent=''; fullDiv.appendChild(h('p','muted','The full list is not available right now.'));});
+      });
+      fullWrap.appendChild(fullBtn); fullWrap.appendChild(fullDiv);
+      body.appendChild(fullWrap);
+    })
+    .catch(function(){
+      var body=document.getElementById('morgueBody'); if(!body)return;
+      body.textContent=''; body.appendChild(h('p','muted','The Morgue Engine figures are not available right now. The rest of this page is unaffected.'));
+    });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vendor Delivery Profiles — Group 5 of 8 — Muse Desk</title><style>
+:root{color-scheme:dark}
+body{background:#0b0e13;color:#dbe2ec;font-family:Georgia,'Times New Roman',serif;margin:0;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 64px}
+header{border-bottom:2px solid #2dd4bf;padding-bottom:14px;margin-bottom:8px}
+h1{font-size:30px;margin:0 0 6px;color:#f2f6fb}
+.sub{color:#93a4bb;font-size:15px;margin:0}
+nav.top{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+nav.top a{background:#131926;border:1px solid #26314a;color:#a5f3e8;text-decoration:none;
+ padding:6px 12px;border-radius:999px;font-size:13.5px;font-family:Helvetica,Arial,sans-serif}
+nav.top a:hover{border-color:#2dd4bf}
+article h1{font-size:26px;color:#f2f6fb;border-bottom:1px solid #26314a;padding-bottom:8px}
+article h2{font-size:21px;color:#7dd3fc;margin-top:34px}
+article h3{font-size:17.5px;color:#a5f3e8;margin-top:26px}
+article h4{font-size:15.5px;color:#fbbf24}
+article a{color:#7dd3fc}
+article code{background:#131926;padding:1px 5px;border-radius:4px;font-size:.92em}
+article pre{background:#0f141f;border:1px solid #26314a;border-radius:8px;padding:12px;overflow-x:auto}
+article pre code{background:none;padding:0}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;
+ font-family:Helvetica,Arial,sans-serif}
+article th,article td{border:1px solid #26314a;padding:6px 9px;text-align:left;vertical-align:top}
+article th{background:#131926;color:#a5f3e8}
+article blockquote{border-left:3px solid #2dd4bf;margin:16px 0;padding:2px 16px;color:#b8c6da}
+article hr{border:none;border-top:1px solid #26314a;margin:28px 0}
+footer{border-top:1px solid #26314a;margin-top:44px;padding-top:14px;color:#7c8da6;font-size:13.5px}
+footer a{color:#7dd3fc}
+.pager{display:flex;justify-content:space-between;margin-top:36px;font-family:Helvetica,Arial,sans-serif;font-size:14px}
+.pager a{color:#a5f3e8;text-decoration:none}
+</style></head>
+<body><div class="wrap">
+<header><h1>Vendor Delivery Profiles — Group 5 of 8</h1><p class="sub">How each vendor in this group packages its product: the unit it sells, its cadence, its free surface, and how it converts readers into buyers.</p></header>
+<nav class="top"><a href="index.html">The Study</a><a href="profiles-g1.html">Profiles 1</a><a href="profiles-g2.html">Profiles 2</a><a href="profiles-g3.html">Profiles 3</a><a href="profiles-g4.html">Profiles 4</a><a href="profiles-g5.html">Profiles 5</a><a href="profiles-g6.html">Profiles 6</a><a href="profiles-g7.html">Profiles 7</a><a href="profiles-g8.html">Profiles 8</a><a href="../morning-map/">Morning Map</a><a href="../desk-terminal-live/">Terminal</a></nav>
+<article><h1>Funnel Profiles — Group g5</h1>
+<p>Delivery/funnel profiles derived from the REA teardown corpus. Each heading is the teardown folder name (the source). Facts are from the teardown unless marked (live).</p>
+<h2>leadrlabs</h2>
+<ul>
+<li><strong>product:</strong> Web screening/journaling app selling a server-computed 0–100 eight-factor confluence score for stocks.</li>
+<li><strong>surfaces:</strong> Web dashboard; in-app AI assistant (Northstar); alerts endpoint; billing via Whop. Predecessor product was a Discord (Enrich Trades).</li>
+<li><strong>unit:</strong> A scored ticker — eight category scores (price action 18, relative strength 15, volume 15, trend 12, support/resistance 12, sector 10, market context 10, institutional positioning 8), a grade, and a confirmed / not-confirmed qualification at 5 of 8 categories, subject to a 60% data-coverage floor (below it: <code>insufficient-data</code>).</li>
+<li><strong>cadence:</strong> Intraday / daily — scores arrive precomputed from the server via <code>/api/universe</code>; no continuous streaming is evidenced.</li>
+<li><strong>mode:</strong> Primarily pull (dashboard to be checked), with an alerts surface.</li>
+<li><strong>curation:</strong> Algorithmic — weighted model computed server-side from market data plus Unusual Whales flow / dark-pool / short-interest derivatives.</li>
+<li><strong>free_surface:</strong> Free tier: watchlist 5 tickers, generic limit 3, 0-day retention.</li>
+<li><strong>paywall:</strong> Tier limits gate scale: Starter watchlist 25 / 30-day retention; Pro unlimited / 90-day retention. Options Scanner and Pro backtesting are marketed but the Terms state both are "still in development and not yet live."</li>
+<li><strong>conversion:</strong> Whop subscription tiers; non-refundable subscriptions per Terms; social proof imported from the predecessor — 4.9-star ratings shown near Leadr branding are the Enrich Trades Whop store's reviews.</li>
+<li><strong>actionability:</strong> Low-to-moderate — a score and qualification flag, plus scored trade geometry (support proximity, room to resistance), but no public evidence of a trade card carrying entry / stop / target. The customer must supply the trigger and the trade.</li>
+<li><strong>trust_record:</strong> Weak and borrowed — the headline "84% Historical Win Rate" is footnoted by the vendor to the predecessor Discord's alerts (Jan 2025–Sep 2026), explicitly "not Leadr performance"; no Leadr-native track record, backtest, or archive is public; the vendor's own Risk Disclosure states scores are "not audited, verified, or validated" with "no representation of predictive value."</li>
+</ul>
+<h2>citrini</h2>
+<ul>
+<li><strong>product:</strong> Human-written thematic equity / global-macro research newsletter plus the Citrindex, a discretionary long/short thematic model portfolio.</li>
+<li><strong>surfaces:</strong> Substack (web + email), Substack Chat, separate Citrindex web dashboard (citrindex.com, "Beta"), corporate site; a mobile app is described in the portal privacy policy.</li>
+<li><strong>unit:</strong> A long-form newsletter issue (thematic primer, macro overview, or tactical note) and, for the portfolio, a weekly-updated holdings spreadsheet with concrete weighted baskets; performance reviews monthly.</li>
+<li><strong>cadence:</strong> Weekly portfolio updates; monthly performance reviews; 2–3 thematic primers per year; sporadic tactical notes.</li>
+<li><strong>mode:</strong> Push (email / Substack delivery) for research; pull for the spreadsheet and the real-time-claimed dashboard.</li>
+<li><strong>curation:</strong> Human — discretionary basket construction attempting to isolate a theme's effect; no formula, weighting rule, or rebalance rule is published.</li>
+<li><strong>free_surface:</strong> Free Substack tier / public posts; the subscribe page displays "Over 265,000 subscribers" (free + paid combined).</li>
+<li><strong>paywall:</strong> Substack paywall gates full posts and the holdings spreadsheet; the Citrindex dashboard is a separate subscription on top.</li>
+<li><strong>conversion:</strong> $125/mo or $999/yr web; Founding $1,999/yr; in-app purchase schedule materially higher ($170/mo or $1,400/yr); Research + Citrindex bundle marketed at 25% off (late-2025 podcast promotion); institutional tier price-on-application, mandatory for entities managing over $100M.</li>
+<li><strong>actionability:</strong> Moderate — baskets are concrete and weighted (basket weights were reported publicly with explicit percentages), so a subscriber can replicate the portfolio; no per-trade entry / stop / target or risk rule is given.</li>
+<li><strong>trust_record:</strong> Hindsight display with a legal reversal — a 200%+ cumulative Citrindex figure is vendor-reported only, with no audit, no administrator, and no complete public return series; both legal surfaces state the model portfolio is a hypothetical allocation that "does not represent the performance of any actual account or investment"; terms reserve the right to modify any model or chart at any time without notice; position disclosure is blanket-only ("may have existing long or short positions," tradable without notice).</li>
+</ul>
+<h2>kobeissi</h2>
+<ul>
+<li><strong>product:</strong> Weekly macro/markets newsletter (The Kobeissi Letter) plus MPW analysis and a private X alerts feed.</li>
+<li><strong>surfaces:</strong> Web membership site (Webflow / Memberstack), private X feed (@TKLSubscribers), weekly letter in six sections; free Chart of the Week with an account.</li>
+<li><strong>unit:</strong> A Sunday letter section — a view on S&amp;P 500, crude oil, natural gas, gold, or bonds, plus a weekly options pick — with targets and stops; MPW weekend / mid-week updates; intraday private-feed alerts.</li>
+<li><strong>cadence:</strong> Weekly letter, mid-week MPW update, intraday alerts.</li>
+<li><strong>mode:</strong> Push (private X feed interrupts) plus pull (letter / members area).</li>
+<li><strong>curation:</strong> Human discretionary commentary; the bundled MPW contributor model (TEACT) names Trend, Elliott Wave, Astrology, Cycle, and TA factors — astrology is stated on the vendor's own benefits page.</li>
+<li><strong>free_surface:</strong> Chart of the Week free with an account; public X threads.</li>
+<li><strong>paywall:</strong> Memberstack gating of the members area and the private X feed; removal from the private feed is at the vendor's discretion with no refund.</li>
+<li><strong>conversion:</strong> Individual $129.99/mo or $1,299.99/yr ("2 months free"); Professional $649.99/mo or $6,499.99/yr (10 users, premium support); auto-renew with a 24-hour cancellation rule; no refunds on charges already processed; referral branch in the client (<code>?rc=panda</code>).</li>
+<li><strong>actionability:</strong> High for the letter — views carry targets and stops; the exception is structural: options-section exits are left to each subscriber, so that section produces no vendor-defined outcome.</li>
+<li><strong>trust_record:</strong> As-was annual ledgers, unusually checkable — six public annual PDFs (2020–2025) list every setup with dates, direction, and % gain/loss, and every annual total and the +516% cumulative reconcile exactly under the stated equal-weight methodology. Caveats found by audit: entirely self-published and self-scored, no costs / spreads / slippage, no audit; the basket silently changed composition (options section counted 2020–2021, excluded from 2023 because exits are subscriber-chosen) while the homepage blends the whole record; the homepage "4.6x vs S&amp;P 500" is a ratio of percentage gains — terminal wealth ratio on its own series is 2.9x; the "+1,200 points" X claim uses a gross-points unit that is never defined or ledgered (UNVERIFIABLE).</li>
+</ul>
+<h2>optionscartel</h2>
+<ul>
+<li><strong>product:</strong> Discord trading community (The Options Cartel Full Access) selling human swing / options alerts, live sessions, education, and a proprietary Custom Flow Bot.</li>
+<li><strong>surfaces:</strong> Discord (the product); Whop storefront (the entire public web surface — no vendor website or web client exists).</li>
+<li><strong>unit:</strong> A real-time entry / exit alert on the lead trader's own trades; daily watchlist / market analysis; and a flow-bot alert inside Discord.</li>
+<li><strong>cadence:</strong> Real-time intraday push; daily live trading sessions and analysis.</li>
+<li><strong>mode:</strong> Push — Discord alerts interrupt the customer.</li>
+<li><strong>curation:</strong> Hybrid — human analysts (lead trader plus named additional traders) plus the bot; the bot's picking logic is undisclosed.</li>
+<li><strong>free_surface:</strong> A free Whop tier ("The Options Cartel Free") as lead-in; the store page shows 22,491 joined (free + paid combined).</li>
+<li><strong>paywall:</strong> Whop purchase grants the Discord invite; everything substantive, including any view of the bot's output, sits behind it.</li>
+<li><strong>conversion:</strong> Full Access $125/mo (live plan object), $299 per quarter and $999.99/yr and $2,199 lifetime per the October 2026 review-site plan table; separate TOC Futures SKU at $45/mo. Prices have risen twice ($99.99 to $125/mo; lifetime $1,899.99 to $2,199) while Whop's own blog still advertises the old figures.</li>
+<li><strong>actionability:</strong> High for human alerts (entry / exit on the trader's own trades, all active positions claimed visible live); the flow bot's output cannot be assessed — no sample alert is published anywhere.</li>
+<li><strong>trust_record:</strong> Nothing — no win rate, trade log, equity curve, or signal archive is published on any surface, while the listing calls its signals "proven" (UNVERIFIABLE) and headlines the free tier "Become a profitable trader"; no risk disclaimer appears in the vendor's own store copy. The only record is Whop satisfaction data: 4.81 / 5 over 568 purchase-linked reviews, which measures community / teaching satisfaction, not trading outcomes; a long-tenured member's top review reports quality drift.</li>
+</ul>
+<h2>optionscout</h2>
+<ul>
+<li><strong>product:</strong> Server-computed options analytics web app — chain scanner with a 0–100 Scout Score, dealer GEX, a classified unusual-activity tape, an AI advisor, and paper trading.</li>
+<li><strong>surfaces:</strong> Web app / dashboard; public per-ticker data pages (161 most-traded names, 9 page families, dated after-close captures); daily 9:00 ET email gamma briefing; email alerts (Trader); Discord / Slack webhook alerts (Pro). No public API — the About page says so explicitly.</li>
+<li><strong>unit:</strong> A scanner trade card / play (directional, vertical spread, iron condor, covered call) carrying entry, max profit / loss, breakevens, and probability of profit, ranked by Scout Score (reward-for-risk /30, chance of profit /30, option pricing /20, liquidity /20 — sub-formulas sealed); a GEX level set (call wall, put wall, gamma flip); a tape print classified block / sweep / golden sweep with a sealed per-print score (observed 15–92); an Advisor card.</li>
+<li><strong>cadence:</strong> Intraday — GEX recomputed every 60 seconds (20 seconds on Pro), tape polled every 30 seconds, plus the daily briefing.</li>
+<li><strong>mode:</strong> Hybrid — pull (scanner / dashboard) plus push (briefing, email and webhook alerts).</li>
+<li><strong>curation:</strong> Algorithmic, with a constrained AI layer — the Advisor (vendor-stated Grok with reasoning) can only recommend trades the screener built; card numbers are screener-computed, never model-typed, and thin quotes fall back to last-trade pricing labelled as such on the card (enforcement is server-side, UNVERIFIABLE).</li>
+<li><strong>free_surface:</strong> The strongest free tier in this group: $0, no card — live options data on every ticker, 3 Scanner runs/day, 3 Advisor chats/day, GEX levels and strike profile on every ticker, GEX heatmap / chart on SPY/QQQ, the daily briefing, 3-ticker watchlist, and $25K paper trading.</li>
+<li><strong>paywall:</strong> Caps and history — full GEX heatmap on every ticker, CSV exports, and 7-day flow history at Trader; 30-day history, historical GEX snapshots, portfolio GEX, trade journal, and webhooks at Pro; free flow history is today only.</li>
+<li><strong>conversion:</strong> Every paid plan starts with 7 days of Pro, card required, then defaults to Trader unless switched; Trader $29/mo ($19/mo billed yearly), Pro $79/mo ($59/mo billed yearly); refund terms (7-day Trader / 14-day Pro annual) appear in the FAQ but not in the Terms.</li>
+<li><strong>actionability:</strong> Very high — a unit is a complete, priced trade structure with breakevens and probability of profit, executable as-is or in the built-in paper account (fills at card price); no further interpretation is required to act.</li>
+<li><strong>trust_record:</strong> Nothing published — and that is the finding: no win-rate, return, or performance figure exists anywhere on the current site; demos are recorded and labelled with their session date; public snapshots are dated as-was captures that visibly obey the vendor's own rules (e.g., reporting "no flip" rather than drawing one through noise). The audit's refutations hit marketing copy, not a record: the Unusual Activity page's sub-5-second latency and hedge-filter claims are REFUTED by the vendor's own method page (30-second polling; no hedge classification in the published rules), and the May 2026 blog overstates the free tier and a competitor comparison.</li>
+</ul>
+<h2>alertsify</h2>
+<ul>
+<li><strong>product:</strong> Hosted Pine-compatible charting platform bolted to chart-to-broker execution and copy trading.</li>
+<li><strong>surfaces:</strong> Web app (16 charts/screen), mobile push, Discord via the Signal user-app; billing via Whop; broker connectivity via SnapTrade to 10 named brokers plus a prop firm.</li>
+<li><strong>unit:</strong> A chart alert notification (price / drawn-line / indicator-line cross); a drawn bracket — entry, stop, up to 3 targets — sent to the customer's own broker; a copied trade from a followed lead trader; a Discord alert parsed by Signal into ticker / strike / expiry / side for one-tap confirmation.</li>
+<li><strong>cadence:</strong> Intraday but sampled — alerts are checked server-side about every two minutes, per the vendor's own page, and can arrive after the price is reached.</li>
+<li><strong>mode:</strong> Push for alerts (in-app + push only — no email, Telegram, Discord, or webhook-out for chart alerts) and for execution; copy trading is automatic once followed, Signal is human-confirm by design.</li>
+<li><strong>curation:</strong> Algorithmic for the customer's own conditions and Pine <code>alertcondition()</code> scripts (clean-room Pine v3–v6 engine, gaps admitted); human for copy-trading leaders and Discord signal authors.</li>
+<li><strong>free_surface:</strong> Genuinely free, no card: charts, GEX / dark-pool / options-flow overlays, Pine runtime, paper-trading simulator, and price alerts on US stocks/ETFs (alert-count cap is published nowhere).</li>
+<li><strong>paywall:</strong> Trade ($99/mo) gates broker execution and 2 prop accounts; Pro ($249/mo) gates copy trading, Signal execution, and 10 prop accounts. Tracking a Discord signal is free; executing it needs Pro.</li>
+<li><strong>conversion:</strong> 7 days free on paid plans via Whop, "cancel anytime" — but the vendor's No Refund Policy makes all payments final and non-refundable, trial conversions explicitly included.</li>
+<li><strong>actionability:</strong> The highest execution actionability in this group — one tap sends a bracket to the customer's own broker; stops / targets are watched on Alertsify's servers and fired as market orders when crossed (they are not resting broker orders, per the vendor's own FAQ). Alerts alone do the opposite: they notify only and never place a trade.</li>
+<li><strong>trust_record:</strong> Broker-reported, not verified — copy-trading leaderboards are built from fills reported by the leader's connected broker; the disclosures page concedes performance is not independently verified beyond what the broker reports, and claims losing trades are not selectively removed. Homepage counters ($1B+ traded, 5M+ contracts, 500K+ trades copied) are self-reported and UNVERIFIABLE. Safety note from the teardown: for Robinhood and the prop connection, broker logins are typed into Alertsify itself (vendor-disclosed, encryption unverifiable); the other brokers use SnapTrade OAuth, read-only until trading is opted in.</li>
+</ul>
+<h2>coincodecap</h2>
+<ul>
+<li><strong>product:</strong> Telegram-delivered discretionary crypto signal service (spot, futures, NFT, gold, forex channels bundled) run by two analysts, live since May 2021.</li>
+<li><strong>surfaces:</strong> Telegram (private channels + premium chat — the product), WordPress sales / results / pricing site, email-delivered invite; optional auto-execution via the third-party Cornix bot on the subscriber's own exchange account.</li>
+<li><strong>unit:</strong> A complete signal card — pair, direction, leverage (typically 1–3x), 1–2 entry prices as a zone, 2–3 take-profit targets with R:R, a pre-set stop-loss that trails after TP1, and a short rationale — formatted to be Cornix-parseable.</li>
+<li><strong>cadence:</strong> Intraday push; 36–75 closed trades per month in 2026 (the homepage range reconciles exactly; a separate "38–85 signals per month" figure elsewhere uses an unreconciled posted-signals denominator).</li>
+<li><strong>mode:</strong> Push — Telegram interrupts the customer.</li>
+<li><strong>curation:</strong> Human discretionary technical analysis (named setup types: break of structure, key-level retest, divergence with volume; stop set first, 1–2% risk per signal as the stated guideline).</li>
+<li><strong>free_surface:</strong> A free Telegram channel serves as the trial substitute; there is no free trial of the paid channels — the paid offer is a 7-day refund instead.</li>
+<li><strong>paywall:</strong> Paid Telegram channels behind InviteMember / CoinPayments checkout; crypto-only payment, no card option.</li>
+<li><strong>conversion:</strong> $99/mo paid manually each month (no auto-renewal), $299 / 6 months, $450/yr, $729 lifetime — every savings / payback figure on the page reconciles exactly; 7-day no-questions refund on every plan.</li>
+<li><strong>actionability:</strong> Complete — entry zone, stop, targets, leverage, and sizing guidance are all in the unit, and Cornix can execute it automatically on the subscriber's own account; no further interpretation is needed.</li>
+<li><strong>trust_record:</strong> The most auditable self-published record in this group — a complete public 521-row 2026 ledger (pair, side, leverage, targets hit, result) whose counts, monthly nets, and total (+145.66 vs printed +145.7) recompute exactly, with losing months and 235 losses printed, exclusions enumerated (35 never-filled, 7 unclosed), and a dated 1 Oct 2026 correction note replacing earlier, higher figures with a full recount. Still self-counted from paywalled bot messages with no audit or broker proof; the "+146%" headline is a summed, never-compounded total of leveraged per-trade percentages before fees / funding — expectancy on the vendor's own numbers is +0.28% per trade, with the average win (+3.46%) smaller than the average loss (−3.55%); an unstated ~0.05% break-even band was found by recomputation; row-level archive has a Feb 2024–2025 gap; governing terms are an unedited template contradicting the sales pages on billing.</li>
+</ul>
+<h2>stockmoe</h2>
+<ul>
+<li><strong>product:</strong> Educator community (Stock Moe Academy) — live sessions, a Discord bot suite, and "Moe's Bread Recipe Indicator," an invite-only TradingView reversal tool (Earner Plus tier).</li>
+<li><strong>surfaces:</strong> Discord, Whop storefront, TradingView (indicator whitelisted to the buyer's username), YouTube / podcast, WordPress site plus a GoHighLevel sales funnel.</li>
+<li><strong>unit:</strong> A Discord bot output — an advanced chart, support / resistance and Fibonacci levels, a sweeps / dark-pool / insider / analyst-grade alert, or an "AI-generated" option trade idea (Bullseye / Scalps / Trady Flow bots; no bot names a data source or methodology) — or an indicator reversal signal with entry / exit cues.</li>
+<li><strong>cadence:</strong> Live sessions Tue/Thu 2:00 PM ET (plus a Wednesday session on Plus); intraday bot output.</li>
+<li><strong>mode:</strong> Push (Discord) plus pull (indicator watched on the customer's own chart).</li>
+<li><strong>curation:</strong> Hybrid — human live trading / teaching, algorithmic bots and a sealed indicator; "AI-generated" is undefined (no model or inputs named).</li>
+<li><strong>free_surface:</strong> Public YouTube / podcast content; no free product tier is evidenced on the store.</li>
+<li><strong>paywall:</strong> Whop gates Discord access and indicator fulfilment (Discord ID + TradingView username collected); a paid TradingView account with live data is required in practice at the buyer's extra expense.</li>
+<li><strong>conversion:</strong> Earner $49.99/mo; Earner Plus $162.99/mo, sold on the funnel at $97.79/mo with code NOW (40% off — arithmetic checks); a $1,649.99 lifetime plan sits in the Whop payload. "NO REFUNDS" banner on both product pages; cancellation stops the next billing only.</li>
+<li><strong>actionability:</strong> Moderate-to-low — bots deliver ideas and levels and the indicator claims entry / exit cues, but no unit carries a complete entry / stop / target / sizing package in any public evidence, and acting on the indicator requires the customer's own chart setup and interpretation.</li>
+<li><strong>trust_record:</strong> Nothing auditable — wins-only member screenshots are showcased on the funnel, a practice the Privacy Policy itself discloses (screenshots of members' results may be featured promotionally), with no losing counterpart anywhere. The brand's one quantified claim, "80% win rate," appears on no product page: it belongs to podcast / Medium marketing for a separate 15-minute prediction-market strategy and is defined in its most precise form as a share of profitable <em>days</em>, not trades, with no log, denominator, or dates. Funnel scale claims (3,000+ active members) are contradicted in scale by Whop's own counters (40 Earner / 206 Earner Plus members), and the funnel's "40% OFF ENDS AUGUST 17" deadline was still displayed, with a zeroed countdown and the discount live, on 26 Oct.</li>
+</ul>
+<h2>skylit</h2>
+<ul>
+<li><strong>product:</strong> Dealer-positioning / options-flow / volatility terminal (Heatseeker, Flowseeker, Atlas, Tempest, Talon, Nexus paper trading) with a data API and MCP server.</li>
+<li><strong>surfaces:</strong> Web terminal (app.skylit.ai), API (api.skylit.ai), MCP server (63 tools), Discord community, Live Stages video sessions, founder commentary feed; sold direct (Stripe) and via Whop.</li>
+<li><strong>unit:</strong> A strike × expiration node board (net GEX or VEX per node, with named roles — King = strongest node, Gatekeeper, Pika, Barney — and 1/5/10-minute node velocity); a flow print row with a Flow Score (−100 to +100); a Tempest SVX volatility reading with expected-move cones; a Talon trade-map card carrying entry reference, structural invalidation, and risk-to-reward; a Nexus paper trade.</li>
+<li><strong>cadence:</strong> Real-time — server values stream over SSE; Replay offers 1+ years of sessions at 1-minute granularity; flow alerts capped per plan (up to 25).</li>
+<li><strong>mode:</strong> Primarily pull (terminal / API / MCP), with push flow alerts.</li>
+<li><strong>curation:</strong> Algorithmic — every model (GEX/VEX node classification, Flow Score, SVX) is computed server-side and sealed: no formula, sign convention, or "standout node" threshold is published. Talon adds an AI layer over deterministic slash-command data reads; its model provider is undisclosed.</li>
+<li><strong>free_surface:</strong> A Free plan (Live Stages 60 min/day; restricted ticker coverage — some plans are index-tickers only versus 5,000+ on full access).</li>
+<li><strong>paywall:</strong> Module and coverage gating — Talon and Tempest are Pro; API access is credit-metered (1 credit = $0.001, 600 requests/min per key, failed calls refunded; Pro / Developer include 100,000 credits/month, lower tiers start with 5,000 once then pay-as-you-go). Headline plan prices are served from a live checkout catalog and appear on no public page fetched in the teardown; a standalone Developer plan at $349/mo is documented in the API guide.</li>
+<li><strong>conversion:</strong> Named tiers (Free / Community / Initiate / Pro, plus Protege / Quant / Lifetime Bootcamp), credit packs ($50 for 55,000 credits, 12-month validity), Whop distribution (homepage displays 4.9/5, "rated by 554+"), Calendly 1:1 sessions for Pro; subscriptions auto-renew and are non-refundable except as stated, per Terms.</li>
+<li><strong>actionability:</strong> Mixed — the Talon card is actionable as given (entry, invalidation, R:R); boards and scores require the customer's own interpretation, and the field guide repeatedly labels the core node "magnet / pin" teaching as not a tested or measured result. Nexus executes paper trades only ($100K permanent practice wallet); the module page calls broker integrations "Coming soon" while the shipped client already contains tastytrade / Webull account routes (internally inconsistent).</li>
+<li><strong>trust_record:</strong> Nothing published — no performance claim of any kind exists on the homepage, module pages, or docs, and the Terms state outputs are not predictions or signals and paper results are hypothetical. The offered anti-repaint contract is Replay (sessions "as they looked at the time"), whose as-was fidelity is UNVERIFIABLE without an account and an independent archive.</li>
+</ul>
+<h2>tjr</h2>
+<ul>
+<li><strong>product:</strong> Invite-only TradingView Pine chart-markup bundle (ICT/SMC drawing tools) plus a separate "Setup Guide" step-tracking indicator.</li>
+<li><strong>surfaces:</strong> TradingView (the product, whitelisted by username), Whop storefront, free Whop community, YouTube / streams.</li>
+<li><strong>unit:</strong> A chart drawing — Break of Structure line, Fair Value Gap / Inversion FVG box, Order Block / Breaker Block zone, liquidity pool, SMT divergence tag (bundle); Session Highs &amp; Lows, Equilibrium, Order Flow, Macro Countdown (legacy Advanced); the Setup Guide marks each step of the vendor's own setup as it plays out until it displays "setup complete" (NQ &amp; ES, New York session only; step definitions sealed).</li>
+<li><strong>cadence:</strong> Real-time on the customer's open chart.</li>
+<li><strong>mode:</strong> Pull — the customer must be watching the chart; no alert product is sold.</li>
+<li><strong>curation:</strong> Algorithmic — sealed Pine over public ICT/SMC primitives.</li>
+<li><strong>free_surface:</strong> Free community (166,757 joined on the store page — a measure of stream reach, not paid adoption) and public video content.</li>
+<li><strong>paywall:</strong> Whop purchase, claimed by entering a TradingView username; access duration is stated affirmatively on no current page.</li>
+<li><strong>conversion:</strong> Catalog restructured in place — the legacy $75/mo bundle that carries all 376 store reviews is hidden and unpurchasable; what is actually for sale is a $97 one-time Full Indicator Bundle (3 reviews) plus the Setup Guide at $500/mo (0 reviews), each page noting in small print that the other is sold separately, so the combined cost is never stated in one place. No product-specific refund policy is published.</li>
+<li><strong>actionability:</strong> Low by design — the Setup Guide page carries an explicit disclaimer that markings are analytical tools and "not trade signals"; no drawing carries entry / stop / target / sizing. The customer supplies the entire trade.</li>
+<li><strong>trust_record:</strong> No performance record is offered or claimed — no win rate, backtest, or equity curve appears on any indicator page, which is cleaner than most of this category. The trust defects are commercial, not statistical: a paying reviewer's report that a 90-day access limit was disclosed only after joining (current plan data shows no expiry but also no lifetime statement), and social proof (4.84 / 5 over 376 purchase reviews) that attaches to the discontinued product, not the current SKUs.</li>
+</ul>
+<h2>ict2023trader-indicators</h2>
+<ul>
+<li><strong>product:</strong> Free open-source GitHub repo of TradingView Pine indicators implementing one ICT "Fractal Model" — 11 near-identical variants of one program (~22,800 lines total) plus one bundled third-party FVG script.</li>
+<li><strong>surfaces:</strong> GitHub (source distribution), TradingView chart (execution), X (linked walkthrough video).</li>
+<li><strong>unit:</strong> A drawing set on the chart — C2 setup label, T-Spot phase box, CISD confirmation line, IC-CISD protected-swing dot, status table — plus optional Pine alerts (Early CISD, IC-CISD, Sweep+C2, C2 direction). Outputs are drawings and alerts only; there are no plotted signals.</li>
+<li><strong>cadence:</strong> Real-time, bar-by-bar on the customer's chart; alerts fire intrabar (see trust record).</li>
+<li><strong>mode:</strong> Pull (chart) with optional push if the customer configures TradingView alerts / webhooks themselves.</li>
+<li><strong>curation:</strong> Algorithmic — fully inspectable source; the model is a C2 sweep-and-close-back sequence (HTF candle wicks beyond the prior candle's extreme and closes back inside) confirmed by a lower-timeframe close through the CISD level.</li>
+<li><strong>free_surface:</strong> Everything — all 13 files are public source at no cost; there is no free tier because there is no tier.</li>
+<li><strong>paywall:</strong> None. The only commercial trace is an alert tooltip naming a "Fractal Model [Pro+]" product that is not in the repo — an upsell / provenance remnant with no checkout attached.</li>
+<li><strong>conversion:</strong> None in the repo — distribution is by GitHub clone / copy into TradingView; reputation funnel is the linked X video.</li>
+<li><strong>actionability:</strong> Moderate — the CISD close-through is a defined entry trigger and the C2 extreme is a natural invalidation reference, but no unit states a stop, target, or size; the customer builds the trade around the drawings.</li>
+<li><strong>trust_record:</strong> No claims at all — a census of the repo finds zero win-rate, accuracy, profit, or "smart money" claims, and history is honest: no future leak (the one <code>lookahead_on</code> construction is quarantined by a period-boundary latch) and no historical repaint. The live record is weaker: CISD / Early CISD confirmations latch, draw, and alert on the unconfirmed live close, so an alert can fire and be false by the bar close; StdDev "Projections" are advertised in inputs / tooltips in all 11 files but only text labels are ever created — no projection line is drawn; one variant (MultipleCandleOptions) ships two regressions, including evicted setups that keep alerting invisibly.</li>
+</ul>
+<h2>m-algo-eurusd-m1-core</h2>
+<ul>
+<li><strong>product:</strong> A cTrader cBot — "M-Algo EURUSD M1 Core," an automated EURUSD M1 recovery / grid bot with progressive position sizing and a shared take-profit, sold on the cTrader Store (product 5052, listed 15 Aug 2026).</li>
+<li><strong>surfaces:</strong> cTrader Store (sale); cTrader platform (the bot runs on the customer's own account). No dashboard, community, or alert surface.</li>
+<li><strong>unit:</strong> The bot itself — there is no information unit; the customer receives an <code>.algo</code> file that opens, sizes, and closes grid baskets autonomously (up to 25 buys + 25 sells, each up to 0.15 lot).</li>
+<li><strong>cadence:</strong> Real-time, tick-driven, continuous on M1.</li>
+<li><strong>mode:</strong> Neither push nor pull — autonomous execution; the customer is out of the loop unless they intervene.</li>
+<li><strong>curation:</strong> Algorithmic and sealed — Core-edition settings (grid step, recovery progression, shared-TP distance, entry trigger) are fixed and hidden by design, so even a buyer cannot audit what they run.</li>
+<li><strong>free_surface:</strong> None — no trial or free tier; the public surface is the store listing and a product video offering a backtest recording.</li>
+<li><strong>paywall:</strong> A $1 purchase (verified from the store page offer data) gates the file — the lowest price barrier in this group, with the real cost carried as account risk rather than subscription.</li>
+<li><strong>conversion:</strong> $1 headline price; store rating 4.75/5 on only 6 reviews; a long, impressive-looking backtest summary on the listing does the selling; an optional trailing-equity maximum-loss guard exists but ships disabled (0 = off).</li>
+<li><strong>actionability:</strong> Total — no interpretation is possible or required: the bot places every trade itself. The corresponding exposure is also total: the stated caps are per-position, "not a limit on the combined account exposure" (vendor's own wording), against a suggested minimum balance of €2,000 at 1:500; there is no fixed stop-loss by default.</li>
+<li><strong>trust_record:</strong> Vendor-published backtest only — 20 Jan 2014 to 6 Aug 2026 on IC Markets demo tick data, no out-of-sample or forward record, with the final configuration selected knowing the window it is then reported on. The claim audit decomposes it: the 87.3% win rate reconciles arithmetically (16,023 / 18,361), but the vendor's own figures imply an average win of €1.53 against an average loss of €6.28, profit factor 1.67, and €0.54 expectancy per trade — inside the spread / slippage gap between a demo feed and a live account; maximum equity drawdown of 26.33% sits behind a smooth 8.43% balance drawdown, the loss-deferral signature of the grid family. To the vendor's credit, the listing names the strategy class, the test broker / feed, and the possible loss of the account in its risk section.</li>
+</ul></article>
+<div class="pager"><a href="profiles-g4.html">&larr; Profiles 4</a><a href="profiles-g6.html">Profiles 6 &rarr;</a></div>
+<footer>Research by Muse Desk. This study of how trading products are packaged and
+delivered is what the <a href="../morning-map/">Morning Map</a> and the Morgue Engine
+were built from.</footer>
+</div></body></html>
