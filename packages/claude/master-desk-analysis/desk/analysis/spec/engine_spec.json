@@ -1,0 +1,510 @@
+{
+ "version": "deep2-engine-secv-1.0.0-final",
+ "status": "FINAL: SEC-V passed Addendum 2-19c's rule; FB2's VETO is SEC-V",
+ "built": "2026-10-25",
+ "registration": {
+  "program": "eyes/DEEP/PROGRAM2.md, Addenda 2-19 (21:39 UTC), 2-19b (22:32 UTC), 2-19c (22:51 UTC)",
+  "program_sha256_at_build": "efbafb585cb08c3bfd40d1f2779d40c59db00f06ad60c02be2a738541f08c0f5",
+  "validation_report": "out2/ENGINE_VALIDATION.md sha256 4f2fcfa3172fa0b0f3b29183eb8558b642110c836e5b104fe6c3242b2678beb5",
+  "decision_2_19b": {
+   "rule": "COMPACT is chosen only if COMPACT_WF_gain >= 0.8 x SECONDARY_WF_gain in BOTH small3 and nano (PROGRAM2.md Addendum 2-19b item 2); WF gain = the money test's kept-minus-all, % per 20 sessions net, walk-forward 2018-22 pooled",
+   "small3": {
+    "SECONDARY_WF_gain": 0.09506841433877175,
+    "COMPACT_WF_gain": 0.031287720670159065,
+    "bar_0.8x": 0.0760547314710174,
+    "pass": false,
+    "ratio": 0.32910742109010854
+   },
+   "nano": {
+    "SECONDARY_WF_gain": 0.24312222621518895,
+    "COMPACT_WF_gain": 0.1382071676415558,
+    "bar_0.8x": 0.19449778097215117,
+    "pass": false,
+    "ratio": 0.5684678434921363
+   },
+   "chosen": "SECONDARY"
+  },
+  "decision_2_19c": {
+   "rule": "FB2's VETO is SEC-V if SEC-V_WF_gain >= 0.8 x SECONDARY_WF_gain in BOTH small3 and nano (PROGRAM2.md Addendum 2-19c item 2); otherwise SEC-V is recorded nightly, labelled INTERIM (item 3). WF gain = the money test's kept-minus-all, % per 20 sessions net, walk-forward 2018-22 pooled.",
+   "small3": {
+    "SECONDARY_WF_gain": 0.09506841433877175,
+    "bar_0.8x": 0.0760547314710174,
+    "SECV_WF_gain": 0.10315574767879093,
+    "pass": true
+   },
+   "nano": {
+    "SECONDARY_WF_gain": 0.24312222621518895,
+    "bar_0.8x": 0.19449778097215117,
+    "SECV_WF_gain": 0.25130226887925494,
+    "pass": true
+   },
+   "passes": true,
+   "label": "FINAL"
+  }
+ },
+ "data": {
+  "source": "Alpaca market data v2 stock bars: timeframe 1Day, feed sip",
+  "adjusted_bars": "adjustment=all: split- and dividend-adjusted open, high, low, close. Used for every return-based quantity: lrv1, lrv5, lrv22, ATR%, momentum 6-1, the HAR target and the FB2 outcomes r20 / r60. Each is a ratio of prices inside its window, so an adjusted series fetched on any later date gives the same value; absolute adjusted price levels are never used.",
+  "raw_bars": "adjustment=raw: close and volume as traded that day. Used only for the price floors ($1 eligibility, $5 liquid) and the dollar volume dv20 (tier and eligibility).",
+  "volume": "only raw volume, and only inside dv20 = median(raw close x raw volume); dollar volume is invariant to splits. No split-adjusted volume is used anywhere in this spec.",
+  "bar_validity": "a bar is used only when open, high, low, close > 0, the raw close > 0 and none is missing",
+  "bar_repair": "high := max(high, open, close); low := min(low, open, close) on every adjusted bar",
+  "segments": "a symbol's bars split into segments wherever two consecutive bars are more than 45 calendar days apart (symbol reuse, long halts). Every window below lies inside the current segment, and history (bar counts) restarts at a segment's first bar.",
+  "point_in_time": "the screen for session d uses bars through d's close only and is written once; a desk entry during d+1 carries screen d (2-19c)."
+ },
+ "universe": {
+  "listing_filter": {
+   "asset_class": "us_equity (Alpaca /v2/assets)",
+   "exchanges": "NYSE, NASDAQ, AMEX, BATS (ARCA-listed names are excluded)",
+   "symbol_regex": "[A-Z]{1,5}(\\.[A-Z])?  (fullmatch: 1-5 capital letters, optional .X share-class suffix)",
+   "share_classes": "included, each class a separate name (e.g. BRK.A and BRK.B)",
+   "name_excluded_if_contains_1": "\\b(warrants?|wts?|units?|rights?|preferred|pfd|notes?|debentures?|bonds?|etf|etn|etns|fund|index|ishares|spdr|proshares|direxion|wisdomtree|vaneck|invesco db|global x|first trust|leveraged|inverse|ultrashort|ultrapro|2x|3x|daily (bull|bear)|acquisition corp|acquisition co|blank check|trust units|depositary shares each representing|perpetual|subordinated|cumulative|exchange[- ]traded)\\b  (re.search on the asset name, case-insensitive)",
+   "name_excluded_if_contains_2": "\\btrust\\b.*\\b(series|units|shares)\\b|\\bshares\\b.*\\btrust\\b|\\bholdrs\\b|\\bportfolio\\b|\\bclosed[- ]end\\b|\\bmunicipal\\b|\\bincome (fund|trust)\\b  (re.search on the asset name, case-insensitive)",
+   "duplicates": "one row per symbol (the first listed, active before inactive)",
+   "etfs_and_funds": "excluded: any symbol flagged ETF = Y in the Nasdaq Trader symbol directory (nasdaqlisted.txt column Symbol, otherlisted.txt column ACT Symbol), plus the two name rules above (funds, trusts, ETNs, warrants, units, rights, preferreds, notes, SPAC shells)",
+   "status": "research: active and inactive (delisted) assets, survivorship-free; desk: the nightly Alpaca US equity list. 2-19c: the FB2 universe is every US equity name the desk holds daily bars for on the screen date, filtered by this rule."
+  },
+  "eligible_on_d": [
+   "raw close on d >= $1.00",
+   "dv20 >= $100,000 (dv20 = the median of raw close x raw volume over the 20 bars ending at d)",
+   "at least 60 bars in the current segment, d included",
+   "raw volume on d > 0",
+   "ATR (the 14-session simple mean true range) defined and > 0"
+  ],
+  "research_only_condition_dropped": "the research panel also required that the segment has a bar after d (needed for its next-open outcome); it is not known at d and is not part of this rule (2-19c, accepted reading)"
+ },
+ "tier": {
+  "rule": [
+   "liquid: raw close on d >= $5.00 and dv20 >= $20,000,000",
+   "small: dv20 >= $5,000,000 and not liquid",
+   "micro: $1,000,000 <= dv20 < $5,000,000",
+   "nano: $100,000 <= dv20 < $1,000,000",
+   "below $100,000: not eligible, not screened"
+  ],
+  "dv20": "median of the 20 values raw close x raw volume on the bars d-19..d of the segment (needs 20 bars; the median of 20 values is the mean of the 10th and 11th smallest)",
+  "point_in_time": "computed each session from bars through d; raw prices and raw volume as traded"
+ },
+ "features": [
+  {
+   "name": "lrv1",
+   "definition": "log(max(|r_d|, 0.0005)) with r_d = ln(c_adj[d] / c_adj[d-1])",
+   "window": "2 adjusted closes",
+   "returns": "daily log returns of adjusted closes",
+   "floor": "|r| >= 0.0005",
+   "min_history": "2 bars in the segment"
+  },
+  {
+   "name": "lrv5",
+   "definition": "0.5 * log(max(var5, 1e-8)); var5 = one-pass sample variance (ddof 1) of the last 5 daily log returns: (S2 - S1^2/5) / 4, S1 = sum r, S2 = sum r^2",
+   "window": "6 adjusted closes",
+   "floor": "variance >= 1e-8",
+   "min_history": "6 bars in the segment"
+  },
+  {
+   "name": "lrv22",
+   "definition": "0.5 * log(max(var22, 1e-8)); var22 as lrv5 over the last 22 returns: (S2 - S1^2/22) / 21. RV22 = exp(lrv22), the 22-session realized volatility (daily standard deviation)",
+   "window": "23 adjusted closes",
+   "floor": "variance >= 1e-8",
+   "min_history": "23 bars in the segment"
+  },
+  {
+   "name": "OW",
+   "definition": "1 when the name's lrv22 is in the top tenth within its tier on d: its percentile rank (average rank of ties / the tier's count of screened names that session) > 0.9; else 0. The population is every eligible name of the same tier on d (the universe and eligibility rules above).",
+   "fallback": "a tier holding fewer than 50 screened names on d uses ow.frozen_cutoffs, and the row says so (2-19c); OW_frozen is recorded on every row",
+   "min_history": "as lrv22"
+  },
+  {
+   "name": "tier_small / tier_micro / tier_nano",
+   "definition": "1 when the name's tier on d is small / micro / nano (liquid = all three 0)"
+  }
+ ],
+ "clipping": "none beyond the two floors in lrv1 (|r| >= 0.0005) and lrv5 / lrv22 (variance >= 1e-8); no winsorizing anywhere",
+ "veto": {
+  "model": "SEC-V: unpenalized logistic regression of lose5 on standardized features, pooled over the four tiers (Addendum 2-19c item 1)",
+  "features": [
+   "OW",
+   "lrv1",
+   "lrv5",
+   "lrv22",
+   "tier_small",
+   "tier_micro",
+   "tier_nano"
+  ],
+  "mean": {
+   "OW": 0.10051129233954718,
+   "lrv1": -4.493036361695538,
+   "lrv5": -3.9355249362421927,
+   "lrv22": -3.7443124364214886,
+   "tier_small": 0.21827964279487824,
+   "tier_micro": 0.19388160316138156,
+   "tier_nano": 0.19488836801856194
+  },
+  "sd": {
+   "OW": 0.30068051557955383,
+   "lrv1": 1.2518360687768935,
+   "lrv5": 0.7912744007023392,
+   "lrv22": 0.6753846702482136,
+   "tier_small": 0.4130782496543983,
+   "tier_micro": 0.3953372321372651,
+   "tier_nano": 0.3961147460443329
+  },
+  "standardization": "z_k = (x_k - mean_k) / sd_k with the fit set's mean and population sd (ddof 0)",
+  "intercept_std": -3.274488181181282,
+  "coef_std": {
+   "OW": 0.13700107189136035,
+   "lrv1": 0.07748617082448246,
+   "lrv5": 0.1738241496015327,
+   "lrv22": 0.5814970972503125,
+   "tier_small": -0.09886559872240863,
+   "tier_micro": -0.14926511359087744,
+   "tier_nano": -0.2147786666199614
+  },
+  "intercept_raw": 1.2772854434208676,
+  "coef_raw": {
+   "OW": 0.4556366801064391,
+   "lrv1": 0.06189801744583884,
+   "lrv5": 0.21967619506867084,
+   "lrv22": 0.8609865205211187,
+   "tier_small": -0.23933866962282443,
+   "tier_micro": -0.3775640173932595,
+   "tier_nano": -0.5422132570543675
+  },
+  "probability": "logit = intercept_std + sum_k coef_std_k * z_k (equivalently intercept_raw + sum_k coef_raw_k * x_k); P = 1 / (1 + exp(-logit))",
+  "thresholds": {
+   "liquid": 0.09889013634810673,
+   "small": 0.09808900474258929,
+   "micro": 0.0988135565442557,
+   "nano": 0.1005082089658617
+  },
+  "rule": "VETO when P >= thresholds[tier]",
+  "applies_to": [
+   "small",
+   "micro",
+   "nano"
+  ],
+  "liquid": "P and the flag are computed and recorded for liquid names; they are never vetoed (2-19 s1)",
+  "comparison_set": "PASS = every eligible name not vetoed (2-19c)",
+  "thresholds_rule": "the 90th percentile of the fit set's in-sample P within each tier (numpy linear interpolation); the fit set holds no P within 1e-12 of a threshold",
+  "veto_share_in_fit": {
+   "liquid": 0.1,
+   "small": 0.10000073954104083,
+   "micro": 0.10000138767467355,
+   "nano": 0.10000110440491902
+  },
+  "label": "lose5 = 1 when u20 <= 0.05 (fb2_label below), on the research panel's eligible rows",
+  "training": {
+   "window": "2016-03-30..2026-09-18 (2-19b item 3, the literal range; December 2022 included)",
+   "rows": "the research sample: every 5th session of the panel calendar (sessions 0, 5, 10, ... from 2016-03-30), every eligible name with an outcome on those sessions",
+   "first_session": "2016-03-30",
+   "last_session": "2026-09-15",
+   "n": 1858428,
+   "n_per_tier": {
+    "liquid": 730270,
+    "small": 405657,
+    "micro": 360315,
+    "nano": 362186
+   },
+   "lose5_rate_per_tier": {
+    "liquid": 0.0496706697522834,
+    "small": 0.0494136672114619,
+    "micro": 0.04929575510317361,
+    "nano": 0.0492840695112456
+   },
+   "solver": "scikit-learn LogisticRegression(C=inf, lbfgs, tol 1e-10), standardized inputs; 20 iterations",
+   "precision": "the fit read its features as float32 (relative rounding below 1e-7); compute them in float64. On the 50 test vectors the float64 P differs from the research P by at most 1e-8 and no veto changes."
+  }
+ },
+ "ow": {
+  "same_session_rule": "see features.OW",
+  "frozen_cutoffs": {
+   "rule": "OW_frozen = 1 when lrv22 > lrv22 cutoff of the name's tier (equivalently RV22 > rv22 cutoff)",
+   "lrv22": {
+    "liquid": -3.002173133620852,
+    "small": -2.788035200023636,
+    "micro": -2.6282877068389423,
+    "nano": -2.3525890227792745
+   },
+   "rv22": {
+    "liquid": 0.04967899189055598,
+    "small": 0.061542012948756455,
+    "micro": 0.07220198742219971,
+    "nano": 0.09512256863807174
+   },
+   "estimated_on": "the 90th percentile (numpy linear interpolation) of lrv22 within tier over every eligible panel row of the last 250 sessions of the fit window: 2025-09-22..2026-09-18 (every session, not only the sample)",
+   "rows_per_tier": {
+    "liquid": 472047,
+    "small": 210342,
+    "micro": 189727,
+    "nano": 199673
+   }
+  },
+  "frozen_vs_same_session_2023_26": {
+   "liquid": {
+    "rows": 294815,
+    "ow_differs_share": 0.04484507233349728,
+    "veto_changes_share": 0.030157895629462545,
+    "ow_share_same_session": 0.10027983650764039,
+    "ow_share_frozen": 0.06856164035072843
+   },
+   "small": {
+    "rows": 149185,
+    "ow_differs_share": 0.033119951737775245,
+    "veto_changes_share": 0.02357475617521869,
+    "ow_share_same_session": 0.10053289539833093,
+    "ow_share_frozen": 0.07646211080202434
+   },
+   "micro": {
+    "rows": 134511,
+    "ow_differs_share": 0.024139289723517036,
+    "veto_changes_share": 0.016221721643583053,
+    "ow_share_same_session": 0.10066834682665358,
+    "ow_share_frozen": 0.08211967794455471
+   },
+   "nano": {
+    "rows": 144872,
+    "ow_differs_share": 0.02659589154564029,
+    "veto_changes_share": 0.01305980451709095,
+    "ow_share_same_session": 0.10055083107846927,
+    "ow_share_frozen": 0.07935280799602408
+   },
+   "small3": {
+    "rows": 428568,
+    "ow_differs_share": 0.028095891433798138,
+    "veto_changes_share": 0.0177124750331336,
+    "ow_share_same_session": 0.10058147131843721,
+    "ow_share_frozen": 0.07921496705306975
+   }
+  },
+  "frozen_vs_same_session_note": "research sample rows 2023-01-03..2026-09-18; P from this spec's model with OW replaced, thresholds as fit"
+ },
+ "har": {
+  "target": "lrv20 = log of the sample standard deviation (ddof 1) of the next 20 daily log returns of adjusted closes (d+1..d+20, at least 15 present, all inside the segment)",
+  "model": "per tier OLS: yhat = intercept + b1 lrv1 + b5 lrv5 + b22 lrv22 + bA log(ATR%) (HAR terms only)",
+  "atr_pct": "ATR / c_adj[d], ATR = simple mean of the 14 true ranges of d-13..d; true range = max(high - low, |high - previous close|, |low - previous close|) on repaired adjusted bars (15 bars)",
+  "by_tier": {
+   "liquid": {
+    "intercept": -1.0453026576568931,
+    "coef": {
+     "lrv1": 0.0174383640209133,
+     "lrv5": 0.020209519904077114,
+     "lrv22": -0.026228471905186245,
+     "log_atr_pct": 0.7991884562897104
+    },
+    "s2": 0.14508429936236864,
+    "n": 729404
+   },
+   "small": {
+    "intercept": -1.062870965218619,
+    "coef": {
+     "lrv1": 0.018661948880760525,
+     "lrv5": 0.040245428876328405,
+     "lrv22": 0.03276034724186168,
+     "log_atr_pct": 0.698428761799774
+    },
+    "s2": 0.16179074415149353,
+    "n": 405004
+   },
+   "micro": {
+    "intercept": -1.0103228490142695,
+    "coef": {
+     "lrv1": 0.022166175783980502,
+     "lrv5": 0.05389939781441579,
+     "lrv22": 0.08226633839351555,
+     "log_atr_pct": 0.6390870347672325
+    },
+    "s2": 0.18695815699472804,
+    "n": 359742
+   },
+   "nano": {
+    "intercept": -0.8518417713396441,
+    "coef": {
+     "lrv1": 0.024947451183215688,
+     "lrv5": 0.06964987796501526,
+     "lrv22": 0.16123576919388619,
+     "log_atr_pct": 0.5785242453487234
+    },
+    "s2": 0.2235616455131207,
+    "n": 361459
+   }
+  },
+  "s2": "the training residual variance (residual sum of squares / (n - 5))",
+  "forecasts": {
+   "sigma_mean": "exp(yhat + s2 / 2): the lognormal mean of RV20 (2-19c's sigma forecast)",
+   "var_mean": "exp(2 yhat + 2 s2): the lognormal mean of RV20^2, the variance forecast the 2-19 validation's QLIKE used",
+   "note": "sqrt(var_mean) = exp(yhat + s2) is not sigma_mean"
+  },
+  "fit": "2016-03-30..2026-09-18, the same sample rows as the veto, rows with lrv20 defined",
+  "addons_not_in_first_build": {
+   "note": "the add-on variant for small and liquid needs DEEP-2 components on the desk; listed for a later build under its own start date (2-19c). The SEEN fold's choice (trained 2016-03..2022-11).",
+   "small": [
+    {
+     "family": "can_ind",
+     "component": "ev_ci_nr4",
+     "row_tier": "all",
+     "ledger_id": "V00333",
+     "train_t": -30.082447242137075
+    },
+    {
+     "family": "ta",
+     "component": "tx_ev_pf_sig+",
+     "row_tier": "small3",
+     "ledger_id": "V09067",
+     "train_t": 24.989253555123998
+    },
+    {
+     "family": "cdl",
+     "component": "cdl_shortline+",
+     "row_tier": "all",
+     "ledger_id": "V02002",
+     "train_t": -24.113768698758168
+    },
+    {
+     "family": "clx",
+     "component": "clx_volrank",
+     "row_tier": "all",
+     "ledger_id": "V02507",
+     "train_t": -21.407049277808383
+    },
+    {
+     "family": "str",
+     "component": "st_mn_sh_age",
+     "row_tier": "all",
+     "ledger_id": "V07215",
+     "train_t": 19.120955790895618
+    },
+    {
+     "family": "tsh",
+     "component": "tshe_wf_rbe_obv-",
+     "row_tier": "small3",
+     "ledger_id": "V10644",
+     "train_t": -17.005491430425444
+    },
+    {
+     "family": "can_pat",
+     "component": "ev_can_v+",
+     "row_tier": "small3",
+     "ledger_id": "V01259",
+     "train_t": 16.41713004767348
+    },
+    {
+     "family": "ind",
+     "component": "ind_cl_vol=0",
+     "row_tier": "all",
+     "ledger_id": "V04384",
+     "train_t": -16.28212587315484
+    },
+    {
+     "family": "strat",
+     "component": "strat_w_type=1",
+     "row_tier": "small3",
+     "ledger_id": "V08417",
+     "train_t": -14.694863133001826
+    },
+    {
+     "family": "pat",
+     "component": "pat_pend_new-",
+     "row_tier": "all",
+     "ledger_id": "V05263",
+     "train_t": -14.61224281502691
+    }
+   ],
+   "liquid": [
+    {
+     "family": "can_ind",
+     "component": "ev_ci_nr4",
+     "row_tier": "all",
+     "ledger_id": "V00333",
+     "train_t": -30.082447242137075
+    },
+    {
+     "family": "cdl",
+     "component": "cdl_shortline+",
+     "row_tier": "all",
+     "ledger_id": "V02002",
+     "train_t": -24.113768698758168
+    },
+    {
+     "family": "ta",
+     "component": "tx_ev_pf_sig+",
+     "row_tier": "all",
+     "ledger_id": "V09057",
+     "train_t": 21.916316874953278
+    },
+    {
+     "family": "clx",
+     "component": "clx_volrank",
+     "row_tier": "all",
+     "ledger_id": "V02507",
+     "train_t": -21.407049277808383
+    },
+    {
+     "family": "can_pat",
+     "component": "can_vdu10",
+     "row_tier": "liquid",
+     "ledger_id": "V01021",
+     "train_t": -19.621566870325022
+    },
+    {
+     "family": "str",
+     "component": "st_mn_sh_age",
+     "row_tier": "all",
+     "ledger_id": "V07215",
+     "train_t": 19.120955790895618
+    },
+    {
+     "family": "ifp",
+     "component": "ifp_n_rel_5",
+     "row_tier": "liquid",
+     "ledger_id": "V03559",
+     "train_t": -16.652386771479666
+    },
+    {
+     "family": "shp",
+     "component": "ev_shp_04",
+     "row_tier": "liquid",
+     "ledger_id": "V06719",
+     "train_t": -16.626017493404454
+    },
+    {
+     "family": "ind",
+     "component": "ind_cl_vol=0",
+     "row_tier": "all",
+     "ledger_id": "V04384",
+     "train_t": -16.28212587315484
+    },
+    {
+     "family": "tsh",
+     "component": "tshe_wf_rbe_vol-",
+     "row_tier": "all",
+     "ledger_id": "V10670",
+     "train_t": -15.66851636128797
+    }
+   ]
+  }
+ },
+ "tilt": {
+  "primary": "momentum 6-1 = ln(c_adj[d-21] / c_adj[d-126]) on the segment's adjusted closes; needs at least 127 bars in the segment (d included), else undefined",
+  "percentile": "within session x tier among eligible names with momentum defined: the share of names whose momentum is <= the name's own (rank method max / count), in (0, 1]",
+  "use": "a tie-breaker only; it never originates an entry. The T04 count is not recorded on the desk (2-19c)"
+ },
+ "fb2_label": {
+  "r20": "c_adj[d+20] / o_adj[d+1] - 1 (entry at the next open, exit at the 20th close; d+k = the k-th next bar of the segment); needs o_adj[d+1] > 0 and ATR(d) > 0",
+  "r60": "the same with c_adj[d+60]",
+  "delisting_proxy": "a segment whose last bar is at least 6 sessions before the data's last session is delisted there; an outcome whose horizon passes its last bar uses that last close (no haircut). A live segment without enough bars yet has no outcome.",
+  "u20": "percentile rank of r20 within session x tier among eligible names with r20 (average ties, rank / count)",
+  "lose5": "u20 <= 0.05; win5: u20 >= 0.95",
+  "xs20": "r20 minus the median r20 of the session x tier",
+  "cost": "each name's round-trip cost: clip(AR20, 0.0005, 0.10), with 0.02 when AR20 is undefined. AR20(d) = sqrt(v) if v > 0 else 0, v = (4/20) * sum_{k=d-19..d} (ln c_{k-1} - eta_{k-1}) (ln c_{k-1} - eta_k), eta_k = (ln h_k + ln l_k) / 2 on repaired adjusted bars (Abdi and Ranaldo 2017; needs 21 bars)",
+  "net20": "r20 - cost (the money test)",
+  "volatility_cells": "q = percentile rank of ATR%(d) within session x tier (average ties, rank / count); quintile vq = min(floor(5 q), 4); cell = session x tier x vq",
+  "vd": "vd_x = x minus the mean of x over its cell's names with r20 (x = u20, xs20, lose5, ...)",
+  "population": "the scored universe of that session (2-19c: the desk's screened names)"
+ },
+ "not_reproducible_from_daily_ohlcv": [
+  "the listing filter (asset class, exchange, symbol pattern, the name rules, ETF flags) needs asset metadata: Alpaca /v2/assets and the Nasdaq Trader symbol directory",
+  "the delisting proxy needs to know that a segment ended; it is an outcome rule, used only for scoring",
+  "OW and every within-tier rank need the whole session's cross-section of screened names, not one stock",
+  "the HAR add-ons and the T04 count need DEEP-2 components; they are not in this build"
+ ],
+ "reference_implementation": "work_ENG/engine_score_ref.py (standard library only); test rows out2/engine_vectors.csv; hashes in out2/ENGINE_FINAL.md"
+}
