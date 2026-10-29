@@ -1,0 +1,108 @@
+/* Master Desk terminal, the visual layer's styles: the glance strip, the plan chart, the sparkline, the board ranking,
+   the record's charts and the card visuals. Tokens come from app.css. */
+
+/* the glance strip: GrokBot's status chip ("● Running normally") and Codex's provenance card */
+.gl{display:flex;align-items:center;gap:10px;min-height:38px;padding:8px 12px;border:1px solid var(--ln);border-radius:14px;background:var(--sfg);color:var(--tx);text-decoration:none;text-align:left;width:100%;font:inherit;box-shadow:var(--cs)}
+.gl .st{flex:none}.gt{flex:1;min-width:0;font-size:14px;font-weight:600;white-space:normal}
+.go{flex:none;font-size:20px;line-height:1;color:var(--mu)}.gk{flex:none;font:500 11px/1 var(--fm);letter-spacing:.08em;text-transform:uppercase;color:var(--ac)}
+.gr{flex-direction:column;align-items:stretch;gap:6px}.grh{display:flex;align-items:center;gap:10px;min-width:0;color:inherit;text-decoration:none}
+.qs{display:flex;flex-wrap:wrap;gap:3px}
+.q{position:relative;width:10px;height:10px;padding:0;border-radius:2px;border:1px solid var(--mu);background:var(--tr)}.q.won{background:#26a69a;border-color:#26a69a}.q.lost{background:#ef5350;border-color:#ef5350}
+.q.open{background:var(--acb);border-color:var(--ac)}.q.waiting{background:none}.q.missed{background:none;border-style:dashed}.q.ended{background:var(--tr);border-color:var(--tr)}
+.q.sel{outline:2px solid var(--hd);outline-offset:1px}
+@media (max-width:719px){.gl .gt{white-space:normal}.gl:not(.gr){min-height:58px}}
+.glc{display:grid;gap:4px;margin:6px 4px 0;font-size:13px}
+.glc li{display:flex;gap:8px;align-items:baseline}.glc li::before{flex:none;width:16px;font-weight:800;text-align:center}
+.glc .ok::before{content:"✓";color:var(--up)}.glc .no::before{content:"✗";color:var(--dn)}
+@media (min-width:720px){.glc{grid-column:1}}
+
+/* the card's sparkline (Muse sparkSvg) with the plan drawn to its right (GrokBot) */
+.spk{display:block;overflow:visible}
+.spk .zb{fill:#26a69a;opacity:.14}.spk .so{stroke:#ef5350;stroke-width:1.2;stroke-dasharray:4 3}.spk .en{stroke:#e0be62;stroke-width:1;stroke-dasharray:4 3;opacity:.85}
+.spk .bx{fill:#26a69a;fill-opacity:.3;stroke:#26a69a;stroke-width:1.2}.spk .t1{stroke:#5c8dff;stroke-width:1.6}.spk .t2{stroke-dasharray:2 3}.spk .ar{stroke:#5c8dff;stroke-width:1.4}
+.spk .cl{fill:none;stroke-width:1.6;stroke-linejoin:round}.spk .u{stroke:#26a69a}.spk .d{stroke:#ef5350}.spk .ed{fill:var(--tx);stroke:var(--sf);stroke-width:1.5}
+
+/* the plan chart (GrokBot bsCVChart and .cv-tf / .cv-key): a fixed box, so it never moves the read under it */
+.pc{min-height:348px;margin-bottom:4px}
+.pcv{height:260px;border-radius:8px;overflow:hidden;background:#131722}.pcs{display:block;touch-action:pan-y}
+.xh{stroke:#dfe3ee;stroke-opacity:0;stroke-dasharray:3 3}.xh.on{stroke-opacity:.55}
+.cap{height:22px;margin-top:4px;font-size:12.5px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.cvk{height:34px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cvk .tg{flex:none;gap:4px}.cvk .tg button{min-height:28px;padding:0 10px;border-radius:6px;border:1px solid #363a45;background:#1e222d;color:#b2b5be;font-size:12px;font-weight:600}
+.cvk .tg button[aria-pressed=true]{background:#2962ff;border-color:#2962ff;color:#fff}
+.vt summary{height:36px;display:flex;align-items:center;cursor:pointer;font-weight:600;font-size:13px;color:var(--ac)}
+.vt .t{font-size:13px}
+@media (min-width:600px){.pc{min-height:498px}.pcv{height:410px}}
+
+/* the board ranking: GrokBot .rkrow .rkbar .rkmini .rkleg */
+.rk{display:grid;margin-top:8px}
+.rkr{display:grid;grid-template-columns:24px 56px minmax(0,1fr) 40px 44px;align-items:center;gap:8px;width:100%;padding:6px 0;border:0;border-bottom:1px solid var(--ln2);background:none;color:inherit;font:inherit;font-size:13.5px;text-align:left;font-variant-numeric:tabular-nums}
+.rkr .n{color:var(--mu);font-size:12px;text-align:right}.rkr b{color:var(--hd);white-space:nowrap}.rkr.on b::after{content:" ●";color:var(--ac);font-size:10px}
+.rkr.sel{background:var(--acb)}.rkleg .ond{color:var(--ac);font-size:10px;margin-right:4px}
+.rkbar{position:relative;display:block;height:16px;border-radius:6px;background:var(--acb);overflow:hidden}
+.rkbar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,#177366,#3d3a8c)}
+.rkmini{display:flex;gap:3px;margin-top:3px;height:4px}.rkmini i{display:block;height:4px;border-radius:2px}
+.rkr .v{text-align:right;font-weight:800;color:var(--hd)}.rkr .dl{text-align:right;font-size:12.5px;font-weight:700;color:var(--mu)}.rkr .dl.up{color:var(--up)}.rkr .dl.dn{color:var(--dn)}
+.rkleg{display:flex;gap:6px 12px;flex-wrap:wrap;font-size:12px;color:var(--mu);margin-top:8px}.rkleg i{display:inline-block;width:12px;height:6px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.p0{background:#177366}.p1{background:#d9a441}.p2{background:#4a8fe0}.p3{background:#3d3a8c}.p4{background:#26c6da}.p5{background:#ab47bc}.p6{background:#ff9800}.p7{background:#8fb8e6}.p8{background:#e2786f}.p9{background:#9aa3b8}.p10{background:#5c8dff}
+.rkc{height:auto;min-height:22px;white-space:normal}
+
+/* the record: the squares, GrokBot's closed-trade bars (.ctr .cbar) and time-left bars (.hold) */
+#rsq .qs{gap:4px}#rsq .q{width:14px;height:14px}
+.rbs{font-size:15px;font-weight:700;color:var(--hd);margin-bottom:8px}
+.rrt{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;gap:0 12px;margin-bottom:10px}.rrt svg{grid-row:1/3;width:100%;height:56px;overflow:visible}.rrt b{font-size:18px;font-variant-numeric:tabular-nums}.rrt b.up{color:var(--up)}.rrt b.dn{color:var(--dn)}.rrt small{font-size:11.5px;color:var(--mu)}
+.rrt .z{stroke:var(--mu);stroke-width:1;stroke-dasharray:2 3;vector-effect:non-scaling-stroke}.rrt polyline{fill:none;stroke-width:2.2;stroke-linejoin:round;vector-effect:non-scaling-stroke}.rrt .u{stroke:var(--up)}.rrt .d{stroke:var(--dn)}
+.rbr{display:grid;grid-template-columns:minmax(62px,110px) minmax(0,1fr) 60px 60px;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--ln2)}
+.rbr:last-child{border-bottom:0}.rbn b{display:block;font-size:15px;color:var(--hd)}.rbn small{display:block;font-size:11.5px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rbt{position:relative;height:12px;background:var(--tr);border-radius:6px}.rbt::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--mu)}
+.rbt i{position:absolute;top:0;bottom:0;border-radius:6px}.rbt .p{left:50%;background:#18744f}.rbt .n{right:50%;background:#b0342e}
+.rbt .dot{left:calc(50% - 6px);width:12px;border-radius:50%;background:var(--mu)}
+.rbv,.rbp{text-align:right;font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap}.rbp{font-weight:600;font-size:12.5px;color:var(--mu)}.rbv.up{color:var(--up)}.rbv.dn{color:var(--dn)}
+.rol{display:grid;gap:4px;padding:8px 0;border-bottom:1px solid var(--ln2)}.rol b{color:var(--hd)}.rol small{font-size:11.5px;color:var(--mu)}
+@media (min-width:720px){.rol{grid-template-columns:minmax(0,15rem) minmax(0,1fr) 11rem;align-items:center;gap:14px}.rol small{text-align:right}.rol .hold{max-width:none}}
+.ckey{margin:6px 0;font-size:12px;color:var(--mu)}
+.hold{display:block;height:6px;max-width:280px;border-radius:999px;background:var(--tr);overflow:hidden}.hold i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#177366,#7ee0c3)}
+
+/* Watching: the mini ladder and its chip */
+.wch{margin-bottom:2px}.wch .bdg{font-size:12px}.wch .mu{display:inline;margin-left:6px}
+.wlad{display:block;overflow:visible;margin:4px 0 6px}
+.wlad .ax{stroke:var(--ln);stroke-width:2}.wlad .zn{fill:var(--upb);stroke:var(--up);stroke-width:1}.wlad .trg{stroke:var(--ac);stroke-width:2;stroke-dasharray:3 2}
+.wlad .ot{stroke:var(--dn);stroke-width:2.5}.wlad .tt{stroke:var(--up);stroke-width:2.5}.wlad .nw{fill:var(--tx)}
+.wlad text{font-size:11px;font-weight:600}.wlad .lo{fill:var(--dn)}.wlad .lw{fill:var(--up)}
+
+/* the card's time strip (GrokBot's time-exit bar on a calendar axis) */
+.tl{margin-top:2px}.tls{display:block;overflow:visible}
+.tls .ta{fill:var(--acb);stroke:var(--ac);stroke-width:1}.tls .tb{fill:var(--tr)}.tls .tn{stroke:var(--tx);stroke-width:2}
+.tls .tc{fill:var(--wn);stroke:var(--sf);stroke-width:1.5}.tls .te{fill:var(--dn);stroke:var(--sf);stroke-width:1.5}
+.tll{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mu)}.tle{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+@media (max-width:599px){.rkr{grid-template-columns:20px 58px minmax(0,1fr) 34px 40px;gap:6px;font-size:13px}.rbr{grid-template-columns:62px minmax(0,1fr) 52px 54px;gap:8px}}
+
+/* the engine's bullets, the holding, the cautions (GrokBot's ranker bars and status chips, small) */
+.ex{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:8px}
+.eng{display:inline-flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+.eb{display:inline-flex;flex-direction:column;gap:2px;min-width:86px}.ebl{font-size:11px;color:var(--mu)}.ebl b{color:var(--hd);font-size:12px}
+.ebt{display:block;width:86px;height:6px;border-radius:99px;background:var(--tr);overflow:hidden}.ebt i{display:block;height:100%;border-radius:99px}
+.mom .ebt i{background:linear-gradient(90deg,#177366,#3d3a8c)}.rsk .ebt i{background:linear-gradient(90deg,#d9a441,#b0342e)}
+.eas{font-size:11px;color:var(--wn)}.tag.hd{color:var(--in);background:var(--inb)}.tag.ct{font-weight:600}
+/* why this conviction: the parts of the evidence as bars from zero (the review's Rank 1, from the card's ranked parts) */
+.evm{display:grid;gap:4px}.evr{display:grid;grid-template-columns:7.5rem minmax(0,1fr) 3rem;align-items:center;gap:10px;font-size:13px}
+@media (min-width:600px){.evr{grid-template-columns:11rem minmax(0,1fr) 3rem}}
+.evt{position:relative;height:8px;background:var(--tr);border-radius:4px}.evt::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--mu)}
+.evt i{position:absolute;top:0;bottom:0;border-radius:4px}.evt .p{left:50%;background:var(--up)}.evt .n{right:50%;background:var(--dn)}
+.evr b{text-align:right;font-variant-numeric:tabular-nums}.evr b.up{color:var(--up)}.evr b.dn{color:var(--dn)}.evn{margin-top:4px;font-weight:700;color:var(--hd)}
+/* Muse's lens-by-lens rows: the line, its verdict badge, what the read found */
+.lens li{display:grid;grid-template-columns:minmax(0,14rem) 5.2rem minmax(0,1fr);gap:4px 12px;align-items:baseline;padding:6px 0;border-top:1px solid var(--ln2);font-size:13.5px}
+.lens li:first-child{border-top:0}.lens b{font-weight:700;color:var(--hd)}.lens .bdg{justify-self:start}.bdg.nr{background:none;border:1px dashed var(--ln);color:var(--mu)}
+@media (max-width:599px){.lens li{grid-template-columns:minmax(0,1fr) auto}.lens li>span:last-child{grid-column:1/-1}}
+/* the eight lenses and Conviction 8 (ldr1): the stage chip, the ring, n/8, the red count and C8 on the face; C8's bars */
+.lx{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px}.lx .st{padding:2px 9px;font-size:12px}.st.mu{background:var(--tr);color:var(--mu)}
+.lx b,.lx i,.c8g b{font:700 12px var(--fm);color:var(--hd)}.lx .rd{color:var(--dn)}.lx i:not(.rd){white-space:nowrap;padding:1px 7px;border-radius:999px;background:var(--tr)}
+.rg{flex:none}.rg path{fill:none;stroke:var(--ln);stroke-width:3}.rg .C{stroke:var(--up)}.rg .R{stroke:var(--dn);stroke-width:4}.rg .I{stroke-dasharray:1.5 1.5}
+.c8g{display:grid;gap:2px;margin-top:6px;max-width:30rem}.c8g>span{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 3.4rem;align-items:center;gap:8px;font-size:12px;color:var(--mu)}
+.c8g .cb{margin:0;height:5px}.c8g .cb i{background:var(--mu)}.c8g .cb.ok i{background:var(--up)}.c8g .nd{background:none;border:1px dashed var(--ln)}.c8g b.mu{font:400 12px var(--fs);color:var(--mu)}
+.rk2{display:grid;gap:0 24px}.rk2>*{min-width:0}@media(min-width:900px){.rk2{grid-template-columns:1fr 1fr}.rk2:not(:has(#lrank:not([hidden]))){grid-template-columns:1fr}}
+
+.gd{display:inline-flex;gap:3px;margin:0 8px 0 2px;flex:none}.gd i{width:8px;height:8px;border-radius:50%;background:#c9473f}.gd i.ok{background:#1f8a5b}
+.rkd>summary{list-style:none;cursor:pointer}.rkd>summary::-webkit-details-marker{display:none}.rkd[open]>summary{background:var(--sf2,#eef4f2)}.why{display:grid;gap:4px;padding:6px 4px 12px 34px;font-size:13px}.why>span{display:grid;grid-template-columns:minmax(0,1fr) 90px 44px;gap:8px;align-items:center}.why .cb{height:6px;border-radius:3px;background:#e6ecea;overflow:hidden}.why .cb i{display:block;height:100%;background:#2b6f8f}.why .cb.ok i{background:#1f8a5b}.why b{text-align:right}
+.rk+.cap{height:auto;white-space:normal;overflow:visible;line-height:1.4}
+.q::after{content:"";position:absolute;inset:-13px -2px}
