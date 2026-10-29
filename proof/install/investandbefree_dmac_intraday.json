@@ -1,0 +1,75 @@
+{
+ "config": {
+  "cadence_s": 300,
+  "flat_by_close": true,
+  "flatten_time_et": "15:55",
+  "inputs": [
+   "bars",
+   "bars_5min",
+   "bars:SPY:5Min",
+   "bars:QQQ:5Min",
+   "options",
+   "positions",
+   "quotes",
+   "session_fills"
+  ],
+  "parked": false,
+  "session": "rth"
+ },
+ "deviations": [
+  "Recreated: 15/30 stack operational form from 5Min bars (desk serves no native SPY 15Min/30Min), 5-day expiry bound, 15:55 flat time."
+ ],
+ "edge_status": "UNPROVEN - live paper record is the test; no backtest claimed; not judged on fewer than 30 own trades; yardstick % gain vs SPY and QQQ over the same window",
+ "feeding_proof": {
+  "door": "desk3/warm.py WarmBars SPY/QQQ 5Min product (60 calendar days; on-disk warm product at build: SPY|5Min 8145 rows, QQQ|5Min 8154 rows); producer key bars:SPY:5Min added to desk3/producers_g4._BARS_TF_KEYS at this install (bars:QQQ:5Min already present)",
+  "fixture_drive": "Blocker TestAdapterDrives.test_intraday_adapter_drive drives adapters3.investandbefree_dmac_intraday.evaluate on a full snapshot view and produces exactly one entry intent (SPY261028C00140000, qty 4); core entry test proves dominant=h4, trigger=crossover on the last closed 30m bar, 5-day expiry bound; flat-by-close tests exit position and runner at 15:56 ET."
+ },
+ "files": {
+  "adapters/investandbefree_dmac_intraday.py": "30048cf0f42daa35e2fbf368b840c8b5462d1f5d7b9aea97d7c9850ecb7db50b",
+  "adapters3/investandbefree_dmac_intraday.py": "58846eecdb21bcaa2d1d3f12a12b77ac01d18efae169320f39db58c214580865",
+  "sleeves/investandbefree_dmac.py": "2909dc8a208b3b84ecf1c4b4ce01d705b93cc5fc5bdd68dc2017d04949d18086",
+  "sleeves/investandbefree_dmac_intraday.py": "0364f3520e25cf462a470a3ba630435fb3bab770d73033d81a00700d67898b05",
+  "tests/test_investandbefree_dmac_variants_blockers.py": "9f048a3c4c75a76d8011aa94cb151f57e7c9a64cd63776008b836c41e2006173"
+ },
+ "frozen_parameters": {
+  "axis": "timeframe stack and session shape",
+  "entry_tf": "30Min",
+  "flat_by_close": true,
+  "min_dte": 5,
+  "stack": [
+   "15Min",
+   "30Min",
+   "4H aggregated in-core from closed 5Min bars, RTH-anchored, complete buckets only"
+  ],
+  "symbols": [
+   "SPY",
+   "QQQ"
+  ]
+ },
+ "gate": {
+  "note": "After the 2026-10-29 F1 slice-fallback repair: run_regression_blockers.sh rc=0 on the final tree; unittest discover 'Ran 1434 tests, OK' (1428 at the variants verification + 6 new F1 blockers).",
+  "result": "GREEN",
+  "tests": 1434
+ },
+ "installed": "2026-10-29",
+ "paper_only": true,
+ "repairs": [
+  {
+   "date": "2026-10-29",
+   "id": "INVESTANDBEFREE-DMAC-SLICE-FALLBACK-20261029",
+   "what": "Verifier finding F1 (BLOCKING): every family adapter sized solely from ctx.slice, but the live cycle snapshot carries no 'slice' key, so live sizing equity was 0 and entries blocked as sizing_zero_or_cap. Cure in the adapter only: SLICE_FALLBACK_USD = 10000.0 fallback (capital_usd or cash_usd or 10000.0); a supplied slice still governs. Gate-wired slice-less blockers added; fail-first proven (all 5 slice-less drives emitted zero intents pre-cure). BUGLOG_2026-10-29.md entry INVESTANDBEFREE-DMAC-SLICE-FALLBACK-20261029. F2 (intraday UNFED on the stale live runner) remains OPEN as a desk-operations runner restart, outside family files."
+  }
+ ],
+ "sleeve": "investandbefree_dmac_intraday",
+ "slice_usd": 10000.0,
+ "spec": {
+  "path": "INVESTANDBEFREE-DMAC-VARIANTS-SPEC-2026-10-29.md",
+  "version": "FROZEN 2026-10-29"
+ },
+ "test_evidence": {
+  "fail_first": "Mutation A: deep call threshold 0.98 -> 0.90 failed 3 deep tests (strike boundary, deep entry drive, deep adapter drive). Mutation B: premium_warmup 40 -> 4 failed the premacd warmup-fallback test. Both restored byte-identical (sha256 verified) and the combined base+variants files re-proven 50/50. F1 repair (2026-10-29): all 5 new slice-less live-view blocker drives FAILED on the pre-cure adapters (zero intents each) and pass after the cure; mutation SLICE_FALLBACK_USD 10000 -> 4000 failed exactly the base slice-less test and was restored byte-identical.",
+  "file": "tests/test_investandbefree_dmac_variants_blockers.py",
+  "golden": "Base identity: crossover fixture entry occ=SPY261128C00239000 strike=239.00 expiry=2026-11-28 qty=4 trigger=crossover, byte-identical reason pre/post refactor. Variant goldens are independent in-test arithmetic (see blocker file docstring).",
+  "result": "26/26 OK (family file); base blockers 30/30 OK post-repair, identical golden decisions with and without a slice"
+ }
+}

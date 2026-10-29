@@ -1,0 +1,71 @@
+{
+ "config": {
+  "cadence_s": 3600,
+  "flat_by_close": false,
+  "inputs": [
+   "bars",
+   "bars:*:1Day",
+   "bars:*:1Week",
+   "options",
+   "positions",
+   "quotes",
+   "session_fills"
+  ],
+  "parked": false,
+  "session": "rth"
+ },
+ "deviations": [
+  "Desk deviation run as a controlled variant: the extracted 4H stack member is removed to isolate its contribution."
+ ],
+ "edge_status": "UNPROVEN - live paper record is the test; no backtest claimed; not judged on fewer than 30 own trades; yardstick % gain vs SPY and QQQ over the same window",
+ "feeding_proof": {
+  "door": "desk3/warm.py WarmBars SPY/QQQ daily (346 rows) + weekly (1000-day window) products, same as base; adapter does not request 1Hour bars",
+  "fixture_drive": "Blocker TestAdapterDrives.test_dailyonly_adapter_drive produces exactly one entry intent (SPY261128C00239000, qty 4). TestDailyOnlyVariant proves a trade on weekly+daily despite bearish 4H inputs and a management difference vs the base when only 4H holds alignment."
+ },
+ "files": {
+  "adapters/investandbefree_dmac_dailyonly.py": "21d09135062b156098e54d2fe4ed5f49ab550cc10fe9579f7da0f3178e1bd2aa",
+  "adapters3/investandbefree_dmac_dailyonly.py": "0f19c557e2541a142c30aae6fc0cfe4aadd36a512c3722b2853b54d54a7b7ad8",
+  "sleeves/investandbefree_dmac.py": "2909dc8a208b3b84ecf1c4b4ce01d705b93cc5fc5bdd68dc2017d04949d18086",
+  "sleeves/investandbefree_dmac_dailyonly.py": "308906f65a4304b6bbd20cb06915ab0194594d91bdaf478e26cd89de75d8d2b1",
+  "tests/test_investandbefree_dmac_variants_blockers.py": "9f048a3c4c75a76d8011aa94cb151f57e7c9a64cd63776008b836c41e2006173"
+ },
+ "frozen_parameters": {
+  "axis": "stack composition (4H removed)",
+  "entry_tf": "daily",
+  "min_dte": 30,
+  "stack": [
+   "weekly",
+   "daily"
+  ],
+  "symbols": [
+   "SPY",
+   "QQQ"
+  ]
+ },
+ "gate": {
+  "note": "After the 2026-10-29 F1 slice-fallback repair: run_regression_blockers.sh rc=0 on the final tree; unittest discover 'Ran 1434 tests, OK' (1428 at the variants verification + 6 new F1 blockers).",
+  "result": "GREEN",
+  "tests": 1434
+ },
+ "installed": "2026-10-29",
+ "paper_only": true,
+ "repairs": [
+  {
+   "date": "2026-10-29",
+   "id": "INVESTANDBEFREE-DMAC-SLICE-FALLBACK-20261029",
+   "what": "Verifier finding F1 (BLOCKING): every family adapter sized solely from ctx.slice, but the live cycle snapshot carries no 'slice' key, so live sizing equity was 0 and entries blocked as sizing_zero_or_cap. Cure in the adapter only: SLICE_FALLBACK_USD = 10000.0 fallback (capital_usd or cash_usd or 10000.0); a supplied slice still governs. Gate-wired slice-less blockers added; fail-first proven (all 5 slice-less drives emitted zero intents pre-cure). BUGLOG_2026-10-29.md entry INVESTANDBEFREE-DMAC-SLICE-FALLBACK-20261029. F2 (intraday UNFED on the stale live runner) remains OPEN as a desk-operations runner restart, outside family files."
+  }
+ ],
+ "sleeve": "investandbefree_dmac_dailyonly",
+ "slice_usd": 10000.0,
+ "spec": {
+  "path": "INVESTANDBEFREE-DMAC-VARIANTS-SPEC-2026-10-29.md",
+  "version": "FROZEN 2026-10-29"
+ },
+ "test_evidence": {
+  "fail_first": "Mutation A: deep call threshold 0.98 -> 0.90 failed 3 deep tests (strike boundary, deep entry drive, deep adapter drive). Mutation B: premium_warmup 40 -> 4 failed the premacd warmup-fallback test. Both restored byte-identical (sha256 verified) and the combined base+variants files re-proven 50/50. F1 repair (2026-10-29): all 5 new slice-less live-view blocker drives FAILED on the pre-cure adapters (zero intents each) and pass after the cure; mutation SLICE_FALLBACK_USD 10000 -> 4000 failed exactly the base slice-less test and was restored byte-identical.",
+  "file": "tests/test_investandbefree_dmac_variants_blockers.py",
+  "golden": "Base identity: crossover fixture entry occ=SPY261128C00239000 strike=239.00 expiry=2026-11-28 qty=4 trigger=crossover, byte-identical reason pre/post refactor. Variant goldens are independent in-test arithmetic (see blocker file docstring).",
+  "result": "26/26 OK (family file); base blockers 30/30 OK post-repair, identical golden decisions with and without a slice"
+ }
+}
