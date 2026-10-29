@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vendor Delivery Profiles — Group 4 of 8 — Muse Desk</title><style>
+:root{color-scheme:dark}
+body{background:#0b0e13;color:#dbe2ec;font-family:Georgia,'Times New Roman',serif;margin:0;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 64px}
+header{border-bottom:2px solid #2dd4bf;padding-bottom:14px;margin-bottom:8px}
+h1{font-size:30px;margin:0 0 6px;color:#f2f6fb}
+.sub{color:#93a4bb;font-size:15px;margin:0}
+nav.top{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+nav.top a{background:#131926;border:1px solid #26314a;color:#a5f3e8;text-decoration:none;
+ padding:6px 12px;border-radius:999px;font-size:13.5px;font-family:Helvetica,Arial,sans-serif}
+nav.top a:hover{border-color:#2dd4bf}
+article h1{font-size:26px;color:#f2f6fb;border-bottom:1px solid #26314a;padding-bottom:8px}
+article h2{font-size:21px;color:#7dd3fc;margin-top:34px}
+article h3{font-size:17.5px;color:#a5f3e8;margin-top:26px}
+article h4{font-size:15.5px;color:#fbbf24}
+article a{color:#7dd3fc}
+article code{background:#131926;padding:1px 5px;border-radius:4px;font-size:.92em}
+article pre{background:#0f141f;border:1px solid #26314a;border-radius:8px;padding:12px;overflow-x:auto}
+article pre code{background:none;padding:0}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;
+ font-family:Helvetica,Arial,sans-serif}
+article th,article td{border:1px solid #26314a;padding:6px 9px;text-align:left;vertical-align:top}
+article th{background:#131926;color:#a5f3e8}
+article blockquote{border-left:3px solid #2dd4bf;margin:16px 0;padding:2px 16px;color:#b8c6da}
+article hr{border:none;border-top:1px solid #26314a;margin:28px 0}
+footer{border-top:1px solid #26314a;margin-top:44px;padding-top:14px;color:#7c8da6;font-size:13.5px}
+footer a{color:#7dd3fc}
+.pager{display:flex;justify-content:space-between;margin-top:36px;font-family:Helvetica,Arial,sans-serif;font-size:14px}
+.pager a{color:#a5f3e8;text-decoration:none}
+</style></head>
+<body><div class="wrap">
+<header><h1>Vendor Delivery Profiles — Group 4 of 8</h1><p class="sub">How each vendor in this group packages its product: the unit it sells, its cadence, its free surface, and how it converts readers into buyers.</p></header>
+<nav class="top"><a href="index.html">The Study</a><a href="profiles-g1.html">Profiles 1</a><a href="profiles-g2.html">Profiles 2</a><a href="profiles-g3.html">Profiles 3</a><a href="profiles-g4.html">Profiles 4</a><a href="profiles-g5.html">Profiles 5</a><a href="profiles-g6.html">Profiles 6</a><a href="profiles-g7.html">Profiles 7</a><a href="profiles-g8.html">Profiles 8</a><a href="../morning-map/">Morning Map</a><a href="../desk-terminal-live/">Terminal</a></nav>
+<article><h1>Funnel Profiles — Group g4</h1>
+<p>Delivery/funnel profiles derived from each folder's TEARDOWN.md (SPEC.md where present). Facts only; no live-page additions were needed.</p>
+<h2>saty-stack</h2>
+<ul>
+<li><strong>product:</strong> Five TradingView Pine indicators — Phase Oscillator, Pivot Ribbon, Pivot Ribbon Pro, ATR Levels, Volume Stack.</li>
+<li><strong>surfaces:</strong> TradingView only, linked from Satyland; no dashboard, app, Discord, or alert surface in evidence.</li>
+<li><strong>unit:</strong> A chart overlay/pane — ATR Fibonacci level ladder with trend/range table, EMA ribbon with clouds and conviction arrows, oscillator with zones/compression colour, or a buy/sell volume-split column. No entry/stop/target set.</li>
+<li><strong>cadence:</strong> Real-time per-bar on an open chart.</li>
+<li><strong>mode:</strong> Pull — the customer must be watching the chart; none of the five contains any <code>alertcondition()</code>, so nothing can push.</li>
+<li><strong>curation:</strong> Algorithmic — fixed indicator math; the user picks symbol, timeframe, and inputs.</li>
+<li><strong>free_surface:</strong> Everything: all five are free and open-source, source readable signed-out.</li>
+<li><strong>paywall:</strong> None for these five. The effective gate is discoverability — the Oscillator and Ribbon Pro are private/unlisted, absent from TradingView search and the author profile, reachable only via Satyland links.</li>
+<li><strong>conversion:</strong> No trial, tier, upsell, or affiliate mechanics evidenced for the stack; distribution is the Satyland link hub.</li>
+<li><strong>actionability:</strong> Interpretation only — levels, zones, and ribbon bias require the trader to decide entry/stop/target; no record of what happened after any reading.</li>
+<li><strong>trust_record:</strong> No performance record published at all. Claim audit confirms free/open-source, refutes "look them up on TradingView" for the two flagships, and flags stale descriptions (Pro described as 8/48, code is 13/48; ATR "trigger clouds"/Keltner mode do not exist).</li>
+</ul>
+<h2>luxalgo</h2>
+<ul>
+<li><strong>product:</strong> Premium TradingView toolkits (Price Action Concepts, Signals &amp; Overlays, Oscillator Matrix) plus the Vela charting platform, Quant AI coding agent, and backtesting.</li>
+<li><strong>surfaces:</strong> TradingView, web platform (Vela), web docs/library, open-source API/MCP/PineTS/broker-SDK infrastructure; Vela broker connection is bring-your-own-key.</li>
+<li><strong>unit:</strong> Chart markup and named events — BOS/CHoCH labels, order blocks, FVGs, trend/oscillator signals — exposed as a 90-condition alert/screener catalog (20 families). No standard entry/stop/target in the unit.</li>
+<li><strong>cadence:</strong> Real-time intraday charting, plus alerts.</li>
+<li><strong>mode:</strong> Mixed — pull on chart/Vela, push via strategy alerts (capped by tier).</li>
+<li><strong>curation:</strong> Algorithmic — swing-structure markup plus an adaptive signal layer with a 1–4 strength classifier and a 250-bar optimal-sensitivity grid search; formulas sealed.</li>
+<li><strong>free_surface:</strong> Free $0 plan: full Orderflow suite at 1-day lookback, Library, Quant usage, 5 strategy alerts, 10 watchlist symbols, no card.</li>
+<li><strong>paywall:</strong> Flagship toolkits start at Premium; historical bars (5k free to 50k top tier), strategy alerts (5 to 500), orderflow lookback, watchlist size, and live CME futures data are tier-gated.</li>
+<li><strong>conversion:</strong> Five tiers — Free / Essential / Premium / Ultimate / AI Ultra, $299.88 / $479.88 / $719.88 / $1,439.88 as standard annual totals; promotional first payments renew at standard rate; 30-day money-back guarantee (first payment, once).</li>
+<li><strong>actionability:</strong> Alerts fire on named events (FVG mitigated, OB entered/exited, crosses) the trader still interprets and executes; Vela optionally connects the user's own broker. No vendor-supplied trade plan per unit.</li>
+<li><strong>trust_record:</strong> Nothing quantified — no win rate or return figure published anywhere, testimonials labelled as not representative; that absence is its most defensible habit. The backtesting page's "bias-free" claim is unverifiable and contradicted in tone by the vendor's own hindsight disclaimer.</li>
+</ul>
+<h2>marketcipher</h2>
+<ul>
+<li><strong>product:</strong> An access pass to four invite-only Pine indicators — Cipher A (price-action signs), Cipher B (five-wave oscillator), Cipher SR (S/R + VWAP), Cipher DBSI (momentum vote).</li>
+<li><strong>surfaces:</strong> TradingView, members-only Discord, WordPress/WooCommerce storefront, tutorial video embeds.</li>
+<li><strong>unit:</strong> An oscillator pane — a Momentum Green Dot when five waves (momentum, VWAP, money flow, RSI, stochastics) converge oversold; DBSI prints a −5…+34 score per candle from 36 momentum indicators; SR plots levels/VWAP. No entry/stop/target supplied in the unit.</li>
+<li><strong>cadence:</strong> Real-time intraday on the user's chart (SR built for hourly and below).</li>
+<li><strong>mode:</strong> Pull — chart-watching; the Discord is community, and the FAQ explicitly says no trade signals are provided there.</li>
+<li><strong>curation:</strong> Algorithmic — sealed Pine; the user applies it to any TradingView symbol.</li>
+<li><strong>free_surface:</strong> Public pages and a free public Risk Calculator (position/leverage/stop sizing with SAFE-to-KAMIKAZE bands); no free indicator tier evidenced.</li>
+<li><strong>paywall:</strong> All four scripts gated by invite, activated by typing a TradingView username into the account page (access "within seconds" to 2 hours in conflicting FAQ text). TradingView's free tier caps indicators, so running all four requires removing defaults.</li>
+<li><strong>conversion:</strong> Starter 3 months $120, 5 months $400, Professional 12 months $600 (regular $1,000), Lifetime $1,500 (regular $3,000); 14-day full refund with crypto-address and Discord-ban carve-outs; every paid member automatically becomes a reseller at 15% monthly — FAQ says paid in Bitcoin, Learn page says USDT.</li>
+<li><strong>actionability:</strong> The dot is marketed as a long-the-dip / cover-the-short cue and signs as entry/exit aids, but the vendor's own FAQ disowns signal provision; the trader supplies levels, sizing (helped by the calculator), and execution.</li>
+<li><strong>trust_record:</strong> Nothing — no win rate, backtest, or P&amp;L table anywhere; testimonials anecdotal and unquantified. Repaint is unverifiable: competitor-curated user reports of disappearing dots, no non-repaint statement on the vendor's own site.</li>
+</ul>
+<h2>chartprime</h2>
+<ul>
+<li><strong>product:</strong> Invite-only Pine suite — Market Oracle, Market Dynamics, Prime Oscillators, Prime Screener — plus Strategy Builder and a Prime Automation bot upsell.</li>
+<li><strong>surfaces:</strong> TradingView, Discord community, Webflow web site, public GitBook docs, ChargeBee checkout.</li>
+<li><strong>unit:</strong> A chart signal label (buy/sell/strong with take-profit ticks), a 0–100 momentum oscillator with divergence lines, or volume-cluster "order block" zones in Soft/High/Loud tiers. Strategy Builder units are user-composed entry/exit condition sets.</li>
+<li><strong>cadence:</strong> Real-time on chart.</li>
+<li><strong>mode:</strong> Pull on chart; the Automation upsell claims push/automated execution ("24/7", "one-click bot") with no public client or record.</li>
+<li><strong>curation:</strong> Algorithmic, with a human/user selection layer — "Optimal Tuning" and Auto Pilot pick per-asset backtested-best settings, a workflow the vendor's own docs warn can introduce overfitting.</li>
+<li><strong>free_surface:</strong> Full public documentation only; the docs FAQ states plainly there is no free trial of the indicators.</li>
+<li><strong>paywall:</strong> One TradingView username per subscription, auto-removed on cancellation/refund. Pro $67/mo or $40/mo billed yearly ($489); Plus $117/mo or $59/mo billed yearly ($708) for the bundle plus 2 extra indicators.</li>
+<li><strong>conversion:</strong> <code>PRIME20</code> 20% code; "try risk-free for 7 days" is a 7-day refund window, not a trial; Plus bundle upsell; Automation upsell; Refersion/LeadDyno affiliates and social-proof popups.</li>
+<li><strong>actionability:</strong> Higher than a pure oscillator — signals carry take-profit ticks and pattern targets, and Strategy Builder lets users define TP/SL and layered entries — but no vendor record follows any signal.</li>
+<li><strong>trust_record:</strong> No win-rate/return figure published — a clean posture. Preset strategies are "developed and backtested by the team" with no track record, trade list, or backtest output published. User counts are refuted as a consistent set (100K+ vs 30K+ vs 3,200+ on one page), and the docs refute the homepage's "institutional order blocks": they are volume-inferred because Pine has no order-book access.</li>
+</ul>
+<h2>zeiierman</h2>
+<ul>
+<li><strong>product:</strong> 80+ invite-only Pine indicators, 9 buy/sell algorithms, bots/toolkits, a Discord signal service, and a credit-metered AI Chart Analyzer.</li>
+<li><strong>surfaces:</strong> TradingView, Discord (signals), web dashboard (app.zeiierman.com, WordPress/Stripe), Webflow storefront, public GitBook docs.</li>
+<li><strong>unit:</strong> The most complete push unit in this group: a Discord signal post with Entry, TP1/TP2, and SL, across a published universe (~24 crypto, ~24 FX, 9 indices, 5 commodities, ~28 stocks; 5m/15m/1h/4h/Daily). Three types: Trading Signals (trend pullbacks), Liquidity Signals (context only, explicitly not a trade command), OB/OS Signals (statistical-stretch flag, explicitly not a reversal signal). Chart indicators and the Analyzer (chart-image upload, 10 credits, Overview/Price Action/Strategy/Risk tabs) are secondary units.</li>
+<li><strong>cadence:</strong> Intraday-to-daily signal push; real-time chart indicators.</li>
+<li><strong>mode:</strong> Push (Discord signals) plus pull (indicators, dashboard).</li>
+<li><strong>curation:</strong> Algorithmic — sealed Pine signal generation; signal universe and types are published in full.</li>
+<li><strong>free_surface:</strong> Free TradingView scripts with unusually detailed textbook method descriptions, plus the public docs and signal-universe list.</li>
+<li><strong>paywall:</strong> Premium scripts, signals, and Analyzer behind subscription; entitlement by TradingView + Discord username, granted "within one minute."</li>
+<li><strong>conversion:</strong> $95.20/mo monthly, $59.99/mo billed quarterly, $37.99/mo billed annually; lifetime exists (price only in cart); Cello referral attribution; "cancel anytime" over an all-sales-final refund policy (exception: yearly auto-renewals within 72 hours), chargeback-reversal authorisation, Stockholm arbitration in Swedish.</li>
+<li><strong>actionability:</strong> High for the Discord unit — entry, two targets, and stop are given, so a unit is executable without further interpretation; indicator users are told by the vendor to backtest themselves.</li>
+<li><strong>trust_record:</strong> Screenshot-grade only — "70%+ win rate" and a "7-figure record" for signals with no blotter; a Trend Analysis backtest claiming 100,000+ trades, 63–71% win rate, 1.33%–5% max drawdown with no equity-curve data or export. The same docs state the indicators "do not come with predefined backtests."</li>
+</ul>
+<h2>algopoint</h2>
+<ul>
+<li><strong>product:</strong> Qalpha — an invite-only Pine suite (Qalpha Heatmap, Statistic Oscillator, Macro Dashboard HUD) by AlgoPoint.</li>
+<li><strong>surfaces:</strong> TradingView (the product), a one-page static storefront (algopoint.co redirecting to qalphatrade.com), Stripe checkout under a third brand name (HarmonyAlgo).</li>
+<li><strong>unit:</strong> A heatmap/oscillator display fusing named models — Hidden Markov regimes, a VWMA or VWAP Z-score (the homepage uses both for the same stack), Holt-Winters, linear regression, centre of gravity; only 5 of the claimed "11+ models" are ever named. No entry/stop/target unit published.</li>
+<li><strong>cadence:</strong> Real-time on chart; "24/7 alerts" claimed, which is native TradingView alerting.</li>
+<li><strong>mode:</strong> Pull on chart, push only via user-configured TradingView alerts.</li>
+<li><strong>curation:</strong> Algorithmic — sealed Pine fusion; free sibling scripts are published as rule designs ("ML" is a 2-of-3 indicator vote, "AI" SuperTrend is adaptive rules — refuted as machine learning by the vendor's own descriptions).</li>
+<li><strong>free_surface:</strong> A 7-day trial of the Oscillator only, limited features, Heatmap excluded; plus free TradingView scripts with full method descriptions (e.g. the Regime-Adaptive Trend Engine's published weights and bands).</li>
+<li><strong>paywall:</strong> The full suite behind $30/week, $100/4 weeks, or $1,099/year. No terms, privacy, refund, or risk pages exist on the site (all probed paths 404).</li>
+<li><strong>conversion:</strong> Weekly entry price anchoring to annual (discount arithmetic reconciles: ~16% / ~30%); trial restricted to the weaker component; storefront still ships template placeholder copy ("Photo pending", "Visual pending").</li>
+<li><strong>actionability:</strong> Low — a regime/state display; the vendor's own free script states it "does not predict direction — it measures market state." The trader supplies all trade decisions.</li>
+<li><strong>trust_record:</strong> Nothing — no win rate, backtest, signal log, or performance record; "zero-repainting" and "mathematical certainty" / future-anticipation copy are assertions refuted as consistent by the vendor's own free-script disclaimers.</li>
+</ul>
+<h2>gainzalgo</h2>
+<ul>
+<li><strong>product:</strong> GainzAlgo Suite — one invite-only TradingView indicator in five configurations (Standard, Pro, V2 Essential / Proficient / Alpha).</li>
+<li><strong>surfaces:</strong> TradingView, Next.js web storefront with calculators, checkout subdomain; delivery by emailed license key pasted into script settings.</li>
+<li><strong>unit:</strong> A buy/sell reversal signal on chart — Standard is a 4-layer sequential rule model, Pro a weighted confidence score; V2 presets add built-in TP/SL levels (identified in reconstruction as ATR multiples scaled by the user's risk:reward setting).</li>
+<li><strong>cadence:</strong> Real-time; vendor claims bar-close confirmation (and simultaneously "no lag," which are opposites).</li>
+<li><strong>mode:</strong> Pull on chart.</li>
+<li><strong>curation:</strong> Algorithmic — closed-source rule/score engine; no model or training artefact behind the "AI-powered / machine learning" copy (refuted as evidenced).</li>
+<li><strong>free_surface:</strong> Free web calculators — a profit calculator, a cost-comparison table, and a "reliability test."</li>
+<li><strong>paywall:</strong> All configurations are one-time lifetime purchases: Standard $29.95, Pro $49.95, V2 Essential $99.95, Proficient $199.95, Alpha $299.95 (sale, from $399.95), Bundle $499.95.</li>
+<li><strong>conversion:</strong> Lifetime-only ladder with sale anchoring (V1 $66.95 → $49.95; V2 25% "Q4 Kickoff"); UpPromote affiliate tracking; refunds only for reasons "deemed appropriate" by the vendor, none once a product is used; Terms/Privacy are unedited Shopify boilerplate that does not describe the actual Next.js/Supabase stack.</li>
+<li><strong>actionability:</strong> Moderate-high — a signal plus TP/SL on V2 is actionable as drawn, with the trader setting the R:R; nothing records what happened after a signal.</li>
+<li><strong>trust_record:</strong> Fabricated at the free surface — the reliability test returns hard-coded 92% accuracy / 0 repaint / 98 trust score for GainzAlgo on the empty input the store actually passes, and <code>Math.random()</code> metrics on its longer-input branch; the profit calculator ships preset to a 68% win rate at 2:1. Backtest claims are screenshots with a "results may vary" caveat, no figures or trade list.</li>
+</ul>
+<h2>vipindicators</h2>
+<ul>
+<li><strong>product:</strong> Five invite-only Pine indicators (Market Scanner, Cloud Band Signals, Market Prediction, Trend Navigator &amp; Oscillator, Support &amp; Resistance Matrix), a separate Scalping pair for a $100→$10k Challenge, a private Telegram group, and a 100+ lesson course — sold through ClickBank.</li>
+<li><strong>surfaces:</strong> TradingView, Telegram, website-builder sales pages and a Mobirise mirror, ClickBank checkout (every mirror purchase link is one affiliate hop link).</li>
+<li><strong>unit:</strong> An indicator signal — the Scanner is described as showing direction / take-profit / stop-loss, Cloud Band gives buy/sell signals, Prediction "draws the market's next moves," the Matrix plots S/R levels. No formula, parameter, or settings list is published for any of them.</li>
+<li><strong>cadence:</strong> Real-time, claimed on any timeframe 1m–1D and any TradingView market.</li>
+<li><strong>mode:</strong> Pull on chart; Telegram is a group, not a described signal feed.</li>
+<li><strong>curation:</strong> Algorithmic in name — "AI powered" with no AI artefact, model, or method in any public surface; the only functional description is "advanced calculations based on past market prices."</li>
+<li><strong>free_surface:</strong> None evidenced for the product; onboarding step 2 routes beginners to an unnamed "award winning broker" offering a "$50 free to trade" bonus.</li>
+<li><strong>paywall:</strong> Everything behind $9/mo or $99 lifetime (hero anchors $9 against $129); Challenge $14/mo or $99 lifetime (anchored against $99).</li>
+<li><strong>conversion:</strong> ClickBank affiliate funnel; 30-day money-back guarantee (enforced through ClickBank); the Challenge adds a conditional promise — no profit in 40 days earns "$2000 worth of powerful trading tools," not cash — under a "Earn Guaranteed Profit" headline.</li>
+<li><strong>actionability:</strong> Nominally a Scanner unit carries TP/SL, but nothing is verifiable before or after purchase; the vendor does state plainly that it does not auto-trade.</li>
+<li><strong>trust_record:</strong> Static hindsight display — "Live Trading Results" are identical static copy printed twice (93.2% win rate, 6,063 of 6,498 trades, 126,503 members, $425/day, $728k last month), internally refuted as a set ($425 × 126,503 × 30 ≈ $1.61B, not $728k), and the Challenge page carries a different member count, total, and averages. The footer concedes content is hypothetical and "presented post-event." A UK FCA unauthorised-firm warning for this firm is live.</li>
+</ul>
+<h2>quantumalgo</h2>
+<ul>
+<li><strong>product:</strong> The Zeno SMC suite (Zeno, Gravity Zone, Gold/XAU Scalper, Zeno Stocks), QuantumBot auto-execution, a Zeno AI Agent page, and 11 free open-source Pine indicators.</li>
+<li><strong>surfaces:</strong> TradingView, a rich web app (signals, track-record, backtests, performance pages; Netlify functions; Stripe payment links), TradingView ideas as the public record, Discord (referenced, not examined).</li>
+<li><strong>unit:</strong> Two units — a chart SMC zone/confluence display (order blocks, FVGs, sweeps, BOS/CHoCH; free engine's Confluence Score weighted 25/25/20/15/15), and a web signal: the free signals page is built to carry exact entry/SL/TP (Binance data for crypto/gold-as-PAXG, Frankfurter for FX, as its FAQ discloses).</li>
+<li><strong>cadence:</strong> Real-time signals page; the AI Agent page claims 60-second real-time updates.</li>
+<li><strong>mode:</strong> Mixed — pull on chart/signals page, posted ideas as a public record; QuantumBot is the push/execute tier.</li>
+<li><strong>curation:</strong> Algorithmic — a stated 5-factor confluence entry rule for the paid suite (sealed parameters); the free engine's scoring recipe is fully published.</li>
+<li><strong>free_surface:</strong> The strongest free tier in this group — 11 free open-source indicators with complete method descriptions, a free live-signals page (episodic; static fallback feed was empty and stale at fetch), and public track-record/backtest pages.</li>
+<li><strong>paywall:</strong> Premium signals and tiers — Matrix $19/mo, Atlas $39/mo, Zeno $79/mo, QuantumBot $199/mo founding; annual Zeno price is inconsistent ($499/yr advertised vs $709 valued in the vendor's own Stripe conversion map, matching its FAQ's "saves 25%").</li>
+<li><strong>conversion:</strong> Tier ladder to the bot upsell; terms state all sales final — no refunds, trials, or guarantees — in plain text; a public Corrections page exists.</li>
+<li><strong>actionability:</strong> High on paper — free signals carry entry/SL/TP and the bot tier executes — but the public ledger's 43 rows all have entry, stopLoss, takeProfit, and rMultiple set to null, so no unit can be re-scored from the record.</li>
+<li><strong>trust_record:</strong> Part as-was archive, part manufactured total — 43 public, platform-timestamped TradingView ideas (filed 32W/11L, not independently re-scored; no levels to score against) plus a manually frozen premium counter (88W/29L, <code>rows: []</code>, frozen 2026-07-22) produce the headline "75% across 160." Its two backtest records contradict each other (160 trades/75%/PF 8.5 vs 287 trades/61.8%/PF 2.18 for BTCUSDT) and the backtest CSV's R columns are arithmetically impossible on every row. The QuantumBot "live account" equity chart is a seeded PRNG random walk generated in the browser, and the AI Agent feed's confidence values are randomised client-side.</li>
+</ul>
+<h2>quantix</h2>
+<ul>
+<li><strong>product:</strong> QuantiX Finance — AI quant infrastructure: an IQ Wizard ML pipeline and bot marketplace for retail crypto, with bot execution in per-bot Freqtrade containers on the user's own exchange account.</li>
+<li><strong>surfaces:</strong> Web platform (app.quantix.finance), marketing site, a public Bot Advisor dashboard, public docs, API/WebSocket; exchange connection is by user API keys (trade-only, non-custodial as stated everywhere).</li>
+<li><strong>unit:</strong> A bot — either built by the user (indicators/patterns → labelling/targets → ML model → fee-aware backtest) or rented from the marketplace, delivered with paired backtest + live records, periodic returns, and a ranking score in identical report formats.</li>
+<li><strong>cadence:</strong> Continuous live bot execution; Advisor rankings/data updated live (sampled live windows ran to the morning of the teardown).</li>
+<li><strong>mode:</strong> Push by automation — a deployed bot trades without the customer watching; building, ranking, and monitoring are pull.</li>
+<li><strong>curation:</strong> Hybrid — creators supply bots, the platform ranks by a published-formula score, and IQ Chat creations pass two stated numeric gates (train/test AUC gaps, gain ratio; then return/Sharpe/drawdown/recovery thresholds). The ranking formula exists in three inconsistent published versions.</li>
+<li><strong>free_surface:</strong> Free $0 platform tier, the fully public Bot Advisor (full bot census, per-bot detail, CSV export), and extensive public docs.</li>
+<li><strong>paywall:</strong> Starter $15/mo, Pro $58.50/mo, Max $120/mo (annual $10.50 / $40.95 / $84) gated by token allowance, storage, and live-bot slots (0/0/1/4); marketplace bots ~$10/bot/mo plus a 20% performance fee on high-water-mark profits, split equally between creator and platform.</li>
+<li><strong>conversion:</strong> Token-metered compute, marketplace revenue share, annual discounts, and a top-slice headline statistic as the acquisition hook.</li>
+<li><strong>actionability:</strong> The highest in this group — the unit executes itself; there is no entry/stop interpretation left to the customer once a bot is deployed.</li>
+<li><strong>trust_record:</strong> A genuine live scoreboard construction — backtest and live side by side per bot, backtest window ending before the live window begins — whose own full census refutes the headline: "19 bots audited live, median +7.3%" (a frozen 9 Sep 2026 snapshot; the top-19-by-rank slice medians +7.63%) versus 134 bots today with median live return −11.88%, 106 of 133 non-positive, and backtest beating live in 133 of 133 pairs. Terms state records "are not audited unless expressly stated," and the ranked population includes staging (<code>stage</code> env) and test bots.</li>
+</ul>
+<h2>summitiq</h2>
+<ul>
+<li><strong>product:</strong> Application-only "autonomous AI trading infrastructure" for crypto — whale-wallet tracking, social/meme-coin scoring, and AI-assisted execution.</li>
+<li><strong>surfaces:</strong> Web console at /app, marketing site, market-data proxy endpoints; Telegram support named on the Elite tier. No mobile, Discord, or public API surface in evidence.</li>
+<li><strong>unit:</strong> A server decision object — a RecommendedMove panel (primary move, confidence, named sub-scores) polled every 30s (scalp) / 90s (swing), and screener states (STRONG BUY…STRONG SELL) that the client merely translates and averages into a 0–100 consensus. The scoring model behind the states ships nowhere in the client.</li>
+<li><strong>cadence:</strong> Intraday polling in the console; claimed real-time feed on the homepage.</li>
+<li><strong>mode:</strong> Pull (console polling) despite the autonomous framing — shipped feature flags set automated order execution, AI-signal execution, and chart-signal execution all to false, with paper trading the default and live the non-default; the AI Operations page confirms agents are advisory and cannot place live orders or change risk limits.</li>
+<li><strong>curation:</strong> Algorithmic and sealed — composite scoring across Twitter/Discord/Telegram/on-chain/whale flow with caller reputation is claimed; no ingestion source, weight, or reputation math appears in any client artefact.</li>
+<li><strong>free_surface:</strong> None — application-only, with a $50k–$250k+ capital range asked at application. The homepage hero widget and a "Demo Dashboard" nav link are the only preview.</li>
+<li><strong>paywall:</strong> The whole console behind application plus Pro Trader $3,000/mo + $1,000 setup, Elite Operator $5,000/mo + $1,000 setup, Institutional custom from $10,000/mo + $1,000 setup; checkout is itself a placeholder — billing is handled manually after review — and setup plus first month are non-refundable.</li>
+<li><strong>conversion:</strong> Application scarcity gate; annual billing framed as "save 2 mo"; paid tiers list features the vendor's own pricing page labels "(placeholder)" (weekly performance review, multi-wallet visibility, team access, private deployment, strategy customization).</li>
+<li><strong>actionability:</strong> A decision panel is actionable in form, but as shipped nothing executes for a customer; an owner-only live-test order page is self-described as blocked for the public. The Connect Exchange flow sends the user's exchange API key, secret, and passphrase to the vendor's server ("encrypted at rest," unverifiable) under "your keys, your custody" marketing.</li>
+<li><strong>trust_record:</strong> Fabricated static display — the hero's 68.4% win rate, +$184,320 PnL, 1,284 signals/24h, 6 open trades, and its "Live Feed" items are hard-coded literals in the marketing bundle with no fetch and no demo label on the widget. Inside the console the vendor labels honestly (Demo Mode badge, a backtest curve marked "SIMULATED — synthetic," a metric named "Sharpe (placeholder)"). No terms, privacy, risk-disclosure page, or named legal entity exists on any public page.</li>
+</ul>
+<h2>algobars</h2>
+<ul>
+<li><strong>product:</strong> An all-in-one retail trading platform — pro charts (including proprietary Range/X-Ray bars), a no-code + plain-English bot builder in its own AlgoBarsX language, a client-side backtester with walk-forward optimizer, live execution through connected brokers, copy trading / AlgoSocial marketplace, Ghost Orders, and a metered AI layer.</li>
+<li><strong>surfaces:</strong> Web app (algobars.com/ai), marketing site, a 1,057-route API whose full map ships in the client bundle, a tick WebSocket, Whop/Stripe/OxaPay checkout plumbing.</li>
+<li><strong>unit:</strong> The customer's own strategy/bot — declared in AlgoBarsX, compiled, backtested, and runnable live — plus marketplace copy-trade strategies and a Ghost Order (a server-held trigger that fires a market order when the level trades). The engine ships a 136-function catalog (textbook indicators plus an SMC family) and textbook backtest statistics.</li>
+<li><strong>cadence:</strong> Real-time tick feed; strategy evaluation defaults to bar close, with tick evaluation as an explicit opt-in.</li>
+<li><strong>mode:</strong> Both — pull to build/backtest, push/automated when a live bot runs or a ghost trigger fires.</li>
+<li><strong>curation:</strong> Hybrid — the user (or the metered AI builder/transpiler/coach, Anthropic server-side) authors the strategy; execution and the in-engine risk guard (daily loss/drawdown caps, min-RR, R-without-stop is a compile error) are algorithmic.</li>
+<li><strong>free_surface:</strong> The platform itself — "$0 per month, forever," charts/backtesting/builder free, no subscription; a public demo page.</li>
+<li><strong>paywall:</strong> No platform paywall; the wall is AI metering — AI actions are charged at compute cost from the account balance, non-refundable once performed, and the app displays per-action credit estimates ("~X cr") despite "No credits. No subscriptions" copy.</li>
+<li><strong>conversion:</strong> Free platform as the funnel, pay-per-use AI, affiliate "Credit Commissions" on referred AI usage, and claimed broker/prop-firm breadth (334 brokers, 131 prop firms — unverifiable).</li>
+<li><strong>actionability:</strong> The highest for a DIY user — a unit compiles, backtests, and can execute live through the user's own broker (the vendor holds no funds, per its Terms); Ghost Orders fill at market on trigger, not at the hidden price.</li>
+<li><strong>trust_record:</strong> No vendor performance record at all — zero win-rate/return figures for its own strategies, and the footer states displayed metrics are user backtest outputs. Backtest integrity is the strongest in this group (future-bar reads are a compile-time <code>FUTURE_VALUE</code> error, default fill is next-bar open, walk-forward mode ships in the client), but the homepage claim of backtests "with real spread and commission costs" is refuted by the shipped tester, which contains no spread, commission, or slippage deduction at all; the marketed Monte Carlo feature has no artefact anywhere in the client.</li>
+</ul></article>
+<div class="pager"><a href="profiles-g3.html">&larr; Profiles 3</a><a href="profiles-g5.html">Profiles 5 &rarr;</a></div>
+<footer>Research by Muse Desk. This study of how trading products are packaged and
+delivered is what the <a href="../morning-map/">Morning Map</a> and the Morgue Engine
+were built from.</footer>
+</div></body></html>

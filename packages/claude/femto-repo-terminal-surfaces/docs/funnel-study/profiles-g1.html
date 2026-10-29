@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vendor Delivery Profiles — Group 1 of 8 — Muse Desk</title><style>
+:root{color-scheme:dark}
+body{background:#0b0e13;color:#dbe2ec;font-family:Georgia,'Times New Roman',serif;margin:0;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 64px}
+header{border-bottom:2px solid #2dd4bf;padding-bottom:14px;margin-bottom:8px}
+h1{font-size:30px;margin:0 0 6px;color:#f2f6fb}
+.sub{color:#93a4bb;font-size:15px;margin:0}
+nav.top{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+nav.top a{background:#131926;border:1px solid #26314a;color:#a5f3e8;text-decoration:none;
+ padding:6px 12px;border-radius:999px;font-size:13.5px;font-family:Helvetica,Arial,sans-serif}
+nav.top a:hover{border-color:#2dd4bf}
+article h1{font-size:26px;color:#f2f6fb;border-bottom:1px solid #26314a;padding-bottom:8px}
+article h2{font-size:21px;color:#7dd3fc;margin-top:34px}
+article h3{font-size:17.5px;color:#a5f3e8;margin-top:26px}
+article h4{font-size:15.5px;color:#fbbf24}
+article a{color:#7dd3fc}
+article code{background:#131926;padding:1px 5px;border-radius:4px;font-size:.92em}
+article pre{background:#0f141f;border:1px solid #26314a;border-radius:8px;padding:12px;overflow-x:auto}
+article pre code{background:none;padding:0}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;
+ font-family:Helvetica,Arial,sans-serif}
+article th,article td{border:1px solid #26314a;padding:6px 9px;text-align:left;vertical-align:top}
+article th{background:#131926;color:#a5f3e8}
+article blockquote{border-left:3px solid #2dd4bf;margin:16px 0;padding:2px 16px;color:#b8c6da}
+article hr{border:none;border-top:1px solid #26314a;margin:28px 0}
+footer{border-top:1px solid #26314a;margin-top:44px;padding-top:14px;color:#7c8da6;font-size:13.5px}
+footer a{color:#7dd3fc}
+.pager{display:flex;justify-content:space-between;margin-top:36px;font-family:Helvetica,Arial,sans-serif;font-size:14px}
+.pager a{color:#a5f3e8;text-decoration:none}
+</style></head>
+<body><div class="wrap">
+<header><h1>Vendor Delivery Profiles — Group 1 of 8</h1><p class="sub">How each vendor in this group packages its product: the unit it sells, its cadence, its free surface, and how it converts readers into buyers.</p></header>
+<nav class="top"><a href="index.html">The Study</a><a href="profiles-g1.html">Profiles 1</a><a href="profiles-g2.html">Profiles 2</a><a href="profiles-g3.html">Profiles 3</a><a href="profiles-g4.html">Profiles 4</a><a href="profiles-g5.html">Profiles 5</a><a href="profiles-g6.html">Profiles 6</a><a href="profiles-g7.html">Profiles 7</a><a href="profiles-g8.html">Profiles 8</a><a href="../morning-map/">Morning Map</a><a href="../desk-terminal-live/">Terminal</a></nav>
+<article><h1>Funnel Profiles — G1: Flow / GEX Data Vendors</h1>
+<p>Source for each profile is that vendor's teardown in the corpus (folder name as heading). Facts from live pages are marked (live) — none were needed; all facts below are from the teardowns, fetched 2026-10-26.</p>
+<hr />
+<h2>unusualwhales</h2>
+<ul>
+<li><strong>product:</strong> Options flow, GEX, dark-pool, congress/insider data platform sold as web app plus developer API.</li>
+<li><strong>surfaces:</strong> Web dashboard; REST API (231 documented endpoints); WebSocket streaming; Kafka (Enterprise); API-MCP — hosted MCP server, npm stdio package, integrations for Claude/ChatGPT/Grok/Cursor etc.</li>
+<li><strong>unit:</strong> A flow trade object / flow alert — price, NBBO bid/ask, underlying price, call/put, report flags (Sweep / Cross / Floor), premium — plus ticker-page aggregates: net premium ticks, flow per strike/expiry, GEX levels, NOPE, OI changes, dark-pool prints.</li>
+<li><strong>cadence:</strong> Real-time push via WebSocket (ticker-scoped channels incl. option trades, flow alerts, GEX by strike, dark pool, news, halts); REST is pull on demand.</li>
+<li><strong>mode:</strong> Hybrid — push streaming/alerts, pull dashboard and API queries.</li>
+<li><strong>curation:</strong> Algorithmic, server-side. Sweep/block/multileg tagging, side signing, flow-alert rules and GEX dealer sign are all computed server-side and sealed; user configures alert filters via a published query grammar.</li>
+<li><strong>free_surface:</strong> 7-day free trial for new API subscribers. No standing free data tier evidenced in the teardown.</li>
+<li><strong>paywall:</strong> API wall: Starter $99/mo (25k requests/mo, 1-yr lookback), Basic $150/mo (unlimited/day, 2-yr), Advanced $375/mo (unlimited/day, 2-yr), Enterprise unpriced (Kafka). All self-serve tiers include real-time flow, GEX, daily OI and MCP.</li>
+<li><strong>conversion:</strong> Tier ladder on request volume and history depth, not on data families; enterprise upsell is streaming transport (Kafka, 36 topics); MCP included at every tier as a distribution channel.</li>
+<li><strong>actionability:</strong> Data only. No entry, stop or target is given; a unit tells the customer what traded and how it was tagged — interpretation and any trade decision are entirely the customer's.</li>
+<li><strong>trust_record:</strong> Nothing — and that is the finding. No backtest, win rate or accuracy figure published anywhere audited; vendor FAQ itself hedges that flow "may signal" institutional positioning. Historical endpoints are date-addressed; no restatement observed on examined surfaces; server-side restatement unverifiable.</li>
+</ul>
+<h2>flowalgo</h2>
+<ul>
+<li><strong>product:</strong> Real-time ask-side options flow dashboard with Levels (volume-at-price zones) and Alpha Ai directional signals.</li>
+<li><strong>surfaces:</strong> Web dashboard only (WordPress + aMember app); voice alerts via text-to-speech over the feed; embedded delayed TradingView charts; Intercom help centre. No public API at any price; scraping/redistribution banned in terms.</li>
+<li><strong>unit:</strong> A flow row / detail card — ticker, premium ("bet size"), call/put, order type (SWEEP / SPLIT / BLOCK), expiry, strike, spot, contract price/size, day volume, OI, greeks, IV — scored by the Algo Score; plus a Levels zone and an Alpha Ai long / short / hedge signal.</li>
+<li><strong>cadence:</strong> Real-time push, with vendor-footnoted delay of 500 ms–15 s; dark-pool/equity blocks delayed up to ~20 min, ADF prints hours to next-day late.</li>
+<li><strong>mode:</strong> Push — live feed and voice alerts interrupt the customer.</li>
+<li><strong>curation:</strong> Algorithmic, server-side, and structurally one-sided: only ask-side / near-ask fills are ingested — bid-side and true-mid prints are excluded by design, so every alert reads as a buy (bought calls vs bought puts). Purple "unusual" highlight rule is published: &lt;35 DTE and &gt;7.5% OTM.</li>
+<li><strong>free_surface:</strong> Trial only, and inconsistently stated on one page: 2 weeks for $37 intro in one block, 7-day free trial in another ("All Access" block).</li>
+<li><strong>paywall:</strong> Single all-inclusive feature set; price varies only by billing period — $149/mo monthly, $129/mo quarterly, $109/mo biannual, $99/mo annual. No feature tiers.</li>
+<li><strong>conversion:</strong> Intro-trial pricing into auto-renew; billing-period discounts; all sales final / no refunds; simultaneous-login lockout up to 24h.</li>
+<li><strong>actionability:</strong> A card identifies a contract and its aggressiveness score but gives no entry, stop or target. Alpha Ai gives direction and a failure gauge (2% adverse, 1% for ETFs) but explicitly no target and no exit signal. Levels require the customer's own interpretation.</li>
+<li><strong>trust_record:</strong> No performance record, backtest or win rate published. Archive is not point-in-time by disclosed design: manually uncovered orders are backfilled at transaction timestamp and late dark-pool prints land at transaction time — disclosed in footnotes, still disqualifying as an as-was record. Algo Score is vendor-labelled beta/experimental.</li>
+</ul>
+<h2>cheddarflow</h2>
+<ul>
+<li><strong>product:</strong> Options flow / dark-pool / gamma web terminal with Power Alerts.</li>
+<li><strong>surfaces:</strong> Web dashboard only (Next.js at dash.cheddarflow.com; GraphQL subscriptions + Phoenix LiveView); embedded TradingView chart; education centre; "Cheddar AI" is a third-party Chatbase chatbot iframe. No public API — its GraphQL is a session-token backend.</li>
+<li><strong>unit:</strong> A flow trade row (sweep/block/split, side, greeks, server sentiment gauge and put/call ratio); a gamma row per strike (net/call/put GEX, OI, expected 1-day move, wall tags); a dark-pool level (price, count, size, premium); a Power Alert referencing one trade (symbol, strike, expiry, put/call, sentiment, triggered-at).</li>
+<li><strong>cadence:</strong> Real-time via GraphQL subscriptions and Phoenix channels.</li>
+<li><strong>mode:</strong> Hybrid — pull dashboard fed by push subscriptions; Power Alerts are push-style triggers inside the session.</li>
+<li><strong>curation:</strong> Algorithmic, server-side. All classification, sentiment, GEX and the Power Alert trigger are precomputed server-side and sealed; the Power Alert carries no score, probability or model field at all.</li>
+<li><strong>free_surface:</strong> 7-day free trial, Standard tier only.</li>
+<li><strong>paywall:</strong> Standard $85/mo; Professional $99/mo; Pro Annual $75/mo effective. Gamma, dark pool, watchlists and Power Alerts are Pro-only — the client itself enforces this (upsell shown when the Pro role is absent, watchlist query skipped for non-Pro).</li>
+<li><strong>conversion:</strong> Trial limited to the lower tier so the flagship features require paid upgrade; annual discount (~25%); affiliate attribution (FirstPromoter); refund copy contradicts itself — pricing FAQ says all sales final, the April 2026 Terms/Refund Policy allow 48-hour and prorated refunds.</li>
+<li><strong>actionability:</strong> Flow and gamma are context requiring interpretation. A Power Alert points at a single underlying trade but supplies no entry, stop, target or confidence — the customer must still decide everything.</li>
+<li><strong>trust_record:</strong> Per-alert post-trigger tracking exists inside the paid product (<code>gainLoss</code>, <code>gainLossHistory</code>, premium/volume changes) — the strongest per-unit follow-up in this subgroup — but no aggregate win rate or auditable archive is published. Testimonials are 2021 anecdotes; zero performance figures published.</li>
+</ul>
+<h2>blackboxstocks</h2>
+<ul>
+<li><strong>product:</strong> Stock and options alert, flow and community platform with charting and in-platform broker execution.</li>
+<li><strong>surfaces:</strong> Web members app (React); embedded Matrix/Element chat plus Discord bot; MCP API-key surface for subscribers; broker integrations (E*TRADE, TradeStation) for execution from the platform; CSV downloads.</li>
+<li><strong>unit:</strong> An alert row — stock types (Price Spike, Volume Active, Pre-Market, Retracement, Rapid Decline, Usual Suspect, etc.) and options types (Large, Roulette, Repeater, Steady, Swift, Rapidfire) — a flow grid row, and chart-study series (Gamma, Net Options Delta, Options Dollar Flow, Dark Pool Volume Profile, Volatility Indicator).</li>
+<li><strong>cadence:</strong> Real-time push via SignalR alert stream; vendor states 60–120 alerts/day filtered from 11,000–13,000 scanned stocks (the two counts disagree across its own pages).</li>
+<li><strong>mode:</strong> Push for alerts; pull for flow, charts and history.</li>
+<li><strong>curation:</strong> Algorithmic, server-side "proprietary algorithm." Options alert rules are published concretely (Rapid Fire = same contract within 2 min; Swift = repeated opening sweeps, rising price, 5 min; Steady = same over 60 min; Roulette/Large = trade exceeds OI at/above ask); every equity alert threshold is withheld ("calculated according to the stock price").</li>
+<li><strong>free_surface:</strong> None evidenced in the teardown beyond the public marketing Top Alerts table.</li>
+<li><strong>paywall:</strong> Four tiers — Options Basic $59/mo, Options Plus $79/mo, Equities Plus $89/mo, Premium $149/mo — split by asset class; Gamma/Net Delta studies sit in Options Plus and above.</li>
+<li><strong>conversion:</strong> Asset-class tier upsell; yearly toggle; retention tooling (Churnkey) and device fingerprinting (FingerprintJS) on the shell; pricing page says "All sales are final" while the Terms PDF says refunds are case-by-case — the stricter text sits on the checkout path.</li>
+<li><strong>actionability:</strong> Alerts are explicitly disclaimed by the vendor as "not entry/exit or buy signals"; no stop or target is given. The platform closes the loop mechanically — the customer can execute via the integrated brokers without leaving — but the decision remains an interpretation of an alert.</li>
+<li><strong>trust_record:</strong> Hindsight display, audited as a failure as a record: the public Top Alerts scoreboard scores options alerts by "Percent to High" and stocks by "Potential Gain" — price at alert to the post-alert daily high, i.e. maximum favourable excursion with no exit rule and no full archive; both tables rendered "Data not found" at fetch. No win rate published elsewhere.</li>
+</ul>
+<h2>insiderfinance</h2>
+<ul>
+<li><strong>product:</strong> Options flow / dark-pool / gamma platform, plus a separately sold invite-only TradingView technical-analysis suite.</li>
+<li><strong>surfaces:</strong> Web app (single Next.js app — marketing and product are the same routes); Discord (auth, bot AI-analysis command); free web Options Profit Calculator; TradingView for the TA suite.</li>
+<li><strong>unit:</strong> A flow trade row ranked and tagged client-side — Heat Score (bucketed points, max constant 26.5, displayed &gt;15 or &gt;18 as "High Heat" depending on surface), Unusual (≥10% OTM and ≤35 DTE), Golden Sweep (sweep + size ≥ strike OI + premium ≥ $1M), Top Position (size ≥ OI), Momentum — plus GEX/DEX per strike with call/put walls, zero-gamma and volatility trigger.</li>
+<li><strong>cadence:</strong> Real-time via WebSocket with REST backfill.</li>
+<li><strong>mode:</strong> Pull dashboard over a live feed; Discord bot is query/response.</li>
+<li><strong>curation:</strong> Algorithmic, but unusually the scoring layer runs in the browser and was recovered in full — a hand-tuned bucketed points score, no learned model. Server supplies raw rows, trailing averages, order-type tags and ticker sentiment.</li>
+<li><strong>free_surface:</strong> A free options-flow tier exists (dedicated free-tier endpoint and "try before you buy" CTA; its scope/delay is nowhere stated) and the Black-Scholes profit calculator is a free tool.</li>
+<li><strong>paywall:</strong> One all-inclusive price — $75/mo, $195/qtr, $660/yr — everything behind it. The TA suite was sold standalone ($39/mo per third-party review; not on the current pricing page).</li>
+<li><strong>conversion:</strong> Simplicity as the funnel: no feature tiers, quarterly/annual discounts (labels say 16%/25%; arithmetic is 13.3%/26.7%); all sales final, no refunds, no pro-rated cancellation; simultaneous-login lockout.</li>
+<li><strong>actionability:</strong> The unit prioritises attention (score + tags) but gives no entry, stop or target. The profit calculator lets the customer model their own trade; the TA suite emits signals/levels but is sealed Pine, unauditable from the web product.</li>
+<li><strong>trust_record:</strong> The weakest audit posture in this group relative to its claims: "proven track record," "increase your win rate" and "unmatched accuracy" are load-bearing marketing with zero published record — no win rate, returns table or alert archive; the only evidence is testimonials including a single-member "$702,000 in 5 months" anecdote. User counters are internally inconsistent between pages (185k/12k/719k vs 105k/6k/215k).</li>
+</ul>
+<h2>tradytics</h2>
+<ul>
+<li><strong>product:</strong> Options flow platform plus a suite of named AI trade-idea tools and a Discord bot product.</li>
+<li><strong>surfaces:</strong> Web dashboard; Discord bot (separately priced, also deployable to 280+ servers per vendor); Talos AI chatbot inside the dashboard (server-side, quota-limited per 24h).</li>
+<li><strong>unit:</strong> A live flow row (only prints ≥ $25K premium are shown, a published floor); Algo Flow / Net Flow / Market Net Flow lines (signed net-premium constructions, formulas published in the FAQ); an AI idea with a server confidence % (Prophet, Psychic, Options Droid, Bullseye, Clairvoyant, Cryptonite); a DEX next-days direction expectation.</li>
+<li><strong>cadence:</strong> Published schedule: Live Flow every 3 s, most dashboards 1 min, Prophet/Scany 2–3h post-close, AI portfolios end-of-day, Performance page every 2h.</li>
+<li><strong>mode:</strong> Pull dashboard; Discord bot is query/push hybrid.</li>
+<li><strong>curation:</strong> Hybrid — descriptive layer is published-formula algorithmic (net premium side rule, golden sweep = sweep &gt;$1M near-the-money, volume-based intraday flow-GEX using traded volume not OI); the paid AI layer is sealed server-side, visible only as confidence thresholds the client filters on (&gt;70 Prophet, &gt;80 Psychic, &gt;85 Clairvoyant, &gt;95 Droid).</li>
+<li><strong>free_surface:</strong> Free tier: delayed analytics, simple flow, daily scanner, and 5 Discord queries/week.</li>
+<li><strong>paywall:</strong> Pro $69/mo for the platform; Discord bot $199/mo; combined $269/mo (~$240 with 10% coupon). The AI confidences are the paid core.</li>
+<li><strong>conversion:</strong> $15 for the first 15 days intro; coupon discounting; the Discord bot priced at nearly 3× the platform as a separate upsell; no-refund policy stated plainly in FAQ and Terms.</li>
+<li><strong>actionability:</strong> An AI idea gives direction plus a confidence number, but no published entry/stop/target structure was evidenced. Descriptive flow/GEX units require interpretation. Hypothetical P&amp;L widgets flip at Algo Flow zero-crossings using same-bar fills with no costs — a visualisation, not an executable record; the matching accuracy figure is computed in code and its display line is commented out.</li>
+<li><strong>trust_record:</strong> A Performance dashboard exists (overall accuracy, average 7-day returns, win rate by sector, P&amp;L distributions) but every figure loads from the sealed API with no published counting rules, and the page leads with "Biggest Winners" tables. A 2020 blog headline ("beat the market by 20% in November") and testimonials quoting 1500%/2500% single trades are unverifiable anecdote.</li>
+</ul>
+<h2>bullflow</h2>
+<ul>
+<li><strong>product:</strong> Real-time unusual flow, gamma/vanna exposure and dark-pool terminal with a genuine developer API and MCP server.</li>
+<li><strong>surfaces:</strong> Web Terminal; iOS/Android apps (shared bundle); REST API; SSE streaming (alerts, live flow, GEX setups, backtest replay); MCP — 19 tools at api.bullflow.io/mcp; Public brokerage execution from the dashboard; Discord community.</li>
+<li><strong>unit:</strong> A flow trade row (side in five grades, greeks, IV, volume/OI at trade time, SigScore 0–1); GEX/VEX per strike (OI-weighted or volume-weighted, formula published verbatim); an Options Activity Profile with structured flags (volume spike, buying surge, unusual weekly activity, etc., thresholds published in full); an algo or custom alert carrying latency fields; a dark-pool trade.</li>
+<li><strong>cadence:</strong> Real-time SSE; GEX refresh ≈ every 5 s; EOD GEX eligible after 17:15 ET using the previous session's OI (vintage disclosed in the field).</li>
+<li><strong>mode:</strong> Push (SSE alerts/flow) plus pull (Terminal, REST, MCP).</li>
+<li><strong>curation:</strong> Algorithmic, server-side. GEX/VEX/net-premium arithmetic is published verbatim including sign convention; the two headline differentiators are sealed — SigScore (only its 0–1 scale, the 0.8 "High Sig" filter, and for dark pool its factor class are disclosed) and the algo alert triggers. Quick-filter grammar is published, though Urgent/Bullflow/Position Builders are defined circularly as "matching Bullflow criteria."</li>
+<li><strong>free_surface:</strong> The strongest free surface in this group: per-ticker delayed GEX snapshot pages (15-min delayed, labelled, capture time shown) and 4 free MCP closing-data tools requiring no account.</li>
+<li><strong>paywall:</strong> Basic $33/mo, Premium $59/mo, API $99/mo as annual-billing equivalents (monthly rates $39/$69/$129 — the headline does not say "billed annually" beside the big number); API responses metered at 1–10 credits; dark-pool premium as an add-on checkout.</li>
+<li><strong>conversion:</strong> Free-data top of funnel into tiered Terminal and credit-metered API; 40%-off-first-month API code published; annual-discount framing; per-request agent payments (x402/MPP/Stripe Link) are non-refundable including failed delivery — disclosed plainly; FAQ states no trial is currently offered while blog CTAs still advertise a free trial (stale surface).</li>
+<li><strong>actionability:</strong> Units give context, levels and flags but no entry, stop or target. The backtest/replay stream lets a customer test their own custom alerts against a historical session in timestamp order — self-evaluation tooling rather than a vendor trade call.</li>
+<li><strong>trust_record:</strong> Hindsight metric, honestly defined in the docs and spent carelessly in marketing: <code>peakReturn</code> is the maximum gain after a timestamp, and the blog's entire performance story is three Discord-posted winners quoted at peak (+80%, +172%, +300%) with no denominator or losers. No win-rate table for the platform; vendor itself warns historical flow is not a complete record of every transaction.</li>
+</ul>
+<h2>quantdata</h2>
+<ul>
+<li><strong>product:</strong> Options order-flow and dealer-exposure (GEX/DEX/VEX/CHEX) data service, dark-pool analytics, and a separate Futures product.</li>
+<li><strong>surfaces:</strong> Web dashboard (v3, ~35 draggable tools); iOS/Android apps; REST API — 30 POST endpoints with a fully published field grammar; hosted MCP twin for every endpoint; Quant IQ chat copilot (proposes dashboard/filter changes for user approval); Intercom help centre.</li>
+<li><strong>unit:</strong> A tool panel: consolidated/unconsolidated flow rows (with Golden Sweep and Unusual as boolean flags), exposure by strike/expiry, Net Drift per-bucket net premium (explicitly not a running total), Max Pain grid, dark-pool levels (summed notional/shares/count per price), and the Exposure Forecast — a Pin / Grind / Volatile session label with a probability it still holds in 30/60/90/120 min.</li>
+<li><strong>cadence:</strong> Real-time over the dashboard WebSocket; the paid API is poll-only (streaming documented as "Coming Soon"), 240 requests/min with a 20-request/1-s burst cap.</li>
+<li><strong>mode:</strong> Pull (dashboard and API polling); no push API product.</li>
+<li><strong>curation:</strong> Algorithmic, server-side. The trade-sentiment rule is published exactly (contract type × trade side → bullish/bearish/neutral) and the block/split/sweep grammar is published; the exposure scaling/sign arithmetic, Golden Sweep and Unusual definitions, and the Exposure Forecast classifier are sealed.</li>
+<li><strong>free_surface:</strong> 7-day free trial (dashboard, non-professional only); Futures launched with a 1-month free trial.</li>
+<li><strong>paywall:</strong> Dashboard $74.99/mo ($62.50/mo billed annually); API $149.99/mo ($124.99 annual equivalent, 365+ days history); Futures $74.99/mo standalone or $119.99/mo bundled. Professional tier exists but its price is on no public page. OPRA subscriber agreement is mandatory.</li>
+<li><strong>conversion:</strong> Annual savings reconcile exactly ($150 dashboard / $300 API); trial auto-bills unless the customer cancels the recurring payment; the harshest refund posture in this group — Terms state refunds are not to be issued and a purchase cannot be cancelled "for any reason."</li>
+<li><strong>actionability:</strong> Context only, and the vendor says so for its flagship: the Exposure Forecast guide states explicitly the label is not a directional signal. No entry, stop or target anywhere; Quant IQ only configures the dashboard and summarises on-screen data.</li>
+<li><strong>trust_record:</strong> Clean claims posture alongside Unusual Whales: no win rate, returns table or strategy performance claim published anywhere; the performance surface is six Discord testimonials. Forecast probabilities are "backed by thousands of data points" with no sample, period or calibration record. One refuted operational claim: pricing promises 24/7 live chat while the vendor's own help centre states 9:30 AM–5:00 PM ET weekdays.</li>
+</ul>
+<h2>flashalpha</h2>
+<ul>
+<li><strong>product:</strong> API-first computed options-exposure analytics (GEX/DEX/VEX/CHEX, levels, volatility, flow, 0DTE) sold as data, not as a terminal.</li>
+<li><strong>surfaces:</strong> REST Lab API (107 endpoints catalogued in its own playground); hosted MCP — 78 tools (61 live + 17 historical) plus nine persona-scoped MCP servers with identical data; official SDKs (Python/JS/C#/Go/Java); web dashboard, screener, watchlist and portfolio apps as shells over the API; API playground; free calculator tools.</li>
+<li><strong>unit:</strong> A JSON response: exposure per strike, gamma flip / call wall / put wall / max pain levels, a pin-risk score 0–100 (weights published: OI concentration 30%, proximity 25%, time 25%, gamma 20%), VRP with percentile/z-score, a screener row, or a server narrative.</li>
+<li><strong>cadence:</strong> Tiered freshness cache — Free 15 min, Basic/Growth ~15 s, Alpha ~1 s snapshots over minute-resolution Greek snapshots; historical replay to the minute since 2017 (204 symbols). Marketing "computed per-tick" is refuted by the vendor's own methodology.</li>
+<li><strong>mode:</strong> Pull only (request/response API and MCP); push streaming exists only on the Professional commercial tier (dedicated node / WebSocket).</li>
+<li><strong>curation:</strong> Algorithmic, server-side — but the core arithmetic is fully published in a methodology whitepaper: GEX as signed sum of gamma × OI × 100 × spot² × 0.01 with an explicit dealer convention labelled an assumption, repriced gamma flip, argmax walls, OI-weighted max pain, and a disclosed 0.43 effective-OI flow model. Sealed: SVI calibration constants and the strategy-signal scores / AI narrative.</li>
+<li><strong>free_surface:</strong> Free $0, no card — 5 requests/day, 15-min freshness, single-expiry GEX, walls/flip, BSM/IV calculators. An account/API key is still required.</li>
+<li><strong>paywall:</strong> Quota-and-freshness ladder: Basic $79/mo ($63 annual; 250 req/day), Growth $299/mo ($239; 2,500/day, full-chain, 0DTE, live flow), Alpha $1,499/mo ($1,199; unlimited, historical replay, ~1 s, 99.9% SLA claim), Professional from $2,500/mo (a separate $4,500/mo streaming framing appears on the pricing page, unreconciled). Internal use only, no redistribution at any tier.</li>
+<li><strong>conversion:</strong> The funnel is metering itself — requests/day, freshness, history depth and symbol universe all step with price; annual billing ~20% off; SDKs and MCP lower integration friction at every tier.</li>
+<li><strong>actionability:</strong> Analytics only. Levels, scores and screener presets frame decisions (including strategy-named screens) but no unit gives an entry, stop or target trade; the customer or their system must convert JSON into action.</li>
+<li><strong>trust_record:</strong> No win-rate guarantee published. The one performance artefact is a vendor-run meta-study (Oct 24, 2026): 357,820 option-selling backtests in which 16/16 GEX entry rules raised average daily Sharpe — run on the vendor's own historical store, with no dataset or code published, and the article itself concedes gains came mostly from skipping losing days. History posture is contradictory across the vendor's own documents: methodology states the store is not versioned and re-pulls silently overwrite, while the historical-data page claims inputs are "never restated."</li>
+</ul>
+<h2>spotgamma</h2>
+<ul>
+<li><strong>product:</strong> Dealer-positioning and gamma-exposure dashboards — TRACE, HIRO, Equity Hub — plus reports/notes.</li>
+<li><strong>surfaces:</strong> Web dashboard only as the sold product (React app, streaming WebSocket); a full REST/GraphQL API exists but powers the dashboard and is not sold as a public developer API; Discord login/integration; Founder's Notes and reports as content surfaces.</li>
+<li><strong>unit:</strong> A positioning view: GEX by strike/expiry, levels (Call Wall, Put Wall, Zero Gamma / Gamma Flip, Volatility Trigger, Risk Pivot), TRACE Gamma/Delta/Charm Pressure, the HIRO cumulated estimated dealer hedge-flow series, and Equity Hub rows covering 3,500+ names.</li>
+<li><strong>cadence:</strong> Static GEX daily from prior-night OI (timing disclosed by the vendor); TRACE updated every minute; HIRO real-time streaming.</li>
+<li><strong>mode:</strong> Pull dashboard whose charts stream in place.</li>
+<li><strong>curation:</strong> Algorithmic, server-side. The static GEX formula is published verbatim with a worked example; everything intraday — the Options Inventory Model's trade signing, HIRO's retail classifier, Volatility Trigger, Risk Pivot, Synthetic OI — is sealed and arrives precomputed.</li>
+<li><strong>free_surface:</strong> Free variants of the paid feeds exist in the product's endpoint split (free HIRO, free greeks, free skew, free equities/historical/earnings), i.e. limited versions gate the paid products; tier detail beyond that split is not in the teardown.</li>
+<li><strong>paywall:</strong> Product-key gating across ~14 products. Pricing is in flux across the vendor's own pages: Standard $89/mo, Pro $129/mo, Alpha $249–$299/mo on one capture; a second funnel shows Essential $99 / Alpha $299 list with first-year promo equivalents of $45/$125 per month. Synthetic OI requires Equity Hub plus a tier above Pro.</li>
+<li><strong>conversion:</strong> Product-by-product tier upsell, first-year promotional pricing, non-refundable auto-billed subscriptions, institutional tier from $1,999/mo per research notes.</li>
+<li><strong>actionability:</strong> Context by the vendor's own framing: it states GEX does not predict direction and walls are not guaranteed support/resistance. No entry, stop or target is given; scenario tools (Moviefone, Spotline) model user-supplied parameters server-side.</li>
+<li><strong>trust_record:</strong> Nothing to refute — no win-rate, return or backtest figure found on any audited surface, and the Terms disclaim the accuracy/completeness of any level, signal or calculation. No archived intraday HIRO/TRACE series is public, so yesterday's intraday curve is unverifiable as an as-was record.</li>
+</ul>
+<h2>menthorq</h2>
+<ul>
+<li><strong>product:</strong> Gamma levels, Q-Score, volatility and swing models for stocks, ETFs, indices, futures, forex and crypto.</li>
+<li><strong>surfaces:</strong> Member dashboard (WordPress/MemberPress, login-gated); Discord/bot channel delivering levels as copy-paste text; invite-only charting integrations — TradingView, NinjaTrader, ATAS, Quantower, Bookmap, Sierra Chart, MotiveWave, TradeStation, TrendSpider, EdgeClear; QUIN AI natural-language screener (Premium and up).</li>
+<li><strong>unit:</strong> A level set per asset — Call Resistance, Put Support, High Volatility Level (gamma flip), Gamma Wall, ranked GEX Levels 1–10, 1D Expected Move, 0DTE variants — plus a Q-Score (four 0–5 sub-scores: Options, Volatility, Momentum, Seasonality from 20 years over the next 5 days) and Swing Model bands (Upper Band, Lower Band, Risk Trigger at 5-day and 20-day horizons).</li>
+<li><strong>cadence:</strong> End-of-day levels (stocks/ETFs/indices 6 PM ET; futures 8 PM ET per one vendor source, ~11 PM ET per its own tutorial; crypto 11 PM ET); intraday indicator updates "14 plus times per day" for ~500+ assets, with ~1,000+ assets reachable only via dashboard/paste.</li>
+<li><strong>mode:</strong> Hybrid — push via bot/Discord text, pull via dashboard; the TradingView path is manual: the customer pastes level text into the indicator's input boxes (up to 20 custom tickers).</li>
+<li><strong>curation:</strong> Algorithmic / ML-claimed, entirely server-side. Level definitions are the standard GEX family, but unlike SpotGamma the arithmetic and dealer-sign convention are never published; Q-Score scales are published, its weights and combination rule are sealed; the Swing Model is a sealed ML claim.</li>
+<li><strong>free_surface:</strong> None evidenced beyond marketing pages and guides; the entry offer is a discounted first month, not a free tier.</li>
+<li><strong>paywall:</strong> Premium $129/mo, Pro $349/mo; first month half price ($59 / $174.50). QUIN is Premium-and-up; charting integrations are invite-gated.</li>
+<li><strong>conversion:</strong> Half-price first month as the acquisition hook; a "7 day money back guarantee" on pricing that the Terms frame as non-refundable "unless explicitly stated"; model-count marketing is inconsistent across its own pages (64+ vs 20+ vs ~24 actually listed).</li>
+<li><strong>actionability:</strong> The most chart-ready unit in the GEX subgroup: levels and bands can be drawn directly on the customer's chart and frame risk, and the vendor frames the 1D range as risk framing, "not meant to predict direction." Still no specific entry, stop or target trade is issued.</li>
+<li><strong>trust_record:</strong> Nothing published to audit — no win-rate or return figure on any public surface, with a plain not-an-adviser / hypothetical-performance disclosure in the Terms. The Swing Model is said to include backtesting inside the product, but no figures or methodology are public. Historical levels are sold "as they were then" — the correct as-was contract — unverifiable without an account.</li>
+</ul>
+<h2>gexradar</h2>
+<ul>
+<li><strong>product:</strong> Dealer-aware GEX terminal with quant widgets, flow scanner, trade journal and platform indicators.</li>
+<li><strong>surfaces:</strong> Web terminal/dashboard; a public interactive demo at /demo; TradingView extension/Pine included; desktop indicator packages (NinjaTrader 8, MotiveWave, ATAS, Sierra Chart, Quantower) as add-ons; AI chat surfaces ("GEX Analyst", homepage assistant); voice rooms; local trade journal.</li>
+<li><strong>unit:</strong> A GEX view per ticker — per-strike call/put/net GEX and OI, Call Wall, Put Wall, Gamma Flip, Max Pain, Vol Trigger, heatmap and client-rendered 3D/IV surfaces — a flow scanner row with Flow Ratio (the one fully published formula: call premium ÷ total premium over unusual prints), and browser-computed widget readings (GARCH(1,1), 3-state HMM regime, Heston calibration, entropy/persistence) combined in a Composite Reading scored −100 to +100 whose weights are sealed.</li>
+<li><strong>cadence:</strong> Marketed as real-time streaming with a 2-second refresh; the shipped client contains a ticketed WebSocket but no 2-second timer — its fastest configured HTTP refresh for GEX is 15 s and other surfaces poll at 20–60 s, so the 2 s figure is unverifiable server-push copy. The vendor's own footer hedges that data "may be delayed or near-real-time."</li>
+<li><strong>mode:</strong> Pull dashboard with push streaming.</li>
+<li><strong>curation:</strong> Algorithmic, split: the GEX core is computed entirely on the vendor's servers (its Privacy Policy states this) and delivered over an encrypted, anti-scraping transport (ECDH + AES-GCM response encryption) that prevents subscriber-side capture/audit; the widget suite is computed in the browser and labelled "educational only" in the UI.</li>
+<li><strong>free_surface:</strong> A public demo running a captured market session (labelled as captured/sample data, verified fixed snapshot) and a 24-hour free trial — card on file, auto-bills at hour 24, one trial per email ever.</li>
+<li><strong>paywall:</strong> Every plan advertises the same full feature list: Monthly $49.99/mo, Annual $37.50/mo billed $449.99/yr, Lifetime $1,499, Academy $299/mo, Academy Lifetime $2,999.99. The five desktop indicators are $15/mo each on Monthly/Annual per the homepage (Terms phrase a single $15 add-on — unreconciled) and included on Lifetime; the TradingView extension is included free.</li>
+<li><strong>conversion:</strong> Lifetime pricing plus a Price Lock Guarantee (rate held while the subscription stays active, forfeited permanently on lapse) as retention mechanics; Academy mentorship as the high-ticket upsell; annual saving of $149.89 reconciles exactly. All sales final — no refunds under any circumstances, expressly including vendor termination without cause.</li>
+<li><strong>actionability:</strong> Levels and widgets are context/education by the vendor's own labels; the Composite Reading gives a bias score but no entry, stop or target. The trade journal records the customer's own trades (locally stored, with equity curve/stats) — record-keeping, not a signal.</li>
+<li><strong>trust_record:</strong> The vendor publishes no performance figure of its own; the trust surface is a displayed Trustpilot badge (4.4, 17 reviews) and selected testimonials mentioning evaluation passes and win-rate improvements. Replay is marketed as as-was pressure-testing, but its own demo strings limit full GEX/wall replay to SPY/SPX/QQQ/NDX recent sessions. History claims are unverifiable and inconsistent (12 years vs 2013, which is 13 years before 2026); no options data vendor is named anywhere — the only source the code names is Yahoo, for history/VIX widgets.</li>
+</ul>
+<hr />
+<h2>Cross-group note</h2>
+<p>Every vendor in this group sells context, not decisions: no unit in any of the twelve contains an entry, stop and target together. The funnel differences are in the free surface and the metering — trial walls (Cheddar, Quant Data, GEXRadar's 24 hours), a genuinely usable free data surface (Bullflow, FlashAlpha, Unusual Whales' trial/API), and billing-period or quota ladders in place of feature tiers (FlowAlgo, InsiderFinance, FlashAlpha). Trust posture splits cleanly: Unusual Whales, Quant Data, SpotGamma and MenthorQ publish no performance claims at all; BlackBoxStocks and Bullflow present hindsight (post-alert high / peak return) as performance; InsiderFinance and Tradytics make accuracy/win-rate claims with no auditable record behind them.</p></article>
+<div class="pager"><a href="index.html">&larr; The Study</a><a href="profiles-g2.html">Profiles 2 &rarr;</a></div>
+<footer>Research by Muse Desk. This study of how trading products are packaged and
+delivered is what the <a href="../morning-map/">Morning Map</a> and the Morgue Engine
+were built from.</footer>
+</div></body></html>

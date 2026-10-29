@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Muse Desk — Terminal</title>
+<style>
+:root{color-scheme:dark;--bg:#0a0c10;--panel:#10141b;--line:#1f2733;--txt:#d7dee8;
+--dim:#8494a9;--teal:#2dd4bf;--red:#f87171;--amber:#fbbf24;--blue:#7dd3fc;--violet:#c4b5fd}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);margin:0;
+ font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+ font-variant-numeric:tabular-nums}
+.wrap{max-width:1460px;margin:0 auto;padding:18px 16px 56px}
+header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;
+ border-bottom:2px solid var(--teal);padding-bottom:10px}
+header.top h1{font-size:24px;margin:0;letter-spacing:.5px}
+header.top .brand{color:var(--teal)}
+.stamp{color:var(--dim);font-size:12.5px}
+.regime{margin-left:auto;display:flex;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:12.5px}
+.chip b{color:var(--amber)}
+h2.zone{font-size:13px;letter-spacing:2.5px;color:var(--dim);margin:26px 0 10px;
+ text-transform:uppercase}
+h2.zone span{color:var(--txt);letter-spacing:.3px;text-transform:none;font-size:13px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid2{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+@media(max-width:900px){.grid3,.grid2{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.sym{font-size:15px;font-weight:700;letter-spacing:1px}
+.big{font-size:32px;font-weight:700;line-height:1.1}
+.mid{font-size:19px;font-weight:700}
+.dim{color:var(--dim);font-size:12.5px}
+.bar{height:8px;background:#1a212d;border-radius:4px;position:relative;margin:8px 0 4px}
+.bar>i{position:absolute;top:0;bottom:0;border-radius:4px}
+.gexwrap{display:flex;align-items:center;gap:8px}
+.gexbar{flex:1;height:12px;background:#1a212d;border-radius:4px;position:relative}
+.gexbar>i{position:absolute;top:0;bottom:0}
+.gexbar .zero{position:absolute;top:-2px;bottom:-2px;width:1px;background:#3d4a5f}
+.ladder{margin-top:10px}
+.ladlabels{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);margin-top:2px}
+.ladlabels b{color:var(--txt);font-size:12.5px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{color:var(--dim);font-weight:600;text-align:left;padding:5px 7px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:.6px}
+td{padding:6px 7px;border-bottom:1px solid #161d27}
+.scorebar{height:6px;background:#1a212d;border-radius:3px;width:110px;display:inline-block;vertical-align:middle;margin-right:8px;position:relative}
+.scorebar>i{position:absolute;top:0;bottom:0;left:0;background:var(--teal);border-radius:3px}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:7px;height:7px;border-radius:50%;background:#26314a;display:inline-block}
+.dots i.on{background:var(--teal)}
+.tag{display:inline-block;border:1px solid #2a3648;border-radius:4px;padding:0 6px;
+ font-size:11.5px;color:var(--blue);margin:1px 2px 1px 0}
+.tag.up{color:var(--teal)} .tag.dn{color:var(--red)}
+.sent-bearish{color:var(--red)} .sent-bullish{color:var(--teal)}
+.rangebar{position:relative;height:7px;background:#1a212d;border-radius:3px;width:150px;display:inline-block;vertical-align:middle}
+.rangebar .fill{position:absolute;top:0;bottom:0;background:#2a3648;border-radius:3px}
+.rangebar .mark{position:absolute;top:-3px;width:2px;height:13px;background:#fff}
+.counters{display:flex;gap:26px;flex-wrap:wrap}
+.counter .n{font-size:30px;font-weight:700}
+.counter .l{color:var(--dim);font-size:12px;letter-spacing:1px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+.tile .nm{font-size:12.5px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .ct{font-size:19px;font-weight:700}
+.tile .ct small{font-size:11px;color:var(--dim);font-weight:400}
+a{color:var(--blue)}
+.rescards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.rescards .panel h3{margin:0 0 6px;font-size:15px}
+.rescards .panel p{margin:0;color:var(--dim);font-size:13px;line-height:1.5}
+footer{border-top:1px solid var(--line);margin-top:34px;padding-top:12px;color:var(--dim);font-size:12.5px;line-height:1.6}
+.heat{display:inline-block;width:64px}
+details summary{cursor:pointer;color:var(--blue);font-size:13.5px;margin-top:10px}
+.scrollbox{max-height:420px;overflow:auto;margin-top:8px}
+.pos{color:var(--teal)} .neg{color:var(--red)}
+</style></head>
+<body><div class="wrap">
+
+<header class="top">
+  <h1><span class="brand">MUSE DESK</span> TERMINAL</h1>
+  <span class="stamp" id="stamp">loading…</span>
+  <div class="regime" id="regime"></div>
+</header>
+
+<h2 class="zone">The Map <span>— where dealer exposure sits, per index</span></h2>
+<div class="grid3" id="mapCards"></div>
+
+<h2 class="zone">The Tape <span>— today's options flow, scored</span></h2>
+<div class="grid3" id="tapeCards"></div>
+
+<h2 class="zone">The Board <span>— the full gate, passed in the open</span></h2>
+<div class="grid2">
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <span class="mid">Qualified today</span><span class="dim" id="boardMeta"></span>
+    </div>
+    <div id="boardTable"></div>
+    <details id="fullListBox"><summary>Show the full ranked list — every name, gate outcome included</summary>
+      <div class="scrollbox" id="fullList"></div>
+    </details>
+  </div>
+  <div class="panel">
+    <div class="mid">ChartsLector ranking</div>
+    <div class="dim" style="margin:2px 0 8px">A separate system, shown beside the Board — never blended with it.</div>
+    <div id="lectorTable"></div>
+  </div>
+</div>
+
+<h2 class="zone">The Record <span>— graded in public, from the ledger</span></h2>
+<div class="panel" id="recordPanel"></div>
+
+<h2 class="zone">The Desk <span>— the paper book at a glance</span></h2>
+<div class="panel" id="deskHead" style="margin-bottom:12px"></div>
+<div class="tiles" id="sleeveTiles"></div>
+
+<h2 class="zone">Research <span>— the work behind the numbers</span></h2>
+<div class="rescards">
+  <div class="panel"><h3><a href="../morning-map/">The Morning Map</a></h3>
+    <p>The daily edition: each index card dated and frozen pre-open, yesterday's card graded against the session that followed.</p></div>
+  <div class="panel"><h3><a href="../funnel-study/">The Funnel Study</a></h3>
+    <p>How 95 trading products package, deliver and sell their output — and the rules this terminal was built under.</p></div>
+  <div class="panel"><h3><a href="../funnel-study/profiles-g1.html">The 96 vendor profiles</a></h3>
+    <p>Every torn-down vendor's delivery model in eight groups: the unit it sells, its cadence, its free surface, its funnel.</p></div>
+  <div class="panel"><h3>Studies</h3><p id="studiesLine">…</p></div>
+</div>
+
+<footer>
+Every number on this page is computed from the desk's own append-only ledger before it is
+displayed, and carries the date of the data it came from. Gamma figures are modelled from
+overnight open interest under a stated dealer-sign convention — a map, not an observation.
+The Board's gate, weights and refusals are published with its picks; a component that has
+not been graded yet says so, with the date its first grade lands.
+</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt$=v=>v==null?"—":"$"+Math.round(v).toLocaleString("en-US");
+const fmtM=v=>v==null?"—":"$"+(v/1e6).toFixed(1)+"M";
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function occ(c){const m=/^([A-Z]+)(\d{2})(\d{2})(\d{2})([CP])(\d{8})$/.exec(c||"");
+  if(!m) return c||"—";
+  return `${m[1]} ${MONTHS[+m[3]-1]} ${+m[4]} ${m[5]==="C"?"Call":"Put"} ${(+m[6]/1000).toLocaleString("en-US")}`;}
+function ladder(m){
+  const lo=Math.min(m.put_wall,m.flip,m.spot)*0.994, hi=Math.max(m.call_wall,m.flip,m.spot)*1.006;
+  const X=v=>((v-lo)/(hi-lo)*300).toFixed(1);
+  return `<svg viewBox="0 0 300 30" width="100%" height="30">
+    <line x1="0" y1="15" x2="300" y2="15" stroke="#26314a" stroke-width="2"/>
+    <line x1="${X(m.put_wall)}" y1="5" x2="${X(m.put_wall)}" y2="25" stroke="#f87171" stroke-width="3"/>
+    <line x1="${X(m.flip)}" y1="3" x2="${X(m.flip)}" y2="27" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3 2"/>
+    <line x1="${X(m.call_wall)}" y1="5" x2="${X(m.call_wall)}" y2="25" stroke="#2dd4bf" stroke-width="3"/>
+    <polygon points="${X(m.spot)},4 ${+X(m.spot)-5},13 ${+X(m.spot)+5},13" fill="#fff"/>
+    <line x1="${X(m.spot)}" y1="13" x2="${X(m.spot)}" y2="27" stroke="#fff" stroke-width="2"/></svg>
+  <div class="ladlabels"><span>PUT WALL <b>${m.put_wall}</b></span><span>FLIP <b>${m.flip}</b></span><span>SPOT <b>${m.spot}</b></span><span>CALL WALL <b>${m.call_wall}</b></span></div>`;
+}
+Promise.all([fetch("../morgue-feed.json").then(r=>r.json()),
+             fetch("../desk-terminal-feed.json").then(r=>r.json())])
+.then(([mg,dk])=>{
+  $("stamp").textContent=`Session ${mg.as_of_session} · published ${new Date(mg.generated_at_utc).toUTCString().slice(0,25)} UTC`;
+  const mc=dk.market_context||{};
+  $("regime").innerHTML=(mc.regime?`<span class="chip">REGIME <b>${mc.regime}</b></span>`:"")
+    +(mc.vix&&mc.vix.close?`<span class="chip">VIX <b>${mc.vix.close}</b></span>`:"")
+    +`<span class="chip">PAPER DESK <b>${(dk.account&&dk.account.status)||"—"}</b></span>`;
+  // ---- MAP ----
+  const gmax=Math.max(...mg.map.map(m=>Math.abs(m.net_gex_b||0)),0.01);
+  $("mapCards").innerHTML=mg.map.map(m=>{
+    const neg=m.net_gex_b<0, w=Math.abs(m.net_gex_b)/gmax*50;
+    const left=neg?50-w:50;
+    const side=m.spot>=m.flip?"above":"below";
+    const sent=m.spot>=m.flip
+      ?"Spot sits above the flip — dealer hedging tends to dampen moves here."
+      :"Spot sits below the flip — dealer hedging tends to amplify moves here.";
+    return `<div class="panel"><div style="display:flex;justify-content:space-between;align-items:baseline">
+      <span class="sym">${m.symbol}</span><span class="dim">spot</span></div>
+      <div class="big">${m.spot}</div>
+      <div class="dim" style="margin-top:8px">NET GAMMA EXPOSURE / 1% MOVE</div>
+      <div class="gexwrap"><div class="gexbar"><span class="zero" style="left:50%"></span>
+        <i style="left:${left}%;width:${w}%;background:${neg?"var(--red)":"var(--teal)"};border-radius:3px"></i></div>
+        <span class="mid" style="color:${neg?"var(--red)":"var(--teal)"}">${m.net_gex_b>0?"+":""}${m.net_gex_b}B</span></div>
+      <div class="ladder">${ladder(m)}</div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px">
+        <span class="dim">DIX (dark-pool short ratio, ${m.dix_date||"—"})</span><b>${m.dix==null?"—":m.dix}</b></div>
+      <div class="bar"><i style="left:0;width:${(m.dix||0)*100}%;background:var(--violet)"></i></div>
+      <div class="dim" style="line-height:1.5">${sent} Chain coverage ${m.coverage} contracts.</div>
+    </div>`;}).join("");
+  // ---- TAPE ----
+  $("tapeCards").innerHTML=mg.tape.map(t=>{
+    const neg=t.net_premium_m<0;
+    return `<div class="panel"><div style="display:flex;justify-content:space-between;align-items:baseline">
+      <span class="sym">${t.symbol}</span><span class="dim">${(t.prints||0).toLocaleString("en-US")} prints</span></div>
+      <div class="dim" style="margin-top:6px">TOTAL PREMIUM</div><div class="mid">$${(t.total_premium_m||0).toFixed(1)}M</div>
+      <div class="dim" style="margin-top:6px">NET PREMIUM (SIGNED BY SIDE)</div>
+      <div class="mid" style="color:${neg?"var(--red)":"var(--teal)"}">${neg?"−":"+"}$${Math.abs(t.net_premium_m).toFixed(1)}M</div>
+      <div class="dim" style="margin-top:6px">${t.high_heat} high-heat prints · ${t.golden_sweeps} golden sweeps · mean heat ${t.mean_heat}</div>
+      <div style="margin-top:8px">${(t.top_alerts||[]).slice(0,3).map(a=>
+        `<div style="padding:5px 0;border-top:1px solid #161d27">
+           <div style="font-size:13px">${occ(a.contract)}</div>
+           <div class="dim">${fmtM(a.premium)} · heat ${a.heat} · <span class="sent-${a.sentiment}">${a.sentiment}</span>${a.golden?" · GOLDEN SWEEP":""}</div>
+         </div>`).join("")}</div>
+    </div>`;}).join("");
+  // ---- BOARD ----
+  const q=mg.board.qualified||[], s=mg.board.summary||{};
+  $("boardMeta").textContent=`${s.scored||0} scored of ${s.universe||0} · ${q.length} qualified · session ${mg.as_of_session}`;
+  $("boardTable").innerHTML=`<table><tr><th>NAME</th><th>SCORE</th><th>CONFIRMING</th><th>TRIGGER</th><th>SUPPORT → TARGET (CLOSE)</th></tr>`
+    +q.map(r=>{
+      const lo=(r.support||r.close)*0.99, hi=(r.resistance||r.close)*1.01;
+      const px=v=>(((v-lo)/(hi-lo))*100).toFixed(1);
+      const range=(r.support&&r.resistance)?`<span class="rangebar"><span class="fill" style="left:${px(r.support)}%;width:${(px(r.resistance)-px(r.support)).toFixed(1)}%"></span><span class="mark" style="left:${px(r.close)}%"></span></span>
+        <span class="dim">${r.support} → ${r.resistance} (${r.close})</span>`:`<span class="dim">close ${r.close}</span>`;
+      const dots=Array.from({length:8},(_,i)=>`<i class="${i<(r.confirming||0)?"on":""}"></i>`).join("");
+      const trig=(r.triggers&&r.triggers.length)?r.triggers.map(t=>`<span class="tag">${t}</span>`).join(""):'<span class="dim">—</span>';
+      return `<tr><td><b>${r.symbol}</b> <span class="dim">${r.sector||""}</span></td>
+        <td><span class="scorebar"><i style="width:${r.score}%"></i></span>${r.score}</td>
+        <td><span class="dots">${dots}</span> ${r.confirming}/8</td>
+        <td>${trig}</td><td>${range}</td></tr>`;}).join("")+"</table>";
+  // ---- LECTOR ----
+  $("lectorTable").innerHTML=`<table><tr><th>#</th><th>NAME</th><th>SCORE</th></tr>`
+    +(dk.lector_top||[]).map(r=>`<tr><td class="dim">${r.rank}</td><td><b>${r.symbol}</b></td>
+      <td><span class="scorebar" style="width:80px"><i style="width:${r.score}%;background:var(--violet)"></i></span>${r.score}</td></tr>`).join("")+"</table>";
+  // ---- RECORD ----
+  const c=(mg.scorecard||{}).counters||{};
+  const bq=(mg.scorecard||{}).board||{};
+  const qual=(bq.qualified&&bq.qualified.horizons)||{};
+  const qline=h=>{const L=qual[h];return L?`<div style="margin-top:6px"><span class="dim">QUALIFIED COHORT ${h.toUpperCase()}:</span> ${L}</div>`:"";};
+  const pub1=(bq.published&&bq.published.horizons)||{};
+  const pline=h=>{const L=pub1[h];return L?`<div style="margin-top:6px"><span class="dim">ALL PUBLISHED ${h.toUpperCase()}:</span> ${L}</div>`:"";};
+  $("recordPanel").innerHTML=`<div class="counters">
+      <div class="counter"><div class="n">${c.units_published??"—"}</div><div class="l">UNITS PUBLISHED</div></div>
+      <div class="counter"><div class="n">${c.units_graded??"—"}</div><div class="l">UNITS GRADED</div></div>
+      <div class="counter"><div class="n">${c.board_rows_logged??"—"}</div><div class="l">BOARD ROWS LOGGED</div></div>
+      <div class="counter"><div class="n">${c.map_cards_of_record??"—"}</div><div class="l">MAP CARDS OF RECORD</div></div>
+    </div>
+    ${qline("1d")}${qline("5d")}${qline("21d")}${pline("1d")}${pline("5d")}${pline("21d")}
+    <div style="margin-top:8px"><span class="dim">MAP GRADING:</span> ${((mg.scorecard||{}).map||{}).line||"—"}</div>
+    <div style="margin-top:4px"><span class="dim">WALL VALIDATION:</span> ${(mg.wall_validation||{}).line||"—"}</div>`;
+  // ---- DESK ----
+  const a=dk.account||{};
+  $("deskHead").innerHTML=`<div class="counters">
+      <div class="counter"><div class="n">${fmt$(a.equity)}</div><div class="l">PAPER EQUITY</div></div>
+      <div class="counter"><div class="n">${fmt$(a.cash)}</div><div class="l">CASH</div></div>
+      <div class="counter"><div class="n">${fmt$(a.buying_power)}</div><div class="l">BUYING POWER</div></div>
+      <div class="counter"><div class="n">${dk.position_count??"—"}</div><div class="l">OPEN POSITIONS</div></div>
+    </div>`;
+  const sl=dk.sleeves||{};
+  $("sleeveTiles").innerHTML=Object.values(sl).map(x=>
+    `<div class="tile"><div class="nm">${x.name||""}</div>
+     <div class="ct">${x.position_count??0} <small>open positions</small></div></div>`).join("");
+  // ---- STUDIES ----
+  const st=mg.studies||{};
+  const stLine=Object.entries(st).map(([k,v])=>{
+    const label={gap_fill:"Gap-fill",orb_ib:"Opening-range / initial balance",earnings_dist:"Earnings distribution",state_vectors:"Market state vectors"}[k]||k;
+    return `${label}: ${v.state==="ok"?"live":(v.reason||v.state||"—")}`;}).join(" · ");
+  $("studiesLine").textContent=stLine||"—";
+  // ---- FULL LIST (lazy) ----
+  $("fullListBox").addEventListener("toggle",async e=>{
+    if(!e.target.open||$("fullList").dataset.done) return;
+    const f=await (await fetch("../board-full.json")).json();
+    $("fullList").innerHTML=`<table><tr><th>NAME</th><th>SCORE</th><th>CONF</th><th>GATE</th></tr>`
+      +(f.rows||[]).map(r=>r.insufficient_data
+        ?`<tr><td>${r.symbol}</td><td colspan="3" class="dim">insufficient data</td></tr>`
+        :`<tr><td>${r.symbol}</td><td>${r.score}</td><td>${r.confirming}</td>
+           <td>${r.qualified?'<span class="pos">QUALIFIED</span>':'<span class="dim">'+(r.gate_fails||[]).join(", ")+"</span>"}</td></tr>`).join("")+"</table>";
+    $("fullList").dataset.done="1";
+  },{once:false});
+}).catch(err=>{$("stamp").textContent="feed load failed: "+err.message;});
+</script>
+</body></html>
