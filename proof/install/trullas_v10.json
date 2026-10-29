@@ -1,0 +1,38 @@
+{
+ "backtest": "NONE (owner ruling: live paper record is the test)",
+ "config": {
+  "cadence_s": 60,
+  "inputs": [
+   "bars",
+   "bars_1min",
+   "bars:QQQ:1Min",
+   "positions",
+   "quotes",
+   "session_fills"
+  ],
+  "parked": false,
+  "session": "rth"
+ },
+ "files": {
+  "adapters/trullas_v10.py": "39cbe53414f57f453d1de2aa0525a68c326ff3bcf65bd666ce45c62e79f2b228",
+  "adapters3/trullas_v10.py": "6aaf8b8bd136f6a1fab3a6a0e97836bce93bb9017efdf367b3b4aa0dce643375",
+  "sleeves/trullas_divergence.py (shared machinery, primary behavior proven identical on golden fixture)": "6f6b7d59818b429192be738dd33728091a8dd487e05931d7e777091d38cf8a9f",
+  "sleeves/trullas_v10.py": "8538b5018cfc75f7a7c6011bb3049b8068a2f36954fdbe411733f0a2f8113d9d",
+  "tests/test_trullas_variants_blockers.py": "112f8517dbb8d9e614d5fab7d74d13168198295400470956b15756f30c1442cb"
+ },
+ "installed": "2026-10-29",
+ "joint": "require_all_three False -> True (count == 3 gate)",
+ "paper_only": true,
+ "sleeve": "trullas_v10",
+ "slice_usd": 10000.0,
+ "spec": {
+  "path": "~/workspace/goals/ai-top50-pattern-study/files/TRULLAS-VARIANTS-SPEC-2026-10-29.md",
+  "primary_spec": "TRULLAS-SPEC-2026-10-25.md v1.0 FROZEN",
+  "version": "v1.0 FROZEN 2026-10-29"
+ },
+ "subtitle": "confirmation strictness: all three divergences required",
+ "test_evidence": {
+  "file": "tests/test_trullas_variants_blockers.py",
+  "note": "per-variant one-joint fixture difference + config/INPUTS wiring + primary identity + unconfirmed-pivot guard; see BUGLOG_2026-10-29.md TRULLAS-VARIANTS-INSTALL-20261029"
+ }
+}

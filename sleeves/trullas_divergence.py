@@ -68,6 +68,34 @@ CONFIG = SleeveConfig(
 )
 
 
+# ------------------------------------------------------------------ params
+# Variant parameter bundle (TRULLAS-VARIANTS-SPEC-2026-10-29). Defaults
+# are the frozen primary values field for field; the primary sleeve uses
+# PRIMARY_PARAMS and its behavior is unchanged (identity proven on the
+# golden fixture pre/post refactor, TRULLAS-VARIANTS-BUILD.md). Each
+# variant subclass overrides exactly ONE field.
+from dataclasses import dataclass, replace as _dc_replace  # noqa: E402
+
+
+@dataclass(frozen=True)
+class TrullasParams:
+    pivot_k: int = PIVOT_K
+    tp2_level: float = TP2_LEVEL
+    include_hidden: bool = False
+    rsi_zone_only: bool = False
+    fallo_admitted: bool = False
+    pyramid: bool = False
+    vol_window: int = 0  # half-width; 0 = single extreme bar (primary)
+    require_all_three: bool = False
+
+
+PRIMARY_PARAMS = TrullasParams()
+
+
+def variant_params(**kw):
+    return _dc_replace(PRIMARY_PARAMS, **kw)
+
+
 # ------------------------------------------------------------------ utils
 def _number(v):
     if isinstance(v, bool):
@@ -142,6 +170,20 @@ def macd_line(closes):
             for f, s in zip(fast, slow)]
 
 
+def macd_signal_line(closes):
+    """EMA(9) of the MACD line (the fallo joint's one extra series)."""
+    line = macd_line(closes)
+    out = [None] * len(line)
+    idx = [i for i, v in enumerate(line) if v is not None]
+    if len(idx) < MACD_SIGNAL:
+        return out
+    vals = [line[i] for i in idx]
+    ema = _ema(vals, MACD_SIGNAL)
+    for pos, i in enumerate(idx):
+        out[i] = ema[pos]
+    return out
+
+
 def rsi_wilder(closes):
     n = len(closes)
     out = [None] * n
@@ -183,17 +225,27 @@ def find_pivots(bars, k=PIVOT_K):
     return highs, lows
 
 
-def detect_setups(bars):
+def detect_setups(bars, params=None):
     """All divergence setups whose decision (confirmation) bar exists
-    in `bars`. Each setup dict carries the frozen Fib geometry."""
+    in `bars`. Each setup dict carries the frozen Fib geometry.
+    `params` defaults to PRIMARY_PARAMS (the frozen primary arm)."""
+    p = params or PRIMARY_PARAMS
     closes = [b["c"] for b in bars]
     macd = macd_line(closes)
     rsi = rsi_wilder(closes)
-    highs, lows = find_pivots(bars)
+    signal_line = macd_signal_line(closes) if p.fallo_admitted else None
+    highs, lows = find_pivots(bars, k=p.pivot_k)
     setups = []
 
     def day(idx):
         return datetime.fromtimestamp(bars[idx]["t"], tz=ET).date()
+
+    def vol_at(idx):
+        if p.vol_window > 0:
+            lo = max(0, idx - p.vol_window)
+            hi = min(len(bars), idx + p.vol_window + 1)
+            return sum(bars[j]["v"] for j in range(lo, hi))
+        return bars[idx]["v"]
 
     for pivots, kind in ((highs, "high"), (lows, "low")):
         for first, second in zip(pivots, pivots[1:]):
@@ -210,33 +262,74 @@ def detect_setups(bars):
                 price_div = second["price"] > first["price"]
                 macd_div = macd[i2] < macd[i1]
                 rsi_div = rsi[i2] < rsi[i1]
+                hidden = (second["price"] < first["price"]
+                          and macd[i2] > macd[i1])
             else:
                 price_div = second["price"] < first["price"]
                 macd_div = macd[i2] > macd[i1]
                 rsi_div = rsi[i2] > rsi[i1]
-            vol_div = bars[i2]["v"] < bars[i1]["v"]
-            if not price_div or not macd_div:
+                hidden = (second["price"] > first["price"]
+                          and macd[i2] < macd[i1])
+            is_hidden = bool(p.include_hidden and hidden
+                             and not (price_div and macd_div))
+            vol_first, vol_second = vol_at(i1), vol_at(i2)
+            if is_hidden:
+                # v05 frozen reading: RSI/volume counting mirrors the
+                # regular case (lower at second high, higher at second low).
+                vol_div = (vol_second < vol_first) if bearish else (vol_second > vol_first)
+                macd_ok = True  # the hidden MACD condition itself
+            else:
+                vol_div = vol_second < vol_first
+                macd_ok = macd_div
+                if not macd_ok and p.fallo_admitted and signal_line is not None:
+                    # v07 frozen reading: within the 5 bars following the
+                    # second extreme the fast line fails to cross the
+                    # signal line in the trade direction and the price
+                    # extreme stays intact. The window ends exactly at
+                    # the confirmation bar (i2 + pivot_k), so it is
+                    # fully knowable at decision time.
+                    win = range(i2 + 1, i2 + 6)
+                    if all(j < len(bars) and macd[j] is not None
+                           and signal_line[j] is not None for j in win):
+                        if bearish:
+                            no_cross = all(macd[j] <= signal_line[j] for j in win)
+                            intact = all(bars[j]["h"] <= second["price"] + TICK
+                                         for j in win)
+                        else:
+                            no_cross = all(macd[j] >= signal_line[j] for j in win)
+                            intact = all(bars[j]["l"] >= second["price"] - TICK
+                                         for j in win)
+                        macd_ok = bool(no_cross and intact)
+            if is_hidden:
+                pass  # hidden price+MACD conditions already checked
+            elif not price_div or not macd_ok:
                 continue  # MACD divergence is REQUIRED (spec section 5)
-            count = int(macd_div) + int(rsi_div) + int(vol_div)
+            # RSI counting (v06: counted only when leaving an extreme zone)
+            rsi_counted = rsi_div
+            if p.rsi_zone_only and rsi_div:
+                rsi_counted = (rsi[i2] > 70.0) if bearish else (rsi[i2] < 30.0)
+            count = int(macd_ok) + int(rsi_counted) + int(vol_div)
+            if p.require_all_three and count != 3:
+                continue  # v10: all three divergences required
             if bearish:
                 a = min(bars[j]["l"] for j in range(i1, i2 + 1))
                 b = second["price"]
                 if b <= a:
                     continue
-                lvl = lambda p: b - p * (b - a)
+                lvl = lambda p_: b - p_ * (b - a)
                 entry_trigger = lvl(ENTRY_LEVEL) - TICK
                 stop = b + TICK
-                tp1, tp2 = lvl(TP1_LEVEL), lvl(TP2_LEVEL)
+                tp1, tp2 = lvl(TP1_LEVEL), lvl(p.tp2_level)
                 direction = -1
             else:
                 a = max(bars[j]["h"] for j in range(i1, i2 + 1))
                 b = second["price"]
                 if a <= b:
                     continue
-                lvl = lambda p: b + p * (a - b)
+                lvl = lambda p_: b + p_ * (a - b)
                 entry_trigger = lvl(ENTRY_LEVEL) + TICK
                 stop = b - TICK
-                tp1, tp2 = lvl(TP1_LEVEL), lvl(TP2_LEVEL)
+                tp1, tp2 = lvl(TP1_LEVEL), lvl(p.tp2_level)
                 direction = 1
             setups.append({
                 "direction": direction, "kind": kind,
@@ -248,7 +341,7 @@ def detect_setups(bars):
                 "swing_a": a, "swing_b": b,
                 "macd_first": macd[i1], "macd_second": macd[i2],
                 "rsi_first": rsi[i1], "rsi_second": rsi[i2],
-                "vol_first": bars[i1]["v"], "vol_second": bars[i2]["v"],
+                "vol_first": vol_first, "vol_second": vol_second,
                 "divergence_count": count,
                 "entry_trigger": entry_trigger, "stop": stop,
                 "tp1": tp1, "tp2": tp2,
@@ -260,6 +353,8 @@ def detect_setups(bars):
 # ------------------------------------------------------------------ sleeve
 class TrullasDivergenceSleeve(BaseSleeve):
     CONFIG = CONFIG
+    PARAMS = PRIMARY_PARAMS
+    REASON_LABEL = "trullas_divergence primary"
 
     def signal(self, bars, slice_state, ctx):
         extra = ctx.extra or {}
@@ -269,7 +364,7 @@ class TrullasDivergenceSleeve(BaseSleeve):
             state = {"day": session, "entries_today": 0,
                      "realized_pnl": 0.0, "pending": None, "plan": None,
                      "traded_pairs": []}
-        self.last_evaluation = {"sleeve": CONFIG.sleeve_id,
+        self.last_evaluation = {"sleeve": self.CONFIG.sleeve_id,
                                 "session": session, "state": "scanning"}
         raw = (bars or {}).get(SYMBOL) or []
         bars1m = _rth_bars(raw)
@@ -296,7 +391,7 @@ class TrullasDivergenceSleeve(BaseSleeve):
             return []
 
         # ---- refresh pending setup from confirmations on/before now --
-        setups = [s for s in detect_setups(bars1m)
+        setups = [s for s in detect_setups(bars1m, self.PARAMS)
                   if s["session"] == session
                   and s["confirm_t"] <= latest["t"]
                   and (s["first_index"], s["second_index"])
@@ -374,14 +469,15 @@ class TrullasDivergenceSleeve(BaseSleeve):
             [pending["first_index"], pending["second_index"]])
         state["plan"] = {
             "direction": d, "entry": fill_px, "stop": stop,
+            "stop_orig": stop,
             "tp1": pending["tp1"], "tp2": pending["tp2"],
-            "tp1_done": False, "qty_initial": qty,
+            "tp1_done": False, "qty_initial": qty, "added": False,
             "session": session}
         state["pending"] = None
         self.last_evaluation["state"] = "entry_intent"
         self.last_evaluation["divergence_count"] = units
         reason = (
-            f"trullas_divergence primary {'short' if d == -1 else 'long'}: "
+            f"{self.REASON_LABEL} {'short' if d == -1 else 'long'}: "
             f"divergences={units}; swing_a={pending['swing_a']:.4f}; "
             f"swing_b={pending['swing_b']:.4f}; entry={fill_px:.4f}; "
             f"stop={stop:.4f}; tp1={pending['tp1']:.4f}; "
@@ -427,6 +523,36 @@ class TrullasDivergenceSleeve(BaseSleeve):
             self.last_evaluation["state"] = "stop_exit"
             return [self._exit(latest, abs(signed), signed,
                                f"trullas stop hit stop={stop:.4f}")]
+        # v08 pyramiding on strength (primary PARAMS.pyramid is False,
+        # so this block is inert for the primary): one add of 1 unit at
+        # +0.5R, evaluated before TP1, stop-first still supreme above;
+        # at the add the whole position's stop moves to entry.
+        if self.PARAMS.pyramid and not plan.get("added") and not plan.get("tp1_done"):
+            r_dist = abs(float(plan["entry"]) - float(plan.get("stop_orig", plan["stop"])))
+            if r_dist > 0:
+                fav = (latest["l"] <= float(plan["entry"]) - 0.5 * r_dist) if d == -1 \
+                    else (latest["h"] >= float(plan["entry"]) + 0.5 * r_dist)
+                if fav:
+                    equity = _number(ctx.equity) or 0.0
+                    add_qty = int(math.floor(min(
+                        UNIT_RISK_PCT * equity / r_dist,
+                        NOTIONAL_CAP_PCT * equity / float(plan["entry"])))) if equity > 0 else 0
+                    if add_qty > 0:
+                        plan["added"] = True
+                        plan["stop"] = float(plan["entry"])
+                        plan["qty_initial"] = int(plan.get("qty_initial") or 0) + add_qty
+                        self.last_evaluation["state"] = "pyramid_add"
+                        return [Intent(
+                            "enter", SYMBOL, qty=add_qty,
+                            price_hint=float(plan["entry"]),
+                            stop=float(plan["entry"]), target=float(plan["tp2"]),
+                            exit_rules=(ExitRule("stop", float(plan["entry"])),
+                                        ExitRule("target", float(plan["tp2"]))),
+                            reason=(f"{self.REASON_LABEL} pyramid add 1 unit at "
+                                    f"+0.5R; qty={add_qty}; stop to entry"),
+                            side="sell" if d == -1 else "buy",
+                            position_intent="sell_to_open" if d == -1 else "buy_to_open",
+                            signal_date=plan.get("session"))]
         if not plan.get("tp1_done"):
             tp1 = float(plan["tp1"])
             tp1_hit = (latest["l"] <= tp1) if d == -1 else (latest["h"] >= tp1)
