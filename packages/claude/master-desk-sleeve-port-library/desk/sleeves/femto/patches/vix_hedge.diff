@@ -1,0 +1,189 @@
+--- femto-lean@7f2a996/sleeves/vix_hedge.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/vix_hedge.py
+@@ -1,38 +1,32 @@
+ """VIX Hedge — portfolio tail insurance — lean-desk port (Wave B).
+ 
+-EXTRACTED from the old desk's vix_hedge_sleeve.py. When the market is
+-complacent (VIX < 16 OR 30-day VIX percentile < 25), buy cheap
+-~90-DTE VXX calls (~25 delta) as tail insurance. INSURANCE: loses
+-money most quarters by design; size small (1% of equity per hedge,
+-max 1 hedge), never add to losers. See ports/vix_hedge.md.
+-
+-** NO-CUTOVER-UNTIL-FLAT **: the old desk holds an open VXX hedge
+-(8x Dec $20 calls per the design spec section 4). This port is
+-code-complete but must NOT cut over until that position is flat on
+-the old desk or its state is imported explicitly and reconciled.
+-
+-Complacency is a pure function of the VIX close series the core Data
+-door supplies (extra["vix_closes"], oldest->newest). Fail-closed:
+-no VIX read = NOT complacent. (The old last-good-cache path with its
+-2.5-day staleness TTL is core Data state, not sleeve logic; a cached
+-read arrives already staleness-labeled by the core.)
+-Vehicle: VXX calls 60-110 DTE; per expiry the strike nearest 1.20x
+-spot (the documented ~25-delta proxy — no Greeks on the chain);
+-expiries tried closest-to-90-DTE first; first with a two-sided quote
+-inside the 20% spread gate wins; none => no_hedge_vehicle (fail
+-closed). Drawdown brake: DELIBERATELY EXEMPT (2026-10-10) — a tail
+-hedge must be buyable during drawdowns; recorded here so core Risk
+-skips the brake for this sleeve's entries.
+-Exits (never gated): +100% of debit, VIX > 30 spike, 21-DTE floor.
++master-desk: the old desk's vix_hedge_sleeve.py restored on the engine. When the market is complacent (VIX < 16
++OR its 30-day percentile < 25), buy cheap ~90-DTE VXX calls (~25 delta) as tail insurance. INSURANCE: loses money
++most quarters by design; 1% of equity per hedge, one hedge at a time, never added to.
++
++  read ..... the ^VIX daily closes ending at the live VIX (the old read Yahoo's daily series, whose last value is
++             the session's running VIX); percentile = the share of the last 30 values strictly below the newest.
++  entry .... complacent, flat (no hedge held or working): VXX calls 60-110 DTE; per expiry the strike nearest
++             1.20 x spot; expiries closest to 90 DTE first; the first with a two-sided quote whose spread is
++             <= 20% of mid wins (none: no hedge vehicle); floor(1% of equity / (ask x 100)) contracts (0: skip);
++             buy to open, limit at the ask.
++  exits .... (never gated; checked every pass, complacent or not) the call's mid worth >= 2x the debit paid
++             (+100%), the live VIX > 30 (the hedge worked), <= 21 days to expiry (the roll); sell to close,
++             limit at the mid.
++
++Gone under the cutover doctrine: the risk gate (kill switch, daily loss), the Decision #75 chart gate (pre_buy
++staging, its 24h pending TTL and release replay), the 150% desk cap (the drawdown brake never applied: exempt).
++Named divergences: passes hourly at :49 in the session (the old cron ran hourly at :49 around the clock); the
++spot is VXX's live quote (the old read the latest SIP daily bar's close); candidate quotes come from the chain
++snapshot (the old made a separate latest-quote call for them); the debit is the fill (book average).
+ 
+ Inputs via context.extra:
+-  "vix_closes": [float, ...] (the ^VIX daily closes; price-only use
+-                of Yahoo is the standing desk exception)
+-  "chains":     {"VXX": [{"symbol","strike","expiration"}]} (calls)
+-  "quotes":     {OCC: {"bid","ask"}}
+-  "sleeve_state": {"VXX": {"position": {...} | None}}
+-Bars (arg): {"VXX": daily bars} for the spot reference.
+-"""
++  "vix_closes"  [float, ...] the ^VIX daily closes, oldest first, ending at the live VIX
++  "chain"       {"VXX": chain rows {"symbol","strike","expiration","type","bid","ask",...}} (calls)
++  "option_quotes" {OCC: {"bid","ask"}} — the held call
++  "quotes"      {"VXX": {"bid","ask","last"}} — the spot
++  "sleeve_state" {"VXX": {"position": {"qty","entry_px","occ",...} | None, "pending_entry": ...}}
++Bars (arg): {"VXX": daily bars} (the spot when no quote)."""
+ import math
+ from datetime import datetime, timezone
+ 
+@@ -69,8 +63,8 @@
+ 
+ 
+ def vix_complacent(closes):
+-    """(complacent, vix, percentile). Fail-closed on no read."""
+-    if not closes:
++    """(complacent, vix, percentile). Fail-closed on no read (the old fetch refused fewer than 35 closes)."""
++    if not closes or len(closes) < VIX_PCTL_LOOKBACK + 5:
+         return False, None, None
+     vix = closes[-1]
+     pctl = vix_percentile(closes)
+@@ -159,57 +153,83 @@
+     def signal(self, bars, slice_state, context):
+         extra = context.extra or {}
+         state = extra.get("sleeve_state") or {}
+-        chains = extra.get("chains") or {}
+-        quotes = extra.get("quotes") or {}
++        oq = extra.get("option_quotes") or {}
+         equity = float(context.equity or 0.0)
+         complacent, vix, pctl = vix_complacent(extra.get("vix_closes") or [])
+         st = state.get(HEDGE_UNDERLYING) or {}
+         pos = st.get("position")
+-        bl = bars.get(HEDGE_UNDERLYING) or []
+-        spot = float(bl[-1]["c"]) if bl else 0.0
+         intents = []
+         if pos:
+             qty = int(float(pos.get("contracts") or pos.get("qty") or 0))
+-            if qty > 0:
+-                q = quotes.get(pos.get("occ")) or {}
++            occ = pos.get("occ")
++            if qty > 0 and occ and not pos.get("exit_submitted"):
++                q = oq.get(occ) or {}
+                 try:
+-                    mid = (float(q["bid"]) + float(q["ask"])) / 2 \
+-                        if q.get("bid") and q.get("ask") else None
++                    mid = (float(q["bid"]) + float(q["ask"])) / 2 if q.get("bid") and q.get("ask") else None
+                 except (TypeError, ValueError):
+                     mid = None
+                 dte = None
+                 try:
+                     from datetime import date as _date
+-                    dte = (_date.fromisoformat(str(pos["expiry"])[:10])
++                    dte = (_date.fromisoformat(str(pos.get("expiry") or occ_expiry(occ))[:10])
+                            - _date.fromisoformat(context.session)).days
+-                except (ValueError, TypeError, KeyError):
++                except (ValueError, TypeError):
+                     pass
+-                reason = exit_due(pos, dte, mid, vix)
+-                if reason:
++                p = dict(pos, contracts=qty, entry_debit=float(pos.get("entry_px") or 0) * qty * 100)
++                reason = exit_due(p, dte, mid, vix)
++                if reason and mid:                        # close_hedge sells at the mid; no mid, no order
++                    order = {"type": "limit", "limit_price": round(mid, 2), "window_s": 3600}
+                     intents.append(Intent(
+-                        "exit", HEDGE_UNDERLYING, qty_hint=qty,
+-                        price_hint=round(spot, 2) if spot else None,
+-                        reason="vix_hedge exit: %s occ=%s" % (reason, pos.get("occ"))))
+-            return intents
+-        if not complacent or equity <= 0 or spot <= 0:
+-            return intents
+-        hedge = pick_hedge_call(chains.get(HEDGE_UNDERLYING), quotes, spot,
+-                                context.session)
++                        "exit", HEDGE_UNDERLYING, qty_hint=qty, order=order,
++                        signal_key="%s:%s:exit" % (occ, context.session),
++                        reason="vix_hedge exit: %s occ=%s mid=%s vix=%s" % (reason, occ, mid, vix)))
++            return intents
++        if st.get("pending_entry") or not complacent or equity <= 0:
++            return intents
++        spot = spot_of(extra.get("quotes"), bars)
++        if not spot:
++            return intents
++        hedge = pick_hedge_call((extra.get("chain") or {}).get(HEDGE_UNDERLYING),
++                                {r["symbol"]: r for r in (extra.get("chain") or {}).get(HEDGE_UNDERLYING) or []
++                                 if r.get("symbol")}, spot, context.session)
+         if not hedge:
+             return intents  # no_hedge_vehicle: fail closed, do nothing
+         qty = size_contracts(equity, hedge["ask"])
+         if qty <= 0:
+             return intents
+         intents.append(Intent(
+-            "enter", HEDGE_UNDERLYING, qty_hint=qty, price_hint=round(spot, 2),
+-            reason="vix_hedge long_call: occ=%s strike=%.2f expiry=%s dte=%d "
+-                   "ask=%.2f vix=%.2f pctl30=%.1f structure=long_call "
+-                   "dte_window=%d-%d strike_rule=nearest(1.20*spot) "
+-                   "brake_exempt=tail_hedge"
+-                   % (hedge["occ"], hedge["strike"], hedge["expiry"],
+-                      hedge["dte"], hedge["ask"], vix, pctl,
+-                      DTE_MIN, DTE_MAX)))
++            "enter", HEDGE_UNDERLYING, qty_hint=qty, asset="option",
++            legs=({"symbol": hedge["occ"], "side": "buy", "ratio": 1, "position_intent": "buy_to_open"},),
++            order={"type": "limit", "limit_price": hedge["ask"], "window_s": 3600},
++            signal_key="%s:%s:hedge" % (hedge["occ"], context.session),
++            position_meta={"occ": hedge["occ"], "expiry": hedge["expiry"], "strike": hedge["strike"],
++                           "dte_at_entry": hedge["dte"], "ask": hedge["ask"], "vix": round(vix, 2),
++                           "pctl30": round(pctl, 1) if pctl is not None else None, "ref_px": hedge["ref_px"]},
++            reason="vix_hedge long call: %s strike %.2f expiry %s dte %d ask %.2f x%d; vix %.2f pctl30 %.1f "
++                   "(complacent); strike nearest 1.20 x spot %.2f"
++                   % (hedge["occ"], hedge["strike"], hedge["expiry"], hedge["dte"], hedge["ask"], qty, vix,
++                      pctl, spot)))
+         return intents
++
++
++def occ_expiry(occ):
++    s = str(occ)[-15:]
++    return "20%s-%s-%s" % (s[0:2], s[2:4], s[4:6])
++
++
++def spot_of(quotes, bars):
++    """VXX's live price: the quote's mid when two-sided, else its last, else the last daily close."""
++    q = (quotes or {}).get(HEDGE_UNDERLYING) or {}
++    try:
++        bid, ask, last = q.get("bid"), q.get("ask"), q.get("last")
++        if bid and ask and float(ask) >= float(bid) > 0:
++            return (float(bid) + float(ask)) / 2
++        if last and float(last) > 0:
++            return float(last)
++    except (TypeError, ValueError):
++        pass
++    bl = (bars or {}).get(HEDGE_UNDERLYING) or []
++    return float(bl[-1]["c"]) if bl else 0.0
+ 
+ 
+ def signal(bars, slice_state, context):

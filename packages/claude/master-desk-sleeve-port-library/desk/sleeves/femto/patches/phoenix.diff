@@ -1,0 +1,214 @@
+--- femto-lean@7f2a996/sleeves/phoenix.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/phoenix.py
+@@ -26,12 +26,15 @@
+   Risk: 0.25% equity/trade on the -25% stop distance => 1.0% notional
+   target; 1-share minimum (overshoot flagged, Decision #20); max 8
+   concurrent Phoenix positions; 25% sleeve notional cap (Decision #44).
+-  Earnings (Decision #8): entries vetoed from 3 days before through the
+-  earnings date; stale/missing calendar halts ALL entries fail-closed;
+-  a symbol absent from the calendar is skipped fail-closed.
+   De-overlap: an entry day on/before the last exit day is skipped.
+   Auto-pause (Decision #49): 3 disaster-stop hits in the trailing 20
+   closed trades halt new entries; resume is User's explicit call only.
++
++master-desk — gone under the cutover doctrine: the Decision #8 earnings
++blackout (3 days before through the earnings date; a stale or missing
++calendar or an unknown date blocked entries). The SPEC's section 5 adopts
++"the desk's existing earnings-blackout semantics": a desk-wide rail, not
++a Phoenix rule.
+ 
+ Inputs the core injects (context.extra) — the sleeve reads nothing else:
+   "sleeve_state": {SYM: {"pending_signals": [...], "pending_entry": ...,
+@@ -39,7 +42,6 @@
+   "meta":         {"closed_trades": [...],
+                     "entries_paused_by_disaster_rule": bool}
+   "forming":      {SYM: {"o": .., "c": .., "v": ..}}  (today's session)
+-  "earnings":     {SYM: "YYYY-MM-DD" | None}, "earnings_fresh": bool
+   "broker_qty":   {SYM: qty}   (absent key == unreadable == fail closed)
+   "foreign_holders": {SYM: [sleeve, ...]}  (Decision #46 co-hold view)
+ Pending-signal bookkeeping is a pure function of the bars plus that
+@@ -70,8 +72,6 @@
+ RISK_FRACTION = 0.0025  # per-trade risk budget (Phase convention)
+ MAX_POSITIONS = 8       # Phoenix-local cap (desk-wide 10 is core Risk's)
+ SLEEVE_NOTIONAL_CAP = 0.25  # sleeve notional <= 25% of equity
+-EARNINGS_STALE_DAYS = 8     # Sunday refresh cadence (fail-closed rule)
+-BLACKOUT_DAYS_BEFORE = 3    # Decision #8: 3 days before through earnings day
+ COST_BPS = 0.0005           # 5bp/side cost assumption (paper calibration ref)
+ 
+ CONFIG = SleeveConfig(
+@@ -201,31 +201,6 @@
+     return qty, bool(qty * ref_px > target)
+ 
+ 
+-def earnings_entry_veto(sym, entry_date_iso, earnings, fresh):
+-    """None when the entry is clear; otherwise a veto reason string.
+-    earnings: {SYM: 'YYYY-MM-DD' | None}; None = confirmed no earnings.
+-    Absent symbol = unknown date => fail closed. Stale/missing calendar
+-    => every entry vetoed. Decision #8 window: 3 days before through
+-    the earnings date."""
+-    if not fresh:
+-        return "stale_calendar"
+-    if sym not in earnings:
+-        return "unknown_date"
+-    ed = earnings[sym]
+-    if ed is None:
+-        return None
+-    try:
+-        from datetime import date as _date
+-        e = _date.fromisoformat(str(ed)[:10])
+-        entry = _date.fromisoformat(entry_date_iso)
+-    except ValueError:
+-        return "unknown_date"
+-    delta = (e - entry).days
+-    if 0 <= delta <= BLACKOUT_DAYS_BEFORE:
+-        return "blackout_window"
+-    return None
+-
+-
+ def detect_provisional_red(forming, prior_close=None):
+     """True when the 15:55 session read says red: last < the day's OPEN.
+     SPEC #39 (frozen): close_d < open_d — the day's OWN open, NOT the
+@@ -344,10 +319,8 @@
+     def signal(self, bars, slice_state, context):
+         extra = context.extra or {}
+         state = extra.get("sleeve_state") or {}
+-        meta = extra.get("meta") or {}
++        meta = latched_meta(extra, context.session)   # master-desk: a stop filled since the last pass latches #49 now
+         forming_map = extra.get("forming") or {}
+-        earnings = extra.get("earnings") or {}
+-        earnings_fresh = bool(extra.get("earnings_fresh"))
+         broker_qty = extra.get("broker_qty")  # None == unreadable
+         foreign = extra.get("foreign_holders") or {}
+         spy = bars.get(REGIME_PROXY)
+@@ -355,6 +328,7 @@
+         now_et = datetime.fromtimestamp(float(context.now), tz=ET)
+         in_window = (15, 55) <= (now_et.hour, now_et.minute) < (16, 0)
+         intents = []
++        book = {s: v for s, v in state.items() if isinstance(v, dict)}   # master-desk: this pass's entries count
+         for sym in CONFIG.universe:
+             bl = bars.get(sym)
+             if not bl or len(bl) < WARMUP_BARS + 1:
+@@ -368,12 +342,14 @@
+                 if ex is not None:
+                     intents.append(ex)
+                     continue
+-                en = self._entry_intent(sym, merged, state, bl, context, meta,
+-                                        forming_map, earnings,
+-                                        earnings_fresh, broker_qty,
++                en = self._entry_intent(sym, merged, book, bl, context, meta,
++                                        forming_map, broker_qty,
+                                         foreign, today_iso)
+                 if en is not None:
+                     intents.append(en)
++                    # old maybe_enter: the pending_entry is written before the submit, so the 8-slot and 25%
++                    # notional caps of every later symbol in this pass already count it
++                    book[sym] = dict(merged, pending_entry={"qty": en.qty_hint, "ref_px": en.price_hint})
+         return intents
+ 
+     # -- exits (never gated; the core clamps qty to this sleeve's slice)
+@@ -414,8 +390,7 @@
+     #    desk-wide gates — chart gate, brake, cap, breaker, kill switch —
+     #    are the core's, downstream of this intent)
+     def _entry_intent(self, sym, st, state, bars, context, meta, forming_map,
+-                      earnings, earnings_fresh, broker_qty, foreign,
+-                      today_iso):
++                      broker_qty, foreign, today_iso):
+         if st.get("position") or st.get("pending_entry"):
+             return None
+         # Broker cross-check (old 2026-10-06/10-10): unreadable book
+@@ -452,8 +427,6 @@
+         # ---- core state — the intent simply is not emitted.
+         if not deoverlap_ok(today_iso, st.get("last_exit_date")):
+             return None
+-        if earnings_entry_veto(sym, today_iso, earnings, earnings_fresh):
+-            return None
+         equity = float(context.equity or 0.0)
+         if equity <= 0:
+             return None  # old: equity unknown consumed the signal
+@@ -474,6 +447,86 @@
+                              % (ps["signal_date"], wday, overshoot))
+ 
+ 
++def next_symbol_state(bars, slice_state, context, intents):
++    """master-desk: the per-symbol state the old sleeve wrote (M1/M2), recomputed purely:
++    pending_signals merged by record_signals, and the active signal CONSUMED (entered=True) exactly where the
++    old maybe_enter consumed it — on submit, and on a red day vetoed by de-overlap / unknown
++    equity / max positions / notional cap. Pause, broker-unreadable, no forming bar and not-red leave the
++    window open (not consumed)."""
++    extra = context.extra or {}
++    state = extra.get("sleeve_state") or {}
++    meta = latched_meta(extra, context.session)
++    forming_map = extra.get("forming") or {}
++    broker_qty = extra.get("broker_qty")
++    foreign = extra.get("foreign_holders") or {}
++    spy = bars.get(REGIME_PROXY)
++    today_iso = context.session
++    now_et = datetime.fromtimestamp(float(context.now), tz=ET)
++    in_window = (15, 55) <= (now_et.hour, now_et.minute) < (16, 0)
++    entered = {i.symbol: i for i in intents if i.kind == "enter"}
++    pass_book = {s: v for s, v in state.items() if isinstance(v, dict)}
++    out = {}
++    for sym in CONFIG.universe:
++        bl = bars.get(sym)
++        if not bl or len(bl) < WARMUP_BARS + 1:
++            continue
++        st = state.get(sym) or {}
++        rows = record_signals(st, sym, bl, spy, today_iso)
++        merged = dict(st, pending_signals=rows)
++        ps = active_signal(merged)
++        if ps is not None and sym in entered:
++            ps["entered"] = True
++            en = entered[sym]
++            pass_book[sym] = dict(merged, pending_entry={"qty": en.qty_hint, "ref_px": en.price_hint})
++        elif ps is not None and in_window and not st.get("position") and not st.get("pending_entry") \
++                and broker_qty is not None and sym in broker_qty \
++                and (broker_qty[sym] == 0 or foreign.get(sym)):
++            dates = _dates(bl)
++            loc = _bar_loc(dates, ps.get("signal_date"))
++            wday = None if loc is None else (len(bl) - 1 - loc) + 1
++            forming = forming_map.get(sym)
++            if wday is not None and 1 <= wday <= ENTRY_WINDOW and not entries_paused(meta) \
++                    and forming is not None and detect_provisional_red(forming):
++                ref_px = float(forming["c"])
++                equity = float(context.equity or 0.0)
++                book = dict(pass_book)                 # this pass's earlier entries hold slots and notional
++                book[sym] = merged
++                consumed = (not deoverlap_ok(today_iso, st.get("last_exit_date"))
++                            or equity <= 0 or count_positions(book) >= MAX_POSITIONS)
++                if not consumed:
++                    qty, _ = size_qty(equity, ref_px)
++                    consumed = sleeve_notional(book) + qty * ref_px > SLEEVE_NOTIONAL_CAP * equity
++                if consumed:
++                    ps["entered"] = True
++        out[sym] = {"pending_signals": rows}
++    return out
++
++
++def latched_meta(extra, session=None):
++    """master-desk: the Decision #49 latch exactly as the old _close_position -> _maybe_disaster_pause set it —
++    checked after EVERY recorded close (each prefix of the closed trades since the last check), so a pass sees
++    a pause latched by a stop that filled since the previous pass; once latched it stays latched (resume =
++    an explicit ruling)."""
++    meta = dict(extra.get("meta") or {})
++    trades = list(extra.get("closed_trades") or [])
++    seen = float(meta.get("closes_checked_to") or 0.0)
++    if not meta.get("entries_paused_by_disaster_rule"):
++        for k, t in enumerate(trades):
++            if float(t.get("closed_at") or 0.0) <= seen:
++                continue
++            if disaster_pause_check(trades[:k + 1]):
++                meta["entries_paused_by_disaster_rule"] = True
++                meta["paused_at"] = session
++                break
++    if trades:
++        meta["closes_checked_to"] = max(seen, max(float(t.get("closed_at") or 0.0) for t in trades))
++    return meta
++
++
++def next_meta(bars, slice_state, context):
++    return latched_meta(context.extra or {}, context.session)
++
++
+ def _plus25(entry_date_iso):
+     """entry_date + 25 calendar days, ISO (old exit failsafe horizon)."""
+     from datetime import date as _date, timedelta as _td

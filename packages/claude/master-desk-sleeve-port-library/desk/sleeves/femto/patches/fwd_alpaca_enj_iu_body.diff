@@ -1,0 +1,232 @@
+--- femto-lean@7f2a996/sleeves/fwd_alpaca_enj_iu_body.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/fwd_alpaca_enj_iu_body.py
+@@ -1,38 +1,203 @@
+-"""FWD Alpaca ENJ IU-body — lean-desk port (Wave D, Decision #119).
+-
+-EXTRACTED from aurelia_alpaca_forward.py BOOKS: FWD_ALPACA_ENJ_IU_BODY_V1
+-(preserves PUBLIC_IU_BODY_SPOT100) is listed=False in the source: the
+-venue returned HTTP 404 for ENJ/USD (and ENJ/USDT is absent); the
+-original ENJUSDT sleeve stays blocked on Binance HTTP 451 and NO other
+-ticker is substituted. The port preserves the ruling exactly: this
+-sleeve never emits an intent, and LIST_ERROR carries the source's
+-reason verbatim. If the venue ever lists the pair, that is a new
+-ruling, not a silent un-block.
+-
+-VIRTUAL BOOK MAPPING: none while unlisted — no account is funded.
+-"""
+-from .compat import BaseSleeve, SleeveConfig
+-
+-LIST_ERROR = ("Alpaca GET /v2/assets/ENJ/USD returned HTTP 404 asset not found. "
+-              "ENJ/USDT is also absent. The original ENJUSDT sleeve stays blocked "
+-              "on Binance HTTP 451. No other ticker is substituted.")
++"""FWD_ALPACA_ENJ_IU_BODY_V1 — the Aurelia source desk's USD forward of the public IU big-body spot recipe
++(PUBLIC_IU_BODY_SPOT100), operational on the master desk.
++
++Source: Agentic-Trading-Desk aurelia-paper-desk @1720157f768e desk/alpaca_forward.py BOOKS (vendored verbatim:
++desk/vendor/aurelia/forward.py) on strategies/public_recipes/public_source_sleeves.py of the Ausar archive (vendored
++byte-exact: desk/vendor/ausar/public_source_sleeves.py). The book is iu_body on ENJ/USD 5-minute bars, warmup 60,
++listed=False: Alpaca returned HTTP 404 for ENJ/USD (ENJ/USDT absent too), the original ENJUSDT sleeve was blocked on
++Binance HTTP 451, and the book's entry, exit, stop and sizing were left "Not installed" for want of a listing.
++
++Operational here (the owner's directive: a sleeve whose venue does not list its instrument trades on a sim venue on
++live quotes of a venue that does):
++  venue ..... Kraken spot ENJ/USD (pair ENJUSD) on the labelled sim venue sim:kraken (SPOT:KRAKEN:ENJUSD), on
++              Kraken's 5-minute OHLC and ticker (Coinbase delisted ENJ-USD), Kraken's spot taker fee.
++  entry ..... the recipe's own long_signal (source_features iu_body at its defaults: the last body above 4 x the
++              inclusive-21 body baseline / 20, close above open) on a completed 5-minute bar, through the source
++              forward's decide() exactly as its two listed siblings install their recipes: a decision only within
++              300 s of the bar's close, a quote no older than 10 s, spread at most 100 bps, an IOC at the ask for
++              floor(10% of $100,000 / ask) to 8 decimals, flat only (no pyramid), long only (no locate).
++  exit ...... the recipe's own exit (public_source_sleeves.step, iu_body): an ATR(14) x 2 trailing stop — on the first
++              completed bar after the fill avg - dist, then max(old, close - dist), with the ATR of the bars up to
++              that bar — sold by an IOC at the bid once the bid is at or below the stop. One send per bar and side.
++
++Named divergences (counted in tests/test_femto_fwd_enj.py):
++  1. venue_substitution: Kraken ENJUSD on the sim venue for the unlisted Alpaca pair;
++  2. installed_rules: the entry, stop and sizing are the recipe's own and the siblings' (the source book had none);
++  3. stop_execution: the recipe handed its executor a stop plan; here the desk's 60 s pass sells at the bid once the
++     bid is through the stop;
++  4. sale_uncapped: a sale is never refused by the 10% entry cap (the siblings' source refused to sell a holding
++     worth more than $10,000.01);
++  5. quote_age: Kraken's ticker has no exchange time, so the 10 s quote age runs from the desk's receipt to the
++     decision (a ticker read during the pass is 0 s old; Alpaca's quotes carried their own time).
++
++Inputs via context.extra:
++  "quote"         {"bid","ask","t"} Kraken's latest ENJUSD ticker, t = when the desk read it (epoch)
++  "meta"          {"sent": {client_order_id: epoch}, "stop": {"opened_at", "stop", "through"}}
++  "sleeve_state"  {"ENJUSD": {"position": {"qty", "entry_px", "opened_at", "entry_close_at", "exit_submitted"} | None,
++                   "pending_entry"}}
++Bars: {"ENJUSD": completed 5m bars {"t","o","h","l","c","v"}} (Kraken spot)."""
++from datetime import datetime, timedelta, timezone
++from decimal import Decimal
++
++from .compat import BaseSleeve, Intent, SleeveConfig
++from ...vendor.aurelia import forward as FWD
++
++SOURCE = next(b for b in FWD.BOOKS if b["id"] == "FWD_ALPACA_ENJ_IU_BODY_V1")
++SPEC = dict(SOURCE, listed=True,
++            entry="The recipe's iu_body long_signal on a completed 5-minute bar (Kraken ENJUSD), IOC at the ask.",
++            exit="The recipe's ATR(14) x 2 trailing stop, IOC at the bid once the bid is through it.",
++            stop="The recipe's trailing stop (public_source_sleeves.step iu_body).",
++            sizing="Up to 10 percent of the 100000 paper budget, long only.")
++SYMBOL = "ENJUSD"
++FETCH_BARS = 300
++SENT_KEEP_S = 7 * 86400
++MEMO = "_fwd_enj_iu_body"
+ 
+ CONFIG = SleeveConfig(
+-    sleeve_id="fwd_alpaca_enj_iu_body", cadence_s=300, universe=("ENJ/USD",),
+-    state_schema={}, risk_pct=None)
+-
+-
+-def status():
+-    return {"id": "FWD_ALPACA_ENJ_IU_BODY_V1", "preserves": "PUBLIC_IU_BODY_SPOT100",
+-            "status": "BLOCKED", "reason": LIST_ERROR, "orders_disabled": True}
++    sleeve_id="fwd_alpaca_enj_iu_body", cadence_s=60, universe=(SYMBOL,),
++    state_schema={"position": "dict|None"}, risk_pct=None)
++
++
++def _utc(ts):
++    return datetime.fromtimestamp(float(ts), tz=timezone.utc)
++
++
++def raw_bars(bars):
++    """the desk's bars -> the source's raw bars (t = the bar's open as an ISO stamp)."""
++    return [{"t": _utc(b["t"]).isoformat(), "o": b["o"], "h": b["h"], "l": b["l"], "c": b["c"], "v": b["v"]}
++            for b in (bars or [])[-FETCH_BARS:]]
++
++
++def quote_of(q, now=None):
++    """Kraken's ticker carries no exchange time: t is the desk's receipt, so a ticker read during this pass (after the
++    pass clock started) is 0 s old at the decision that reads it, never a quote from the future (the age rule of
++    fwd_coinbase_sma200's quote_of); one read earlier keeps its age."""
++    if not q:
++        return {}
++    t = q.get("t")
++    if t is not None and now is not None:
++        t = min(float(t), now.timestamp())
++    return {"bid": q.get("bid"), "ask": q.get("ask"), "exchange_at": _utc(t).isoformat() if t is not None else None}
++
++
++def _params():
++    core = FWD._recipes()
++    return core.make_config(SPEC["strategy"], {"symbol": SPEC["symbol"], "market_kind": "spot",
++                                                "paper_only": True})["params"]
++
++
++def trail(bars, avg, opened_at, prev=None):
++    """the recipe's trailing stop through the completed bars: {"opened_at", "stop", "through"}. prev carries the stop
++    of the bars already processed (the recipe's pos["stop"]); each later bar closing after the fill updates it with
++    the ATR of the bars up to it (public_source_sleeves.step, iu_body)."""
++    core, params = FWD._recipes(), _params()
++    st = dict(prev) if prev and prev.get("opened_at") == opened_at else {"opened_at": opened_at, "stop": None,
++                                                                          "through": None}
++    for i, b in enumerate(bars):
++        closed = FWD.parse_utc(b["close_at"]).timestamp()
++        if closed <= float(opened_at) or (st["through"] is not None and closed <= float(st["through"])):
++            continue
++        f = core.source_features(SPEC["strategy"], bars[:i + 1], params)
++        st["through"] = closed
++        if f.get("atr") is None:
++            continue
++        dist = f["atr"] * params["atr_factor"]
++        old = st["stop"]
++        new = avg - dist if old is None else max(old, b["close"] - dist)
++        if new > 0:
++            st["stop"] = new
++    return st
++
++
++def decide(now, raw, quote, held, entry_close):
++    """the source forward's decide() for the installed book (entries; it has no iu_body exit)."""
++    bars = FWD.completed_bars(raw, SPEC["step_seconds"], now)
++    d = FWD.decide(SPEC, now, bars, None, held, entry_close)
++    if d.get("needs_quote"):
++        d = FWD.decide(SPEC, now, bars, quote, held, entry_close)
++    return d, bars
++
++
++def _pass(bars, context):
++    extra = context.extra if isinstance(context.extra, dict) else {}
++    memo = extra.get(MEMO)
++    if memo is None or memo[0] is not context:              # one decision per pass's context (identity, not id())
++        now = _utc(context.now)
++        st = (extra.get("sleeve_state") or {}).get(SYMBOL) or {}
++        pos = st.get("position") if isinstance(st.get("position"), dict) else None
++        qty = float((pos or {}).get("qty") or 0)
++        held = Decimal(str(qty)) if qty > 0 else Decimal(0)
++        quote = quote_of(extra.get("quote"), now)
++        d, cbars = decide(now, raw_bars((bars or {}).get(SYMBOL)), quote, held,
++                          (pos or {}).get("entry_close_at") if qty > 0 else None)
++        meta = (extra.get("meta") or {})
++        stop = None
++        order = d.get("order") if held <= 0 else None
++        if held > 0 and pos.get("entry_px") is not None and pos.get("opened_at") is not None:
++            stop = trail(cbars, float(pos["entry_px"]), float(pos["opened_at"]), meta.get("stop"))
++            bid = quote.get("bid")
++            if stop["stop"] is not None and bid is not None and float(bid) > 0 and float(bid) <= stop["stop"] \
++                    and cbars:
++                last = cbars[-1]["close_at"]
++                order = {"paper_only": True, "sleeve": SPEC["id"], "symbol": SPEC["symbol"], "side": "sell",
++                         "quantity": float(held), "limit_price": float(bid),
++                         "client_order_id": FWD._client(SPEC, last, "sell"), "bar_close_at": last,
++                         "stop": stop["stop"]}
++                d = dict(d, status="PAPER-ACTIVE", reason="The bid %s is at or below the trailing stop %s." % (
++                    bid, round(stop["stop"], 8)), order=order)
++        sent = meta.get("sent") or {}
++        working = bool(st.get("pending_entry")) or bool(pos and pos.get("exit_submitted"))
++        send = order if order and order["client_order_id"] not in sent and not working else None
++        memo = (context, {"decision": d, "send": send, "stop": stop})
++        extra[MEMO] = memo
++    return memo[1]
+ 
+ 
+ class FwdEnjIuBody(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        return []  # unlisted instrument — blocked in the source, blocked here
++        o = _pass(bars, context)["send"]
++        if not o:
++            return []
++        px = float(o["limit_price"])
++        order = {"type": "limit", "limit_price": px, "tif": "ioc", "window_s": 1.0}
++        why = "%s %s %s %s at %s (IOC), bar %s, %s" % (SPEC["id"], o["side"], o["quantity"], SYMBOL, px,
++                                                         o["bar_close_at"], SPEC["strategy"])
++        if o["side"] == "buy":
++            return [Intent("enter", SYMBOL, asset="spot", qty=float(o["quantity"]), price_hint=px, order=order,
++                           venue="sim:kraken", signal_key=o["client_order_id"],
++                           position_meta={"entry_close_at": o["bar_close_at"]}, reason=why)]
++        return [Intent("exit", SYMBOL, qty=float(o["quantity"]), price_hint=px, order=order,
++                       signal_key=o["client_order_id"], reason=why + " (trailing stop %s)" % o.get("stop"))]
+ 
+ 
+ def signal(bars, slice_state, context):
+     return FwdEnjIuBody().signal(bars, slice_state, context)
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    """meta.sent: the client order ids sent (one send per bar and side), a week kept; meta.stop: the trailing stop of
++    the open position (dropped when flat)."""
++    meta = dict((context.extra or {}).get("meta") or {})
++    now = float(context.now)
++    sent = {k: v for k, v in (meta.get("sent") or {}).items() if now - float(v) < SENT_KEEP_S}
++    for it in intents or ():
++        if it.signal_key:
++            sent[it.signal_key] = now
++    meta["sent"] = sent
++    stop = _pass(bars, context)["stop"]
++    if stop is not None:
++        meta["stop"] = stop
++    else:
++        meta.pop("stop", None)
++    return meta
++
++
++def monitor(mod, bars, context):
++    """a decision that sends or is blocked is recorded (waiting and out-of-window passes are not)."""
++    d = _pass(bars, context)["decision"]
++    if d.get("status") not in ("PAPER-ACTIVE", "BLOCKED"):
++        return []
++    return [(SYMBOL, "%s %s: %s" % (SPEC["id"], d["status"], d.get("reason")),
++             {"status": d["status"], "order": d.get("order")})]

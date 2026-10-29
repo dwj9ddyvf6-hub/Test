@@ -1,0 +1,95 @@
+--- femto-lean@7f2a996/sleeves/daily_cyan_gbm.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/daily_cyan_gbm.py
+@@ -22,7 +22,8 @@
+ """
+ from datetime import datetime, timezone
+ 
+-from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++from . import dcg_core
++from .compat import BaseSleeve, Intent, SleeveConfig
+ 
+ HOLD_BARS = 21
+ SCORE_CUT = 0.00208
+@@ -56,50 +57,42 @@
+         return None
+ 
+ 
++RANK_HM, FILL_HM = (16, 32), (10, 32)       # old crons daily-cyan-gbm rank 16:32, fill 10:32 ET
++COST_BPS_SIDE = 0.001
++DISASTER_STOP = 0.25
++MIN_DV20 = 1_000_000
++
++
++def signals(scores, context=None):
++    """old mode_rank: score >= SCORE_CUT on the signal bar (the name's last bar), $5+, $1M dv20; by score."""
++    facts = scores.get("facts") or {}
++    out = []
++    for s, f in (scores.get("gbm") or {}).items():
++        fa = facts.get(s) or {}
++        if f.get("score") is None or f["score"] < SCORE_CUT or f.get("date") != fa.get("date"):
++            continue
++        if fa.get("px") is None or fa["px"] < MIN_PX or (fa.get("dv20") or 0) < MIN_DV20:
++            continue
++        out.append((s, f["score"]))
++    out.sort(key=lambda t: -t[1])
++    return out
++
++
+ class DailyCyanGbm(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        scores = extra.get("dcg_scores") or {}
+-        equity = float(context.equity or 0.0)
+-        intents = []
+-        book = {s: (state.get(s) or {}).get("position")
+-                for s in state if (state.get(s) or {}).get("position")}
+-        for sym, p in book.items():
+-            bl = bars.get(sym) or []
+-            n = sessions_since(bl, p.get("entry_date")) if p.get("entry_date") else None
+-            if n is not None and n >= HOLD_BARS:
+-                qty = int(float(p.get("qty") or 0))
+-                if qty > 0 and bl:
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty,
+-                        price_hint=round(float(bl[-1]["c"]), 2),
+-                        reason="daily_cyan_gbm: %d sessions held >= %d"
+-                               % (n, HOLD_BARS)))
+-        if equity <= 0 or not scores:
+-            return intents
+-        ranked = sorted(((s, sc) for s, sc in scores.items()
+-                         if sc is not None and sc >= SCORE_CUT),
+-                        key=lambda t: -t[1])
+-        for sym, sc in ranked:
+-            if sym in book:
+-                continue
+-            bl = bars.get(sym) or []
+-            if not bl:
+-                continue
+-            px = float(bl[-1]["c"])
+-            if px < MIN_PX:
+-                continue
+-            qty = max(1, int((equity * 0.01) // px))
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(px, 2),
+-                exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                reason="daily_cyan_gbm: score=%.5f >= cut %.5f dv20=%s"
+-                       % (sc, SCORE_CUT,
+-                          None if dv20(bl) is None else round(dv20(bl), 0))))
+-        return intents
++        """master-desk: the old runtime (dcg_core) — the rank stages after the close (next_meta), the next
++        session's fill pass executes the old sleeve_core fill law, market-on-close."""
++        if dcg_core.phase(context, RANK_HM, FILL_HM) != "fill":
++            return []
++        meta = (context.extra or {}).get("meta") or {}
++        return dcg_core.fill(Intent, context, meta, COST_BPS_SIDE, "daily_cyan_gbm", disaster_stop=DISASTER_STOP)
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    return dcg_core.next_meta(context, (context.extra or {}).get("meta") or {}, signals, HOLD_BARS, bars,
++                              COST_BPS_SIDE, "daily_cyan_gbm", RANK_HM, FILL_HM)
+ 
+ 
+ def signal(bars, slice_state, context):

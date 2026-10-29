@@ -1,0 +1,332 @@
+--- femto-lean@7f2a996/sleeves/fear_premium.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/fear_premium.py
+@@ -1,31 +1,39 @@
+ """Fear Premium — put credit spreads on red days — lean port (Wave B).
+ 
+-EXTRACTED from the old desk's fear_premium_sleeve.py (SPEC adapted
+-from Matt Giannino's guide): after a >=5% red day with RSI(14) < 50
+-on a high-beta name, sell a ~30-DTE put credit spread. Universe =
+-top-10 by 60d beta vs QQQ (re-ranked weekly) + SOXL/TQQQ always —
+-the ranking is a pure function here; the weekly cache is core state.
+-Leg selection and quote validation are the old file's PURE functions
+-(select_spread_legs / validate_spread_quotes) verbatim in behavior,
+-including the 2026-10-11 determinism fixes. See ports/fear_premium.md.
+-
+-Spread: short put nearest 7% below the red-day close, long one width
+-(~10% of underlying, snapped to the strike grid) lower, same expiry,
+-25-35 DTE (legs accepted within +-4 days by the old selector). Gates:
+-two-sided quotes, per-leg (ask-bid)/mid <= 10% (Decision #103),
+-credit (short bid - long ask) >= 3% of capital at risk. Risk 0.5%/
+-spread, sleeve notional cap 25%, max 5.
+-Exits: 50% of max profit, 8-day time exit, 21-DTE floor.
++master-desk: the old desk's fear_premium_sleeve.py (SPEC adapted from Matt Giannino's guide) restored on the
++engine: after a >=5% red day with RSI(14) < 50 on a high-beta name, sell a ~30-DTE put credit spread for >= 3%
++on the capital at risk; out at 50% of max profit, after 8 days, or at 21 DTE.
++
++  universe . SOXL and TQQQ always, then the basket's top 10 by 60-day beta vs QQQ (cov / var of daily returns,
++             >= 20 aligned pairs), re-ranked when the ranking is 7 days old (kept in meta between ranks).
++  signal ... the last completed daily bar down >= 5% with Wilder RSI(14) < 50; no earnings within 3 days and a
++             confirmed calendar entry, on a calendar refreshed within 8 days (SOXL / TQQQ / QQQ have none) — the
++             sleeve's own signal step 3, fail closed.
++  spread ... puts 25-35 DTE: short strike nearest 7% under the red-day close, long nearest one width (10% of the
++             price snapped to the strike grid) lower, same expiry; both legs two-sided with (ask - bid) / mid <=
++             10% (Decision #103); credit = short bid - long ask >= 3% of the capital at risk ((width - credit) x
++             100); floor(0.5% of equity / risk) spreads, at most 25% of equity in short-strike notional; at most
++             5 spreads held or in flight; one spread, both legs at once, at that natural credit.
++  exits .... (never gated, every pass) credit - (short ask - long bid) >= 50% of the credit received; 8 days
++             since the fill; <= 21 days to expiry; both legs closed at their mids (the package at the mid net).
++
++Gone under the cutover doctrine: the risk gate (kill switch), the Decision #75 chart gate (staging, its 24h
++pending TTL, the release replay) and the 150% desk cap; the cross-sleeve check was a log line. Named
++divergences: one atomic spread order at the natural credit (the old sent two single-leg orders, short first, at
++the short bid and the long ask — the same prices, without its legging risk) and one at the mid net to close (the
++old: each leg at its own mid); passes hourly at :55 in the session (the old cron ran hourly around the clock);
++the chain snapshot carries the legs' quotes (the old made a separate latest-quote call).
+ 
+ Inputs via context.extra:
+-  "chains":  {SYM: [{"symbol","strike","expiration"}]} (puts)
+-  "quotes":  {OCC: {"bid","ask"}}
+-  "sleeve_state": {SYM: {"position": {...} | None}}
+-  "universe": ranked universe override (default: bars keys)
+-Bars (arg): daily dicts ascending; QQQ must be present for beta.
+-"""
++  "chains"        {SYM: put rows 25-35 DTE {"symbol","strike","expiration","bid","ask",...}} (fetched on demand)
++  "option_quotes" {OCC: {"bid","ask"}} — the held legs
++  "earnings"      {SYM: "YYYY-MM-DD" | None}; "earnings_fresh": bool
++  "basket"        the basket's names in file order (the beta ranking's candidates)
++  "meta"          {"universe": {"ranked", "as_of", "betas"}}
++  "sleeve_state"  {SYM: {"position": spread group | None, "pending_entry": ...}}
++Bars (arg): daily bars (90 completed sessions) for the basket, SOXL, TQQQ and QQQ."""
+ import math
+-from datetime import datetime, timezone
++from datetime import date, datetime, timezone
+ 
+ from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
+ 
+@@ -208,7 +216,8 @@
+         return None
+     for b, a in ((sb, sa), (lb, la)):
+         mid = (b + a) / 2
+-        if mid <= 0 or (a - b) / mid > SPREAD_GATE_FRAC:
++        frac = round((a - b) / mid, 4) if mid > 0 else None       # the old rounds the leg fraction first
++        if frac is None or frac > SPREAD_GATE_FRAC:
+             return None
+     credit = sb - la
+     width_pts = legs.get("width_pts") or 0
+@@ -275,61 +284,206 @@
+     return None
+ 
+ 
++NO_EARNINGS_ETFS = {"SOXL", "TQQQ", "QQQ"}
++BLACKOUT_DAYS = 3
++EXIT_WINDOW_S = 3600
++
++
++def earnings_ok(sym, calendar, fresh, today):
++    """the old earnings_ok: ETFs by construction clear; else a fresh calendar, a confirmed entry, and no report
++    today or in the next 3 days. Fail closed."""
++    s = (sym or "").upper()
++    if s in NO_EARNINGS_ETFS:
++        return True
++    if not fresh or s not in (calendar or {}):
++        return False
++    d = calendar[s]
++    if d is None:
++        return True
++    try:
++        delta = (date.fromisoformat(str(d)[:10]) - date.fromisoformat(today)).days
++    except ValueError:
++        return True
++    return not (0 <= delta <= BLACKOUT_DAYS)
++
++
++def ranked_universe(meta, bars, basket, now):
++    """(universe, new_rank | None): the cached ranking while under 7 days old, else a fresh one (the old
++    rank_universe: no QQQ bars -> the last ranking)."""
++    uni = meta.get("universe") or {}
++    if uni.get("ranked") and uni.get("as_of") is not None and int((float(now) - float(uni["as_of"])) // 86400) \
++            < BETA_RERANK_DAYS:
++        return list(uni["ranked"]), None
++    bench = bars.get("QQQ") or []
++    if not bench:
++        return list(uni.get("ranked") or []), None
++    scored = []
++    for sym in basket or []:
++        if sym in ALWAYS_INCLUDE or sym == "QQQ":
++            continue
++        bl = bars.get(sym)
++        if not bl:
++            continue
++        beta = compute_beta(bl, bench)
++        if beta is not None:
++            scored.append((beta, sym))
++    scored.sort(reverse=True)
++    ranked = [s for _, s in scored[:UNIVERSE_BETA_COUNT]]
++    universe = list(dict.fromkeys(list(ALWAYS_INCLUDE) + ranked))
++    return universe, {"ranked": universe, "as_of": float(now),
++                      "betas": {s: round(b, 3) for b, s in scored[:UNIVERSE_BETA_COUNT]}}
++
++
++def held_spread(pos):
++    """the spread's short / long OCC from its group legs, its credit received and its open time."""
++    legs = pos.get("legs") or {}
++    short = [o for o, q in legs.items() if float(q) < 0]
++    long = [o for o, q in legs.items() if float(q) > 0]
++    if len(short) != 1 or len(long) != 1:
++        return None
++    return {"short_occ": short[0], "long_occ": long[0], "entry_credit": -float(pos.get("net_entry") or 0.0),
++            "opened_at": pos.get("opened_at"), "expiry": pos.get("expiry")}
++
++
++def exit_reason(spread, now, session_iso, close_cost):
++    """the old exit_due: 50% of max profit, 8 days since the fill (timestamp days), the 21-DTE floor."""
++    if close_cost is not None and spread["entry_credit"] > 0:
++        if spread["entry_credit"] - close_cost >= PROFIT_TARGET_FRAC * spread["entry_credit"]:
++            return "profit_target_50pct"
++    if spread.get("opened_at") is not None and int((float(now) - float(spread["opened_at"])) // 86400) \
++            >= TIME_EXIT_DAYS:
++        return "time_exit_8d"
++    try:
++        exp = spread.get("expiry") or _occ_expiry(spread["short_occ"])
++        if (date.fromisoformat(str(exp)[:10]) - date.fromisoformat(session_iso)).days <= DTE_FLOOR:
++            return "dte_floor_21"
++    except (ValueError, TypeError):
++        pass
++    return None
++
++
++def _occ_expiry(occ):
++    t = str(occ)[-15:]
++    return "20%s-%s-%s" % (t[0:2], t[2:4], t[4:6])
++
++
++def _mid(q):
++    try:
++        m = (float(q["bid"]) + float(q["ask"])) / 2
++    except (KeyError, TypeError, ValueError):
++        return None
++    return m if m > 0 else None
++
++
++def decide(bars, context):
++    """(intents, new_rank): exits first, then the universe's entries in order, at most MAX_POSITIONS slots."""
++    extra = context.extra or {}
++    state = extra.get("sleeve_state") or {}
++    meta = extra.get("meta") or {}
++    oq = extra.get("option_quotes") or {}
++    chains = extra.get("chains") or {}
++    equity = float(context.equity or 0.0)
++    now = float(context.now)
++    universe, new_rank = ranked_universe(meta, bars, extra.get("basket"), now)
++    intents = []
++    slots = 0
++    for sym, st in state.items():
++        pos = (st or {}).get("position")
++        if (st or {}).get("pending_entry") and not pos:
++            slots += 1
++        if not pos:
++            continue
++        sp = held_spread(pos)
++        if sp is None:
++            continue
++        slots += 1
++        if pos.get("exit_submitted"):
++            continue
++        cost = spread_close_cost(oq, sp)
++        why = exit_reason(sp, now, context.session, cost)
++        if not why:
++            continue
++        ms, ml = _mid(oq.get(sp["short_occ"]) or {}), _mid(oq.get(sp["long_occ"]) or {})
++        if ms is None or ml is None:
++            continue                                  # the old close_spread: no two-sided quotes, no close
++        net = max(round(ms - ml, 2), 0.01)
++        intents.append(Intent(
++            "exit", sym, qty_hint=int(abs(float(pos.get("qty") or 0))) or None, net_price=net,
++            order={"window_s": EXIT_WINDOW_S}, signal_key="%s:%s:fp-exit" % (sym, context.session),
++            reason="fear_premium exit: %s close_cost=%s credit=%.2f legs=%s/%s mid_net=%.2f"
++                   % (why, None if cost is None else round(cost, 2), sp["entry_credit"], sp["short_occ"],
++                      sp["long_occ"], net)))
++    if equity <= 0:
++        return intents, new_rank
++    today = context.session
++    for sym in universe:
++        st = state.get(sym) or {}
++        if st.get("position") or st.get("pending_entry"):
++            continue
++        if slots >= MAX_POSITIONS:
++            break
++        bl = bars.get(sym) or []
++        is_sig, day_pct, rsi = detect_red_day(bl)
++        if not is_sig:
++            continue
++        if not earnings_ok(sym, extra.get("earnings"), extra.get("earnings_fresh"), today):
++            continue
++        ref_px = float(bl[-1]["c"])
++        chain = chains.get(sym)
++        if not chain:
++            continue
++        legs = select_spread_legs(ref_px, chain, today)
++        if not legs:
++            continue
++        q = {r["symbol"]: r for r in chain if r.get("symbol") in (legs["short_occ"], legs["long_occ"])}
++        sp = validate_spread_quotes(legs, q)
++        if not sp:
++            continue
++        n = size_contracts(equity, sp["capital_at_risk"], sp["short_strike"])
++        if n <= 0:
++            continue
++        intents.append(Intent(
++            "enter", sym, qty_hint=n, asset="mleg",
++            legs=({"symbol": sp["short_occ"], "side": "sell", "ratio": 1, "position_intent": "sell_to_open"},
++                  {"symbol": sp["long_occ"], "side": "buy", "ratio": 1, "position_intent": "buy_to_open"}),
++            net_price=-sp["credit"], order={"window_s": EXIT_WINDOW_S},
++            signal_key="%s:%s:fear-premium" % (sym, today),
++            position_meta={k: sp[k] for k in ("short_occ", "long_occ", "short_strike", "long_strike", "expiry",
++                                              "width_pts", "capital_at_risk")} |
++                          {"credit_nat": sp["credit"], "day_pct": round(day_pct, 4), "rsi": round(rsi, 1),
++                           "ref_px": round(ref_px, 2)},
++            reason="fear_premium put credit spread: short %s @%.2f long %s @%.2f expiry %s dte %d width %.2f "
++                   "credit %.2f risk %.2f x%d; red day %.2f%% rsi %.1f"
++                   % (sp["short_occ"], sp["short_strike"], sp["long_occ"], sp["long_strike"], sp["expiry"],
++                      sp["dte"], sp["width_pts"], sp["credit"], sp["capital_at_risk"], n, day_pct * 100, rsi)))
++        slots += 1
++    return intents, new_rank
++
++
++def _pass(bars, context):
++    extra = context.extra
++    memo = extra.get("_fp_pass") if isinstance(extra, dict) else None
++    if memo is None or memo[0] is not context:            # one decision per pass's context (identity, not id())
++        memo = (context, decide(bars, context))
++        if isinstance(extra, dict):
++            extra["_fp_pass"] = memo
++    return memo[1]
++
++
+ class FearPremium(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        chains = extra.get("chains") or {}
+-        quotes = extra.get("quotes") or {}
+-        equity = float(context.equity or 0.0)
+-        universe = extra.get("universe") or rank_universe(bars)
+-        intents = []
+-        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position"))
+-        for sym in universe:
+-            bl = bars.get(sym) or []
+-            st = state.get(sym) or {}
+-            pos = st.get("position")
+-            if pos:
+-                qty = int(float(pos.get("qty") or 0))
+-                if qty <= 0:
+-                    continue
+-                cost = spread_close_cost(quotes, pos["spread"])
+-                reason = exit_due(pos, context.session, _dates(bl), cost)
+-                if reason:
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty,
+-                        price_hint=round(float(bl[-1]["c"]), 2) if bl else None,
+-                        reason="fear_premium exit: %s close_cost=%s legs=%s/%s"
+-                               % (reason, cost, pos["spread"]["short_occ"],
+-                                  pos["spread"]["long_occ"])))
+-                continue
+-            if open_n >= MAX_POSITIONS or equity <= 0:
+-                continue
+-            is_sig, day_pct, rsi = detect_red_day(bl)
+-            if not is_sig:
+-                continue
+-            ref_px = float(bl[-1]["c"])
+-            sp = pick_spread(ref_px, chains.get(sym), quotes, context.session)
+-            if not sp:
+-                continue
+-            qty = size_contracts(equity, sp["capital_at_risk"], sp["short_strike"])
+-            if qty <= 0:
+-                continue
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(ref_px, 2),
+-                reason="fear_premium put_credit_spread: short=%s@%.2f "
+-                       "long=%s@%.2f expiry=%s dte=%d width=%.2f credit=%.2f "
+-                       "day_pct=%.4f rsi=%.1f structure=put_credit_spread "
+-                       "dte_window=%d-%d short_otm_pct=%.2f width_pct=%.2f"
+-                       % (sp["short_occ"], sp["short_strike"], sp["long_occ"],
+-                          sp["long_strike"], sp["expiry"], sp["dte"],
+-                          sp["width_pts"], sp["credit"], day_pct, rsi,
+-                          DTE_MIN, DTE_MAX, SHORT_OTM_PCT, WIDTH_PCT)))
+-            open_n += 1
+-        return intents
++        return list(_pass(bars, context)[0])
+ 
+ 
+ def signal(bars, slice_state, context):
+     return FearPremium().signal(bars, slice_state, context)
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    meta = dict((context.extra or {}).get("meta") or {})
++    _intents, new_rank = _pass(bars, context)
++    if new_rank is not None:
++        meta["universe"] = new_rank
++    return meta

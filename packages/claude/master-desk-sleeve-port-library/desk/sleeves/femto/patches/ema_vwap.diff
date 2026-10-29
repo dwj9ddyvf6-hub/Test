@@ -1,0 +1,113 @@
+--- femto-lean@7f2a996/sleeves/ema_vwap.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/ema_vwap.py
+@@ -17,7 +17,7 @@
+ Bars: daily dicts {"t","o","h","l","c","v"} ascending.
+ """
+ import math
+-from datetime import datetime, timezone
++from datetime import date, datetime, timedelta, timezone
+ 
+ from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
+ 
+@@ -56,7 +56,10 @@
+     for b in bars[-window:]:
+         v = float(b["v"])
+         if v == 0:
+-            continue  # old: vol.replace(0, NaN); rolling sum skips NaN terms
++            # master-desk: pandas rolling(20).sum() is NaN when ANY of the 20
++            # values is NaN (min_periods = window) — the old vol.replace(0, NaN)
++            # makes a zero-volume bar void the whole window's VWAP.
++            return None
+         tp = (float(b["h"]) + float(b["l"]) + float(b["c"])) / 3.0
+         num += tp * v
+         den += v
+@@ -88,13 +91,25 @@
+ 
+ 
+ def size_qty(equity, ref_px):
+-    """Risk budget / 8% stop distance, capped by the 5% per-position
+-    notional cap; 1-share minimum."""
+-    if not ref_px or ref_px <= 0 or equity <= 0:
+-        return 1
+-    by_risk = int((equity * RISK_FRACTION) // (STOP_LOSS * ref_px))
+-    by_cap = int((equity * POS_NOTIONAL_CAP) // ref_px)
+-    return max(1, min(by_risk, by_cap)) if min(by_risk, by_cap) >= 1 else 1
++    """master-desk: old size_qty verbatim — 0.25% risk budget on the fixed
++    8% stop distance, capped at 5% of equity notional, floored to whole
++    shares, 0 allowed (entry skipped)."""
++    stop_dist = (ref_px or 0) * STOP_LOSS
++    if not ref_px or ref_px <= 0 or not stop_dist or stop_dist <= 0:
++        return 0
++    raw = equity * RISK_FRACTION / stop_dist
++    cap = equity * POS_NOTIONAL_CAP / ref_px
++    return max(0, int(min(raw, cap)))
++
++
++def weekdays_held(entry_date, today):
++    """master-desk: the old manage_position count — weekdays in
++    (entry_date, today], holidays NOT excluded (the old approximation)."""
++    try:
++        d0, d1 = date.fromisoformat(str(entry_date)[:10]), date.fromisoformat(str(today)[:10])
++    except ValueError:
++        return 0
++    return sum(1 for i in range((d1 - d0).days) if (d0 + timedelta(days=i + 1)).weekday() < 5)
+ 
+ 
+ class EmaVwap(BaseSleeve):
+@@ -106,15 +121,16 @@
+         universe = extra.get("universe") or sorted(bars.keys())
+         equity = float(context.equity or 0.0)
+         intents = []
+-        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position"))
++        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position")
++                     or (state.get(s) or {}).get("pending_entry"))   # old count_positions
+         sleeve_notional = 0.0
+         for s in universe:
+             p = (state.get(s) or {}).get("position")
+-            if p:
+-                sleeve_notional += float(p.get("entry_px") or 0) * float(p.get("qty") or 0)
++            if p:   # old sleeve_notional: qty x the entry's signal close (ref_px)
++                sleeve_notional += float(p.get("ref_px") or p.get("entry_px") or 0) * float(p.get("qty") or 0)
+         for sym in universe:
+             bl = bars.get(sym) or []
+-            if len(bl) < WARMUP_BARS:
++            if len(bl) < WARMUP_BARS + 1:      # old daily_pass: < WARMUP+1 bars -> symbol untradeable
+                 continue
+             st = state.get(sym) or {}
+             pos = st.get("position")
+@@ -124,8 +140,12 @@
+                 qty = int(float(pos.get("qty") or 0))
+                 if qty <= 0:
+                     continue
++                if pos.get("entry_date") and dates[-1] < str(pos["entry_date"])[:10]:
++                    # master-desk: the spec's exits run "from entry"; a bar that closed before the fill says nothing
++                    # about the position (the old desk's hourly pass sold gap-down entries at once: 2026-10-16, 6 of 6)
++                    continue
+                 entry_px = float(pos.get("entry_px") or last_px)
+-                held = _sessions_since(dates, pos.get("entry_date")) \
++                held = weekdays_held(pos.get("entry_date"), context.session) \
+                     if pos.get("entry_date") else 0
+                 hit_target = last_px >= entry_px * (1 + PROFIT_TARGET)
+                 hit_stop = last_px <= entry_px * (1 - STOP_LOSS)
+@@ -139,8 +159,10 @@
+             if open_n >= MAX_POSITIONS or equity <= 0:
+                 continue
+             if deviation_below(bl):
++                if st.get("last_exit_date") and context.session <= str(st["last_exit_date"]):
++                    continue                  # old de-overlap: never re-enter on/before the last exit day
+                 qty = size_qty(equity, last_px)
+-                if sleeve_notional + qty * last_px > SLEEVE_NOTIONAL_CAP * equity:
++                if qty <= 0 or sleeve_notional + qty * last_px > SLEEVE_NOTIONAL_CAP * equity:
+                     continue
+                 stop_px = round(last_px * (1 - DISASTER_STOP), 2)
+                 intents.append(Intent(
+@@ -150,7 +172,8 @@
+                                 ExitRule("target", round(last_px * (1 + PROFIT_TARGET), 2)),
+                                 ExitRule("time_bars", float(TIME_STOP_DAYS))),
+                     reason="ema_vwap deviation: close=%.2f vwap20=%.4f"
+-                           % (last_px, rolling_vwap(bl))))
++                           % (last_px, rolling_vwap(bl)),
++                    position_meta={"ref_px": round(last_px, 2)}))
+                 open_n += 1
+                 sleeve_notional += qty * last_px
+         return intents

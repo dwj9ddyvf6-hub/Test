@@ -1,0 +1,121 @@
+--- femto-lean@7f2a996/sleeves/beatendown.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/beatendown.py
+@@ -15,17 +15,25 @@
+ _exit_due ported verbatim: a position with a MISSING exit_due_date is
+ DUE (2026-10-12 fix — never held forever).
+ 
++Master-desk restoration (the femto port ranked on every call, sized 3% per
++name off the qualifier close, held 91 SESSIONS via time_bars and dropped
++the fill law): the old weekly runtime in m2_core.py — the Friday rank over
++the M2 weekly job's qualifier file (desk/feedlib/m2.py: the vendored
++qualify_week.mjs + the verbatim feature blocks), the Monday fill pass with
++the old budget / capacity / fresh-quote law and the 91-calendar-day exit.
++
+ Inputs via context.extra:
+-  "qualifiers": [{"symbol","close","wcloses":[...],"feat":{...}}]
++  "m2": the weekly qualifier file for the rank day (None until written)
++  "meta": the sleeve's stamps (pending, last_rank_date, last_fill_date)
++  "quotes": {SYM: {"bid","ask","t"}} for held and staged names
+   "vix": (close, prev, asof_iso, source) | None
+-  "fomc_dates": optional override of FOMC_2026
+-  "sleeve_state": {SYM: {"position": {"entry_px","entry_date",
+-                   "exit_due_date","qty"} | None}}
+-Bars: daily dicts (used for exit price hints only).
++  "fear_ok": the desk fear composite >= FEAR (beatendown's buy gate)
++  "sleeve_state": {SYM: {"position": {...}, "pending_entry": {...}}}
+ """
+ from datetime import date, datetime, timedelta, timezone
+ 
+-from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++from . import m2_core
++from .compat import BaseSleeve, Intent, SleeveConfig
+ 
+ HOLD9 = [
+     ("E_WEEK_BIGRANGE", "X_SECT_LEAD", "Q_LAM_HIGH"),
+@@ -131,63 +139,33 @@
+     return blocks
+ 
+ 
++def row(q):
++    """old mode_rank's table row: the HOLD9 count on the rank's own feature set (daily bars through the rank
++    Friday), selected = beaten-down (no rule-count minimum: the count is the ranker)."""
++    hits = score_rules(q.get("feat_bd") or q.get("feat") or {})
++    return {"count": len(hits), "rules": hits, "beaten_down": is_beaten_down(q), "selected": is_beaten_down(q),
++            "bucket": (q.get("feat_bd") or q.get("feat") or {}).get("_bucket")}
++
++
++RANK_HM, FILL_HM = (16, 20), (10, 20)      # old crons: rank Fri 16:20, fill Mon 10:20 ET
++
++
+ class BeatenDown(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        equity = float(context.equity or 0.0)
+-        today = context.session
+-        intents = []
+-        book = {s: (state.get(s) or {}).get("position")
+-                for s in state if (state.get(s) or {}).get("position")}
+-        for sym, p in book.items():
+-            if exit_due(p, today):
+-                qty = int(float(p.get("qty") or 0))
+-                if qty > 0:
+-                    bl = bars.get(sym) or []
+-                    px = round(float(bl[-1]["c"]), 2) if bl else None
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty, price_hint=px,
+-                        reason="beatendown 13-week time exit due"))
+-        if equity <= 0:
+-            return intents
+-        if new_buy_gates(today, extra.get("vix"),
+-                         extra.get("fomc_dates") or FOMC_2026):
+-            return intents
+-        quals = [q for q in (extra.get("qualifiers") or [])
+-                 if isinstance(q, dict) and q.get("symbol")]
+-        table = []
+-        for q in quals:
+-            if not is_beaten_down(q):
+-                continue
+-            hits = score_rules(q.get("feat") or {})
+-            table.append({"symbol": q["symbol"], "close": q.get("close"),
+-                          "count": len(hits), "rules": hits})
+-        table.sort(key=lambda r: (-r["count"], r["symbol"]))
+-        room = MAX_POSITIONS - len(book)
+-        per_name = equity * SLEEVE_CAP / MAX_POSITIONS
+-        for row in table:
+-            if room <= 0:
+-                break
+-            sym = row["symbol"]
+-            if sym in book:
+-                continue
+-            px = row["close"]
+-            if not px or px <= 0:
+-                bl = bars.get(sym) or []
+-                if not bl:
+-                    continue
+-                px = float(bl[-1]["c"])
+-            qty = max(1, int(per_name // px))
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(float(px), 2),
+-                exit_rules=(ExitRule("time_bars", float(HOLD_DAYS)),),
+-                reason="beatendown: rules=%s count=%d (ranker, no minimum)"
+-                       % (",".join(row["rules"]) or "-", row["count"])))
+-            room -= 1
+-        return intents
++        """master-desk: the old weekly runtime (desk/sleeves/femto/m2_core.py) — Friday's rank stages the book,
++        the Monday fill pass executes it."""
++        meta = (context.extra or {}).get("meta") or {}
++        if m2_core.phase(context, RANK_HM, FILL_HM) != "fill" or meta.get("last_fill_date") == context.session:
++            return []
++        return m2_core.intents(Intent, context, meta, exit_due, new_buy_gates, "beatendown", fear_gate=True,
++                               free_sold_slots=False)
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    return m2_core.next_meta(context, (context.extra or {}).get("meta") or {}, RANK_HM, FILL_HM, row, exit_due,
++                             new_buy_gates, fear_gate=True, free_sold_slots=False)
+ 
+ 
+ def signal(bars, slice_state, context):

@@ -1,0 +1,90 @@
+--- femto-lean@7f2a996/sleeves/rsi_meanrev.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/rsi_meanrev.py
+@@ -30,6 +30,8 @@
+ RISK_FRACTION = 0.0025
+ MAX_POSITIONS = 8
+ WARMUP_BARS = 30
++MA200_PERIOD = 200    # master-desk: old 200-day SMA trend filter (entries only in an uptrend)
++MA5_PERIOD = 5        # master-desk: old primary exit (close back above the 5-day SMA, Connors' original)
+ 
+ CONFIG = SleeveConfig(
+     sleeve_id="rsi_meanrev", cadence_s=300, universe=(),
+@@ -75,11 +77,12 @@
+ 
+ 
+ def size_qty(equity, ref_px):
+-    """Verbatim old size_qty semantics: risk budget / 8% stop distance,
+-    1-share minimum."""
+-    if not ref_px or ref_px <= 0 or equity <= 0:
+-        return 1
+-    return max(1, int((equity * RISK_FRACTION) // (STOP_LOSS * ref_px)))
++    """master-desk: the old size_qty verbatim — 0.25% risk on the -8% stop
++    distance, whole shares, NO 1-share minimum (the 2026-10-09 fix: a 0
++    computes as 0 and the entry is skipped)."""
++    if not ref_px or ref_px <= 0 or not equity or equity <= 0:
++        return 0
++    return int((equity * RISK_FRACTION) / (ref_px * STOP_LOSS))
+ 
+ 
+ class RsiMeanRev(BaseSleeve):
+@@ -91,7 +94,8 @@
+         universe = extra.get("universe") or sorted(bars.keys())
+         equity = float(context.equity or 0.0)
+         intents = []
+-        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position"))
++        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position")
++                     or (state.get(s) or {}).get("pending_entry"))   # old count_positions
+         for sym in universe:
+             bl = bars.get(sym) or []
+             if len(bl) < WARMUP_BARS:
+@@ -107,22 +111,44 @@
+                 qty = int(float(pos.get("qty") or 0))
+                 if qty <= 0:
+                     continue
++                if pos.get("entry_date") and dates[-1] < str(pos["entry_date"])[:10]:
++                    # master-desk: the spec's exits run "from entry fill"; a bar that closed before the fill says
++                    # nothing about the position (the old hourly pass sold a gap entry at once; ema_vwap 2026-10-16)
++                    continue
+                 entry_px = float(pos.get("entry_px") or last_px)
+                 held = _sessions_since(dates, pos.get("entry_date")) \
+                     if pos.get("entry_date") else 0
+-                if last_px >= entry_px * (1 + PROFIT_TARGET) \
+-                        or last_px <= entry_px * (1 - STOP_LOSS) \
+-                        or held >= TIME_STOP_DAYS:
++                # old manage_position order: sma5 -> rsi>70 -> target -> stop -> time
++                sma5 = sum(closes[-MA5_PERIOD:]) / MA5_PERIOD if len(closes) >= MA5_PERIOD else None
++                rsi_now = rsi_wilder_last(closes)
++                why = None
++                if sma5 is not None and last_px > sma5:
++                    why = "sma5_exit"
++                elif rsi_now is not None and rsi_now > RSI_OVERBOUGHT:
++                    why = "rsi_overbought"
++                elif last_px >= entry_px * (1 + PROFIT_TARGET):
++                    why = "profit_target"
++                elif last_px <= entry_px * (1 - STOP_LOSS):
++                    why = "stop_loss_market"
++                elif held >= TIME_STOP_DAYS:
++                    why = "time_stop"
++                if why:
+                     intents.append(Intent(
+                         "exit", sym, qty_hint=qty, price_hint=round(last_px, 2),
+-                        reason="rsi_meanrev exit: px=%.2f entry=%.2f held=%d"
+-                               % (last_px, entry_px, held)))
++                        reason="rsi_meanrev exit: %s px=%.2f entry=%.2f held=%d"
++                               % (why, last_px, entry_px, held)))
+                 continue
+             if open_n >= MAX_POSITIONS or equity <= 0:
+                 continue
+             rsi = rsi_wilder_last(closes)
+-            if rsi is not None and rsi <= RSI_OVERSOLD:
++            if rsi is not None and rsi < RSI_OVERSOLD:   # old: last_rsi >= 10 -> not oversold
++                if len(closes) < MA200_PERIOD:
++                    continue                             # old: MA200 warmup fails closed
++                if last_px <= sum(closes[-MA200_PERIOD:]) / MA200_PERIOD:
++                    continue                             # old: below the 200-day SMA -> no entry
+                 qty = size_qty(equity, last_px)
++                if qty <= 0:
++                    continue
+                 stop_px = round(last_px * (1 - STOP_LOSS), 2)
+                 intents.append(Intent(
+                     "enter", sym, qty_hint=qty, price_hint=round(last_px, 2),

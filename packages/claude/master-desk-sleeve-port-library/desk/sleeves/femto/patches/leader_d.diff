@@ -1,0 +1,133 @@
+--- femto-lean@7f2a996/sleeves/leader_d.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/leader_d.py
+@@ -53,56 +53,86 @@
+     return n >= HOLD_BARS - 1
+ 
+ 
++# ---------------------------------------------------------------- master-desk: the old runtime, restored
++from datetime import date, timedelta  # noqa: E402
++from zoneinfo import ZoneInfo  # noqa: E402
++
++from . import sleeve_core as core  # noqa: E402
++
++ET = ZoneInfo("America/New_York")
++RANK_HM = (16, 40)            # old cron leader-d-rank Mon-Fri 16:40 ET (after the close)
++FILL_HM = (10, 40)            # old cron leader-d-fill Mon-Fri 10:40 ET
++
++
++def spy_down_regime(spy_bars, asof):
++    """old core.spy_down_regime: trailing-60-session SPY return <= 0 (B8); None with < 61 sessions."""
++    sc = [b for b in spy_bars or () if _dates([b])[0] <= asof]
++    if len(sc) < 61:
++        return None
++    c0, c1 = float(sc[-61]["c"]), float(sc[-1]["c"])
++    if not c0 or not c1:
++        return None
++    return (c1 / c0 - 1) <= 0
++
++
++def _phase(context):
++    t = datetime.fromtimestamp(float(context.now), tz=ET)
++    if t.weekday() >= 5:
++        return None
++    if (t.hour, t.minute) >= RANK_HM:
++        return "rank"
++    if FILL_HM <= (t.hour, t.minute) < (16, 0):
++        return "fill"
++    return None
++
++
++def rank(bars, context, meta, events):
++    """old mode_rank: in a SPY down regime, the genome names (not SPY) through the shared leader rank law.
++    Returns (pending, last_event, down, signals)."""
++    from . import leader_core
++    extra = context.extra or {}
++    down = spy_down_regime(bars.get("SPY"), context.session)
++    cands = [s for s in bars if s != "SPY"] if down else []
++    pending, last_ev, signals = leader_core.rank(bars, extra.get("sleeve_state") or {}, meta, events,
++                                                 context.session, cands)
++    return pending, last_ev, down, signals
++
++
+ class LeaderD(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
++        """master-desk: the old two-phase runtime — the 16:40 rank stages pending (next_meta), the 10:40 fill
++        executes it through the old sleeve_core fill law (5bp modeled, -25% disaster stop)."""
++        if _phase(context) != "fill":
++            return []
+         extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        last_event = extra.get("last_event") or {}
+-        events = extra.get("leader_events") or {}
+-        equity = float(context.equity or 0.0)
+-        intents = []
+-        book = {s: (state.get(s) or {}).get("position")
+-                for s in state if (state.get(s) or {}).get("position")}
+-        for sym, p in book.items():
+-            if sell_due(bars.get(sym) or [], p.get("entry_date")):
+-                qty = int(float(p.get("qty") or 0))
+-                if qty > 0:
+-                    bl = bars.get(sym) or []
+-                    px = round(float(bl[-1]["c"]), 2) if bl else None
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty, price_hint=px,
+-                        reason="leader_d hold complete: bars_after_entry >= %d"
+-                               % (HOLD_BARS - 1)))
+-        if equity <= 0 or not extra.get("spy_down_regime"):
+-            return intents
+-        room = MAX_POSITIONS - len(book)
+-        for sym in sorted(events):
+-            if room <= 0:
+-                break
+-            if sym == "SPY" or sym in book:
+-                continue
+-            bl = bars.get(sym) or []
+-            if len(bl) < MIN_BARS:
+-                continue
+-            ev = events[sym]
+-            if last_event.get(sym) == ev:
+-                continue
+-            px = float(bl[-1]["c"])
+-            if px <= 0:
+-                continue
+-            qty = max(1, int((equity * 0.01) // px))
+-            stop_px = round(px * (1 - DISASTER_STOP), 2)
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(px, 2),
+-                stop=stop_px,
+-                exit_rules=(ExitRule("stop", stop_px),
+-                            ExitRule("time_bars", float(HOLD_BARS))),
+-                reason="leader_d event %s in SPY down regime (score>=3 & gate)"
+-                       % ev))
+-            room -= 1
++        meta = extra.get("meta") or {}
++        close_ts = datetime.fromtimestamp(float(context.now), tz=ET).replace(hour=16, minute=0, second=0,
++                                                                             microsecond=0).timestamp()
++        intents, _left = core.fill_intents(Intent, extra.get("sleeve_state") or {}, meta.get("pending") or {},
++                                           float(context.equity or 0.0), extra.get("quotes") or {}, COST_BPS_SIDE,
++                                           context.session, float(context.now), "leader_d", close_ts,
++                                           disaster_stop=DISASTER_STOP)
+         return intents
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    extra = context.extra or {}
++    meta = dict(extra.get("meta") or {})
++    ph = _phase(context)
++    if ph == "rank" and meta.get("last_rank_date") != context.session:
++        events = extra.get("leader_events")
++        if events is not None:                         # the genome job has computed today's frames
++            pending, last_ev, down, signals = rank(bars, context, meta, events)
++            meta.update(pending=pending, last_event=last_ev, last_rank_date=context.session,
++                        spy_down_regime=down, last_signals=len(signals))
++    elif ph == "fill":
++        _s, _b, left = core.fill(extra.get("sleeve_state") or {}, meta.get("pending") or {},
++                                 float(context.equity or 0.0), extra.get("quotes") or {}, COST_BPS_SIDE,
++                                 context.session, float(context.now), "leader_d")
++        meta["pending"] = left
++    return meta
+ 
+ 
+ def signal(bars, slice_state, context):

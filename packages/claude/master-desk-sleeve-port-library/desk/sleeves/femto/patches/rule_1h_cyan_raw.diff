@@ -1,0 +1,197 @@
+--- femto-lean@7f2a996/sleeves/rule_1h_cyan_raw.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/rule_1h_cyan_raw.py
+@@ -31,10 +31,11 @@
+ the last bar's timestamp is ignored (old law).
+ """
+ import math
+-from datetime import datetime, timezone
++from datetime import datetime, timedelta, timezone
+ from zoneinfo import ZoneInfo
+ 
+-from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++from . import sleeve_core as core
++from .compat import BaseSleeve, Intent, SleeveConfig
+ 
+ ET = ZoneInfo("America/New_York")
+ 
+@@ -113,77 +114,115 @@
+                for b in daily_bars[idx - 19:idx + 1]) / 20.0
+ 
+ 
++COST_BPS_SIDE = 0.001
++
++
++def _phase(context):
++    """the old crons: fill hourly at :04, scan hourly at :26, 10:00-15:59 ET (main() skips other hours)."""
++    t = datetime.fromtimestamp(float(context.now), tz=ET)
++    if t.weekday() >= 5 or not (10 <= t.hour <= 15):
++        return None
++    return "rank" if t.minute >= 20 else "fill"
++
++
++def _same_t(a, b):
++    """the fire's bar start is the signal bar's (any ISO spelling of the same instant)."""
++    if a == b:
++        return True
++    try:
++        return abs(datetime.fromisoformat(str(a).replace("Z", "+00:00")).timestamp()
++                   - datetime.fromisoformat(str(b).replace("Z", "+00:00")).timestamp()) < 1.0
++    except ValueError:
++        return False
++
++
++def signals(bars_1h, daily, fires):
++    """old mode_rank: fires on each name's latest closed 1H bar passing the rule, the signal bar's close $5+,
++    the $1M dv20 ending at the latest daily bar <= the signal's ET date; the scorer's (symbol) order."""
++    out = []
++    for s in sorted(fires):
++        bl = bars_1h.get(s) or []
++        if len(bl) < 100:
++            continue
++        last_t = datetime.fromtimestamp(float(bl[-1]["t"]), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
++        for f in fires.get(s) or []:
++            if not isinstance(f, dict) or not _same_t(f.get("t"), last_t):
++                continue
++            ok, _ra, _wg = fire_passes(f)
++            if not ok:
++                continue
++            if float(bl[-1]["c"]) < MIN_PX:
++                continue
++            if dv20_daily(daily.get(s) or [], _et_date_of_ts(bl[-1]["t"])) < MIN_DV20:
++                continue
++            out.append(s)
++    return out
++
++
++def rank(bars_1h, daily, fires, context, meta):
++    extra = context.extra or {}
++    state = extra.get("sleeve_state") or {}
++    book = core.book_of(state)
++    old = dict(meta.get("pending") or {})
++    surv = list(old.get("buys") or [])
++    buys, seen = [], set()
++    for s in signals(bars_1h, daily, fires):
++        if s in book or s in seen:
++            continue
++        if len(buys) + len(surv) + len(book) >= core.MAX_POSITIONS:
++            break
++        seen.add(s)
++        buys.append(s)
++    sells = []
++    for s, p in book.items():
++        bl = bars_1h.get(s) or []
++        opened = p.get("opened_at")
++        entry_t = _iso_t(opened) if opened else (p.get("entry_time") or p.get("entry_date"))
++        if not entry_t or not bl:
++            continue
++        if sum(1 for b in bl if bar_after(entry_t, b["t"])) >= HOLD_BARS:
++            sells.append(s)
++    today = datetime.fromtimestamp(float(context.now), tz=ET).date()
++    exit_dates = dict(old.get("exit_dates") or {})
++    exit_dates.update({s: (today + timedelta(days=2)).isoformat() for s in buys})
++    old_sells = list(old.get("sells") or [])
++    return {"buys": core.merge_pending_buys(surv, buys, len(book)),
++            "sells": old_sells + [s for s in sells if s not in old_sells], "exit_dates": exit_dates}
++
++
+ class Rule1hCyanRaw(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
++        """master-desk: the old hourly runtime — the :26 scan stages (next_meta), the :04 fill executes the old
++        sleeve_core fill law (market, the day's session)."""
++        if _phase(context) != "fill":
++            return []
+         extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        fires = extra.get("rule_fires_1h") or {}
+-        daily = extra.get("daily_bars") or {}
+-        equity = float(context.equity or 0.0)
+-        intents = []
+-        book = {s: (state.get(s) or {}).get("position")
+-                for s in state if (state.get(s) or {}).get("position")}
+-        for sym, p in book.items():
+-            bl = bars.get(sym) or []
+-            entry_t = p.get("entry_time") or p.get("entry_date")
+-            if not entry_t or not bl:
+-                continue
+-            n = sum(1 for b in bl if bar_after(entry_t, b["t"]))
+-            if n >= HOLD_BARS:
+-                qty = int(float(p.get("qty") or 0))
+-                if qty > 0:
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty,
+-                        price_hint=round(float(bl[-1]["c"]), 2),
+-                        exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                        reason="rule_1h_cyan_raw: %d hourly bars after entry "
+-                               ">= hold %d" % (n, HOLD_BARS)))
+-        if equity <= 0 or not fires:
+-            return intents
+-        open_n = len(book)
+-        for sym in sorted(fires):
+-            if sym in book or open_n >= MAX_POSITIONS:
+-                continue
+-            bl = bars.get(sym) or []
+-            if len(bl) < 100:  # old rank required >= 100 1H bars to score
+-                continue
+-            last_t = _iso_t(bl[-1]["t"])
+-            px = float(bl[-1]["c"])
+-            hit = None
+-            for f in fires.get(sym) or []:
+-                ok, ra, wg = fire_passes(f)
+-                if not ok:
+-                    continue
+-                ft = str(f.get("t") or "")
+-                match = (ft == last_t)
+-                if not match:
+-                    try:  # epoch comparison tolerates Z / offset spellings
+-                        match = abs(datetime.fromisoformat(
+-                            ft.replace("Z", "+00:00")).timestamp()
+-                            - float(bl[-1]["t"])) < 1.0
+-                    except ValueError:
+-                        match = False
+-                if match:
+-                    hit = (ra, wg)
+-                    break
+-            if hit is None:
+-                continue
+-            sig_date = _et_date_of_ts(bl[-1]["t"])
+-            if px < MIN_PX:
+-                continue
+-            if dv20_daily(daily.get(sym) or [], sig_date) < MIN_DV20:
+-                continue
+-            qty = max(1, int((equity * 0.01) // px))
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(px, 2),
+-                exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                reason="rule_1h_cyan_raw: cyan fire %s rangeatr=%.2f "
+-                       "wtgap=%.2f smhUp=1 px=%.2f"
+-                       % (last_t, hit[0], hit[1], px)))
+-            open_n += 1
++        close_ts = datetime.fromtimestamp(float(context.now), tz=ET).replace(hour=16, minute=0, second=0,
++                                                                             microsecond=0).timestamp()
++        intents, _left = core.fill_intents(Intent, extra.get("sleeve_state") or {},
++                                           (extra.get("meta") or {}).get("pending") or {},
++                                           float(context.equity or 0.0), extra.get("quotes") or {}, COST_BPS_SIDE,
++                                           context.session, float(context.now), "rule_1h_cyan_raw", close_ts)
+         return intents
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    extra = context.extra or {}
++    meta = dict(extra.get("meta") or {})
++    ph = _phase(context)
++    if ph == "rank":
++        fires = extra.get("fires_1h")
++        if fires is not None:
++            meta["pending"] = rank(extra.get("bars_1h") or {}, bars, fires, context, meta)
++            meta["last_rank"] = float(context.now)
++    elif ph == "fill":
++        _s, _b, left = core.fill(extra.get("sleeve_state") or {}, meta.get("pending") or {},
++                                 float(context.equity or 0.0), extra.get("quotes") or {}, COST_BPS_SIDE,
++                                 context.session, float(context.now), "rule_1h_cyan_raw")
++        meta["pending"] = left
++    return meta
+ 
+ 
+ def signal(bars, slice_state, context):
