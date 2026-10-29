@@ -1,0 +1,118 @@
+--- femto-lean@7f2a996/sleeves/rule_1d_cyan_smallcap.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/rule_1d_cyan_smallcap.py
+@@ -29,7 +29,8 @@
+ import math
+ from datetime import datetime, timezone
+ 
+-from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++from . import dcg_core
++from .compat import BaseSleeve, Intent, SleeveConfig
+ 
+ HOLD_BARS = 21
+ LANE = "1D"
+@@ -98,67 +99,48 @@
+         return None
+ 
+ 
++RANK_HM, FILL_HM = (16, 34), (10, 34)       # old crons rank 16:34, fill 10:34 ET
++COST_BPS_SIDE = 0.001
++
++
++def signals(scores, context=None):
++    """old mode_rank: the rule on the signal bar (the name's last bar) + the desk filter, scorer order."""
++    facts = scores.get("facts") or {}
++    out = []
++    for s, f in ((scores.get("rules") or {}).get("1D:cyan") or {}).items():
++        fa = facts.get(s) or {}
++        if f.get("date") != fa.get("date"):
++            continue
++        feats = dict(f.get("features") or {})
++        if not rule_pass(feats, CONDITIONS):
++            continue
++        px = fa.get("px")
++        if px is None or not (5.0 <= px < 10.0):
++            continue
++        if (fa.get("dv20") or 0) < MIN_DV20:
++            continue
++        lm = fa.get("log_mcap")                         # EDGAR public float (fail closed)
++        if lm is None or lm > MCAP_THRESHOLD:
++            continue
++        out.append((s, f["date"]))
++    return out
++
++
+ class Rule1dCyanSmallcap(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        fires = extra.get("rule_fires") or {}
+-        log_mcap = extra.get("log_mcap") or {}
+-        equity = float(context.equity or 0.0)
+-        intents = []
+-        book = {s: (state.get(s) or {}).get("position")
+-                for s in state if (state.get(s) or {}).get("position")}
+-        for sym, p in book.items():
+-            bl = bars.get(sym) or []
+-            n = sessions_since(bl, p.get("entry_date")) if p.get("entry_date") else None
+-            if n is not None and n >= HOLD_BARS - 1:
+-                qty = int(float(p.get("qty") or 0))
+-                if qty > 0 and bl:
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty,
+-                        price_hint=round(float(bl[-1]["c"]), 2),
+-                        exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                        reason="rule_1d_cyan_smallcap: %d sessions >= hold %d (staged early)"
+-                               % (n, HOLD_BARS)))
+-        if equity <= 0 or not fires:
+-            return intents
+-        open_n = len(book)
+-        for sym in sorted(fires):
+-            if sym in book or open_n >= MAX_POSITIONS:
+-                continue
+-            bl = bars.get(sym) or []
+-            if not bl:
+-                continue
+-            dates = _dates(bl)
+-            last_date = dates[-1]
+-            px = float(bl[-1]["c"])
+-            hit = None
+-            for f in fires.get(sym) or []:
+-                if isinstance(f, dict) and f.get("date") == last_date \
+-                        and rule_pass(f.get("features")):
+-                    hit = f
+-                    break
+-            if hit is None:
+-                continue
+-            if not (5.0 <= px < 10.0):
+-                continue
+-            if dv20(bl) < MIN_DV20:
+-                continue
+-            lm = log_mcap.get(sym)
+-            if lm is None or not math.isfinite(float(lm)) \
+-                    or float(lm) > MCAP_THRESHOLD:
+-                continue  # fail closed on missing mcap (old law)
+-            qty = max(1, int((equity * 0.01) // px))
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(px, 2),
+-                exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                reason="rule_1d_cyan_smallcap: cyan fire %s pxn/di pass, "
+-                       "px=%.2f dv20=%.0f log_mcap=%.4f <= %.4f"
+-                       % (last_date, px, dv20(bl), float(lm), MCAP_THRESHOLD)))
+-            open_n += 1
+-        return intents
++        """master-desk: the old runtime (dcg_core) — the rank stages after the close (next_meta), the next
++        session's fill pass executes the old sleeve_core fill law, market-on-close."""
++        if dcg_core.phase(context, RANK_HM, FILL_HM) != "fill":
++            return []
++        meta = (context.extra or {}).get("meta") or {}
++        return dcg_core.fill(Intent, context, meta, COST_BPS_SIDE, "rule_1d_cyan_smallcap", disaster_stop=None)
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    return dcg_core.next_meta(context, (context.extra or {}).get("meta") or {}, signals, HOLD_BARS, bars,
++                              COST_BPS_SIDE, "rule_1d_cyan_smallcap", RANK_HM, FILL_HM)
+ 
+ 
+ def signal(bars, slice_state, context):

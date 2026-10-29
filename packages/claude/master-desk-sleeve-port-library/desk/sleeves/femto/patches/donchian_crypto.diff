@@ -1,0 +1,177 @@
+--- femto-lean@7f2a996/sleeves/donchian_crypto.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/donchian_crypto.py
+@@ -1,28 +1,33 @@
+-"""Donchian Crypto (SOL 15m) — lean-desk port (Wave C).
++"""Donchian Crypto (SOL 15m) — lean-desk port (Wave C), restored on the master desk.
+ 
+ EXTRACTED from the old desk's donchian_crypto_sleeve.py (SPEC:
+ desk/sleeves/donchian_crypto/SPEC.md) — the TraderDev-validated Donchian
+ on the asset/timeframe it was validated on (SOL, 15-minute bars).
+ 
+ Signal (closed 15m bars only): close > max(high[t-20..t-1]) strict (ties
+-do NOT count), volume > 0, >= 40 closed bars warmup.
+-Exits (first trigger wins): close < min(low[t-10..t-1]), OR low <= the
+-synthetic ATR(14) x 2.0 trailing stop (crypto has no native stops on the
+-broker — the trail is core-executed synthetic logic; here the ratcheted
+-trail is expressed in the intent reason and recomputed purely from bars
+-by trail_level() — see the port report for the state misfit).
++do NOT count), volume > 0, >= 40 closed bars warmup (the last 120 closed
++Kraken bars, the old fetch window — ATR(14) is Wilder-seeded on it).
++Exits (first trigger wins, every pass): close < min(low[t-10..t-1]), OR
++low <= the ATR(14) x 2.0 trailing stop. The trail starts at
++round(signal close - 2 x ATR, 2) and ratchets each pass to
++max(trail, close - 2 x ATR) BEFORE the check (old update_trail ->
++check_exit); master-desk restoration: the ratcheted trail persists per
++position (next_symbol_state), where the femto port recomputed an
++un-ratcheted close - 2 x ATR every pass.
+ Risk: 0.25% equity/trade on the 2.0 x ATR stop distance; single symbol
+-SOLUSD, max 1 position; 25% sleeve notional cap; $10 minimum notional
+-with the post-floor rail re-check (floored qty that breaches risk or cap
+-=> no trade). Long only. No time stop (validated spec has none).
+-Bars come from Kraken public OHLC on the old desk (the broker's crypto
+-market-data endpoints 404) — in the lean desk bars are a core Data
+-product; the sleeve reads only the `bars` argument (15m SOLUSD bars).
++SOLUSD, max 1 position (a working entry counts); 25% sleeve notional cap;
++$10 minimum notional with the post-floor rail re-check (floored qty that
++breaches risk or cap => no trade). Fractional SOL (qty to 6 dp). Long
++only. No time stop (validated spec has none). Market orders, gtc; an entry
++not filled within 1 hour is dropped (the SPEC's 15m-signal staleness).
++One pass per closed bar ~1 minute after it closes (old cron every 15m,
++anchored :00:56). Desk-wide gates (kill switch, chart gate, red-day
++analog, 150% cap) are gone per the cutover doctrine.
+ 
+ Inputs via context.extra:
+-  "sleeve_state": {"SOLUSD": {"position": {"entry_px","entry_date","qty",
+-                    "trail"} | None}}
+-Bars: 15m dicts {"t","o","h","l","c","v"} ascending.
++  "sleeve_state": {"SOLUSD": {"position": {"entry_px","qty","trail",
++                    "exit_submitted"} | None, "pending_entry": {...}}}
++Bars: 15m dicts {"t","o","h","l","c","v"} ascending (Kraken SOLUSD).
+ """
+ import math
+ 
+@@ -38,6 +43,7 @@
+ MAX_POSITIONS = 1
+ SLEEVE_NOTIONAL_CAP = 0.25
+ MIN_NOTIONAL = 10.0
++PENDING_TTL_SECONDS = 3600
+ 
+ CONFIG = SleeveConfig(
+     sleeve_id="donchian_crypto", cadence_s=900, universe=(SYMBOL,),
+@@ -74,10 +80,8 @@
+ 
+ 
+ def trail_level(bars, prior_trail=None):
+-    """The ratcheted synthetic trail implied by the bars: max over the
+-    trailing window of (close - 2.0 x ATR at that bar), never loosening
+-    below prior_trail. Pure recomputation of the old update_trail
+-    ratchet (which mutated state bar by bar)."""
++    """The old update_trail ratchet: max(prior_trail, close - 2.0 x ATR),
++    never loosening; prior_trail None starts it at the candidate."""
+     atr = calc_atr(bars)
+     if atr is None or not bars:
+         return prior_trail
+@@ -88,9 +92,8 @@
+ 
+ 
+ def check_exit(pos, bars):
+-    """Verbatim port of the old check_exit: channel break first, then
+-    the ATR trail (using the position's recorded trail when present,
+-    else the purely recomputed ratchet)."""
++    """Verbatim port of the old check_exit: channel break first, then the
++    ATR trail — pos["trail"] is the trail already ratcheted this pass."""
+     if len(bars) < EXIT_CHANNEL + 1:
+         return None
+     last = bars[-1]
+@@ -98,8 +101,6 @@
+     if prior_lows and float(last["c"]) < min(prior_lows):
+         return "donchian_exit"
+     trail = pos.get("trail") if isinstance(pos, dict) else None
+-    if trail is None:
+-        trail = trail_level(bars)
+     if trail and float(last["l"]) <= float(trail):
+         return "atr_trail"
+     return None
+@@ -129,43 +130,57 @@
+     return qty
+ 
+ 
++def _position(context):
++    st = ((context.extra or {}).get("sleeve_state") or {}).get(SYMBOL) or {}
++    return st if isinstance(st, dict) else {}
++
++
+ class DonchianCrypto(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+         equity = float(context.equity or 0.0)
+         bl = bars.get(SYMBOL) or []
+-        st = state.get(SYMBOL) or {}
+-        pos = st.get("position") if isinstance(st, dict) else None
+-        intents = []
++        st = _position(context)
++        pos = st.get("position")
++        if len(bl) < WARMUP_BARS:
++            return []                       # old: skip_warmup (no exits, no entries)
++        now = float(context.now)
++        key = "%s:%d" % (SYMBOL, int(float(bl[-1]["t"])))
+         if pos:
++            trail = trail_level(bl, pos.get("trail"))
++            reason = check_exit(dict(pos, trail=trail), bl)
+             qty = float(pos.get("qty") or 0)
+-            reason = check_exit(pos, bl)
+-            if reason and qty > 0:
+-                intents.append(Intent(
+-                    "exit", SYMBOL, qty_hint=int(qty) if qty == int(qty) else None,
+-                    price_hint=round(float(bl[-1]["c"]), 2),
+-                    reason="donchian_crypto exit: %s trail=%s"
+-                           % (reason, pos.get("trail"))))
+-            return intents
+-        if equity <= 0 or not detect_breakout(bl):
+-            return intents
++            if not reason or qty <= 0 or pos.get("exit_submitted"):
++                return []
++            return [Intent("exit", SYMBOL, qty=qty, price_hint=round(float(bl[-1]["c"]), 2),
++                           order={"type": "market"}, signal_key=key + ":exit",
++                           reason="donchian_crypto exit: %s trail=%.4f" % (reason, trail))]
++        if st.get("pending_entry") or equity <= 0 or not detect_breakout(bl):
++            return []
+         atr = calc_atr(bl)
+         px = float(bl[-1]["c"])
+         qty = size_qty(equity, px, atr)
+         if qty <= 0:
+-            return intents
+-        # Intent.qty_hint is whole shares by contract; fractional SOL qty
+-        # rides in the reason for the core's crypto sizing (named misfit).
+-        intents.append(Intent(
+-            "enter", SYMBOL, qty_hint=None, price_hint=round(px, 2),
+-            reason="donchian_crypto 20-bar breakout: close=%.2f atr=%s "
+-                   "qty_sol=%.6f trail_init=%.2f"
+-                   % (px, None if atr is None else round(atr, 4), qty,
+-                      px - ATR_MULT * (atr or px * 0.02))))
+-        return intents
++            return []
++        trail_init = round(px - ATR_MULT * (atr or px * 0.02), 2)
++        return [Intent("enter", SYMBOL, qty=qty, price_hint=round(px, 2),
++                       order={"type": "market", "not_after": now + PENDING_TTL_SECONDS},
++                       position_meta={"trail": trail_init}, signal_key=key + ":entry",
++                       reason="donchian_crypto 20-bar breakout: close=%.2f atr=%s qty_sol=%.6f trail_init=%.2f"
++                              % (px, None if atr is None else round(atr, 4), qty, trail_init))]
++
++
++def next_symbol_state(bars, slice_state, context, intents=()):
++    """persist this pass's ratcheted trail on the held position (the old
++    state's position["trail"]); a flat book drops it."""
++    bl = bars.get(SYMBOL) or []
++    pos = _position(context).get("position")
++    if not pos:
++        return {SYMBOL: {"pos": None}}
++    if len(bl) < WARMUP_BARS:
++        return {}
++    return {SYMBOL: {"pos": {"trail": trail_level(bl, pos.get("trail"))}}}
+ 
+ 
+ def signal(bars, slice_state, context):

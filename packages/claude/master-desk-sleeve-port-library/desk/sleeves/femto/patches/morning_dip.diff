@@ -1,0 +1,133 @@
+--- femto-lean@7f2a996/sleeves/morning_dip.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/morning_dip.py
+@@ -20,12 +20,11 @@
+ UNCLAMPED strategy qty as a hint and names the dependency in the port
+ report; Risk applies the identical clamp downstream.
+ 
+-Inputs via context.extra:
+-  "candles_3min": [closed 3-min candle dicts {"t","o","h","l","c",
+-                   "healthy"}] for QQQ (core Data product)
+-  "sleeve_state": {"QQQ": {"position": {...} | None}}
+-Bars (arg): unused for the signal (3-min candles arrive via extra);
+-accepted for contract shape.
++Inputs (master-desk):
++  bars {"QQQ": [1-minute bars incl. the pre-market from 09:00 ET]} -> the
++      old 3-minute UTC-grid candles (healthy with >= 2 minute bars)
++  context.extra "candles_3min" — accepted instead (femto shape)
++  "sleeve_state": {"QQQ": {"position": {...} | None, "pending_entry"}}
+ """
+ import math
+ from datetime import datetime
+@@ -110,49 +109,86 @@
+     return plan, None
+ 
+ 
++# ---------------------------------------------------------------- master-desk: the old runtime, restored
++CANDLE_S = 180
++CLOSED_AFTER_S = 210            # old closed_candles: a 3-min candle is closed 3.5 min after it started
++
++
++def candles_3min(min_bars, now):
++    """old fetch_3min + closed_candles: 1-minute bars from 09:00 ET bucketed on the UTC 3-minute grid
++    (bucket = t // 180 * 180), healthy with >= 2 of its 3 minute bars, closed 210 s after its start."""
++    if not min_bars:
++        return []
++    day0 = datetime.fromtimestamp(float(now), tz=ET).replace(hour=9, minute=0, second=0, microsecond=0).timestamp()
++    buckets = {}
++    for b in min_bars:
++        t = float(b["t"])
++        if t < day0 or t >= float(now):
++            continue
++        k = int(t // CANDLE_S) * CANDLE_S
++        e = buckets.setdefault(k, {"t": float(k), "o": float(b["o"]), "h": -1e18, "l": 1e18, "c": None, "n": 0})
++        e["h"] = max(e["h"], float(b["h"]))
++        e["l"] = min(e["l"], float(b["l"]))
++        e["c"] = float(b["c"])
++        e["n"] += 1
++    return [dict(buckets[k], healthy=buckets[k]["n"] >= 2) for k in sorted(buckets)
++            if float(now) - k >= CLOSED_AFTER_S]
++
++
+ class MorningDip(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
++        """master-desk: the old morning_dip pass (every 3 minutes, 10:00-12:00 ET). Held: flat at 12:00 ET (the
++        bracket target/stop and the 15-minute time stop are engine exit data). Flat with nothing working and
++        a fresh signal candle (closed, starting 10:00-12:00 ET, not acted on before, the last 16 candles
++        healthy, ER <= 0.35): arm a DAY limit buy one tick under level = floor(close - ATR), bracket target
++        = the candle midpoint, stop = max(4 ticks, ceil(1.5 ATR)) under the limit; unfilled after 9 minutes
++        it is cancelled. One order or position at a time. The desk cap clamp (Decision #87), risk gate,
++        context gate and Decision #75 staging are desk-wide gates, out of scope by the cutover doctrine."""
+         extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        pos = (state.get(SYMBOL) or {}).get("position")
+-        now_et = datetime.fromtimestamp(float(context.now), tz=ET)
++        st = (extra.get("sleeve_state") or {}).get(SYMBOL) or {}
++        pos = st.get("position")
++        now = float(context.now)
++        now_et = datetime.fromtimestamp(now, tz=ET)
+         intents = []
+         if pos:
+-            # time stop / flat-at-window-end are ExitRule data for the
+-            # core; an in-window pass also emits the exit when the
+-            # position's own stop/target data is absent.
+-            qty = int(float(pos.get("qty") or 0))
+-            if qty > 0 and not in_window(now_et):
+-                intents.append(Intent(
+-                    "exit", SYMBOL, qty_hint=qty,
+-                    reason="morning_dip: flat at/after window end 12:00 ET"))
++            qty = abs(float(pos.get("qty") or 0))
++            if qty > 0 and not in_window(now_et) and (now_et.hour, now_et.minute) >= WINDOW_END \
++                    and not pos.get("exit_submitted"):
++                intents.append(Intent("exit", SYMBOL, qty=qty, signal_key="%s:%s:eod" % (SYMBOL, context.session),
++                                      reason="morning_dip: flat at the 12:00 ET window end"))
+             return intents
+-        if not in_window(now_et):
++        if st.get("pending_entry") or not in_window(now_et):
++            return intents                            # one order/position at a time
++        if bars.get(SYMBOL):                          # 1-minute bars -> the old 3-minute candles
++            candles = candles_3min(bars[SYMBOL], now)
++        else:                                         # femto shape: pre-built closed candles
++            candles = list(extra.get("candles_3min") or [])
++        if len(candles) < ER_CANDLES + 1:
+             return intents
+-        candles = extra.get("candles_3min") or []
++        sig = candles[-1]
++        sig_et = datetime.fromtimestamp(float(sig["t"]), tz=ET)
++        if not (WINDOW_START <= (sig_et.hour, sig_et.minute) < WINDOW_END):
++            return intents
+         atr, er = indicators(candles)
+-        if atr is None or er is None:
++        if atr is None or atr <= 0 or er is None or er > ER_MAX:
+             return intents
+-        if er > ER_MAX:
+-            return intents  # ER gate: only a clean directional morning arms
+         equity = float(context.equity or 0.0)
+         if equity <= 0:
+             return intents
+-        plan, _skip = arm_plan(candles[-1], atr, er, equity)
++        plan, _skip = arm_plan(sig, atr, er, equity)
+         if plan is None:
+             return intents
+         intents.append(Intent(
+-            "enter", SYMBOL, qty_hint=plan["qty"],
+-            price_hint=plan["limit"], stop=plan["stop"],
+-            target=plan["target"],
+-            exit_rules=(ExitRule("stop", plan["stop"]),
+-                        ExitRule("target", plan["target"])),
+-            reason="morning_dip arm: ER=%.4f ATR=%.4f level=%.2f limit=%.2f "
+-                   "(cancel %d min unfilled, time stop %d min — core timers)"
+-                   % (plan["er"], plan["atr"], plan["level"], plan["limit"],
+-                      ARM_CANCEL_MIN, TIME_STOP_MIN)))
++            "enter", SYMBOL, qty_hint=plan["qty"], price_hint=plan["limit"], stop=plan["stop"],
++            target=plan["target"], exit_rules=(ExitRule("time_bars", float(TIME_STOP_MIN)),),
++            order={"type": "limit", "limit_price": plan["limit"], "not_after": now + ARM_CANCEL_MIN * 60},
++            signal_key="%s:%s:mdl:%d" % (SYMBOL, context.session, int(sig["t"])),
++            position_meta={"level": plan["level"], "signal_candle": sig_et.strftime("%H:%M")},
++            reason="morning_dip arm %s: ER=%.4f ATR=%.4f level=%.2f limit=%.2f target=%.2f stop=%.2f"
++                   % (sig_et.strftime("%H:%M"), plan["er"], plan["atr"], plan["level"], plan["limit"],
++                      plan["target"], plan["stop"])))
+         return intents
+ 
+ 

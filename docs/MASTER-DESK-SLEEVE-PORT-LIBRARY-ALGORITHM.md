@@ -1,0 +1,394 @@
+# master-desk-sleeve-port-library
+
+Created by Claude (master desk). Packaged into the Test repo on 2026-10-29 (packaging pass).
+
+Origin: dwj9ddyvf6-hub/Femto-lean repo, branch master-desk @ 53096b3a, path desk/sleeves/.
+
+The master desk's sleeve port library: the ported sleeve implementations organized by family (families/, femto/, Author/, midna/, milkman/, muse/, quant_research/, sable/, monitor/, killed/) plus shared modules (jsport.py, v8math.py). Each port carries a strategy family's logic into the master-desk sleeve contract so it can be run, monitored, and compared inside the one desk; the killed/ tree preserves retired ports in place rather than deleting them.
+
+## Files in this package
+
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/absorption.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/apex.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/apex_options.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/ausar_daily20.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/ausar_options.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/ausar_public.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/ausar_spot_recipes.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/coinbase_sma200.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/event_research.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/femto.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/femto_specs.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_altdata.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_altdata_run.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_intraweek.mjs`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_producers.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_wait.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_wait_feed.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/griffith.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/griffith_factor.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/griffith_intraday.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/grokbot.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/killed_studies.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/lazarus.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/midna.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/midna_tensor.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/milkman.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/milkman_0dte.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/monitor.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/muse.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/prediction_markets.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/quant_research.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/qullamaggie.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/r17_etf.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/r19_crypto.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/r19_etf.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/r19_tensor.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/r19_timing.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/sable.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/tensor_research.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/tensor_state.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/PROVENANCE.json`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/aurelia_gold.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/aurelia_ndx.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/beatendown.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/bilbo_options.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/blowoff_1h.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/blowoff_d.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/capitulation.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/capitulation_options.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/compat.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/confluence.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/conformance.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/daily_cyan_gbm.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/dcg_core.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/donchian.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/donchian_crypto.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/earnings_buyback.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/ema_vwap.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/ema_vwap_options.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/fear_premium.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_etf.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_kraken_ada_basis.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_kraken_ada_breakdown.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_kraken_ada_crowded.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_kraken_link_basis.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_kraken_link_breakdown.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_kraken_link_crowded.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_opt_core.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_opt_own_iv.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_opt_pair.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_opt_parity.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_opt_release.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_opt_tail.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/free_opt_wheel.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/fwd_alpaca_ada_rsi2.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/fwd_alpaca_enj_iu_body.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/fwd_alpaca_link_ai_volume.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/fwd_coinbase_sma200.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/gate_1h.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/iron_condor.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/leader_core.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/leader_d.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/leader_sc.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/leaps_momentum.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/legends_ema.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/m2_core.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/momentum.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/momentum_rotation.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/morning_dip.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/aurelia_ndx.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/beatendown.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/bilbo_options.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/capitulation.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/capitulation_options.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/confluence.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/daily_cyan_gbm.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/donchian.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/donchian_crypto.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/earnings_buyback.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/ema_vwap.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/ema_vwap_options.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/fear_premium.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_kraken_ada_basis.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_kraken_ada_breakdown.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_kraken_ada_crowded.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_kraken_link_basis.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_kraken_link_breakdown.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_kraken_link_crowded.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_opt_own_iv.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_opt_pair.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_opt_parity.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_opt_release.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_opt_tail.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/free_opt_wheel.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/fwd_alpaca_ada_rsi2.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/fwd_alpaca_enj_iu_body.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/fwd_alpaca_link_ai_volume.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/fwd_coinbase_sma200.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/gate_1h.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/iron_condor.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/leader_d.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/leader_sc.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/leaps_momentum.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/legends_ema.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/momentum.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/momentum_rotation.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/morning_dip.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/phase_daily.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/phoenix.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/qqq_put_ladder.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/qullamaggie.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/qullamaggie_paper.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/red_day_reversal.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/rsi_meanrev.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/rsi_meanrev_options.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/rule_1d_cyan_smallcap.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/rule_1d_green_tom.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/rule_1h_cyan_raw.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/rule_1w_cyan_mom_adx.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/rule_1w_swing_beta_wt.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/snapback.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/spx_premium.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/tensor_red_dip.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/tensor_swing.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/ts_momentum_decile.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/vix_hedge.diff`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/phase_daily.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/phoenix.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/qqq_put_ladder.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/qullamaggie.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/qullamaggie_paper.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/red_day_reversal.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/rsi_meanrev.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/rsi_meanrev_options.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/rule_1d_cyan_smallcap.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/rule_1d_green_tom.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/rule_1h_cyan_raw.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/rule_1w_cyan_mom_adx.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/rule_1w_swing_beta_wt.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/sleeve_core.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/snapback.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/spx_premium.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/tensor_red_dip.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/tensor_swing.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/ts_momentum_decile.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/vix_hedge.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/anna.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/book.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/echo.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/komar.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/levels.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/paper.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/prism.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/tensor.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/wire.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/jsport.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/killed/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/killed/common.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/killed/daily.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/killed/events.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/killed/intraday.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/killed/pairs.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/killed/smcap.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/board.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/common.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/context.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/forward.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/forward_scan.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/hourly.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/hyperliquid.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/kronos.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/ladder.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/lanes.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/options.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/qld.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/quantpedia.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/midna/shadow.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/daily.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/Author.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/intraday.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/rules.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/vendored.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/base.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/fdlibm.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/indicators.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/session.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/tmath.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author_phd_mon.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author_tensor_mon.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/js.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/midna_books.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/midna_mon.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/printer_books.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/reads.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/PROVENANCE.json`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/data.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/early_close.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/em_1587.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/raschke_rre/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/raschke_rre/admission.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/raschke_rre/awareness.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/raschke_rre/raschke_core.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/raschke_rre/raschke_engine.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/raschke_rre/router.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_bars.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/data.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/midna_enhancements.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/midna_enhancements2.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/models.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/reference.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/risk_lots.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/strategies.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/structure.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/awareness.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/data.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/models.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/reference.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/risk_lots.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/routing.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/strategies.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v03/structure.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_indicators.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_primitives.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_reference.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/sleeve.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/em_1587.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/po10_qqq.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/raschke_pf3.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/raschke_rre.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/saty_day.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/saty_gpt_v02.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/saty_gpt_v03.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/saty_magnum.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/saty_sol.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/saty_sol_0dte.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/shen_fade.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/trullas_divergence.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/airt.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/alphagen_np.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/alphaqcm.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/bolt.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/carm.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/cer.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/common.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/cqr.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/crd.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/crg.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/dropout_book.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/factor_books.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/fastnumbers.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/finrlx.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/kronos.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/kronos_runner.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/lgbm_text.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/news121.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/r10.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/relay.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/scores.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/sed.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/sixai.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/tcft.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/quant_research/uir.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/sable/__init__.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/sable/desk_scanner.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/sable/location_first.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/sable/runtime.py`
+- `packages/claude/master-desk-sleeve-port-library/desk/sleeves/v8math.py`
+
+Source files are verbatim copies from the origin location named above unless a sanitization note appears in this doc.
+
+## Sanitization note
+
+This copy was sanitized at 388 point(s) to pass the public-repo privacy gate; the private original in dwj9ddyvf6-hub/Femto-lean repo, branch master-desk @ 53096b3a, path desk/sleeves/ is the verbatim source.
+Sanitized files in this package (non-verbatim copies):
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/ausar_options.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author.py: 65 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_altdata.py: 13 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_altdata_run.py: 8 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_intraweek.mjs: 5 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_producers.py: 29 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_wait.py: 23 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_wait_feed.py: 12 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/lazarus.py: 19 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/milkman.py: 23 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/monitor.py: 14 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/r19_tensor.py: 3 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/capitulation.py: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/capitulation_options.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/m2_core.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/capitulation_options.diff: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/phoenix.diff: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/tensor_red_dip.diff: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/tensor_swing.diff: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/patches/ts_momentum_decile.diff: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/phoenix.py: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/tensor_red_dip.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/femto/ts_momentum_decile.py: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/anna.py: 4 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/book.py: 3 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/echo.py: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/komar.py: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/levels.py: 3 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/paper.py: 4 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/prism.py: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/tensor.py: 4 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/wire.py: 5 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/daily.py: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/Author.py: 31 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/vendored.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/__init__.py: 2 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/indicators.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/session.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/tmath.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author_phd_mon.py: 15 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author_tensor_mon.py: 12 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/printer_books.py: 24 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/midna_enhancements.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/saty_gpt_v02/midna_enhancements2.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/core/sleeve.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/raschke_pf3.py: 3 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/saty_day.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/saty_sol_0dte.py: 4 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/muse/sleeves/shen_fade.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/v8math.py: 1 occurrence(s) replaced
+- docs/MASTER-DESK-SLEEVE-PORT-LIBRARY-ALGORITHM.md: 25 occurrence(s) replaced
+Files whose package path was renamed to pass the same gate (original filenames are in the private origin named above):
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_altdata.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_altdata_run.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_intraweek.mjs
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_producers.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_wait.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/Author_wait_feed.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/__init__.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/anna.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/book.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/echo.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/komar.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/levels.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/paper.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/prism.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/tensor.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/Author/wire.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/milkman/Author.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/__init__.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/indicators.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/session.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author/tmath.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author_phd_mon.py
+- packages/claude/master-desk-sleeve-port-library/desk/sleeves/monitor/Author_tensor_mon.py

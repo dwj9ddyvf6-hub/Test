@@ -1,0 +1,121 @@
+--- femto-lean@7f2a996/sleeves/red_day_reversal.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/red_day_reversal.py
+@@ -20,6 +20,7 @@
+ """
+ import math
+ from datetime import date as _date, datetime, timezone
++from zoneinfo import ZoneInfo
+ 
+ from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
+ 
+@@ -35,6 +36,7 @@
+ MAX_POSITIONS = 8
+ EARNINGS_BLACKOUT_DAYS = 5
+ NO_EARNINGS_ETFS = {"QQQ", "SPY", "SOXL", "TQQQ", "VXX", "UVXY"}
++ET = ZoneInfo("America/New_York")
+ 
+ CONFIG = SleeveConfig(
+     sleeve_id="red_day_reversal", cadence_s=300, universe=(),
+@@ -101,14 +103,39 @@
+ 
+ 
+ def size_shares(equity, ref_px):
+-    """Verbatim old sizing shape: risk budget / 2% stop, capped at 25%
+-    of equity notional per name; 1-share minimum."""
+-    if not ref_px or ref_px <= 0 or equity <= 0:
+-        return 1
+-    by_risk = int((equity * RISK_FRACTION) // (STOP_PCT * ref_px))
+-    by_cap = int((equity * SLEEVE_NOTIONAL_CAP) // ref_px)
+-    q = min(by_risk, by_cap)
+-    return q if q >= 1 else 1
++    """master-desk: old size_shares verbatim — floor(0.25% risk / 2% stop),
++    capped at floor(25% notional / px); 0 allowed (entry skipped)."""
++    if equity is None or equity <= 0 or not ref_px or ref_px <= 0:
++        return 0
++    n = math.floor(equity * RISK_FRACTION / (ref_px * STOP_PCT))
++    n = min(n, math.floor((equity * SLEEVE_NOTIONAL_CAP) / ref_px))
++    return max(0, int(n))
++
++
++def in_rth(now):
++    """old in_rth: entries only 09:30-16:00 ET on weekdays (never chase)."""
++    t = datetime.fromtimestamp(float(now), tz=ET)
++    mins = t.hour * 60 + t.minute
++    return t.weekday() < 5 and 9 * 60 + 30 <= mins < 16 * 60
++
++
++def exit_due(pos, now, mark):
++    """master-desk: old exit_due verbatim on the fill-relative levels the old
++    promote_fills stored (target_px = fill x 1.04, stop_px = fill x 0.98) and
++    the fill time; mark = a fresh intraday price (None -> only the time exit).
++    Returns (reason, order_type, limit_px) or (None, None, None)."""
++    fill = float(pos.get("entry_px") or 0)
++    if fill > 0 and mark is not None and mark > 0:
++        target_px = round(fill * (1 + PROFIT_TARGET_PCT), 2)
++        stop_px = round(fill * (1 - STOP_PCT), 2)
++        if mark >= target_px:
++            return "profit_target_4pct", "limit", target_px
++        if mark <= stop_px:
++            return "hard_stop_2pct", "market", None
++    opened = pos.get("opened_at")
++    if opened is not None and (float(now) - float(opened)) // 86400 >= TIME_EXIT_DAYS:
++        return "time_stop_3d", "market", None
++    return None, None, None
+ 
+ 
+ def _earnings_veto(sym, today_iso, earnings):
+@@ -136,7 +163,9 @@
+         equity = float(context.equity or 0.0)
+         today = context.session
+         intents = []
+-        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position"))
++        marks = extra.get("marks") or {}
++        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position")
++                     or (state.get(s) or {}).get("pending_entry"))   # old _slot_count
+         for sym in universe:
+             bl = bars.get(sym) or []
+             if len(bl) < SMA_LONG + 2:
+@@ -149,16 +178,14 @@
+                 qty = int(float(pos.get("qty") or 0))
+                 if qty <= 0:
+                     continue
+-                entry_px = float(pos.get("entry_px") or last_px)
+-                held = _sessions_since(dates, pos.get("entry_date")) \
+-                    if pos.get("entry_date") else 0
+-                if last_px >= entry_px * (1 + PROFIT_TARGET_PCT) \
+-                        or last_px <= entry_px * (1 - STOP_PCT) \
+-                        or held >= TIME_EXIT_DAYS:
++                # old manage_positions: hourly, on a fresh intraday mark
++                why, otype, lpx = exit_due(pos, context.now, marks.get(sym))
++                if why:
+                     intents.append(Intent(
+-                        "exit", sym, qty_hint=qty, price_hint=round(last_px, 2),
+-                        reason="red_day_reversal exit: px=%.2f entry=%.2f held=%d"
+-                               % (last_px, entry_px, held)))
++                        "exit", sym, qty_hint=qty, price_hint=lpx or marks.get(sym),
++                        order=({"type": "limit", "limit_price": lpx} if otype == "limit" else None),
++                        reason="red_day_reversal exit: %s mark=%s entry=%.2f"
++                               % (why, marks.get(sym), float(pos.get("entry_px") or 0))))
+                 continue
+             if open_n >= MAX_POSITIONS or equity <= 0:
+                 continue
+@@ -168,13 +195,19 @@
+             if _earnings_veto(sym, today, earnings):
+                 continue
+             qty = size_shares(equity, last_px)
++            if qty <= 0 or not in_rth(context.now):
++                continue                  # old: zero shares skipped; RTH entries only
+             stop_px = round(last_px * (1 - STOP_PCT), 2)
++            close_et = datetime.fromtimestamp(float(context.now), tz=ET).replace(hour=16, minute=0, second=0,
++                                                                                 microsecond=0)
+             intents.append(Intent(
+                 "enter", sym, qty_hint=qty, price_hint=round(last_px, 2),
+                 stop=stop_px,
+                 exit_rules=(ExitRule("stop", stop_px),
+                             ExitRule("target", round(last_px * (1 + PROFIT_TARGET_PCT), 2)),
+                             ExitRule("time_bars", float(TIME_EXIT_DAYS))),
++                # old _submit_entry: a LIMIT buy at the last close (never chase), a day order
++                order={"type": "limit", "limit_price": round(last_px, 2), "not_after": close_et.timestamp()},
+                 reason="red_day_reversal washout: day=%.4f rsi2=%.2f above200=%s"
+                        % (day_pct, rsi, above)))
+             open_n += 1

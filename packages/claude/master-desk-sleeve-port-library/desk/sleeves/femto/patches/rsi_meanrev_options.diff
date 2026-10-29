@@ -1,0 +1,516 @@
+--- femto-lean@7f2a996/sleeves/rsi_meanrev_options.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/rsi_meanrev_options.py
+@@ -1,25 +1,53 @@
+-"""RSI Mean Reversion — Options (call debit spreads) — lean port.
+-
+-EXTRACTED from the old desk's rsi_meanrev_options.py. Signal EXACTLY
+-the stock sleeve's (the old file imported rsi_meanrev_sleeve): RSI(2)
+-< 10 with close > SMA200 (fail-closed under 200 bars), using the stock
+-sleeve's pandas-ewm-seeded Wilder RSI (see sleeves/rsi_meanrev.py).
+-Execution: 14-30 DTE call debit spread via the pure form of
+-desk/options_exec.select_debit_spread — long leg highest strike <=
+-spot (ATM or 1 ITM, never OTM), short first strike >= long x 1.08.
+-Risk 0.25%/trade on the debit; max 5.
+-Exits: 50% of max profit, 7-DTE time stop, RSI(2) > 70 (snapback done).
++"""RSI Mean Reversion — Options (call debit spreads) — lean port (Wave B).
++
++master-desk: the old desk's rsi_meanrev_options.py restored on the engine. The stock sleeve's exact signal (the old
++imported rsi_meanrev_sleeve for it) — Connors' RSI(2) washout inside an uptrend — traded as a 14-30 DTE call debit
++spread instead of stock; out at half the spread's max profit, at 7 DTE, or once RSI(2) is back above 70.
++
++  universe . the basket (basket.json), in file order.
++  signal ... the completed daily closes: at least 200 (fewer: no signal, fail closed), the stock sleeve's Wilder
++             RSI(2) (pandas ewm alpha 1/2, seeded on the first change) < 10 and the close above its 200-day SMA.
++  spread ... calls 14-30 DTE, the nearest expiry: long = the highest strike <= the signal close (to the cent; none at
++             or below it: the lowest strike), short = the first strike >= long x 1.08 (none: no trade); both legs
++             quoted; the long's ask > 0 and, when it is bid, (ask - bid) / mid <= 10%; debit = long ask - short bid
++             > 0 (no debit / width band: fragment 098); floor(0.25% of equity / (debit x 100)) spreads (0: skip);
++             at most 5 spreads held or in flight, the basket in order; the long bought and the short sold as one
++             package at that natural debit, a day order.
++  exits .... (never gated, every pass, the first that holds) the close value (long bid - short ask, both quoted)
++             less the entry debit (the package fill) >= 50% of the max profit (width - debit at selection); <= 7
++             days to expiry (the never-into-expiry rule); RSI(2) on the completed closes > 70 (the snapback is
++             done); the package closes at its natural, a day order.
++
++Gone under the cutover doctrine: the risk gate (the kill switch, consulted under the sleeve's own name), the
++drawdown brake (its block and its halve-the-size verdicts), the Decision #75 chart gate (pre_buy's red-day gate and
++chart read, the staging, its 72h pending TTL and the release replay with its re-checks), the 150% desk cap (with the
++desk-exposure ledger that fed it) and the desk-wide Decision #8 earnings blackout (the stock sleeve's _earnings_ok,
++borrowed: a desk rail in that sleeve's SPEC, as the restored equity sibling has it). Named divergences: one package
++to open at the natural debit (the old sent the long at its ask, then the short at its bid, as two single-leg
++orders: the same prices without the legging; a short leg bid at nothing, which the old's order CLI refused to
++price, so the old bought the long alone and flattened it, now opens with the package) and one to close at its
++natural (the old sent each leg at its own natural, and nothing while either leg was one-sided: a long leg bid at
++zero now closes at zero instead of riding into expiry against the 7-DTE rule); hourly passes at :31 in the session
++(the old cron ran hourly at :31 around the clock); the chain snapshot carries the legs' quotes (the old made a
++separate latest-quote call for the two legs: a leg it got no quote for is a row with neither bid nor ask). The
++old's fill promotion, partial-leg adoption, naked-leg flattening, dead-close retries and broker ghost-clears are
++the OMS's and the book's.
+ 
+ Inputs via context.extra:
+-  "chains":       {SYM: [{"symbol","strike","expiration"}]} (calls)
+-  "quotes":       {OCC: {"bid","ask"}}
+-  "sleeve_state": {SYM: {"position": {...} | None}}
+-Bars (arg): daily dicts ascending.
+-"""
++  "universe"      the basket in scan order (held names appended)
++  "chains"        {SYM: call rows 14-30 DTE {"symbol","strike","expiration","bid","ask",...}} (fetched on demand)
++  "option_quotes" {OCC: {"bid","ask"}} — the held legs
++  "sleeve_state"  {SYM: {"position": spread group | None, "pending_entry": ...}}
++Bars (arg): completed daily bars (260) of the basket and the held names."""
+ import math
+-from datetime import datetime, timezone
++from datetime import date, datetime
++
++from zoneinfo import ZoneInfo
+ 
+ from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++from .rsi_meanrev import rsi_wilder_last   # the stock sleeve's rsi_wilder, as the old imported it
++
++_ET = ZoneInfo("America/New_York")
+ 
+ RSI_PERIOD = 2
+ RSI_OVERSOLD = 10.0
+@@ -32,227 +60,270 @@
+ PROFIT_TARGET_FRAC = 0.50
+ EXIT_DTE = 7
+ LIQ_GATE_FRAC = 0.10
++RSI_EXIT_MIN_BARS = 5
+ 
+ CONFIG = SleeveConfig(
+     sleeve_id="rsi_meanrev_options", cadence_s=300, universe=(),
+     state_schema={"position": "dict|None"}, risk_pct=RISK_FRACTION)
+ 
+ 
+-def rsi_wilder_last(closes, period=RSI_PERIOD):
+-    """Identical to sleeves/rsi_meanrev.py (the stock sleeve's
+-    rsi_wilder: pandas ewm alpha=1/period, adjust=False)."""
+-    if len(closes) < period + 1:
+-        return None
+-    deltas = [closes[i] - closes[i - 1] for i in range(1, len(closes))]
+-    alpha = 1.0 / period
+-    ag = al = None
+-    last = None
+-    for i, d in enumerate(deltas):
+-        g, l = max(d, 0.0), max(-d, 0.0)
+-        if ag is None:
+-            ag, al = g, l
+-        else:
+-            ag = ag + alpha * (g - ag)
+-            al = al + alpha * (l - al)
+-        if i + 1 < period:
+-            last = None
+-            continue
+-        if al == 0 and ag > 0:
+-            last = 100.0
+-        elif ag == 0 and al == 0:
+-            last = 50.0
+-        elif al == 0:
+-            last = 100.0
+-        else:
+-            last = 100.0 - 100.0 / (1.0 + ag / al)
+-    return last
+-
+-
+ def rsi_signal(closes):
+-    """(bool, info) — verbatim old rsi_signal over closes (the old
+-    fetched bars itself; here bars arrive via the core Data door)."""
++    """(bool, info): the old rsi_signal over the completed closes — fail closed under 200 bars, RSI(2) < 10, the
++    close above its 200-day SMA. info carries rsi2 / close / sma200 rounded to the cent (the close, so rounded, is
++    the stock price the spread is chosen on)."""
+     if len(closes) < MA200_PERIOD:
+         return False, {"note": "ma200_warmup", "bars": len(closes)}
+     rsi = rsi_wilder_last(closes)
+-    if rsi is None or (isinstance(rsi, float) and math.isnan(rsi)) \
+-            or rsi >= RSI_OVERSOLD:
++    if rsi is None or (isinstance(rsi, float) and math.isnan(rsi)) or rsi >= RSI_OVERSOLD:
+         return False, {"rsi2": None if rsi is None else round(float(rsi), 2)}
+     sma200 = sum(closes[-MA200_PERIOD:]) / MA200_PERIOD
+     last_close = closes[-1]
+     if last_close <= sma200:
+-        return False, {"rsi2": round(float(rsi), 2),
+-                       "close": round(last_close, 2),
+-                       "sma200": round(sma200, 2), "note": "below_ma200"}
+-    return True, {"rsi2": round(float(rsi), 2), "close": round(last_close, 2),
+-                  "sma200": round(sma200, 2)}
+-
+-
+-def select_debit_spread(chain, quotes, target_price, session_iso,
+-                        dte_min=DTE_MIN, dte_max=DTE_MAX,
+-                        width_pct=SPREAD_WIDTH_PCT):
+-    """Pure form of desk/options_exec.select_debit_spread (see
+-    sleeves/ema_vwap_options.py for the shared rule text); this sleeve
+-    passes target = spot and debit_range=None (fragment 098)."""
+-    from datetime import date as _date
++        return False, {"rsi2": round(float(rsi), 2), "close": round(last_close, 2), "sma200": round(sma200, 2),
++                       "note": "below_ma200"}
++    return True, {"rsi2": round(float(rsi), 2), "close": round(last_close, 2), "sma200": round(sma200, 2)}
++
++
++def current_rsi2(closes):
++    """the old current_rsi2: the latest completed-bar RSI(2); None under 5 closes."""
++    if len(closes) < RSI_EXIT_MIN_BARS:
++        return None
++    r = rsi_wilder_last(closes)
++    return None if r is None or math.isnan(r) else float(r)
++
++
++def _leg_quote(row):
++    """the leg's latest quote as the old's quote CLI gave it ({bid, ask}, a missing side = 0), or None when the
++    snapshot holds no quote at all (the old: no quote returned -> no spread)."""
++    if row is None or (row.get("bid") is None and row.get("ask") is None):
++        return None
+     try:
+-        ref = _date.fromisoformat(session_iso)
+-    except ValueError:
+-        return None
++        return {"bid": float(row.get("bid") or 0), "ask": float(row.get("ask") or 0)}
++    except (TypeError, ValueError):
++        return None
++
++
++def pick_spread(chain, stock_price, session_iso, dte_min=DTE_MIN, dte_max=DTE_MAX, width_pct=SPREAD_WIDTH_PCT):
++    """(spread | None, why): the old desk/options_exec.select_debit_spread on chain rows that carry their quotes,
++    debit_range=None (fragment 098). The nearest expiry dte_min..dte_max days out; strikes in ascending order
++    (stable): long = the last strike <= stock_price (none: the first), short = the first strike >= long x
++    (1 + width_pct); the legs' quotes; the long ask > 0; the long's (ask - bid) / mid <= 10% when bid; debit =
++    long ask - short bid > 0."""
++    try:
++        ref = date.fromisoformat(session_iso)
++    except (TypeError, ValueError):
++        return None, "bad_session"
+     by_exp = {}
+     for c in chain or []:
+-        exp = str(c.get("expiration") or c.get("expiration_date") or "")[:10]
++        if not c.get("tradable", True):                   # the old chain CLI's client-side tradable filter
++            continue
++        exp = str(c.get("expiration") or "")[:10]
+         try:
+-            strike = float(c["strike"])
+-            dte = (_date.fromisoformat(exp) - ref).days
+-        except (TypeError, ValueError, KeyError):
++            float(c["strike"])
++            dte = (date.fromisoformat(exp) - ref).days
++        except (KeyError, TypeError, ValueError):
+             continue
+         if dte_min <= dte <= dte_max:
+-            by_exp.setdefault(exp, []).append(
+-                {"occ": c["symbol"], "strike": strike})
++            by_exp.setdefault(exp, []).append(c)
+     if not by_exp:
+-        return None
+-    expiry = sorted(by_exp.keys())[0]
+-    legs = sorted(by_exp[expiry], key=lambda c: c["strike"])
+-    long_leg = None
+-    for c in legs:
+-        if c["strike"] <= target_price:
+-            long_leg = c
+-    if long_leg is None:
+-        long_leg = legs[0]
+-    target_short = long_leg["strike"] * (1 + width_pct)
+-    short_leg = next((c for c in legs if c["strike"] >= target_short), None)
+-    if short_leg is None:
+-        return None
+-    lq = (quotes or {}).get(long_leg["occ"]) or {}
+-    sq = (quotes or {}).get(short_leg["occ"]) or {}
+-    try:
+-        long_ask, long_bid = float(lq.get("ask") or 0), float(lq.get("bid") or 0)
+-        short_bid = float(sq.get("bid") or 0)
+-    except (TypeError, ValueError):
+-        return None
++        return None, "no_expiry_in_window"
++    expiry = sorted(by_exp)[0]
++    rows = sorted(by_exp[expiry], key=lambda c: float(c["strike"]))
++    long_row = None
++    for c in rows:
++        if float(c["strike"]) <= stock_price:
++            long_row = c
++    if long_row is None:
++        long_row = rows[0]
++    long_strike = float(long_row["strike"])
++    target_short = long_strike * (1 + width_pct)
++    short_row = next((c for c in rows if float(c["strike"]) >= target_short), None)
++    if short_row is None:
++        return None, "no_short_strike"
++    short_strike = float(short_row["strike"])
++    width = short_strike - long_strike
++    lq, sq = _leg_quote(long_row), _leg_quote(short_row)
++    if lq is None or sq is None:
++        return None, "leg_unquoted"
++    long_ask, long_bid, short_bid = lq["ask"], lq["bid"], sq["bid"]
+     if long_ask <= 0:
+-        return None
++        return None, "long_no_ask"
+     mid = (long_ask + long_bid) / 2 if long_bid > 0 else long_ask
+     if long_bid > 0 and (long_ask - long_bid) / mid > LIQ_GATE_FRAC:
+-        return None
++        return None, "long_illiquid"
+     debit = long_ask - short_bid
+     if debit <= 0:
+-        return None
+-    width = short_leg["strike"] - long_leg["strike"]
++        return None, "no_debit"
+     return {"expiry": expiry,
+-            "long_leg": dict(long_leg, ask=long_ask, bid=long_bid),
+-            "short_leg": dict(short_leg, bid=short_bid),
+-            "width": round(width, 2), "debit": round(debit, 2),
+-            "max_profit": round(width - debit, 2),
+-            "breakeven": round(long_leg["strike"] + debit, 2)}
+-
+-
+-def size_spreads(equity, debit, halve=False):
+-    """Old _size_spreads: spread_qty_for_risk, optionally halved."""
++            "long_leg": {"occ": long_row["symbol"], "strike": long_strike, "ask": long_ask, "bid": long_bid},
++            "short_leg": {"occ": short_row["symbol"], "strike": short_strike, "bid": short_bid},
++            "width": round(width, 2), "debit": round(debit, 2), "max_profit": round(width - debit, 2),
++            "max_return_pct": round((width - debit) / debit * 100, 1),
++            "breakeven": round(long_strike + debit, 2)}, "ok"
++
++
++def select_debit_spread(chain, stock_price, session_iso, dte_min=DTE_MIN, dte_max=DTE_MAX,
++                        width_pct=SPREAD_WIDTH_PCT):
++    """the spread pick_spread chooses, or None."""
++    return pick_spread(chain, stock_price, session_iso, dte_min, dte_max, width_pct)[0]
++
++
++def size_spreads(equity, debit):
++    """the old _size_spreads = options_exec.spread_qty_for_risk: int(equity x 0.25% / (debit x 100)), 0 on bad
++    inputs (the drawdown brake's halving is gone with the brake)."""
+     if not equity or equity <= 0 or debit <= 0:
+-        qty = 0
+-    else:
+-        qty = max(0, int((equity * RISK_FRACTION) / (debit * 100)))
+-    if halve:
+-        qty = int(qty / 2)
+-    return qty
++        return 0
++    budget = equity * RISK_FRACTION
++    return max(0, int(budget / (debit * 100)))
+ 
+ 
+ def spread_close_value(spread, quotes):
+-    """Long bid - short ask. None when either leg is unquotable."""
+-    lq = (quotes or {}).get(spread["long_leg"]["occ"]) or {}
+-    sq = (quotes or {}).get(spread["short_leg"]["occ"]) or {}
++    """the old spread_close_value: what closing pays now, long bid - short ask, to the cent; None unless both
++    are > 0."""
++    q = quotes or {}
++    lq = q.get(spread["long_leg"]["occ"]) or {}
++    sq = q.get(spread["short_leg"]["occ"]) or {}
+     try:
+-        lb, sa = float(lq.get("bid") or 0), float(sq.get("ask") or 0)
++        long_bid, short_ask = float(lq.get("bid") or 0), float(sq.get("ask") or 0)
+     except (TypeError, ValueError):
+         return None
+-    if lb <= 0 or sa <= 0:
+-        return None
+-    return round(lb - sa, 2)
+-
+-
+-def _dte(spread, session_iso):
++    if long_bid <= 0 or short_ask <= 0:
++        return None
++    return round(long_bid - short_ask, 2)
++
++
++def days_to_expiry(spread, session_iso):
+     try:
+-        from datetime import date as _date
+-        return (_date.fromisoformat(str(spread["expiry"])[:10])
+-                - _date.fromisoformat(session_iso)).days
+-    except (ValueError, TypeError, KeyError):
+-        return None
+-
+-
+-def exit_due(pos, session_iso, close_value, rsi2):
+-    """Verbatim old order: 50% of max profit, 7-DTE, RSI(2) > 70."""
+-    entry_debit = pos.get("entry_debit") or 0
+-    max_profit = (pos.get("spread") or {}).get("max_profit") or 0
++        return (date.fromisoformat(str(spread["expiry"])[:10]) - date.fromisoformat(session_iso)).days
++    except (KeyError, TypeError, ValueError):
++        return None
++
++
++def exit_due(spread, session_iso, close_value, closes):
++    """the old exit_due, in its order: 50% of max profit, the 7-DTE time stop, RSI(2) > 70."""
++    entry_debit = spread.get("entry_debit") or 0
++    max_profit = spread.get("max_profit") or 0
+     if close_value is not None and entry_debit > 0 and max_profit > 0:
+         if close_value - entry_debit >= PROFIT_TARGET_FRAC * max_profit:
+             return "profit_target_50pct"
+-    dte = _dte(pos.get("spread") or {}, session_iso)
++    dte = days_to_expiry(spread, session_iso)
+     if dte is not None and dte <= EXIT_DTE:
+         return "dte_time_stop_%d" % dte
++    rsi2 = current_rsi2(closes)
+     if rsi2 is not None and rsi2 > RSI_OVERBOUGHT:
+         return "rsi2_overbought_%.1f" % rsi2
+     return None
+ 
+ 
++def _occ_expiry(occ):
++    t = str(occ)[-15:]
++    return "20%s-%s-%s" % (t[0:2], t[2:4], t[4:6])
++
++
++def held_spread(pos):
++    """the held spread: its legs from the position's meta (both in the book's group), else the group's one long and
++    one short leg (no max profit known); the entry debit is the package's net fill, to the cent."""
++    legs = pos.get("legs") or {}
++    sp = dict(pos.get("spread") or {})
++    lo, so = (sp.get("long_leg") or {}).get("occ"), (sp.get("short_leg") or {}).get("occ")
++    if not (lo and so and lo in legs and so in legs):
++        longs = [o for o, q in legs.items() if float(q) > 0]
++        shorts = [o for o, q in legs.items() if float(q) < 0]
++        if len(longs) != 1 or len(shorts) != 1:
++            return None
++        sp = {"long_leg": {"occ": longs[0]}, "short_leg": {"occ": shorts[0]}, "expiry": _occ_expiry(shorts[0]),
++              "max_profit": 0}
++    sp["entry_debit"] = round(float(pos.get("net_entry") or 0.0), 2)
++    return sp
++
++
++def session_close_ts(session_iso):
++    """16:00 ET of the session: a day order's end (the old's legs were day orders)."""
++    d = date.fromisoformat(session_iso)
++    return datetime(d.year, d.month, d.day, 16, 0, tzinfo=_ET).timestamp()
++
++
++def _flight_symbol(key, pending):
++    """the name an entry in flight belongs to: its signal key's symbol (a package in flight can be filed under the
++    package's id)."""
++    k = str((pending or {}).get("key") or "")
++    return k.split(":", 1)[0] if ":" in k else key
++
++
++def decide(bars, context):
++    """intents: exits first (every held spread), then the basket's entries in order, at most MAX_POSITIONS spreads
++    held or in flight."""
++    extra = context.extra or {}
++    state = extra.get("sleeve_state") or {}
++    chains = extra.get("chains") or {}
++    oq = extra.get("option_quotes") or {}
++    equity = float(context.equity or 0.0)
++    today = context.session
++    day_end = session_close_ts(today)
++    held, flight = set(), set()
++    for key, st in state.items():
++        st = st or {}
++        if st.get("position"):
++            held.add(key)
++        elif st.get("pending_entry"):
++            flight.add(_flight_symbol(key, st["pending_entry"]))
++    intents = []
++    for sym, st in state.items():
++        pos = (st or {}).get("position")
++        if not pos or pos.get("exit_submitted"):
++            continue
++        sp = held_spread(pos)
++        n = int(abs(float(pos.get("qty") or 0)))
++        if sp is None or n <= 0:
++            continue
++        cv = spread_close_value(sp, oq)
++        closes = [float(b["c"]) for b in bars.get(sym) or []]
++        why = exit_due(sp, today, cv, closes)
++        if not why:
++            continue
++        intents.append(Intent(
++            "exit", sym, qty_hint=n, order={"not_after": day_end}, signal_key="%s:%s:rmo-exit" % (sym, today),
++            reason="rsi_meanrev_options exit: %s close_value=%s entry_debit=%.2f max_profit=%.2f legs=%s/%s"
++                   % (why, cv, sp["entry_debit"], float(sp.get("max_profit") or 0), sp["long_leg"]["occ"],
++                      sp["short_leg"]["occ"])))
++    if equity <= 0:
++        return intents
++    live = len(held | flight)
++    for sym in extra.get("universe") or sorted(bars):
++        if sym in held or sym in flight:
++            continue
++        if live >= MAX_POSITIONS:
++            break
++        closes = [float(b["c"]) for b in bars.get(sym) or []]
++        ok, info = rsi_signal(closes)
++        if not ok:
++            continue
++        sp, _why = pick_spread(chains.get(sym), info["close"], today)
++        if sp is None:
++            continue
++        qty = size_spreads(equity, sp["debit"])
++        if qty <= 0:
++            continue
++        lo, so = sp["long_leg"], sp["short_leg"]
++        intents.append(Intent(
++            "enter", sym, qty_hint=qty, asset="mleg",
++            legs=({"symbol": lo["occ"], "side": "buy", "ratio": 1, "position_intent": "buy_to_open"},
++                  {"symbol": so["occ"], "side": "sell", "ratio": 1, "position_intent": "sell_to_open"}),
++            net_price=sp["debit"], order={"not_after": day_end}, signal_key="%s:%s:rmo" % (sym, today),
++            position_meta={"spread": sp, "rsi2": info["rsi2"], "sma200": info["sma200"], "signal_close": info["close"]},
++            reason="rsi_meanrev_options call debit spread: long %s @%.2f short %s @%.2f expiry %s width %.2f debit "
++                   "%.2f max_profit %.2f x%d; rsi2 %.2f close %.2f sma200 %.2f"
++                   % (lo["occ"], lo["strike"], so["occ"], so["strike"], sp["expiry"], sp["width"], sp["debit"],
++                      sp["max_profit"], qty, info["rsi2"], info["close"], info["sma200"])))
++        live += 1
++    return intents
++
++
+ class RsiMeanrevOptions(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        chains = extra.get("chains") or {}
+-        quotes = extra.get("quotes") or {}
+-        equity = float(context.equity or 0.0)
+-        universe = extra.get("universe") or sorted(bars.keys())
+-        intents = []
+-        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position"))
+-        for sym in universe:
+-            bl = bars.get(sym) or []
+-            closes = [float(b["c"]) for b in bl]
+-            st = state.get(sym) or {}
+-            pos = st.get("position")
+-            if pos:
+-                qty = int(float(pos.get("qty") or 0))
+-                if qty <= 0:
+-                    continue
+-                value = spread_close_value(pos.get("spread") or {}, quotes) \
+-                    if pos.get("spread") else None
+-                rsi2 = rsi_wilder_last(closes) if len(closes) >= 5 else None
+-                reason = exit_due(pos, context.session, value, rsi2)
+-                if reason:
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty,
+-                        price_hint=round(closes[-1], 2) if closes else None,
+-                        reason="rsi_meanrev_options exit: %s value=%s"
+-                               % (reason, value)))
+-                continue
+-            if open_n >= MAX_POSITIONS or equity <= 0:
+-                continue
+-            ok, info = rsi_signal(closes)
+-            if not ok:
+-                continue
+-            spot = closes[-1]
+-            sp = select_debit_spread(chains.get(sym), quotes, spot,
+-                                     context.session)
+-            if not sp:
+-                continue
+-            qty = size_spreads(equity, sp["debit"])
+-            if qty <= 0:
+-                continue
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(spot, 2),
+-                reason="rsi_meanrev_options call_debit_spread: long=%s@%.2f "
+-                       "short=%s@%.2f expiry=%s width=%.2f debit=%.2f "
+-                       "rsi2=%.2f sma200=%.2f structure=call_debit_spread "
+-                       "dte_window=%d-%d width_pct=%.2f"
+-                       % (sp["long_leg"]["occ"], sp["long_leg"]["strike"],
+-                          sp["short_leg"]["occ"], sp["short_leg"]["strike"],
+-                          sp["expiry"], sp["width"], sp["debit"],
+-                          info["rsi2"], info["sma200"],
+-                          DTE_MIN, DTE_MAX, SPREAD_WIDTH_PCT)))
+-            open_n += 1
+-        return intents
++        return list(decide(bars, context))
+ 
+ 
+ def signal(bars, slice_state, context):

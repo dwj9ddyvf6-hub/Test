@@ -1,0 +1,134 @@
+--- femto-lean@7f2a996/sleeves/capitulation.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/capitulation.py
+@@ -20,11 +20,15 @@
+ is FEAR+ — the core supplies it as extra["fear_ok"]; absent = fail-open
+ exactly as the old code (sentiment errors never blocked).
+ 
++master-desk — gone under the cutover doctrine: the Decision #8 earnings
++blackout (entries vetoed 3 days before through the earnings date, a stale
++calendar halting all entries); the SPEC lists it with the desk-wide rails
++(kill switch, chart gate, drawdown brake), not as a capitulation rule.
++
+ Inputs via context.extra:
+   "bars_1h":      {SYM: [closed 1H bar dicts]}
+   "sleeve_state": {SYM: {"position": {...} | None}}
+   "fear_ok":      bool (optional; absent == fail-open pass)
+-  "earnings":     {SYM: "YYYY-MM-DD" | None}, "earnings_fresh": bool
+ Bars (arg): daily dicts {"t","o","h","l","c","v"} ascending.
+ """
+ import math
+@@ -251,23 +255,6 @@
+     return None
+ 
+ 
+-def _earnings_veto(sym, session_iso, earnings, fresh):
+-    if not fresh:
+-        return "stale_calendar"
+-    if sym not in earnings:
+-        return "unknown_date"
+-    ed = earnings[sym]
+-    if ed is None:
+-        return None
+-    try:
+-        from datetime import date as _date
+-        delta = (_date.fromisoformat(str(ed)[:10])
+-                 - _date.fromisoformat(session_iso)).days
+-    except ValueError:
+-        return "unknown_date"
+-    return "blackout_window" if 0 <= delta <= BLACKOUT_DAYS_BEFORE else None
+-
+-
+ class Capitulation(BaseSleeve):
+     CONFIG = CONFIG
+ 
+@@ -275,18 +262,14 @@
+         extra = context.extra or {}
+         state = extra.get("sleeve_state") or {}
+         h1map = extra.get("bars_1h") or {}
+-        earnings = extra.get("earnings") or {}
+-        earnings_fresh = bool(extra.get("earnings_fresh"))
+         fear_ok = extra.get("fear_ok", True)  # old: fail-open on errors
+         equity = float(context.equity or 0.0)
+         universe = extra.get("universe") or sorted(bars.keys())
+         intents = []
+-        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position"))
+-        notional = 0.0
+-        for s in universe:
+-            p = (state.get(s) or {}).get("position")
+-            if p:
+-                notional += float(p.get("entry_px") or 0) * float(p.get("qty") or 0)
++        # master-desk: old scan_pass open_count = positions + pending entries; the old sleeve defined
++        # SLEEVE_NOTIONAL_CAP but never enforced it (the femto port's notional check is not the strategy)
++        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position")
++                     or (state.get(s) or {}).get("pending_entry"))
+         for sym in universe:
+             daily = bars.get(sym) or []
+             h1 = h1map.get(sym) or []
+@@ -305,16 +288,19 @@
+                         price_hint=round(float(h1[-1]["c"]), 2),
+                         reason="capitulation exit: %s" % reason))
+                     continue
+-                # Tranche 2: remainder on the 5/20 turn within 5 sessions.
++                # Tranche 2: remainder on the 5/20 turn within 5 sessions (old _maybe_tranche2: weekday
++                # sessions from the tranche-1 fill date, exclusive, to today; > 5 expires; no stacking).
+                 t2 = int(float(pos.get("tranche2_qty") or 0))
+-                if t2 > 0 and pos.get("signal_date"):
+-                    dates = _dates(daily)
+-                    try:
+-                        waited = len(dates) - 1 - dates.index(pos["signal_date"])
+-                    except ValueError:
+-                        waited = None
+-                    if waited is not None and waited <= TRANCHE2_MAX_WAIT \
+-                            and turn_confirmed(daily):
++                if t2 > 0 and pos.get("entry_date") and not pos.get("exit_submitted") \
++                        and not st.get("pending_entry"):
++                    from datetime import date as _date
++                    waited = 0
++                    d = _date.fromisoformat(str(pos["entry_date"])[:10])
++                    while d < _date.fromisoformat(context.session):
++                        d += timedelta(days=1)
++                        if d.weekday() < 5:
++                            waited += 1
++                    if waited <= TRANCHE2_MAX_WAIT and turn_confirmed(daily):
+                         stop_px = round(float(pos["entry_px"]) * (1 - DISASTER_STOP), 2)
+                         intents.append(Intent(
+                             "enter", sym, qty_hint=t2,
+@@ -323,7 +309,9 @@
+                             exit_rules=(ExitRule("stop", stop_px),
+                                         ExitRule("time_bars", float(HOLD_DAYS))),
+                             reason="capitulation tranche2: 5/20 turn confirmed, "
+-                                   "waited=%d sessions" % waited))
++                                   "waited=%d sessions" % waited,
++                            signal_key="%s:%s:t2" % (sym, context.session),
++                            state={"pos": {"tranche2_qty": 0}}))
+                 continue
+             if open_n >= MAX_POSITIONS or equity <= 0:
+                 continue
+@@ -334,15 +322,11 @@
+                 continue
+             if not fear_ok:
+                 continue  # DEFER (old semantics): signal stays eligible
+-            if _earnings_veto(sym, context.session, earnings, earnings_fresh):
+-                continue
+             ref_px = float(h1[-1]["c"])
+             full = size_qty(equity, ref_px)
+             if full <= 0:
+                 continue
+             t1 = max(1, int(full * TRANCHE1_FRACTION))
+-            if notional + t1 * ref_px > SLEEVE_NOTIONAL_CAP * equity:
+-                continue
+             stop_px = round(ref_px * (1 - DISASTER_STOP), 2)
+             intents.append(Intent(
+                 "enter", sym, qty_hint=t1, price_hint=round(ref_px, 2),
+@@ -352,9 +336,9 @@
+                             ExitRule("time_bars", float(HOLD_DAYS))),
+                 reason="capitulation tranche1 (of full %d): rsi=%.1f "
+                        "vol_mult=%.2f ema200=%.2f"
+-                       % (full, sig["rsi"], sig["climax_vol_mult"], sig["ema200"])))
++                       % (full, sig["rsi"], sig["climax_vol_mult"], sig["ema200"]),
++                position_meta={"tranche2_qty": full - t1, "signal_date": context.session}))
+             open_n += 1
+-            notional += t1 * ref_px
+         return intents
+ 
+ 

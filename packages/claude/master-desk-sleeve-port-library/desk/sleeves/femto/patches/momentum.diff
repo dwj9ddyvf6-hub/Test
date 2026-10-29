@@ -1,0 +1,209 @@
+--- femto-lean@7f2a996/sleeves/momentum.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/momentum.py
+@@ -25,7 +25,11 @@
+ import math
+ from datetime import date, datetime, timedelta, timezone
+ 
++from zoneinfo import ZoneInfo
++
+ from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++
++ET = ZoneInfo("America/New_York")
+ 
+ LOOKBACK = 126
+ REVIEW_EVERY = 63
+@@ -43,6 +47,11 @@
+              ("2026-04-28", "2026-04-29"), ("2026-06-16", "2026-06-17"),
+              ("2026-07-28", "2026-07-29"), ("2026-09-15", "2026-09-16"),
+              ("2026-10-27", "2026-10-28"), ("2026-12-08", "2026-12-09")]
++# master-desk: SPEC §7 ("2027 FOMC dates must be added here in January 2027") — the Fed's 2027 schedule
++FOMC_2026 = FOMC_2026 + [("2027-01-26", "2027-01-27"), ("2027-03-16", "2027-03-17"),
++                         ("2027-04-27", "2027-04-28"), ("2027-06-15", "2027-06-16"),
++                         ("2027-07-27", "2027-07-28"), ("2027-09-21", "2027-09-22"),
++                         ("2027-11-02", "2027-11-03"), ("2027-12-14", "2027-12-15")]
+ 
+ CONFIG = SleeveConfig(
+     sleeve_id="momentum", cadence_s=300, universe=(),
+@@ -182,63 +191,142 @@
+     return 0.0050
+ 
+ 
++def review_plan(bars, state, meta, today):
++    """master-desk: the old mode_rank decision verbatim in behaviour — rank on completed bars, a review
++    every 63 SPY sessions (or on the first rank), target = top tenth on review else the current book,
++    sells = book - target (minus working exits), buys = target - book - pending entries.
++    Returns None when the rank waits (SPY missing/stale), else a dict."""
++    rank = compute_rank(bars, today)
++    spy = rank["spy_sessions"]
++    if not spy:
++        return None
++    prev = date.fromisoformat(today) - timedelta(days=1)
++    while prev.weekday() >= 5:
++        prev -= timedelta(days=1)
++    if spy[-1] < prev.isoformat():
++        return None                                   # old: SPY bars stale -> rank waits
++    book = {s: (st or {}).get("position") for s, st in state.items() if (st or {}).get("position")}
++    pend_entry = {s for s, st in state.items() if (st or {}).get("pending_entry")}
++    pend_exit = {s for s, p in book.items() if p.get("exit_submitted")}
++    last_rev = meta.get("last_review_spy_date")
++    is_first = not book and not meta.get("ranked")
++    due = is_first or last_rev is None or sum(1 for d in spy if d > last_rev) >= REVIEW_EVERY \
++        or review_lost(meta, state, book, pend_entry)
++    target = list(rank["top"]) if due else sorted(book)
++    sells = [s for s in book if s not in target and s not in pend_exit]
++    buys = [s for s in target if s not in book and s not in pend_entry]
++    return {"rank": rank, "review": due, "target": target, "sells": sells, "buys": buys,
++            "spy_last": spy[-1], "book": book, "pend_entry": pend_entry, "pend_exit": pend_exit}
++
++
++def review_lost(meta, state, book, pend_entry):
++    """master-desk (roll call 2026-10-26): a review stamped before reviews recorded their sends ("review_sent")
++    whose book never held a name since — its buys were never sent, so the review is still due. femto_momentum's
++    only review ran at the 2026-10-16 14:07Z pass in the Alpaca credentials outage, sent no buy and stamped itself."""
++    last_rev = meta.get("last_review_spy_date")
++    if not last_rev or "review_sent" in meta or book or pend_entry:
++        return False
++    return not any(str((st or {}).get("last_exit_date") or "") >= last_rev for st in state.values())
++
++
++def next_meta(bars, slice_state, context, out=()):
++    """master-desk: the old rank's state stamps (persisted sleeve meta): ranked; review date on a review — once
++    its buys are sent (or it needed none). A review whose buys all wait (a buy gate, no fresh quote, no budget) stays
++    due, as the old gates' "buys wait" says: stamped regardless, it emptied the book until the next review."""
++    extra = context.extra or {}
++    meta = dict(extra.get("meta") or {})
++    plan = review_plan(bars, extra.get("sleeve_state") or {}, meta, context.session)
++    if plan is None:
++        return meta
++    meta["ranked"] = True
++    if plan["review"]:
++        sent = sum(1 for i in out or () if i.kind == "enter")
++        if sent or not plan["buys"]:
++            meta["last_review_spy_date"] = plan["spy_last"]
++            meta["review_sent"] = sent
++    return meta
++
++
++def _mid(q):
++    try:
++        bid, ask = float(q.get("bid") or q.get("bp") or 0), float(q.get("ask") or q.get("ap") or 0)
++    except (TypeError, ValueError, AttributeError):
++        return None
++    return (bid + ask) / 2 if bid > 0 and ask > 0 else None
++
++
+ class Momentum(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
++        """master-desk: the old rank (16:05) + fill (10:05) pair as one 10:05 pass on the same completed
++        bars: review plan -> rank sells -> 40% breaker on a fresh mid -> gated buys sized from the 30%
++        sleeve budget left after book + pending notional, split over the review target, all-in price
++        mid x (1 + cost_bps), 1-share minimum (Decision #20), book capped at 10."""
+         extra = context.extra or {}
+         state = extra.get("sleeve_state") or {}
++        meta = extra.get("meta") or {}
++        quotes = extra.get("quotes") or {}
+         equity = float(context.equity or 0.0)
+         today = context.session
+-        now_et = datetime.fromtimestamp(float(context.now),
+-                                        tz=timezone.utc)
+-        # ET wall time via the desk's fixed convention is core-injected
+-        # as extra["now_et"] when available; fall back to session date.
+-        now_date = date.fromisoformat(today)
+-        now_hm = tuple(extra.get("now_hm") or (16, 0))
++        now_et = datetime.fromtimestamp(float(context.now), tz=ET)
++        if (now_et.hour, now_et.minute) < (10, 0):
++            return []                                  # old fill clock: never before 10:00 ET
+         intents = []
+-        # circuit breaker exits first (old: close if down 40% from entry)
+-        held = {}
+-        for sym, st in state.items():
+-            p = (st or {}).get("position")
+-            if p:
+-                held[sym] = p
+-        for sym, p in held.items():
+-            bl = bars.get(sym) or []
+-            if not bl:
++        plan = review_plan(bars, state, meta, today)
++        book = {s: (st or {}).get("position") for s, st in state.items() if (st or {}).get("position")}
++        done_sells = set()
++        for sym in (plan or {}).get("sells", []):
++            mid = _mid(quotes.get(sym) or {})
++            p = book.get(sym) or {}
++            qty = int(float(p.get("qty") or 0))
++            if mid is None or qty <= 0:
++                continue                               # old: sell_quote_stale -> not sold this pass
++            intents.append(Intent("exit", sym, qty_hint=qty, price_hint=round(mid, 2),
++                                  reason="momentum rank_exit (review target %s)" % ",".join(plan["target"])))
++            done_sells.add(sym)
++        for sym, p in book.items():                    # 40% circuit breaker on a fresh regular-hours mid
++            if sym in done_sells or p.get("exit_submitted"):
+                 continue
+-            last_px = float(bl[-1]["c"])
+-            entry_px = float(p.get("entry_px") or last_px)
+             qty = int(float(p.get("qty") or 0))
+-            if qty > 0 and entry_px > 0 and last_px <= entry_px * (1 - BREAKER_DROP):
+-                intents.append(Intent(
+-                    "exit", sym, qty_hint=qty, price_hint=round(last_px, 2),
+-                    reason="momentum breaker: %.2f <= entry %.2f x %.2f"
+-                           % (last_px, entry_px, 1 - BREAKER_DROP)))
+-        if equity <= 0:
++            entry = float(p.get("entry_px") or 0)
++            mid = _mid(quotes.get(sym) or {})
++            if qty <= 0 or entry <= 0 or mid is None:
++                continue
++            if mid <= (1 - BREAKER_DROP) * entry:
++                intents.append(Intent("exit", sym, qty_hint=qty, price_hint=round(mid, 2),
++                                      reason="momentum breaker_40pct: mid %.2f <= 0.60 x entry %.2f" % (mid, entry)))
++                done_sells.add(sym)
++        if plan is None or not plan["buys"] or equity <= 0:
+             return intents
+-        blocks = new_buy_gates(now_date, now_hm, extra.get("vix"),
+-                               bars.get("SPY"), today)
++        blocks = new_buy_gates(now_et.date(), (now_et.hour, now_et.minute), extra.get("vix"), bars.get("SPY"), today)
+         if blocks:
+             return intents
+-        rank = compute_rank(bars, today)
+-        room = MAX_POSITIONS - len(held)
+-        if room <= 0:
++        pend = {s: (st or {}).get("pending_entry") for s, st in state.items() if (st or {}).get("pending_entry")}
++        book_not = sum(float(p.get("qty") or 0) * float(p.get("entry_px") or p.get("ref_px") or 0)
++                       for p in book.values())
++        pend_not = sum(float(pe.get("qty") or 0) * float(pe.get("ref_px") or pe.get("entry_px") or 0)
++                       for pe in pend.values())
++        budget = max(0.0, SLEEVE_CAP * equity - book_not - pend_not)
++        if budget == 0:
+             return intents
+-        per_name = equity * SLEEVE_CAP / MAX_POSITIONS
+-        for row in rank["top_detail"]:
+-            if room <= 0:
+-                break
+-            sym = row["symbol"]
+-            if sym in held:
++        n_target = max(1, len(plan["target"] or plan["buys"]))
++        n_open = len(book) + len(pend)
++        for sym in plan["buys"]:
++            if n_open - len(done_sells) >= MAX_POSITIONS:
+                 continue
+-            qty = max(1, int(per_name // row["price"]))
++            mid = _mid(quotes.get(sym) or {})
++            if mid is None:
++                continue                               # old: buy_quote_stale
++            all_in = mid * (1.0 + cost_bps(mid))
++            qty = max(1, math.floor((budget / n_target) / all_in)) if all_in > 0 else 1
++            row = next((r for r in plan["rank"]["top_detail"] if r["symbol"] == sym), {})
+             intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(row["price"], 2),
+-                reason="momentum top-decile: ret126=%.4f dv20=%.0f cost_bps=%.4f"
+-                       % (row["ret126"], row["dollar_vol_20d"],
+-                          cost_bps(row["price"]))))
+-            room -= 1
++                "enter", sym, qty_hint=qty, price_hint=round(mid, 2),
++                reason="momentum review buy: ret126=%s cost_bps=%.4f"
++                       % (round(row.get("ret126", 0.0), 4), cost_bps(mid)),
++                position_meta={"ref_px": round(mid, 2), "cost_bps": cost_bps(mid) * 1e4}))
++            n_open += 1
+         return intents
+ 
+ 
