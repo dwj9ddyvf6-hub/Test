@@ -1,0 +1,473 @@
+{
+  "audit": "Full notification subsystem correctness and functional inspection",
+  "generated_at": "2026-10-08T07:33:27.493552+00:00",
+  "scope": {
+    "files": [
+      "backend/notifications.py",
+      "tests/test_notifications.py"
+    ],
+    "function_bodies_inspected": [
+      {
+        "name": "__init__",
+        "line": 34,
+        "end_line": 36,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_http",
+        "line": 39,
+        "end_line": 51,
+        "review": "full body inspected"
+      },
+      {
+        "name": "post",
+        "line": 56,
+        "end_line": 63,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_push",
+        "line": 66,
+        "end_line": 80,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_https",
+        "line": 83,
+        "end_line": 92,
+        "review": "full body inspected"
+      },
+      {
+        "name": "__init__",
+        "line": 99,
+        "end_line": 146,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_destination_binding",
+        "line": 148,
+        "end_line": 152,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_configured",
+        "line": 154,
+        "end_line": 161,
+        "review": "full body inspected"
+      },
+      {
+        "name": "configure",
+        "line": 163,
+        "end_line": 177,
+        "review": "full body inspected"
+      },
+      {
+        "name": "subscribe",
+        "line": 179,
+        "end_line": 189,
+        "review": "full body inspected"
+      },
+      {
+        "name": "unsubscribe",
+        "line": 191,
+        "end_line": 198,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_channel_enabled",
+        "line": 200,
+        "end_line": 202,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_insert",
+        "line": 204,
+        "end_line": 207,
+        "review": "full body inspected"
+      },
+      {
+        "name": "queue",
+        "line": 209,
+        "end_line": 243,
+        "review": "full body inspected"
+      },
+      {
+        "name": "read",
+        "line": 245,
+        "end_line": 255,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_collect",
+        "line": 257,
+        "end_line": 273,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_receipt",
+        "line": 275,
+        "end_line": 282,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_accepted",
+        "line": 284,
+        "end_line": 290,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_media",
+        "line": 292,
+        "end_line": 332,
+        "review": "full body inspected"
+      },
+      {
+        "name": "_deliver",
+        "line": 334,
+        "end_line": 374,
+        "review": "full body inspected"
+      },
+      {
+        "name": "run_once",
+        "line": 376,
+        "end_line": 436,
+        "review": "full body inspected"
+      },
+      {
+        "name": "retry",
+        "line": 438,
+        "end_line": 447,
+        "review": "full body inspected"
+      },
+      {
+        "name": "resolve",
+        "line": 449,
+        "end_line": 459,
+        "review": "full body inspected"
+      },
+      {
+        "name": "status",
+        "line": 461,
+        "end_line": 470,
+        "review": "full body inspected"
+      },
+      {
+        "name": "snapshot",
+        "line": 472,
+        "end_line": 485,
+        "review": "full body inspected"
+      },
+      {
+        "name": "notification_router",
+        "line": 501,
+        "end_line": 525,
+        "review": "full body inspected"
+      },
+      {
+        "name": "configure",
+        "line": 505,
+        "end_line": 506,
+        "review": "full body inspected"
+      },
+      {
+        "name": "subscribe",
+        "line": 508,
+        "end_line": 509,
+        "review": "full body inspected"
+      },
+      {
+        "name": "unsubscribe",
+        "line": 511,
+        "end_line": 512,
+        "review": "full body inspected"
+      },
+      {
+        "name": "queue",
+        "line": 514,
+        "end_line": 515,
+        "review": "full body inspected"
+      },
+      {
+        "name": "read",
+        "line": 517,
+        "end_line": 518,
+        "review": "full body inspected"
+      },
+      {
+        "name": "retry",
+        "line": 520,
+        "end_line": 521,
+        "review": "full body inspected"
+      },
+      {
+        "name": "resolve",
+        "line": 523,
+        "end_line": 524,
+        "review": "full body inspected"
+      }
+    ],
+    "interfaces_inspected": [
+      "backend/store.py transaction/event methods",
+      "backend/lab.py peer-message source usage",
+      "backend/app.py notification router binding and export exclusion",
+      "backend/autonomy.py production clock handoff",
+      "frontend/public/sw.js push presentation",
+      "frontend/src/Autonomy.tsx notification forms/acknowledgement controls",
+      "backend/http_transport.py cancellable bounded HTTP interface and shared-loop resolver lifecycle",
+      "pywebpush.webpush and WebPusher session injection, encryption, VAPID signing and error response behavior"
+    ],
+    "areas": [
+      "schema and additive migration",
+      "destination enablement and historical baselines",
+      "per-recipient subscriptions and cursor scope",
+      "event collection/deduplication",
+      "atomic claims/cancellations",
+      "in-process and cross-process locks",
+      "bounded retry and unknown recovery",
+      "webhook acceptance",
+      "WebPush expiry/pruning",
+      "Typefully creation/upload/processing/publish phases",
+      "reader acknowledgement",
+      "operator retry/reconciliation",
+      "receipts and payload provenance",
+      "snapshot/export configured-secret omission",
+      "whole-request deadlines through shared bounded HTTP",
+      "WebPush encrypted transport session adapter",
+      "finite notification batch-start budget and durable deferral"
+    ]
+  },
+  "findings": [
+    {
+      "id": "NOTIF-001",
+      "status": "repaired",
+      "problem": "Queued messages could be resurrected after a pause/resume during an existing delivery batch, and queueing could race a pause.",
+      "root_cause": "Batch claims unconditionally updated stale snapshots; queue enablement was read outside the mutation transaction.",
+      "repair": "Claim current queued/retry status and channel enablement in the same write transaction, reread attempts, and recheck queue enablement inside its insert transaction.",
+      "regression_tests": [
+        "test_pause_resume_does_not_resurrect_cancelled_batch_items",
+        "test_queue_pause_race_does_not_append_an_unapproved_pending_item"
+      ]
+    },
+    {
+      "id": "NOTIF-002",
+      "status": "repaired",
+      "problem": "New or resumed browser recipients could receive prior uncollected history; unsubscribed pending items could resume after resubscription.",
+      "root_cause": "Only a channel-wide event cursor existed, and unsubscribe did not cancel pending recipient rows.",
+      "repair": "Add durable recipient baseline_event_id, preserve the baseline for active key updates, baseline new/resumed recipients, and atomically fail queued/retry items on unsubscribe.",
+      "regression_tests": [
+        "test_new_subscription_baselines_uncollected_history",
+        "test_unsubscribe_cancels_pending_deliveries_and_resubscribe_baselines",
+        "test_legacy_subscription_migration_preserves_existing_recipient_and_pending_scope"
+      ]
+    },
+    {
+      "id": "NOTIF-003",
+      "status": "repaired",
+      "problem": "A webhook accepting delivery with a valid non-object JSON response was recorded unknown.",
+      "root_cause": "Accepted response bodies were assumed to have a get method.",
+      "repair": "Treat accepted HTTP status as webhook acceptance and read an optional remote ID only from object bodies.",
+      "regression_tests": [
+        "test_webhook_acceptance_does_not_require_json_object_response"
+      ]
+    },
+    {
+      "id": "NOTIF-004",
+      "status": "repaired",
+      "problem": "Safe media PUT retries were lost on provider 5xx, and valid HTTP 201 upload acceptance was rejected.",
+      "root_cause": "Retry classification only considered read operations and the PUT acceptance set omitted Created.",
+      "repair": "Classify read and idempotent PUT 5xx as retryable, accept 200/201/204 for PUT, and reuse persisted media/upload identity on retries.",
+      "regression_tests": [
+        "test_idempotent_media_upload_retries_server_failure_without_new_media",
+        "test_explicit_png_upload_processing_and_draft_have_durable_receipts"
+      ]
+    },
+    {
+      "id": "NOTIF-005",
+      "status": "repaired",
+      "problem": "Delivery and operator reconciliation statuses could commit without their matching receipt, or an acceptance receipt could survive without final status.",
+      "root_cause": "Receipt inserts and status writes used separate transactions.",
+      "repair": "Persist each terminal/retry delivery receipt with its outbox state and each operator reconciliation receipt with its status in one transaction.",
+      "regression_tests": [
+        "test_reconciliation_receipt_and_state_are_atomic",
+        "test_accepted_receipt_and_final_status_roll_back_together"
+      ]
+    },
+    {
+      "id": "NOTIF-006",
+      "status": "repaired",
+      "problem": "An inability to open the lock file permanently left the in-process dispatcher busy.",
+      "root_cause": "The mutex was acquired before an open call outside the try/finally cleanup.",
+      "repair": "Acquire the file inside the cleanup scope and release the mutex even if open or close fails.",
+      "regression_tests": [
+        "test_lock_open_failure_releases_dispatch_mutex"
+      ]
+    },
+    {
+      "id": "NOTIF-007",
+      "status": "repaired",
+      "problem": "A slow external call consumed the configured retry delay, causing the next retry to become due immediately.",
+      "root_cause": "The clock was frozen at batch entry and used after transport completion.",
+      "repair": "Keep explicit test clocks deterministic but recompute production time at collection, claims, and completion; backoff starts at completion.",
+      "regression_tests": [
+        "test_retry_backoff_starts_after_slow_attempt_completes",
+        "test_retry_budget_is_bounded_and_definite_failure_needs_operator_retry"
+      ]
+    },
+    {
+      "id": "NOTIF-008",
+      "status": "repaired",
+      "problem": "Malformed channel values or malformed HTTPS addresses raised internal exceptions rather than validation errors.",
+      "root_cause": "Set membership ran before channel type validation, and URL parsing/port validation was not guarded.",
+      "repair": "Validate channel type before membership and return false for malformed addresses/ports.",
+      "regression_tests": [
+        "test_invalid_channel_types_and_malformed_https_are_validation_errors"
+      ]
+    },
+    {
+      "id": "NOTIF-009",
+      "status": "repaired",
+      "problem": "A terminal failed local notice left after a channel pause blocked acknowledgement of all later delivered notices.",
+      "root_cause": "The reader cursor treated terminal failed rows as pending.",
+      "repair": "Allow the delivered-notice reader cursor past terminal failed rows while still rejecting pending/unknown gaps and backward/out-of-range movement.",
+      "regression_tests": [
+        "test_local_cursor_passes_cancelled_notices_but_cannot_skip_pending"
+      ]
+    },
+    {
+      "id": "NOTIF-010",
+      "status": "repaired",
+      "problem": "Changed persisted image bytes could be uploaded while receipts claimed the original content hash.",
+      "root_cause": "The recorded image digest was never checked at delivery.",
+      "repair": "Decode and verify the persisted digest before media creation or upload; fail before any provider effect on mismatch.",
+      "regression_tests": [
+        "test_typefully_rejects_changed_media_before_any_provider_effect"
+      ]
+    },
+    {
+      "id": "NOTIF-011",
+      "status": "repaired",
+      "problem": "Typefully silently truncated an explicit message to 280 characters while the acceptance receipt omitted the modification.",
+      "root_cause": "The text slice did not record transmitted length/scope.",
+      "repair": "Preserve the original outbox payload and disclose original/transmitted character counts in the acceptance receipt when truncated.",
+      "regression_tests": [
+        "test_typefully_discloses_text_truncation"
+      ]
+    },
+    {
+      "id": "NOTIF-012",
+      "status": "repaired",
+      "problem": "HTTP error responses were returned without closing their response stream.",
+      "root_cause": "The HTTPError branch bypassed the success response context manager.",
+      "repair": "The urllib response-error path was first closed explicitly, then replaced by shared bounded_http whose async response/client context closes all transport resources. Status handling and retry/ambiguity semantics are preserved.",
+      "regression_tests": [
+        "test_http_transport_preserves_status_and_retry_classification",
+        "test_real_loopback_dribbling_post_deadline_is_unknown_and_not_replayed"
+      ]
+    },
+    {
+      "id": "NOTIF-013",
+      "status": "repaired",
+      "problem": "Two dispatcher instances addressing one SQLite database through a file symlink could bypass the process lock.",
+      "root_cause": "Lock-file names were derived from the supplied path instead of its resolved database path.",
+      "repair": "Resolve the database path before naming the notification lock and retain the atomic SQL claim guard.",
+      "regression_tests": [
+        "test_two_dispatchers_do_not_send_the_same_pending_item_concurrently"
+      ]
+    },
+    {
+      "id": "NOTIF-014",
+      "status": "repaired",
+      "problem": "A restart with a different webhook URL or Typefully social set could redirect a previously approved pending/retry message.",
+      "root_cause": "Persisted enablement and queued items were bound only to the channel name.",
+      "repair": "Persist an opaque receiver binding, pause changed receivers, fail their prior queued/retry rows, baseline future events upon explicit enablement, and guard delivery against receiver drift; same-receiver credential rotation preserves existing authorization.",
+      "regression_tests": [
+        "test_changed_webhook_destination_pauses_and_cannot_redirect_old_retry",
+        "test_changed_typefully_social_set_cannot_publish_old_queued_message",
+        "test_credential_rotation_for_the_same_receiver_keeps_authorized_scope",
+        "test_initial_destination_binding_migration_keeps_existing_enablement"
+      ]
+    },
+    {
+      "id": "NOTIF-015",
+      "status": "repaired",
+      "problem": "Socket idle timeouts allowed a provider continuously dribbling response bytes to stall the shared operations worker indefinitely, including WebPush requests through requests/pywebpush.",
+      "root_cause": "urllib and requests timeout values limited inactivity rather than the complete response, so each arriving chunk reset the effective wait.",
+      "repair": "Route notification HTTP through shared bounded_http with an eight-second whole-request deadline, 256000-byte limit and redirects disabled. Inject a bounded session adapter into real pywebpush, preserving its encryption/VAPID signing and accepted/expired status handling. Timeout/oversize POSTs remain unknown and are never automatically replayed. Shared helper cancellation closes the actual HTTP operation rather than abandoning a sender thread.",
+      "regression_tests": [
+        "test_real_loopback_dribbling_post_deadline_is_unknown_and_not_replayed",
+        "test_http_transport_preserves_status_and_retry_classification",
+        "test_actual_webpush_encryption_and_signing_use_bounded_transport",
+        "test_webpush_deadline_and_oversized_response_remain_unknown"
+      ],
+      "independent_reproduction": "Root final recheck observed a 93-byte dribbling POST response taking 9.032 seconds through the previous eight-second socket timeout. This notification suite independently verifies a real loopback dribble is stopped under a 0.15-second test deadline; no external destination is contacted.",
+      "shared_helper_regressions": [
+        "tests/test_http_transport.py:test_total_deadline_stops_a_real_continuously_streaming_response",
+        "tests/test_http_transport.py:test_slow_dns_does_not_extend_deadline_or_send_after_cancellation"
+      ]
+    },
+    {
+      "id": "NOTIF-016",
+      "status": "repaired",
+      "problem": "A batch of twelve slow notifications could monopolize the operations worker for hundreds of seconds even after individual network requests became bounded.",
+      "root_cause": "The dispatcher limited item count without limiting the elapsed time before starting another item; Typefully media can perform four sequential calls per item.",
+      "repair": "Use a sixteen-second monotonic budget for starting another batch item. Finish the current item and its durable outcome, then leave remaining items queued/retrying for the next pass; report budget_exhausted and the actual deferred_due count. No already accepted publication stage is interrupted or blindly replayed.",
+      "regression_tests": [
+        "test_slow_delivery_yields_before_claiming_next_item_and_resumes_next_pass"
+      ],
+      "timing_scope": "This is a start budget, not a whole-runtime deadline. The last item may run beyond the sixteen-second start budget; a Typefully media item can perform up to four bounded eight-second requests, plus local SQL/encryption work."
+    }
+  ],
+  "finding_count": 16,
+  "verification": {
+    "command": ".venv/bin/python -m unittest tests.test_notifications -v",
+    "tests_run": 35,
+    "tests_passed": 35,
+    "new_tests": 27,
+    "result": "passed",
+    "log": "docs/verification/notifications-audit-repaired.log",
+    "pre_repair_replay": {
+      "tests_run": 29,
+      "failure_entries": 16,
+      "error_entries": 5,
+      "log": "docs/verification/notifications-audit-baseline.log",
+      "summary": "docs/verification/notifications-audit-baseline.json",
+      "method": "git HEAD:backend/notifications.py evaluated only in an isolated Python process; every test uses a temporary SQLite database and mocked transports",
+      "scope_note": "Historical first audit baseline before the HTTP-deadline follow-up: 29 exercised tests, 16 failure entries and 5 error entries. New deadline/helper regressions were added afterward and do not alter that historical replay log."
+    },
+    "live_external_notifications_sent": 0,
+    "real_broker_calls": 0,
+    "databases": "Per-test TemporaryDirectory SQLite files; default desk database untouched",
+    "transport_probe": "One real loopback HTTP POST per suite execution; external endpoints never contacted. WebPush cryptography executes with locally generated fixture keys and a mocked bounded transport."
+  },
+  "source_evidence": {
+    "backend/notifications.py": {
+      "bytes": 36305,
+      "sha256": "4bc3887da37053750f30f3c173b477e45a76d71639041ddaa08179ea989d1ab5"
+    },
+    "tests/test_notifications.py": {
+      "bytes": 36180,
+      "sha256": "4ba4eacc01d77e8bb635ee123cc84eb27abe13a06d73a129f8b08e599702a7a6"
+    }
+  },
+  "preserved_contracts": [
+    "External channels remain opt-in and disabled in an empty installation.",
+    "Provider acceptance remains distinct from audience/browser/X publication.",
+    "Ambiguous POSTs and interrupted external sends stay unknown and are never automatically replayed.",
+    "Retry requires definite failure/retry state; unknown outcomes need an explicit factual reconciliation.",
+    "Per-recipient idempotent outbox uniqueness remains channel/event/recipient.",
+    "No trade strategies or order-creation authority were added.",
+    "Existing subscription migration preserves recipient IDs and pending scope; initial receiver-binding migration preserves existing channel enablement."
+  ],
+  "limits": [
+    "External destinations remain simulated; only the dribble deadline regression uses a real loopback HTTP server. Real WebPush cryptography executes with generated fixture keys and a mocked transport. No live webhook, Typefully or browser-push credentials/delivery were tested.",
+    "An external channel paused or changed during an already submitted request cannot retract that in-flight request; its actual acceptance outcome is recorded.",
+    "Unknown external delivery still requires destination reconciliation; exactly-once audience delivery cannot be inferred from HTTP acceptance.",
+    "On the first migration of a previously unbound legacy channel, the current configured environment is recorded as its receiver; historical receiver values were never persisted and cannot be independently reconstructed.",
+    "Receiver bindings are opaque hashes and contain no raw endpoints or credentials in snapshots.",
+    "The file lock assumes cooperating processes on one local filesystem; arbitrary hard-linked database aliases and uncoordinated lock-file deletion are outside the supported deployment.",
+    "PNG queue validation checks a bounded PNG signature; image decoding/processing remains the provider responsibility.",
+    "X message truncation remains at 280 characters and is now explicitly disclosed in the delivery receipt.",
+    "HTTP request deadlines are separate from the sixteen-second batch-start budget. A current item may finish its bounded stages after the start budget; the complete operations cycle has no asserted hard time limit.",
+    "The shared HTTP helper uses a cancellable IO loop and at most four resolver threads. A cancelled DNS lookup may finish later, but its result cannot initiate a late HTTP request; helper-owned tests verify a delayed lookup resolving to a real loopback server produces no late POST."
+  ]
+}

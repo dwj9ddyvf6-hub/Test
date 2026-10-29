@@ -1,0 +1,1278 @@
+{
+  "review_kind": "read-only strategy-free desk infrastructure source review",
+  "review_date": "2026-10-08",
+  "repositories": [
+    {
+      "name": "Author-desk",
+      "branch": "main",
+      "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff"
+    },
+    {
+      "name": "Author-desk-backup",
+      "branch": "main",
+      "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff"
+    }
+  ],
+  "scope": [
+    "runtime and supervision",
+    "agent and task representation",
+    "durable stores and ledger",
+    "paper order lifecycle and accounting",
+    "data truth",
+    "lifecycle controls",
+    "operator UI",
+    "current canonical/backup identity"
+  ],
+  "excluded": [
+    "strategy formulas and research validation",
+    "security audit",
+    "external production actions",
+    "runtime execution and tests",
+    "exhaustive historical branch content review"
+  ],
+  "summary": "Author supplies a deterministic worker desk, typed receipts, durable JSON snapshot recovery, paper-only broker adapters, external delivery reconciliation and operator views. It does not supply a general autonomous agent/task runtime or a complete accounting engine. Current source disables automated scanner/publishing and halts paper/Telegram; retained workers and scheduled Tensor polls remain.",
+  "instructions_read": [
+    "AGENTS.md",
+    "AGENTS.project.md",
+    "RESTORE.md",
+    "chain/LIVE-STATE.md",
+    "chain/DEBACLE-2026-08-18.md",
+    "chain/PUBLISHED.md"
+  ],
+  "backup_comparison": {
+    "whole_git_tree_identical": true,
+    "fields": [
+      "path",
+      "mode",
+      "type",
+      "sha",
+      "size"
+    ],
+    "tree_entries": 2516,
+    "blob_count": 2432,
+    "git_tree_truncated": false,
+    "independently_compared_modules": [
+      {
+        "path": ".github/workflows/desk-clock.yml",
+        "byte_identical": true,
+        "sha256": "a489ce395a92c471e12f2d8da348a57bc7c8ba34296dfbaa8685c38e791a4824",
+        "git_blob_sha": "ab5202ffe7cea739e82ec771ccc23080821f7267",
+        "backup_git_blob_sha": "ab5202ffe7cea739e82ec771ccc23080821f7267"
+      },
+      {
+        "path": ".github/workflows/tensor-tick.yml",
+        "byte_identical": true,
+        "sha256": "5c4cb803a254ae7dea669059b2e3cfea1f38bcdfec4e0c47b768c065948e0dff",
+        "git_blob_sha": "184a86f68cb45620f75ce2b38fe3b79a7f1020e0",
+        "backup_git_blob_sha": "184a86f68cb45620f75ce2b38fe3b79a7f1020e0"
+      },
+      {
+        "path": "AGENTS.md",
+        "byte_identical": true,
+        "sha256": "a1c504a7e99ef7fd6418c5dd512ffce84dc4aed51aac806edc5775e115c1734e",
+        "git_blob_sha": "ec9319a40e5e8b9022ac04e1087da0d74d5df82f",
+        "backup_git_blob_sha": "ec9319a40e5e8b9022ac04e1087da0d74d5df82f"
+      },
+      {
+        "path": "AGENTS.project.md",
+        "byte_identical": true,
+        "sha256": "3dd57462770950902fac172f77e5100e3c94de1ba31b0891886af0bbf06e3ecb",
+        "git_blob_sha": "5465fb64fbb8ecc78c4453ebe8d0a9a6c2b6914e",
+        "backup_git_blob_sha": "5465fb64fbb8ecc78c4453ebe8d0a9a6c2b6914e"
+      },
+      {
+        "path": "RESTORE.md",
+        "byte_identical": true,
+        "sha256": "b61d5cec1745d5d071fa8a65d60f3edfc16a6c38a64af5817814169e31597c43",
+        "git_blob_sha": "ecbcfb36ef0024a970c48455a5c4d997d3eaa207",
+        "backup_git_blob_sha": "ecbcfb36ef0024a970c48455a5c4d997d3eaa207"
+      },
+      {
+        "path": "chain/DEBACLE-2026-08-18.md",
+        "byte_identical": true,
+        "sha256": "d17abfe969efdcca2591b918daa9c71ca5fe262223f934085b20269abf4a327a",
+        "git_blob_sha": "4ca252bbd26eb768d0fda3bae16604786ca904e7",
+        "backup_git_blob_sha": "4ca252bbd26eb768d0fda3bae16604786ca904e7"
+      },
+      {
+        "path": "chain/LIVE-STATE.md",
+        "byte_identical": true,
+        "sha256": "57d146c61b79074fe7b692bdb1f3b2234ebc7f0658b2397d7f74fa0f2cb48102",
+        "git_blob_sha": "d4973c6de283203ab83b481e465d0a005767bd98",
+        "backup_git_blob_sha": "d4973c6de283203ab83b481e465d0a005767bd98"
+      },
+      {
+        "path": "chain/PUBLISHED.md",
+        "byte_identical": true,
+        "sha256": "a30ca22cd728e81abefd425e47a576be70cf17a84595a736340c2ff2b0158897",
+        "git_blob_sha": "3b45b2a26de0e517991a615503734fcc23efc667",
+        "backup_git_blob_sha": "3b45b2a26de0e517991a615503734fcc23efc667"
+      },
+      {
+        "path": "scripts/desk-autopilot.mjs",
+        "byte_identical": true,
+        "sha256": "c518b663f947871ddf3643d822cb0b80d3bf34a31b4899e29b1053415be71ff8",
+        "git_blob_sha": "470a6cd72511d9ea981d58c729f63506b64fb499",
+        "backup_git_blob_sha": "470a6cd72511d9ea981d58c729f63506b64fb499"
+      },
+      {
+        "path": "scripts/desk-clock-assert.mjs",
+        "byte_identical": true,
+        "sha256": "b664e95eec9483a61d20f8af88207f485f32bf904bb9aa9023442178e0f5764b",
+        "git_blob_sha": "4b473dc02df7b12f7d087a86ea3711a04ce91505",
+        "backup_git_blob_sha": "4b473dc02df7b12f7d087a86ea3711a04ce91505"
+      },
+      {
+        "path": "scripts/desk-clock-ci.sh",
+        "byte_identical": true,
+        "sha256": "26d3ac53e355e2cf809d9cc8e75e075186c6c66bedd0f84128bcf055d1153260",
+        "git_blob_sha": "6fc849902172c1c6cfb03a6707e5345333065400",
+        "backup_git_blob_sha": "6fc849902172c1c6cfb03a6707e5345333065400"
+      },
+      {
+        "path": "scripts/desk-watchdog.mjs",
+        "byte_identical": true,
+        "sha256": "e94b1701df139a366991627c7561d04b077ab4ab37a86fecc64760a4702e363d",
+        "git_blob_sha": "21569c4f9e66db85ea6207228969599157a7465f",
+        "backup_git_blob_sha": "21569c4f9e66db85ea6207228969599157a7465f"
+      },
+      {
+        "path": "scripts/tensor-wire.mjs",
+        "byte_identical": true,
+        "sha256": "9a42d9cc2d009ef74f4b413fafe02400571687fd0d2277a5111f41c4574920e5",
+        "git_blob_sha": "76924ab0d64ee01a8e0f8c407167c5f5551a9ff0",
+        "backup_git_blob_sha": "76924ab0d64ee01a8e0f8c407167c5f5551a9ff0"
+      },
+      {
+        "path": "src/components/desk/DeskApp.tsx",
+        "byte_identical": true,
+        "sha256": "75788d6550af443303e450dfa7b26f9414399a9bcf101bbd6cbc678403518f7c",
+        "git_blob_sha": "345cff00471a5f99e2ded558bf335145d5852ed2",
+        "backup_git_blob_sha": "345cff00471a5f99e2ded558bf335145d5852ed2"
+      },
+      {
+        "path": "src/components/desk/DeskHome.tsx",
+        "byte_identical": true,
+        "sha256": "bde5897599d14f436c2122cb20f25e2ef4956663cd97625a75c8abb03124b464",
+        "git_blob_sha": "1f6c1b2d55d5fa658644c6319ab1e16d24521c2b",
+        "backup_git_blob_sha": "1f6c1b2d55d5fa658644c6319ab1e16d24521c2b"
+      },
+      {
+        "path": "src/components/desk/OperatorStrip.tsx",
+        "byte_identical": true,
+        "sha256": "ecba3844e6baa4fd3cc66604f8c2459b9fe580fa06672fa987ddbfd8c41f72e4",
+        "git_blob_sha": "7ae7e6bba78c58ac178f855d421d5a6d074b0524",
+        "backup_git_blob_sha": "7ae7e6bba78c58ac178f855d421d5a6d074b0524"
+      },
+      {
+        "path": "src/components/desk/PublishDesk.tsx",
+        "byte_identical": true,
+        "sha256": "146339d7a1f3ce29af019b2d9d905df86ea3788dbcd598a72709f4ee8213d04b",
+        "git_blob_sha": "e64ecb97d4d00c865dd4160ea0ebf14549e7b9c4",
+        "backup_git_blob_sha": "e64ecb97d4d00c865dd4160ea0ebf14549e7b9c4"
+      },
+      {
+        "path": "src/components/desk/SystemMapDesk.tsx",
+        "byte_identical": true,
+        "sha256": "ee1705bab79fa804b26348226b29cd4a11ebafd33c9a38be0e31a47a1ea4f022",
+        "git_blob_sha": "70d91196246aa9abee86f98f7ffaaceaa012a682",
+        "backup_git_blob_sha": "70d91196246aa9abee86f98f7ffaaceaa012a682"
+      },
+      {
+        "path": "src/lib/db.ts",
+        "byte_identical": true,
+        "sha256": "6c62df53c9947bac08d0d466e8c8eac71b60af3012e92558dc0d6a03e30ab4f9",
+        "git_blob_sha": "ba1222dbba77ef47dc5ef5287ffc05f8daae7d8d",
+        "backup_git_blob_sha": "ba1222dbba77ef47dc5ef5287ffc05f8daae7d8d"
+      },
+      {
+        "path": "src/lib/desk-api.ts",
+        "byte_identical": true,
+        "sha256": "08392521bda36e64a8e801f406149d7d549af6d357dc4633c7450597ce665e69",
+        "git_blob_sha": "12ef6054a1e0dd365dbcd5eea7afa69894e3621c",
+        "backup_git_blob_sha": "12ef6054a1e0dd365dbcd5eea7afa69894e3621c"
+      },
+      {
+        "path": "src/lib/desk-store.ts",
+        "byte_identical": true,
+        "sha256": "18b8c1f9df8d4bdbcbb9f36db5b23b900d9d882b6ba554c50653be8aa9c5d90f",
+        "git_blob_sha": "cb526fcdc81e0e374274f6d06d9cd0b451594a02",
+        "backup_git_blob_sha": "cb526fcdc81e0e374274f6d06d9cd0b451594a02"
+      },
+      {
+        "path": "src/lib/tensor/bars.ts",
+        "byte_identical": true,
+        "sha256": "b5d4eb81595d26d516511c971a7197f1801d68dc83cc30d9ff930ce8640d982f",
+        "git_blob_sha": "66e2f5a96012972a6c7eed2033eb8592e3250322",
+        "backup_git_blob_sha": "66e2f5a96012972a6c7eed2033eb8592e3250322"
+      },
+      {
+        "path": "src/lib/tensor/green/bars.ts",
+        "byte_identical": true,
+        "sha256": "41e04f9a23b1df0d78538082495b9484d76d072a92e38dd4206790ab72aa0682",
+        "git_blob_sha": "0bf147963c5f25fedaa472bfbf75f14ffa6a22bf",
+        "backup_git_blob_sha": "0bf147963c5f25fedaa472bfbf75f14ffa6a22bf"
+      },
+      {
+        "path": "src/lib/tensor/yahoo.ts",
+        "byte_identical": true,
+        "sha256": "bd217191b12fb131fba017234dc924cb172265044198431095fc9032ee7f1d13",
+        "git_blob_sha": "256da73c987a46f37bacc0bef245834a4c3878cc",
+        "backup_git_blob_sha": "256da73c987a46f37bacc0bef245834a4c3878cc"
+      },
+      {
+        "path": "src/lib/workdesk-store.ts",
+        "byte_identical": true,
+        "sha256": "c8b54a9debd4ebdffe46ba14eb88d290b55e53126481ec4dc8ebc704a75fbfe8",
+        "git_blob_sha": "1419757d2a2a2c90c2775c2e4c7717728dee7137",
+        "backup_git_blob_sha": "1419757d2a2a2c90c2775c2e4c7717728dee7137"
+      },
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "byte_identical": true,
+        "sha256": "57092f84ee599b3e902d24da55ba3235f2497d20d636c96bd5abd86981578a73",
+        "git_blob_sha": "2a1c6fd8b97faacbc6688bea6f67de440358c320",
+        "backup_git_blob_sha": "2a1c6fd8b97faacbc6688bea6f67de440358c320"
+      },
+      {
+        "path": "src/lib/workdesk/analyst-run.ts",
+        "byte_identical": true,
+        "sha256": "7974c89dd1924b096c6434486b33297f1aaddcd19b03b9698519fe7c0f0b341a",
+        "git_blob_sha": "f9ed847f1a8f9004226c14333b0f06f375dc10b1",
+        "backup_git_blob_sha": "f9ed847f1a8f9004226c14333b0f06f375dc10b1"
+      },
+      {
+        "path": "src/lib/workdesk/desk-pulse.ts",
+        "byte_identical": true,
+        "sha256": "65cb4a51f02b6ee692cffe849397849eefd548a4ae61fc1a73e0226209242e71",
+        "git_blob_sha": "fe157edf6213eb955434c067c352c24c3fc48609",
+        "backup_git_blob_sha": "fe157edf6213eb955434c067c352c24c3fc48609"
+      },
+      {
+        "path": "src/lib/workdesk/folio-list.ts",
+        "byte_identical": true,
+        "sha256": "10c752779b7b0ccb4c931f1f2b40a8cf9c843840c28fd7ab064aabea75240a07",
+        "git_blob_sha": "513febd4409669c0f1e62b0bdd9b0ad8ce38edcc",
+        "backup_git_blob_sha": "513febd4409669c0f1e62b0bdd9b0ad8ce38edcc"
+      },
+      {
+        "path": "src/lib/workdesk/live-clock.ts",
+        "byte_identical": true,
+        "sha256": "4cc00f1bc69f266252e83be5e28fea6204df76a765c97cab529cc05825847163",
+        "git_blob_sha": "5f176ba04915f7812f9dfa6bd3b375eb1e7ea8e6",
+        "backup_git_blob_sha": "5f176ba04915f7812f9dfa6bd3b375eb1e7ea8e6"
+      },
+      {
+        "path": "src/lib/workdesk/observe.ts",
+        "byte_identical": true,
+        "sha256": "41659557d7ce1cc1b1a69369de0c728f34cae8d887b44e0d029893a4e6057334",
+        "git_blob_sha": "02c47f760165bdc9f916a54bdb862c0a6df161b3",
+        "backup_git_blob_sha": "02c47f760165bdc9f916a54bdb862c0a6df161b3"
+      },
+      {
+        "path": "src/lib/workdesk/paper-review.ts",
+        "byte_identical": true,
+        "sha256": "94ad019d597018f82cb92e6035bec7d1f5d9d4979b43dc65fcd6c68395433d1e",
+        "git_blob_sha": "ff5bcfa06b84fbfb34264ffdf4d853878f0b8c74",
+        "backup_git_blob_sha": "ff5bcfa06b84fbfb34264ffdf4d853878f0b8c74"
+      },
+      {
+        "path": "src/lib/workdesk/paper-rules.ts",
+        "byte_identical": true,
+        "sha256": "87707acfd892822183869bc018f7d5fca65ad90636487949f72bf679787e70dc",
+        "git_blob_sha": "e3bcb77c310acb557b6adb5fcdafd58ff3c8805d",
+        "backup_git_blob_sha": "e3bcb77c310acb557b6adb5fcdafd58ff3c8805d"
+      },
+      {
+        "path": "src/lib/workdesk/paper-wire.ts",
+        "byte_identical": true,
+        "sha256": "c4c44dd7436817b1f355a5b98b3ee009f140600fff0c87f8a7bf5baa2ae2a75b",
+        "git_blob_sha": "d2d0ae5ed5473e4b8cb46b142a8d41a313b2bf77",
+        "backup_git_blob_sha": "d2d0ae5ed5473e4b8cb46b142a8d41a313b2bf77"
+      },
+      {
+        "path": "src/lib/workdesk/telegram.ts",
+        "byte_identical": true,
+        "sha256": "01a250b39593b01b985c4a179568736aaad9e6a7ead284ffe4a52c7c37945ed8",
+        "git_blob_sha": "8224597b24ca4612ccff4ee3ca9ec612661723a7",
+        "backup_git_blob_sha": "8224597b24ca4612ccff4ee3ca9ec612661723a7"
+      },
+      {
+        "path": "src/lib/workdesk/typefully.ts",
+        "byte_identical": true,
+        "sha256": "381ce7c0b3db8be58a243539723cd8b5d34e98343cc7017f27f2bea5d133f2ad",
+        "git_blob_sha": "8721d9307d7415f32761054cef413b1e3fcd170f",
+        "backup_git_blob_sha": "8721d9307d7415f32761054cef413b1e3fcd170f"
+      },
+      {
+        "path": "src/lib/workdesk/types.ts",
+        "byte_identical": true,
+        "sha256": "daaf8f44ac95e1270ff5770449b2ad4ef609c421a909ef65bfd2daecb64e94c8",
+        "git_blob_sha": "a029ef1f4b7216198007d1371e25ee5ce0c27acd",
+        "backup_git_blob_sha": "a029ef1f4b7216198007d1371e25ee5ce0c27acd"
+      },
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "byte_identical": true,
+        "sha256": "2a520b4b7236d59c399daca65d3eca795c2efa442bb778cfe77e6a58b4978ffe",
+        "git_blob_sha": "d77ce2ec4c7ba348d8697d49e7849dcf8d471715",
+        "backup_git_blob_sha": "d77ce2ec4c7ba348d8697d49e7849dcf8d471715"
+      },
+      {
+        "path": "src/routes/api/foliotend.ts",
+        "byte_identical": true,
+        "sha256": "db6424413f2800483eda95a9e7feb6721e91c07d5c58e9b5acaa9429a62390c1",
+        "git_blob_sha": "1cbea1b91fbe1e2969614fddb70569091310e937",
+        "backup_git_blob_sha": "1cbea1b91fbe1e2969614fddb70569091310e937"
+      },
+      {
+        "path": "startup.sh",
+        "byte_identical": true,
+        "sha256": "e2c5f263f2817f4bd73d6a527d2ef8d583331de74014a18890cd79dbd6393944",
+        "git_blob_sha": "9c69acfd8c876e61b7f23d2140186550810584bd",
+        "backup_git_blob_sha": "9c69acfd8c876e61b7f23d2140186550810584bd"
+      }
+    ],
+    "changed_reviewed_modules": [],
+    "limits": "Current main snapshots only. Backup has eight branch refs versus seventeen primary refs; differently named/different-SHA historical refs are not evidence of a current main divergence."
+  },
+  "findings": [
+    {
+      "id": "runtime",
+      "title": "Independent supervised workers",
+      "evidence_class": "source capability",
+      "implemented_behavior": "startup.sh revives Vite, tensor-wire --loop, desk-watchdog, desk-autopilot and a low-priority Echo sidecar. It validates process command lines as well as PIDs and checks autopilot heartbeat age. Autopilot uses three independently guarded scan/guard/wire intervals plus a heartbeat; the watchdog restarts autopilot after a 90-second stale heartbeat and supervises Tensor and Echo separately.",
+      "portable_pattern": "Keep a restart manifest, separate feed collection from slow jobs, publish heartbeat and last useful work timestamps, and expose worker health to operators.",
+      "limits_for_new_desk": [
+        "Linux-specific /workspace paths, /proc checks, detached Node processes and local PID files assume one persistent host.",
+        "These are hand-written loops and subprocesses. There is no shared durable queue, work lease, retry-attempt model, cancellation propagation or distributed scheduler.",
+        "The 110-second scan flag clear changes a Boolean rather than proving the underlying operation stopped; use job leases and actual cancellation in a new runtime."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "startup.sh",
+          "line": 22,
+          "end_line": 74,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/startup.sh#L22-L74"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-autopilot.mjs",
+          "line": 112,
+          "end_line": 129,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L112-L129"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-autopilot.mjs",
+          "line": 2097,
+          "end_line": 2158,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L2097-L2158"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-watchdog.mjs",
+          "line": 194,
+          "end_line": 206,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-watchdog.mjs#L194-L206"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-watchdog.mjs",
+          "line": 299,
+          "end_line": 334,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-watchdog.mjs#L299-L334"
+        }
+      ]
+    },
+    {
+      "id": "agents",
+      "title": "Named desk functions are not an autonomous agent model",
+      "evidence_class": "source capability",
+      "implemented_behavior": "DeskRun stores at/scanned/usable/buys/rejected. DeskDecision stores id/at/kind/symbol/action/reason/detail. DraftPost has a publishing status and schedule. Analyst compilation invokes deterministic compileAnalyst on observations, paper reviews and X quality; the System Map tab is two static PNG pages and a PDF.",
+      "portable_pattern": "Preserve explicit typed work receipts and deterministic services; add an agent registry and durable task state separately if agent execution is desired.",
+      "limits_for_new_desk": [
+        "The reviewed runtime contains no general agent definition, planning loop, tool capability registry, task ownership, task DAG, agent checkpoint, conversation memory or model-call execution.",
+        "Scanner/Analyst/Skyvern naming and the static chain map do not establish live autonomous reasoning.",
+        "A new strategy-free desk must supply tasks with owner, state, attempt, lease, inputs, output artifacts and execution receipts; it cannot obtain those by renaming these scan metrics."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/types.ts",
+          "line": 22,
+          "end_line": 34,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/types.ts#L22-L34"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/types.ts",
+          "line": 70,
+          "end_line": 76,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/types.ts#L70-L76"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 23,
+          "end_line": 43,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L23-L43"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/analyst-run.ts",
+          "line": 9,
+          "end_line": 26,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/analyst-run.ts#L9-L26"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/components/desk/SystemMapDesk.tsx",
+          "line": 3,
+          "end_line": 35,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/SystemMapDesk.tsx#L3-L35"
+        }
+      ]
+    },
+    {
+      "id": "stores",
+      "title": "Browser projections and server JSON are separate stores",
+      "evidence_class": "source capability",
+      "implemented_behavior": "Zustand persist holds browser watchlists, selected views, draft posts, membership records, scan memory and observations. Server desk state is a collection of JSON files under .data; vault.ts can load local, checked-in bundle, primary GitHub and backup GitHub copies, choosing a recent snapshot and merging receipts by ID. The SQL helper supports Neon or in-memory PGLite, but the desk ledger is not stored in those SQL tables.",
+      "portable_pattern": "Treat the browser as a presentation cache; use one authoritative server store with explicit snapshot provenance and rebuildable projections.",
+      "limits_for_new_desk": [
+        "Browser state is per browser, bounded and partly manually editable; it is not the durable authoritative task or accounting ledger.",
+        "Most ledger writes use plain writeFile across multiple JSON files with an eight-second process cache and no transaction or compare-and-swap. Multiple writers can interleave.",
+        "PGLite is instantiated without a data directory and resets on server restart; only the auth migration is present. A durable new desk needs disk-backed SQLite/Postgres and task/accounting migrations."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/desk-store.ts",
+          "line": 74,
+          "end_line": 83,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-store.ts#L74-L83"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/desk-store.ts",
+          "line": 154,
+          "end_line": 172,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-store.ts#L154-L172"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk-store.ts",
+          "line": 24,
+          "end_line": 61,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk-store.ts#L24-L61"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk-store.ts",
+          "line": 262,
+          "end_line": 278,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk-store.ts#L262-L278"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 50,
+          "end_line": 76,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L50-L76"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 600,
+          "end_line": 701,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L600-L701"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 703,
+          "end_line": 747,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L703-L747"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/db.ts",
+          "line": 106,
+          "end_line": 123,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/db.ts#L106-L123"
+        }
+      ]
+    },
+    {
+      "id": "receipts",
+      "title": "Unified typed receipt ledger with daily and monthly shelves",
+      "evidence_class": "source capability",
+      "implemented_behavior": "LedgerBlob combines observations, roster, inbox, paper tickets, timing tape, autopilot, X quality and decisions. ID-based merges preserve distinct records, observations prefer the latest lastMarkedAt, and daily/monthly shelves union snapshots. Held/failed paper attempts become HELD observations. Roster add/keep/demote/drop actions become explicit receipts.",
+      "portable_pattern": "Keep event IDs, event time, entity, action, reason and source artifact references; project current state from durable events and archive snapshots for recovery.",
+      "limits_for_new_desk": [
+        "This is a bounded mutable snapshot ledger, not an append-only event log. Local decisions cap at 2,000, normal observations at 400 with 120 paper slots; the GitHub top-level snapshot slims observations to 120 and decisions to 250.",
+        "Current fill deduplication combines symbol/bar/side/status/reason/orderId/time, not a unique broker execution ID.",
+        "Decision records lack task ID, parent task, attempt, actor, input/output hashes and schema-versioned payloads needed for replayable agent work."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 65,
+          "end_line": 76,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L65-L76"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 107,
+          "end_line": 136,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L107-L136"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 322,
+          "end_line": 329,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L322-L329"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 359,
+          "end_line": 397,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L359-L397"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 400,
+          "end_line": 473,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L400-L473"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 758,
+          "end_line": 802,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L758-L802"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/observe.ts",
+          "line": 140,
+          "end_line": 160,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/observe.ts#L140-L160"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/observe.ts",
+          "line": 232,
+          "end_line": 260,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/observe.ts#L232-L260"
+        }
+      ]
+    },
+    {
+      "id": "backup",
+      "title": "Dual copy recovery is best-effort replication",
+      "evidence_class": "source capability",
+      "implemented_behavior": "Vault recovery can union primary, backup, local and bundle snapshots. Explicit ensureDailyVault publishes day/month/top-level snapshots to both repositories; paper/clock review functions also try remote copies. Ordinary saveLedger writes local JSON and the local checked-in bundle, then returns.",
+      "portable_pattern": "Use off-host snapshots and clearly report each replica result, last successful sync and restore provenance.",
+      "limits_for_new_desk": [
+        "AGENTS.project.md says every ingest and mark dual-writes, but saveLedger does not remotely PUT; remote replication occurs through explicit vault/review functions and the scheduled local daily vault path.",
+        "githubPutAll returns true when either copy succeeds, so it does not prove both replicas are current.",
+        "A conflict retry fetches the new remote SHA then retries the same payload, rather than remerging newly arrived remote events. Replication is not a transactional event-store guarantee."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 296,
+          "end_line": 319,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L296-L319"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 332,
+          "end_line": 343,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L332-L343"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 475,
+          "end_line": 502,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L475-L502"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/vault.ts",
+          "line": 719,
+          "end_line": 747,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L719-L747"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-autopilot.mjs",
+          "line": 2055,
+          "end_line": 2072,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L2055-L2072"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "AGENTS.project.md",
+          "line": 20,
+          "end_line": 25,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/AGENTS.project.md#L20-L25"
+        }
+      ]
+    },
+    {
+      "id": "market-data",
+      "title": "Identity and completed-bar intake precede event deduplication",
+      "evidence_class": "source capability",
+      "implemented_behavior": "Yahoo reads use two hosts, six-second request timeouts, bounded in-flight requests and short interval caches. Bar reads check canonical provider symbol identity, skip missing OHLCV, admit positive coherent ordered bars and drop forming tails. The wire pools five symbol fetches, aggregates admitted one-minute bars to completed five-minute session bars, and suppresses repeated symbol/bar and eventKey work before writing tape.",
+      "portable_pattern": "Build a provider adapter with identity, source time, receipt time, quality flags, bar completeness and event-key deduplication independent of any strategy.",
+      "limits_for_new_desk": [
+        "The one-to-five-minute aggregator explicitly accepts whatever minute prints exist; it does not require all five minutes. Its bar timestamp and close time derive from the first available minute.",
+        "Freshness is mostly age metadata and cache timing, not a universal stale-data execution gate. Missing quote timestamp reports ageMs 0, and loadLiveQuote does not perform the bar-read identity comparison.",
+        "This remains Yahoo polling, not a broker-grade streaming market data or corporate-action-normalized immutable history service."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/tensor/yahoo.ts",
+          "line": 34,
+          "end_line": 56,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/yahoo.ts#L34-L56"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/tensor/yahoo.ts",
+          "line": 103,
+          "end_line": 174,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/yahoo.ts#L103-L174"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/tensor/yahoo.ts",
+          "line": 211,
+          "end_line": 249,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/yahoo.ts#L211-L249"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/tensor/bars.ts",
+          "line": 4,
+          "end_line": 23,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/bars.ts#L4-L23"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/tensor/green/bars.ts",
+          "line": 16,
+          "end_line": 52,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/green/bars.ts#L16-L52"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/tensor-wire.mjs",
+          "line": 130,
+          "end_line": 157,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/tensor-wire.mjs#L130-L157"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/tensor-wire.mjs",
+          "line": 343,
+          "end_line": 350,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/tensor-wire.mjs#L343-L350"
+        }
+      ]
+    },
+    {
+      "id": "paper",
+      "title": "Dormant paper-only order adapter and execution policy",
+      "evidence_class": "source capability",
+      "implemented_behavior": "The Alpaca adapter is confined to the paper API. If enabled, it provides three timeout/network/rate-limit retries, symbol/bar client order IDs, market or extended-hours limit bracket requests, GTC protective exits, cancellation and partial close functions. Policy helpers constrain sizing, open positions, daily entries, correlated exposure, entry time, same-day re-entry and a three-percent account day guard.",
+      "portable_pattern": "Separate immutable order intent, deterministic risk decision, submit adapter and reconciliation; record both allowed and held intents as receipts. Keep paper routing and operator arm/halt state explicit.",
+      "limits_for_new_desk": [
+        "ALPACA_HALTED=true currently blocks verification and all low-level broker calls; save-keys and arm endpoints also refuse. This is retained capability, not currently working paper execution.",
+        "Current numerical policy: four impulse plus six swing positions, ten total, sixteen new buys/day, two same-story positions, last ordinary buy 15:45 ET; older documents mention different caps.",
+        "Risk rules are specialized to source ticket types and exceptions. Portable infrastructure should accept policy inputs rather than copy signal-specific branches.",
+        "Gold handling can fall back to zero known positions when a position read fails; ordinary ticket handling holds on unknown positions. A new shared adapter should fail closed uniformly on unknown state."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/alpaca.ts",
+          "line": 4,
+          "end_line": 20,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L4-L20"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/alpaca.ts",
+          "line": 80,
+          "end_line": 99,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L80-L99"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/alpaca.ts",
+          "line": 175,
+          "end_line": 202,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L175-L202"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/alpaca.ts",
+          "line": 322,
+          "end_line": 379,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L322-L379"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/paper-rules.ts",
+          "line": 9,
+          "end_line": 30,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-rules.ts#L9-L30"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/paper-wire.ts",
+          "line": 404,
+          "end_line": 427,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-wire.ts#L404-L427"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/paper-wire.ts",
+          "line": 430,
+          "end_line": 460,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-wire.ts#L430-L460"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/desk-api.ts",
+          "line": 465,
+          "end_line": 474,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-api.ts#L465-L474"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/desk-api.ts",
+          "line": 507,
+          "end_line": 542,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-api.ts#L507-L542"
+        }
+      ]
+    },
+    {
+      "id": "accounting",
+      "title": "Broker reconciliation and review exist; full accounting does not",
+      "evidence_class": "source capability",
+      "implemented_behavior": "syncPaperLedger refuses to mark positions flat on a failed position list. With known positions it marks quotes and uses recent broker sell fills where available. Review code can collapse actual fill partials into weighted-price bursts and pair same-day buys/sells. Held and failed order attempts remain distinguishable from sent tickets.",
+      "portable_pattern": "Use broker executions as fill authority, preserve unknown state, and reconcile cash, lots, positions and equity before updating operator projections.",
+      "limits_for_new_desk": [
+        "PaperTicket sent is recorded immediately from successful submit/close responses, using the input price; it is not a confirmed fill lifecycle.",
+        "Recent fill intake is limited to 100 activities. latestExitPrice chooses the first same-symbol sell without matching the current entry/order.",
+        "The review pairs whole same-day buy/sell tickets by symbol and groups partials by time; it is not a quantity-aware FIFO lot engine or double-entry cash/fees/dividends accounting.",
+        "When a confirmed flat position has no recent sell fill, observation reconciliation may use current quote or lastClose. Keep inferred marks separate from realized execution prices in a new ledger."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/alpaca.ts",
+          "line": 214,
+          "end_line": 246,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L214-L246"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/paper-wire.ts",
+          "line": 242,
+          "end_line": 260,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-wire.ts#L242-L260"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/paper-wire.ts",
+          "line": 616,
+          "end_line": 647,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-wire.ts#L616-L647"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/observe.ts",
+          "line": 200,
+          "end_line": 228,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/observe.ts#L200-L228"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/paper-review.ts",
+          "line": 89,
+          "end_line": 149,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-review.ts#L89-L149"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/paper-review.ts",
+          "line": 165,
+          "end_line": 186,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-review.ts#L165-L186"
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "title": "External queue truth, artifact gating and retry receipts",
+      "evidence_class": "source capability",
+      "implemented_behavior": "Typefully scheduled/published lists are the book of record, and scheduled/published cards deduplicate per ticker/day. The submit adapter checks a designated writer environment gate, non-empty content, content gates and required chart media before sending. The clock runner ensures the renderer and Pillow are available before rendering. Slow scan subprocesses receive a 95-second budget and escalation to SIGKILL.",
+      "portable_pattern": "Keep one delivery owner, stable idempotency keys, evidence-linked artifacts, explicit retry outcomes and external acknowledgement; distinguish created, scheduled and delivered.",
+      "limits_for_new_desk": [
+        "An environment flag is a routing convention, not a distributed writer lease. desk-clock.yml concurrency group includes github.run_id, so distinct dispatches do not serialize against one another.",
+        "Current clock assert fails when a list is owed but returns success when cards are owed (cards retry next tick), contrary to the older missing-cards-fail operating note.",
+        "Thin coverage logs THIN_COVERAGE but proceeds and may use fallback names. It is not an absolute output veto.",
+        "Emergency publishing is outside runCycle auto-off check, so the central delivery adapter and explicit owner permission remain necessary."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/typefully.ts",
+          "line": 59,
+          "end_line": 78,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/typefully.ts#L59-L78"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/typefully.ts",
+          "line": 238,
+          "end_line": 277,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/typefully.ts#L238-L277"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/typefully.ts",
+          "line": 537,
+          "end_line": 551,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/typefully.ts#L537-L551"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-clock-ci.sh",
+          "line": 68,
+          "end_line": 82,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-clock-ci.sh#L68-L82"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-clock-assert.mjs",
+          "line": 59,
+          "end_line": 87,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-clock-assert.mjs#L59-L87"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": ".github/workflows/desk-clock.yml",
+          "line": 49,
+          "end_line": 60,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/.github/workflows/desk-clock.yml#L49-L60"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-autopilot.mjs",
+          "line": 314,
+          "end_line": 368,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L314-L368"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-autopilot.mjs",
+          "line": 1112,
+          "end_line": 1136,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L1112-L1136"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-autopilot.mjs",
+          "line": 1385,
+          "end_line": 1415,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L1385-L1415"
+        }
+      ]
+    },
+    {
+      "id": "controls",
+      "title": "Useful operator views with partial control authority",
+      "evidence_class": "source capability",
+      "implemented_behavior": "DeskApp exposes operator home, scanner, publish, alert, observation, paper, review, membership, source-map and chart views. Browser watch/held controls update local state and held names through a server endpoint. Paper arm/save/status endpoints share the broker halt. Publish UI records queued on API creation, but also permits a local Mark sent button.",
+      "portable_pattern": "Use task, worker, data and account projections with server-backed approve/pause/cancel/halt controls and explicit acknowledgement states.",
+      "limits_for_new_desk": [
+        "Browser setAutopilot changes local Zustand state, not worker processes. There is no global backend task pause/cancel control or per-agent control API.",
+        "Membership tiers/prices and seeded operator records are browser CRUD/static copy, not evidence of billing, paid entitlements or separate worker agents.",
+        "System Map displays static assets. OperatorStrip polls snapshots every twenty seconds; renderer=true is literal and clock on means same-day lastScanAt, which the disabled runCycle also stamps.",
+        "Static home copy still says Autopilot is on and Paper is automatic despite current halt flags. A new desk should derive capability badges solely from authoritative runtime state."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/components/desk/DeskApp.tsx",
+          "line": 24,
+          "end_line": 37,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/DeskApp.tsx#L24-L37"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/desk-store.ts",
+          "line": 131,
+          "end_line": 139,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-store.ts#L131-L139"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk-store.ts",
+          "line": 24,
+          "end_line": 61,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk-store.ts#L24-L61"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk-store.ts",
+          "line": 262,
+          "end_line": 307,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk-store.ts#L262-L307"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/components/desk/PublishDesk.tsx",
+          "line": 73,
+          "end_line": 82,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/PublishDesk.tsx#L73-L82"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/components/desk/PublishDesk.tsx",
+          "line": 253,
+          "end_line": 254,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/PublishDesk.tsx#L253-L254"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/components/desk/OperatorStrip.tsx",
+          "line": 16,
+          "end_line": 50,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/OperatorStrip.tsx#L16-L50"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/desk-pulse.ts",
+          "line": 21,
+          "end_line": 72,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/desk-pulse.ts#L21-L72"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/components/desk/DeskHome.tsx",
+          "line": 95,
+          "end_line": 103,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/DeskHome.tsx#L95-L103"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/desk-autopilot.mjs",
+          "line": 1072,
+          "end_line": 1082,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L1072-L1082"
+        }
+      ]
+    },
+    {
+      "id": "lifecycle",
+      "title": "Current halt flags supersede old operating claims",
+      "evidence_class": "source capability",
+      "implemented_behavior": "Current code disables scanner and Typefully automation, halts Alpaca and Telegram, and returns 410 for FolioTend ingestion. The publishing GitHub workflow is manual-only and self-hosted. Separately, Tensor tick still schedules every thirty minutes and runs tensor-wire once; startup and watchdog still run the older green worker directly despite live-clock.ts declaring zero.",
+      "portable_pattern": "Keep one versioned capability manifest consumed by every entrypoint, worker, API and UI; publish last change and operator reason.",
+      "limits_for_new_desk": [
+        "Do not describe current Author as a fully active automated trading desk from older LIVE-STATE/RESTORE copy.",
+        "LIVE_CLOCK zero is not a global worker halt: tensor-wire imports and calls green/engine directly. Retained worker code can collect events while paper and Telegram remain halted.",
+        "GitHub Tensor tick is a best-effort thirty-minute poll; its fixed UTC schedule is labelled EDT and does not represent a five-minute live socket or an exchange holiday calendar."
+      ],
+      "sources": [
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/folio-list.ts",
+          "line": 6,
+          "end_line": 14,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/folio-list.ts#L6-L14"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/live-clock.ts",
+          "line": 1,
+          "end_line": 21,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/live-clock.ts#L1-L21"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/alpaca.ts",
+          "line": 9,
+          "end_line": 11,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L9-L11"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/lib/workdesk/telegram.ts",
+          "line": 3,
+          "end_line": 11,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/telegram.ts#L3-L11"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "src/routes/api/foliotend.ts",
+          "line": 9,
+          "end_line": 22,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/routes/api/foliotend.ts#L9-L22"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": ".github/workflows/desk-clock.yml",
+          "line": 1,
+          "end_line": 5,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/.github/workflows/desk-clock.yml#L1-L5"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": ".github/workflows/tensor-tick.yml",
+          "line": 1,
+          "end_line": 34,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/.github/workflows/tensor-tick.yml#L1-L34"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "startup.sh",
+          "line": 34,
+          "end_line": 44,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/startup.sh#L34-L44"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/tensor-wire.mjs",
+          "line": 19,
+          "end_line": 20,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/tensor-wire.mjs#L19-L20"
+        },
+        {
+          "repository": "Author-desk",
+          "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+          "path": "scripts/tensor-wire.mjs",
+          "line": 130,
+          "end_line": 149,
+          "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/tensor-wire.mjs#L130-L149"
+        }
+      ]
+    }
+  ],
+  "deployment_and_data_evidence": {
+    "historical_notes": "chain/PUBLISHED.md identifies public Grok URLs as old snapshots and GitHub as code backup. Those notes are deployment claims, not independent current-host verification.",
+    "workflow_evidence": [
+      {
+        "repository": "Author-desk",
+        "retrieved_total_count": 597,
+        "sample": [
+          {
+            "id": 37703401578,
+            "name": "Tensor tick",
+            "event": "schedule",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-07T23:38:22Z",
+            "head_sha": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+            "html_url": "https://github.com/dwj9ddyvf6-hub/Author-desk/actions/runs/37703401578"
+          },
+          {
+            "id": 37672056741,
+            "name": "Tensor tick",
+            "event": "schedule",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-07T19:07:10Z",
+            "head_sha": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+            "html_url": "https://github.com/dwj9ddyvf6-hub/Author-desk/actions/runs/37672056741"
+          }
+        ]
+      },
+      {
+        "repository": "Author-desk-backup",
+        "retrieved_total_count": 269,
+        "sample": [
+          {
+            "id": 37703666338,
+            "name": "Tensor tick",
+            "event": "schedule",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-07T23:41:18Z",
+            "head_sha": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+            "html_url": "https://github.com/dwj9ddyvf6-hub/Author-desk-backup/actions/runs/37703666338"
+          },
+          {
+            "id": 37672988549,
+            "name": "Tensor tick",
+            "event": "schedule",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-07T19:14:35Z",
+            "head_sha": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+            "html_url": "https://github.com/dwj9ddyvf6-hub/Author-desk-backup/actions/runs/37672988549"
+          }
+        ]
+      }
+    ],
+    "workflow_interpretation": "Retrieved GitHub API metadata shows Tensor tick completed successfully on Oct 7 in both repositories at the reviewed commit. This establishes a workflow ran and exited successfully, not current five-minute worker uptime, delivered alerts, fills or broker profitability.",
+    "checked_in_ledger": {
+      "source": {
+        "repository": "Author-desk",
+        "commit": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+        "path": "ledger/desk.json",
+        "line": 1,
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/ledger/desk.json#L1"
+      },
+      "savedAt": "2026-09-02T08:39:59.566Z",
+      "observations": 120,
+      "paper_tickets": 21,
+      "decision_records": 250,
+      "timing_prints": 783,
+      "interpretation": "Historical checked-in snapshot. Its Sep 2 timestamp and stored sent statuses do not prove current broker state or confirmed fills."
+    },
+    "not_verified": [
+      "running workers on the original host",
+      "published site behavior",
+      "broker account state",
+      "external Typefully queue",
+      "current paid entitlements",
+      "complete historical logs"
+    ]
+  },
+  "recommended_strategy_free_adaptation": [
+    {
+      "component": "Agent and task contracts",
+      "keep": "typed IDs, timestamps, action/reason receipts",
+      "add": "agent registry; durable task IDs, owner, state, attempt, lease, parent dependencies, capability grants, input/output artifact hashes and cancellable execution"
+    },
+    {
+      "component": "Authoritative storage",
+      "keep": "local recovery and off-host snapshots",
+      "add": "transactional disk-backed SQLite/Postgres, append-only event records and consistent projections; replica-specific sync receipts"
+    },
+    {
+      "component": "Paper account and order model",
+      "keep": "paper host adapter, risk decision separation, unknown-position hold",
+      "add": "intent/submitted/accepted/partially-filled/filled/cancelled/rejected states, unique broker fill IDs, quantity-aware lots, cash/fees/equity reconciliation"
+    },
+    {
+      "component": "Feed truth",
+      "keep": "canonical symbol identity, completed bars, timestamps and event deduplication",
+      "add": "explicit full/partial/stale/missing/unknown quality, source/fetch/bar timestamps, archive hashes, provider lineage and stale-data gates"
+    },
+    {
+      "component": "Operations console",
+      "keep": "views for work, receipts, account state and worker status",
+      "add": "one shared capability manifest, actual heartbeat/last-work health, server-backed task pause/retry/cancel and account halt; distinguish disabled from waiting or healthy"
+    }
+  ],
+  "verification": {
+    "method": "Static source reads plus Git tree and byte/hash comparisons; no tests or worker executions",
+    "source_refs_checked": 83,
+    "source_files_compared": 40,
+    "external_writes": 0,
+    "source_repository_writes": 0
+  }
+}

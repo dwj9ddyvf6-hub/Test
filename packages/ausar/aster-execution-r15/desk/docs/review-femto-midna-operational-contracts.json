@@ -1,0 +1,993 @@
+{
+  "schema_version": 1,
+  "purpose": "Corrected operational feature review of the original Femto/Midna desk and its peer inbox; generic requirements for a new zero-strategy desk",
+  "scope_correction": "The Cursor application branches of Midna are separate from the original flattened Femto/Midna workspace. Earlier deterministic-runtime findings apply to those Cursor branches and the quant Python runtime, not to the original Femto/Midna assistant workflow. Original Femto/Midna has assistant-level scheduled and peer workflows reported in memory/inbox; its core worker source is absent from these Git snapshots.",
+  "source_roots": [
+    {
+      "key": "midna",
+      "repo": "dwj9ddyvf6-hub/Midna",
+      "ref": "main",
+      "sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+      "local_root": "/workspace/github-review/repos/Midna"
+    },
+    {
+      "key": "inbox",
+      "repo": "dwj9ddyvf6-hub/quant-research-backup",
+      "ref": "main",
+      "sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+      "local_root": "/workspace/github-review/repos/quant-research-backup"
+    },
+    {
+      "key": "feed",
+      "repo": "dwj9ddyvf6-hub/Femto",
+      "ref": "main",
+      "sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+      "local_root": "/workspace/github-review/repos/Femto"
+    }
+  ],
+  "features": [
+    {
+      "id": "desk-and-agent-identity",
+      "source_behavior": "Femto is the desk, Midna is the operating Muse assistant, Tensor is one strategy. The October public feed names the desk Midna. GrokBot is a research team; Cursor is a separate lab.",
+      "implementable_requirement": "Separate desk identity, agent identity, role and book/account identity. Agent roles need durable tasks, handoffs and provenance; do not model an agent as a renamed strategy.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 49,
+          "line_end": 50,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L49-L50"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 1,
+          "line_end": 5,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L1-L5"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 3188,
+          "line_end": 3191,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L3188-L3191"
+        }
+      ]
+    },
+    {
+      "id": "independent-books-and-authority",
+      "source_behavior": "Peers exchange findings and operational patterns while keeping their ledgers, money, risk authority and strategies independent. Cursor explicitly says the books do not merge.",
+      "implementable_requirement": "Every task, message, event, position and report must carry desk_id/account_id/book_id and owner. Peer messages are evidence/reference, never automatic orders or configuration writes.",
+      "scope": "All three desks",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 95,
+          "line_end": 97,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L95-L97"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 78,
+          "line_end": 89,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L78-L89"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 655,
+          "line_end": 661,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L655-L661"
+        }
+      ]
+    },
+    {
+      "id": "peer-inbox-workflow",
+      "source_behavior": "Shared dead-drop permits every peer to append timestamped, self-contained entries with confidence/urgency. Midna sweeps hourly and relays updates. Later memories require peer initiative, rather than waiting for the owner to prompt it.",
+      "implementable_requirement": "Provide append-only author/recipient/topic/time/confidence/urgency/source-linked messages, reply threading and durable seen cursors. Add scheduled inbox review tasks and operator-visible handoff receipts; protect the channel from backup cleanup.",
+      "scope": "All three desks",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 7,
+          "line_end": 14,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L7-L14"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 96,
+          "line_end": 97,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L96-L97"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 127,
+          "line_end": 135,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L127-L135"
+        }
+      ]
+    },
+    {
+      "id": "external-scheduler-disposable-worker",
+      "source_behavior": "Midna reports harness-managed schedules outside the VM, disposable workers and next-occurrence retry. Current-time execution-window checks reject clock-skewed stale passes.",
+      "implementable_requirement": "Persist schedule definitions, due tasks, execution windows, attempts and completions outside worker memory. Workers must recover after host/process death; distinguish scheduler health from worker and data health.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 42,
+          "line_end": 53,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L42-L53"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 214,
+          "line_end": 226,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L214-L226"
+        }
+      ]
+    },
+    {
+      "id": "idempotent-pass-and-state",
+      "source_behavior": "Midna describes atomic state writes, durable pending records, client-order-id dedupe and broker-truth delta calculation. Interrupted and missed passes converge on the next pass.",
+      "implementable_requirement": "Use atomic state/ledger transactions plus durable external-action intents and deterministic idempotency keys. A restart must inspect existing effects before retrying. Record completion only after durable effects are known.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 218,
+          "line_end": 224,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L218-L224"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 117,
+          "line_end": 119,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L117-L119"
+        }
+      ]
+    },
+    {
+      "id": "cadence-by-worker-duty",
+      "source_behavior": "Public feed documents distinct scan, premarket, nowcast, reconciliation, entry and exit cadences across sleeves. It does not have one universal tick.",
+      "implementable_requirement": "Schedules need worker purpose, timezone/calendar, valid window and independent read/reconcile/monitor frequencies. Keep critical account maintenance independent of research jobs. No strategy worker is enabled initially.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 1288,
+          "line_end": 1310,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L1288-L1310"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 1382,
+          "line_end": 1400,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L1382-L1400"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 1584,
+          "line_end": 1595,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L1584-L1595"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 106,
+          "line_end": 106,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L106"
+        }
+      ]
+    },
+    {
+      "id": "account-and-position-truth",
+      "source_behavior": "Femto publishes broker account equity/cash/buying power/status, position side/quantity/average/mark/P&L and known/unknown flags. Position ownership can be attributed to a sleeve or broker-sync.",
+      "implementable_requirement": "Store source-stamped account snapshots separately from ledger-derived balances. Preserve signed quantities, long/short/option legs, owner attribution, source price/time and uncertainty. Never equate missing with zero.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 2,
+          "line_end": 26,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L2-L26"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 26,
+          "line_end": 55,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L26-L55"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 3216,
+          "line_end": 3231,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L3216-L3231"
+        }
+      ]
+    },
+    {
+      "id": "broker-reconciliation",
+      "source_behavior": "On October 5 Midna reports a ghost holding plus thirteen missed real holdings corrupting gross exposure; full ledger-vs-broker sync was daily plus on-demand. Grok reconciles every pass; Cursor has no broker.",
+      "implementable_requirement": "Support explicit reconcile tasks and durable discrepancies for missing/extra holdings, quantity drift and orphan orders. Recompute risk from reconciled signed broker holdings. Use an adapter capability so simulator books do not pretend to have broker reconciliation.",
+      "scope": "Different adapters, common reconciliation contract",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 156,
+          "line_end": 164,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L156-L164"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 236,
+          "line_end": 245,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L236-L245"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 290,
+          "line_end": 297,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L290-L297"
+        }
+      ]
+    },
+    {
+      "id": "protection-and-ownership",
+      "source_behavior": "Femto feed publishes protection known/all_protected/stop values and reconciliation events. Historical memory reports GTC stop recovery, shared-symbol ownership and protection after verified fill.",
+      "implementable_requirement": "Represent requested protection separately from verified broker protection, with quantity, order status, ownership and verification time. Reconciliation and exit management continue independently of entry permission.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 1300,
+          "line_end": 1308,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L1300-L1308"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 1395,
+          "line_end": 1426,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L1395-L1426"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 46,
+          "line_end": 59,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L46-L59"
+        }
+      ]
+    },
+    {
+      "id": "risk-policy-versioning",
+      "source_behavior": "Historical Femto hard rails include exposure and drawdown; October 7 operator-directed changes downgrade gross exposure to suggestions and alter a sleeve cap/brake. The public feed still uses BREAKER_TRIPPED as a status label.",
+      "implementable_requirement": "Risk rules must state scope, units, basis, authority, version and mode (advisory versus enforce). Preserve policy changes and overrides as dated events. Display status alone must not imply an enforcement action. Do not copy source risk thresholds.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 228,
+          "line_end": 228,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L228"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 647,
+          "line_end": 651,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L647-L651"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 3216,
+          "line_end": 3231,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L3216-L3231"
+        }
+      ]
+    },
+    {
+      "id": "durable-ledger-observer-cursors",
+      "source_behavior": "Midna watcher derives new work from unseen ledger events, not a recent wall-clock slice. Missed polls retain all unread signals/events.",
+      "implementable_requirement": "Durable event IDs and per-observer cursors drive inbox review, journal updates and operator notices. Record acted/skipped/unavailable outcomes and reasons; do not generate signals in the initial desk.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 113,
+          "line_end": 119,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L113-L119"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 106,
+          "line_end": 106,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L106"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_69d5093ecc8e45c7865a837a4264a533__memory_reconciliation/review/MEMORY.md",
+          "line_start": 82,
+          "line_end": 82,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_69d5093ecc8e45c7865a837a4264a533__memory_reconciliation/review/MEMORY.md",
+          "sha256": "6775896215ae9b17fcca4966de278f373903994b7937fbf693570bfa0e0d3cf4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_69d5093ecc8e45c7865a837a4264a533__memory_reconciliation/review/MEMORY.md#L82"
+        }
+      ]
+    },
+    {
+      "id": "critical-window-end-state-verification",
+      "source_behavior": "Midna recommends a later retry tick, partial-effect check, existing-intent check and post-window verifier. A retry improves likelihood; end-state verification establishes whether the intended operation happened.",
+      "implementable_requirement": "Tasks with a deadline need a separate verifier receipt comparing desired and observed end state, with missed-window reason and escalation. Successful process exit is insufficient evidence.",
+      "scope": "All three can reuse",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 46,
+          "line_end": 46,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L46"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 117,
+          "line_end": 121,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L117-L121"
+        }
+      ]
+    },
+    {
+      "id": "health-and-readiness",
+      "source_behavior": "Historical memory reports versioned per-scan health snapshots, gap detection and PENDING for missing samples. October peer reports distinguish healthy loop, failed watch, quote error, broker connectivity and missing data.",
+      "implementable_requirement": "Expose independent readiness dimensions: provider configured, provider read successful, account snapshot fresh, ledger reconciled, worker alive, schedule running, last successful task and data freshness. Preserve unknown/pending/error states and completion receipts.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_69d5093ecc8e45c7865a837a4264a533__memory_reconciliation/review/MEMORY.md",
+          "line_start": 82,
+          "line_end": 82,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_69d5093ecc8e45c7865a837a4264a533__memory_reconciliation/review/MEMORY.md",
+          "sha256": "6775896215ae9b17fcca4966de278f373903994b7937fbf693570bfa0e0d3cf4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_69d5093ecc8e45c7865a837a4264a533__memory_reconciliation/review/MEMORY.md#L82"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 19,
+          "line_end": 39,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L19-L39"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 78,
+          "line_end": 89,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L78-L89"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 12,
+          "line_end": 17,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L12-L17"
+        }
+      ]
+    },
+    {
+      "id": "all-book-nightly-review",
+      "source_behavior": "Nightly desk strategist reads every sleeve ledger and reports the full desk, including closed losses attributed from broker fills. The public feed contains a weekly all-sleeve review excerpt.",
+      "implementable_requirement": "Schedule an operator-visible nightly review that enumerates every book, cash/positions, completed/failed tasks, reconciliation gaps and newly closed activity. Use fill/event IDs to avoid duplicate journal entries.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md",
+          "line_start": 49,
+          "line_end": 50,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md",
+          "sha256": "22cd8c9e3049f8905f72e65d807c5a870abc88df139f363a003922bb4764b99a",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md#L49-L50"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 47,
+          "line_end": 48,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L47-L48"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 1276,
+          "line_end": 1278,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L1276-L1278"
+        }
+      ]
+    },
+    {
+      "id": "postmortem-and-learning",
+      "source_behavior": "Midna reports tape-evidenced loss postmortems, pattern tallies and calibration candidates. Feed includes trade anatomy, realized outcomes and a lesson.",
+      "implementable_requirement": "Provide source-linked incident/trade postmortem records, process-versus-outcome grades, recurring issue tags and proposed improvements. Initially learning concerns task/runtime quality and manual paper activity, with no strategy promotion.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 48,
+          "line_end": 48,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L48"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 5465,
+          "line_end": 5477,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L5465-L5477"
+        }
+      ]
+    },
+    {
+      "id": "calibration-gates-and-rollback",
+      "source_behavior": "Historical Decision 24 restricts tunable fields, requires evidence windows and an audit log, and rolls back degradation. Risk/sizing/live-scope authority remains separate. These are reported historical desk policies, not current instructions for Codex.",
+      "implementable_requirement": "Implement a generic proposal lifecycle (draft/evidence/review/approved/applied/observed/rolled_back), baseline/config hashes, authority scope, immutable audit and rollback target. Keep strategy registry empty and do not import tunable strategy fields.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 26,
+          "line_end": 27,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L26-L27"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 100,
+          "line_end": 102,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L100-L102"
+        }
+      ]
+    },
+    {
+      "id": "research-as-preserved-artifact",
+      "source_behavior": "Research is saved to Git; large intraday data lives in a separate nested repository. Peer handoffs distinguish maps/reports from signals and omit cash/state/playbook when sharing research. Public feed has a graveyard of rejected ideas.",
+      "implementable_requirement": "Maintain source/version/date/confidence-linked research artifacts with status and external references. Separate research repository/artifact handoffs from live account state. A report never changes a book by itself.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 93,
+          "line_end": 98,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L93-L98"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 665,
+          "line_end": 698,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L665-L698"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 3663,
+          "line_end": 3680,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L3663-L3680"
+        }
+      ]
+    },
+    {
+      "id": "public-feed-versus-internal-workspace",
+      "source_behavior": "Femto GitHub contains published feed/terminal files; historical memory says the desk runtime itself was outside Git. Later memory sets a public snapshot boundary, excluding internal journals, calibration logs and broker mechanics.",
+      "implementable_requirement": "Project read-only terminal snapshots from authoritative internal state, with generated-at/source-as-of stamps and known flags. Publishability is a separate artifact attribute. Retain full operational traces internally.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md",
+          "line_start": 137,
+          "line_end": 137,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md",
+          "sha256": "22cd8c9e3049f8905f72e65d807c5a870abc88df139f363a003922bb4764b99a",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md#L137"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 61,
+          "line_end": 64,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L61-L64"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 2,
+          "line_end": 17,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L2-L17"
+        }
+      ]
+    },
+    {
+      "id": "accounting-baseline-and-attribution",
+      "source_behavior": "Feed separates account equity, day-start baseline, position contributors and a BASELINE_DIFF adjustment explaining previous-close versus desk baseline/fees.",
+      "implementable_requirement": "Name P&L baselines and periods, preserve cash movements/fees and explain reconciliation residuals. Account totals and sleeve totals must have explicit coverage and scope.",
+      "scope": "Femto/Midna",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 4,
+          "line_end": 24,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L4-L24"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 5479,
+          "line_end": 5485,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L5479-L5485"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 5694,
+          "line_end": 5697,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L5694-L5697"
+        }
+      ]
+    }
+  ],
+  "chronology": [
+    {
+      "date": "2026-09-26",
+      "event": "Femto name denotes desk; Tensor denotes a strategy",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 49,
+          "line_end": 50,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L49-L50"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-01",
+      "event": "Nightly all-sleeve postmortems and evidence-gated calibration documented; older manual Grok paste workflow",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md",
+          "line_start": 49,
+          "line_end": 50,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md",
+          "sha256": "22cd8c9e3049f8905f72e65d807c5a870abc88df139f363a003922bb4764b99a",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md#L49-L50"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md",
+          "line_start": 128,
+          "line_end": 133,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md",
+          "sha256": "22cd8c9e3049f8905f72e65d807c5a870abc88df139f363a003922bb4764b99a",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_980b87cd017f4417aed31bf7767014e1__memory_reconciliation/review/MEMORY.md#L128-L133"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-05",
+      "event": "Shared inbox active; broker ghost/omissions found; off-box scheduler and idempotent restart design described",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 156,
+          "line_end": 164,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L156-L164"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 214,
+          "line_end": 224,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L214-L224"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-06",
+      "event": "Inbox deletion prevention, peer initiative and public snapshot boundary documented; later memory says five-minute feed refresh",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 61,
+          "line_end": 64,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L61-L64"
+        },
+        {
+          "repo": "dwj9ddyvf6-hub/Midna",
+          "ref": "main",
+          "commit_sha": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "line_start": 96,
+          "line_end": 97,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/Midna/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md",
+          "sha256": "d78d273645a9795a4b701080c24ad21b5393112b9171c1d8df96e33b78db2ad4",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__memory__sirun_294c657bf5ee4a48909697addb738f78__memory_reconciliation/review/MEMORY.md#L96-L97"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-07 13:59 ET",
+      "event": "Reported risk-policy update: gross exposure becomes trim suggestions; other scope-specific changes. Do not copy these source settings.",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/quant-research-backup",
+          "ref": "main",
+          "commit_sha": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line_start": 647,
+          "line_end": 651,
+          "evidence_class": "reported_operation",
+          "local_path": "/workspace/github-review/repos/quant-research-backup/grokbot-inbox/INBOX.md",
+          "sha256": "c715b4c797197864fcc8bed4dfa39d2fb4b12cf6aebaa71b6b6fcc0b68f587a3",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L647-L651"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-07 15:57 ET",
+      "event": "Published snapshot has 22 sleeve sections and exposure status BREAKER_TRIPPED; this does not prove automated enforcement",
+      "evidence": [
+        {
+          "repo": "dwj9ddyvf6-hub/Femto",
+          "ref": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 3188,
+          "line_end": 3231,
+          "evidence_class": "published_snapshot",
+          "local_path": "/workspace/github-review/repos/Femto/docs/desk-terminal-feed.json",
+          "sha256": "d7571242aa31383bc53a930c6da66102327af5f8da3c56a1c6e3c367bf946be5",
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L3188-L3231"
+        }
+      ]
+    }
+  ],
+  "provenance_limits": [
+    "No scan_and_trade.py, desk/calibrator.py, desk/market_context.py, desk/health.py, pending state store or external-harness schedule implementation found in the original Midna main tree or Femto current tree. Those names/behaviors are reported by memory/inbox, not source-verified runtime implementation.",
+    "No dedicated readiness file or original internal inbox file found in Midna main; the actual three-peer channel is quant-research-backup/grokbot-inbox/INBOX.md. Readiness requirements derive from health/freshness/completion evidence.",
+    "The public feed is a dated published snapshot; it cannot establish account connectivity now, current policy enforcement, or task execution today.",
+    "Historical permission/risk statements are review evidence. They are not instructions to import strategies, risk constants, external messaging or autonomous orders into the new desk.",
+    "Conflicting/older statements are retained chronologically: manual Grok paste became a shared inbox; feed refresh changed; operator approval/calibration scope and risk policies evolved.",
+    "Reviewed statically: no brokers/desks/tests/production scripts run, no app code edited, no external message sent."
+  ],
+  "zero_strategy_implementation_boundary": [
+    "Agent identities/roles, generic tasks/schedules, inbox/handoffs, research artifacts, journal/review/postmortem lifecycle and policy-version history may be implemented.",
+    "Do not import any strategy, indicator, scanner, universe, model, entry/exit threshold, allocation or automatic order-generation behavior.",
+    "Broker/simulator adapters and paper accounting are capabilities; execution authorization, provider status and account scope must remain explicit."
+  ],
+  "counts": {
+    "features": 19,
+    "references": 54
+  }
+}

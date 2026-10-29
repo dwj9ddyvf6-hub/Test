@@ -1,0 +1,283 @@
+{
+  "schema_version": "1.0",
+  "strategy_id": "TCFT",
+  "name": "Time-Cut Flow Transport",
+  "invented_at_utc": "2026-10-08T20:35:44.548798+00:00",
+  "status": "STRUCTURAL_INPUT_BLOCKED",
+  "financial_validation": "RETURN_TEST_NOT_RUN",
+  "measured_returns": null,
+  "novelty_claim": "Proposed specific signed ownership-adjustment, temporal-cancellation, deadline-relaxed contrast, uncertainty-envelope and exact-removal synthesis; global novelty unproved.",
+  "economic_hypothesis": "Overlapping opposite-signed known ownership adjustments can leave near-deadline pressure when time-feasible cancellation fails, after intermediary and implementation flexibility; price impact and market orders remain empirically unidentified.",
+  "target": "Higher identical-window terminal fully funded net total-return wealth than both QQQ and SPY, plus positive incremental paired results versus exact same-cohort mechanism-removal controls.",
+  "account": {
+    "initial_capital_usd": 1000000,
+    "long_only": true,
+    "leverage": 0,
+    "borrow": false,
+    "primary_assets": [
+      "US primary-listed common stocks",
+      "QQQ",
+      "USD cash"
+    ],
+    "shorts_options_futures_etf_primary_market_powers": false,
+    "requested_incumbent_QQQ_weight": 0.95,
+    "requested_cash_weight": 0.05,
+    "max_stock_replacement_weight": 0.2,
+    "min_requested_QQQ_weight": 0.75,
+    "single_stock_max": 0.04,
+    "max_stock_positions": 5,
+    "max_requested_total_equity_weight": 0.95,
+    "actual_funded_equity_ceiling": 1.0,
+    "cash_interest": "actual broker treatment only",
+    "dividends": "actual entitlement and cash receipts, no double credit",
+    "core_attribution_required": true
+  },
+  "universe": {
+    "membership": "point-in-time common stocks, permanent identities, subsequent delistings retained",
+    "price_floor_usd": 10,
+    "market_cap_floor_usd": 2000000000,
+    "ADV60_median_floor_usd": 50000000,
+    "minimum_sessions": 252,
+    "exclude": [
+      "ADRs",
+      "funds as signal securities",
+      "OTC",
+      "halts",
+      "unresolved corporate actions",
+      "indispensable missing data"
+    ]
+  },
+  "input_contract": {
+    "fields": [
+      "owner_id",
+      "fund_id",
+      "permanent_security_id",
+      "quantity",
+      "measurement_time",
+      "first_public_time",
+      "provider_receipt",
+      "desk_ingestion",
+      "transformation_ready",
+      "source_sha256",
+      "revision_id",
+      "parser_version"
+    ],
+    "available_at": "max actual required receipt, ingestion and ready times",
+    "fund_holdings": "received original prior-close physical quantities; current holdings cannot backfill availability",
+    "index": "original announcement/target/methodology version; distinguish effective open and preceding implementation close",
+    "basket": "holdings != published initial basket != actual negotiated custom baskets",
+    "ETF_volume": "secondary turnover is not primary cash flow",
+    "N_CEN": "annual AP roles and volume do not reveal daily AP inventory",
+    "actual_open_market_orders_identified": false,
+    "unknown_model_allowance_policy": "NO_TRADE_UNBOUNDED_MODEL_ALLOWANCE"
+  },
+  "formation": {
+    "time": "18:30 America/New_York",
+    "index_document_receipt_cutoff": "18:00 America/New_York",
+    "price_cutoff": "already received fully completed sessions",
+    "late_sources": "next formation; never backdate",
+    "binding_endpoint_session_range": [
+      3,
+      10
+    ],
+    "minimum_distinct_legal_fund_owners": 2,
+    "event_family": "announced US-equity index constituent/float/weight changes",
+    "opposite_signed_adjustments_required": true,
+    "options_LETF": "calendar baselines only, not primary invented physical mandates"
+  },
+  "ledger": {
+    "fund_netting": "net simultaneous changes within legal fund; incremental chronological target deltas, not repeated target minus present holding",
+    "unique_physical_lot_identity_required": true,
+    "max_residual_signed_lots_per_fund_security_horizon": 1,
+    "future_sale_dependent_on_planned_purchase": "exclude dependency chain from primary, not observed supply",
+    "scenario_consistency": "joint AUM/target price/index shares/primary-flow/tracking/basket/inventory/implementation scenarios",
+    "bypass": "cash/derivatives/basket relaxation reduce modeled demand, not fungible supply",
+    "cross_owner_matching": "possible economic offset, never guaranteed internal crossing or desk right"
+  },
+  "kernel": {
+    "file": "kernel.py",
+    "method": "per-security bipartite maximum flow with min-cut witness",
+    "lot_units": "shares, common current split basis",
+    "allowed_edge": "distinct legal owners, same permanent security, 0 <= demand_deadline - supply_release <= carry_limit",
+    "carry_limit_sessions": 5,
+    "lot_supply_budget": "used at most once",
+    "timed_debt": "total demand - maximum time-feasible cancellation",
+    "relaxed_debt": "same graph with only time/carry restrictions removed",
+    "time_cut_gap": "timed_debt - relaxed_debt",
+    "scenario_envelope": "min/max across complete explicitly registered finite joint scenarios only",
+    "continuous_uncertainty_guarantee": false,
+    "actual_forced_market_order_certificate": false
+  },
+  "candidate": {
+    "timed_debt_lower_positive": true,
+    "time_cut_gap_lower_positive": true,
+    "price_times_gap_lower_div_ADV_min": 0.1,
+    "width_div_gap_upper_max": 0.5,
+    "single_unopposed_inclusion": "zero novel contrast; no admission",
+    "missing_any_allowance": "NO_TRADE",
+    "dimensions": "shares times USD/share divided by USD/session yields session-equivalent liquidity"
+  },
+  "forecast": {
+    "BASE": [
+      "provider/type/migration",
+      "gross and net share change/ADV",
+      "positive purchase demand",
+      "scheduled coordination density",
+      "received owner concentration",
+      "days to implementation",
+      "sector",
+      "prior volatility/spread",
+      "20/126-session momentum",
+      "already observed market/sector residual repricing"
+    ],
+    "transport_terms": [
+      "price*gap_lower/ADV",
+      "price*debt_lower/ADV",
+      "price*gap_width/ADV",
+      "price*gap_lower/ADV/(1+days)"
+    ],
+    "feature_preprocessing": "train-only residualize added terms against BASE, train-only standardization",
+    "model": "ridge regression",
+    "fixed_ridge_penalty": 100,
+    "outer_winner_grid": false,
+    "refit_frequency": "quarterly frozen",
+    "label": "exact completed funded swap policy log-wealth advantage per initially reserved displaced QQQ dollar; net all costs, partial/missed fills, cash/settlement and terminal costs",
+    "cost_double_counting": false,
+    "minimum_training_years": 5,
+    "minimum_event_clusters": 300,
+    "minimum_securities": 60,
+    "minimum_family_calibration_clusters": 30,
+    "purge_embargo_sessions": 21,
+    "whole_cluster": "all securities/funds in same or overlapping implementation event",
+    "calibration": "older genuinely out-of-fold forecasts only",
+    "admission_net_LCB_bp": 20,
+    "paired_incremental_LCB_vs_BASE_positive": true,
+    "drifting_market_iid_coverage_guarantee": false,
+    "unfilled_stock_after_core_sale": "Zero stock-trade contribution, but exact funded target includes actual cash yield, QQQ sale fees, missed QQQ return and restore costs; no zero account-advantage imputation."
+  },
+  "sizing": {
+    "stock_notional_caps": [
+      ".04*NAV",
+      ".0025*ADV60",
+      "remaining .20*NAV sleeve budget",
+      "actual settled cash"
+    ],
+    "nominal_aggregate_incremental_risk_max_NAV": 0.01,
+    "nominal_stop_fraction": 0.05,
+    "incremental_ex_ante_vol_ceiling_annualized": 0.02,
+    "single_connected_implementation_cluster_max_NAV": 0.08,
+    "incremental_sector_exposure_max_NAV": 0.08,
+    "priority": "conservative net incremental log-wealth advantage; then prior ADV and permanent security ID"
+  },
+  "entry": {
+    "core_sale_window": "D+1 09:45-10:00 ET after D evening ticket",
+    "stock_earliest": "D+2 09:45-10:00 ET after actual QQQ sale settles",
+    "refresh": "new received inputs under frozen policy; vanished gap means abstain",
+    "minimum_endpoint_remaining": "one full session after actual entry",
+    "NBBO_max_age_seconds": 1,
+    "minimum_decision_delay_seconds": 1,
+    "order_type": "marketable-limit IOC",
+    "limit_ask_plus_bp": 3,
+    "child_display_size_max": 0.1,
+    "trailing_observed_minute_shares_participation_max": 0.02,
+    "entry_timeout_minutes": 15,
+    "spread_max_bp": 8,
+    "misses_partials_rejects_retained": true
+  },
+  "exit": {
+    "ordinary": "binding endpoint last ten to five minutes of continuous trading, known calendar; primary never assumes auction fill",
+    "emergency": [
+      "received correction",
+      "robust gap zero",
+      "source contract failure",
+      "observed nominal 5% adverse move"
+    ],
+    "gap_fill": "next obtainable price, losses beyond nominal stop retained",
+    "halt": "hold actual position with real marks until executable liquidation",
+    "QQQ_restore": "settled stock sale proceeds, next eligible 09:45 window",
+    "unfinished_position_and_restore": "retained in account NAV and terminal reserve"
+  },
+  "risk": {
+    "stop_new_entries_relative_core_drawdown": 0.02,
+    "stop_new_entries_full_account_drawdown": 0.1,
+    "resume": "fixed quarterly review; no loss deletion",
+    "feed_failure": "cancel entries; reconcile and risk-reduce actual positions"
+  },
+  "costs": {
+    "legs": [
+      "QQQ sale",
+      "stock purchase",
+      "stock sale",
+      "QQQ restore"
+    ],
+    "include": [
+      "fees",
+      "executable spread once",
+      "adverse impact",
+      "decision/receipt delays",
+      "settlement opportunity cost",
+      "data/compute overhead"
+    ],
+    "proxy_cost_stress_bp_per_side": [
+      15,
+      30,
+      45
+    ],
+    "proxy_executability_certified": false,
+    "capacity_capital_usd": [
+      100000,
+      1000000,
+      10000000
+    ],
+    "source_delay_stress_sessions": [
+      1,
+      2
+    ],
+    "decision_delay_stress_seconds": [
+      1,
+      5,
+      30
+    ]
+  },
+  "controls": [
+    "exact BASE feature removal",
+    "deadline-relaxed graph",
+    "calendar/SCD and aggregate signed flow",
+    "matched temporal-window placebo",
+    "broader substitution/inventory/windows",
+    "same-event equal weight and momentum",
+    "security-only identity and sector/style controls",
+    "published reconstitution-game challenger where inputs permit",
+    "first-public/receipt/implementation attribution"
+  ],
+  "forward": {
+    "status": "not activated",
+    "minimum_months": 18,
+    "minimum_independent_clusters_checkpoint": 100,
+    "insufficient_support": "predeclared extension, not return-driven stopping",
+    "family_correction": "all five strategies and all registered challengers",
+    "block_lengths_sessions": [
+      21,
+      63,
+      126
+    ],
+    "historical_already_inspected": "discovery only"
+  },
+  "blockers": [
+    "original first-receipt historical physical fund holdings",
+    "original index target/methodology vintages",
+    "bounded custom-basket/derivative/sampling allowances",
+    "bounded daily intermediary inventory and early-window estimates",
+    "fully executable quote/impact and broker settlement history",
+    "historical fund and security membership including delistings",
+    "adequate completed event-cluster calibration"
+  ],
+  "financial_claims": {
+    "profitability": null,
+    "outperformance": null,
+    "complete_novelty": null,
+    "award_worthy_theorem": null
+  },
+  "specification_file": "SPEC.md",
+  "reference_kernel_scope": "pure supplied-graph correctness; no model fit, orders, account replay or market backtest"
+}

@@ -1,0 +1,270 @@
+{
+  "id": "05_allocator",
+  "name": "Capital Release Dynamics",
+  "version": "0.1.0-research-invention",
+  "status": "Unvalidated invention; not installed or traded",
+  "research_account_usd": 1000000,
+  "mechanism": {
+    "hypothesis": "Uneven durable repricing after a sector moves from synchronized residual returns and low dispersion to decentralized residual strength; buy independently improving cash-generative firms, release capital only when conditional opportunity fades.",
+    "independent_alpha": true,
+    "uses_other_inventions": false,
+    "observational_limit": "Return synchronization and price/volume patterns are proxies; they do not identify investor positions or flows."
+  },
+  "universe": {
+    "markets": [
+      "NYSE",
+      "Nasdaq"
+    ],
+    "types": [
+      "US ordinary common shares"
+    ],
+    "exclusions": [
+      "ETFs",
+      "ADRs",
+      "REITs",
+      "financial companies",
+      "leveraged instruments"
+    ],
+    "selection": "Monthly top 1000 by trailing 63-session median dollar volume, point-in-time listings/permanent IDs",
+    "price_min_usd": 5,
+    "median_dollar_volume_min_usd": 10000000,
+    "valid_daily_bars_min": 400,
+    "sector_names_min": 30,
+    "historical_requirement": "Delistings, corporate actions and distributions included; current index members cannot substitute for historical universe.",
+    "fundamental_eligibility": "Positive trailing-four-quarter operating cash flow and latest annual gross profit/assets > 0 from original publicly available SEC filings; missing is ineligible for this research version, with coverage reported."
+  },
+  "horizon": {
+    "forecast_sessions": 20,
+    "rebalance": "Weekly, with daily close risk/exit monitoring",
+    "renewal": "May renew at 20 sessions if conditional opportunity remains; no calendar profit trim"
+  },
+  "features": {
+    "return_units": "Daily log total returns",
+    "residual": "e_i,u = l_i,u - beta_m,i,u-1*l_SPY,u - beta_s,i,u-1*(l_sector,u-l_SPY,u); fitted intercept not subtracted",
+    "regression": {
+      "window": 252,
+      "min_observations": 200,
+      "fit_cutoff": "u-1",
+      "ridge_penalty_after_training_standardization": 0.01
+    },
+    "residual_sigma": {
+      "window": 63,
+      "floor_daily": 0.0025,
+      "rank_signal_denominator": "Measured before 10-session sum window"
+    },
+    "stock_rank": "Within point-in-time eligible sector, percentile of standardized 10-session residual sum; midpoint ties",
+    "dispersion": "5-session mean of daily sector MAD of residuals standardized by prior-day 63-session residual sigma",
+    "synchronization": "lambda_max of 50%-identity-shrunk trailing-63 residual correlation matrix divided by contemporaneous N; no zero fill",
+    "percentile_reference": "Preceding 252 observations, excluding present",
+    "compression": "D percentile <= .20 AND K percentile >= .80 on at least 3 of prior20 sessions",
+    "release": "Previous compression plus D percentile >= .60 and K percentile drops >= .20 versus t-10; duration10 sessions from first event, overlapping events cannot reset age"
+  },
+  "signal": {
+    "states": "Ten living states s=(release_flag, residual_rank_quintile), plus absorbing EXIT",
+    "transition_matrix_dimension": [
+      11,
+      11
+    ],
+    "transition_horizon_sessions": 5,
+    "lookback_years": 5,
+    "origin_spacing_sessions": 5,
+    "admissible_training_outcome": "Transition/reward end by t-1; 20-session bias calibration labels must also mature before cutoff",
+    "origin_weighting": "Total weight1 per sector origin distributed among eligible stocks",
+    "transition_shrinkage_origin_equivalents": 50,
+    "reward_shrinkage_origin_equivalents": 50,
+    "reward_units": "5-session SIMPLE total-return residual net of origin-frozen factor contributions while held; post-exit stock residual reward0",
+    "forecast_equation": "raw_a = basis(s_i)^T*(I+A_g+A_g^2+A_g^3)*b_g; additive simple-return reward score calibrated to20-session executable simple-return residual outcomes",
+    "control": "Rank-only forecast omitting release and synchronization",
+    "release_increment": "a_hat_i - a_hat_i_rank_only",
+    "effective_state_origin_min": 30,
+    "sparse_state_policy": "Release increment zero, unavailable for new CRD entries",
+    "uncertainty": {
+      "calendar_month_block_resamples": 500,
+      "se_rule": "Max(bootstrap SE, absolute historical chronological-out-of-fold forecast bias)",
+      "confidence_multiplier": 1.645
+    },
+    "market_component": "25% trailing252 daily log mean +75% log(1.06)/252 daily; 6% is annual nominal simple-return prior; sector mean75% shrink zero; project factor exposure only while economically held, convert projected factor log return to simple and add calibrated residual return; forecast cash afterward",
+    "market_prior_sensitivities_annual": [
+      0,
+      0.03,
+      0.09
+    ],
+    "calibration": "Past chronological out-of-fold20-session executable-entry/exit/cash residual outcomes; ridge-shrink intercept/slope toward0/1, min100 distinct origin dates; monthly fit frozen next month",
+    "origin_attrition": "Every delisting, sector change and eligibility loss is retained as transition to EXIT; no survivor-only transition counts",
+    "exit_labels": "Next-session executable liquidation/legal recovery and subsequent cash; -100% simple-return loss for permanent zero recovery; suspension remains held until executable sale/legal resolution; unresolved payout is immature",
+    "release_age_approximation": "11-state model omits release age; actual10-session event expiry remains exact; compare age-aware transition baseline",
+    "calibration_origin_dates_min": 100,
+    "conditional_market_exposure": "Joint transition survival and observed within-block historical exit timing, not full20-session stock beta after EXIT"
+  },
+  "entry": {
+    "rank_min": 0.6,
+    "rank_max": 0.95,
+    "rank_gain_over20_min": 0.2,
+    "positive_10_session_residual_sum": true,
+    "release_required": true,
+    "incremental_lcb_over_rank_only_min": 0,
+    "residual_lcb_hurdle": "a_hat-1.645*SE > expected round-trip cost+0.0020",
+    "all_thresholds": "Unoptimized preregistration defaults; no historical result claimed"
+  },
+  "exit": {
+    "rank_below": 0.4,
+    "conservative_residual_forecast_nonpositive": true,
+    "fundamental_ineligibility": true,
+    "hard_cap_breach": true,
+    "signal_expiry_only_is_not_exit": true,
+    "position_entry_to_close_drawdown_trigger": 0.08,
+    "account_peak_to_close_drawdown_trigger": 0.2,
+    "drawdown_trigger_execution": "Next-session reduction/liquidation, five-session monitoring cooldown; gaps can exceed trigger",
+    "daily_evaluation": "Completed close, queue next session; no hindsight intrabar trigger fill"
+  },
+  "portfolio": {
+    "self_financing_equation": "sum_i x_i+x_cash+C(x,w_minus)=1, where x are post-order asset dollars/pre-order equity and C is cost/pre-order equity",
+    "objective": "Maximize worst-case E[log(sum_i x_i*(1+R_i,H)+x_cash*(1+R_cash,H))] - .10*CVaR_5pct(20-session loss)",
+    "ambiguity": "Residual mean intervals a_hat +/-1.645*SE only; market premium is not systematically subtracted",
+    "scenarios": "500 joint20-session paths from synchronized5-session trailing return blocks plus fitted transition exits; preserve joint shocks and explicit zero recovery; exp(L)-1 for living returns; match calibrated SIMPLE means by positive terminal gross-multiplier scaling preserving zero outcomes; reject target means below-100%",
+    "terminal_cost_reserve": "Stock terminal proceeds include expected sell cost in both proposed and hold alternatives; account ledger deducts actual executions only",
+    "post_cost_normalization": "All portfolio caps apply to x/(1-C)",
+    "stock_weight_cap": 0.05,
+    "sector_weight_cap": 0.25,
+    "positive_correlation_cluster_cap": 0.2,
+    "cluster_threshold": 0.7,
+    "max_positions": 30,
+    "cash_min": 0.05,
+    "cash_max": 1.0,
+    "gross_exposure_max": 0.95,
+    "forecast_annual_vol_cap": 0.2,
+    "ordinary_weekly_buys_plus_sells_cap": 0.3,
+    "emergency_reductions_exempt_turnover_cap": true,
+    "rounding": "Whole shares; retain feasibility/cash after fee debit",
+    "no_trade": "Hold drifted portfolio if robust20-session log-terminal-wealth improvement after current costs and terminal liquidation reserves <= log(1.0002)",
+    "cash_policy": "Keep cash when no legal or sufficiently supported opportunity; no mandatory deployment or guarantee of benchmark outperformance",
+    "cash_return": "Observed net daily cash yield compounded for actual cash-held sessions",
+    "covariance_units": "20-session simple-return covariance; annualized volatility scales20-session portfolio SD by sqrt(252/20)",
+    "cvar_units": "5%-tail mean terminal loss fraction of initial equity; .10 penalty coefficient dimensionless"
+  },
+  "costs": {
+    "side_minimum": 0.0005,
+    "model": "Actual fees + estimated half spread + calibrated impact; charge traded notional",
+    "stress_side_costs": [
+      0.001,
+      0.0025
+    ],
+    "impact_stress_multiplier": 2,
+    "tax_scope": "Pretax research account; personal taxes are not modeled",
+    "liquidity_caps": {
+      "trailing_ADV_participation": 0.005,
+      "observed_interval_volume_participation": 0.05
+    }
+  },
+  "timeline": {
+    "feature_cutoff": "Friday16:15 America/New_York after completed official bars and actual filing receipts",
+    "freeze": "Features and monthly coefficients fixed for next-session execution",
+    "quote_reoptimization": "Next trading session09:35 drifted holdings/quotes/costs update without signal change",
+    "execution_interval": "09:35-10:05 America/New_York; holiday/session-aware",
+    "unfilled": "Expire at interval end; stale/missing quote means no fill",
+    "historical_execution": "Bid/ask/impact/volume-constrained interval simulation, no next-close substitute"
+  },
+  "novel_contribution": {
+    "claim": "Proposed ordered compression\u2192correlation-release\u2192stock rank-ascent interaction; joint release/rank Markov reward forecast; cost-aware displacement based on fading conditional stock opportunities.",
+    "bounds": "Individual ingredients have prior art; global originality not established; no new theorem or tested return result."
+  },
+  "prior_art": [
+    {
+      "title": "Return dispersion and conditional momentum returns: International evidence",
+      "url": "https://ideas.repec.org/a/eee/pacfin/v50y2018icp263-278.html",
+      "overlap": "Dispersion-conditioned momentum; abstract checked, full subscriber methods not accessed"
+    },
+    {
+      "title": "Co-momentum / Lou-Polk",
+      "url": "https://www.systemicrisk.ac.uk/news/paul-woolley-centre-research-part-mscis-crowding-scorecard-traders",
+      "overlap": "Abnormal-return correlation as crowding proxy"
+    },
+    {
+      "title": "Zooming In on Equity Factor Crowding",
+      "url": "https://arxiv.org/abs/2001.04185",
+      "overlap": "Equity signal crowding already studied"
+    },
+    {
+      "title": "Observable Matrix Dynamics",
+      "url": "https://arxiv.org/html/2607.27461v1",
+      "overlap": "Observable return ranks and relationship states"
+    },
+    {
+      "title": "Quantum stochastic walks for portfolio optimization",
+      "url": "https://www.nature.com/articles/s44335-025-00050-4",
+      "overlap": "Network-aware allocation"
+    },
+    {
+      "title": "Diffolio",
+      "url": "https://arxiv.org/html/2511.07014v2",
+      "overlap": "Joint distributions and growth-optimal portfolio objectives"
+    }
+  ],
+  "validation": {
+    "primary_joint_hurdle": "J=min(g_strategy-g_QQQ,g_strategy-g_SPY)>0 AND g_strategy>max(g_cash,0), where g is realized annualized compound logwealth; total returns, identical dates/initial capital, actual costs",
+    "benchmark_allocation": "Natural QQQ and SPY total-return accounts are primary; volatility/beta matched benchmark+cash accounts additional diagnostics",
+    "forecast_controls": [
+      "Sector/size/vol/liquidity/quality/momentum matched stock observations",
+      "Rank-only model",
+      "Ordinary/residual12-1 momentum"
+    ],
+    "allocation_controls": [
+      "Equal weight exact same candidates/clock/costs",
+      "Static minimum variance",
+      "Static quality",
+      "Equal weight liquid stocks",
+      "Simple dispersion-timed momentum"
+    ],
+    "ablations": [
+      "Ordered compression",
+      "Correlation release",
+      "Fundamentals",
+      "Transition powers",
+      "Uncertainty shrinkage",
+      "Forecast-based displacement",
+      "Release-age aggregation versus age-aware transition model"
+    ],
+    "inference": "Calendar-month/date/issuer dependence;20-session purge and20-session embargo; complete variant register and multiplicity correction across5 inventions",
+    "locked_history": "Multiyear block covering several bull/bear/rebound regimes, not selected after seeing results",
+    "forward": "At least12 months frozen paper receipts before a claim of forward qualification",
+    "separate_forecast_allocation_value": true,
+    "metrics": [
+      "Terminal dollars",
+      "Compound growth",
+      "Drawdown",
+      "Factor/sector/beta attribution",
+      "Paired confidence intervals",
+      "Net forecast lift",
+      "Net same-signal allocation contribution"
+    ]
+  },
+  "dependencies": [
+    "Point-in-time US listings/permanent identifiers/delisting outcomes",
+    "Distribution/corporate-action-aware total-return data",
+    "Historical sector metadata and factor ETF series",
+    "Original timestamped SEC filings and fact revisions",
+    "Current and historical executable quotes/interval volume",
+    "Joint scenario generator and constrained objective solver",
+    "Self-financing trade ledger/cash yield/fee model",
+    "Immutable feature/model/decision/fill receipts"
+  ],
+  "kill_conditions": [
+    "Incremental release forecast lift nonpositive in two consecutive independent6-month evaluation blocks",
+    "Costed allocation underperforms equal-weight exact same signals",
+    "Normal execution costs exceed half conservative expected benefit",
+    "Joint QQQ/SPY compound-growth hurdle fails",
+    "Point-in-time timing, total-return or executable-cost dependency cannot be verified"
+  ],
+  "failure_regimes": [
+    "Narrow mega-cap rally concentrated outside selected cohort",
+    "Rank-transition dynamics shift",
+    "Synchronized sector liquidation despite apparent release",
+    "Accounting coverage/restatement bias",
+    "Information incorporated before executable entry",
+    "Costs/cash drag erase stock lift"
+  ],
+  "artifacts": {
+    "narrative": "strategies/05_allocator.md",
+    "provenance": "research/allocator_provenance.json"
+  }
+}

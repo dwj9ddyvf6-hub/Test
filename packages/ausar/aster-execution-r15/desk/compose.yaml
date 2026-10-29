@@ -1,0 +1,20 @@
+services:
+  desk:
+    build: .
+    restart: unless-stopped
+    init: true
+    ports:
+      - "127.0.0.1:8787:8787"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      ASTER_DB_PATH: /data/aster.sqlite
+      # Optional read-only data credentials are provisioned inside the private
+      # state volume, never copied from the host's .env into the image.
+      ASTER_ACTIONS_CREDENTIALS_FILE: ${ASTER_CONTAINER_ACTIONS_CREDENTIALS_FILE:-/data/alpaca-readonly-credentials.json}
+    volumes:
+      - desk-state:/data
+    stop_grace_period: 45s
+volumes:
+  desk-state:

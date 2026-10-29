@@ -1,0 +1,71 @@
+{
+  "scope": "Isolated synthetic before/after reproductions against local release HEAD; no broker/provider actions",
+  "cases": [
+    {
+      "scenario": "short_chart",
+      "before": {
+        "matched_sessions": 2,
+        "return_percent": 3.4482758620689653,
+        "closed_roundtrips": 0,
+        "closed_trade_net_pnl": 0.0
+      },
+      "after": {
+        "matched_sessions": 21,
+        "return_percent": 200.0,
+        "closed_roundtrips": 0,
+        "closed_trade_net_pnl": 0.0
+      }
+    },
+    {
+      "scenario": "corrupt_benchmark",
+      "before": {
+        "matched_sessions": 2,
+        "return_percent": 10.0,
+        "closed_roundtrips": 0,
+        "closed_trade_net_pnl": 0.0,
+        "QQQ_return": 899.0
+      },
+      "after": {
+        "matched_sessions": null,
+        "return_percent": null,
+        "closed_roundtrips": 0,
+        "closed_trade_net_pnl": 0.0,
+        "QQQ_return": null
+      }
+    },
+    {
+      "scenario": "pre_calendar_history",
+      "before": {
+        "exception": "DateOutOfBounds"
+      },
+      "after": {
+        "matched_sessions": 2,
+        "return_percent": 10.0,
+        "closed_roundtrips": 0,
+        "closed_trade_net_pnl": 0.0
+      }
+    },
+    {
+      "scenario": "unverified_broker",
+      "before": {
+        "matched_sessions": null,
+        "return_percent": null,
+        "closed_roundtrips": 1,
+        "closed_trade_net_pnl": null,
+        "episode_net_pnl": 50.0
+      },
+      "after": {
+        "matched_sessions": null,
+        "return_percent": null,
+        "closed_roundtrips": null,
+        "closed_trade_net_pnl": null,
+        "episode_net_pnl": null
+      }
+    },
+    {
+      "scenario": "ambiguous_funding_timestamp",
+      "before": 100.0,
+      "after": null
+    }
+  ]
+}
