@@ -1,0 +1,221 @@
+/* Master Desk terminal, the Desk tab (loaded with desk.js on the tab's first open): GrokBot's "Main desk" in the design
+   system's tokens (app.css), and the owner's leaderboard and sleeves explorer. No style attributes: sizes come from
+   CSSOM, colours from tokens and classes. Chart canvases keep GrokBot's dark slate in both themes. */
+
+#p-desk{--dk:1}   /* desk.js draws once this sheet applies */
+
+/* the overview: headline, GrokBot's stat tiles (.stat, kpiDeco), the split bar (.allocbar) */
+.dk-hl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px}
+.dk-h{flex:1 1 320px;font-size:19px;font-weight:800;line-height:1.3;color:var(--hd)}
+.dk-en{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:var(--s);color:var(--mu)}
+.dk-ts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:12px}
+.dk-ts .tile{min-height:132px;padding:12px 12px 10px}.dk-ts .s{font-size:12.5px}
+.dk-ts .up .s,.dk-c.up,.dk-up{color:var(--up)}.dk-ts .dn .s,.dk-c.dn,.dk-dn{color:var(--dn)}
+.dk-ts .tile.up{background:linear-gradient(180deg,var(--upb) 0%,var(--sf2) 70%)}.dk-ts .tile.dn{background:linear-gradient(180deg,var(--dnb) 0%,var(--sf2) 70%)}
+.tile.dk-eq{background:linear-gradient(150deg,#0b3b46 0%,#126356 100%);border-color:#0b3b46}
+.dk-eq .l,.dk-eq .s,.dk-eq .dk-tl{color:#cfe8e1}.dk-eq .v{color:#fff}
+.dk-tsp{display:block;width:100%;height:32px;margin-top:8px;overflow:visible}
+.dk-tsp .a{fill:#7ee0c3;opacity:.22}.dk-tsp .k{fill:none;stroke:#7ee0c3;stroke-width:1.6}
+.dk-tl{font-size:10.5px;color:var(--mu);margin-top:2px;white-space:nowrap}
+.dk-kb{height:6px;margin-top:10px;border-radius:99px;background:var(--tr);overflow:hidden}
+.dk-kb i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#8fb8e6,#4a7fc0)}
+.dk-vs{display:grid;gap:4px;margin-top:8px}
+.dk-vr{display:grid;grid-template-columns:34px 1fr auto;gap:6px;align-items:center;font-size:11px;color:var(--mu)}
+.dk-vr b{min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+.dk-vb,.dk-db{position:relative;height:6px;border-radius:99px;background:var(--tr)}
+.dk-vb::after,.dk-db::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--mu);opacity:.6}
+.dk-vb i,.dk-db i{position:absolute;top:0;bottom:0;border-radius:99px;background:var(--up)}
+.dk-vb .n,.dk-db .n{right:50%;background:var(--dn)}.dk-vb .p,.dk-db .p{left:50%}.dk-vb .s{background:#c9a227}
+.dk-ab{display:flex;height:14px;margin-top:12px;border-radius:999px;overflow:hidden;background:var(--tr)}
+.dk-ab i{display:block;height:100%;background:#2e8b57}.dk-ab .c{flex:1;background:#cfe0f5}
+.dk-ak{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:6px;font-size:12.5px;font-weight:600;color:var(--mu)}
+.dk-ak em{font-style:normal}.dk-ak span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:3px;vertical-align:-1px;background:#2e8b57}
+.dk-ak .c::before{background:#cfe0f5}
+@media not all{.tile.dk-eq{background:linear-gradient(150deg,#1d4a52 0%,#122f37 100%);border-color:#2d6674}
+.dk-ab .c,.dk-ak .c::before{background:#2b4566}}
+@media (max-width:719px){.dk-ts{grid-template-columns:1fr 1fr}.dk-ts .tile{min-height:118px}.dk-ts .v{font-size:20px}
+.dk-ts>:nth-child(3){order:-1}.dk-ts>:first-child{order:-2}.dk-ts>:last-child{grid-column:1/-1;min-height:0}.dk-h{font-size:17px}}
+
+/* the curve: GrokBot's drawChart in a dark chart panel, end-value pills, dashed zero, Desk + SPY / Desk only */
+.dk-cv{padding:12px 12px 10px;border-radius:14px;background:#131722;color:#d1d4dc}
+.dk-ch{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;min-height:34px}
+.dk-ch h3{font-size:18px;font-weight:800;color:#7ee0c3;letter-spacing:.01em}.dk-ch h3 span{color:#d1d4dc;font-weight:700}
+.dk-cv .tg button{min-height:36px;border-color:#363a45;background:#1e222d;color:#d1d4dc}
+.dk-cv .tg button[aria-pressed=true]{background:#d1d4dc;border-color:#d1d4dc;color:#131722}
+.dk-cw{position:relative;height:262px;margin-top:6px;touch-action:pan-y}.dk-cw svg{display:block;width:100%;height:100%}
+.dk-cw .g{stroke:#262a35}.dk-cw .z{stroke:#8a91a6;stroke-dasharray:4 4}.dk-cw text{fill:#787b86;font-size:11px}
+.dk-cw .ar{fill:url(#dk-ga)}.dk-cw .d{fill:none;stroke:#7ee0c3;stroke-width:2.6;stroke-linejoin:round}.dk-cw .dd{fill:#7ee0c3}
+.dk-cw .s{fill:none;stroke:#f2d68a;stroke-width:2;stroke-dasharray:5 3}.dk-cw .x{stroke:#dfe3ee;stroke-opacity:.55;stroke-dasharray:3 3}
+.dk-cw .pu{fill:#18744f}.dk-cw .pd{fill:#b0342e}.dk-cw .ps{fill:#f2d68a}.dk-cw .pt{fill:#fff;font-size:11.5px;font-weight:700}.dk-cw .ps+.pt{fill:#2a2d3a}
+.dk-cg{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;min-height:22px;font-size:12.5px}
+.dk-cg i{display:inline-block;width:16px;height:3px;margin-right:6px;border-radius:2px;vertical-align:3px;background:#7ee0c3}.dk-cg .s{background:#f2d68a}
+.dk-cap{margin-left:auto;color:#d1d4dc;font-variant-numeric:tabular-nums}
+@media (max-width:599px){.dk-cw{height:222px}.dk-ch h3{font-size:16px}}
+
+/* values tables (Codex "Chart values"): collapsed, never clipped */
+.dk-vt{margin-top:8px}.dk-vt summary{cursor:pointer;min-height:36px;padding-top:6px;font-size:var(--s);font-weight:700;color:var(--ac);list-style:none}
+.dk-vt summary::-webkit-details-marker{display:none}.dk-cv .dk-vt summary{color:#d1d4dc}.dk-cv .t th,.dk-cv .t td{border-color:#2a2e39;color:#d1d4dc}
+
+/* the leaderboard: GrokBot's closed-trade bars per sleeve, with its spark */
+.dk-lt{display:none;margin-bottom:10px}
+.dk-lb{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.dk-lc h3,.dk-xl>span,.dk-gh,.dk-alh,.dk-kv dt,.dk-ef dt,.dk-fl h3{font:500 11px/1.3 var(--fm);letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}
+.dk-lc h3{display:flex;justify-content:space-between;margin-bottom:4px;color:var(--ac)}
+.dk-li{display:grid;grid-template-columns:20px minmax(0,1fr) auto;grid-template-areas:"k n v" "k s b";gap:2px 8px;align-items:center;width:100%;padding:7px 2px;border:0;border-top:1px solid var(--ln2);background:none;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.dk-li:hover{background:var(--acb)}
+.dk-li .k{grid-area:k;align-self:start;font-size:12px;font-weight:700;color:var(--mu);text-align:right}
+.dk-li .nm{grid-area:n;min-width:0;font-size:14px;font-weight:700;line-height:1.3;color:var(--hd)}
+.dk-li .v{grid-area:v;font-size:14px;font-weight:800;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dk-li .dk-lsb{grid-area:s;display:flex;align-items:center;gap:8px;min-width:0;font-size:12px;color:var(--mu)}
+.dk-li .dk-db{grid-area:b;width:96px;height:8px}
+@media (max-width:899px){.dk-lt{display:flex}.dk-lb{grid-template-columns:1fr}.dk-lb:not([data-v=best]) .best,.dk-lb:not([data-v=worst]) .worst,.dk-lb:not([data-v=today]) .today{display:none}}
+
+/* sparks: a line, a dashed zero (or entry) line, green or red by sign; the end dot on positions */
+.dk-sk{display:block;flex:none;overflow:visible}.dk-sk .z{stroke:var(--mu);stroke-width:1;stroke-dasharray:3 3;opacity:.7}
+.dk-sk .k{fill:none;stroke:var(--mu);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
+.dk-sk.up .k{stroke:var(--up)}.dk-sk.dn .k{stroke:var(--dn)}.dk-sk .e{fill:var(--mu)}.dk-sk.up .e{fill:var(--up)}.dk-sk.dn .e{fill:var(--dn)}
+.dk-sk .en{stroke:#e0be62;stroke-width:1.2;stroke-dasharray:4 3}
+
+/* the sleeves explorer: GrokBot's .sgroup sections and .sl rows, with the owner's sparks, filters, sort and search */
+.dk-xt{display:grid;grid-template-columns:150px minmax(0,360px) minmax(0,1fr);gap:16px 28px;align-items:center}.dk-sb .dk-st{margin-top:8px}
+.dk-st{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--tr)}.dk-st i{display:block;height:100%}
+.dk-st .firing,.dk-sg .firing::before,.dk-dot.firing{background:var(--up)}.dk-st .waiting,.dk-sg .waiting::before{background:var(--bl)}
+.dk-st .off,.dk-sg .off::before{background:var(--mu)}.dk-st .blocked,.dk-sg .blocked::before,.dk-dot.blocked{background:var(--dn)}
+.dk-sg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12.5px;font-weight:600;color:var(--mu)}
+.dk-sg span::before{content:"";display:inline-block;width:9px;height:9px;margin-right:6px;border-radius:50%;vertical-align:0}
+.dk-sg b{color:var(--hd)}
+.dk-al{display:grid;gap:4px;font-size:12.5px;min-width:0}.dk-al p{display:flex;justify-content:space-between;gap:8px;white-space:nowrap}
+.dk-al span{overflow:hidden;text-overflow:ellipsis}.dk-al i{display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:3px;vertical-align:-1px}
+.dk-al b{font-variant-numeric:tabular-nums;color:var(--hd)}
+.dk-dn2 .c{font-size:17px;font-weight:800;fill:var(--hd)}.dk-dn2 .u{font-size:10px;fill:var(--mu)}.dk-dn2 .r{fill:none;stroke:var(--tr)}
+#p-desk .c0{fill:#177366;background:#177366}#p-desk .c1{fill:#4a8fe0;background:#4a8fe0}#p-desk .c2{fill:#d9a441;background:#d9a441}#p-desk .c3{fill:#9467d0;background:#9467d0}#p-desk .c4{fill:#d4504a;background:#d4504a}
+#p-desk .c5{fill:#2bb07f;background:#2bb07f}#p-desk .c6{fill:#c3ccd6;background:#c3ccd6}
+@media not all{#p-desk .c0{fill:#2bb3a0;background:#2bb3a0}#p-desk .c6{fill:#4d5d73;background:#4d5d73}}
+.dk-xc{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:14px;padding-top:12px;border-top:1px solid var(--ln)}
+.dk-xc .tg{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;max-width:100%}.dk-xc .tg::-webkit-scrollbar{display:none}
+.dk-xc .tg button{flex:none;min-height:34px}#p-desk .tg .n{margin-left:6px;opacity:.75;font-variant-numeric:tabular-nums}
+.dk-xl{display:flex;align-items:center;gap:8px;min-width:0}.dk-xl>span{flex:none}
+.dk-fb{display:inline-flex;align-items:center;gap:8px;min-height:36px;margin-left:auto;padding:0 14px;border:1.5px solid var(--ln);border-radius:999px;background:var(--sf);font-weight:700;font-size:13.5px;color:var(--hd)}
+.dk-fb:hover{border-color:var(--ac)}.dk-fb kbd{font:600 11px/1 var(--fs);padding:2px 5px;border:1px solid var(--ln);border-radius:5px;color:var(--mu)}
+.dk-gs{margin-top:10px}
+.dk-g{margin-top:8px;border:1px solid var(--ln);border-radius:14px;background:var(--sf)}
+.dk-g[open]{border-color:var(--ac);box-shadow:0 4px 16px rgba(16,40,58,.08)}
+.dk-gh,.dk-g>summary{display:grid;grid-template-columns:minmax(0,1fr) 150px 88px 78px;gap:2px 16px;align-items:center}
+.dk-gh{margin:4px 0 -2px;padding:0 15px;font-size:10.5px}.dk-gh span:last-child{text-align:right}
+.dk-g>summary{grid-template-areas:"n u s m" "b b b b";min-height:52px;padding:9px 14px;cursor:pointer;list-style:none}
+.dk-g>summary::-webkit-details-marker{display:none}.dk-g>summary:hover{background:var(--acb);border-radius:13px}
+.dk-gn{grid-area:n;display:flex;align-items:baseline;gap:8px;min-width:0;font-size:15.5px;font-weight:800;color:var(--hd)}
+.dk-gn::before{content:"";flex:none;width:7px;height:7px;margin:0 2px 2px 0;border:solid var(--mu);border-width:0 2px 2px 0;transform:rotate(-45deg)}
+.dk-g[open] .dk-gn::before{transform:rotate(45deg)}.dk-gn small{font-size:12.5px;font-weight:700;color:var(--mu);white-space:nowrap}
+.dk-gu{grid-area:u;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--mu);white-space:nowrap}.dk-gu .ud{flex:none;display:flex;width:44px;height:6px;border-radius:99px;overflow:hidden;background:var(--tr)}
+.dk-gu .ud i{display:block;height:100%;background:var(--up)}.dk-gu .ud .d{margin-left:auto;background:var(--dn)}
+.dk-g .dk-sk{grid-area:s}.dk-gm{grid-area:m;text-align:right;font-size:15px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dk-gb{grid-area:b;display:flex;flex-wrap:wrap;align-items:center;gap:2px 16px;font-size:12px;color:var(--mu)}
+.dk-g .bu{display:flex;align-items:center;gap:8px;white-space:nowrap}.dk-g .bu i{display:block;width:72px;height:5px;border-radius:99px;background:var(--acb);overflow:hidden}
+.dk-g .bu b{display:block;height:100%;border-radius:99px;background:var(--ac)}.dk-g .ov b{background:var(--wn)}.dk-g em{font-style:normal;font-weight:700;color:var(--tx)}.dk-gn .mt{color:var(--ac)}
+.dk-gx{display:none}
+.dk-rs{border-top:1px solid var(--ln)}
+.dk-r+.dk-r{border-top:1px solid var(--ln2)}.dk-r{content-visibility:auto;contain-intrinsic-size:auto 64px}   /* rows off screen skip layout and paint */
+@media (max-width:719px){.dk-r{contain-intrinsic-size:auto 86px}}
+.dk-rb{display:grid;grid-template-columns:84px minmax(0,1fr) 88px 70px 150px;grid-template-areas:"st nm sk rt vd" "st ds sk d1 vd";align-items:center;gap:1px 14px;width:100%;min-height:48px;padding:8px 14px;border:0;background:none;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.dk-rb:hover,.dk-r.on .dk-rb{background:var(--acb)}
+.dk-rst{grid-area:st;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--mu)}
+.dk-dot{flex:none;width:9px;height:9px;border-radius:50%;border:2px solid var(--bl);background:none}.dk-dot.off{border-color:var(--mu);background:var(--mu);height:3px;border-radius:2px;border:0}
+.dk-dot.firing,.dk-dot.blocked{border:0}
+.dk-rn{grid-area:nm;min-width:0;font-size:14.5px;font-weight:700;line-height:1.3;color:var(--hd)}
+.dk-rd{grid-area:ds;min-width:0;font-size:12.5px;line-height:1.35;color:var(--mu)}
+.dk-rb .dk-sk{grid-area:sk}.dk-rr{grid-area:rt;text-align:right;font-size:15px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dk-r1{grid-area:d1;justify-self:end}.dk-rv{grid-area:vd;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px}
+.dk-k{display:inline-block;padding:1px 7px;border-radius:6px;font-size:10.5px;font-weight:800;letter-spacing:.04em;line-height:1.5;text-transform:uppercase;white-space:nowrap;background:var(--tr);color:var(--mu)}
+.dk-k.h{background:var(--blb);color:var(--bl)}.dk-k.d{background:var(--upb);color:var(--up)}.dk-k.w{background:var(--inb);color:var(--in)}
+.dk-c{display:inline-block;padding:1px 7px;border-radius:999px;font-size:11.5px;font-weight:800;line-height:1.5;white-space:nowrap;background:var(--tr);color:var(--mu);font-variant-numeric:tabular-nums}
+.dk-c.up{background:var(--upb)}.dk-c.dn{background:var(--dnb)}.dk-c.wn{background:var(--wnb);color:var(--wn)}.dk-c.ok{background:var(--upb);color:var(--up)}.dk-c.bad{background:var(--dnb);color:var(--dn)}
+.dk-c.sm{background:none;box-shadow:inset 0 0 0 1px var(--ln);color:var(--mu)}.dk-xo{display:none}
+.dk-rx{padding:4px 14px 14px 112px;display:grid;gap:10px}
+.dk-kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.dk-kv div{padding:7px 10px;border:1px solid var(--ln);border-radius:10px;background:var(--sf2)}
+.dk-kv dt{font-size:10.5px}.dk-kv dd{font-size:15px;font-weight:800;color:var(--hd);white-space:nowrap}
+.dk-xm{display:flex;flex-wrap:wrap;gap:6px}.dk-pm{font-size:13px}.dk-pm li{display:flex;justify-content:space-between;gap:12px;padding:4px 0;border-top:1px solid var(--ln2)}
+.dk-more{display:block;min-height:44px;margin:0 auto;padding:0 18px;border:1.5px solid var(--ln);border-radius:999px;background:var(--sf);font-weight:700;font-size:13.5px;color:var(--hd)}
+.dk-rs>.dk-more{margin:8px auto 10px}.dk-mb{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:8px}.dk-mb:empty{display:none}.dk-mb .dk-more{margin:0}.dk-none{padding:14px;font-size:var(--s);color:var(--mu)}
+@media (max-width:719px){.dk-xt{grid-template-columns:118px minmax(0,1fr);gap:12px}.dk-sb{grid-column:1/-1}.dk-fb{margin-left:0}
+.dk-gh,.dk-g>summary{grid-template-columns:minmax(0,1fr) 64px 64px;gap:4px 10px}.dk-gh{padding:0 13px}.dk-gh span:nth-child(2){display:none}
+.dk-g>summary{grid-template-areas:"n s m" "u u u";padding:9px 12px}.dk-g>summary .dk-sk{width:64px;height:22px}.dk-g>summary .dk-gb{display:none}
+.dk-gx{display:flex;flex-wrap:wrap;gap:4px 14px;padding:0 12px 10px;font-size:12px;color:var(--mu)}
+.dk-xc{gap:8px}.dk-xc .tg{flex-wrap:wrap;overflow:visible;gap:5px}.dk-xc .tg button{min-height:36px;font-size:12.5px}
+.dk-fb{order:-1;width:100%;justify-content:center;min-height:42px}
+.dk-gu .ud{flex:1;max-width:120px}
+.dk-rb{grid-template-columns:10px minmax(0,1fr) 52px 70px;grid-template-areas:"st nm nm rt" "st ds sk d1";gap:1px 8px;padding:8px 12px}.dk-rb .dk-sk{width:52px;height:20px}
+.dk-rr{align-self:start;font-size:14.5px}.dk-r1 .dk-c{padding:0 5px;font-size:10.5px}.dk-rn{font-size:14px}
+.dk-rst{align-self:start;padding-top:6px}.dk-rst span,.dk-rv{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.dk-rx{padding:2px 12px 12px}.dk-xo{display:inline-block}
+.dk-kv{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.dk-kv div{padding:6px 8px}.dk-kv dd{font-size:14px}
+.dk-xc .tg button{padding:0 9px}.dk-xl{align-items:flex-start}.dk-xl>span{width:34px;padding-top:9px}.dk-gh span:nth-child(3){visibility:hidden}}
+
+/* positions: GrokBot's .list .it with the owner's 30-close spark, entry line and time-left bar (.hold) */
+.dk-pc{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:6px}.dk-pc::-webkit-scrollbar{display:none}.dk-pc button{flex:none}
+.dk-p{display:grid;grid-template-columns:minmax(0,1fr) 140px 124px;grid-template-areas:"a s r";align-items:center;gap:4px 16px;padding:10px 4px 10px 12px;border-top:1px solid var(--ln2);border-left:3px solid transparent}
+.dk-p:first-child{border-top:0}.dk-p.up{border-left-color:var(--up)}.dk-p.dn{border-left-color:var(--dn)}
+.dk-pa{grid-area:a;min-width:0}.dk-p .dk-sk{grid-area:s}.dk-pr{grid-area:r;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dk-py{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}.dk-py b{font-size:19px;font-weight:800;color:var(--hd);letter-spacing:.01em}.dk-py small{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--dn)}
+.dk-pt{display:inline-block;max-width:100%;padding:2px 8px;border:1.5px solid var(--ln);border-radius:10px;font-size:12px;font-weight:800;line-height:1.35;color:var(--ac)}
+.dk-pd{margin-top:4px;font-size:12.5px;line-height:1.45;color:var(--mu)}
+.dk-ho{max-width:280px;height:6px;margin-top:7px;border-radius:999px;background:var(--tr);overflow:hidden}.dk-ho i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#177366,#7ee0c3)}
+.dk-px{font-size:19px;font-weight:800;color:var(--hd)}.dk-pp{font-size:14px;font-weight:800}.dk-pr small{display:block;font-size:12px;color:var(--mu)}
+@media (max-width:599px){.dk-p{grid-template-columns:minmax(0,1fr) 100px;grid-template-areas:"a r" "a s";align-items:start;padding:10px 2px 10px 10px;gap:4px 10px}.dk-p .dk-sk{width:100px;height:29px}.dk-py b,.dk-px{font-size:17px}}
+
+/* the heatmap: GrokBot's squarified treemap (tile size = value, colour = gain or loss) and its tap detail strip */
+.dk-hm{display:block;width:100%;height:380px;border-radius:14px;background:#2a2d3a}
+.dk-hm rect{stroke:#2a2d3a;stroke-width:2;cursor:pointer}.dk-hm .sel{stroke:#fff;stroke-width:3}
+.dk-hm text{pointer-events:none;font-variant-numeric:tabular-nums}.dk-hm .b{font-size:14px;font-weight:800}.dk-hm .p{font-size:12px;font-weight:700}.dk-hm .m{font-size:11px;opacity:.85}
+.dk-hd{min-height:64px;margin-top:10px;padding:10px 12px;border:1px solid var(--ln);border-radius:12px;background:var(--sf2);font-size:13.5px;line-height:1.5}
+.dk-hd b{color:var(--hd)}.dk-hg{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:var(--mu)}
+.dk-hg i{display:inline-block;width:120px;height:10px;border-radius:999px;background:linear-gradient(90deg,hsl(4,65%,38%),hsl(4,65%,80%),#e9eef0,hsl(152,50%,78%),hsl(152,55%,30%))}
+@media (max-width:599px){.dk-hm{height:300px}}
+
+/* the engine card: GrokBot's "Running normally" chip and .kv grid; today's signals, orders and fills as three tiles */
+.dk-eg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px 32px;align-items:end}@media (max-width:719px){.dk-eg{grid-template-columns:1fr}}
+.dk-ek{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin-top:12px;font-size:14px}
+.dk-ek dt{color:var(--mu)}.dk-ek dd{font-weight:700;color:var(--hd)}
+.dk-ef{display:flex;align-items:stretch;gap:6px;margin-top:6px}.dk-ef>dl{flex:1;padding:10px 12px;border:1px solid var(--ln);border-radius:12px;background:var(--sf2)}
+.dk-ef dd{font-size:22px;font-weight:800;color:var(--hd)}
+.dk-ef>span{align-self:center;font-size:18px;color:var(--mu)}
+
+/* closed trades: GrokBot's .ctr rows, a diverging bar from zero per trade, % and $, a dot for a tiny result */
+.dk-cr{display:grid;grid-template-columns:minmax(70px,270px) 1fr 70px 84px;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--ln2)}
+.dk-cr:last-child{border-bottom:0}.dk-cr .y{font-size:15px;font-weight:800;color:var(--hd)}.dk-cr .w{font-size:11.5px;line-height:1.3;color:var(--mu)}
+.dk-cb{position:relative;height:12px;border-radius:6px;background:var(--tr)}
+.dk-cb::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:#9fb3ac}
+.dk-cb i{position:absolute;top:0;bottom:0;border-radius:6px;background:var(--up)}.dk-cb .n{right:50%;background:var(--dn)}.dk-cb .p{left:50%}
+.dk-cb .o{width:12px;height:12px;border-radius:50%}.dk-cb .o.n{right:calc(50% - 6px)}.dk-cb .o.p{left:calc(50% - 6px)}
+.dk-cr .r{text-align:right;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}.dk-cr .r.s{font-size:12.5px;font-weight:600}
+@media (max-width:599px){.dk-cr{grid-template-columns:minmax(0,92px) 1fr 60px 62px;grid-template-areas:"y b p d" "w w w w";gap:2px 7px}.dk-cr>:first-child{display:contents}.dk-cr .y{grid-area:y;font-size:14px;line-height:1.25}
+.dk-cr .w{grid-area:w}.dk-cb{grid-area:b}.dk-cr .r{grid-area:p}.dk-cr .r.s{grid-area:d}}
+
+/* trade log and scorecards: the design system's tables; criteria as dots, "small sample" as a chip */
+.dk-tb td,.dk-tb th{vertical-align:top}.dk-tb td small{display:block;color:var(--mu)}.dk-tb th small{display:block;font-weight:600;color:var(--mu)}
+@media (max-width:599px){.dk-tb thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.dk-tb,.dk-tb tbody{display:block}
+.dk-tb tr{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 14px;padding:8px 0;border-top:1px solid var(--ln2)}.dk-tb th,.dk-tb td{display:block;padding:0;border:0;text-align:left}
+.dk-tb caption{display:block}.dk-tb tr>th{flex:1 1 100%}.dk-tb td[data-l]::before{content:attr(data-l) " ";font:500 10px/1 var(--fm);letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}.dk-tb td small{display:inline}.dk-tb td.nm{flex:1 1 100%}.dk-tb .nm::before{content:none}}.dk-tb caption .dk-cri{vertical-align:0}.dk-tb .nm{min-width:180px}
+.dk-cri{display:inline-flex;gap:3px;vertical-align:-1px}.dk-cri i{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--mu)}
+.dk-cri .p{background:var(--up);box-shadow:none}.dk-cri .f{background:var(--dn);box-shadow:none}
+
+/* Find a sleeve: GrokBot's finder dialog (.fpanel); a bottom sheet on phones */
+dialog.dk-fd{width:min(680px,calc(100% - 28px));height:min(84vh,760px);max-height:none;margin:7vh auto auto;overflow:hidden;border-radius:18px;box-shadow:0 18px 50px rgba(8,30,38,.35)}
+.dk-fd[open]{display:flex;flex-direction:column}.dk-fd::backdrop{background:rgba(8,30,38,.48)}
+.dk-fh{display:flex;align-items:center;gap:10px;padding:14px 16px 6px}.dk-fh h2{flex:1;font-size:18px;font-weight:800;color:var(--hd)}
+.dk-fx{width:40px;height:40px;border:1px solid var(--ln);border-radius:999px;background:var(--sf);font-size:20px;line-height:1;color:var(--hd)}
+.dk-fs{position:relative;margin:6px 16px 8px}.dk-fs svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mu)}
+.dk-fs input{width:100%;min-height:46px;padding:0 14px 0 40px;border:1.5px solid var(--ln);border-radius:12px;background:var(--bg);color:var(--tx);font:inherit;font-size:16px}
+.dk-fs input:focus{border-color:var(--ac);outline:none;box-shadow:0 0 0 3px var(--acb)}
+.dk-ft{display:flex;gap:6px;overflow-x:auto;padding:2px 16px 10px;border-bottom:1px solid var(--ln);scrollbar-width:none}.dk-ft::-webkit-scrollbar{display:none}
+.dk-ft.tg{display:flex;flex-wrap:nowrap}.dk-ft button{flex:none;min-height:36px}.dk-ft .n{margin-left:6px;opacity:.75}.dk-fc{padding:6px 16px 2px;font-size:12.5px;color:var(--mu)}
+.dk-fl{flex:1;min-height:0;overflow-y:auto;padding:0 8px 14px;overscroll-behavior:contain}
+.dk-fl h3{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;margin:0;padding:10px 8px 6px;background:var(--sf);color:var(--ac)}
+.dk-fl h3 span{color:var(--mu)}
+.dk-fi{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:8px;border:0;border-radius:10px;background:none;text-align:left;font:inherit;color:var(--tx)}
+.dk-fi:hover,.dk-fi:focus-visible{background:var(--acb)}.dk-fi>span{flex:1;min-width:0}
+.dk-fi b{display:block;font-size:14.5px;color:var(--hd)}.dk-fi small{display:block;margin-top:1px;font-size:12.5px;line-height:1.35;color:var(--mu)}
+.dk-fi .dk-c{flex:none}
+@media (max-width:599px){dialog.dk-fd{width:100%;max-width:100%;height:92vh;margin:auto 0 0;border-radius:18px 18px 0 0;border-bottom:0}}
+.dk-tint{animation:dk-t 1.4s ease-out}@keyframes dk-t{from{background-color:var(--acb)}}
+@media (forced-colors:active){.dk-vb i,.dk-db i,.dk-ab i,.dk-st i,.dk-cb i,.dk-ho i,.dk-kb i,.dk-gu .ud i,.dk-gb .bu b,.dk-dot{forced-color-adjust:none;background:CanvasText}}
