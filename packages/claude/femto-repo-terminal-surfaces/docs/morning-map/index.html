@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Morning Map — index positioning and the day's qualified setups</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; background:#0c0f14; color:#e8ecf1; font-family: Georgia, 'Times New Roman', serif; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 28px 18px 60px; }
+  h1 { font-size: 34px; margin: 0 0 4px; letter-spacing:.3px; }
+  .sub { color:#9fb0c3; font-size: 15px; margin-bottom: 6px; }
+  .vintage { color:#6f8199; font-size: 13px; margin-bottom: 22px; }
+  h2 { font-size: 21px; margin: 30px 0 10px; border-bottom: 1px solid #26303f; padding-bottom: 6px; }
+  .record { background:#11161f; border:1px solid #26303f; border-radius:10px; padding:14px 16px; font-size:14.5px; line-height:1.55; }
+  .record b { color:#ffd479; font-weight:600; }
+  .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:14px; }
+  .card { background:#11161f; border:1px solid #26303f; border-radius:10px; padding:16px 18px; }
+  .card h3 { margin:0 0 2px; font-size:24px; }
+  .spot { color:#9fb0c3; font-size:14px; margin-bottom:10px; }
+  .big { font-size:26px; margin:4px 0; }
+  .neg { color:#ff9d8a; } .pos { color:#8fe3b0; }
+  .kv { display:flex; justify-content:space-between; font-size:14.5px; padding:3px 0; border-bottom:1px dotted #223048; }
+  .kv:last-of-type { border-bottom:none; }
+  .kv span:first-child { color:#9fb0c3; }
+  .regime { font-size:14.5px; line-height:1.55; margin-top:10px; color:#d7e1ee; }
+  .fine { color:#6f8199; font-size:12.5px; margin-top:10px; line-height:1.5; }
+  table { width:100%; border-collapse:collapse; font-size:14.5px; }
+  th, td { text-align:left; padding:7px 8px; border-bottom:1px solid #1d2634; }
+  th { color:#9fb0c3; font-weight:600; font-size:13px; text-transform:uppercase; letter-spacing:.4px; }
+  td.num, th.num { text-align:right; }
+  .tick { font-weight:700; color:#ffd479; }
+  button.toggle { background:#1a2331; color:#e8ecf1; border:1px solid #33445e; border-radius:8px; padding:9px 14px; font-size:14px; cursor:pointer; margin-top:12px; }
+  button.toggle:hover { background:#223048; }
+  .scrollbox { max-height: 480px; overflow-y:auto; margin-top:10px; border:1px solid #26303f; border-radius:10px; display:none; }
+  .scrollbox table { font-size:13.5px; }
+  a { color:#8fc3ff; }
+  .foot { margin-top:36px; color:#6f8199; font-size:13px; line-height:1.6; border-top:1px solid #26303f; padding-top:14px; }
+  .err { color:#ff9d8a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The Morning Map</h1>
+  <div class="sub">Where the index positioning sits before the open, and the stocks that passed every gate yesterday. Free, every trading day, and graded in public.</div>
+  <div class="vintage" id="vintage">Loading the latest edition…</div>
+
+  <h2>The record so far</h2>
+  <div class="record" id="record">Loading…</div>
+
+  <h2>The Map — index positioning</h2>
+  <div class="cards" id="mapcards"></div>
+  <div class="fine">Net gamma is a model, built from overnight open interest with the standard dealer-sign convention (calls positive, puts negative) — it describes positioning, it is not an observation of any dealer's book. The dark-pool figure is the latest FINRA file and always lags one day. Contract coverage counts how much of each chain carried a usable price or volatility.</div>
+
+  <h2>The Qualified Board</h2>
+  <div class="sub" id="boardline"></div>
+  <table>
+    <thead><tr>
+      <th>Stock</th><th class="num">Close</th><th class="num">Score</th><th class="num">Agreeing checks</th>
+      <th>What triggered it</th><th class="num">Support (exit if broken)</th><th class="num">First target</th>
+    </tr></thead>
+    <tbody id="boardbody"></tbody>
+  </table>
+  <button class="toggle" id="fullbtn">Show the full ranked list — every stock scored, refusals included</button>
+  <div class="scrollbox" id="fullbox">
+    <table>
+      <thead><tr><th>Stock</th><th class="num">Close</th><th class="num">Score</th><th class="num">Agreeing checks</th><th>Outcome</th></tr></thead>
+      <tbody id="fullbody"></tbody>
+    </table>
+  </div>
+  <div class="fine">A stock qualifies only when the method's own gates all pass: enough data behind the score, at least five of eight checks agreeing, and a high enough score and confidence. The full list shows every refusal and its reason — nothing is quietly dropped.</div>
+
+  <div class="foot">
+    How to read this page: the Map tells you the terrain — whether dealer positioning is likely to amplify moves or absorb them, and the two price levels where the largest positions sit. The Board tells you which individual stocks earned a full pass through an eight-check confluence method (relative strength, price action, volume, trend, support and resistance, sector strength, institutional positioning, market context). Support is the line the idea is wrong below; the first target is the next significant level above. Every figure on this page is written to a permanent public record before it is shown, and yesterday's figures are graded against what the market actually did — see the record above. Method note: the score is our open implementation of a published method; the transforms are ours and are labeled as such wherever the record is kept.
+    <br><br><a href="../desk-terminal-live/">Open the full desk terminal →</a>
+  </div>
+</div>
+
+<script>
+function fmt(n, d) { return (n === null || n === undefined) ? "—" : Number(n).toLocaleString('en-US', {minimumFractionDigits: d||0, maximumFractionDigits: d||0}); }
+function esc(s) { return String(s === null || s === undefined ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+function regimeLine(m) {
+  var lines = [];
+  if (m.net_gex_b < 0) lines.push("Dealers are positioned <b>short gamma</b> — a stance that tends to amplify moves rather than absorb them.");
+  else if (m.net_gex_b > 0) lines.push("Dealers are positioned <b>long gamma</b> — a stance that tends to absorb moves and pin prices into ranges.");
+  if (m.flip !== null && m.flip !== undefined) {
+    var dist = ((m.spot - m.flip) / m.flip * 100);
+    if (m.spot < m.flip) lines.push("Price sits <b>below the flip point</b> (" + fmt(Math.abs(dist),1) + "% under it), in the amplifying zone. The flip is resistance until price takes it back.");
+    else lines.push("Price sits <b>above the flip point</b> (" + fmt(dist,1) + "% over it), in the calmer zone. The flip is support while price holds it.");
+  }
+  return lines.join(" ");
+}
+
+fetch('../morgue-feed.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(f){
+  var when = f.generated_at_utc ? new Date(f.generated_at_utc) : null;
+  document.getElementById('vintage').textContent =
+    "Edition for the session of " + (f.as_of_session || "—") + (when ? " · prepared " + when.toLocaleString('en-US') : "") + " · figures are recorded before they are shown, and never edited afterwards.";
+
+  // Record strip
+  var sc = f.scorecard || {};
+  var parts = [];
+  if (sc.counters) parts.push("<b>" + fmt(sc.counters.units_published) + "</b> figures published so far · <b>" + fmt(sc.counters.units_graded) + "</b> graded");
+  if (sc.map) parts.push("Yesterday's Map: " + esc(sc.map.line));
+  if (sc.board && sc.board.qualified) {
+    var q = sc.board.qualified;
+    var hz = [];
+    ["1d","5d","21d"].forEach(function(h){ if (q.horizons && q.horizons[h]) hz.push(h + " — " + esc(q.horizons[h])); });
+    parts.push("Qualified board (" + fmt(q.n_logged) + " published): " + hz.join(" · "));
+  }
+  document.getElementById('record').innerHTML = parts.join("<br>");
+
+  // Map cards
+  var mc = document.getElementById('mapcards');
+  (f.map || []).forEach(function(m){
+    var cls = m.net_gex_b < 0 ? "neg" : "pos";
+    var dixPct = (m.dix === null || m.dix === undefined) ? "—" : fmt(m.dix * 100, 1) + "%";
+    var card = document.createElement('div'); card.className = 'card';
+    card.innerHTML =
+      "<h3>" + esc(m.symbol) + "</h3>" +
+      "<div class='spot'>Last close " + fmt(m.spot, 2) + "</div>" +
+      "<div class='big " + cls + "'>" + (m.net_gex_b < 0 ? "−" : "+") + "$" + fmt(Math.abs(m.net_gex_b), 2) + "B</div>" +
+      "<div class='spot'>net dealer gamma per 1% move</div>" +
+      "<div class='kv'><span>Ceiling (call wall)</span><span>" + fmt(m.call_wall, 0) + "</span></div>" +
+      "<div class='kv'><span>Floor (put wall)</span><span>" + fmt(m.put_wall, 0) + "</span></div>" +
+      "<div class='kv'><span>Flip point</span><span>" + fmt(m.flip, 1) + "</span></div>" +
+      "<div class='kv'><span>Dark-pool short selling</span><span>" + dixPct + "</span></div>" +
+      "<div class='kv'><span>Chain coverage</span><span>" + esc(m.coverage || "—") + " contracts</span></div>" +
+      "<div class='regime'>" + regimeLine(m) + "</div>" +
+      "<div class='fine'>Dark-pool figure dated " + esc(m.dix_date || "—") + " (one-day lag, always).</div>";
+    mc.appendChild(card);
+  });
+
+  // Board
+  var b = f.board || {};
+  var s = b.summary || {};
+  document.getElementById('boardline').textContent =
+    fmt(s.scored) + " of " + fmt(s.universe) + " stocks scored · " + fmt(s.qualified) + " passed every gate · " + fmt(s.insufficient_data) + " had too little data to judge.";
+  var tb = document.getElementById('boardbody');
+  (b.qualified || []).slice(0, 15).forEach(function(r){
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      "<td class='tick'>" + esc(r.symbol) + "</td>" +
+      "<td class='num'>" + fmt(r.close, 2) + "</td>" +
+      "<td class='num'>" + fmt(r.score, 1) + "</td>" +
+      "<td class='num'>" + fmt(r.confirming) + " of 8</td>" +
+      "<td>" + esc((r.triggers || []).join("; ")) + "</td>" +
+      "<td class='num'>" + fmt(r.support, 2) + "</td>" +
+      "<td class='num'>" + (r.resistance === null || r.resistance === undefined ? "—" : fmt(r.resistance, 2)) + "</td>";
+    tb.appendChild(tr);
+  });
+
+  // Full list toggle
+  var btn = document.getElementById('fullbtn'), box = document.getElementById('fullbox'), loaded = false;
+  btn.addEventListener('click', function(){
+    if (box.style.display === 'block') { box.style.display = 'none'; btn.textContent = 'Show the full ranked list — every stock scored, refusals included'; return; }
+    box.style.display = 'block'; btn.textContent = 'Hide the full ranked list';
+    if (loaded) return; loaded = true;
+    fetch('../board-full.json', {cache: 'no-store'}).then(function(r){ return r.json(); }).then(function(bf){
+      var fb = document.getElementById('fullbody');
+      (bf.rows || []).forEach(function(r){
+        var tr = document.createElement('tr');
+        if (r.insufficient_data) {
+          tr.innerHTML = "<td class='tick'>" + esc(r.symbol) + "</td><td class='num'>—</td><td class='num'>—</td><td class='num'>—</td><td>insufficient data</td>";
+        } else {
+          var outcome = r.qualified ? "qualified" : "refused — " + esc((r.gate_fails || []).join(", "));
+          tr.innerHTML =
+            "<td class='tick'>" + esc(r.symbol) + "</td>" +
+            "<td class='num'>" + fmt(r.close, 2) + "</td>" +
+            "<td class='num'>" + fmt(r.score, 1) + "</td>" +
+            "<td class='num'>" + fmt(r.confirming) + " of 8</td>" +
+            "<td>" + outcome + "</td>";
+        }
+        fb.appendChild(tr);
+      });
+    }).catch(function(){ document.getElementById('fullbody').innerHTML = "<tr><td colspan='5' class='err'>The full list could not be loaded right now.</td></tr>"; });
+  });
+}).catch(function(){
+  document.getElementById('vintage').innerHTML = "<span class='err'>The latest edition could not be loaded right now.</span>";
+});
+</script>
+</body>
+</html>

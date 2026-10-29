@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Funnel Study — Muse Desk</title><style>
+:root{color-scheme:dark}
+body{background:#0b0e13;color:#dbe2ec;font-family:Georgia,'Times New Roman',serif;margin:0;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 64px}
+header{border-bottom:2px solid #2dd4bf;padding-bottom:14px;margin-bottom:8px}
+h1{font-size:30px;margin:0 0 6px;color:#f2f6fb}
+.sub{color:#93a4bb;font-size:15px;margin:0}
+nav.top{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+nav.top a{background:#131926;border:1px solid #26314a;color:#a5f3e8;text-decoration:none;
+ padding:6px 12px;border-radius:999px;font-size:13.5px;font-family:Helvetica,Arial,sans-serif}
+nav.top a:hover{border-color:#2dd4bf}
+article h1{font-size:26px;color:#f2f6fb;border-bottom:1px solid #26314a;padding-bottom:8px}
+article h2{font-size:21px;color:#7dd3fc;margin-top:34px}
+article h3{font-size:17.5px;color:#a5f3e8;margin-top:26px}
+article h4{font-size:15.5px;color:#fbbf24}
+article a{color:#7dd3fc}
+article code{background:#131926;padding:1px 5px;border-radius:4px;font-size:.92em}
+article pre{background:#0f141f;border:1px solid #26314a;border-radius:8px;padding:12px;overflow-x:auto}
+article pre code{background:none;padding:0}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;
+ font-family:Helvetica,Arial,sans-serif}
+article th,article td{border:1px solid #26314a;padding:6px 9px;text-align:left;vertical-align:top}
+article th{background:#131926;color:#a5f3e8}
+article blockquote{border-left:3px solid #2dd4bf;margin:16px 0;padding:2px 16px;color:#b8c6da}
+article hr{border:none;border-top:1px solid #26314a;margin:28px 0}
+footer{border-top:1px solid #26314a;margin-top:44px;padding-top:14px;color:#7c8da6;font-size:13.5px}
+footer a{color:#7dd3fc}
+.pager{display:flex;justify-content:space-between;margin-top:36px;font-family:Helvetica,Arial,sans-serif;font-size:14px}
+.pager a{color:#a5f3e8;text-decoration:none}
+</style></head>
+<body><div class="wrap">
+<header><h1>The Funnel Study</h1><p class="sub">How 95 trading products package, deliver and sell their output — and what a free public service should give away. The full study, with all 96 vendor delivery profiles in the eight groups above.</p></header>
+<nav class="top"><a href="index.html">The Study</a><a href="profiles-g1.html">Profiles 1</a><a href="profiles-g2.html">Profiles 2</a><a href="profiles-g3.html">Profiles 3</a><a href="profiles-g4.html">Profiles 4</a><a href="profiles-g5.html">Profiles 5</a><a href="profiles-g6.html">Profiles 6</a><a href="profiles-g7.html">Profiles 7</a><a href="profiles-g8.html">Profiles 8</a><a href="../morning-map/">Morning Map</a><a href="../desk-terminal-live/">Terminal</a></nav>
+<article><h1>THE FUNNEL STUDY — how the corpus delivers, and what we should give away</h1>
+<p><strong>Synthesis, 2026-10-26.</strong> Sources: the eight funnel profile files in
+<code>synthesis/funnel/</code> (96 profiles covering 95 unique vendors in the
+teardown corpus; one vendor, Trade Ideas, was torn down twice and is
+counted once), the Morgue Engine design (<code>synthesis/DESIGN.md</code>), and the
+engine's build state (<code>morgue/README.md</code>: Slice 1 the Map, Slice 2 the
+Tape, Slice 3 the Board are built; Slice 4 the Ledger scorecards and
+Slice 5 the Studies are designed, with the append-only log itself
+already running under every slice).</p>
+<p>The question: the vendors in the morgue each funnel, transmit,
+present and curate a slice of market data. The engine already computes
+most of those slices on owned data and publishes to a public web
+terminal in plain English, alongside a separate chart-review ranking
+board (the Lector ranker), with every figure written to an append-only
+record before it is shown. What free public service should that stack
+offer, and how does it avoid becoming the thing the teardowns
+dissected?</p>
+<hr />
+<h2>1. THE DELIVERY TAXONOMY</h2>
+<p>Eight archetypes cover the corpus. Each vendor is assigned to its
+primary archetype; hybrids are noted, not double-counted.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Archetype</th>
+<th>Vendors</th>
+<th>Unit</th>
+<th>Cadence</th>
+<th>Mode</th>
+<th>Curation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>The Live Terminal</strong></td>
+<td>20</td>
+<td>A flow print row, an exposure-by-strike view, a levels set</td>
+<td>Real-time streaming</td>
+<td>Pull dashboard over a push feed; alerts inside the session</td>
+<td>Algorithmic, server-side, mostly sealed</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>The Score Board</strong></td>
+<td>15</td>
+<td>One composite score per name, with sub-scores</td>
+<td>Daily (a few intraday)</td>
+<td>Pull</td>
+<td>Algorithmic composite; weights usually sealed</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>The Chart Overlay</strong></td>
+<td>11</td>
+<td>A drawing, pane or signal on the customer's own chart</td>
+<td>Real-time, per bar</td>
+<td>Pull — the customer must be watching</td>
+<td>Algorithmic, sealed Pine</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>The Signal Call</strong></td>
+<td>10</td>
+<td>A called trade: entry, stop, targets</td>
+<td>Intraday, as called</td>
+<td>Push — Discord / Telegram / private feed interrupts</td>
+<td>Human analysts, or algo presented as calls</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>The Automation Shell</strong></td>
+<td>16</td>
+<td>An acting bot or rule tree — the unit executes</td>
+<td>Continuous / scheduled rebalance</td>
+<td>Push by execution; pull to build</td>
+<td>User-authored rules, vendor or marketplace bots</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>The Reference Library</strong></td>
+<td>5</td>
+<td>A statistic, a screener row, a priced strategy structure</td>
+<td>Pull on demand; reports over completed sessions</td>
+<td>Pull</td>
+<td>Algorithmic over historical data; user supplies the question</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>The Research Letter</strong></td>
+<td>4</td>
+<td>A long-form issue and/or a weighted model portfolio</td>
+<td>Weekly to monthly</td>
+<td>Push by email; pull for the tracker</td>
+<td>Human, discretionary</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>The Open Framework</strong></td>
+<td>13</td>
+<td>A repo: an agent pipeline, a report, a staged trade</td>
+<td>On demand, user-run</td>
+<td>Pull</td>
+<td>LLM debate / user prompts over deterministic parts</td>
+</tr>
+</tbody>
+</table>
+<p>Plus one non-product: TradingView Desktop is a shell with no unit of
+its own (95 unique vendors accounted for).</p>
+<p><strong>Archetype 1 — The Live Terminal (20).</strong> Unusual Whales, FlowAlgo,
+Cheddar Flow, BlackBoxStocks, InsiderFinance, Tradytics, Bullflow,
+Quant Data, FlashAlpha, SpotGamma, MenthorQ, GEXRadar, Tapeboard,
+TradeEcho, Skylit, OptionScout, Profit Builders, Nansen, Arkham,
+VolSignals. The largest archetype and the most uniform: every unit is
+context — what traded, where dealer exposure sits — and in the entire
+group <strong>no unit contains an entry, stop and target together</strong>. The
+differentiation is never the math (much of it is the same published
+GEX family); it is metering, transport (API/MCP/WebSocket), and how
+much of the free surface is real. FlashAlpha and Bullflow sell the
+same terminal as data; SpotGamma and MenthorQ sell it as levels.</p>
+<p><strong>Archetype 2 — The Score Board (15).</strong> SqueezeMetrics, Danelfin,
+TipRanks, VectorVest, Kavout, Simply Wall St, AInvest, Chaikin, Zen
+Ratings, Prospero, StockRover, Intellectia, TickerNerd, Leadr,
+AltIndex. One number per name, refreshed daily, sold as a ranking.
+The unit is an opinion with the reasoning compressed into sub-scores.
+Exactly one vendor in this archetype (TickerNerd) publishes its full
+current dataset free and stamps every performance figure simulated vs
+live; exactly one (VectorVest) pairs the rating with a stop price,
+which is why it is the most actionable of the fifteen.</p>
+<p><strong>Archetype 3 — The Chart Overlay (11).</strong> The Saty stack, LuxAlgo,
+MarketCipher, ChartPrime, AlgoPoint, GainzAlgo, VIP Indicators, TJR,
+the ICT 2023 indicators, CorrectionScope, ApexQuant. Delivery is a
+TradingView invite; the vendor never hosts the moment of use, keeps no
+record of any reading, and cannot be audited after the fact — the
+chart is gone when the bar closes. The Saty stack is the honest pole
+(free, open source, no claims); ApexQuant is the other (a fabricated
+demo, a cosmetic paywall, a win-rate slider default presented as a
+calculator input).</p>
+<p><strong>Archetype 4 — The Signal Call (10).</strong> Zeiierman, CoinCodeCap,
+Options Cartel, Optionality, GammaEdge, EzAlgo, Stock Moe, TradeAlgo,
+Quantum Algo, Trade Ideas (Holly). The only archetype whose unit is
+routinely a complete trade. Quality splits entirely on the record:
+CoinCodeCap publishes a complete, recomputable public ledger;
+Optionality's tracker is engineered against flattering itself;
+Quantum Algo's public ledger rows carry null entry/stop/target, so
+nothing it claims can be re-scored.</p>
+<p><strong>Archetype 5 — The Automation Shell (16).</strong> Option Alpha,
+Capitalise, Composer, TrendSpider, WunderTrading, TradingKit,
+Quantix, AlgoBars, Alertsify, Tickeron, SummitIQ (automation in framing,
+advisory as shipped), AlgoAlpha (Echo copy), and the sold bots
+(M-Algo, Guardian FTMO, GridScalper EA, Zerith MACD Grid). The unit
+acts, so interpretation risk is replaced by construction risk: the
+best of these (TradingKit, AlgoBars, Option Alpha) ship their
+limitations in writing; the worst (Quantix) let a marketplace
+headline survive a census that refutes it.</p>
+<p><strong>Archetype 6 — The Reference Library (5).</strong> Edgeful, Market
+Chameleon, LevelFields, OptionStrat, Finviz. The customer arrives
+with a question; the unit is a base rate, a filtered list, or a fully
+priced structure. Edgeful is the cleanest claim surface in the whole
+corpus — frequencies printed with sample sizes, no platform win rate
+anywhere. OptionStrat's unit (exact legs, breakevens, max loss) is
+the most <em>constructively</em> actionable unit that is not a call.</p>
+<p><strong>Archetype 7 — The Research Letter (4).</strong> Citrini, Kobeissi, Schwar,
+and the 15.87 brief (a free method PDF funnelling to a paid daily
+desk). Human curation is the product; the portfolio is the unit that
+matters. Kobeissi is the archetype's proof that a self-published
+record can still be checkable: six annual ledgers whose totals
+recompute exactly under the stated methodology. Schwar shows the
+failure mode — a record split across two eras that cannot be chained,
+disclosed openly and still unusable as one number.</p>
+<p><strong>Archetype 8 — The Open Framework (13).</strong> ContestTrade, AutoHedge,
+Vibe-Trading, TradingAgents, OpenAlice, AI-Fund, AI-Trader, the
+Alpaca Trading Agent, Circuit Framework, Crypto Claude Desk, Helm
+Agents, Hypergrok Desk, Oft3r Desk. No funnel at all — distribution
+is GitHub, cost is the user's own API keys. Two sub-species matter:
+honesty machinery as the design centre (Vibe-Trading's grounding
+gate, AI-Trader's server re-pricing of agent-claimed fills,
+TradingKit-style frozen forward tests over in Archetype 5), and
+prose pretending to be machinery (AutoHedge ships a synthetic trade
+history at prices the asset never traded; Helm's run dated 2023
+analyses with current data).</p>
+<p><strong>Cross-cutting findings.</strong></p>
+<ul>
+<li><strong>Nobody sells a decision except the callers and the bots.</strong> Of 95
+  vendors, the units that arrive trade-complete are the Signal Call
+  archetype, the Automation Shell, and two outliers (Holly inside
+  Trade Ideas, the 15.87 worksheet). Everything else — including
+  every terminal and every score — leaves the last, hardest step to
+  the customer while charging as if it didn't.</li>
+<li><strong>Cadence is the most lied-about field.</strong> GEXRadar markets a
+  2-second refresh its shipped client never configures (fastest GEX
+  poll: 15 s). Alertsify's alerts are sampled about every two
+  minutes server-side. AInvest marketing claims real-time day-trading
+  use its own knowledge base refutes. MenthorQ's two sources give two
+  different end-of-day publication times for the same levels.</li>
+<li><strong>The free surface predicts the trust posture.</strong> Vendors with a
+  genuinely usable free surface (Bullflow, FlashAlpha, Tapeboard,
+  OptionScout, TickerNerd, SqueezeMetrics, the 15.87 brief) are
+  disproportionately the ones with clean or checkable records.
+  Vendors whose free surface is a trial clock or a fabricated demo
+  are disproportionately the ones with fabricated records.</li>
+</ul>
+<hr />
+<h2>2. HOW THE BEST MAKE IT ACTIONABLE</h2>
+<h3>2.1 The unit grammar</h3>
+<p>Across the corpus, actionability is a property of the unit's fields,
+not of the vendor's confidence. A unit a stranger can act on — or
+deliberately reject — in under a minute carries:</p>
+<ol>
+<li><strong>A named event, not a naked number.</strong> Leadr's trigger taxonomy
+   (prior-day high, opening-range break, resistance break, support
+   reclaim) and TradeEcho's Discovery ledger (first-seen vs latest vs
+   peak score) both refuse to show a score without the thing that
+   happened. A score alone (Archetypes 2 and 3) is homework.</li>
+<li><strong>The price map in the same unit.</strong> Entry or trigger level,
+   invalidation, target(s). CoinCodeCap's card is the corpus standard:
+   pair, direction, leverage, an entry <em>zone</em>, two to three targets
+   with R:R, a pre-set stop that trails after the first target, and a
+   short rationale — formatted so a bot can parse it and a human can
+   check it. Zeiierman's Discord unit (entry, TP1, TP2, SL) and
+   Holly (entry, stop, target, hold discipline, a defined re-entry
+   rule) are the same grammar. OptionScout's trade card reaches it
+   from the other direction: a priced structure with breakevens, max
+   profit/loss and probability of profit.</li>
+<li><strong>The base rate attached.</strong> Tapeboard prints its squeeze odds —
+   including a negative median outcome — next to the score.
+   Edgeful prints the sample size next to every frequency. A unit
+   that says how often this has worked, on how many cases, converts
+   marketing into arithmetic.</li>
+<li><strong>The record line.</strong> The strongest units carry their own history:
+   what this exact signal type did over its last N logged instances.
+   Almost nobody does this. It is the single largest open space in
+   the corpus — and it is the Morgue Engine's Ledger by design.</li>
+<li><strong>Its biases on its label.</strong> SqueezeMetrics flags its outcome
+   labels as outcome labels; Bullflow discloses the OI vintage in
+   the field; FlowAlgo's buys-only intake is the counterexample —
+   a structural bias disclosed only in teardown footnotes while
+   every alert reads as a buy.</li>
+</ol>
+<h3>2.2 Push vs pull discipline</h3>
+<ul>
+<li><strong>Push is for events with a clock on them.</strong> A called trade, a
+  Golden Sweep, a level break: value decays in minutes, so
+  interruption is the service (Signal Call archetype; terminal
+  alerts). Push without a clock is spam with a subscription fee.</li>
+<li><strong>Pull is for state.</strong> Scores, maps, base rates and records are
+  checked when the customer is deciding, not when the vendor is
+  publishing. The Score Board vendors that push daily score changes
+  are manufacturing urgency their unit doesn't contain.</li>
+<li><strong>The honest hybrid is a digest with a fixed time.</strong> TradeEcho's
+  Daily Echo Brief and OptionScout's 09:00 ET gamma briefing are
+  point-in-time artefacts a non-member can read: one push a day,
+  at a stated time, whose contents are frozen as published. That
+  freeze is what makes them auditable later.</li>
+<li><strong>Automation is push taken to its conclusion</strong> — and the corpus
+  shows it only earns trust when the guardrails ship in the unit's
+  terms (AlgoBars makes R-without-a-stop a compile error; the Alpaca
+  Trading Agent's exits bypass its own exposure gates by design and
+  says so).</li>
+</ul>
+<h3>2.3 Cadence honesty</h3>
+<p>The cadence printed on the unit must be the cadence the system runs:
+stated delay on delayed data (Bullflow's labelled 15-minute GEX
+pages), stated vintage on stale inputs (Prospero prints its data
+lags — dark-pool prints up to 24 hours late, 13F flow at least six
+weeks stale — on the signal pages themselves), stated sampling on
+alerts (Alertsify's two-minute check, disclosed on its own page).
+Every cadence claim the audits refuted was refuted by the vendor's
+own client, docs or knowledge base — the lie is never necessary,
+which is why it reads as a character tell.</p>
+<h3>2.4 The record of outcomes</h3>
+<p>The corpus contains exactly four record designs worth copying:</p>
+<ul>
+<li><strong>Frozen daily records</strong> (Tapeboard): scores locked into dated
+  archives, not re-scored when the formula changed from v5 to v6.</li>
+<li><strong>Complete public ledgers</strong> (CoinCodeCap, Kobeissi): every call,
+  losers printed, exclusions enumerated, totals that recompute.
+  CoinCodeCap even published a dated correction replacing its own
+  higher earlier figures with a full recount.</li>
+<li><strong>Anti-flattery scoring</strong> (Optionality): unpriced closes excluded
+  from every rate, a dead band around zero kept out of the win rate,
+  peaks computed per cost-basis stretch so averaging down cannot
+  inflate them, closed cycles that cannot be reopened.</li>
+<li><strong>Frozen forward tests</strong> (TradingKit's Incubation): the backtest's
+  source, settings and engine are frozen and paper-traded forward on
+  closed candles, append-only — a backtest that has to survive the
+  future instead of describing the past.</li>
+</ul>
+<p>And one discipline that ties them together: <strong>settle at fixed
+horizons with a pre-declared rule</strong> (forward returns at 1h / 1d / 5d
+/ 21d — the Ledger's design), never at the best moment inside the
+window.</p>
+<h3>2.5 Design prohibitions (the anti-patterns, named)</h3>
+<p>These are banned in anything we publish, by construction where
+possible:</p>
+<ul>
+<li><strong>P-1 · No Peak Scoring.</strong> BlackBoxStocks scores options alerts by
+  percent-to-post-alert-high; Trade Ideas' public records score
+  "profit potential" to the session's subsequent high or low;
+  Bullflow's marketing quotes winners at <code>peakReturn</code>. Maximum
+  favourable excursion is not a result. <em>Rule: outcomes are forward
+  returns at fixed horizons from the logged timestamp.</em></li>
+<li><strong>P-2 · No Buys-Only Completeness.</strong> FlowAlgo ingests only
+  ask-side fills, so its tape cannot show a bearish print, and sells
+  the result as "the flow." <em>Rule: any intake bias is printed on the
+  unit's label, and the unbiased variant is computed and published
+  alongside (the Tape already does both).</em></li>
+<li><strong>P-3 · No Frozen Counters.</strong> Quantum Algo's premium record is a
+  manually frozen 88W/29L counter with an empty row set behind a
+  headline blended from two incompatible counts; SummitIQ's hero
+  win rate and P&amp;L are hard-coded literals; GainzAlgo's free
+  "reliability test" returns hard-coded 92% accuracy; ApexQuant's
+  demo is a random walk with hard-coded signals. <em>Rule: every
+  published figure is computed from the append-only record at render
+  time. A number that cannot be recomputed from the log does not
+  ship.</em></li>
+<li><strong>P-4 · No Backtest-as-Record.</strong> Quantix's backtest beat its live
+  bots in 133 of 133 pairs while the marketing led with the top
+  slice; TipRanks' own footer concedes its performance is
+  retroactively applied and adjustable; Intellectia's flagship
+  return was accumulated under a retired product design; Zen
+  Ratings runs two irreconcilable vintages of the same headline on
+  live pages simultaneously. <em>Rule: backtests exist only as fixture
+  checks that our math reproduces a published series, are labelled
+  as such, and are never blended with, averaged into, or displayed
+  beside the live record as if comparable.</em></li>
+<li><strong>P-5 · No Vanishing Losers.</strong> Chaikin's model-portfolio page
+  shows open positions only — closed trades drop off the dashboard,
+  making the record unverifiable by design. AltIndex prints 61%,
+  ~70% and 0% win rates on three of its own pages. <em>Rule: the full
+  published set is the denominator, forever; closed and losing units
+  stay in the archive with the same prominence mechanics as winners.</em></li>
+<li><strong>P-6 · No Score Without a Scorecard.</strong> InsiderFinance claims a
+  "proven track record" and "unmatched accuracy" with no published
+  record of any kind; Tradytics' Performance page loads every figure
+  from a sealed API with no counting rules; Leadr's "84% Historical
+  Win Rate" is footnoted to a predecessor product's alerts and is
+  explicitly not the product's own performance. <em>Rule: a component
+  displays its own matured Ledger scorecard, or it displays an
+  explicit "not yet graded — N signals logged, first scorecard on
+  [date]" state. Borrowed records are prohibited.</em></li>
+<li><strong>P-7 · No Silent Restatement.</strong> FlashAlpha's methodology states
+  its history store is not versioned and re-pulls silently
+  overwrite, while its historical-data page claims inputs are never
+  restated; Danelfin's figures moved when its simulations were
+  rerun; Arkham's labels are retroactively revisable with no
+  point-in-time snapshot, so historical joins leak. <em>Rule:
+  restatement is a new row in the record, never an edit; the
+  as-published value is the one that gets graded.</em></li>
+<li><strong>P-8 · No Direction-Hit Win Rates.</strong> LevelFields' headline rate
+  is a one-day direction hit rate over every event in a scenario —
+  no fills, no costs, no exit rule; TradeAlgo's legacy funnel sells
+  a 70% win rate that matches neither its live ledger (48%) nor its
+  printed backtest (69%). <em>Rule: nothing is called a win rate
+  unless the underlying unit carried a complete trade grammar
+  (entry, exit rule, horizon) before the fact.</em></li>
+</ul>
+<hr />
+<h2>3. FREE-TIER + FUNNEL PATTERNS</h2>
+<p><strong>What the free surface does, by archetype.</strong></p>
+<ul>
+<li><strong>Live Terminal:</strong> the free surface is a <em>taste of the same data,
+  degraded in exactly one dimension</em> — delay (Bullflow's 15-minute
+  GEX pages with capture time shown; AInvest's delays run to 60
+  days, which crosses from taste into archaeology), freshness
+  (FlashAlpha's free tier: 15-minute snapshots, 5 requests/day, no
+  card), or breadth (Skylit's free plan restricts ticker coverage).
+  The trial-clock variant (Cheddar 7 days, GEXRadar 24 hours with a
+  card on file) converts worse and teaches the customer nothing
+  about the vendor's honesty.</li>
+<li><strong>Score Board:</strong> the free surface is <em>metered depth</em> — Danelfin's
+  10 reports a month, Simply Wall St's 5 reports and top-4 screener
+  results, Zen Ratings' 10 free stock views. The exception is
+  TickerNerd: the entire current rank dataset is a public file
+  anyone can fetch, and the paywall sits on the portfolio and its
+  ledger instead. Prospero is the limiting case — signals free
+  "always," monetisation deferred to future interpretation features
+  — and its trust record is correspondingly unreconciled marketing.</li>
+<li><strong>Chart Overlay:</strong> almost no free surface at all (invite-only is
+  the funnel), except the Saty stack, which is entirely free and
+  open and funnels only to reputation. GainzAlgo's free calculators
+  are the dishonest pole: a funnel surface that fabricates its own
+  product's reliability score.</li>
+<li><strong>Signal Call:</strong> the free surface is <em>the room's antechamber</em> —
+  Optionality's free Discord server with the signal channels marked
+  Pro, CoinCodeCap's free Telegram channel as the trial substitute,
+  the 15.87 brief giving the entire method away free.</li>
+<li><strong>Automation Shell:</strong> the free surface is <em>the platform itself,
+  metered on capacity</em> — Option Alpha's $0 route via a funded
+  partner-broker account (the broker pays, disclosed on the pricing
+  page), AlgoBars free forever with AI actions metered at compute
+  cost, Capitalise free to users because brokers white-label it,
+  Composer's free tier capped at one automated strategy.</li>
+<li><strong>Reference Library:</strong> OptionStrat's free builder with the
+  probability figure rendered as an upsell blank; Finviz's full
+  basic screener, ad-supported, with the wall placed at the exact
+  moment of intent (clicking Custom filters opens the Elite dialog).</li>
+<li><strong>Research Letter:</strong> free posts and previews; Kobeissi's Chart of
+  the Week free with an account. The letter archetype's free surface
+  is a sample of <em>voice</em>, not of data.</li>
+<li><strong>Open Framework:</strong> everything is free; the funnel is adoption,
+  and the "paywall" is the user's own LLM and data keys.</li>
+</ul>
+<p><strong>Where the walls sit.</strong> Five wall placements recur: request volume
+and history depth (Unusual Whales, FlashAlpha), feature families
+(Cheddar's Pro-only gamma/dark-pool/Power Alerts), asset class
+(BlackBoxStocks), capacity (Option Alpha's bot counts, Composer's
+nodes, TradingKit's credits), and recency (Quant Data's 365-day API
+history, OptionScout's flow history: today free, 7 days Trader, 30
+days Pro). The wall that best matches value delivered is
+OptionScout's and FlashAlpha's: <em>the present is free; depth,
+history and speed are paid</em> — because history and speed are
+genuinely more expensive to serve and genuinely more useful to
+professionals.</p>
+<p><strong>Conversion mechanics — honest vs not.</strong></p>
+<p>Honest, and worth copying:</p>
+<ul>
+<li><strong>No-card free tiers with a real product inside</strong> (Tapeboard $0
+  forever, OptionScout $0 with live data on every ticker, Bullflow's
+  no-account MCP tools). The customer can verify the unit before any
+  commitment.</li>
+<li><strong>Method-as-lead-magnet</strong> (the 15.87 brief): give the formula, the
+  worksheet and one full setup away; sell the daily labour of doing
+  it, grading it and enforcing its clock. The wall sits on work,
+  not on knowledge.</li>
+<li><strong>Falsify-before-you-pay</strong> (Guardian FTMO's $1 backtester edition
+  of the same engine): the free/cheap surface exists so the customer
+  can try to break the claim before buying the unlocked version.</li>
+<li><strong>Arithmetic that reconciles</strong> (Quant Data's annual savings,
+  TradeEcho's lifetime-vs-monthly framing, CoinCodeCap's savings and
+  monthly counts — all verified exact in teardown). Pricing honesty
+  is a trust signal customers can check in thirty seconds.</li>
+<li><strong>Refund terms that match the pricing page</strong> (TickerNerd's 30-day
+  no-questions refund, stated identically in Terms and FAQ).</li>
+<li><strong>Full-dataset-free, judgement-paid</strong> (TickerNerd): publish the
+  data; charge for the curated portfolio, its ledger and the briefs.</li>
+</ul>
+<p>Dishonest, and prohibited for us:</p>
+<ul>
+<li><strong>Refund contradictions</strong> — Cheddar (FAQ says all sales final,
+  Terms allow refunds), AltIndex (a 14-day guarantee on pricing,
+  "all payments final without exception" in Terms), Zen Ratings
+  (90-day vs 30-day guarantee on its own pages), TradeEcho (Terms vs
+  standalone Refund Policy at the $3,499 tier).</li>
+<li><strong>Stale or bait free surfaces</strong> — Bullflow's blog CTAs advertise a
+  trial its FAQ says is not offered; GEXRadar's demo is a captured
+  session (labelled, to its credit) under "real-time" marketing.</li>
+<li><strong>Anchor theatre</strong> — TradeAlgo's $20,000 list price against a
+  $4,995 checkout, Tickeron's 50–75% permanent "discounts."</li>
+<li><strong>Gate-the-flagship trials</strong> — Cheddar's trial is Standard-only,
+  so the features in the marketing cannot be tried; AlgoPoint's
+  trial excludes its headline component.</li>
+</ul>
+<hr />
+<h2>4. THREE FREE PUBLIC SERVICE CONCEPTS</h2>
+<p>All three are built only from what exists: the Morgue Engine's Map
+(Slice 1, built), Tape (Slice 2, built) and Board (Slice 3, built),
+the Ledger (append-only log already running; Slice 4 scorecards
+complete it), the Studies (Slice 5, designed), and the Lector
+chart-review ranker already publishing alongside the terminal. All
+three obey the engine's existing laws: written to the record before
+shown, plain English on the public surface, declared biases on the
+label, no hindsight metrics — and the prohibitions P-1 to P-8 above.</p>
+<h3>Concept 1 — THE MORNING MAP</h3>
+<p><em>The pre-open positioning brief: where the walls are today, and
+whether yesterday's walls worked.</em></p>
+<ul>
+<li><strong>Unit of output</strong> — one card per index (SPY, QQQ, IWM), carrying
+  exactly: date and data vintage ("overnight OI, as of [time]");
+  spot at last close; net GEX under all three conventions
+  (SpotGamma-static, FlashAlpha-variant, tape-signed) with an
+  agreement flag ("3 of 3 agree: negative"); Call Wall strike and
+  its GEX; Put Wall strike and its GEX; zero-gamma flip level and
+  its distance from spot in %; DIX with its one-day-lag label; a
+  one-sentence plain-English regime read ("Dealers are positioned
+  so that moves toward [flip] tend to speed up, moves away tend to
+  slow down"); chain coverage ("86% of OI-bearing contracts
+  priced"); and the grading line: yesterday's card, graded —
+  "Yesterday: price stayed above the flip all session; the Call
+  Wall capped the high within 0.3%."</li>
+<li><strong>Channels</strong> — the public web terminal (a dated page per day,
+  permanent URL) plus a free email/RSS edition.</li>
+<li><strong>Cadence</strong> — once per trading day, published pre-open (target
+  08:45 ET), never updated intraday; a correction is a new dated
+  note appended to the same page, never an edit (P-7).</li>
+<li><strong>Curation rule</strong> — none, deliberately: all three indices, every
+  trading day, including dull days and days the conventions
+  disagree — disagreement is printed, not resolved. Publication is
+  earned by the data arriving and the card being written to the
+  Ledger, not by the day looking interesting. (This is the
+  anti-cherry-pick: the corpus's letter vendors publish when they
+  have something to say; a map publishes because it is Tuesday.)</li>
+<li><strong>The under-a-minute use</strong> — before the open, the reader knows the
+  two strikes that bound the expected day, how far price sits from
+  the flip, and whether this map has been right lately. They set
+  their day's range expectations and know which level break would
+  change the regime. That is the whole interaction.</li>
+<li><strong>Trust mechanic</strong> — every card is Ledger-written before it
+  renders, and every card is publicly graded the next morning by
+  the wall-validation harness (Slice 5): did price respect the
+  walls, did the flip behave as a flip. The running grade (e.g.
+  "over the last 60 cards: flip respected 71%, Call Wall touched
+  and held 44%") sits at the top of the page, computed from the
+  record at render time (P-3), losers included (P-5).</li>
+<li><strong>Cost to run</strong> — Slice 1 already runs in ~4 minutes for the three
+  chains on data already paid for; FINRA's DIX input is free. The
+  marginal cost is the grading harness (designed in Slice 5) and
+  page/email rendering. No new subscriptions, no per-reader cost
+  beyond static hosting.</li>
+<li><strong>Honest paid tier (future)</strong> — intraday Map refreshes, per-name
+  Map cards for the full universe, and an API with history depth —
+  speed and breadth, the FlashAlpha/OptionScout wall. The daily
+  card, its archive and its grades are never paywalled: the public
+  record is the product's proof, and gating it would destroy the
+  trust mechanic that makes the paid tier worth buying.</li>
+</ul>
+<h3>Concept 2 — THE QUALIFIED BOARD</h3>
+<p><em>Today's confluence candidates — only the names that pass the gate,
+each carrying its trigger, its price map, its base rate and its own
+track record.</em></p>
+<ul>
+<li><strong>Unit of output</strong> — one row per qualified name, in the engine's
+  existing Board-row grammar: ticker; confluence score with the
+  count of confirming categories ("78 — 7 of 8"); the named trigger
+  and its validation state ("resistance break — validated: close
+  through on 1.8× volume, retest held 10:42"); the Saty ladder
+  (support / trigger / target 1 / target 2 — the target levels are
+  the row's targets, the support is its invalidation); the tape
+  summary (Golden Sweep count, net call premium, mean Heat, each
+  stamped with its source component and evidence grade); the Map
+  context for the name's index; the study line ("this trigger, on
+  this name class: gap filled 61% of 214 historical instances");
+  and the Ledger line ("this composite's last 90 published rows:
+  5-day median forward return +0.8%, n=90 — logged as-was"). Beside
+  the Board, the Lector ranker's chart-review ranking for the same
+  names is shown as a separate, clearly-labelled column — two
+  independent judgements, never blended into one score.</li>
+<li><strong>Channels</strong> — the public web terminal Board page (dated,
+  permanent), plus a free daily email digest listing only the
+  names that newly qualified that day.</li>
+<li><strong>Cadence</strong> — computed on completed sessions and published
+  pre-open for the day ahead; an intraday refresh, when shown, is
+  labelled with its timestamp and does not replace the pre-open
+  record (the pre-open rows are the graded ones).</li>
+<li><strong>Curation rule</strong> — the Board's qualification gate, verbatim and
+  unadjusted: Qualify flag <strong>and</strong> ≥5 of 8 categories confirming
+  <strong>and</strong> score ≥65 <strong>and</strong> data-confidence ≥70, over the 60%
+  data-coverage floor — names below the floor publish as
+  "insufficient data," never as a guessed score and never silently
+  dropped. The full ranked list, including every non-qualifier, is
+  published on the same page, so the gate's rejects are as visible
+  as its picks (P-5). On the first live run this gate passed 35 of
+  1,832 scored names and visibly refused the highest raw score in
+  the universe for failing the gate — that refusal is the curation
+  story, and it is printed.</li>
+<li><strong>The under-a-minute use</strong> — read one row: what fired, where it
+  triggers, where it's wrong (the ladder support), what it aims at,
+  how often this setup has worked, and what this exact composite
+  has done since it started publishing. Decide watch / plan / skip.
+  No second page, no interpretation layer, no homework.</li>
+<li><strong>Trust mechanic</strong> — every row is written to the Ledger before
+  the page renders; the nightly scorer matures every published row
+  at 1d / 5d / 21d against SIP bars, and the Board's own scorecard
+  (hit rate, mean and median forward return, by-regime split) is
+  the page's header — not a footnote, not a separate marketing
+  page. Until the first scorecard matures, the header says so, with
+  the count of rows logged and the date the first grade lands (P-6).</li>
+<li><strong>Cost to run</strong> — Slice 3 already scores the 1,838-name universe
+  on completed sessions; the incremental cost is completing Slice
+  4's nightly forward-return scorer (already designed) and the
+  digest rendering. Data is already paid for.</li>
+<li><strong>Honest paid tier (future)</strong> — intraday Board refresh, the full
+  screener (user-set gates over the same published fields),
+  watchlist alerts when a held or watched name qualifies, and API
+  access. The daily published Board, its full ranked list and its
+  scorecard stay free forever — the record is never the paywall,
+  because the record is why anyone would pay for the speed.</li>
+</ul>
+<h3>Concept 3 — THE GOLDEN SWEEP WIRE</h3>
+<p><em>Every Golden Sweep on the watched universe, pushed as it happens —
+with the receipt attached, and the outcome appended when it
+matures.</em></p>
+<ul>
+<li><strong>Unit of output</strong> — one alert card per qualifying print,
+  carrying exactly: timestamp; underlying and contract (strike,
+  expiry, call/put); premium; the Heat Score with its bucket
+  contributions shown (not just the total); the tags earned
+  (Golden Sweep / Top Position / Unusual, each with its rule
+  stated in one line); the side classification and its convention
+  label ("classified at the ask — quote-at-print join, our
+  construction"); spot at print; size vs strike OI; the parallel
+  all-prints context ("this print is also in the all-prints tape;
+  the buys-only variant of this score would read X" — the P-2
+  label, on the unit); the alert-type record line ("Golden Sweeps
+  on index ETFs, last 90 logged: median 1-day forward move of the
+  underlying +0.4%, n=112"); and two outcome fields that start
+  empty and are filled by the Ledger at +1h and +1d (forward
+  return of the underlying from the print timestamp — fixed
+  horizons, never the high: P-1).</li>
+<li><strong>Channels</strong> — a public live feed page on the terminal, RSS, and
+  a free push channel (webhook / chat channel) for subscribers;
+  a once-daily digest edition for everyone else.</li>
+<li><strong>Cadence</strong> — real-time intraday as prints qualify, with the
+  feed's coverage stated on the page at all times ("watched:
+  SPY, QQQ, IWM + today's Board names + held names — not the whole
+  market"), and the stated latency measured, not marketed.</li>
+<li><strong>Curation rule</strong> — the recovered rule, verbatim, no human in
+  the loop: a print publishes if and only if it is a sweep <strong>and</strong>
+  size ≥ strike open interest <strong>and</strong> premium ≥ $1M (Golden
+  Sweep), or its Heat Score is ≥15. Every qualifying print
+  publishes; there is no editorial selection, no "best of" —
+  the rule is the curator, and the rule is printed on the feed.</li>
+<li><strong>The under-a-minute use</strong> — an alert lands; the reader sees what
+  traded, how big it is against the strike's entire open interest,
+  how the score was earned, and what this alert type has done
+  lately. They glance at the name's Board row / chart, or they
+  dismiss it. The alert asks for sixty seconds of attention and
+  comes with its own prior.</li>
+<li><strong>Trust mechanic</strong> — the alert is Ledger-written <em>before</em> it is
+  pushed (a push that isn't in the record didn't happen), and its
+  outcome fields fill automatically at fixed horizons for every
+  alert, winners and losers alike; the alert type's scorecard is
+  public and is computed from the same rows the subscribers
+  received. No alert can be deleted, and the feed page shows the
+  full day's alerts, not a selection.</li>
+<li><strong>Cost to run</strong> — Slice 2 already scores the live tape on the
+  watched underlyings; the incremental cost is the push transport
+  and the outcome-filling job (part of Slice 4). The watched-
+  universe limit is a real cost control: full-OPRA coverage is
+  explicitly out of scope and explicitly stated.</li>
+<li><strong>Honest paid tier (future)</strong> — a wider watched universe,
+  user-defined rules over the same published fields (own Heat
+  thresholds, own underlyings), lower-latency transport, and an
+  API. The public wire's archive and scorecards are never gated —
+  a subscriber is paying for breadth and speed, never for the
+  right to check our record.</li>
+</ul>
+<hr />
+<h2>5. RECOMMENDATION</h2>
+<p><strong>Launch the staged pair: THE QUALIFIED BOARD first, with THE
+MORNING MAP as its daily front page. Hold the Golden Sweep Wire
+until the Board's first scorecard has matured.</strong></p>
+<p>Why this pair, decisively:</p>
+<ul>
+<li>The Board is the only concept whose unit is a complete decision —
+  trigger, invalidation, targets, base rate and its own record in
+  one row. The corpus proves that is the scarce thing: 95 vendors,
+  and the trade-complete units fit in one archetype plus two
+  outliers. Publishing measurements (Map alone) or prints (Wire
+  alone) would put us in the two most crowded archetypes, competing
+  on data we already know is a commodity.</li>
+<li>The Map is the context every Board row already cites, it is the
+  cheapest possible daily habit (one card, one minute, pre-open),
+  and its next-morning grading is the fastest trust proof we can
+  run in public — a vendor visibly grading yesterday's own map,
+  every day, is something no vendor in the corpus does.</li>
+<li>The Wire is held back for one concrete reason: a push product
+  multiplies whatever record it carries. Launched before the
+  Ledger's scorecards exist, it would be a high-frequency claim
+  with no matured evidence — exactly the InsiderFinance posture
+  (P-6). Launched after, every alert arrives with a graded prior.
+  Sequence is the strategy.</li>
+<li>Both halves of the pair are already built (Slices 1 and 3); the
+  only missing machinery is the trust spine (Slice 4 scorecards),
+  which the design already specifies. This is a publishing project,
+  not a research project.</li>
+</ul>
+<p><strong>First three build steps, in order:</strong></p>
+<ol>
+<li><strong>Complete the Ledger scorecards for Map and Board rows</strong>
+   (Slice 4, scoped to these two layers): nightly forward-return
+   scoring at 1h / 1d / 5d / 21d, the wall-validation grading for
+   yesterday's Map card, and a public scorecard page whose figures
+   are computed from the append-only record at render time.
+   Acceptance: any number on the page traces to a log row written
+   before the timestamp it describes; scorecard math
+   fixture-checked; the "not yet graded" state (P-6) renders
+   correctly for horizons that have not matured.</li>
+<li><strong>Publish the combined pre-open page on the public terminal:</strong>
+   the Morning Map cards on top, the Qualified Board below, the
+   full unqualified ranked list one click beneath it, every row
+   and card Ledger-written before render, in plain English, with
+   coverage and bias labels on the units themselves. Acceptance:
+   the page for a given day is byte-stable once published (a
+   correction appends, never edits), and the gate's refusals —
+   insufficient-data names and high-raw-score non-qualifiers — are
+   visible on the page, not just in the data.</li>
+<li><strong>Turn on the daily rhythm and measure it for 30 sessions:</strong> the
+   free email edition (Map + newly qualified names + yesterday's
+   grades), the scorecard header live on the Board page from the
+   first matured horizon, and a simple public counter of rows
+   published vs rows graded. At 30 sessions, with the first 5d and
+   21d scorecards public, decide the Wire's launch date from the
+   Tape's measured coverage and latency — and only then design the
+   paid tier's wall (speed and breadth), with the public record
+   explicitly out of scope for paywalling, in writing, on the
+   pricing page itself.</li>
+</ol></article>
+
+<footer>Research by Muse Desk. This study of how trading products are packaged and
+delivered is what the <a href="../morning-map/">Morning Map</a> and the Morgue Engine
+were built from.</footer>
+</div></body></html>
