@@ -1,0 +1,181 @@
+# master-desk-parity-tools
+
+Created by Claude (master desk). Packaged into the Test repo on 2026-10-29 (packaging pass).
+
+Origin: dwj9ddyvf6-hub/Femto-lean repo, branch master-desk @ 53096b3a, path tools/parity/.
+
+The master desk's parity tools: one parity checker per strategy family and mechanism (absorption, apex, and the full family set), used to verify that a ported or rebuilt implementation matches its reference behavior. Each tool replays its family's cases through both implementations and reports divergences, which is how the desk proves a port is the same strategy and not a lookalike.
+
+## Files in this package
+
+- `packages/claude/master-desk-parity-tools/tools/parity/__init__.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/absorption.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/apex.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/apex_options.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/apex_synth.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/aurelia_ndx.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/ausar_daily20.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/ausar_option_producers.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/ausar_options.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/ausar_spot_recipes.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/batch_tmp.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/bilbo_options.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/blowoff_1h.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/blowoff_d.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/capitulation.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/capitulation_options.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/coinbase_sma200.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/dcg_frame.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/dcg_ranks.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/donchian.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/donchian_crypto.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/earnings_buyback.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/edgar_buyback.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/ema_vwap.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/ema_vwap_options.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/event_research.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/fear_premium.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/free_kraken.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/free_opt_own_iv.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/free_opt_pair.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/free_opt_parity.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/free_opt_release.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/free_opt_tail.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/free_opt_wheel.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/free_options_common.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/frozen_hedge.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/fwd_alpaca.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/fwd_coinbase_sma200.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/Author_book.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/Author_echo.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/Author_paper.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/Author_screens.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/Author_src.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/gate_1h.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/griffith.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/griffith_factor.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/griffith_intraday.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/iron_condor.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/killed_gao.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/killed_leader.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/killed_pairs.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/killed_pead.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/killed_restated.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/killed_rsiobv.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/killed_short.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/killed_smcap.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/lazarus_common.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/lazarus_entry.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/lazarus_exit.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/lazarus_vmr.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/leader_d.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/leader_sc.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/leaps_momentum.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/legends_ema.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/m2_features.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/m2_twins.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/mcap.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_board.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_common.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_context.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_fires.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_forward.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_forward_book.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_hourly.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_hyperliquid.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_kronos.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_kronos_forecast.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_ladder.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_options.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_pins.json`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_qld.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_quantpedia.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_shadow.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/midna_watch.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/milkman_daily.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/milkman_Author.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/milkman_intraday.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/milkman_legends_day.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/momentum.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/momentum_rotation.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/monitor_cases.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/morning_dip.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/node_pinned.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/node_src.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/own_iv_forecast.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/phase_daily.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/phoenix.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qm_pass3.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qqq_put_ladder.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_alphaqcm.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_bolt.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_factor_books.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_fastnumbers.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_finrlx.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_kronos.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_news121.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_r10_kernels.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_relay.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_relay_sec.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qr_sed.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qullamaggie.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/qullamaggie_paper.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/r10src.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/r17_etf.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/r19_book.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/r19_calendar.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/r19_crypto.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/r19_etf.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/r19_ledger.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/r19_market.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/red_day_reversal.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/rsi_meanrev.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/rsi_meanrev_options.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/rule_1h_cyan_raw.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/run.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/sable_desk_scanner.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/sable_location_first.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/sable_runtime.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/sleeve_core.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/snapback.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/span_harvest.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/spx_premium.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/stubs/alpaca_lib.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/stubs/aurelia_crypto_cases.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/stubs/numba.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/stubs/pandas_market_calendars.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/tensor_red_dip.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/tensor_research.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/tensor_state.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/tensor_swing.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/ts_momentum_decile.py`
+- `packages/claude/master-desk-parity-tools/tools/parity/vix_hedge.py`
+
+Source files are verbatim copies from the origin location named above unless a sanitization note appears in this doc.
+
+## Sanitization note
+
+This copy was sanitized at 149 point(s) to pass the public-repo privacy gate; the private original in dwj9ddyvf6-hub/Femto-lean repo, branch master-desk @ 53096b3a, path tools/parity/ is the verbatim source.
+Sanitized files in this package (non-verbatim copies):
+- packages/claude/master-desk-parity-tools/tools/parity/capitulation_options.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/Author_book.py: 20 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/Author_echo.py: 14 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/Author_paper.py: 19 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/Author_screens.py: 29 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/Author_src.py: 5 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/lazarus_vmr.py: 3 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/midna_fires.py: 6 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/midna_pins.json: 8 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/midna_watch.py: 7 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/milkman_Author.py: 25 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/node_pinned.py: 1 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/node_src.py: 4 occurrence(s) replaced
+- packages/claude/master-desk-parity-tools/tools/parity/r19_market.py: 1 occurrence(s) replaced
+- docs/MASTER-DESK-PARITY-TOOLS-ALGORITHM.md: 6 occurrence(s) replaced
+Files whose package path was renamed to pass the same gate (original filenames are in the private origin named above):
+- packages/claude/master-desk-parity-tools/tools/parity/Author_book.py
+- packages/claude/master-desk-parity-tools/tools/parity/Author_echo.py
+- packages/claude/master-desk-parity-tools/tools/parity/Author_paper.py
+- packages/claude/master-desk-parity-tools/tools/parity/Author_screens.py
+- packages/claude/master-desk-parity-tools/tools/parity/Author_src.py
+- packages/claude/master-desk-parity-tools/tools/parity/milkman_Author.py
