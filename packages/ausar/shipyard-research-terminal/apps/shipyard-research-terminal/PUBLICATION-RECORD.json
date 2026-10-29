@@ -1,0 +1,806 @@
+{
+  "site": {
+    "title": "Shipyard Research Terminal",
+    "url": "https://shipyard-mobile.j2wrgxpsj9.chatgpt.site",
+    "project_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d",
+    "access": "public"
+  },
+  "publication": {
+    "version_number": 445,
+    "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_c5f2e2a0cee08191874d464cf7d5d3f4",
+    "deployment_id": "appgdep_6ae29d78e6d8819187e1e73bfa3d3439",
+    "deployment_status": "succeeded",
+    "source_commit": "b0339d89339e631d3bfd13a45030b2c581b50a1c",
+    "site_archive_content_hash": "sha256:52db8cd85d12687b2fc678b67c0c501d669d2957856d347210fb092e7d3c8cdf",
+    "site_archive_reported_file_count": 36,
+    "site_archive_size_bytes": 2099200,
+    "published_at_utc": "2026-10-29T01:12:33.343427Z"
+  },
+  "verification": {
+    "http": {
+      "home": 200,
+      "favicon_ico": 200,
+      "favicon_svg": 200,
+      "app_js": 200,
+      "styles_css": 200,
+      "app_bootstrap_mjs": 200,
+      "market_overview_mjs": 200,
+      "api_status": 200,
+      "terminal_context": 200,
+      "alpaca_bars": 200,
+      "morgue_readiness": 200,
+      "operations_html_retired": 410,
+      "ausar_snapshot_retired": 410,
+      "terminal_history_retired": 410,
+      "account_api_unavailable": 404,
+      "orders_api_unavailable": 404,
+      "unauthenticated_mcp": 401
+    },
+    "focused_runtime_probe": {
+      "input_bars": 60,
+      "completed_calculation_bars": 59,
+      "current_session_bar_excluded": true,
+      "features_created": 7,
+      "decision_eligible_features": 0,
+      "chartlector_age_calendar_days": 6
+    },
+    "limitations": [
+      "Chartlector upstream static JSON remains stale at 2026-10-22; the Site flags it stale but does not operate its producer.",
+      "Python research engines remain linked source packages and are not executed by the JavaScript Site Worker.",
+      "Alpaca IEX is not consolidated SIP coverage; market-data entitlement and historical point-in-time availability remain unverified.",
+      "The current-date IEX calendar is used when available. If it is unavailable, the NYSE schedule is only a fallback and does not prove IEX early-close eligibility or historical session coverage.",
+      "Alerts are browser-local and checked after refresh; no hosted scheduler or push delivery is configured.",
+      "Alpaca rate limiting and caching are Worker-isolate-local, not strict global controls.",
+      "Morgue integration is commit-pinned metadata only; freshness and decision/order gates remain closed.",
+      "Direct unauthenticated MCP returns 401; owner-authenticated connector access was not independently verified.",
+      "The 92-name roster remains unreconciled against 86 evidenced families; no full vendor recreation or trading-performance claim is supported.",
+      "Yahoo Finance remains a link-out; automated collection is not configured."
+    ],
+    "mcp": {
+      "local_worker_tools": [
+        "shipyard_market_context",
+        "shipyard_alpaca_daily_bars",
+        "shipyard_morgue_readiness"
+      ],
+      "unauthenticated_production_probe_http": 401,
+      "owner_authenticated_connector_path_verified": false,
+      "deployed_site_has_mcp": true
+    },
+    "python_runtime": {
+      "installed_in_site": false,
+      "engines": [
+        "Saty Adaptive Opportunity Engine v0.3.0",
+        "Raschke Research Engine v0.2.0",
+        "Morgue Engine",
+        "ChartsLector research systems"
+      ],
+      "blocker": "No connected Python service runtime; Railway connection requires reauthentication and the separate Render connection is not yet active."
+    },
+    "asset_sha256_prefix16": {
+      "/app.js": "7516DB196E1655FF",
+      "/styles.css": "6666C0FDA4CDDD4D",
+      "/app-bootstrap.mjs": "B58165638386BFB5",
+      "/market-overview.mjs": "BA16F82F6D3FB8FF",
+      "live_matches_silicon_build": true
+    },
+    "worker_smoke": {
+      "result": "PASS",
+      "registered_views": 28,
+      "coverage": [
+        "static entry and favicon alias",
+        "read-only status",
+        "Alpaca input validation and missing-credential fail-closed state",
+        "IEX bar normalization",
+        "isolate cache",
+        "1 MiB streamed provider-body limit",
+        "malformed/provider-error mapping and secret redaction",
+        "Morgue metadata gates",
+        "three read-only MCP tools",
+        "retired routes",
+        "no account/order routes"
+      ]
+    },
+    "repository_tests": {
+      "automated_passed": 963,
+      "skipped": 1,
+      "skip_reason": "Optional Femto Lean cross-repo comparator is unavailable.",
+      "suites": {
+        "Morgue": {
+          "passed": 211,
+          "skipped": 1
+        },
+        "Saty_v03": 295,
+        "Saty_v01_reference": 22,
+        "Raschke_v02": 196,
+        "Raschke_v1_compatibility": 74,
+        "Saty_stack_kernel": 14,
+        "TheStrat_replica": 21,
+        "Saty_replay_validation": 4,
+        "Unusual_Whales_MCP_client": {
+          "passed": 121,
+          "test_files": 6,
+          "lint": "PASS",
+          "typescript_build": "PASS"
+        }
+      },
+      "browser_fixtures": {
+        "cases": 22,
+        "boundary_assertions": 40,
+        "result": "PASS"
+      },
+      "morgue_readiness_fixture": "PASS",
+      "local_http_smoke": "PASS",
+      "scope_ledger": {
+        "passes": 100,
+        "families": 86,
+        "complete_families": 81,
+        "bounded_complete_families": 5,
+        "in_progress_families": 0,
+        "result": "PASS"
+      },
+      "saty_export_manifest": {
+        "files": 179,
+        "result": "PASS"
+      },
+      "counted_by_run": 20
+    },
+    "production_data": {
+      "context": {
+        "http": 200,
+        "as_of": "2026-10-22",
+        "generated_at": "2026-10-22 18:33 ET",
+        "stale_calendar_days": 6,
+        "ui_stale_label": "PASS",
+        "received_at": "2026-10-28T23:24:37Z"
+      },
+      "alpaca": {
+        "http": 200,
+        "status": "connected",
+        "feed": "iex",
+        "timeframe": "1Day",
+        "bars": 63,
+        "as_of": "2026-10-28T04:00:00Z",
+        "account_data": false,
+        "order_access": false,
+        "received_at": "2026-10-28T23:27:13Z"
+      },
+      "morgue": {
+        "freshness": "unknown",
+        "values_returned": false,
+        "decision_eligible": false,
+        "order_submission_enabled": false,
+        "http": 200,
+        "snapshot_as_of": "2026-10-26",
+        "snapshot_age_seconds": 86864,
+        "rights_status": "unknown",
+        "ingestion_policy": "metadata_only"
+      },
+      "api_status": {
+        "mode": "read_only",
+        "key_configured": true,
+        "account_data": false,
+        "order_access": false
+      }
+    },
+    "corpus_state": {
+      "requested_passes": 100,
+      "families": 86,
+      "full_scope_passes": 95,
+      "bounded_scope_passes": 5,
+      "in_progress": 0,
+      "full_vendor_replicas": 0,
+      "source_backed_92_name_roster": false
+    },
+    "github_actions_run": {
+      "workflow": "Offline verification",
+      "run_number": 22,
+      "run_id": 40787860675,
+      "commit": "b098c70f6e4eef1a0051a52ac8ba6694ae43ea4c",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/dwj9ddyvf6-hub/Silicon/actions/runs/40787860675",
+      "job": "verify",
+      "successful_steps": 19
+    },
+    "production_v435": {
+      "url": "https://shipyard-mobile.j2wrgxpsj9.chatgpt.site",
+      "version": 435,
+      "deployment_status": "succeeded",
+      "context_http": 200,
+      "context_as_of": "2026-10-22",
+      "context_age_days": 6,
+      "stale_badge": "STALE · 6 DAYS OLD",
+      "stale_badge_visible_in_browser": true,
+      "app_js_http": 200,
+      "app_js_sha256": "37F1A3279BD9C302B559BEFAF42FBA432F7C9AE82C45C9AA0CC8A70889B3FF22",
+      "app_js_matches_silicon_build": true,
+      "api_status": "read_only",
+      "account_data": false,
+      "order_access": false,
+      "alpaca_feed": "iex",
+      "alpaca_bars": 14,
+      "orders_route_http": 404,
+      "retired_routes_http": 410,
+      "morgue_readiness": "metadata_only",
+      "morgue_freshness": "unknown",
+      "morgue_values_returned": false,
+      "morgue_decision_eligible": false
+    },
+    "corpus_deep_audit": {
+      "active_families": 86,
+      "active_passes": 100,
+      "complete_families": 81,
+      "bounded_complete_families": 5,
+      "in_progress_families": 0,
+      "legacy_numbered_passes": 94,
+      "later_pass_additions": 6,
+      "post_index_additions": [
+        "OpenMarket",
+        "VolSignals",
+        "TheStrat"
+      ],
+      "source_backed_92_name_roster": false,
+      "full_vendor_replicas": 0,
+      "morgue_evidence_residuals_implemented": 7,
+      "morgue_checklist_gaps_implemented": 6,
+      "cross_process_sec_rate_limiter": "local cooperating-process lock implemented; global IP coordination remains open",
+      "archive_review": "integrity verified; semantic and rights review incomplete",
+      "claude_original_authorship_verified": false
+    },
+    "overall_state": "PARTIAL",
+    "last_audited_at_utc": "2026-10-29T00:09:00Z",
+    "production_v440": {
+      "url": "https://shipyard-mobile.j2wrgxpsj9.chatgpt.site",
+      "version": 440,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_6aa6a3981ac88191bbfd7818a0582c50",
+      "deployment_id": "appgdep_6ae283e05d488191a36a46bcea7ee57c",
+      "deployment_status": "succeeded",
+      "site_source_commit": "fa21c63c83a3e749cc3671278b3addd06a8a2a17",
+      "archive_path": "artifacts/shipyard-research-terminal-v440.tar",
+      "http": {
+        "home": 200,
+        "api_status": 200,
+        "terminal_context": 200,
+        "alpaca_bars": 200,
+        "morgue_readiness": 200,
+        "orders": 404,
+        "ausar_snapshot": 410,
+        "terminal_history": 410,
+        "operations_html": 410,
+        "unauthenticated_mcp": 401
+      },
+      "access": {
+        "mode": "public",
+        "terminal_mode": "read_only",
+        "account_data": false,
+        "order_access": false
+      },
+      "asset_sha256": {
+        "/app.js": "D1F3C08369E0BBCBAB17D82204FBB3432FEE57B3A632FEEB33F8BE29B46E7F15",
+        "/styles.css": "A7F15F218C1A97434047B19DC0F1D2F6B26BA60A820526060A290DC92B1D91DF",
+        "/app-bootstrap.mjs": "AB06A9E866E7AE61E06D671A0A94CE4BC523BBCD1D2E22DCB504D500898D63D4",
+        "/market-overview.mjs": "CBE0AA9F5F1B42EFC7F823E46E476B5316850323E6415013BF904B7174799BD0"
+      },
+      "live_data": {
+        "provider": "Alpaca Market Data",
+        "feed": "iex",
+        "timeframe": "1Day",
+        "adjustment": "split",
+        "symbol": "SPY",
+        "bars": 63,
+        "received_at_utc": "2026-10-28T23:27:13Z",
+        "as_of": "2026-10-28T04:00:00Z",
+        "latest": {
+          "open": 771.33,
+          "high": 773.33,
+          "low": 769.27,
+          "close": 772.28,
+          "volume": 1163105,
+          "trades": 16707,
+          "vwap": 771.264037
+        },
+        "prior_close": 769.7,
+        "change_pct": 0.335196,
+        "displayed_change": "+0.34%",
+        "range": 4.06,
+        "ordered": true,
+        "duplicate_dates": 0,
+        "invalid_ohlcv_rows": 0,
+        "consolidated_sip": false
+      },
+      "context": {
+        "http": 200,
+        "as_of": "2026-10-22",
+        "received_at_utc": "2026-10-28T23:24:37Z",
+        "calendar_age_days": 6,
+        "stale_label_visible": true
+      },
+      "morgue": {
+        "http": 200,
+        "status": "available_metadata_only",
+        "source_commit": "49c7e474c24d1181437659a446cfde6e7e7b278e",
+        "snapshot_as_of": "2026-10-26",
+        "snapshot_age_seconds": 86864,
+        "freshness": "unknown",
+        "rights_status": "unknown",
+        "ingestion_policy": "metadata_only",
+        "values_returned": false,
+        "point_in_time_validation": "not_run",
+        "decision_eligible": false,
+        "performance_claim_eligible": false,
+        "order_submission_enabled": false
+      },
+      "refresh": {
+        "alpaca_bars_minutes": 5,
+        "market_context_minutes": 15,
+        "requires_visible_page": true,
+        "refresh_on_focus": true,
+        "refresh_on_visibility_return": true,
+        "worker_alpaca_cache_seconds": 30,
+        "scheduled_when_site_closed": false,
+        "intraday_stream": false
+      },
+      "browser": {
+        "registered_views": 28,
+        "rendered_views": 28,
+        "blank_views": 0,
+        "console_or_page_errors": 0,
+        "viewports_px": [
+          1440,
+          390
+        ],
+        "mobile_horizontal_overflow": false,
+        "screenshots": [
+          "artifacts/shipyard-terminal-v440-desktop.png",
+          "artifacts/shipyard-terminal-v440-mobile.png"
+        ]
+      },
+      "interactions": {
+        "csv_import": "parsed in browser memory; no server upload",
+        "same_origin_upload_requests": 0,
+        "watchlist_persists_after_reload": true,
+        "daily_move_alert_persists_after_reload": true,
+        "alert_evaluated_after_bar_refresh": true,
+        "hosted_alert_scheduler": false,
+        "notification_delivery": false,
+        "behavioral_flow_release": 439,
+        "v440_behavioral_change": "copy-only",
+        "csv_rows_persist_after_reload": "not stored in localStorage"
+      },
+      "local_checks": {
+        "market_overview_tests": "4 passed",
+        "worker_route_smoke": "passed",
+        "registered_views": 28,
+        "worker_build_embedded_assets": 9,
+        "worker_build_embedded_bytes": 524766
+      },
+      "known_open_gaps": [
+        "Chartlector source data remains stale; no verified producer is connected.",
+        "Python engines are not executed by the Site Worker.",
+        "Yahoo is a link-out; no Yahoo data pipeline is configured.",
+        "Alerts are browser-local with no hosted scheduler or notification delivery.",
+        "Original 92-name roster is not reconciled with the 86-family registry.",
+        "Archive semantic and rights review is incomplete; hashes establish byte integrity only.",
+        "No full vendor replicas or trading-performance claims are established."
+      ]
+    },
+    "latest_audit": {
+      "date": "2026-10-28",
+      "production_version": 443,
+      "status": "PARTIAL",
+      "scope": "mobile chart legibility, cache-busted release assets, live IEX calendar and OHLCV calculations, timezone-stable labels, shared SMA/RSI/ATR parity, navigation duplication, read-only routes, 28-view Worker smoke, and visual review",
+      "focused_tests": {
+        "market_overview": "13 passed",
+        "worker_smoke": "PASS; all 28 registered views, read-only routes, and cache-busted asset hash checks"
+      },
+      "known_data_gap": "Chartlector context remains dated 2026-10-22 and is visibly marked stale.",
+      "visual_capture_status": "The Sites thumbnail remains cached at the v441 image; the updated responsive chart is verified through its geometry test and source-matched production CSS, without a fresh rendered screenshot.",
+      "audited_at_utc": "2026-10-29T00:09:00Z"
+    },
+    "github_actions_history": [
+      {
+        "workflow": "Offline verification",
+        "run_number": 20,
+        "run_id": 40781233998,
+        "commit": "60b0a3fa06affb007441e6a0f935930456c5613c",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/dwj9ddyvf6-hub/Silicon/actions/runs/40781233998"
+      },
+      {
+        "workflow": "Offline verification",
+        "run_number": 22,
+        "run_id": 40787860675,
+        "commit": "b098c70f6e4eef1a0051a52ac8ba6694ae43ea4c",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/dwj9ddyvf6-hub/Silicon/actions/runs/40787860675",
+        "job": "verify",
+        "successful_steps": 19
+      }
+    ],
+    "production_v442": {
+      "url": "https://shipyard-mobile.j2wrgxpsj9.chatgpt.site",
+      "version": 442,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_07a00afeb7c48191a564c8744a518452",
+      "deployment_id": "appgdep_6ae28be818cc8191b47aa1a6caf768ee",
+      "deployment_status": "succeeded",
+      "deployment_completed_at_utc": "2026-10-28T23:57:36.576899Z",
+      "site_source_commit": "c819b657d5f58e1c3a96f51c0b6b621b6720aadc",
+      "archive_path": "artifacts/shipyard-research-terminal-v442.tar",
+      "archive_bytes": 410387,
+      "archive_sha256": "909170C13AC15F0E2B39294091DACEDC8086227E4CA890277E262C4673EE528E",
+      "site_archive_content_hash": "sha256:b8ef478cf74c0f3681069afd9e622f42402937425ad8118b30fb5c64142c352d",
+      "site_archive_files": 35,
+      "read_only_status": "read_only",
+      "account_data": false,
+      "order_access": false,
+      "http": {
+        "home": 200,
+        "app_js": 200,
+        "styles_css": 200,
+        "app_bootstrap_mjs": 200,
+        "market_overview_mjs": 200,
+        "api_status": 200,
+        "terminal_context": 200,
+        "alpaca_bars": 200
+      },
+      "assets": {
+        "app_js_sha256": "B42EBD003994890E8C5F1F0A4C954215D030565EAF8130671389335606CF2271",
+        "app_js_matches_source": true,
+        "market_overview_matches_source": true,
+        "styles_and_bootstrap_match_after_line_ending_normalization": true
+      },
+      "alpaca": {
+        "feed": "iex",
+        "timeframe": "1Day",
+        "requested_days": 20,
+        "returned_bars": 14,
+        "as_of": "2026-10-28T04:00:00Z",
+        "latest": {
+          "open": 771.33,
+          "high": 773.33,
+          "low": 769.27,
+          "close": 772.28,
+          "volume": 1163105,
+          "trades": 16707
+        },
+        "prior_close": 769.7,
+        "change_percent_display": 0.34,
+        "session_range": 4.06,
+        "calendar": {
+          "market": "IEX",
+          "date": "2026-10-28",
+          "status": "open",
+          "core_end": "2026-10-28T20:00:00Z",
+          "source": "alpaca_iex_calendar_v3"
+        }
+      },
+      "context": {
+        "as_of": "2026-10-22",
+        "age_calendar_days": 6,
+        "received_at_utc": "2026-10-29T00:01:16.394Z",
+        "ui_stale_state": "retained"
+      },
+      "visual_review": {
+        "reviewed_capture": "artifacts/shipyard-terminal-v441-site.png",
+        "capture_sha256": "B4DC890DC3A8410AAD711B1DF60A5C5EBE1B9DEF5979415AE7F0C11D80ABF5BE",
+        "capture_dimensions": "1200x750",
+        "v442_thumbnail_sha256": "B4DC890DC3A8410AAD711B1DF60A5C5EBE1B9DEF5979415AE7F0C11D80ABF5BE",
+        "note": "The Sites screenshot thumbnail is byte-identical across v441 and v442; the final Home shortcut is verified in the served v442 app.js, not in a newly captured screenshot.",
+        "review": "Metric values agree with the live IEX response; change and session range calculations are consistent; desktop hierarchy is readable. v442 changes the duplicate shortcut label; CSS is unchanged from the prior responsive capture."
+      },
+      "focus_tests": {
+        "market_overview": "12 passed",
+        "worker_smoke": "PASS; all 28 registered views and read-only routes"
+      }
+    },
+    "production_v443": {
+      "url": "https://shipyard-mobile.j2wrgxpsj9.chatgpt.site",
+      "version": 443,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_7002cafa6ed48191ad9bf849a0e348ae",
+      "deployment_id": "appgdep_6ae28e41c5ac8191802823ff5c106450",
+      "deployment_status": "succeeded",
+      "deployment_completed_at_utc": "2026-10-29T00:07:38.402641Z",
+      "site_source_commit": "097fb4b0271e8a724d6c3006e49172214b9f3924",
+      "archive_path": "artifacts/shipyard-research-terminal-v443.tar",
+      "archive_bytes": 410953,
+      "archive_sha256": "B13AFDE5EA05A30EF034F7ADC5FDA1084B48517E88B36EECF177D5047741F152",
+      "site_archive_content_hash": "sha256:4c9a588f7f0ca3fc802bfd25f8c7aabdba408a4eb422b1a6749e73ef5a0bf3d0",
+      "site_archive_files": 35,
+      "read_only_status": "read_only",
+      "account_data": false,
+      "order_access": false,
+      "http": {
+        "home": 200,
+        "app_js": 200,
+        "styles_css_versioned": 200,
+        "app_bootstrap_versioned": 200,
+        "market_overview_mjs": 200,
+        "api_status": 200,
+        "terminal_context": 200,
+        "alpaca_bars": 200
+      },
+      "asset_verification": {
+        "app_js_sha256": "7516db196e1655ff44fc0fd6d9357098ffce8cc7711a918c48b57b896a3c41d4",
+        "app_js_matches_source": true,
+        "market_overview_matches_source": true,
+        "styles_css_matches_versioned_source": true,
+        "app_bootstrap_matches_versioned_source": true,
+        "cache_busted_links": true,
+        "styles_css_url": "styles.css?v=6666c0fda4cddd4d",
+        "app_bootstrap_url": "app-bootstrap.mjs?v=b58165638386bfb5"
+      },
+      "alpaca": {
+        "feed": "iex",
+        "timeframe": "1Day",
+        "requested_days": 20,
+        "returned_bars": 14,
+        "as_of": "2026-10-28T04:00:00Z",
+        "latest": {
+          "open": 771.33,
+          "high": 773.33,
+          "low": 769.27,
+          "close": 772.28,
+          "volume": 1163105,
+          "trades": 16707
+        },
+        "prior_close": 769.7,
+        "change_percent_display": 0.34,
+        "session_range": 4.06,
+        "calendar": {
+          "market": "IEX",
+          "date": "2026-10-28",
+          "status": "open",
+          "core_end": "2026-10-28T20:00:00Z",
+          "source": "alpaca_iex_calendar_v3"
+        }
+      },
+      "context": {
+        "as_of": "2026-10-22",
+        "age_calendar_days": 6,
+        "received_at_utc": "2026-10-29T00:08:20.006Z",
+        "ui_stale_state": "retained"
+      },
+      "visual_review": {
+        "historical_mobile_capture": "artifacts/shipyard-terminal-v440-mobile.png",
+        "historical_desktop_capture": "artifacts/shipyard-terminal-v441-site.png",
+        "v443_capture": "artifacts/shipyard-terminal-v443-site.png",
+        "v443_capture_sha256": "B4DC890DC3A8410AAD711B1DF60A5C5EBE1B9DEF5979415AE7F0C11D80ABF5BE",
+        "thumbnail_refreshed": false,
+        "note": "The Sites thumbnail remained byte-identical to v441, so it did not render the updated responsive chart. The mobile axis layout is checked at 390, 560, and 561 px in the focused unit suite; production assets and cache-busted links match the pushed source."
+      },
+      "focus_tests": {
+        "market_overview": "13 passed",
+        "worker_smoke": "PASS; all 28 registered views, read-only routes, and cache-busted asset hash checks"
+      }
+    }
+  },
+  "publication_history": [
+    {
+      "version_number": 445,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_c5f2e2a0cee08191874d464cf7d5d3f4",
+      "deployment_id": "appgdep_6ae29d78e6d8819187e1e73bfa3d3439",
+      "deployment_status": "succeeded",
+      "source_commit": "b0339d89339e631d3bfd13a45030b2c581b50a1c",
+      "archive_path_in_repo": "shipyard-v445.tar.gz (local packaging workspace; not stored in Silicon)",
+      "site_archive_content_hash": "sha256:52db8cd85d12687b2fc678b67c0c501d669d2957856d347210fb092e7d3c8cdf",
+      "site_archive_reported_file_count": 36,
+      "site_archive_size_bytes": 2099200,
+      "published_at_utc": "2026-10-29T01:12:33.343427Z"
+    },
+    {
+      "version_number": 434,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_f5baf7ccecc08191ace69a320f95e362",
+      "deployment_id": "appgdep_6ae25d55f54081919083fc1e03a598c5",
+      "deployment_status": "succeeded",
+      "source_commit": "d1a166ddee53d98b2516024339a0cfc2c62f6e8b",
+      "archive_path_in_repo": "artifacts/shipyard-research-engine-suite-v434.tar",
+      "local_archive_bytes": 406785,
+      "local_archive_sha256": "A26B1B446F257D577CA3DCE53A0B4D4D4F0D289A51F68FE6C8716CE0C9C8433C",
+      "local_tar_member_count": 34,
+      "site_archive_content_hash": "sha256:3ea533bad3bd0c7d188fe04c944e8f5503e8a6cf54b976c447944aa4da22b798",
+      "site_archive_reported_file_count": 34,
+      "site_archive_size_bytes": 1822720,
+      "published_at_utc": "2026-10-28T20:38:56.058349Z"
+    },
+    {
+      "version_number": 431,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_26a4fc6e12a88191b6cd29b8eeacddcb",
+      "deployment_id": "appgdep_6ae24a8535c88191a73438fad879f97f",
+      "deployment_status": "succeeded",
+      "source_commit": "8aaeb7bb46d2294d49bd539bd376ae64ee005ec7",
+      "archive_path_in_repo": "artifacts/shipyard-research-engine-suite-v431.tar.gz",
+      "local_archive_bytes": 403157,
+      "local_archive_sha256": "EE107D0EF2DDB0B674C717F613D03097EA9112FB29977B69CCD17234F3235BB6",
+      "local_tar_member_count": 39,
+      "site_archive_content_hash": "sha256:c954b1fca4bb51f91dabae384b44f2f57666670005daf6d4e67ade6f20506aa9",
+      "site_archive_reported_file_count": 34,
+      "published_at_utc": "2026-10-28T19:18:38Z"
+    },
+    {
+      "version_number": 432,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_120cce91685081919171597a9be926d6",
+      "deployment_id": "appgdep_6ae24d707538819192c8430aea47218a",
+      "deployment_status": "succeeded_then_superseded",
+      "source_commit": "04e4538041afc864940b278d7908ba85d82a43c1",
+      "archive": {
+        "path": "artifacts/shipyard-research-engine-suite-v432.tar",
+        "bytes": 406858,
+        "sha256": "43DFAE283D717586E31AE53731BB92C51F3314328A97B1782953E099FFE7C420",
+        "member_count": 39
+      },
+      "site_archive_content_hash": "sha256:cb6a5dab6b378e9cc2dd509c8474f9f9f1ee37892860d17a909fdb49d9c4e70e",
+      "site_archive_reported_file_count": 34,
+      "superseded_reason": "The public Worker could not fetch the private repository raw URL; version 433 embeds only pinned metadata."
+    },
+    {
+      "version_number": 433,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_0d53c8080e408191995107b761138f5d",
+      "deployment_id": "appgdep_6ae24e1469ec8191b423099d67432d18",
+      "deployment_status": "succeeded",
+      "source_commit": "93a053c4f1a1ab8917959184357974fed9ee9c24",
+      "archive": {
+        "path": "artifacts/shipyard-research-engine-suite-v433.tar",
+        "bytes": 406511,
+        "sha256": "17C97403DADDB141AF98EBA1B59242D38EAD80ECE18B625C7BA1FE7470678292",
+        "member_count": 39
+      },
+      "site_archive_content_hash": "sha256:47b6ad55723bf21a6a1c1e7dcdb9bde04b51599defdba60f4a535de42c63bfbd",
+      "site_archive_reported_file_count": 34,
+      "published_at_utc": "2026-10-28T19:33:49.788532Z"
+    },
+    {
+      "version_number": 434,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_f5baf7ccecc08191ace69a320f95e362",
+      "deployment_id": "appgdep_6ae25d55f54081919083fc1e03a598c5",
+      "deployment_status": "succeeded",
+      "source_commit": "d1a166ddee53d98b2516024339a0cfc2c62f6e8b",
+      "archive_path_in_repo": "artifacts/shipyard-research-engine-suite-v434.tar",
+      "local_archive_bytes": 406785,
+      "local_archive_sha256": "A26B1B446F257D577CA3DCE53A0B4D4D4F0D289A51F68FE6C8716CE0C9C8433C",
+      "local_tar_member_count": 34,
+      "site_archive_content_hash": "sha256:3ea533bad3bd0c7d188fe04c944e8f5503e8a6cf54b976c447944aa4da22b798",
+      "site_archive_reported_file_count": 34,
+      "published_at_utc": "2026-10-28T20:38:56.058349Z"
+    },
+    {
+      "version_number": 438,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_cffdbc83d5b481918aa938990ab9e5f3",
+      "deployment_id": "appgdep_6ae280a9a4408191bbee0baebc0440ef",
+      "deployment_status": "succeeded",
+      "source_commit": "d829b11742dee83edf2a09f6d8ed68ade76b111c",
+      "archive_path_in_repo": "artifacts/shipyard-research-terminal-v438.tar",
+      "local_archive_bytes": 407939,
+      "local_archive_sha256": "FA0C3672075EF1F030FF53770DB967A751087508FF6C6851F6F4AD2A2FFEAEAE",
+      "local_tar_member_count": 40,
+      "site_archive_content_hash": "sha256:e618475fd123825b33e265555c1558d1ce2cd10113df9dce5487e3346804964f",
+      "site_archive_reported_file_count": 35,
+      "site_archive_size_bytes": 1832960,
+      "published_at_utc": "2026-10-28T23:09:40Z"
+    },
+    {
+      "version_number": 439,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_e3bce84fb9888191b5cf2bd29b423457",
+      "deployment_id": "appgdep_6ae282a8eda88191aff89f553233df31",
+      "deployment_status": "succeeded",
+      "source_commit": "336eddbafafe8c9859162c3bf2bbb3b7c35976ab",
+      "archive_path_in_repo": "artifacts/shipyard-research-terminal-v439.tar",
+      "local_archive_bytes": 406133,
+      "local_archive_sha256": "3989BF7DD18F885563DAF24036552380828BE879DE7F288A796C1C2E808754AE",
+      "local_tar_member_count": 40,
+      "site_archive_content_hash": "sha256:1506d5d6d05cf33cec86c6ddd31c15fb39897cad42dfb89d1b9973e9a7dbacf3",
+      "site_archive_reported_file_count": 35,
+      "site_archive_size_bytes": 1822720,
+      "published_at_utc": "2026-10-28T23:18:10Z"
+    },
+    {
+      "version_number": 440,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_6aa6a3981ac88191bbfd7818a0582c50",
+      "deployment_id": "appgdep_6ae283e05d488191a36a46bcea7ee57c",
+      "deployment_status": "succeeded",
+      "source_commit": "fa21c63c83a3e749cc3671278b3addd06a8a2a17",
+      "archive_path_in_repo": "artifacts/shipyard-research-terminal-v440.tar",
+      "local_archive_bytes": 405997,
+      "local_archive_sha256": "908FF818373E961588E6D63463FBDD516FE6F9284A6638153D2F9CB2BBB53CBE",
+      "local_tar_member_count": 40,
+      "site_archive_content_hash": "sha256:edeece57ae4243dd70e87ea3d9d0f854ad2e82a517bc29ff635a1281f1703132",
+      "site_archive_reported_file_count": 35,
+      "site_archive_size_bytes": 1822720,
+      "published_at_utc": "2026-10-28T23:23:20.763529Z"
+    },
+    {
+      "version_number": 441,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_f2210b3f7fa881918d69b010facbfae6",
+      "deployment_id": "appgdep_6ae28ae68a2881918ec26e8d42392acd",
+      "deployment_status": "succeeded",
+      "source_commit": "3bc80dc8fcc0fd57f781cf95e946888017f6dfe4",
+      "archive_path_in_repo": "artifacts/shipyard-research-terminal-v441.tar",
+      "local_archive_bytes": 410404,
+      "local_archive_sha256": "1C4C62BB460E277ED9DCAAB4D00713C23DD995C15BCF8AE05427B6EA44FCBA17",
+      "local_tar_member_count": 40,
+      "site_archive_content_hash": "sha256:204566f6d4863c258254a0ff0222884396a2459aa403c1159a790142eae18a4f",
+      "site_archive_reported_file_count": 35,
+      "site_archive_size_bytes": 1843200,
+      "published_at_utc": "2026-10-28T23:55:06.441295Z"
+    },
+    {
+      "version_number": 442,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_07a00afeb7c48191a564c8744a518452",
+      "deployment_id": "appgdep_6ae28be818cc8191b47aa1a6caf768ee",
+      "deployment_status": "succeeded",
+      "source_commit": "c819b657d5f58e1c3a96f51c0b6b621b6720aadc",
+      "archive_path_in_repo": "artifacts/shipyard-research-terminal-v442.tar",
+      "local_archive_bytes": 410387,
+      "local_archive_sha256": "909170C13AC15F0E2B39294091DACEDC8086227E4CA890277E262C4673EE528E",
+      "local_tar_member_count": 40,
+      "site_archive_content_hash": "sha256:b8ef478cf74c0f3681069afd9e622f42402937425ad8118b30fb5c64142c352d",
+      "site_archive_reported_file_count": 35,
+      "site_archive_size_bytes": 1843200,
+      "published_at_utc": "2026-10-28T23:57:36.576899Z"
+    },
+    {
+      "version_number": 443,
+      "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_7002cafa6ed48191ad9bf849a0e348ae",
+      "deployment_id": "appgdep_6ae28e41c5ac8191802823ff5c106450",
+      "deployment_status": "succeeded",
+      "source_commit": "097fb4b0271e8a724d6c3006e49172214b9f3924",
+      "archive_path_in_repo": "artifacts/shipyard-research-terminal-v443.tar",
+      "local_archive_bytes": 410953,
+      "local_archive_sha256": "B13AFDE5EA05A30EF034F7ADC5FDA1084B48517E88B36EECF177D5047741F152",
+      "local_tar_member_count": 40,
+      "site_archive_content_hash": "sha256:4c9a588f7f0ca3fc802bfd25f8c7aabdba408a4eb422b1a6749e73ef5a0bf3d0",
+      "site_archive_reported_file_count": 35,
+      "site_archive_size_bytes": 1843200,
+      "published_at_utc": "2026-10-29T00:07:38.402641Z"
+    }
+  ],
+  "production_v445": {
+    "url": "https://shipyard-mobile.j2wrgxpsj9.chatgpt.site",
+    "version": 445,
+    "version_id": "appgprj_6a606791c99c8191a3f3d509d74fcb7d~appgver_c5f2e2a0cee08191874d464cf7d5d3f4",
+    "deployment_id": "appgdep_6ae29d78e6d8819187e1e73bfa3d3439",
+    "deployment_status": "succeeded",
+    "site_source_commit": "b0339d89339e631d3bfd13a45030b2c581b50a1c",
+    "archive_path": "shipyard-v445.tar.gz (local packaging workspace)",
+    "site_archive_content_hash": "sha256:52db8cd85d12687b2fc678b67c0c501d669d2957856d347210fb092e7d3c8cdf",
+    "site_archive_size_bytes": 2099200,
+    "site_archive_file_count": 36,
+    "browser_verification": {
+      "route": "#convergence",
+      "visible_survivors": 20,
+      "mapped_active_families": 86,
+      "recorded_review_passes": 100,
+      "complete_families": 81,
+      "bounded_complete_families": 5,
+      "family_index_expanded": true,
+      "local_csv_boundary_visible": true,
+      "desktop_visual_inspection": "PASS"
+    },
+    "automated_verification": {
+      "convergence_tests": "4 passed",
+      "worker_smoke": "PASS; 29 views",
+      "source_checks": "node syntax, worker build, smoke, and git diff checks passed"
+    },
+    "scope": {
+      "raw_csv_uploads_to_server": 0,
+      "account_or_order_access_added": false,
+      "python_engine_runtime_added": false
+    }
+  },
+  "latest_audit": {
+    "date": "2026-10-28",
+    "production_version": 445,
+    "status": "PARTIAL",
+    "scope": "convergence catalog, 86-family provenance crosswalk, local-only CSV evidence intake, event timeline, focused parser checks, Worker route smoke, public deployment and desktop visual review",
+    "focused_tests": {
+      "convergence_engine": "4 passed",
+      "worker_smoke": "PASS; 29 registered views; read-only and no-account/no-order invariants"
+    },
+    "visual_capture_status": "Production #convergence route was opened after deployment, refreshed, and visually inspected. The 20 capability cards and intake are legible in the desktop viewport; the 86-family source index expands and displays report links.",
+    "remaining_scope": "The terminal is not a set of exact vendor replicas. Six names in the historic 92-name request remain unverified; Python packages are not run by the Site Worker; source freshness and point-in-time rights gates remain in force.",
+    "audited_at_utc": "2026-10-29T01:12:33Z"
+  },
+  "overall_state": "PARTIAL",
+  "last_audited_at_utc": "2026-10-29T01:12:33Z"
+}
