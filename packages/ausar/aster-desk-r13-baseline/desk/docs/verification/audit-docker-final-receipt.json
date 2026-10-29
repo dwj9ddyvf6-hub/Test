@@ -1,0 +1,274 @@
+{
+  "verified_at": "2026-10-08T07:49:56.613428+00:00",
+  "passed": true,
+  "image": "aster-desk:audited",
+  "image_id": "sha256:d1b0bd385b993156d4ff992eb9894b54408e06004d8ced83bb20f6c6e36b9683",
+  "mode": "manual feed with separate temporary persistent bind mount",
+  "checks": [
+    "final image boots",
+    "task worker and autonomous supervisor healthy",
+    "database and journal health gates pass",
+    "Docker HEALTHCHECK passes",
+    "explicit isolated paper funding of125.50 persists across container restart and container removal/recreation",
+    "zero intents, fills and strategies"
+  ],
+  "restart": {
+    "passed": true,
+    "book_id": "a5c376daca6c48e4b6b6a00e2f58eed0",
+    "cash": 125.5,
+    "zero_fills": true,
+    "zero_intents": true,
+    "strategy_count": 0,
+    "monitor": {
+      "healthy": true,
+      "problems": [],
+      "heartbeat_at": "2026-10-08T07:49:30.480011+00:00"
+    }
+  },
+  "recreation": {
+    "passed": true,
+    "book_id": "a5c376daca6c48e4b6b6a00e2f58eed0",
+    "cash": 125.5,
+    "strategy_count": 0,
+    "fills": 0,
+    "health": {
+      "worker": {
+        "alive": true,
+        "owns_lease": true,
+        "lease_active": true,
+        "last_tick_at": "2026-10-08T07:49:05.329808+00:00",
+        "error": null
+      },
+      "database": {
+        "status": "ok",
+        "journal_mode": "wal"
+      },
+      "reasoning": {
+        "provider": "local",
+        "configured": false,
+        "model": null,
+        "cognitive_roles": [],
+        "reachability": "not checked",
+        "last_success_at": null,
+        "last_error": null
+      },
+      "market_data": {
+        "kind": "manual",
+        "configured": true,
+        "connected": false,
+        "delayed": false,
+        "description": "Operator-supplied observations"
+      },
+      "broker": {
+        "kind": "alpaca-paper",
+        "configured": false,
+        "connected": false,
+        "paper_only": true,
+        "accounts": [
+          {
+            "connection_id": "default",
+            "configured": false,
+            "connected": false,
+            "paper_only": true
+          }
+        ],
+        "connection_ids": []
+      },
+      "strategy_count": 0,
+      "manual_ledger": {
+        "market_data": "manual; no external feed",
+        "broker": "paper ledger; no live broker"
+      },
+      "autonomy": {
+        "running": true,
+        "refresh_seconds": 60,
+        "brief_seconds": 900,
+        "minimum_free_bytes": 10000000,
+        "heartbeat_at": "2026-10-08T07:49:05.364502+00:00",
+        "last_progress_at": "2026-10-08T07:49:05.364518+00:00",
+        "sqlite_status": "ok",
+        "disk_free_bytes": 9346232320,
+        "last_error": null,
+        "session_catchup": {
+          "maximum_calendar_days_per_pass": 7,
+          "backlog": [],
+          "complete": true,
+          "scope": "Known schedules only; first observation establishes availability, expired windows are recorded without execution"
+        },
+        "active_job_id": null,
+        "active_job_started_at": null,
+        "quote_coverage": {
+          "maximum_per_pass": 16,
+          "held_or_protective_symbols": 0,
+          "active_symbols": 0,
+          "observational_symbols": 0,
+          "selected_symbols": [],
+          "deferred_active_symbols": [],
+          "deferred_active_count": 0,
+          "capacity_limited": false,
+          "policy": "Held positions and active protection first, then active instructions; rotate only remaining capacity. Over-capacity tiers rotate with an explicit warning."
+        },
+        "last_cycle_at": "2026-10-08T07:48:33.752000+00:00",
+        "last_success_at": "2026-10-08T07:48:33.752000+00:00",
+        "journal_integrity": {
+          "status": "ok",
+          "checked_at": "2026-10-08T07:48:47.825883+00:00",
+          "verified_events": 5,
+          "last_verified_hash": "2d148b3d9ceea3e60847756a2c945824dde314a383e3bf063f8042e02a36f362",
+          "error_row": null,
+          "checkpoint_event_id": 5,
+          "checkpoint_hash": "2d148b3d9ceea3e60847756a2c945824dde314a383e3bf063f8042e02a36f362",
+          "latest_event_id": 5,
+          "latest_event_hash": "2d148b3d9ceea3e60847756a2c945824dde314a383e3bf063f8042e02a36f362",
+          "cached": true
+        },
+        "worker_alive": true,
+        "worker_stale": false,
+        "progress_stale": false,
+        "healthy": true,
+        "heartbeat_age_seconds": 0.147062,
+        "pending_jobs": 0,
+        "retrying_jobs": 0,
+        "failed_jobs": 0,
+        "providers": {
+          "market_data": {
+            "kind": "manual",
+            "configured": true,
+            "connected": false,
+            "delayed": false,
+            "description": "Operator-supplied observations"
+          },
+          "broker": {
+            "kind": "alpaca-paper",
+            "configured": false,
+            "connected": false,
+            "paper_only": true,
+            "accounts": [
+              {
+                "connection_id": "default",
+                "configured": false,
+                "connected": false,
+                "paper_only": true
+              }
+            ],
+            "connection_ids": []
+          },
+          "historical_data": {
+            "primary": "manual",
+            "fallbacks": [],
+            "adapters": [
+              {
+                "provider": "yahoo",
+                "configured": true,
+                "enabled": false,
+                "connected": false,
+                "intervals": [
+                  "15m",
+                  "1d",
+                  "1m",
+                  "1mo",
+                  "1wk",
+                  "30m",
+                  "5m",
+                  "60m"
+                ],
+                "historical_only": false
+              },
+              {
+                "provider": "alpaca",
+                "configured": false,
+                "enabled": false,
+                "connected": false,
+                "intervals": [
+                  "15m",
+                  "1d",
+                  "1m",
+                  "1mo",
+                  "1wk",
+                  "30m",
+                  "5m",
+                  "60m"
+                ],
+                "historical_only": false
+              },
+              {
+                "provider": "stooq",
+                "configured": true,
+                "enabled": false,
+                "connected": false,
+                "intervals": [
+                  "1d"
+                ],
+                "historical_only": true
+              }
+            ],
+            "daily_bars_are_executable_quotes": false
+          }
+        },
+        "calendar": {
+          "exchange": "XNYS",
+          "timezone": "America/New_York",
+          "timestamp": "2026-10-08T07:49:05.512749+00:00",
+          "date": "2026-10-08",
+          "is_session": true,
+          "is_open": false,
+          "session_date": "2026-10-08",
+          "open_at": "2026-10-08T13:30:00+00:00",
+          "close_at": "2026-10-08T20:00:00+00:00",
+          "previous_session": "2026-10-07",
+          "next_session": "2026-10-09",
+          "previous_open_at": "2026-10-07T13:30:00+00:00",
+          "previous_close_at": "2026-10-07T20:00:00+00:00",
+          "next_open_at": "2026-10-08T13:30:00+00:00",
+          "next_close_at": "2026-10-08T20:00:00+00:00",
+          "early_close": false,
+          "source": "exchange_calendars XNYS"
+        },
+        "reasoning": {
+          "provider": "local",
+          "configured": false,
+          "model": null,
+          "cognitive_roles": []
+        },
+        "automation": "deterministic operational workers; optional configured read-only models"
+      },
+      "journal_integrity": {
+        "status": "ok",
+        "checked_at": "2026-10-08T07:48:47.825883+00:00",
+        "verified_events": 5,
+        "last_verified_hash": "2d148b3d9ceea3e60847756a2c945824dde314a383e3bf063f8042e02a36f362",
+        "error_row": null,
+        "checkpoint_event_id": 5,
+        "checkpoint_hash": "2d148b3d9ceea3e60847756a2c945824dde314a383e3bf063f8042e02a36f362",
+        "latest_event_id": 5,
+        "latest_event_hash": "2d148b3d9ceea3e60847756a2c945824dde314a383e3bf063f8042e02a36f362",
+        "cached": true
+      }
+    },
+    "monitor": {
+      "healthy": true,
+      "problems": [],
+      "heartbeat_at": "2026-10-08T07:49:05.364502+00:00"
+    }
+  },
+  "docker_health": {
+    "Status": "healthy",
+    "FailingStreak": 0,
+    "Log": [
+      {
+        "Start": "2026-10-08T07:48:52.013781012Z",
+        "End": "2026-10-08T07:48:52.279000806Z",
+        "ExitCode": 0,
+        "Output": "{\n  \"healthy\": true,\n  \"problems\": [],\n  \"heartbeat_at\": \"2026-10-08T07:48:52.198527+00:00\"\n}\n"
+      },
+      {
+        "Start": "2026-10-08T07:49:11.319551383Z",
+        "End": "2026-10-08T07:49:11.46799412Z",
+        "ExitCode": 0,
+        "Output": "{\n  \"healthy\": true,\n  \"problems\": [],\n  \"heartbeat_at\": \"2026-10-08T07:49:11.342744+00:00\"\n}\n"
+      }
+    ]
+  },
+  "remote_deployment": false,
+  "actual_desk_state_changed": false
+}

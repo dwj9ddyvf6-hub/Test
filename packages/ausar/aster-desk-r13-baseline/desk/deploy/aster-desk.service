@@ -1,0 +1,18 @@
+[Unit]
+Description=Aster autonomous paper desk
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/aster-desk
+EnvironmentFile=-/opt/aster-desk/.env
+Environment=ASTER_DB_PATH=/var/lib/aster-desk/aster.sqlite
+ExecStart=/opt/aster-desk/.venv/bin/python -m uvicorn backend.app:app --host 127.0.0.1 --port 8787
+Restart=always
+RestartSec=5
+TimeoutStopSec=45
+StateDirectory=aster-desk
+
+[Install]
+WantedBy=multi-user.target

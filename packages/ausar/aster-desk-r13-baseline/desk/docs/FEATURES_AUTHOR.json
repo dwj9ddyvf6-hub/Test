@@ -1,0 +1,742 @@
+[
+  {
+    "id": "Author.market_data",
+    "label": "Market bars and quotes",
+    "implemented_behavior": "Polls Yahoo bars and quotes with two-host fallback, timeouts, interval cache and in-flight coalescing; bar intake checks provider symbol identity.",
+    "current_status": "implemented; runtime not independently verified",
+    "evidence": [
+      {
+        "path": "src/lib/tensor/yahoo.ts",
+        "lines": [
+          103,
+          174
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/yahoo.ts#L103-L174"
+      },
+      {
+        "path": "src/lib/tensor/yahoo.ts",
+        "lines": [
+          183,
+          249
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/yahoo.ts#L183-L249"
+      }
+    ],
+    "configuration_dependencies": [
+      "Yahoo network access",
+      "canonical ticker/interval"
+    ],
+    "limits": [
+      "Quote-only path lacks the same identity check; missing provider timestamp reports age zero. No durable immutable market-data store or corporate-action adjustment service."
+    ],
+    "strategy_coupling": "Remove signal-engine imports from downstream consumers; preserve provider adapter and provenance."
+  },
+  {
+    "id": "Author.bar_intake",
+    "label": "Completed-bar intake and event deduplication",
+    "implemented_behavior": "Rejects incoherent OHLC, nonpositive prices, negative volume and unordered bars; drops forming tails and aggregates premarket/regular one-minute bars into five-minute bars. Wire suppresses symbol/bar and eventKey duplicates.",
+    "current_status": "implemented in retained worker",
+    "evidence": [
+      {
+        "path": "src/lib/tensor/bars.ts",
+        "lines": [
+          4,
+          23
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/bars.ts#L4-L23"
+      },
+      {
+        "path": "src/lib/tensor/green/bars.ts",
+        "lines": [
+          16,
+          52
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/tensor/green/bars.ts#L16-L52"
+      },
+      {
+        "path": "scripts/tensor-wire.mjs",
+        "lines": [
+          130,
+          157
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/tensor-wire.mjs#L130-L157"
+      }
+    ],
+    "configuration_dependencies": [
+      "source timestamps",
+      "America/New_York session rules",
+      "local seen/tape files"
+    ],
+    "limits": [
+      "Five-minute aggregation accepts incomplete minute buckets. Event deduplication is bounded local state, not a transactional exactly-once event bus."
+    ],
+    "strategy_coupling": "Replace green event calculation with strategy-free data-change/task events; retain intake and stable event keys."
+  },
+  {
+    "id": "Author.watch_adoption",
+    "label": "Persistent watchlist and operator-held names",
+    "implemented_behavior": "Browser watch adoption merges new canonical symbols without replacing prior names. Mark-entered updates the local watch and calls a server held-name endpoint. Worker watch merges roster, last book, tape watch and broker-open names, capped at 36.",
+    "current_status": "implemented; broker-held discovery halted with Alpaca",
+    "evidence": [
+      {
+        "path": "src/lib/desk-store.ts",
+        "lines": [
+          103,
+          139
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-store.ts#L103-L139"
+      },
+      {
+        "path": "scripts/tensor-wire.mjs",
+        "lines": [
+          107,
+          123
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/tensor-wire.mjs#L107-L123"
+      }
+    ],
+    "configuration_dependencies": [
+      "browser state",
+      "server roster",
+      "optional broker position reads"
+    ],
+    "limits": [
+      "Manual held/adopted names are supported. Generic broker position adoption with recovered cost basis, lot identity and independently selected protection is absent."
+    ],
+    "strategy_coupling": "Remove conviction/scanner selection and replace with operator-selected universe plus broker discovery."
+  },
+  {
+    "id": "Author.market_clock",
+    "label": "Market-session scheduling",
+    "implemented_behavior": "Uses America/New_York date/window helpers and DST offset conversion; separates weekday/weekend and list/card time windows. Tensor workflow offers a thirty-minute wake while local workers use finer polling.",
+    "current_status": "implemented; scan/publish automation disabled; Tensor schedule retained",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/autopilot.ts",
+        "lines": [
+          39,
+          107
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/autopilot.ts#L39-L107"
+      },
+      {
+        "path": ".github/workflows/tensor-tick.yml",
+        "lines": [
+          1,
+          34
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/.github/workflows/tensor-tick.yml#L1-L34"
+      }
+    ],
+    "configuration_dependencies": [
+      "host clock",
+      "Node Intl timezone data",
+      "GitHub Actions for remote wake"
+    ],
+    "limits": [
+      "Fixed UTC cron is labelled EDT and shifts against local time in standard time. No full exchange holiday/early-close calendar. Workflow success is not delivery proof."
+    ],
+    "strategy_coupling": "Remove scan/publish windows and use configurable task schedules, market calendar and deadlines."
+  },
+  {
+    "id": "Author.worker_lifecycle",
+    "label": "Worker startup and recovery",
+    "implemented_behavior": "Startup revives web server, Tensor, autopilot, watchdog and Echo. PID files are checked against process command lines; watchdog replaces stale autopilot and Echo workers and keeps Tensor alive.",
+    "current_status": "implemented retained runtime; original-host uptime unverified",
+    "evidence": [
+      {
+        "path": "startup.sh",
+        "lines": [
+          22,
+          74
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/startup.sh#L22-L74"
+      },
+      {
+        "path": "scripts/desk-watchdog.mjs",
+        "lines": [
+          179,
+          206
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-watchdog.mjs#L179-L206"
+      },
+      {
+        "path": "scripts/desk-watchdog.mjs",
+        "lines": [
+          299,
+          334
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-watchdog.mjs#L299-L334"
+      }
+    ],
+    "configuration_dependencies": [
+      "persistent Linux host",
+      "/workspace paths",
+      "Node",
+      "local lock and heartbeat files"
+    ],
+    "limits": [
+      "No distributed durable queue, work lease, agent registry, checkpointed task ownership or general planning loop. LIVE_CLOCK=zero is not a global halt: startup still invokes the old worker."
+    ],
+    "strategy_coupling": "Remove Tensor/Echo/scan-specific services; keep supervisor contract for strategy-free feed, broker, journal and research-tool workers."
+  },
+  {
+    "id": "Author.job_budget",
+    "label": "Job deadlines and overlap control",
+    "implemented_behavior": "Runs the heavy scan in a child process with a 95-second budget, SIGTERM then SIGKILL; local scan, guard and wire loops have overlap flags and independent intervals.",
+    "current_status": "implemented; scan path currently disabled",
+    "evidence": [
+      {
+        "path": "scripts/desk-autopilot.mjs",
+        "lines": [
+          314,
+          368
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L314-L368"
+      },
+      {
+        "path": "scripts/desk-autopilot.mjs",
+        "lines": [
+          2097,
+          2158
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/scripts/desk-autopilot.mjs#L2097-L2158"
+      }
+    ],
+    "configuration_dependencies": [
+      "Node subprocess support",
+      "local scan/result files"
+    ],
+    "limits": [
+      "A 110-second scan flag clear does not establish that all work stopped. No durable attempt/retry/cancellation state."
+    ],
+    "strategy_coupling": "Replace scanner payload with arbitrary typed task handlers; use real cancellation, persisted attempts and leases."
+  },
+  {
+    "id": "Author.paper_account",
+    "label": "Paper account connection, arm and halt",
+    "implemented_behavior": "Paper-only adapter verifies account state/equity, detects blocked accounts, persists session equity and applies a three-percent daily account guard. Save/arm/status endpoints honor the hard halt.",
+    "current_status": "implemented but ALPACA_HALTED=true; unavailable now",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "lines": [
+          139,
+          173
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L139-L173"
+      },
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "lines": [
+          364,
+          379
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L364-L379"
+      },
+      {
+        "path": "src/lib/desk-api.ts",
+        "lines": [
+          465,
+          542
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-api.ts#L465-L542"
+      }
+    ],
+    "configuration_dependencies": [
+      "paper account credentials",
+      "broker access",
+      "explicit capability enablement",
+      "server arm state"
+    ],
+    "limits": [
+      "Current UI cannot reconnect or arm. New-day day guard automatically arms; model operator disable separately from day-loss parking in a new desk."
+    ],
+    "strategy_coupling": "Remove signal ticket eligibility; preserve paper routing, account truth and explicit risk/arm state."
+  },
+  {
+    "id": "Author.order_submit",
+    "label": "Order submission, retries and bracket intent",
+    "implemented_behavior": "Submits market or extended-hours limit paper buys with GTC bracket exits and symbol/bar client order IDs. Retries timeout/network/rate-limit/server failures three times.",
+    "current_status": "implemented but broker hard-halted",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "lines": [
+          80,
+          99
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L80-L99"
+      },
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "lines": [
+          175,
+          202
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L175-L202"
+      }
+    ],
+    "configuration_dependencies": [
+      "enabled paper adapter",
+      "broker credentials",
+      "validated order intent"
+    ],
+    "limits": [
+      "Successful submit is recorded as sent, not confirmed filled. No complete accepted/partial/filled/rejected/cancelled order state machine or execution stream."
+    ],
+    "strategy_coupling": "Replace bar-driven client IDs with intent IDs and strategy-free order proposal inputs; preserve retry/idempotency adapter."
+  },
+  {
+    "id": "Author.order_cancel_partial",
+    "label": "Cancel, flatten and partial close",
+    "implemented_behavior": "Lists nested open orders, cancels a symbol orders, closes a full position or requests a quantity-limited partial close. Wire records partial-close sent/failed receipts.",
+    "current_status": "implemented but broker hard-halted",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "lines": [
+          249,
+          310
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L249-L310"
+      },
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "lines": [
+          313,
+          319
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L313-L319"
+      },
+      {
+        "path": "src/lib/workdesk/paper-wire.ts",
+        "lines": [
+          750,
+          769
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-wire.ts#L750-L769"
+      }
+    ],
+    "configuration_dependencies": [
+      "enabled paper adapter",
+      "known broker position quantity",
+      "operator/task close intent"
+    ],
+    "limits": [
+      "Cancel responses are not fully reconciled before close. An accepted close request is not proof of execution; dedicated operator partial-close UI is absent."
+    ],
+    "strategy_coupling": "Remove overhead/impulse exit triggers; retain explicit cancel/close/trim intents and reconciliation."
+  },
+  {
+    "id": "Author.protection_repair",
+    "label": "Protective-order coverage repair",
+    "implemented_behavior": "Reads broker positions/open orders and quantity coverage; for known positions with a local fill or roster plan, replaces missing/undercovered protection with OCO exits. Fractional quantities use a day stop; whole shares use GTC OCO.",
+    "current_status": "implemented but broker hard-halted",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/paper-wire.ts",
+        "lines": [
+          314,
+          350
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-wire.ts#L314-L350"
+      },
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "lines": [
+          322,
+          361
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L322-L361"
+      }
+    ],
+    "configuration_dependencies": [
+      "broker position/order truth",
+      "known entry and protection levels",
+      "enabled paper adapter"
+    ],
+    "limits": [
+      "Unknown unplanned broker positions are not generically adopted/protected. Checks infer stop/target coverage from order fields and strategy-linked local entries. Fractional positions have day-only stop handling."
+    ],
+    "strategy_coupling": "Remove paperStop/swingStop/paperTarget/swingTarget inference; require operator-approved stop/target intent and broker-execution cost basis."
+  },
+  {
+    "id": "Author.risk_decision",
+    "label": "Deterministic paper risk decisions",
+    "implemented_behavior": "Pure policy helpers calculate quantities and apply open-position, daily-entry, same-story, session-time and same-day re-entry limits, returning hold/buy/sell reasons. Attempts persist as held/failed/sent receipts.",
+    "current_status": "implemented but paper execution halted",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/paper-rules.ts",
+        "lines": [
+          9,
+          30
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-rules.ts#L9-L30"
+      },
+      {
+        "path": "src/lib/workdesk/paper-rules.ts",
+        "lines": [
+          50,
+          71
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-rules.ts#L50-L71"
+      },
+      {
+        "path": "src/lib/workdesk/paper-rules.ts",
+        "lines": [
+          334,
+          415
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-rules.ts#L334-L415"
+      }
+    ],
+    "configuration_dependencies": [
+      "account equity",
+      "known exposure",
+      "versioned configurable limits"
+    ],
+    "limits": [
+      "Current policy branches contain source-specific exceptions; Gold handling can treat unknown positions as zero. No portfolio-wide exposure transaction or reservation model."
+    ],
+    "strategy_coupling": "Remove green/Gold/Echo/book eligibility, calibration and technical entry gates; retain generic risk limits with fail-closed unknown state."
+  },
+  {
+    "id": "Author.broker_reconcile",
+    "label": "Broker positions and execution reconciliation",
+    "implemented_behavior": "Sync refuses to mark the book flat after a failed position read; known positions receive quote marks and exits prefer recent broker sell fills. Adapter retrieves up to 100 recent fill activities.",
+    "current_status": "implemented but broker reads halted",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/paper-wire.ts",
+        "lines": [
+          242,
+          260
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-wire.ts#L242-L260"
+      },
+      {
+        "path": "src/lib/workdesk/observe.ts",
+        "lines": [
+          200,
+          215
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/observe.ts#L200-L215"
+      },
+      {
+        "path": "src/lib/workdesk/alpaca.ts",
+        "lines": [
+          214,
+          246
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/alpaca.ts#L214-L246"
+      }
+    ],
+    "configuration_dependencies": [
+      "enabled broker adapter",
+      "execution history",
+      "market quotes",
+      "local journal"
+    ],
+    "limits": [
+      "Latest same-symbol sell is not matched to the current entry/order. Missing exit fill can fall back to quote/lastClose. Full cash/fees/dividends/equity and lot accounting is absent."
+    ],
+    "strategy_coupling": "Remove strategy outcome classification; separate confirmed realized fills from inferred marks and maintain quantity-aware lots."
+  },
+  {
+    "id": "Author.partial_fill_review",
+    "label": "Partial-fill reconstruction and trade review",
+    "implemented_behavior": "Groups actual broker fill partials within 25-second same-symbol/side bursts and computes quantity-weighted prices, borrowing nearby local order context; pairs same-day buys/sells for review.",
+    "current_status": "implemented research/review function; current broker intake halted",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/paper-review.ts",
+        "lines": [
+          80,
+          149
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-review.ts#L80-L149"
+      },
+      {
+        "path": "src/lib/workdesk/paper-review.ts",
+        "lines": [
+          165,
+          186
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/paper-review.ts#L165-L186"
+      }
+    ],
+    "configuration_dependencies": [
+      "historical actual fills",
+      "local order-context receipts"
+    ],
+    "limits": [
+      "Burst grouping does not require matching order ID; pairing is same-day by symbol and whole ticket, not partial-quantity lot matching. Overnight accounting is incomplete."
+    ],
+    "strategy_coupling": "Remove signal-specific default stops, targets and success verdicts; use execution IDs and quantity matching for operational reconciliation."
+  },
+  {
+    "id": "Author.journal",
+    "label": "Decision and observation journal",
+    "implemented_behavior": "Typed ledger records entity/action/reason/time, observations, order attempts, timing tape and lifecycle receipts; ID merges and daily/monthly shelves retain history. APIs expose journal projections.",
+    "current_status": "implemented with historical checked-in data",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "lines": [
+          23,
+          76
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L23-L76"
+      },
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "lines": [
+          400,
+          473
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L400-L473"
+      },
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "lines": [
+          719,
+          747
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L719-L747"
+      },
+      {
+        "path": "src/lib/desk-api.ts",
+        "lines": [
+          342,
+          358
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-api.ts#L342-L358"
+      }
+    ],
+    "configuration_dependencies": [
+      "persistent disk",
+      "stable event IDs",
+      "optional archive replication"
+    ],
+    "limits": [
+      "Bounded mutable JSON snapshots and sequential file writes are not an append-only transactional ledger. No task/attempt/actor/artifact lineage fields."
+    ],
+    "strategy_coupling": "Remove scanner/strategy scoring semantics; retain operational event types and add immutable task/order execution lineage."
+  },
+  {
+    "id": "Author.restore_replication",
+    "label": "Snapshot restore and two-repository replication",
+    "implemented_behavior": "Loads and merges local, bundle, primary and backup snapshots; explicit daily vault publishes day/month/current shelves to both repositories. Primary and backup current trees and reviewed modules are identical.",
+    "current_status": "implemented best-effort; checked-in ledger last saved September 2",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "lines": [
+          332,
+          343
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L332-L343"
+      },
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "lines": [
+          475,
+          502
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L475-L502"
+      },
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "lines": [
+          621,
+          701
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L621-L701"
+      }
+    ],
+    "configuration_dependencies": [
+      "persistent local state",
+      "configured GitHub replica access",
+      "explicit vault jobs"
+    ],
+    "limits": [
+      "Ordinary saveLedger is local/bundle only. Replication success means either copy succeeded; conflict retry does not merge intervening remote records. No guaranteed both-copy freshness."
+    ],
+    "strategy_coupling": "Preserve replication and restore provenance; remove source-specific ledger assumptions and report per-replica results."
+  },
+  {
+    "id": "Author.notifications_delivery",
+    "label": "Notification and publication delivery",
+    "implemented_behavior": "Telegram adapter returns sent/held/failed status. Typefully adapter creates drafts/schedules with designated-writer gating, duplicate ticker/day checks and required media; external scheduled/published queue is delivery truth.",
+    "current_status": "Telegram halted; automatic Typefully disabled; manual delivery code retained",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/telegram.ts",
+        "lines": [
+          1,
+          28
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/telegram.ts#L1-L28"
+      },
+      {
+        "path": "src/lib/workdesk/typefully.ts",
+        "lines": [
+          238,
+          277
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/typefully.ts#L238-L277"
+      },
+      {
+        "path": "src/lib/workdesk/typefully.ts",
+        "lines": [
+          537,
+          551
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/typefully.ts#L537-L551"
+      }
+    ],
+    "configuration_dependencies": [
+      "explicitly enabled channel",
+      "channel credentials/destination",
+      "approved message/artifact",
+      "one delivery owner"
+    ],
+    "limits": [
+      "No guaranteed delivery or transactional outbox. Clock assert can succeed while cards remain owed. UI Mark sent changes local status without external confirmation."
+    ],
+    "strategy_coupling": "Remove ticker-card editorial doctrine, scanner names and signal notifications; retain configurable operational alerts, approved research delivery and external acknowledgements."
+  },
+  {
+    "id": "Author.operator_controls",
+    "label": "Operator console and manual controls",
+    "implemented_behavior": "UI offers watch/held management, observation marking, paper arm/status, research runs, draft editing/copy/send and review views; server endpoints provide roster and ledger projections.",
+    "current_status": "implemented; paper controls refuse while halted",
+    "evidence": [
+      {
+        "path": "src/lib/desk-store.ts",
+        "lines": [
+          131,
+          139
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-store.ts#L131-L139"
+      },
+      {
+        "path": "src/lib/desk-api.ts",
+        "lines": [
+          507,
+          542
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/desk-api.ts#L507-L542"
+      },
+      {
+        "path": "src/components/desk/PublishDesk.tsx",
+        "lines": [
+          73,
+          82
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/PublishDesk.tsx#L73-L82"
+      },
+      {
+        "path": "src/components/desk/PublishDesk.tsx",
+        "lines": [
+          244,
+          254
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/PublishDesk.tsx#L244-L254"
+      }
+    ],
+    "configuration_dependencies": [
+      "running web/server",
+      "browser state",
+      "authoritative runtime/broker state"
+    ],
+    "limits": [
+      "Browser autopilot toggle does not stop backend workers. General task approve/pause/cancel and per-agent control APIs are absent. Membership tiers/prices are local CRUD/static copy."
+    ],
+    "strategy_coupling": "Remove strategy charts/scanners/sales tiers; expose task, broker, journal and tool controls with server acknowledgements."
+  },
+  {
+    "id": "Author.health_metrics",
+    "label": "Heartbeats, health receipts and operator metrics",
+    "implemented_behavior": "Workers stamp heartbeats; desk-ops logs dated health slots/grades and review completion; OperatorStrip polls clock/render/card/queue summaries every twenty seconds.",
+    "current_status": "implemented; displayed health is partly inferred/static",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/desk-ops.ts",
+        "lines": [
+          6,
+          68
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/desk-ops.ts#L6-L68"
+      },
+      {
+        "path": "src/components/desk/OperatorStrip.tsx",
+        "lines": [
+          16,
+          50
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/components/desk/OperatorStrip.tsx#L16-L50"
+      },
+      {
+        "path": "src/lib/workdesk/desk-pulse.ts",
+        "lines": [
+          21,
+          72
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/desk-pulse.ts#L21-L72"
+      }
+    ],
+    "configuration_dependencies": [
+      "heartbeat/status files",
+      "working API",
+      "actual process/progress probes"
+    ],
+    "limits": [
+      "renderer=true is literal; clock on means same-day lastScanAt and disabled runCycle also stamps it. Workflow success proves completion only, not live process health, fills or delivery."
+    ],
+    "strategy_coupling": "Remove strategy-specific health grades; show independent process heartbeat, last useful work, feed freshness, broker reconciliation and task delivery states."
+  },
+  {
+    "id": "Author.research_tools",
+    "label": "Deterministic research compilation and artifacts",
+    "implemented_behavior": "Analyst runner compiles observations, daily reviews and X quality into persisted report/feedback JSON. Daily review/clock review functions store dated artifacts and decision receipts.",
+    "current_status": "implemented tooling; not an autonomous research agent",
+    "evidence": [
+      {
+        "path": "src/lib/workdesk/analyst-run.ts",
+        "lines": [
+          9,
+          26
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/analyst-run.ts#L9-L26"
+      },
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "lines": [
+          846,
+          869
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L846-L869"
+      },
+      {
+        "path": "src/lib/workdesk/vault.ts",
+        "lines": [
+          913,
+          931
+        ],
+        "url": "https://github.com/dwj9ddyvf6-hub/Author-desk/blob/652db7afcc4312b6bd44d41547ca0f73981fe3ff/src/lib/workdesk/vault.ts#L913-L931"
+      }
+    ],
+    "configuration_dependencies": [
+      "historical journal/review inputs",
+      "persistent artifact store",
+      "tool execution scheduler"
+    ],
+    "limits": [
+      "No generic research-task queue, agent reasoning loop, experiment execution sandbox or artifact approval lifecycle. Existing analytics are specialized to scanner/trade outcome data."
+    ],
+    "strategy_coupling": "Remove signal-specific inferred weights, walk-forward filters and scanner rankings; retain tool-run inputs/outputs, data summaries, lineage and operational review artifacts."
+  }
+]

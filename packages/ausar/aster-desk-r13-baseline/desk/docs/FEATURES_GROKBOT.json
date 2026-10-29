@@ -1,0 +1,1426 @@
+{
+  "reference_name": "GrokBot",
+  "status": "source-backed operational feature inventory for corrected reference set",
+  "scope": "GrokBot only; strategies and security excluded",
+  "review_date": "2026-10-08",
+  "identity": {
+    "team": "Head of Trading",
+    "roles": [
+      "Edge Hunter",
+      "Risk Manager",
+      "Journal & Coach"
+    ],
+    "operational_signoff": "Chief of Staff",
+    "runtime_path": "Author-research/shadow/paper_desk/desk.py",
+    "repository": "quant-research-backup",
+    "branch": "main",
+    "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+    "desk_version": "paper-desk 1.7.6.1",
+    "playbook_version": "1.4.4-r1"
+  },
+  "features": [
+    {
+      "id": "G01",
+      "feature": "GrokBot identity and accountable team roles",
+      "source_behavior": "Midna records identify User's Grok-session Head of Trading team: Edge Hunter, Risk Manager, Journal & Coach. Inbox operational notes are signed Chief of Staff, with Desk Ops and Research Lab workers reported on October 5.",
+      "new_desk_requirement": "Represent named agent roles, authority, tasks, outputs and operator ownership. If these are implemented as actual model agents, execute durable tasks through configured model providers and record their tool calls and evidence.",
+      "sources": [
+        {
+          "repo": "Midna",
+          "commit": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__relationships__sirun_fb0673c0c7344259b05e2bae963bb3b4__people/grokbot.md",
+          "line": 11,
+          "end_line": 17,
+          "evidence_class": "archived relationship narrative",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__relationships__sirun_fb0673c0c7344259b05e2bae963bb3b4__people/grokbot.md#L11-L17"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line": 37,
+          "end_line": 39,
+          "evidence_class": "contemporaneous self-report",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L37-L39"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Model provider and model selection are new-desk configuration; no Grok API credential was sought or copied."
+      ],
+      "limits_and_status": [
+        "Role titles document external AI sessions. No resident general-purpose reasoning worker, model invocation, tool registry or task queue was located in the reviewed paper runtime."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G02",
+      "feature": "Separate main and experimental paper accounts",
+      "source_behavior": "Publisher is built for a $100,000 main Alpaca paper book starting October 1, 2026. A second paper_sleeve account has independent state/ledger and an allow-listed summary; it is never mixed into main account, equity, headline or statistics.",
+      "new_desk_requirement": "Namespace broker accounts, cash, positions, intents, risk budgets, journals and metrics by desk/book; preserve separate ownership and provenance.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/README.md",
+          "line": 3,
+          "end_line": 14,
+          "evidence_class": "documented runtime architecture",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/README.md#L3-L14"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 702,
+          "end_line": 724,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L702-L724"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Separate paper broker account configuration and private credential references."
+      ],
+      "limits_and_status": [
+        "The starting $100k is the historical reference book, not permission to fund a new account. Second-desk code or an enabled lane is not proof of activation. October6 journal says second desk was not live for trading yet."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G03",
+      "feature": "Paper broker adapter and broker truth",
+      "source_behavior": "Python runtime calls paper-api.alpaca.markets for account/positions/orders and data.alpaca.markets for market prices. Publisher uses broker account, positions and portfolio history for current account figures.",
+      "new_desk_requirement": "Expose a paper broker integration with connection status, account identity, source timestamp and last successful read; distinguish local simulation from external paper brokerage.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 18,
+          "end_line": 23,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L18-L23"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 181,
+          "end_line": 208,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L181-L208"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "ALPACA_API_KEY_ID and ALPACA_API_SECRET_KEY are read privately from environment; values are not in this report.",
+        "Python, pandas, numpy and tracker calendar module."
+      ],
+      "limits_and_status": [
+        "No authenticated broker call was made; current account balance/connectivity are not independently verified."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G04",
+      "feature": "Hash-chained append-only event ledger",
+      "source_behavior": "append assigns contiguous seq, prev_hash and SHA256 hash; writes JSONL then flushes/fsyncs. verify recomputes chain and checks frozen config hashes.",
+      "new_desk_requirement": "Persist append-only execution and decision events with immutable IDs and integrity verification; let projections be rebuilt from these events.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 157,
+          "end_line": 179,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L157-L179"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Durable filesystem, serialized writer and canonical hash format."
+      ],
+      "limits_and_status": [
+        "Integrity hashes are a provenance mechanism, not an independently signed broker record."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G05",
+      "feature": "Atomic state and pre-submit intent durability",
+      "source_behavior": "State snapshots and order-intent JSON use temporary files, fsync, replace and directory fsync. Intents are distinct from completed broker orders.",
+      "new_desk_requirement": "Persist intended submission before contacting the broker, then persist receipt and settle the intent only after durable state/event commit; recover after worker death.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 180,
+          "end_line": 198,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L180-L198"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1271,
+          "end_line": 1276,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1271-L1276"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Durable storage for state and intents; broker client-order-ID lookups."
+      ],
+      "limits_and_status": [],
+      "strategy_specific": false
+    },
+    {
+      "id": "G06",
+      "feature": "Versioned frozen operational configuration",
+      "source_behavior": "Runtime refuses missing/unfrozen or hash-mismatched playbooks. Records and positions carry the playbook version/hash; immutable history copies preserve earlier settings.",
+      "new_desk_requirement": "Version broker, risk, workflow and account settings separately from strategy modules; keep an auditable change record and previous configuration.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 200,
+          "end_line": 210,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L200-L210"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/README.md",
+          "line": 3,
+          "end_line": 5,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/README.md#L3-L5"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Configuration schema and ledger-backed settings history."
+      ],
+      "limits_and_status": [
+        "Existing strategy playbooks, ranking formulas, signal units, exits and thresholds are excluded from new-desk defaults."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G07",
+      "feature": "Explicit pass lifecycle and receipt",
+      "source_behavior": "A pass logs run_start, reconciles first, services queued orders, manages exits, evaluates candidates, re-reads positions, manages exits again and commits run_end/state. Partial pass errors can preserve effects.",
+      "new_desk_requirement": "Make reconciliation, servicing existing orders, risk checks, permitted intents and receipt persistence explicit workflow stages with attempts and resumable outcomes.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1245,
+          "end_line": 1276,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1245-L1276"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Scheduler and broker adapter."
+      ],
+      "limits_and_status": [
+        "Existing candidate generation is strategy-specific and excluded. Strategy-free starts with empty strategies and operator/authorized task intents only."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G08",
+      "feature": "Session calendar and broker clock verification",
+      "source_behavior": "Runtime compares broker trading-day/close calendar to tracker calendar and logs disagreements before halting that pass. The current version includes broker-clock checks for time-sensitive submissions.",
+      "new_desk_requirement": "Use an authoritative session clock with holidays, DST and early closes; validate the submission window at the actual send time.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1364,
+          "end_line": 1378,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1364-L1378"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 24,
+          "end_line": 24,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L24-L24"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Alpaca calendar/clock endpoints and market-calendar implementation."
+      ],
+      "limits_and_status": [
+        "Calendar request exceptions currently print a warning and continue; a confirmed calendar mismatch halts. Do not overstate this as every clock/data error halting."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G09",
+      "feature": "Internal trade accounting and status report",
+      "source_behavior": "Generated report separates queued, pending, failed, open, closed and mismatched positions; shows entry/exit quantities, average prices, realized/unrealized dollars and lock reasons.",
+      "new_desk_requirement": "Provide broker-reconciled internal position/order views with explicit lifecycle states and quantity/price provenance.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1278,
+          "end_line": 1313,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1278-L1313"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/report.md",
+          "line": 3,
+          "end_line": 5,
+          "evidence_class": "stored generated snapshot",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/report.md#L3-L5"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Broker fills/marks, local ledger and state."
+      ],
+      "limits_and_status": [
+        "Stored October6 snapshot reports 18 open positions, $2,587.80 unrealized and 0 closed trades, not current balances. report() uses entry-price fallback if broker marks fail; public metrics need explicit stale/unavailable semantics."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G10",
+      "feature": "Execution quality and slippage report",
+      "source_behavior": "Internal report compares actual fills to known research reference prices, preserving sample size, mean/median slippage and assumed transaction cost per side.",
+      "new_desk_requirement": "Record intended reference price, actual fill, mark source and timing; expose execution slippage without representing estimated fills as broker fills.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1314,
+          "end_line": 1325,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1314-L1325"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Reference-price provenance and broker execution events."
+      ],
+      "limits_and_status": [
+        "The reference study price and cost schedule are historical strategy assets; port the measurement interface without importing their assumptions."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G11",
+      "feature": "Idempotent daily account snapshots",
+      "source_behavior": "Close writes one P&L row per NYSE trading date; a rerun replaces that date instead of double-counting, and a holiday writes none.",
+      "new_desk_requirement": "Store unique book/date account snapshots, preserving revised source timestamp and preventing duplicate daily P&L.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1334,
+          "end_line": 1343,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1334-L1343"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1382,
+          "end_line": 1390,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1382-L1390"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Market calendar, local state and broker equity."
+      ],
+      "limits_and_status": [],
+      "strategy_specific": false
+    },
+    {
+      "id": "G12",
+      "feature": "Broker-backed readonly public terminal",
+      "source_behavior": "Publisher builds a static JSON projection; browser polls every 60 seconds. The publisher never submits orders. It has a separate single-instance 5 minute loop and publishes only changed payloads.",
+      "new_desk_requirement": "Keep public/readonly views distinct from operator commands; show provenance and refresh health while orders remain server-side.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/README.md",
+          "line": 3,
+          "end_line": 24,
+          "evidence_class": "documented architecture",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/README.md#L3-L24"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish_loop.sh",
+          "line": 1,
+          "end_line": 28,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish_loop.sh#L1-L28"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Publisher process, hosting or local HTTP server, broker read connection."
+      ],
+      "limits_and_status": [
+        "Source documents a public GitHub Pages URL; live hosting was not independently visited during this read-only source review."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G13",
+      "feature": "Honest session and freshness labels",
+      "source_behavior": "Outside regular market hours the headline uses last-close wording; official close history is used when available. A stale public update turns the header amber.",
+      "new_desk_requirement": "Expose observation time, feed age, session state, latest-mark versus official-close basis and unavailable values.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 89,
+          "end_line": 146,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L89-L146"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/README.md",
+          "line": 28,
+          "end_line": 35,
+          "evidence_class": "documented UI behavior",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/README.md#L28-L35"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Broker calendar and portfolio history."
+      ],
+      "limits_and_status": [
+        "Publisher has Mon\u2013Fri09:30\u201316:00 fallback when calendar unavailable; fallback cannot know holidays."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G14",
+      "feature": "Realized results and closed-only win rate",
+      "source_behavior": "Public closed-trade log uses trade_closed ledger events, requires state agreeclosed, and calculates quantity-weighted exit. Track record keeps realized/partial-exit P&L separate from unrealized and includes sample counts.",
+      "new_desk_requirement": "Compute wins/returns from actual completed trades; label open marks, partial exits and sample sizes separately.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 490,
+          "end_line": 530,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L490-L530"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Broker fills plus closed-trade ledger/state."
+      ],
+      "limits_and_status": [],
+      "strategy_specific": false
+    },
+    {
+      "id": "G15",
+      "feature": "Drawdown and benchmark comparisons",
+      "source_behavior": "Public account curve uses Alpaca portfolio history and synchronized SPY bars. Maximum drawdown uses chronological broker equity marks plus latest mark and exposes basis.",
+      "new_desk_requirement": "Provide book equity history, realized/unrealized attribution, drawdown and benchmark comparison with aligned timestamps and common start basis.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 196,
+          "end_line": 223,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L196-L223"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 510,
+          "end_line": 530,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L510-L530"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Broker portfolio history and benchmark bars."
+      ],
+      "limits_and_status": [
+        "Display metrics are not the automatic exposure/drawdown breaker: inbox explicitly says no automatic breaker on GrokBot main desk."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G16",
+      "feature": "Filled-holdings exposure and beta provenance",
+      "source_behavior": "Holdings heatmap draws broker-filled long positions only; long-beta panel market-value weights observed OLS beta to IWM, exposes data coverage and records forward daily points without backfilling nonexistent lane history.",
+      "new_desk_requirement": "Offer exposure by book/symbol/sector and optional benchmark beta with coverage and method; isolate queued reservations from filled market value.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 532,
+          "end_line": 553,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L532-L553"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 608,
+          "end_line": 620,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L608-L620"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 648,
+          "end_line": 700,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L648-L700"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Historical return bars and correct asset/book classification."
+      ],
+      "limits_and_status": [
+        "Existing lane grouping, IWM reference and63/30session parameters are source-specific; new desk configuration should not import them automatically. Heatmap source filters out shorts."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G17",
+      "feature": "Separately labelled research expectations",
+      "source_behavior": "Source scorecards carry research statistics and separately compute live paper statistics, closed counts and small-sample notes; missing reference numbers remain missing.",
+      "new_desk_requirement": "Keep research artifacts/results distinct from paper executions and include provenance; a research task output does not become an order.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 555,
+          "end_line": 595,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L555-L595"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 403,
+          "end_line": 408,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L403-L408"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Artifact store with study IDs and data/version provenance."
+      ],
+      "limits_and_status": [
+        "No research strategy, alpha claim or default funded sleeve is copied into the new desk."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G18",
+      "feature": "Visible worker, gate and missed-slot health",
+      "source_behavior": "Terminal derives last completed run, matching scheduler phaseexit, ledger-check status, passes_today, lock count and latest gate/slot audit. Missing MOC window alerts are recorded once per date.",
+      "new_desk_requirement": "Expose heartbeat separately from last useful work; show incomplete passes, missed/failed slots, reconciling locks and data age as actionable operator state.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 311,
+          "end_line": 332,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L311-L332"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/terminal/publish.py",
+          "line": 1547,
+          "end_line": 1570,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/terminal/publish.py#L1547-L1570"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/moc_window_check.py",
+          "line": 2,
+          "end_line": 44,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/moc_window_check.py#L2-L44"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Persisted scheduler receipts, broker/reconcile status and event log."
+      ],
+      "limits_and_status": [
+        "Existing alert sink is log/stdout/terminal; no generic Telegram/email notification transport located in these alert sources."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G19",
+      "feature": "Operational gate and critical-input diagnostics",
+      "source_behavior": "Gate checks scheduler presence, desk gate, critical file health, missed slots, STOP/FREEZE and heartbeat next slot, emits JSONL and explicit failure reasons.",
+      "new_desk_requirement": "Define readiness checks and dependency-specific health reasons, with explicit recovery actions and separate entry pause versus existing-order servicing.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/live_trading_gate_check.sh",
+          "line": 14,
+          "end_line": 46,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/live_trading_gate_check.sh#L14-L46"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Critical-input allowlist, scheduler manifest, account readiness and source-data freshness."
+      ],
+      "limits_and_status": [
+        "Although the gate wrapper is described readonly, called helpers may enforce recovery/FREEZE state. Do not assume running it has no local effects. No helper was executed in this review."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G20",
+      "feature": "Research/operations isolation and durable context journals",
+      "source_behavior": "Inbox reports separate Desk Ops and Research Lab workers. Daily journals explicitly declare context for evening learning, not trade overrides; dated daily/week/month/memory files preserve incident and rationale history.",
+      "new_desk_requirement": "Provide scheduled premarket context, post-session review, durable decisions/lessons and task artifacts with source links, without allowing free-form narrative to change order/risk settings.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line": 37,
+          "end_line": 39,
+          "evidence_class": "contemporaneous self-report",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L37-L39"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/journal/daily/2026-10-06.md",
+          "line": 1,
+          "end_line": 6,
+          "evidence_class": "stored journal",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/journal/daily/2026-10-06.md#L1-L6"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/journal/memory.md",
+          "line": 98,
+          "end_line": 112,
+          "evidence_class": "stored journal",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/journal/memory.md#L98-L112"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Research tools/data sources, journal task worker and persistent artifact store."
+      ],
+      "limits_and_status": [
+        "No generic automatic model-agent journal writer was located. Exact journals are evidence of completed external-agent/operator work, not proof of native worker implementation."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G21",
+      "feature": "Queryable ledger, decisions, fills and journal evidence",
+      "source_behavior": "DuckDB refresh projects append ledger tables incrementally and rebuilds changed state/journal/report sources; SQL views expose orders, updates, fills, decisions, closed trades and runs. Journal is section-indexed for search.",
+      "new_desk_requirement": "Offer read-only searchable task/decision/execution history and rebuildable analytics projections without blocking time-critical runtime.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/db/refresh.py",
+          "line": 1,
+          "end_line": 10,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/db/refresh.py#L1-L10"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/db/refresh.py",
+          "line": 226,
+          "end_line": 237,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/db/refresh.py#L226-L237"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/db/refresh.py",
+          "line": 332,
+          "end_line": 336,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/db/refresh.py#L332-L336"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/db/refresh.py",
+          "line": 515,
+          "end_line": 542,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/db/refresh.py#L515-L542"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/db/QUERIES.md",
+          "line": 103,
+          "end_line": 138,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/db/QUERIES.md#L103-L138"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "DuckDB/pyarrow for reference implementation; new implementation can use its existing database."
+      ],
+      "limits_and_status": [
+        "Projection is not a separate authoritative ledger. Publisher avoids opening research DuckDB to prevent locking the scheduled writer."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G22",
+      "feature": "Three-peer append-only shared inbox",
+      "source_behavior": "INBOX is a shared Markdown dead-drop for GrokBot, Cursor and Midna. Entries append at bottom withETdate/time/author/topic, evidence/confidence and urgency; participants lack each other's chat histories. Midna hourly sweep/relay is documented.",
+      "new_desk_requirement": "Implement persistent messages with author/desk, timestamp, topic, body, evidence, urgency and delivery/read cursor. Expose incoming/outgoing threads and safe idempotent append; keep independent desks/accounts.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line": 1,
+          "end_line": 14,
+          "evidence_class": "channel protocol",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L1-L14"
+        },
+        {
+          "repo": "Midna",
+          "commit": "1e03a16743d8e725fa123a95e8273d71e6fc6038",
+          "path": "workspace__self_improvement__staging__relationships__sirun_fb0673c0c7344259b05e2bae963bb3b4__people/grokbot.md",
+          "line": 13,
+          "end_line": 17,
+          "evidence_class": "relationship narrative",
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/1e03a16743d8e725fa123a95e8273d71e6fc6038/workspace__self_improvement__staging__relationships__sirun_fb0673c0c7344259b05e2bae963bb3b4__people/grokbot.md#L13-L17"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "For an external shared-inbox integration, repository/reference/path and write-capable connector configured explicitly; local inbox can work without remote credentials."
+      ],
+      "limits_and_status": [
+        "Archived hourly sweep is documented external automation, not a source-verifiable standing inbox API. This review sent no message and made no remote writes."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G23",
+      "feature": "Inbox preservation and backup-safe synchronization",
+      "source_behavior": "Backup installs pre-push guard and refreshes index with read-tree HEAD after admin-ref updates. Hook rejects ref/file deletions and protected-inbox changes by bulkbackup. Deliberate inbox appends use a scoped protected-path opt-in.",
+      "new_desk_requirement": "Protect the inbox/event/journal stores from bulk backup reconciliation; make remote collaboration appends additive and retain cursor/message IDs through restart.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "backup/sync.sh",
+          "line": 22,
+          "end_line": 36,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/backup/sync.sh#L22-L36"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "backup/hooks/pre-push",
+          "line": 2,
+          "end_line": 24,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/backup/hooks/pre-push#L2-L24"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line": 318,
+          "end_line": 326,
+          "evidence_class": "reported box verification",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L318-L326"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Backup and connector ownership distinct from collaboration messages."
+      ],
+      "limits_and_status": [
+        "No backup command or hook was run. October6 report says deployedbox copies matched, but deployed copies are not accessible here."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G24",
+      "feature": "Failure recovery must verify effects before retry",
+      "source_behavior": "Inbox records broker accepts before state-save as a crash gap and describes verify-before-retry plus deterministic intents. Current source persists intents and settles after durable state.",
+      "new_desk_requirement": "On retries query prior intent/client-ID and broker state; never replay an external side effect merely because a worker lacks success receipt. Keep journaled attempts and reconcile after restarts.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line": 238,
+          "end_line": 258,
+          "evidence_class": "contemporaneous implementation discussion",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L238-L258"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 191,
+          "end_line": 198,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L191-L198"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1274,
+          "end_line": 1276,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1274-L1276"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Broker idempotency identity, task attempts and durable receipt store."
+      ],
+      "limits_and_status": [
+        "October5/October6 narrative promises are dated; current pinned source supersedes them where implementation is present."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G25",
+      "feature": "Validated external paper account readiness",
+      "source_behavior": "Paper adapter rejects non-paper URL configuration, missing credentials, inactive/non-PA or trading-blocked account before execution.",
+      "new_desk_requirement": "Require explicit paper mode and verified account readiness; connection status must come from actual account reads.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 438,
+          "end_line": 448,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L438-L448"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Private broker credentials and account connection setup."
+      ],
+      "limits_and_status": [],
+      "strategy_specific": false
+    },
+    {
+      "id": "G26",
+      "feature": "Idempotent submission and ambiguous receipt recovery",
+      "source_behavior": "Deterministic client-order IDs identify attempts; pre-submit intent is persisted, failed/ambiguous submit looks up the same client ID, then records the broker receipt and any immediate fill.",
+      "new_desk_requirement": "Persist intent before submission; reuse idempotency identity on uncertain outcomes and recover exact broker receipts before retrying.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 652,
+          "end_line": 678,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L652-L678"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Broker client-ID lookup and submission adapter, durable intent store."
+      ],
+      "limits_and_status": [],
+      "strategy_specific": false
+    },
+    {
+      "id": "G27",
+      "feature": "Cumulative partial-fill import and confirmed cancellation",
+      "source_behavior": "refresh imports cumulative filled quantity and average price; apply_fill books only additional quantity; cancellation polls actual broker status and does not assume a request is a completed cancel.",
+      "new_desk_requirement": "Track cumulative filled quantity AND notional/fees; book deltas exactly once, and preserve pending-cancel state until confirmed.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 680,
+          "end_line": 717,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L680-L717"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Broker order polling or stream, monotonic execution receipt IDs."
+      ],
+      "limits_and_status": [
+        "Source sell accounting uses each new quantity at the current cumulative average, which can misstate proceeds when fill prices differ. New implementation must delta cumulative notional, not copy this accounting shortcut."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G28",
+      "feature": "Broker reconciliation with explicit symbol locks",
+      "source_behavior": "Every pass refreshes unfinished orders, broker positions and open orders. Unknown orders/positions, local phantoms and quantity mismatches become reasoned symbol locks.",
+      "new_desk_requirement": "Reconcile broker versus local state before new intents, report mismatches, block conflicting symbol activity and provide safe resolution/adoption controls.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 719,
+          "end_line": 748,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L719-L748"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Account positions/open-orders reads and local ownership map."
+      ],
+      "limits_and_status": [
+        "This symbol-local control is distinct from automatic global gross-exposure/drawdown breakers; main inbox reports no such automatic breaker."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G29",
+      "feature": "Crash-safe adoption preserving existing broker facts",
+      "source_behavior": "Current runtime recovers durable intents and matching orphan entry/exit orders. A known queued/pending position can adopt an accepted broker entry without resubmitting; missing source plan leaves symbol locked.",
+      "new_desk_requirement": "Adopt only identifiable owned broker records, preserving IDs, fill quantities, cost, protection and ownership; unknown legacy positions require explicit metadata rather than invented strategy/ATR.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 753,
+          "end_line": 790,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L753-L790"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 817,
+          "end_line": 846,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L817-L846"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1118,
+          "end_line": 1138,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1118-L1138"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Stable ownership/client-ID mapping, intent and order history."
+      ],
+      "limits_and_status": [
+        "Existing generic orphan reconstruction depends on strategy fire and frozen plan. Strategy-free adoption must retain unknown metadata and cannot recreate those plans."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G30",
+      "feature": "Protection quantity and cancel-replace lifecycle",
+      "source_behavior": "Manage-exits maintains GTC stop/limit orders, tracks partial targets, resizes coverage when entries keep filling and waits for cancel confirmation before replacing.",
+      "new_desk_requirement": "When a protection policy is explicitly supplied, track covered versus uncovered broker quantity and manage replacement/cancellation without overselling.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 882,
+          "end_line": 926,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L882-L926"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 655,
+          "end_line": 659,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L655-L659"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Explicit operator/strategy protection intent, broker-supported order types."
+      ],
+      "limits_and_status": [
+        "Existing orders are independent stops/limits, not a proven atomic OCO/bracket. Sell-reservation guard can block competing coverage. No stop/target/trailing formulas copied."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G31",
+      "feature": "Entry pause that preserves existing-position management",
+      "source_behavior": "STOP holds newly offered and already queued entries; main pass still reconciles and manages existing exits.",
+      "new_desk_requirement": "Provide pause-new-entries and resume controls with operator, reason and audit event, independently of shutdown/cancel/flatten controls.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1024,
+          "end_line": 1032,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1024-L1032"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1163,
+          "end_line": 1172,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1163-L1172"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1252,
+          "end_line": 1258,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1252-L1258"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Persistent book control state and role-aware operator commands."
+      ],
+      "limits_and_status": [],
+      "strategy_specific": false
+    },
+    {
+      "id": "G32",
+      "feature": "Cash reservations and account/book risk budgets",
+      "source_behavior": "Reference entry path reads cash, subtracts pending reservations, limits whole-share notional to available cash and configured lane budgets, and records retryable capacity blocks with deadline.",
+      "new_desk_requirement": "Reserve notional for pending intents/orders and enforce configured book/symbol/exposure constraints using current broker cash/buying power; release reservations only on verified lifecycle change.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1045,
+          "end_line": 1078,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1045-L1078"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Broker cash/buying power, current positions/open orders, configured risk policy."
+      ],
+      "limits_and_status": [
+        "Source claim order, lane budgets, liquidity floors and sizing formulas are strategy-specific. New desk retains configurable constraints with no imported allocation."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G33",
+      "feature": "Durable success-only schedule receipts and bounded retries",
+      "source_behavior": "Watch loop uses singleton flock, explicit heartbeat and per-slot attempts. Zero process exit is insufficient: it requires a matching ledger run_end. Failure retries use bounded window/cadence and can rerun only the desk when tracker already succeeded.",
+      "new_desk_requirement": "Persist scheduled slot/attempt/stage completion and side-effect receipts; retry unfinished stages within their valid window without duplicating completed effects.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/watch_scheduler.sh",
+          "line": 26,
+          "end_line": 39,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/watch_scheduler.sh#L26-L39"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/watch_scheduler.sh",
+          "line": 45,
+          "end_line": 60,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/watch_scheduler.sh#L45-L60"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/watch_scheduler.sh",
+          "line": 78,
+          "end_line": 104,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/watch_scheduler.sh#L78-L104"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Independent scheduler, task lease, broker idempotency and receipt verification."
+      ],
+      "limits_and_status": [],
+      "strategy_specific": false
+    },
+    {
+      "id": "G34",
+      "feature": "NYSE slots, late catch-up and post-session verification",
+      "source_behavior": "Watch slots skip holidays/weekends and honor early closes. Preopen/open and close-relative MOC slots are computed separately; an unrecorded late MOC slot remains eligible before cutoff. Close scheduler includes restart catch-up.",
+      "new_desk_requirement": "Schedule operational passes against exchange sessions; preserve due work after restart, and explicitly mark expired work rather than executing it outside its valid window.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/watch_slots.py",
+          "line": 1,
+          "end_line": 21,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/watch_slots.py#L1-L21"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/watch_slots.py",
+          "line": 46,
+          "end_line": 53,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/watch_slots.py#L46-L53"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/scheduler.sh",
+          "line": 18,
+          "end_line": 66,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/scheduler.sh#L18-L66"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Exchange calendar, persistent slot receipts and pass receipt verifier."
+      ],
+      "limits_and_status": [
+        "Close scheduler weekday gating differs from intraday calendar-aware slots; calendar check in order runtime remains relevant."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G35",
+      "feature": "Independent scheduler supervision and host-reset recovery",
+      "source_behavior": "On-box supervisor polls scheduler processes, records deaths/restarts and launches missing schedulers. Alive-but-stale heartbeats warn without killing. Inbox reports off-box routines restart workers after VM replacement.",
+      "new_desk_requirement": "Supervise resident jobs independently of browser/model sessions; persist heartbeat/death/restart evidence and use an external service supervisor for host restart.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/supervisor/sched_supervisor.sh",
+          "line": 103,
+          "end_line": 134,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/supervisor/sched_supervisor.sh#L103-L134"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "grokbot-inbox/INBOX.md",
+          "line": 251,
+          "end_line": 258,
+          "evidence_class": "reported external routines",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/grokbot-inbox/INBOX.md#L251-L258"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Persistent process/service manager or externally hosted scheduler."
+      ],
+      "limits_and_status": [
+        "External routine definitions are not included in reviewed source. On-box supervisor alone cannot survive host replacement; stale-but-alive process does not auto-restart in this reference."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G36",
+      "feature": "Independent staged account arming and rollback",
+      "source_behavior": "Second desk has separate credential names, process namespace and ARMED gate; soft rollback pauses entries, resume clears it and full rollback checks that broker is empty. Snapshot README describes staged/unarmed state, and newer1.0.4 sibling is explicitly staging.",
+      "new_desk_requirement": "Support staged connection, explicit activation, pause/resume and account-safe rollback without disturbing another book. Show staged versus active state from actual runtime receipts.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_sleeve/README.md",
+          "line": 1,
+          "end_line": 27,
+          "evidence_class": "documented staged lifecycle",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_sleeve/README.md#L1-L27"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_sleeve/sleeve_scheduler.sh",
+          "line": 17,
+          "end_line": 20,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_sleeve/sleeve_scheduler.sh#L17-L20"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_sleeve/rollback.sh",
+          "line": 11,
+          "end_line": 29,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_sleeve/rollback.sh#L11-L29"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Separate paper account/credential references and durable activation state."
+      ],
+      "limits_and_status": [
+        "No arm/rollback operation executed. Source availability and enabled configuration are not proof of deployed trading."
+      ],
+      "strategy_specific": false
+    },
+    {
+      "id": "G37",
+      "feature": "Isolated dry-run/replay and operator command surface",
+      "source_behavior": "Dry run uses separate state/ledger/report/lock; CLI exposes verify, run, report, configuration freezes and controlled configuration-mode changes.",
+      "new_desk_requirement": "Separate simulation/replay fixtures and operational tasks from external paper accounting; expose explicit status, verification, reconcile, pause and resume tools to authorized operators/agents.",
+      "sources": [
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1364,
+          "end_line": 1370,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1364-L1370"
+        },
+        {
+          "repo": "quant-research-backup",
+          "commit": "cae8806a8e963be365bf862a3b3e463088c90a29",
+          "path": "Author-research/shadow/paper_desk/desk.py",
+          "line": 1518,
+          "end_line": 1535,
+          "evidence_class": "implemented source",
+          "url": "https://github.com/dwj9ddyvf6-hub/quant-research-backup/blob/cae8806a8e963be365bf862a3b3e463088c90a29/Author-research/shadow/paper_desk/desk.py#L1518-L1535"
+        }
+      ],
+      "dependencies_or_configuration": [
+        "Separate run-mode namespaces and command/task tool contracts."
+      ],
+      "limits_and_status": [
+        "The connectivity-test CLI sends then cancels a paper order, so it was not run as a read-only check. Replay carries source strategy logic; no strategy replay copied."
+      ],
+      "strategy_specific": false
+    }
+  ],
+  "evidence_policy": "Implemented source, stored snapshot, documented protocol and reported external agent/deployment behavior are labelled separately. No archived settings or instructions authorize production changes.",
+  "strategy_exclusions": [
+    "signals/scanners",
+    "alpha models",
+    "ranking/eligibility",
+    "specific lane/sleeve/default funding",
+    "stop/target/timeexit formulas",
+    "research performance claims"
+  ],
+  "review_scope": {
+    "inbox": "All narrative entries across lines1\u2013700 read; embedded225-rowSnorlaxCSV structurally parsed. Cursor/Midna strategy discussions not ported.",
+    "source": "Targeted complete functions for durability/pass/report/publisher/projection/inbox safeguards; runtime/scheduler companion reviewed by child.",
+    "execution": "No tests, dependency installation, broker calls, clouddeploy, message sending or GitHub writes."
+  },
+  "limitations": [
+    "Archived pinned snapshot does not establish current deployment, broker balance or running workerhealth.",
+    "External Grok/Muse/Cursor session prompts/toolaccess/scheduledservice infrastructure are outside this repository; role titles alone cannot supply model execution.",
+    "Source report notes explicit missing/staged states and does not collapse them into shipped capability."
+  ],
+  "dependencies_summary": [
+    "Configured paperbroker or honestlocal simulator",
+    "Marketdata source withsession/timestamp/freshness",
+    "Independent durable scheduler/supervisor",
+    "Persistent intents/receipts/ledger/state",
+    "Configured model provider foractualagent tasks",
+    "Queryable research/journal/message artifacts",
+    "Optional external shared-inbox connector"
+  ],
+  "source_body_verification": [
+    {
+      "repo": "Midna",
+      "path": "workspace__self_improvement__staging__relationships__sirun_fb0673c0c7344259b05e2bae963bb3b4__people/grokbot.md",
+      "git_blob_sha": "52e01b8efd28bb7a67c199fa2e4807295cc23cfb",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "grokbot-inbox/INBOX.md",
+      "git_blob_sha": "6be0b5caa4bc8acdf903bfde7b7cb3092a2f4357",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/terminal/README.md",
+      "git_blob_sha": "fc3c6b0d8b99486dbf8025f145079daa285794e0",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/terminal/publish.py",
+      "git_blob_sha": "2343413035fa55e29f02568c3210cd30b38bc51f",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/paper_desk/desk.py",
+      "git_blob_sha": "121a00d643c54764898764664d68f089cea09c43",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/paper_desk/README.md",
+      "git_blob_sha": "a91a39408ccf33fcdaa1460e5495c7e890ffb943",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/paper_desk/report.md",
+      "git_blob_sha": "b31dd3686b1e66fea82961b1e0e1ddc51972ef6a",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/terminal/publish_loop.sh",
+      "git_blob_sha": "c17a19dc81dc42a1bc09e3dbd8aa410fedd64d51",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/moc_window_check.py",
+      "git_blob_sha": "b1d4254848d4cbbab929e457dd682204334588ec",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/live_trading_gate_check.sh",
+      "git_blob_sha": "d7018444324d5ec74de8fd8a9ed527ff5d06aa32",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/paper_desk/journal/daily/2026-10-06.md",
+      "git_blob_sha": "1bf00c9e46657a2eaa7afb1f2252a6402212b0fe",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/paper_desk/journal/memory.md",
+      "git_blob_sha": "b7a4e1fd6911dec359431f0f02de9cf4e5616678",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/db/refresh.py",
+      "git_blob_sha": "91f86c14b64fabf317d1f88714bd75f43c25810b",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/db/QUERIES.md",
+      "git_blob_sha": "6640b62fc932254f5339645f323cb5032014c6cd",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "backup/sync.sh",
+      "git_blob_sha": "cc8bbd5bd606b063b126079f99dc756663684b6c",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "backup/hooks/pre-push",
+      "git_blob_sha": "88ca6f0e5b4119517f53fe41c26bc1767267a1d6",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/watch_scheduler.sh",
+      "git_blob_sha": "f15910b55adbd146a600d5334cac1810ae2627e9",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/watch_slots.py",
+      "git_blob_sha": "afd7d01e7c75178b93590d9d8b6632ba4a0148df",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/scheduler.sh",
+      "git_blob_sha": "7540bb91d63dd660cf22d92059e01085dc9c74b4",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/supervisor/sched_supervisor.sh",
+      "git_blob_sha": "a97ecc898e01f6873e19fb9e793dbab2d134ca61",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/paper_sleeve/README.md",
+      "git_blob_sha": "4dbb601f84bc264aedd7cbc7d38884cd45d63e50",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/paper_sleeve/sleeve_scheduler.sh",
+      "git_blob_sha": "e734628f3dbb143bb2e84b08ed5cbc113c79a85e",
+      "matches_pinned_tree": true
+    },
+    {
+      "repo": "quant-research-backup",
+      "path": "Author-research/shadow/paper_sleeve/rollback.sh",
+      "git_blob_sha": "d47c154ff629684e89b6fdb294781a267a4bcd0f",
+      "matches_pinned_tree": true
+    }
+  ]
+}

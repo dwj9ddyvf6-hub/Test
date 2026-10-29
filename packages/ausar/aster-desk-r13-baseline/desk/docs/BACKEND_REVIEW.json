@@ -1,0 +1,181 @@
+{
+  "review": "Independent bounded Aster backend QA",
+  "completed_at": "2026-10-08T05:20:15.929942+00:00",
+  "scope": [
+    "Financial correctness and cent/Decimal accounting",
+    "Atomic cash/share reservations and repriced operator approval",
+    "Idempotency",
+    "Task cancellation, restart and lease fencing",
+    "Truthful worker/provider/data/broker status",
+    "No agent-created or agent-approved orders; empty strategy registry"
+  ],
+  "instructions_read": [
+    "AGENTS.md",
+    "docs/BUILD_CONTRACT.md"
+  ],
+  "result": "No open concrete finding remains in the reviewed scope. Three reported issues were fixed by the backend owner and rechecked. Independent accounting and worker scenarios passed.",
+  "reviewed_sources": [
+    {
+      "path": "backend/store.py",
+      "sha256": "460b37932fbddce289c834696172a26694c95c365ea8ea7aa4c8f4a95807da8a",
+      "lines": 417
+    },
+    {
+      "path": "backend/worker.py",
+      "sha256": "661b8d0da4f08df6fb3d38241b96232bedcf26fb2eda9c246521286bf5a0aed6",
+      "lines": 279
+    },
+    {
+      "path": "backend/app.py",
+      "sha256": "be4c4481d80cfefdd8089d76279e08cbb3952766c6621b14bb760be1bfdb3d64",
+      "lines": 142
+    },
+    {
+      "path": "backend/models.py",
+      "sha256": "2b201bdb8309c4921224194806128745781775896494c6e4383666d438efa5cf",
+      "lines": 64
+    },
+    {
+      "path": "backend/reasoning.py",
+      "sha256": "071053a7c58bed784d7ff83a0a6f2347ea9fc711cf848a924c258b09bf05f124",
+      "lines": 114
+    }
+  ],
+  "findings": [
+    {
+      "id": "QA-01",
+      "severity": "medium",
+      "title": "Cancelled failing task was stranded as queued",
+      "status": "fixed and independently rechecked",
+      "path": "backend/worker.py",
+      "reproduction": [
+        "Enqueue research_note.",
+        "Fake annotate calls cancel_task on the running task, then raises RuntimeError.",
+        "Original exception branch requeued status=queued with cancel_requested=1; next run selected no task."
+      ],
+      "fix_evidence": "Exception path now cancels before retry; queued cancellation cleanup also runs. Current fake-provider cancellation case yields cancelled and cancelled remaining steps."
+    },
+    {
+      "id": "QA-02",
+      "severity": "low",
+      "title": "Expired agent lease was displayed as working",
+      "status": "fixed and independently rechecked",
+      "path": "backend/store.py",
+      "reproduction": [
+        "Persist running task/first step with dead lease owner and expired lease.",
+        "Original snapshot reported agent working while health had lease_active=false."
+      ],
+      "fix_evidence": "Snapshot now requires matching unexpired task/global worker lease. Current expired-owner case reports coordinator as not working."
+    },
+    {
+      "id": "QA-03",
+      "severity": "low",
+      "title": "Annotation label denied tools that were actually available",
+      "status": "fixed and source rechecked",
+      "path": "backend/worker.py; backend/reasoning.py",
+      "reproduction": [
+        "Configured explicit brief/note can call registered read-only operational inspection tools.",
+        "Earlier label/docstring said no tools."
+      ],
+      "fix_evidence": "Current wording distinguishes read-only inspection from trade-execution authority."
+    }
+  ],
+  "checks": [
+    {
+      "id": "funding_identity",
+      "result": "passed",
+      "evidence": "Repeated funding identity credits once; mismatched amount rejects."
+    },
+    {
+      "id": "fractional_basis",
+      "result": "passed",
+      "evidence": "Buy 0.333333 at 10.005; sell 0.111111 and 0.222222 at 15.005. Final cash 101.67, realized P&L 1.67, zero residual quantity/cost basis; accountant reconstruction passes."
+    },
+    {
+      "id": "concurrent_cash",
+      "result": "passed",
+      "evidence": "Two concurrent $60 intents against $100 permit only one reservation."
+    },
+    {
+      "id": "concurrent_shares",
+      "result": "passed",
+      "evidence": "Two concurrent four-share sell intents against six shares permit only one reservation."
+    },
+    {
+      "id": "approval_identity",
+      "result": "passed",
+      "evidence": "Four simultaneous approvals produce one sale fill and one quantity/cash change."
+    },
+    {
+      "id": "approval_reprice",
+      "result": "passed",
+      "evidence": "Repriced approval rejects when other reservations leave insufficient cash; no fill or holdings mutation. Cancelling competing order releases reservation; explicit approval fills at current quote."
+    },
+    {
+      "id": "quote_chronology",
+      "result": "passed",
+      "evidence": "Older and future quotes reject without replacing the quote; stale quote cannot create an intent."
+    },
+    {
+      "id": "restart_recovery",
+      "result": "passed",
+      "evidence": "Replacement worker resumes after committed accountant step; six-step cycle finishes with one accountant snapshot."
+    },
+    {
+      "id": "zero_strategy_cycle",
+      "result": "passed",
+      "evidence": "Repeated active-cycle request returns same ID; recovered cycle preserves manual pending intention, creates no orders/fills/strategies and invokes no configured model."
+    },
+    {
+      "id": "cancellation_failure",
+      "result": "passed",
+      "evidence": "Cancel while annotation runs, then fail annotation: task/remaining steps become cancelled, not an unselectable queued task."
+    },
+    {
+      "id": "expired_owner_fence",
+      "result": "passed",
+      "evidence": "Blocked former owner loses leases; replacement completes task. Former response commits no annotation or handoff."
+    },
+    {
+      "id": "truthful_agent_status",
+      "result": "passed",
+      "evidence": "Running step with expired task/global lease is no longer reported working."
+    },
+    {
+      "id": "model_receipts",
+      "result": "passed",
+      "evidence": "Targeted fake-provider test confirms actual registered read-only tool inspection and durable receipts. No external call made."
+    }
+  ],
+  "test_execution": [
+    {
+      "method": "Independent standard-library scenarios through Store/Worker",
+      "environment": "Temporary isolated SQLite databases automatically removed",
+      "result": "Passed fractional accounting, reservations, idempotency, quote checks, cycle authority, cancellation and recovery/fencing scenarios."
+    },
+    {
+      "command": ".venv/bin/python -m unittest tests.test_backend.DeskTest.test_model_selects_read_only_tools_and_journals_actual_receipts tests.test_backend.DeskTest.test_cycle_never_calls_configured_model_tool_provider tests.test_backend.DeskTest.test_cancel_during_provider_failure_cannot_strand_retry",
+      "result": "3 tests passed after final backend changes."
+    },
+    {
+      "source": "Backend owner report",
+      "result": "39 backend tests passed in latest owner report; the full suite was not separately rerun by this reviewer."
+    }
+  ],
+  "static_contract_checks": [
+    "Funding/approval exposed only by explicit operator API routes; worker only audits pending intentions.",
+    "Operational cycles stay local even when optional reasoning is configured.",
+    "Registered reasoning tools read account, quotes, pending intentions and current task evidence only.",
+    "GET /strategies returns []; snapshots/export/health report zero strategy count and empty slots.",
+    "Paper/manual source labels and unverified provider reachability are explicit.",
+    "Money/fills/positions/order state and reservations mutate in BEGIN IMMEDIATE transactions."
+  ],
+  "limitations": [
+    "No security assessment, strategy selection, original-repository extension or live financial/provider integration was performed.",
+    "No backend app code was edited by this reviewer.",
+    "No external model calls or real broker executions occurred; fake providers exercised optional reasoning paths.",
+    "This is bounded QA of the hashed local source snapshot, not a proof covering every possible numerical/state-space input.",
+    "Default workspace data was not used for tests; all review scenarios used temporary databases."
+  ],
+  "scope_boundary": "This review covers the hashed local paper/manual-quote core. The forthcoming unattended feed and external paper-broker extension is not covered."
+}
