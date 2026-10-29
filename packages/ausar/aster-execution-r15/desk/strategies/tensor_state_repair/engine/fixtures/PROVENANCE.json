@@ -1,0 +1,44 @@
+{
+  "schema": "tensor-state-repair-finite-fixtures/1",
+  "research_commit": "4b08cfddcc67d6542e7cb583223874f839cd8f2b",
+  "research_prefix": "research-archives/2026-10-09-tensor-forensic-edge-study-r11",
+  "fixtures": [
+    {
+      "fixture": "AMD-1h-completed.json",
+      "fixture_sha256": "af4d9b397d598c8b7c8adc0e0fb53b9bfb59d25ab49420649d6a00a73869a3f8",
+      "source_path": "experiments/native_replay_v1_failure/AMD-1h.v1.csv.gz",
+      "source_sha256": "b6209c97945f8d7618080595285c5b9da56422f024dbe3dd6006ef087cac6049",
+      "source_rows_projected": 330,
+      "source_fields": "Only OHLCV and timestamp/completed_at/usable_at. V1 indicator columns discarded entirely.",
+      "availability": "Historical bar-proxy calendar completion; contemporaneous vendor receipt not established.",
+      "purpose": "Finite numerical parity and causal-prefix checks; no profitability assertion or synthetic broker data."
+    },
+    {
+      "fixture": "AMD-1wk-completed.json",
+      "fixture_sha256": "cd9348ad6bec531fb3157e26cca0cb66423c2f0a662576a98496bbafb684ee8b",
+      "source_path": "experiments/native_replay_v1_failure/AMD-1wk.v1.csv.gz",
+      "source_sha256": "853b0f00399cc8c5cace78728bacdc1d6f6eb196274f5f6f79b17e42ca7dbd56",
+      "source_rows_projected": 330,
+      "source_fields": "Only OHLCV and timestamp/completed_at/usable_at. V1 indicator columns discarded entirely.",
+      "availability": "Historical bar-proxy calendar completion; contemporaneous vendor receipt not established.",
+      "purpose": "Finite numerical parity and causal-prefix checks; no profitability assertion or synthetic broker data."
+    },
+    {
+      "fixture": "AMD-1d-completed.json",
+      "fixture_sha256": "e4da3d2afa825f32f81fef0e8908bb6542a08ca79cbea1adb333f69a74cc92ce",
+      "source_path": "experiments/native_replay_v1_failure/AMD-1d.v1.csv.gz",
+      "source_sha256": "6060e0e641d0f5af9b91954b83ce11e67b43e562213fda0f0c84a0e6b4622298",
+      "source_rows_projected": 2513,
+      "source_fields": "Only OHLCV and timestamp/completed_at/usable_at. V1 indicator columns discarded entirely.",
+      "availability": "Historical bar-proxy calendar completion; contemporaneous vendor receipt not established.",
+      "purpose": "Full one-name canonical-origin fixture for frozen daily-model parity; no profitability assertion or synthetic broker data."
+    }
+  ],
+  "reference": {
+    "path": "REFERENCE_NATIVE_FEATURES.json.gz",
+    "sha256": "9f664635f9682ce6279d40fa8562a40c512dac1bd3006a9a7f65f9477fd4ffa8",
+    "producer_r11_path": "scripts/replay_native_features.mjs",
+    "producer_sha256": "4926490334864a440f88857565e62d6b6d8194f65307226bf645bc3f7ab63f82",
+    "scope": "All93features forfirst330actualbarsforeach1h/1d/1wk; generatedbysealedoriginalR11exporter, notnewadapter. Numerical/sourceparity fixture, notuntouchedpredictivetest."
+  }
+}

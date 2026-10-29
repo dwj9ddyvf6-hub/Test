@@ -1,0 +1,1951 @@
+{
+  "audit": "Full financial and durable-store functional audit",
+  "generated_at": "2026-10-08T07:34:59.280512+00:00",
+  "scope": [
+    "backend/store.py",
+    "backend/trading.py",
+    "tests/test_backend.py",
+    "tests/test_trading.py"
+  ],
+  "review_method": [
+    "Read every owned runtime and test file body, including SQL schemas/migrations and nested fixtures.",
+    "Trace every public mutation, read snapshot, local simulation, native broker reconciliation, pending liability, signed cost-basis, protection/OCO, session and terminal lifecycle path.",
+    "Use isolated temporary SQLite databases, in-process broker/provider fixtures, concurrency tests, injected clocks and numerical boundary probes; no real broker network calls.",
+    "Repair confirmed defects directly and rerun the complete owned financial/legacy suite after each material group."
+  ],
+  "coverage": [
+    {
+      "path": "backend/store.py",
+      "sha256": "b2185cc723b3a1f93ffb4529f0266c913549c336488e05d1ab1fe5c495923375",
+      "lines": 507,
+      "scope": "entire file, including schema/migrations, constants, functions and nested fixtures",
+      "all_bodies_inspected": true,
+      "bodies": [
+        {
+          "name": "DeskError.__init__",
+          "start_line": 39,
+          "end_line": 41,
+          "sha256": "40d9b5460ea41d92320f13fb80f77ea051788edc8faffd12b52c012bb0b9111a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "now",
+          "start_line": 44,
+          "end_line": 45,
+          "sha256": "24d02a6d28611cd4bc1e22906976927b3fad723f60e981ae6d5f686ebc9bd75e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "identifier",
+          "start_line": 48,
+          "end_line": 49,
+          "sha256": "46eb78dc8a1f0e52561058c652260b2e8e8f97e624316bdd7cd6cccd6f9c836d",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "symbol",
+          "start_line": 52,
+          "end_line": 56,
+          "sha256": "4a7941aaedc463dffdef1cc23b02d700803726e6f6158d519c0d5456db332f67",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "cents",
+          "start_line": 59,
+          "end_line": 60,
+          "sha256": "6724e65d7318ed1bb4960eeb2b1efc65b76a6b61795193b36a6ef55c5d037d75",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "checked_cents",
+          "start_line": 63,
+          "end_line": 67,
+          "sha256": "4f8102f82033b3d979c3a9c9b915b2236890f31cc78e7429ff9b56157b791d28",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "number",
+          "start_line": 70,
+          "end_line": 71,
+          "sha256": "7a7c0a6b1b1f317999f8b476b7fda6238b9d30d68f09d778ebbe13b7c0b081b9",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "rowdict",
+          "start_line": 74,
+          "end_line": 75,
+          "sha256": "ba0e08e415ceaf8b68433b357f03e8442267b661392518f672090c0f7c080354",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.__init__",
+          "start_line": 79,
+          "end_line": 121,
+          "sha256": "543d9f5c4726cf1cb93bf7dbeeef14596839c06755d18b4fa07cec22fa44ef6b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.connect",
+          "start_line": 123,
+          "end_line": 129,
+          "sha256": "8e7c068c33f539e815bf7da88626dbc9a58e449d0c82295adb368c204bfc5354",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.transaction",
+          "start_line": 132,
+          "end_line": 142,
+          "sha256": "90f8c8ea54a6482e1e800e6bac5c4ed26a8f8ada9f28aef5f367a2c3362cdd78",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.settings",
+          "start_line": 145,
+          "end_line": 146,
+          "sha256": "e90b6d4518f1f707a8645ed89c8b3a48dc174053c23b2f5d8d19132563e0d617",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.setting",
+          "start_line": 149,
+          "end_line": 150,
+          "sha256": "b6f4dc9673f23d320f996e3f6c6c74cdbea9347ed5f27261cfe93893d650894b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.event",
+          "start_line": 153,
+          "end_line": 158,
+          "sha256": "697815edef993061c5753e5c15faef85ce51718bf5b62441b126c82ef611ea04",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store._event_digest",
+          "start_line": 161,
+          "end_line": 163,
+          "sha256": "a09381f0fe87f93feae9b73bd09e27972e4d136d9ff21a9263e10612c948d4e7",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.verify_ledger",
+          "start_line": 165,
+          "end_line": 199,
+          "sha256": "e4b5e5c2614cc5cd320d37702769e725b14778341f04b006e6c5a1bcacb7a013",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.ledger_status",
+          "start_line": 201,
+          "end_line": 205,
+          "sha256": "2e707e27cf594e10f41888bb0436d29dc8efc69da4fe3b6e830b739ce0bc8a87",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.quote",
+          "start_line": 207,
+          "end_line": 215,
+          "sha256": "274d8cc9f70b3515ab12586c35d681f1c0cd4457f5aec4cf114e7b6c80f7a6b2",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.fresh_quote",
+          "start_line": 217,
+          "end_line": 223,
+          "sha256": "b3c25c92be52d43192c9c9b7d0b163d1100b664b2813f3114ea3178ecfcfdbed",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.reserved_cash",
+          "start_line": 226,
+          "end_line": 227,
+          "sha256": "15058b8c7055d4e23311f92df219307c8d488728d5d24fedceea87de350f534e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.reserved_shares",
+          "start_line": 230,
+          "end_line": 231,
+          "sha256": "936e553ae3ffed8289f61f6b3246e030d9c162083370de1a735b0e9b230afd43",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.fund",
+          "start_line": 233,
+          "end_line": 252,
+          "sha256": "81c2915f44ab9fb9565a808eac9a0d2b0882cef4a110cd8f35397bf17f628066",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.add_watch",
+          "start_line": 254,
+          "end_line": 263,
+          "sha256": "12d3e26b73923cd1d4b92f711792b8ff4010ba0baeee64bf7476d5901ea9be2a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.remove_watch",
+          "start_line": 265,
+          "end_line": 271,
+          "sha256": "9c022b9c38bae74f5262e8d7690191a88d43735f8c63f97c63f5570eff587541",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.ingest_quote",
+          "start_line": 273,
+          "end_line": 300,
+          "sha256": "b8011e4c1b874bfb1aa7998184b39e12d0a76af876e37d9b56018603ae626ec6",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.order_public",
+          "start_line": 303,
+          "end_line": 304,
+          "sha256": "a2f98bc9e288609ee1e45e5affc4aae7baf46fda584a08af015b6aa3e76b3738",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.create_order",
+          "start_line": 306,
+          "end_line": 331,
+          "sha256": "e66d5a306f41a8931557d8bd7d89ef8cbcc941c82a3232890eb4c176d2b03ba8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.approve_order",
+          "start_line": 333,
+          "end_line": 375,
+          "sha256": "11d5be3adf72ed3e081ea5ed2c8864e6f0bf47794d70918914d9b4bdca12bcfb",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.cancel_order",
+          "start_line": 377,
+          "end_line": 387,
+          "sha256": "b23c5949452d772525933bcb8e056f7e0a81fb388de5908d0500d75824d49e3f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.account_public",
+          "start_line": 389,
+          "end_line": 405,
+          "sha256": "68b2a1a183569f061699a4dfbe1c1fbff5c3e1bcba60220f90f79c838943cbea",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.balance_snapshot",
+          "start_line": 407,
+          "end_line": 410,
+          "sha256": "32f34fb4ca78794e5bac43e9a6c1f96114e2092060125ef98493518208fe571c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store._enqueue",
+          "start_line": 412,
+          "end_line": 428,
+          "sha256": "db83f0d392edda23dd565fa2647055df0ebb43310e9307f20229ece9dbfaadf7",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.enqueue",
+          "start_line": 430,
+          "end_line": 434,
+          "sha256": "4174aa23f2dea80cbbbdd7d8fb164ebf88cf955fbd9d9512fa96795532622b0c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.task_public",
+          "start_line": 437,
+          "end_line": 440,
+          "sha256": "c600b3b2289db294cd002a7e1ddb9ab16d17b9b8bd7058f287b3c67dca87369e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.cancel_task",
+          "start_line": 442,
+          "end_line": 454,
+          "sha256": "ddb8f49f278c4eebfd0f6a058591eb6cc452b7aeeaf695f1e5c67702d1b04e1e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.runtime",
+          "start_line": 456,
+          "end_line": 460,
+          "sha256": "ba5ad2073977c4b4ef0c66c5e176125ad0a18e27b65eeb8ad615e6c243ac0f0a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.update_settings",
+          "start_line": 462,
+          "end_line": 473,
+          "sha256": "11005e4e5a440ebbb2397fe94d6a212e73c700a69f1f2df37b40047e07a04bbb",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.snapshot",
+          "start_line": 475,
+          "end_line": 500,
+          "sha256": "5e0f7043fc18b36c26d7b2d72dabbfc89fec233adbd3974e6efe14cac5bb7f76",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "Store.export",
+          "start_line": 502,
+          "end_line": 507,
+          "sha256": "8d365894ca9ab7868249ad85d4cb167e0405321ec12be59a865fc6177a8ab762",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        }
+      ]
+    },
+    {
+      "path": "backend/trading.py",
+      "sha256": "c2d1fd60d0356ec5c9511d65b4a80851c99d043f995fc62e5d51f2800e8fac8e",
+      "lines": 1370,
+      "scope": "entire file, including schema/migrations, constants, functions and nested fixtures",
+      "all_bodies_inspected": true,
+      "bodies": [
+        {
+          "name": "decimal",
+          "start_line": 26,
+          "end_line": 33,
+          "sha256": "c8dbefc5af8fb78ebe72527a98751262e0c4da9eaeacfa27e081d37c4e043234",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "timestamp",
+          "start_line": 36,
+          "end_line": 45,
+          "sha256": "b43e8b888218f612735cd19cfea06fff021acaf8d0c3e94d7dffc7361d679017",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "clock_time",
+          "start_line": 48,
+          "end_line": 51,
+          "sha256": "996a5470a0953cc64725992f40c17006b2ce1939ca2c3b471ca60513475badee",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "dump",
+          "start_line": 54,
+          "end_line": 55,
+          "sha256": "05ecafb22a614b1b1c525b1dfe50e024f3990f1767da952bbdaa8ce4aadee1ad",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.__init__",
+          "start_line": 59,
+          "end_line": 95,
+          "sha256": "361f460edffda186990e8b2bf1e7b23650f1755f157972052e780b55aacdee83",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._create_book",
+          "start_line": 97,
+          "end_line": 105,
+          "sha256": "9a6fae15b4cfe9726de0a23424ce973f41e3203d42ee065ed1a6482389e0fe54",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._book",
+          "start_line": 108,
+          "end_line": 112,
+          "sha256": "d0c8b8e2e1e41a643522c050f5c8d2dfbd5c0eceb6dc210516afbbf851e4fe64",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.create_book",
+          "start_line": 114,
+          "end_line": 133,
+          "sha256": "d465c484f9c8b16f08e318d2789e168a368461db64096ab44bbc3c976f5e7b0e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.fund_book",
+          "start_line": 135,
+          "end_line": 159,
+          "sha256": "579a40838a1a60fff290e4d8c5212367243cc1e98e40ab4fb105c83c5895f24f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.set_book",
+          "start_line": 161,
+          "end_line": 204,
+          "sha256": "e502e9c039e80956cdcf9088b066076bd801dbb95e704567e2642a7d2c8a5413",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._normalize_intent",
+          "start_line": 206,
+          "end_line": 243,
+          "sha256": "e739d401c7f5a526299c3ea4ce2f460b260d2f82b89fda30876c1a3572389b2e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._portfolio_policy",
+          "start_line": 246,
+          "end_line": 247,
+          "sha256": "ec65ff05d9eba91909f8ff24a3fcef21c308964447736fcef11379a9fa4d79f5",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.set_portfolio_policy",
+          "start_line": 249,
+          "end_line": 279,
+          "sha256": "6875403e809a22b40d3e79d2c6ea1b7ed382ce79b71207bd9ddbcaab92fcb003",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._global_exposure",
+          "start_line": 281,
+          "end_line": 359,
+          "sha256": "b1c1c7653e4b6787856db9aec3457f0c15cb2b75f65cde1206728ad558383c6a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._validate_global_capacity",
+          "start_line": 361,
+          "end_line": 374,
+          "sha256": "876a149d13d4e1acf41448da38c77ace796018625fea6f4de8339d00acc3e73d",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._raw_quote",
+          "start_line": 376,
+          "end_line": 386,
+          "sha256": "97b716889d7dabe52ec7582644a7aab07276a32fbde0fd37bc4a381298efe80a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._position",
+          "start_line": 389,
+          "end_line": 390,
+          "sha256": "e4874dd813ffe8fc896f902b77667b30002a0f3a3d45689eab12aaf8f9043844",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._risk_reducing",
+          "start_line": 393,
+          "end_line": 394,
+          "sha256": "1388756ac99e7ebe90d172af23ca4fbcc78fd7b99cfe3357379156c3e2ee7a98",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._realized_coverage",
+          "start_line": 397,
+          "end_line": 400,
+          "sha256": "9370f1c7b8331e4a39cc13d732104a64e30874e346bae8332042be1c8a416ef3",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._fill_public",
+          "start_line": 402,
+          "end_line": 407,
+          "sha256": "520f091b308ff1ebdcfa04046ca905b0cb9a7c2ceb569187153513ebdd55694f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._account",
+          "start_line": 409,
+          "end_line": 466,
+          "sha256": "50d65a5b657bb23ccc420ed0d846f0955e2551b0234b4549404478057f18e75c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._validate_capacity",
+          "start_line": 468,
+          "end_line": 553,
+          "sha256": "e2f325cbc66055320a6ab1931dee6d4345fdf9c65332d05cfcfc3499522abf77",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.submit_intent",
+          "start_line": 555,
+          "end_line": 590,
+          "sha256": "ab4883e26399fa3e023c7f685f64173882b235248546266f563adcd50c37827b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._intent_public",
+          "start_line": 593,
+          "end_line": 600,
+          "sha256": "5dddb811a9d4206daabe1d88f3c883df64669e08204b7108a21af77637f56034",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.cancel_intent",
+          "start_line": 602,
+          "end_line": 613,
+          "sha256": "efc48512062297fb55e6e60329ba612342ed79593a19aeeeadfca656cc35e82c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._equity_snapshot",
+          "start_line": 615,
+          "end_line": 622,
+          "sha256": "2c7b4feabbff1d1da6a31727ee9938bb472103d94be8a2023271f073b0fb1c9b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.snapshot",
+          "start_line": 624,
+          "end_line": 644,
+          "sha256": "7b389e36cb4980d8f4c21a6a71a33f4d771e8a33fdfc00c9a7da0a947c48ed51",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._performance",
+          "start_line": 646,
+          "end_line": 658,
+          "sha256": "c73312972e612599fc47fa62b722aa5b2c09e3fb1074b5f0bcfdaf738773ef49",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._fill",
+          "start_line": 660,
+          "end_line": 728,
+          "sha256": "a4a93d0b4ce888b4a5e12a924354696d0bd7fafb6187d5800961a8a83ee9feda",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._create_protection",
+          "start_line": 730,
+          "end_line": 740,
+          "sha256": "c4b3b740d38a8167eedc37839575f5452d52c71579f90c8bb517c7b439271d17",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._oco_after_fill",
+          "start_line": 742,
+          "end_line": 752,
+          "sha256": "89d206445057572c514f0f4c8d2d7a175de666363f59d963d18b4afa8b4a24a4",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._terminal",
+          "start_line": 754,
+          "end_line": 756,
+          "sha256": "43aae92701228be6ae3991af219fafbd81374724b23e8f18d9d5fd9cf6786d8e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._block",
+          "start_line": 758,
+          "end_line": 762,
+          "sha256": "1a569e225e80ceeba37eb693e9e06acb71a0ee62b87d2ed288db4215c6cbc51d",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._window",
+          "start_line": 764,
+          "end_line": 801,
+          "sha256": "629adf2d571b0298f62757c7492a7f2148b26d07424bcc63cdcb2689b651a8d5",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._service_ids",
+          "start_line": 803,
+          "end_line": 831,
+          "sha256": "da408d0eb7652d4465155919b7962279764bee7758c760ec4ff47fdd0acfbb3a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.process",
+          "start_line": 833,
+          "end_line": 918,
+          "sha256": "574f12c2cee2f2d6990c6ae56c895af36a47ceebac4311eb65997b337acb53f3",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._accepted_cancel_reason",
+          "start_line": 920,
+          "end_line": 948,
+          "sha256": "d6799b5400ed2ec75625559259806b29a6e0bd1f6ab828d93433621f5d41d898",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._process_broker",
+          "start_line": 950,
+          "end_line": 1092,
+          "sha256": "3639ae203f59f092e99d4df158ca1b6269e96827194a1c3edffb7c2c8ad027ce",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._apply_remote_order",
+          "start_line": 1094,
+          "end_line": 1164,
+          "sha256": "258b65a1d17d1ad0c8c4c46c93224aebe59e526bfea9ef9875a6c2405759407f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._adopt_order",
+          "start_line": 1166,
+          "end_line": 1177,
+          "sha256": "80d21648ba15b1fd6249b51070d0d5730da84162e5d4e7d1d5ab6c5fc94d0471",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk.reconcile",
+          "start_line": 1179,
+          "end_line": 1310,
+          "sha256": "8c7bff65ec1d1d76ea47c456d0af102e41f4f97dd7cef0f43340acaf510177dc",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._broker_for",
+          "start_line": 1313,
+          "end_line": 1317,
+          "sha256": "e3ff3910888acc22c6e6644c83833b55df884bb3db6f5d91c917231965865a24",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingDesk._reconcile_local",
+          "start_line": 1319,
+          "end_line": 1370,
+          "sha256": "0e8127705525fd632ed477f622bfa3369af4f9202cf7e49d20f03c1f29d5fd34",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_backend.py",
+      "sha256": "99dea8cd7a33f72d3b6189c9903187f4d5af39a758f905bf5f29d343dcdfb9f7",
+      "lines": 639,
+      "scope": "entire file, including schema/migrations, constants, functions and nested fixtures",
+      "all_bodies_inspected": true,
+      "bodies": [
+        {
+          "name": "LocalReasoning.status",
+          "start_line": 23,
+          "end_line": 24,
+          "sha256": "36fcb44d50359b65e53cc236faacf63e5163437b66ce32926cba19bdd6ee1083",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "CountingReasoning.__init__",
+          "start_line": 30,
+          "end_line": 32,
+          "sha256": "c66166f1f036f24d4f4a49bc2a0bd973609b355710137de57d8fd2f99a1ee8da",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "CountingReasoning.annotate",
+          "start_line": 34,
+          "end_line": 38,
+          "sha256": "a8f08ca189660bcda6bcb001afdb5bf2e27b119f93b6d51ff045c09e072fa5f5",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "ScriptedReasoning.__init__",
+          "start_line": 43,
+          "end_line": 47,
+          "sha256": "ccc90778867b6a2e1dc804823f937336046acfde04ccb723130cc6a316fffa86",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "ScriptedReasoning._completion",
+          "start_line": 49,
+          "end_line": 53,
+          "sha256": "b4f62d04f9a4195a7bbd57372ffba4f31a4f280f4a0f331d8e0e5a1a0df93b3a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "model_reply",
+          "start_line": 56,
+          "end_line": 57,
+          "sha256": "c1fd6e9918b3be73cbc8cb9a609e0cd3375ac626eff287f88113f066cae108b8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "model_call",
+          "start_line": 60,
+          "end_line": 61,
+          "sha256": "a36fc8077dc20575011015f578f8be4a214c786e6f29cb1790d407e35c0540f5",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.setUp",
+          "start_line": 65,
+          "end_line": 69,
+          "sha256": "294a6716e5e13210b2851588ff1a6770cc1052ada6c1dcc50c2c97d43769150d",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.tearDown",
+          "start_line": 71,
+          "end_line": 72,
+          "sha256": "248c49e70f6736f9ce99924b3530ed8a939420fe08146b695ee2b536a6fa2729",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.snapshot",
+          "start_line": 74,
+          "end_line": 75,
+          "sha256": "2363a2e81689d6ab68bcfd35498089198c1132f3f945e49405892db6b5e35b9e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.quote",
+          "start_line": 77,
+          "end_line": 78,
+          "sha256": "2785c342c4998cad874920300caf87266d9e8d921389bdf8af93ef03d965f87d",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.fund",
+          "start_line": 80,
+          "end_line": 81,
+          "sha256": "eacb9e1766e0e30b4349e880413d86763b705fd0226ff31908d4ab2e2389a108",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.buy",
+          "start_line": 83,
+          "end_line": 87,
+          "sha256": "463f1d65c9cfe22a6573cc07870fd3f8e506cc4ee1a1c50376c54fd9d760340b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.run_task",
+          "start_line": 89,
+          "end_line": 94,
+          "sha256": "89e15c79d97e89df12ca66422b2f57315dc4ebd7e556041ac831ebb6ee1491d8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_empty_initial_state_is_truthful",
+          "start_line": 96,
+          "end_line": 104,
+          "sha256": "6765f670f56a325e8731aac46664f73b846fc447cfed8e994e7c8c708829f914",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_funding_idempotency_and_payload_mismatch",
+          "start_line": 106,
+          "end_line": 113,
+          "sha256": "f9db1a33770f90133bfcf54689d079ef2be46569ae522fdfa4ecb3a29f8130d3",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_quote_chronology_and_future_are_atomic",
+          "start_line": 115,
+          "end_line": 126,
+          "sha256": "fc3e5853adf562f5571301f682af288dd05bcf78d4e79af002e64f08523c7883",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_timezone_and_nonfinite_rejected",
+          "start_line": 128,
+          "end_line": 137,
+          "sha256": "043a704eee7deddd0e31961c7ceda5ab578c6e00575cb14a90673d4888416612",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_watchlist_does_not_invent_price_and_symbols_normalized",
+          "start_line": 139,
+          "end_line": 147,
+          "sha256": "ed0f373a0500c6d94373e4f03b64834c057ae86a71defc764bb542b89f75afbb",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_pending_order_reserves_but_does_not_fill",
+          "start_line": 149,
+          "end_line": 159,
+          "sha256": "9692e1728c784a739903c66b638485aeb6e9f693e78cc0dcdc20cfb313367d77",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_order_and_approval_idempotency",
+          "start_line": 161,
+          "end_line": 171,
+          "sha256": "9a50c95b8d038674023276e811e59413e4d0b227f5a5c86a94a22a2cc59fc093",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_concurrent_cash_reservations_cannot_overcommit",
+          "start_line": 173,
+          "end_line": 189,
+          "sha256": "735c0bae888da692a1fb132fe424cf3dafec88097c6b5a151155c225fcba338f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_concurrent_cash_reservations_cannot_overcommit.attempt",
+          "start_line": 178,
+          "end_line": 183,
+          "sha256": "7e50b016141c2324711734e765cd6e16c8a54161b143d06abf2d4865f7d10a95",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_concurrent_idempotent_approval_fills_once",
+          "start_line": 191,
+          "end_line": 199,
+          "sha256": "bbd694480ff9d33adeb4ac637bda53163eab4f41199512816d96a5aa7fe08f06",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_stale_quote_blocks_intent_and_approval_without_effects",
+          "start_line": 201,
+          "end_line": 217,
+          "sha256": "b76571ece28ca3ee0b5da7062a4e22aca2c0f85a7ab7acebe0a977d4c0420e88",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_price_change_rechecks_other_reservations_atomically",
+          "start_line": 219,
+          "end_line": 230,
+          "sha256": "f6d5a3d0d3196dc9963d29f29ece28c2cb09e7f8f2f5cb2796839a1eee10c74c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_cancel_releases_cash_and_preserves_intent_history",
+          "start_line": 232,
+          "end_line": 241,
+          "sha256": "95c9524179ce74dcae3535004b15e2af834e4312a91a230617b144ff84856bfb",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_sell_reservations_prevent_share_oversubscription",
+          "start_line": 243,
+          "end_line": 252,
+          "sha256": "103492944850163a430048647d663b1269dd27742334a658c5d70eeb6af2dd2e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_average_cost_partial_and_final_liquidation_realized_pnl",
+          "start_line": 254,
+          "end_line": 278,
+          "sha256": "c002cb1ad00e13b487a0acf1bd340584e0ec189c597b13605839930915734951",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_fractional_shares_cent_basis_rounding_remains_reconcilable",
+          "start_line": 280,
+          "end_line": 290,
+          "sha256": "c98912b26d5681fe2d166c47f2a82ffc673b9ca46d7dbe370970c0a5b2396ac0",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_paused_runtime_executes_queued_work_with_durable_handoffs",
+          "start_line": 292,
+          "end_line": 306,
+          "sha256": "40bf41d268c98f89e592814a042a7c729d9f6a7c9e7a59977ca944a999b530eb",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_cycle_never_fills_pending_human_intent",
+          "start_line": 308,
+          "end_line": 317,
+          "sha256": "2e7fc3545085a7b521e154444afcf126a64716081f29e0a47df0854ccf8a10fa",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_equivalent_cycles_are_idempotent_while_active",
+          "start_line": 319,
+          "end_line": 326,
+          "sha256": "8a68488fe5220deb4e8c16dc31acea23d35f0dc5a4190ed3b54013780df40d4c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_single_worker_fencing_and_restart_resumes_completed_steps",
+          "start_line": 328,
+          "end_line": 342,
+          "sha256": "ffbd2a493123f0a0f69c1a334c5ebb8857036a2b589a941921716eeba57e9eee",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_crashed_running_step_is_recovered_without_duplicate_snapshot",
+          "start_line": 344,
+          "end_line": 353,
+          "sha256": "5ac7e8afdeb6507c82bb02abe608b05bd31c0dcf658a99702690bf1c5f220131",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_cancel_queued_and_running_work_prevents_future_steps",
+          "start_line": 355,
+          "end_line": 366,
+          "sha256": "8ea6e546a825b4bd4efcbe7602e1f6f8ce1425dafc8dc216c2957d907fc38fb8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_recovery_attempt_limit_visible_and_bounded",
+          "start_line": 368,
+          "end_line": 376,
+          "sha256": "51ccc0181ae3b1ffee3d524528cece2fdc4b307be558902f6fe1818689aac866",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_expired_task_cannot_claim_agent_is_working",
+          "start_line": 378,
+          "end_line": 384,
+          "sha256": "edeaeb221dac2a344bf05ef9919b3f6657dcfc9ed7f14049230fe3512c4985c8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_model_only_explicit_brief_or_note_and_verbatim_note_preserved",
+          "start_line": 386,
+          "end_line": 399,
+          "sha256": "66a4f8789372b4767f3b8a4f9ebfd997cc9486a34f2e10ef64447b00b3bbe5ae",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_model_selects_read_only_tools_and_journals_actual_receipts",
+          "start_line": 401,
+          "end_line": 422,
+          "sha256": "d52e6a9db68d7aeb9c2a5b7b10f3206b39b96ae29cb485658e0ff8b0167ad7b7",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_model_mutation_and_nonempty_arguments_are_denied_visibly",
+          "start_line": 424,
+          "end_line": 437,
+          "sha256": "d56438ea120a34f7b9488aa8fe674abe69f92e91b9ecbae331b3d896b5a975f6",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_model_round_and_inspection_budgets_are_enforced",
+          "start_line": 439,
+          "end_line": 453,
+          "sha256": "de5259c6c09c8c85b0bcb607956e4737f845daf0518cbe23e0f1c7e1b451f25e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_cycle_never_calls_configured_model_tool_provider",
+          "start_line": 455,
+          "end_line": 460,
+          "sha256": "987986be5fa7f02a1d53cf7298b3e98cfe598c768d8590c344e5f6948e1c108b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_provider_failure_has_bounded_visible_attempts",
+          "start_line": 462,
+          "end_line": 469,
+          "sha256": "c0fbaf2c6ee98b5346b66cf0a28afa604aa982955f332784deb9c5593aae3441",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_cancel_during_provider_failure_cannot_strand_retry",
+          "start_line": 471,
+          "end_line": 485,
+          "sha256": "996809770ea9b34342f5c8d16aeacc2f13620022a308eb25a14d5639e3d911b6",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_cancel_during_provider_failure_cannot_strand_retry.CancellingProvider.annotate",
+          "start_line": 476,
+          "end_line": 478,
+          "sha256": "c3c3aafe56a112d386403e50568d22535cc22ac210978d43b6b519c08e31429b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_full_queue_does_not_block_worker_when_scheduler_enabled",
+          "start_line": 487,
+          "end_line": 494,
+          "sha256": "c8c2300120f53937e9447dbfce09a70361653bd0d18896aa56dcd1bd365e1e85",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_accountant_detects_corruption_instead_of_claiming_success",
+          "start_line": 496,
+          "end_line": 504,
+          "sha256": "cdb81ac767ce27b3e6547725f4741e76cabe84ef6b4176837e50f0a8e55fe560",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_recurring_cycles_require_explicit_control_and_pause",
+          "start_line": 506,
+          "end_line": 518,
+          "sha256": "0d9466e5fe32f51b590bcc3302f3b5741aa526e13a5915c7459f31be676b878e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_input_bounds_and_export_preserves_all_desk_state",
+          "start_line": 520,
+          "end_line": 531,
+          "sha256": "0276c3b52ec56d90f398df34fe1708f340331a9c751277f8a84a75d6f92653c2",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_ordered_journal_hashes_and_tamper_detection_persist_on_restart",
+          "start_line": 533,
+          "end_line": 545,
+          "sha256": "264cd5a7a98ee36c8ac07d40ec868156e6d3f08e115c39b8a362288c2d006c25",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_verified_journal_truncation_is_detected",
+          "start_line": 547,
+          "end_line": 553,
+          "sha256": "b79b56b4e7b8fa565b2226c09d18e98b85d5849ccc716522a10ffcbcf5899eda",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_manual_ledger_rejects_historical_quote_for_creation_and_approval",
+          "start_line": 556,
+          "end_line": 566,
+          "sha256": "4ed8e6a1e9fb4f0e6abd966f879b023ac32d021d776203eb883cff7906b6ebfd",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_manual_extreme_notional_is_a_validation_error_without_write",
+          "start_line": 568,
+          "end_line": 574,
+          "sha256": "cdbe381c02825a3f662c64d401e3ec44206de2f2e7c5cde4401868c45426d2f6",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_funding_cannot_promote_cash_to_sqlite_real",
+          "start_line": 576,
+          "end_line": 584,
+          "sha256": "1d1b8d72b186049de52db0943b5b64eb5fbcc60aa29a1be152036a9eb5c2813e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_journal_scan_and_checkpoint_publication_exclude_stale_concurrent_results",
+          "start_line": 586,
+          "end_line": 635,
+          "sha256": "acf5b0cdea0fb4c15ef03979ec45af9626206da6d7e675f9724e96afca38f4d7",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_journal_scan_and_checkpoint_publication_exclude_stale_concurrent_results.gated_digest",
+          "start_line": 592,
+          "end_line": 597,
+          "sha256": "cd85aa3be4ac5d91900dc150017934c600339e56384ca4416fb3dd4309e78c06",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_journal_scan_and_checkpoint_publication_exclude_stale_concurrent_results.earlier",
+          "start_line": 598,
+          "end_line": 602,
+          "sha256": "0f232cf68008bb64c9d2c43c8e31c993179a538a59ca4a098fedf69d293f2462",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "DeskTest.test_journal_scan_and_checkpoint_publication_exclude_stale_concurrent_results.later",
+          "start_line": 603,
+          "end_line": 613,
+          "sha256": "00a22339be02f8be482db162bf3a0a7864c1119164ed543f665a497297cf5311",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_trading.py",
+      "sha256": "1c8744ad4fed76cf9160e4dbfe4d6d516dab36be325d29ddc2e1f2e36bc66ebb",
+      "lines": 1299,
+      "scope": "entire file, including schema/migrations, constants, functions and nested fixtures",
+      "all_bodies_inspected": true,
+      "bodies": [
+        {
+          "name": "FakeBroker.__init__",
+          "start_line": 17,
+          "end_line": 25,
+          "sha256": "2b6dedf653d5eaebfe8bf476e9fa3e88f78306922727aa94433d21878093b93e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "FakeBroker.account",
+          "start_line": 27,
+          "end_line": 30,
+          "sha256": "4a38bbb72df0e7eaa162c51c61c756a9a6e5f37213f4f375bb398ee2b30ccb18",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "FakeBroker.positions",
+          "start_line": 32,
+          "end_line": 33,
+          "sha256": "5161d7cc8086abd3bc669f8c70a2c533e32e3e8217aa9d8c624b75c6c5ff4f96",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "FakeBroker.orders",
+          "start_line": 35,
+          "end_line": 36,
+          "sha256": "33b6396e94bad2568cf6e9384f8d7f65e4bf98b70ab20d0326804db2e425913f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "FakeBroker.get_order",
+          "start_line": 38,
+          "end_line": 39,
+          "sha256": "afb091a47b26587e648dcd67f63d108ee5e8d0071072780f381f90949cf0190a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "FakeBroker.submit",
+          "start_line": 41,
+          "end_line": 49,
+          "sha256": "cc3f7248bcaa0683aeb145b376bbcbaba8e22202b173fb07c173c408eeb2feec",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "FakeBroker.cancel",
+          "start_line": 51,
+          "end_line": 54,
+          "sha256": "7b5d18c01b4f920bdf3d198efb1bff2f34133a0778fe771a2ba319a8651b9ef2",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "FakeProviders.__init__",
+          "start_line": 58,
+          "end_line": 63,
+          "sha256": "19da4db2c65a774a7bef0136a6c63da2dc063783e6ec7f4a79b3be8d7441ccb8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "FakeProviders.calendar",
+          "start_line": 65,
+          "end_line": 66,
+          "sha256": "5df3736130afa4929c0c24a659297a86700496abb403cc9007d4e2ddbf3f23a8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.setUp",
+          "start_line": 70,
+          "end_line": 74,
+          "sha256": "14215b48e20348eedb5ade2a1fbdfdd856d19bc8f3c379cff97f8cd2a224cc1c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.tearDown",
+          "start_line": 76,
+          "end_line": 77,
+          "sha256": "248c49e70f6736f9ce99924b3530ed8a939420fe08146b695ee2b536a6fa2729",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.quote",
+          "start_line": 79,
+          "end_line": 80,
+          "sha256": "7b7b423fa2c021a280c2a288f0a075dcd790dd17ee284101d4c3c83322ae9c7c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.fund",
+          "start_line": 82,
+          "end_line": 83,
+          "sha256": "a34a79a1c7921457f255bd9be9b5a9479f6107bdd3cfb5bbcebb9744330afa41",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.intent",
+          "start_line": 85,
+          "end_line": 86,
+          "sha256": "14c8cb47528016f82ec19526f25f8e8af28e40a5ca968777f489f3dbfb413801",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.book",
+          "start_line": 88,
+          "end_line": 89,
+          "sha256": "800a0624be8e16d7a7426cee70da8ded26d4940c0eea14a81c8abf2841d06bbc",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.order",
+          "start_line": 91,
+          "end_line": 92,
+          "sha256": "8d0bcd1854a3736107c11f941bbc527c59044b4a9eacb280cf5b0eeac6baaea1",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.process",
+          "start_line": 94,
+          "end_line": 95,
+          "sha256": "f5f844325da0c4b68ae48324355ad2a156fd7afb8f217462f5abb40343a9bed4",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_books_are_independent_empty_and_strategy_free",
+          "start_line": 97,
+          "end_line": 106,
+          "sha256": "f509f9673a7348c1e178ada6c57bcf0cf3057aa0fbc6b3a30473aac773965e4d",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_funding_identity_and_policy_history",
+          "start_line": 108,
+          "end_line": 117,
+          "sha256": "b5ef2554facbeaa1139556a09f6e9151036744ebe87ad4656f45071f3e229b87",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_authorized_intent_executes_unattended_without_approval",
+          "start_line": 119,
+          "end_line": 132,
+          "sha256": "f88d4ba420f895070065bdc94e8968a5ae061a6cbaf7ad8ad5aa5fc21952b7d9",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_intent_idempotency_includes_authorization_fields",
+          "start_line": 134,
+          "end_line": 142,
+          "sha256": "cf43cdf93892ecb0b063de4020b5beef790f6f2211f19848c5399791a57fee1e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_concurrent_cash_and_short_exposure_reservations",
+          "start_line": 144,
+          "end_line": 161,
+          "sha256": "f14f961741af957acfa72f352dcee2087f1d711cd2ca3cc3f57eefc69c6abec1",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_concurrent_cash_and_short_exposure_reservations.buy",
+          "start_line": 148,
+          "end_line": 152,
+          "sha256": "d807879263bdcc870f43d84b851eccd76cb2d39c666a885710d6cac0cc0de9f5",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_halt_blocks_entries_but_services_existing_risk_reduction",
+          "start_line": 163,
+          "end_line": 173,
+          "sha256": "6e65fc315b9294d24778b3988bd25853360c95d1eff6dcd3f7c8511d4e0fcae9",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_short_entry_cover_flip_and_realized_pnl",
+          "start_line": 175,
+          "end_line": 196,
+          "sha256": "7494a0b095aedcfc35db6785bc20582ee481acdb10efc36deaf8e089f6067692",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_explicit_partial_fills_and_fee_once_survive_restart",
+          "start_line": 198,
+          "end_line": 212,
+          "sha256": "9425a86f6c7d9fa74b00e3266090b2fc4a13be4c0e2cbcc3e880f8ed4ef09a01",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_protective_oco_partial_exit_keeps_remaining_protection",
+          "start_line": 214,
+          "end_line": 233,
+          "sha256": "8cb0c0d2e54eef26a60591f1392cac2dc50f8a11086b58ba55077cbba31ae883",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_limit_stop_and_persistent_stop_limit_trigger",
+          "start_line": 235,
+          "end_line": 250,
+          "sha256": "0b2ef9b2d983dbaadace097fe74615be0bfb2f825498a872760f136cede7d35b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_slippage_never_breaches_explicit_limit",
+          "start_line": 252,
+          "end_line": 261,
+          "sha256": "2921903908d43f7590b244a1b2056869238c855cbade9a5b067a4f69725c1db2",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_expiry_and_auction_missed_window_do_not_replay",
+          "start_line": 263,
+          "end_line": 273,
+          "sha256": "e68728e3ab3f012c685894a6533c97d204e9867ee2c706c28d7ee92f73b787a3",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_auction_quotes_require_documented_actual_window",
+          "start_line": 275,
+          "end_line": 284,
+          "sha256": "7272bf3582ae5c0a38d36b6b7ae6c08c64e272a9178f18bee52e8745631a112e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_stale_price_never_fills_and_cancel_releases_reservation",
+          "start_line": 286,
+          "end_line": 297,
+          "sha256": "7e48d14a7fa273e50ecca46b147b0300cafc715f296ae2b7d79de01b6f817fd9",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_cashflow_performance_does_not_report_deposit_as_profit",
+          "start_line": 299,
+          "end_line": 307,
+          "sha256": "0027ef8be8893e47da35ae88447124a5ec5bd32a8c463a9feebbd96f54749fb7",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.broker_book",
+          "start_line": 309,
+          "end_line": 315,
+          "sha256": "3af7fe84956cf83e11a14a82331b711906b3c478720959289a6ae89ef17576dc",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_broker_only_one_binding_and_no_local_funding_or_simulation",
+          "start_line": 317,
+          "end_line": 327,
+          "sha256": "04034b3ca9ee9693f1767eb23662ae7a98dd1a738d9e4a987ddae5953f11383a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_ambiguous_broker_submit_looks_up_identity_before_resending",
+          "start_line": 329,
+          "end_line": 337,
+          "sha256": "6b7b7a09e18e989425813b0d8d55472b272ab38a42198b742d72647960765f82",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_broker_cumulative_fill_notional_delta_and_idempotent_reconciliation",
+          "start_line": 339,
+          "end_line": 358,
+          "sha256": "2204d9c83dfe11f6c682f88dd238785e95ee901b5ff08371b13f04d7d1d4e32e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_external_position_unknown_locked_and_failed_reads_preserve_truth",
+          "start_line": 360,
+          "end_line": 373,
+          "sha256": "70d91967e67a36b5eb31e59a60e5877da8bf4a8ca65db3437d1dd748bfc13c1d",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_owned_orphan_adoption_is_idempotent",
+          "start_line": 375,
+          "end_line": 384,
+          "sha256": "f78ac3fd64bea3124104cb64204e620aae53b4d2e39e53d3e80101d2f7295e2e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_broker_cancel_retains_reservation_until_receipt_confirmed",
+          "start_line": 386,
+          "end_line": 396,
+          "sha256": "d899dbabe48a25333ea42e3fda114fc5b44114f7b43a1602c43b90d8bc09cb3f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_multiple_paper_connections_keep_cash_orders_and_positions_separate",
+          "start_line": 398,
+          "end_line": 421,
+          "sha256": "0667869b710e340ec587e36d66a15651d35c0e2c89475b5ea4798a98360b6f64",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_same_actual_broker_account_cannot_bind_two_aliases",
+          "start_line": 423,
+          "end_line": 430,
+          "sha256": "02c82dad765c42e789dcff44e914ecb00c498e62d03f4b62c5bd34fd97ec1e70",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_policy_compare_and_swap_preserves_newer_operator_override",
+          "start_line": 432,
+          "end_line": 438,
+          "sha256": "cbc0f09ff06f601fb84939e79d0836a62c09eea09db18f5b41047754baef8e57",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_signed_local_reconciliation_detects_corruption_and_preserves_history",
+          "start_line": 440,
+          "end_line": 453,
+          "sha256": "498a158e92045e146b47ade05cdbd48664439c036e82ceaccd003f2e454a01d7",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_failed_book_does_not_freeze_healthy_independent_book",
+          "start_line": 455,
+          "end_line": 462,
+          "sha256": "ce44a1b9c5dc20046e07ded4e194a33433e126dc57f381e7d34e7e7a6a59f57a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_corrupt_local_book_is_fenced_from_further_execution",
+          "start_line": 464,
+          "end_line": 472,
+          "sha256": "7b8bf8b5095513c25f56088ad3ad3f77e763357a64390b8c07996789279a509d",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_funding_has_clean_pre_and_post_flow_valuation_receipts",
+          "start_line": 474,
+          "end_line": 481,
+          "sha256": "af2beb7d6e7131a39bdab2f9b44101f523b2176dd5142abe8bf2d942e1a0b88f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_first_pass_after_restart_does_not_reanchor_old_auction_to_today",
+          "start_line": 483,
+          "end_line": 503,
+          "sha256": "7de5f2844298139e70be3748f57b769b3d711b6fd6307ec07b3e981913b46838",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_first_pass_after_restart_does_not_reanchor_old_auction_to_today.DatedCalendar.calendar",
+          "start_line": 493,
+          "end_line": 498,
+          "sha256": "1712c8be3e89b042c41eed83dff5f29bedd7fd5dfd2cb9ad9606da8393c57c93",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_descending_orphan_history_reconstructs_average_cost_in_source_order",
+          "start_line": 505,
+          "end_line": 522,
+          "sha256": "f137bce82a7247cf6cad66a761dd12a0733d5efb0d47f55f81bb703401cde413",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_ambiguous_auction_submission_recovers_before_expiry_gate",
+          "start_line": 524,
+          "end_line": 535,
+          "sha256": "3e8eb2edcd1e3079793cb040514c5647cda8b0260dffa8d8ba028fa1d332b1c8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_turning_off_short_entries_still_allows_partial_risk_reduction",
+          "start_line": 537,
+          "end_line": 547,
+          "sha256": "f77ee8ff54354dae7e7e04a9e7059803098d1273b4390efcc60ecf43163fa3e7",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_unowned_external_pending_order_locks_even_a_flat_symbol",
+          "start_line": 549,
+          "end_line": 554,
+          "sha256": "004f71c85ddae7b34c7c74a13ffadbfaa83af57261e7f91aca47746c324a547e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_cover_with_protection_never_creates_a_new_position",
+          "start_line": 556,
+          "end_line": 568,
+          "sha256": "a2d76fbb9a0f217a3a82dcea402d460630c79e331e1ddd9c56c5a63ce226e095",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_protected_flip_covers_only_the_newly_opened_quantity",
+          "start_line": 570,
+          "end_line": 583,
+          "sha256": "98e8d9f6e7223502e013aad770b5d708a61e16d4030f0bbb64d72ddfdf5cd779",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_partial_limit_fill_retains_worst_authorized_cash_bound",
+          "start_line": 585,
+          "end_line": 595,
+          "sha256": "03be42ca374d9448a436a3605fc3b9671824164ae279219acb049f6121ad3fee",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_accepted_broker_entry_cancels_after_expiry_or_policy_withdrawal",
+          "start_line": 597,
+          "end_line": 626,
+          "sha256": "2a5e01c9559bdf34c420ae7656540d42ee76a8847ecabea13817ee1772cc5940",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_cancel_and_identity_recovery_survive_failed_reconciliation_and_calendar",
+          "start_line": 628,
+          "end_line": 642,
+          "sha256": "f5ecd585acf476199bc4d9dac0578d0da8146f3beda02e2a3ec01af187a0f5eb",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_missing_adapter_keeps_the_operator_cancel_request",
+          "start_line": 644,
+          "end_line": 654,
+          "sha256": "e7db7b57d74160748cb78f09566fae588b405d93012e2d8571568c2b4c48dc4c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_ambiguous_identity_is_recovered_even_when_market_calendar_fails",
+          "start_line": 656,
+          "end_line": 666,
+          "sha256": "4199e20b7e3e34fe529f0c35a965a0e990e8f57ed795e8b2a61da5027289ed2e",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_broker_oco_legs_reserve_shares_once_after_complete_position_truth",
+          "start_line": 668,
+          "end_line": 683,
+          "sha256": "50da99e77dd36b8340acdcbc412dcd57b9bc74ce8863008f0ad5e95186363f93",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_pending_flip_reserves_its_closing_component",
+          "start_line": 685,
+          "end_line": 694,
+          "sha256": "402a6dd42ca4984fb5bb69579c4ba7b9041adce13f0fb0bd1cdd883d133b76ea",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_partial_cover_and_flip_retains_remaining_cash_and_closing_reservations",
+          "start_line": 696,
+          "end_line": 709,
+          "sha256": "01d25639879673ad9c992129a973feb97cebf52ac2dc06d0642b29b118ee8eb5",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_broker_native_bracket_cannot_cover_or_flip_an_existing_opposite_position",
+          "start_line": 711,
+          "end_line": 719,
+          "sha256": "a57598cc67376855a37077cc47af099b77488764a7fa3a42d7a69f4ddfe644db",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_protection_is_serviced_ahead_of_two_hundred_waiting_entries",
+          "start_line": 721,
+          "end_line": 733,
+          "sha256": "e399cecfbef179561acf4e06d2e16f554d1b463b169de76af837dec3ed26aa14",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_waiting_entry_rotation_survives_restart",
+          "start_line": 735,
+          "end_line": 744,
+          "sha256": "b406800576ec6b6ba64cfb59cfde2436bfae598204edae9389698eaa9158a3ac",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_slow_identity_lookup_rechecks_wall_clock_and_operator_policy_before_send",
+          "start_line": 746,
+          "end_line": 765,
+          "sha256": "327b16501f3e0f3d142da49a4bcd29c8071db8214aea0ec7b9d39afb1948e940",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_slow_identity_lookup_rechecks_wall_clock_and_operator_policy_before_send.delayed_lookup",
+          "start_line": 753,
+          "end_line": 758,
+          "sha256": "4927c782872822382bbe66d1ed0435e483b69222b8051649f7adb97a575278f4",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_production_clock_refreshes_between_local_intents",
+          "start_line": 767,
+          "end_line": 782,
+          "sha256": "18e79955e6b7001cf1d7d30c0d51971274804448bfef3522895ec0ca9cc8c2f8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_production_clock_refreshes_between_local_intents.advancing_fill",
+          "start_line": 774,
+          "end_line": 777,
+          "sha256": "3ae668abf7636c4a2dccc912f00e2097aa7e3d53bfc8edf4be4a0f592ba49298",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_policy_is_opt_in_versioned_durable_and_compare_and_swap",
+          "start_line": 784,
+          "end_line": 799,
+          "sha256": "974ce273a39d42a065b06ee1a6e2569aeff033e421b6290af8da82bc0ca7f8f4",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_cash_and_share_books_stay_separate_while_gross_caps_reserve_atomically",
+          "start_line": 801,
+          "end_line": 824,
+          "sha256": "c8d2151483140224c502f8bae6ef692651375520764feccdf2545ff93c66710a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_cash_and_share_books_stay_separate_while_gross_caps_reserve_atomically.authorize",
+          "start_line": 807,
+          "end_line": 812,
+          "sha256": "3b8953f31212a8cc4f1eea48c0057a815e16a7ca2da2f86e350da6b488fa0910",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_symbol_cap_never_nets_opposite_positions_across_books",
+          "start_line": 826,
+          "end_line": 843,
+          "sha256": "54f4586a3f6e0a7aa32f7a4e083365f1ee4dddb7873a9061c48e8c0265d1aeff",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_gate_requires_fresh_marks_across_books_but_preserves_exits",
+          "start_line": 845,
+          "end_line": 867,
+          "sha256": "258247654a0ac9e03820153199667d5d75f3b2f3389ba8421af2f9767774fce4",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_unknown_broker_gate_is_opt_in_and_reducing_exits_remain_available",
+          "start_line": 869,
+          "end_line": 882,
+          "sha256": "0265b7083ae14dca88267f7e688527f01f329cfe8d2063afbcf66604c14491d5",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_known_broker_truth_becomes_stale_and_failed_reads_block_new_entries",
+          "start_line": 884,
+          "end_line": 898,
+          "sha256": "cd76be90136b5d0bb9a38466e6382a57ad9b4b7dde43f5ffd9e1ce5a29abfa1b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_cap_lowered_after_authorization_blocks_local_entry_until_reduction",
+          "start_line": 900,
+          "end_line": 913,
+          "sha256": "544c1c583bbbc5d950da610574dfbe39465e8fb5f0c999f982139cb410fd9f20",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_cap_cancels_accepted_broker_entries_without_assuming_a_fill",
+          "start_line": 915,
+          "end_line": 924,
+          "sha256": "872d11a1e781975d78a2730fcde840dd6765c2b443c4dfa27532d970422df365",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_portfolio_foreign_pending_broker_exposure_is_unknown_not_zero",
+          "start_line": 926,
+          "end_line": 936,
+          "sha256": "b5e1e39f1a3c83d585e4547c587272ce52d6a65549c4dc68d85590d13dc081a2",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_accepted_broker_entry_can_cancel_for_global_policy_with_no_quote",
+          "start_line": 938,
+          "end_line": 948,
+          "sha256": "e7e65a37881f1a0fd96092a7b6fbe5ef711d01a31db4d18d0a222d07da43eaa6",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_accepted_broker_entry_can_cancel_for_global_policy_after_account_read_failure",
+          "start_line": 950,
+          "end_line": 959,
+          "sha256": "722102496e8fec600ab9ceea308dbc05fbda006cc4e5b31c67930c6dd1253e3f",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_foreign_nested_bracket_protection_is_unattributed_pending_exposure",
+          "start_line": 961,
+          "end_line": 970,
+          "sha256": "74e8b0dc89f9ac638bd3ed3da6c2c0eb3e910b6faa9f2456184a0c3baee87960",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_owned_broker_protection_after_external_flatten_is_unknown_pending_exposure",
+          "start_line": 972,
+          "end_line": 991,
+          "sha256": "796dff2b08841e9c0d3dd311ef25f704645866e573465236e7abcb5eed50810a",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_per_book_caps_include_other_pending_explicit_price_bounds",
+          "start_line": 995,
+          "end_line": 1004,
+          "sha256": "679f1c2f95c5ec64bd05e9f325176b7632aef06cc702627273ca673874bbb917",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_buy_stop_reserves_explicit_trigger_before_any_transport",
+          "start_line": 1006,
+          "end_line": 1017,
+          "sha256": "48bc0d65c2e4f843f2c96be4a4b5d6f05259b2bcdeeaa01d506e7b90d1ca27b0",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_stop_limit_reserves_limit_without_inventing_trigger_execution",
+          "start_line": 1019,
+          "end_line": 1026,
+          "sha256": "34ffcf0e18ac3d7a7c1d24160a4d713ddb789adada1e34fd653911a41896f5ce",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_cheap_limit_does_not_discount_current_held_exposure",
+          "start_line": 1028,
+          "end_line": 1036,
+          "sha256": "894f3d78e11a88286136333292304fbf688a715bc253b22998867274207c4c81",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_integer_range_failure_blocks_only_affected_order_without_partial_fill",
+          "start_line": 1038,
+          "end_line": 1057,
+          "sha256": "d29b7dc741e8522c9ef7030d465092351adfc71983da154aa06ad907eb1bbe0b",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_reconciliation_rejects_preexisting_real_money_without_rewriting_it",
+          "start_line": 1059,
+          "end_line": 1068,
+          "sha256": "493e5c436a0b6abf54d00204f6fb1e80d784f02effe36901b4502f5d50d8da95",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_broker_receipts_must_match_saved_identity_and_authorized_economics",
+          "start_line": 1070,
+          "end_line": 1083,
+          "sha256": "10acc98c9549c0c58eb64c24e08e5587298311aa20f15c60156e77faaf5cfdad",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_terminal_broker_receipt_does_not_regress_or_drop_late_measured_fill",
+          "start_line": 1085,
+          "end_line": 1106,
+          "sha256": "837a9393c3525dcd0552d15ba9d927cb80faac3c1e5e01e0de1ea24510564555",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_fractional_broker_deltas_preserve_subcent_receipts_and_positive_prices",
+          "start_line": 1108,
+          "end_line": 1124,
+          "sha256": "0f47991e1816d61e660559ab6ef91cd12078e553cd6fbe69786c5a07f3af324c",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_nine_decimal_owned_broker_orphan_is_observed_without_rounding",
+          "start_line": 1126,
+          "end_line": 1135,
+          "sha256": "0e044cb2dac381485504c46318dcc78786b7fd60cface932712ed1e376f2fa07",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_reconciliation_observation_time_follows_completed_provider_reads",
+          "start_line": 1137,
+          "end_line": 1147,
+          "sha256": "933721076a78a36f51c780c021a919bdc8b05fe3f69264b01410e0cda096fba0",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_execution_fence_is_atomic_with_each_local_fill",
+          "start_line": 1149,
+          "end_line": 1171,
+          "sha256": "0eb34400587017167306e8c284474df18cde9508e4d4c6e5dee9e3ffb0eabae8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_execution_fence_is_atomic_with_each_local_fill.fill_then_pause",
+          "start_line": 1155,
+          "end_line": 1158,
+          "sha256": "ceb3eb658b472d8f8db3f2aae02b4cfed1e12c121a6efb54d7f99449ce1722e6",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_execution_fence_is_atomic_with_each_local_fill.fence",
+          "start_line": 1159,
+          "end_line": 1164,
+          "sha256": "c603d7c42fd97cbc6236311b06a83887440643a340a38fd75cc386f73d00e7d6",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_local_reconciliation_uses_mutation_order_when_wall_clock_moves_backwards",
+          "start_line": 1173,
+          "end_line": 1181,
+          "sha256": "62df159fdd3b6ead8c45c42095a619e55324590b7d9746ee13cac6c7df52b295",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_owned_orphan_replay_normalizes_source_timezones_before_ordering",
+          "start_line": 1183,
+          "end_line": 1198,
+          "sha256": "5abfd3d38e764d1ca38aaec6e90edee4f6c7c9cb2547fb6a03115c0185f4d231",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_same_quantity_broker_notional_correction_preserves_prior_ledger",
+          "start_line": 1200,
+          "end_line": 1212,
+          "sha256": "85a656449e62ab8bef25ea446ae811a85632b0db8f98887943692bba6c486c64",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_completed_broker_fill_never_becomes_a_cancellation",
+          "start_line": 1214,
+          "end_line": 1225,
+          "sha256": "544bb0185afe595dae2719a9ea070e1b2fff2a0968f6bb8da67e5893a04d8c33",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_native_protective_quantity_shrink_is_adopted_but_increase_is_refused",
+          "start_line": 1227,
+          "end_line": 1245,
+          "sha256": "0005bf11145e1a82b3a7061ab6c62b037f1651943a5fcf79685151c005a32fb8",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_cumulative_broker_order_chronology_withholds_basis_dependent_realized_values",
+          "start_line": 1247,
+          "end_line": 1274,
+          "sha256": "bca4dde5156befcde85177a9ba40dacec907821205be214e8af41947544be7b2",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        },
+        {
+          "name": "TradingTest.test_broker_basis_waits_for_complete_position_truth_after_transport_fill",
+          "start_line": 1276,
+          "end_line": 1295,
+          "sha256": "7c9a1fd559f53a1a1b5ee1cbd5d2a6ce50377a2c2c704aabb27cb81da7ce11f3",
+          "review": "read and traced; runtime methods also exercised through focused and baseline integration tests"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "FIN-001",
+      "title": "Per-book caps ignored pending explicit prices and could discount held marks",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "A pending one-share short limit at $100 and a second one-share short market instruction were both admitted under a $150 cap; the shared projected exposure was $200. A cheap buy limit also discounted current held exposure.",
+      "repair": "_validate_capacity now combines current marks, explicit pending/candidate stop and limit bounds, signed pending quantities and all held symbols before applying book caps.",
+      "regression_tests": [
+        "test_per_book_caps_include_other_pending_explicit_price_bounds",
+        "test_cheap_limit_does_not_discount_current_held_exposure"
+      ]
+    },
+    {
+      "id": "FIN-002",
+      "title": "Buy-stop cash reservation ignored its explicit trigger",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "A ten-share buy-stop at $30 was accepted with $100 cash using a $10 quote and reserved only $100 before potential broker transport.",
+      "repair": "Reserve pure buy-stops at at least their explicit trigger; preserve limit ceilings for stop-limit orders and retain known bounds after partial fills.",
+      "regression_tests": [
+        "test_buy_stop_reserves_explicit_trigger_before_any_transport",
+        "test_stop_limit_reserves_limit_without_inventing_trigger_execution"
+      ]
+    },
+    {
+      "id": "FIN-003",
+      "title": "Aggregate monetary arithmetic could overflow the exact cents ledger",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "Two allowed large short instructions caused a processing-pass OverflowError; SQLite addition can promote overflowed integer money to REAL. Manual extreme notionals were not range validated.",
+      "repair": "Validate signed 64-bit cents before funding/fill writes, cumulative money and valuation receipts. Assign checked totals instead of unchecked SQL arithmetic. Validate all possible fill-range errors before mutations so catching DeskError cannot commit a partial accounting effect; isolate an invalid intent while servicing healthy books. Independent local reconciliation also rejects pre-existing REAL/out-of-range monetary columns without resetting state.",
+      "regression_tests": [
+        "test_integer_range_failure_blocks_only_affected_order_without_partial_fill",
+        "test_manual_extreme_notional_is_a_validation_error_without_write",
+        "test_funding_cannot_promote_cash_to_sqlite_real",
+        "test_reconciliation_rejects_preexisting_real_money_without_rewriting_it"
+      ]
+    },
+    {
+      "id": "FIN-004",
+      "title": "Broker receipts could be attributed to a different authorized asset or mechanics",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "A receipt with a matching client identity but MSFT symbol was recorded as an AAPL fill; mismatched side, broker ID, quantity or price/mechanics were also unchecked.",
+      "repair": "Validate broker/client identity, symbol, side, quantity, type, time in force and explicit prices before any accounting. Accept only decreasing native protective quantity adjustments; refuse increases and inconsistent filled status.",
+      "regression_tests": [
+        "test_broker_receipts_must_match_saved_identity_and_authorized_economics",
+        "test_native_protective_quantity_shrink_is_adopted_but_increase_is_refused"
+      ]
+    },
+    {
+      "id": "FIN-005",
+      "title": "Lagging broker status could reopen conclusively cancelled orders",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "After conclusive cancellation, a stale accepted order snapshot reset local status to open and introduced an unreserved active liability. Fully filled records could also become cancellation records.",
+      "repair": "Preserve terminal local status and completion timestamps against regressing lifecycle snapshots while still accounting newly measured cumulative fill deltas. Retain broker_status separately for source fidelity.",
+      "regression_tests": [
+        "test_terminal_broker_receipt_does_not_regress_or_drop_late_measured_fill",
+        "test_completed_broker_fill_never_becomes_a_cancellation"
+      ]
+    },
+    {
+      "id": "FIN-006",
+      "title": "Sub-cent broker partial fills were rejected and implied prices used rounded cents",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "A real 0.0001-share partial at $10 has positive execution quantity/value but rounds to zero ledger cents; it was rejected. Incremental prices derived from rounded cumulative cents could differ materially from the source-implied price. Orphan quantities over six decimal places were rejected despite supported nine-place broker precision.",
+      "repair": "Persist exact broker cumulative notional; derive positive incremental prices from exact cumulative source values; retain zero-cent positive-quantity partials exactly once; support observed nine-place broker quantities while operator input remains six-place.",
+      "regression_tests": [
+        "test_fractional_broker_deltas_preserve_subcent_receipts_and_positive_prices",
+        "test_nine_decimal_owned_broker_orphan_is_observed_without_rounding"
+      ]
+    },
+    {
+      "id": "FIN-007",
+      "title": "Manual ledger allowed historical daily marks to authorize intraday fills",
+      "severity": "medium",
+      "status": "repaired",
+      "reproduction": "The autonomous engine rejected source labels identifying daily historical marks, but the independent manual approval path accepted the same fresh-timestamped historical price.",
+      "repair": "Apply the same historical source gate to manual order creation and approval; preserve the pending order/cash when refused.",
+      "regression_tests": [
+        "test_manual_ledger_rejects_historical_quote_for_creation_and_approval"
+      ]
+    },
+    {
+      "id": "FIN-008",
+      "title": "Reconstruction chronology depended on wall-clock and lexical timezone ordering",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "Valid local fills 10@$10,10@$20,5@$25 produced $50 realized P&L, but a backward observed clock reordered reconstruction and falsely failed the book. Broker orphan source timestamps with different offsets sorted lexically rather than by actual time.",
+      "repair": "Reconstruct local cost basis in immutable append rowid order. Normalize broker source timestamps to UTC datetime before orphan cumulative replay.",
+      "regression_tests": [
+        "test_local_reconciliation_uses_mutation_order_when_wall_clock_moves_backwards",
+        "test_owned_orphan_replay_normalizes_source_timezones_before_ordering"
+      ]
+    },
+    {
+      "id": "FIN-009",
+      "title": "Broker snapshot observation timestamps preceded the provider reads",
+      "severity": "medium",
+      "status": "repaired",
+      "reproduction": "A slow complete reconciliation was labelled with the time before account/positions/orders/identity reads, causing newly obtained truth to appear stale and mislabelling observation provenance.",
+      "repair": "Refresh the production wall clock after successful complete network reads for each broker book; retain deterministic explicit clock injection.",
+      "regression_tests": [
+        "test_reconciliation_observation_time_follows_completed_provider_reads"
+      ]
+    },
+    {
+      "id": "FIN-010",
+      "title": "Changed broker cumulative notional without changed quantity was silently ignored",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "A previously measured one-share fill at $10 could later report $11 at the same quantity without rejecting the contradictory accounting receipt.",
+      "repair": "Reject a changed cent execution notional at unchanged cumulative quantity and preserve prior cash, fills and positions. Broker execution corrections require a separate verified correction workflow.",
+      "regression_tests": [
+        "test_same_quantity_broker_notional_correction_preserves_prior_ledger"
+      ]
+    },
+    {
+      "id": "FIN-011",
+      "title": "Cumulative broker order chronology presented an unverified realized P&L as known",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "Actual sequence buy 1@$10, sell 1@$20, buy 1@$20 realizes $10, but aggregate buy order 2@$15 completes after the sell. Sorting order cumulative endpoints reconstructs $5 and previously exposed it as known account/position/fill/journal realized P&L despite source position cost $20 disagreeing with estimated ledger cost $15.",
+      "repair": "Conservatively withhold all broker realized P&L outputs with explicit execution-history coverage until a complete ordered broker execution activity tape and verified source basis are installed. Public fill realized_cents also becomes null. Keep internal reconstructed cents as explicitly unverified raw evidence. New broker journal events use null realized values and coverage. Average cost/basis/unrealized are known only against a matching complete broker position snapshot; durable receipt cursor prevents newer receipt estimates from being mistaken for verified position basis.",
+      "regression_tests": [
+        "test_cumulative_broker_order_chronology_withholds_basis_dependent_realized_values",
+        "test_broker_basis_waits_for_complete_position_truth_after_transport_fill"
+      ]
+    },
+    {
+      "id": "FIN-012",
+      "title": "Concurrent journal verification could overwrite a newer checkpoint or integrity failure",
+      "severity": "high",
+      "status": "repaired",
+      "reproduction": "An older verifier scanned checkpoint 1, then paused before writing status. Another append/verifier advanced to checkpoint 2 or recorded a new failure; the older verifier could resume and overwrite the newer checkpoint/failure because scanning and publication used separate SQL transactions.",
+      "repair": "Serialize the full chain scan, checkpoint comparison and status publication in one BEGIN IMMEDIATE transaction. A later append/verification follows the older publication, so a stale successful scan cannot overwrite newer evidence or failure.",
+      "regression_tests": [
+        "test_journal_scan_and_checkpoint_publication_exclude_stale_concurrent_results"
+      ]
+    }
+  ],
+  "joint_repairs": [
+    {
+      "id": "RUNTIME-PAUSE-INTEGRATION",
+      "owner": "audit_runtime with audit_financial",
+      "status": "repaired",
+      "behavior": "Trading.process calls optional execution_fence(con) inside each per-intent write transaction, before local effects. Final broker pre-submit SQL guard also uses the callback; pause exceptions propagate without blocking an intent. Already returned or recovered broker receipts remain truthfully recorded.",
+      "tests": [
+        "test_execution_fence_is_atomic_with_each_local_fill"
+      ]
+    }
+  ],
+  "verification": {
+    "command": ".venv/bin/python -m unittest tests.test_trading tests.test_backend -q",
+    "tests": 120,
+    "baseline_tests": 97,
+    "new_tests": 23,
+    "result": "passed",
+    "duration_seconds": 3.993,
+    "log": "docs/verification/financial-audit-tests.log",
+    "real_broker_requests": 0,
+    "default_database_mutations": 0,
+    "strategies_added": 0
+  },
+  "limits": [
+    "Inspection and focused regression coverage are not a formal proof that all possible bugs are absent.",
+    "Broker cumulative average prices provide implied incremental execution prices, not a complete broker trade-activity tape; source average rounding remains visible as a measurement limit.",
+    "Pre-migration broker fill prices cannot recover exact sub-cent source notional that was never retained; repeated existing cumulative receipts seed the new exact field when consistent.",
+    "Unexpected broker execution corrections, corporate-action repricing and increased/replaced protection require a verified repair workflow; this desk intentionally fails closed rather than inventing corrected money.",
+    "Broker requests in this audit are simulated. Actual account integration, unknown external fees/cashflows and generic broker cancel/replace protection repair remain deployment/extension limits already disclosed.",
+    "Broker realized_cents retained in raw SQL evidence are reconstruction estimates. Public broker account/position/fill views and new journal receipts explicitly withhold realized P&L; an ordered execution activity importer remains an uninstalled extension."
+  ]
+}

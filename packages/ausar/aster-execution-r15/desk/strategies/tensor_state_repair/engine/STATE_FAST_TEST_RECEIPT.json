@@ -1,0 +1,104 @@
+{
+  "schema": "aster-tensor-fast-state-validation/1",
+  "status": "PASS",
+  "executed_at": "2026-10-09T12:41:27.563062+00:00",
+  "exit_code": 0,
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "unittest",
+    "tests.test_tensor_engine",
+    "tests.test_tensor_engine_state_fast",
+    "-v"
+  ],
+  "tests": 24,
+  "elapsed_seconds": 7.684,
+  "source_manifest_sha256": "5f38a63a611bdfbe62ceb6a0619f64559e7b9d136f51ac57597988d8da2ee28c",
+  "pinned_source_files": 26,
+  "exact_sealed_r11_scientific_files": 24,
+  "unchanged_frozen_modules": 20,
+  "native_frames": [
+    "1h",
+    "1d",
+    "1wk"
+  ],
+  "fast_state_frames_used_by_runtime": [
+    "1h",
+    "1wk"
+  ],
+  "financial_trials": 0,
+  "model_refits": 0,
+  "predictive_rule_changes": 0,
+  "checks": [
+    "All original full93 native adapter checks remain passing.",
+    "Every required state field and snapshot equals the exact full exporter over real H1/W fixture histories.",
+    "Every retained state field equals the exact full exporter across the entire restored 3478-bar AMD hourly history.",
+    "Full-history chronological greedy opportunities and cooldown clocks match exactly at five prefix boundaries.",
+    "All warmup boundaries, nulls, independent canonical request SHA and millisecond availability/open clocks are preserved.",
+    "Later wildly changed prices/volume do not rewrite prior state features.",
+    "Concurrent mixed-frame reusable-worker requests do not carry previous histories into later requests.",
+    "Real nonresponsive Node child, multiple response lines, exhausted worker capacity and inconsistent output fail closed; subsequent valid requests recover."
+  ],
+  "environment": {
+    "python": "3.12.14",
+    "node": "v24.19.0",
+    "cgroup_cpu_max": "400000 100000",
+    "cgroup_memory_max": "17179869184",
+    "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0"
+  },
+  "microbenchmarks": {
+    "dataset": "AMD original immutable H1 full prefix",
+    "source_bars": 3478,
+    "prepared_gzip_sha256": "edfdd5aa738d958243694744d06d51ebbbe02ebf653c9e37615e76dc07c90b1a",
+    "workers": 8,
+    "initial_full93_24_requests_seconds": 8.516559669999879,
+    "initial_fast_24_requests_seconds_before_final_python_validation_optimization": 5.262764884000262,
+    "final_first_24_requests_seconds": 3.8426726819998294,
+    "final_next_48_requests_seconds": 5.715974732000177,
+    "final_next_96_requests_seconds": 11.287351282000145,
+    "final_sustained_symbols_per_second": 8.505095447245491,
+    "request_history_cache_used": false
+  },
+  "actual_full_roster_receipt": "strategies/tensor_state_repair/engine/STATE_FAST_FULL_ROSTER_THROUGHPUT.json",
+  "limitations": [
+    "Source throughput is an operational timing check, not a trading performance test.",
+    "The whole-enrollment source-computation receipt excludes live network latency, forward source stitching and database/accounting operations.",
+    "Execution readiness requires a complete timely runtime census and successful paper admission checks; this receipt does not certify a live fill or benchmark outperformance.",
+    "Private original Anna formula identity remains NOT_ESTABLISHED."
+  ],
+  "prior_adapter_receipt": "TEST_RECEIPT.json preserves the historical 25-file closure validation; this receipt binds the current 26-file closure and current Python adapter.",
+  "files": {
+    "backend/tensor_engine.py": {
+      "bytes": 25026,
+      "sha256": "c2bf3cb1305385c72bb17fb579636a025a9c9b91747a0698ba8b5a9164dac173"
+    },
+    "tests/test_tensor_engine.py": {
+      "bytes": 13106,
+      "sha256": "22182b1b076264d4ce53216b45adaf6af4fcd1b734f36ee1d407afadd1cfd373"
+    },
+    "tests/test_tensor_engine_state_fast.py": {
+      "bytes": 11195,
+      "sha256": "6cb51f96fcfae9b9719e81892ee34039ffaf941707a7d1e9a190507fefe6a5b3"
+    },
+    "strategies/tensor_state_repair/engine/state_features.mjs": {
+      "bytes": 7885,
+      "sha256": "940dee50195c983afce1cd68a311f1398f5cba16bb5b035f410eb2127e4676c2"
+    },
+    "strategies/tensor_state_repair/engine/SOURCE_MANIFEST.json": {
+      "bytes": 8373,
+      "sha256": "5f38a63a611bdfbe62ceb6a0619f64559e7b9d136f51ac57597988d8da2ee28c"
+    },
+    "strategies/tensor_state_repair/engine/STATE_FAST_TEST_TRANSCRIPT.txt": {
+      "bytes": 4491,
+      "sha256": "368798e2c06a451f1fe4bfc5c4c222e6c80d382a67279e53faa8644b88f2de28"
+    },
+    "strategies/tensor_state_repair/engine/STATE_FAST_FULL_ROSTER_THROUGHPUT.json": {
+      "bytes": 466438,
+      "sha256": "1e1393d51bc23ec5162cdb04af21aeaa1d7ba37717d52592e298e478f8d454fa"
+    },
+    "strategies/tensor_state_repair/engine/README.md": {
+      "bytes": 7005,
+      "sha256": "b9fb4f29173423e892b9c57dbfd2eaed1661b8bc10ace5cb7d9ff19d08e74fe5"
+    }
+  }
+}

@@ -1,0 +1,501 @@
+{
+  "audit": "Independent recheck of financial, notification and cognitive worker repairs",
+  "generated_at": "2026-10-08T07:45:10.663501+00:00",
+  "phase": "Completed independent final verification of frozen source",
+  "authorization_scope": "Code inspection, isolated temporary database and loopback/simulated transports; no broker action, no external message, no actual model call, no strategy",
+  "source_or_test_mutations_by_this_auditor": false,
+  "coverage": [
+    {
+      "path": "backend/store.py",
+      "snapshot_sha256": "b2185cc723b3a1f93ffb4529f0266c913549c336488e05d1ab1fe5c495923375",
+      "lines": 507,
+      "entire_file_read": true,
+      "function_bodies": 39,
+      "class_declarations": 2,
+      "review_basis": "Complete original file bodies plus all final modifications and newly added bodies independently read"
+    },
+    {
+      "path": "backend/trading.py",
+      "snapshot_sha256": "c2d1fd60d0356ec5c9511d65b4a80851c99d043f995fc62e5d51f2800e8fac8e",
+      "lines": 1370,
+      "entire_file_read": true,
+      "function_bodies": 43,
+      "class_declarations": 1,
+      "review_basis": "Complete original file bodies plus all final modifications and newly added bodies independently read"
+    },
+    {
+      "path": "backend/notifications.py",
+      "snapshot_sha256": "4bc3887da37053750f30f3c173b477e45a76d71639041ddaa08179ea989d1ab5",
+      "lines": 525,
+      "entire_file_read": true,
+      "function_bodies": 33,
+      "class_declarations": 6,
+      "review_basis": "Complete original file bodies plus all final modifications and newly added bodies independently read"
+    },
+    {
+      "path": "backend/reasoning.py",
+      "snapshot_sha256": "07be30b3c7637e623afe98e2b6207e207122f5f96719d88f131f7a1eb71331ca",
+      "lines": 146,
+      "entire_file_read": true,
+      "function_bodies": 6,
+      "class_declarations": 1,
+      "review_basis": "Complete original file bodies plus all final modifications and newly added bodies independently read"
+    },
+    {
+      "path": "backend/worker.py",
+      "snapshot_sha256": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995",
+      "lines": 357,
+      "entire_file_read": true,
+      "function_bodies": 16,
+      "class_declarations": 1,
+      "review_basis": "Complete original file bodies plus all final modifications and newly added bodies independently read"
+    },
+    {
+      "path": "backend/models.py",
+      "snapshot_sha256": "2b201bdb8309c4921224194806128745781775896494c6e4383666d438efa5cf",
+      "lines": 64,
+      "entire_file_read": true,
+      "function_bodies": 2,
+      "class_declarations": 8,
+      "review_basis": "Complete original file bodies plus all final modifications and newly added bodies independently read"
+    },
+    {
+      "path": "backend/http_transport.py",
+      "snapshot_sha256": "aa7528c69c7dd2ec5e7ccdacff2261f7f37717a238310e9524c011ab1268cea8",
+      "lines": 134,
+      "entire_file_read": true,
+      "function_bodies": 7,
+      "class_declarations": 2,
+      "review_basis": "Complete original file bodies plus all final modifications and newly added bodies independently read"
+    }
+  ],
+  "diffs_reviewed": [
+    "backend/store.py",
+    "backend/trading.py",
+    "backend/notifications.py",
+    "backend/reasoning.py",
+    "backend/worker.py"
+  ],
+  "checks": [
+    "Integer-cents before-effect bounds, partial-fill reservation prices, signed close/flip cost allocation and separate book state",
+    "Cumulative broker execution notional/quantity, positive exact fractional delta prices including zero-cent receipts, native protective quantity shrink and saved identity/mechanics",
+    "Terminal broker receipt preservation, cancellation recovery, guarded local fill/submission authority and durable replay chronology",
+    "Notification claim serialization/file mutex, disabled channel/subscription revalidation, destination binding, ambiguous sends and atomic result/receipt",
+    "Real model HTTP total deadline, bounded valid JSON evidence, malformed response handling, six-call/two-round bounds, read-only tools",
+    "Worker instance tick mutex, per-task and process lease checks/renewal, shutdown and recovery attempt fencing"
+  ],
+  "findings": [
+    {
+      "id": "IR-01",
+      "severity": "high",
+      "path": "backend/notifications.py",
+      "root_cause": "urllib timeout=8 only bounds inactive socket operations; continuously producing response bytes can hold the shared autonomy tick indefinitely.",
+      "probe": {
+        "transport": "Real loopback ThreadingHTTPServer only",
+        "method": "POST",
+        "response_bytes": 93,
+        "elapsed_seconds": 9.031908097,
+        "configured_socket_timeout_seconds": 8,
+        "outcome": "Accepted success after nominal timeout; continuous streaming can extend indefinitely"
+      },
+      "status": "Repaired by owner; independently reprobed on final frozen source and final full suite passed",
+      "repair_observed": "Notification HTTP and WebPush use shared total-deadline transport; a batch start budget yields before another slow delivery.",
+      "post_repair_probe": {
+        "finding_id": "IR-01",
+        "probe": "original 93-byte continuous notification response",
+        "elapsed_seconds": 8.002501016999304,
+        "deadline_seconds": 8,
+        "requests_received": 1,
+        "client_connection_closed": true,
+        "result": {
+          "state": "DeliveryFailure",
+          "ambiguous": true,
+          "retryable": false,
+          "message": "Delivery transport failed"
+        },
+        "passed": true
+      }
+    },
+    {
+      "id": "IR-02",
+      "severity": "medium",
+      "path": "backend/worker.py",
+      "root_cause": "Legacy manual accountant replay used timestamp,rowid, allowing wall-clock regression to reverse already committed effects.",
+      "probe": {
+        "durable_append_order": [
+          "buy 1 at $10 timestamp07:01:00",
+          "sell 1 at $10 timestamp07:00:59"
+        ],
+        "correct_cash": 100,
+        "prior_task_status": "queued",
+        "prior_task_error": "Reconciliation failed: fill exceeds reconstructed holdings",
+        "post_owner_repair_task_status": "completed",
+        "post_owner_repair_task_error": null
+      },
+      "repair_observed": "Manual accounting replay follows durable rowid append order.",
+      "status": "Repaired by owner; independently reprobed on final frozen source and final full suite passed",
+      "post_repair_probe": {
+        "finding_id": "IR-02",
+        "probe": "manual reconcile after clock regression",
+        "post_repair_task": {
+          "status": "completed",
+          "error": null
+        },
+        "passed": true
+      }
+    },
+    {
+      "id": "IR-03",
+      "severity": "high",
+      "path": "backend/trading.py",
+      "root_cause": "Ordering cumulative order snapshots by final fill timestamps cannot recover interleaved execution chronology, yet inferred book/fill realized P&L is presented as measured.",
+      "probe": {
+        "actual_execution_sequence": [
+          "buy 1 at $10",
+          "sell 1 at $20",
+          "buy 1 at $20"
+        ],
+        "buy_order_cumulative_quantity": 2,
+        "buy_order_cumulative_average": 15,
+        "buy_order_final_fill_time": "10:02",
+        "sell_order_quantity": 1,
+        "sell_order_average": 20,
+        "sell_order_final_fill_time": "10:01",
+        "true_realized_pnl": 10,
+        "reported_realized_pnl": 5,
+        "reconcile_errors": [],
+        "final_broker_position_basis": 20,
+        "mismatching_position_correctly_locked": true
+      },
+      "recommendation": "Withhold broker basis-dependent realized values with explicit coverage unless exact execution chronology is available; preserve the observed cumulative quantity/notional and actual broker position/cash.",
+      "status": "Repaired by owner; independently reprobed on final frozen source and final full suite passed",
+      "repair_observed": "Broker realized P/L is withheld at book, position, fill and journal boundaries; matching complete broker basis remains visible, reconstructed raw values carry export coverage metadata.",
+      "post_repair_probe": {
+        "finding_id": "IR-03",
+        "probe": "original overlapping cumulative broker snapshots",
+        "reconcile_errors": [],
+        "public_realized_pnl": null,
+        "public_realized_coverage": "withheld",
+        "position_realized": null,
+        "fill_realized_values": [
+          null,
+          null
+        ],
+        "fill_raw_realized_cents": [
+          null,
+          null
+        ],
+        "verified_position_basis": 20.0,
+        "passed": true
+      }
+    },
+    {
+      "id": "IR-04",
+      "severity": "high",
+      "path": "backend/store.py",
+      "root_cause": "verify_ledger reads and persists checkpoint/status in separate transactions without a monotonic fence, allowing stale verification to overwrite newer evidence.",
+      "probe": {
+        "initial_checkpoint": 1,
+        "newer_concurrent_checkpoint": 2,
+        "final_persisted_checkpoint": 1,
+        "latest_event_id": 2,
+        "checkpoint_regressed": true
+      },
+      "recommendation": "Serialize verification or fence checkpoint/status persistence so earlier readings cannot override newer verification evidence.",
+      "status": "Repaired by owner; independently reprobed on final frozen source and final full suite passed",
+      "repair_observed": "Journal scan, checkpoint comparison and status publication now share one immediate write transaction.",
+      "post_repair_probe": {
+        "finding_id": "IR-04",
+        "probe": "original concurrent journal checkpoint regression",
+        "newer_checkpoint": 2,
+        "final_checkpoint": 2,
+        "latest_event": 2,
+        "passed": true
+      }
+    }
+  ],
+  "limits": [
+    "Independent review and adversarial regression coverage are not a formal proof that every possible bug is absent.",
+    "No real broker submission, external message delivery or configured model call was exercised; real transport tests contacted isolated loopback fixture servers only.",
+    "Broker exact execution activity history is not installed; realized P/L is explicitly withheld instead of presented as verified.",
+    "The shared resolver pool has four fixed daemon workers/slots. Saturated or stalled DNS fails requests without queue growth or late POST; the operating system lookup itself is not forcibly cancelled.",
+    "Strategies remain absent, and no profitability, alpha or benchmark outperformance claim is made.",
+    "Synthetic probe evidence was never written to the default live desk database."
+  ],
+  "additional_real_loopback_transport_checks": [
+    {
+      "name": "bounded_http",
+      "deadline_seconds": 0.3,
+      "elapsed_seconds": 0.302548513,
+      "result": "continuously streaming response cancelled by total deadline"
+    },
+    {
+      "name": "Reasoning._completion",
+      "deadline_seconds": 0.3,
+      "elapsed_seconds": 0.301833189,
+      "result": "simulated model service continuously streaming response cancelled by total deadline"
+    }
+  ],
+  "shared_helper_resource_followup": {
+    "pre_repair_confirmed_shutdown_regression": {
+      "caller_timeout_seconds": 0.201,
+      "simulated_resolver_seconds": 2,
+      "whole_subprocess_elapsed_seconds": 2.267374489998474,
+      "root_cause": "Standard ThreadPoolExecutor interpreter-exit hook waited for its resolver threads after the caller had timed out."
+    },
+    "repair_observed": "Shared IO loop now owns four daemon resolver workers, four bounded slots and a bounded queue; saturation refuses new resolver work, cancelled results cannot send later requests. No per-call executor teardown and no interpreter-exit resolver join.",
+    "post_repair_checks": [
+      {
+        "probe": "eight concurrent slow DNS exchanges after bounded daemon pool",
+        "results": [
+          {
+            "state": "deadline",
+            "elapsed_seconds": 0.4510650940010237
+          },
+          {
+            "state": "deadline",
+            "elapsed_seconds": 0.47844725900176854
+          },
+          {
+            "state": "deadline",
+            "elapsed_seconds": 0.45019395100098336
+          },
+          {
+            "state": "deadline",
+            "elapsed_seconds": 0.47240367400081595
+          },
+          {
+            "state": "deadline",
+            "elapsed_seconds": 0.4671485440012475
+          },
+          {
+            "state": "deadline",
+            "elapsed_seconds": 0.45105536400114943
+          },
+          {
+            "state": "deadline",
+            "elapsed_seconds": 0.45017878399994515
+          },
+          {
+            "state": "deadline",
+            "elapsed_seconds": 0.45864906800125027
+          }
+        ],
+        "peak_resolvers": 4,
+        "resolver_calls": 4,
+        "late_POSTs": [],
+        "pending_HTTP_tasks_after_deadlines": 0,
+        "passed": true
+      },
+      {
+        "probe": "resolver threads no longer delay interpreter shutdown",
+        "caller_output": [
+          "CALLER_TIMEOUT 0.271",
+          "MAIN_FINISHED"
+        ],
+        "whole_subprocess_elapsed_seconds": 0.8564670560008381,
+        "simulated_resolver_duration_seconds": 3,
+        "exit_code": 0,
+        "passed": true
+      }
+    ],
+    "counts_toward_original_four_findings": false,
+    "fixed_capacity_stress_check": {
+      "resolver_threads": 4,
+      "all_daemon": true,
+      "maximum_queue_size": 4,
+      "additional_saturated_requests_rejected": 100,
+      "submissions_recovered_after_release": true,
+      "passed": true
+    },
+    "status": "Repaired by root and independently verified; no remaining late-send, queue-growth or interpreter-shutdown defect in tested cases"
+  },
+  "initial_selected_verification": {
+    "modules": [
+      "tests.test_backend",
+      "tests.test_trading",
+      "tests.test_notifications",
+      "tests.test_cognitive_agents"
+    ],
+    "tests": 157,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 3.4141345090010873,
+    "passed": true,
+    "source_hashes_before": {
+      "backend/store.py": "d863a117a3f5432346853f1642a7d9b95949bf12d0179ba34cc2e3ff1f6af3ee",
+      "backend/trading.py": "7fe4da08dec6680bece07dec386198669b17ee134a25ee6f1342976c3658b058",
+      "backend/notifications.py": "83e078c242a8e8f4743850f5afc6ef5fade0b54804ffb58e949951cda543275d",
+      "backend/reasoning.py": "00e8b26eba0768883f5d4d04d07cbddc3dd1a803ad3624ebedf76851e5668743",
+      "backend/worker.py": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995"
+    },
+    "source_hashes_after": {
+      "backend/store.py": "d863a117a3f5432346853f1642a7d9b95949bf12d0179ba34cc2e3ff1f6af3ee",
+      "backend/trading.py": "7fe4da08dec6680bece07dec386198669b17ee134a25ee6f1342976c3658b058",
+      "backend/notifications.py": "83e078c242a8e8f4743850f5afc6ef5fade0b54804ffb58e949951cda543275d",
+      "backend/reasoning.py": "00e8b26eba0768883f5d4d04d07cbddc3dd1a803ad3624ebedf76851e5668743",
+      "backend/worker.py": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995"
+    },
+    "sources_unchanged_during_test": true,
+    "default_state_changed": false
+  },
+  "verification": {
+    "command": "ASTER_DB_PATH=<isolated import database> ASTER_MARKET_DATA=manual .venv/bin/python -m unittest discover -s tests -p test_*.py -v",
+    "tests": 320,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 8.867497602001094,
+    "passed": true,
+    "files_hashed": 29,
+    "source_and_test_hashes_before": {
+      "backend/__init__.py": "f5c92a0f13284b2f1a9f9f74686f8108d3ae4f19dd7b903314eb2e644f313171",
+      "backend/analytics.py": "4736a8894ac3cb80efd4f1d0cd1ef132d70be86d05a73ab8139f5c45ba9633b6",
+      "backend/app.py": "5d584466154bb829a4fb29160da1dee20653f963fbebebef302466cca94e86a6",
+      "backend/autonomy.py": "0cd671f725538a566c81cbd4032fdf730fa8b741aab43dd6f61b0ffdc1b93bb0",
+      "backend/http_transport.py": "aa7528c69c7dd2ec5e7ccdacff2261f7f37717a238310e9524c011ab1268cea8",
+      "backend/lab.py": "4de719c9f70638a88d470fcc380f1cd787902d9b8c9545629e9e403f700af223",
+      "backend/models.py": "2b201bdb8309c4921224194806128745781775896494c6e4383666d438efa5cf",
+      "backend/notifications.py": "4bc3887da37053750f30f3c173b477e45a76d71639041ddaa08179ea989d1ab5",
+      "backend/providers.py": "1541f6b0a1e04550a55e7323ea86f4dc5bda5f66b60b630b8d9b894598a7c9ac",
+      "backend/reasoning.py": "07be30b3c7637e623afe98e2b6207e207122f5f96719d88f131f7a1eb71331ca",
+      "backend/research.py": "1e9d241f3b0ddf3cfb5b7982f2c4fd561d03729588d60cc00200cf00ead6940f",
+      "backend/research_workflows.py": "fc1ee601d99241bb3c695435693bd68b96ce012213bc22974e62a9806f98b817",
+      "backend/store.py": "b2185cc723b3a1f93ffb4529f0266c913549c336488e05d1ab1fe5c495923375",
+      "backend/strategy_contract.py": "41ec1b4ba378722cfca97333899079a928ef79875d0276de08c6bae20a8f3592",
+      "backend/trading.py": "c2d1fd60d0356ec5c9511d65b4a80851c99d043f995fc62e5d51f2800e8fac8e",
+      "backend/worker.py": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995",
+      "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/test_analytics.py": "7837d3aef774c259ae406265080793a10ac1bbf55423f4c0c4cbb2b3ceb19668",
+      "tests/test_autonomy.py": "f4da5a382731056564444e56b76c9bb08ad6b500b359ec90a46c73ed6596f751",
+      "tests/test_backend.py": "99dea8cd7a33f72d3b6189c9903187f4d5af39a758f905bf5f29d343dcdfb9f7",
+      "tests/test_cognitive_agents.py": "c55e97f637d0b075fd1c2ac5d12f79d4a29f1c88cdb55a88cc405d90d02091de",
+      "tests/test_http.py": "6ba31668ebdebedb6ea13d95d6ab2b4ab723e7ce71581920564e73911fd6f1be",
+      "tests/test_http_transport.py": "925d236872ec6aa5f3d27da2cbd298a855d4c8adf4753f6109a60da6cb5fc14d",
+      "tests/test_lab.py": "0ec7b539185aab36ea743b1aee0f48ee39a1237d2c7f7bb097325ebb62d5cb51",
+      "tests/test_notifications.py": "4ba4eacc01d77e8bb635ee123cc84eb27abe13a06d73a129f8b08e599702a7a6",
+      "tests/test_operations_scripts.py": "217a7cda2a0301d7f7b65b7bdc9a178887df652a1b968dcf583d9c5599441387",
+      "tests/test_providers.py": "621adeff32b82389a3512c46595fc7cb7af324068d5402c5fd3f0cbdc4226e6e",
+      "tests/test_research_workflows.py": "e811b29b74a0f013e34ca2dce935a86c090da25d7e98cdf281b242651f14bd10",
+      "tests/test_trading.py": "1c8744ad4fed76cf9160e4dbfe4d6d516dab36be325d29ddc2e1f2e36bc66ebb"
+    },
+    "source_and_test_hashes_after": {
+      "backend/__init__.py": "f5c92a0f13284b2f1a9f9f74686f8108d3ae4f19dd7b903314eb2e644f313171",
+      "backend/analytics.py": "4736a8894ac3cb80efd4f1d0cd1ef132d70be86d05a73ab8139f5c45ba9633b6",
+      "backend/app.py": "5d584466154bb829a4fb29160da1dee20653f963fbebebef302466cca94e86a6",
+      "backend/autonomy.py": "0cd671f725538a566c81cbd4032fdf730fa8b741aab43dd6f61b0ffdc1b93bb0",
+      "backend/http_transport.py": "aa7528c69c7dd2ec5e7ccdacff2261f7f37717a238310e9524c011ab1268cea8",
+      "backend/lab.py": "4de719c9f70638a88d470fcc380f1cd787902d9b8c9545629e9e403f700af223",
+      "backend/models.py": "2b201bdb8309c4921224194806128745781775896494c6e4383666d438efa5cf",
+      "backend/notifications.py": "4bc3887da37053750f30f3c173b477e45a76d71639041ddaa08179ea989d1ab5",
+      "backend/providers.py": "1541f6b0a1e04550a55e7323ea86f4dc5bda5f66b60b630b8d9b894598a7c9ac",
+      "backend/reasoning.py": "07be30b3c7637e623afe98e2b6207e207122f5f96719d88f131f7a1eb71331ca",
+      "backend/research.py": "1e9d241f3b0ddf3cfb5b7982f2c4fd561d03729588d60cc00200cf00ead6940f",
+      "backend/research_workflows.py": "fc1ee601d99241bb3c695435693bd68b96ce012213bc22974e62a9806f98b817",
+      "backend/store.py": "b2185cc723b3a1f93ffb4529f0266c913549c336488e05d1ab1fe5c495923375",
+      "backend/strategy_contract.py": "41ec1b4ba378722cfca97333899079a928ef79875d0276de08c6bae20a8f3592",
+      "backend/trading.py": "c2d1fd60d0356ec5c9511d65b4a80851c99d043f995fc62e5d51f2800e8fac8e",
+      "backend/worker.py": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995",
+      "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/test_analytics.py": "7837d3aef774c259ae406265080793a10ac1bbf55423f4c0c4cbb2b3ceb19668",
+      "tests/test_autonomy.py": "f4da5a382731056564444e56b76c9bb08ad6b500b359ec90a46c73ed6596f751",
+      "tests/test_backend.py": "99dea8cd7a33f72d3b6189c9903187f4d5af39a758f905bf5f29d343dcdfb9f7",
+      "tests/test_cognitive_agents.py": "c55e97f637d0b075fd1c2ac5d12f79d4a29f1c88cdb55a88cc405d90d02091de",
+      "tests/test_http.py": "6ba31668ebdebedb6ea13d95d6ab2b4ab723e7ce71581920564e73911fd6f1be",
+      "tests/test_http_transport.py": "925d236872ec6aa5f3d27da2cbd298a855d4c8adf4753f6109a60da6cb5fc14d",
+      "tests/test_lab.py": "0ec7b539185aab36ea743b1aee0f48ee39a1237d2c7f7bb097325ebb62d5cb51",
+      "tests/test_notifications.py": "4ba4eacc01d77e8bb635ee123cc84eb27abe13a06d73a129f8b08e599702a7a6",
+      "tests/test_operations_scripts.py": "217a7cda2a0301d7f7b65b7bdc9a178887df652a1b968dcf583d9c5599441387",
+      "tests/test_providers.py": "621adeff32b82389a3512c46595fc7cb7af324068d5402c5fd3f0cbdc4226e6e",
+      "tests/test_research_workflows.py": "e811b29b74a0f013e34ca2dce935a86c090da25d7e98cdf281b242651f14bd10",
+      "tests/test_trading.py": "1c8744ad4fed76cf9160e4dbfe4d6d516dab36be325d29ddc2e1f2e36bc66ebb"
+    },
+    "sources_and_tests_unchanged_during_verification": true,
+    "default_state_changed": false,
+    "fixtures": "Temporary SQLite databases, simulated provider/broker/model transports and loopback HTTP servers only",
+    "log": "docs/verification/audit-independent-final-tests.log"
+  },
+  "final_original_probes": {
+    "generated_at": "2026-10-08T07:44:13.073766+00:00",
+    "phase": "Final frozen source recheck",
+    "checks": [
+      {
+        "finding_id": "IR-01",
+        "probe": "original 93-byte continuous notification response",
+        "elapsed_seconds": 8.002501016999304,
+        "deadline_seconds": 8,
+        "requests_received": 1,
+        "client_connection_closed": true,
+        "result": {
+          "state": "DeliveryFailure",
+          "ambiguous": true,
+          "retryable": false,
+          "message": "Delivery transport failed"
+        },
+        "passed": true
+      },
+      {
+        "finding_id": "IR-02",
+        "probe": "manual reconcile after clock regression",
+        "post_repair_task": {
+          "status": "completed",
+          "error": null
+        },
+        "passed": true
+      },
+      {
+        "finding_id": "IR-04",
+        "probe": "original concurrent journal checkpoint regression",
+        "newer_checkpoint": 2,
+        "final_checkpoint": 2,
+        "latest_event": 2,
+        "passed": true
+      },
+      {
+        "finding_id": "IR-03",
+        "probe": "original overlapping cumulative broker snapshots",
+        "reconcile_errors": [],
+        "public_realized_pnl": null,
+        "public_realized_coverage": "withheld",
+        "position_realized": null,
+        "fill_realized_values": [
+          null,
+          null
+        ],
+        "fill_raw_realized_cents": [
+          null,
+          null
+        ],
+        "verified_position_basis": 20.0,
+        "passed": true
+      }
+    ],
+    "source_hashes_before": {
+      "backend/store.py": "b2185cc723b3a1f93ffb4529f0266c913549c336488e05d1ab1fe5c495923375",
+      "backend/trading.py": "c2d1fd60d0356ec5c9511d65b4a80851c99d043f995fc62e5d51f2800e8fac8e",
+      "backend/notifications.py": "4bc3887da37053750f30f3c173b477e45a76d71639041ddaa08179ea989d1ab5",
+      "backend/reasoning.py": "07be30b3c7637e623afe98e2b6207e207122f5f96719d88f131f7a1eb71331ca",
+      "backend/worker.py": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995",
+      "backend/http_transport.py": "aa7528c69c7dd2ec5e7ccdacff2261f7f37717a238310e9524c011ab1268cea8"
+    },
+    "source_hashes_after": {
+      "backend/store.py": "b2185cc723b3a1f93ffb4529f0266c913549c336488e05d1ab1fe5c495923375",
+      "backend/trading.py": "c2d1fd60d0356ec5c9511d65b4a80851c99d043f995fc62e5d51f2800e8fac8e",
+      "backend/notifications.py": "4bc3887da37053750f30f3c173b477e45a76d71639041ddaa08179ea989d1ab5",
+      "backend/reasoning.py": "07be30b3c7637e623afe98e2b6207e207122f5f96719d88f131f7a1eb71331ca",
+      "backend/worker.py": "f0d3b6eca207dbdb559b392626825977f707200dd3673c5f6b7029b6fa243995",
+      "backend/http_transport.py": "aa7528c69c7dd2ec5e7ccdacff2261f7f37717a238310e9524c011ab1268cea8"
+    },
+    "sources_unchanged": true,
+    "all_passed": true,
+    "default_state_changed": false
+  },
+  "counts": {
+    "files_fully_read": 7,
+    "function_bodies_reviewed": 146,
+    "class_declarations_reviewed": 21,
+    "original_residual_defects_found_and_repaired": 4,
+    "final_tests": 320,
+    "final_probes_passed": 4
+  },
+  "remaining_confirmed_findings": []
+}

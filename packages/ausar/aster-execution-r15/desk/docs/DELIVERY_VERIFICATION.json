@@ -1,0 +1,75 @@
+{
+  "release": "1.0.0",
+  "reference_desks": [
+    "Femto/Midna",
+    "Cursor",
+    "GrokBot"
+  ],
+  "backend_tests": {
+    "passed": 194,
+    "root_command": ".venv/bin/python -m unittest discover -s tests -q",
+    "independent_verification": true
+  },
+  "browser": {
+    "passed": true,
+    "checks": 17,
+    "scope": "Isolated database; actual UI forms and unattended worker/research runs; desktop and mobile navigation"
+  },
+  "frontend": {
+    "typecheck": "passed",
+    "production_build": "passed",
+    "script": "index-CB7UD3q4.js"
+  },
+  "docker": {
+    "build": "passed",
+    "startup_health_journal": "passed",
+    "restart_recreation_persistence": "passed",
+    "remote_deployment": false
+  },
+  "source_recovery": {
+    "femto_verified_bodies": 370,
+    "git_blob_mismatches": 0,
+    "nonlink_executable_bodies_read": 127,
+    "literal_links_verified_separately": 9,
+    "snapshot": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+    "current_local_head_reported_by_midna": "914ed868"
+  },
+  "requirements_mapped": {
+    "canonical": 30,
+    "atomic": 211,
+    "status_note": "Mapping is exhaustive; full source feature parity is not claimed. Exact implemented/configuration/extension status is in FEATURE_IMPLEMENTATION_VERIFICATION.json."
+  },
+  "running_desk": {
+    "location": "http://127.0.0.1:8787",
+    "launcher": "./run.sh",
+    "state": "data/aster.sqlite",
+    "capital": 0,
+    "positions": 0,
+    "intents": 0,
+    "strategies": 0,
+    "public_history_probe": "QQQ actual Yahoo daily bars",
+    "catalogue_connected": true,
+    "broker_credentials_configured": false,
+    "model_credentials_configured": false
+  },
+  "external_actions": {
+    "authorized_github_inbox_appends": 2,
+    "broker_orders": 0,
+    "external_notification_posts": 0
+  },
+  "limits": [
+    "Equity paper execution; options/multi-leg execution remains an extension",
+    "Missing broker protection is diagnosed; automatic cancel/replace repair is not implemented",
+    "Live Alpaca and LLM capability requires configuration and has not been end-to-end verified against those providers",
+    "Stooq historical fallback is fixture-tested; live availability was not verified",
+    "No strategies, demonstrated edge or outperformance",
+    "Remote service/backup storage and off-host monitor are supplied as deployment interfaces, not installed remotely"
+  ],
+  "audit_context": {
+    "classification": "Pre-audit release evidence retained as a historical baseline",
+    "source_commit": "32f6f14dccd1e8831f7ba276da037e8490e2ebf8",
+    "current_inspection": "FULL_AUDIT_REPORT.md",
+    "current_code_manifest": "AUDIT_CODE_MANIFEST.json",
+    "note": "Original counts, citations and hashes describe the pre-audit source. The repair audit has separate current file hashes and final validation receipts."
+  }
+}

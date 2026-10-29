@@ -1,0 +1,73 @@
+//@version=3
+strategy("RSI Strategy", overlay=true, default_qty_type = strategy.percent_of_equity, default_qty_value = 100)
+
+//Starter Parameters
+
+length = input(title="RSI Lenght",type=integer, defval=2)
+overBoughtRSI = input(title="OverBought Level for RSI", type=integer, defval=10)
+shortLength = input(title="Short MA Length", type=integer, defval=5)
+longLength = input(title="Long MA Length", type=integer, defval=200)
+
+RuleMRSI=input(title="RSI Moving Average Filter", defval= true)
+lengthmrsi=input(title="RSI Moving Average Length", type=integer, defval=4)
+overBoughtMRSI=input(title="OverBought Level for the Moving Average of the RSI", type=integer, defval=30)
+
+Rulestop=input(title="Apply Stop Loss", defval=false)
+stop_percentual=input(title="% Stop Loss", type=integer, defval=10)
+
+//RSI
+
+vrsi = rsi(close, length)
+
+//Moving Averages
+
+longma = sma(close,longLength)
+shortma = sma(close,shortLength)
+mrsi=sma(vrsi,lengthmrsi)
+
+//Stop Loss
+
+stop_level = strategy.position_avg_price*((100-stop_percentual)/100)
+
+//Backtest Period
+testStartYear = input(2009, "Backtest Start Year")
+testStartMonth = input(1, "Backtest Start Month")
+testStartDay = input(2, "Backtest Start Day")
+testPeriodStart = timestamp(testStartYear,testStartMonth,testStartDay,0,0)
+
+testStopYear = input(2020, "Backtest Stop Year")
+testStopMonth = input(12, "Backtest Stop Month")
+testStopDay = input(30, "Backtest Stop Day")
+testPeriodStop = timestamp(testStopYear,testStopMonth,testStopDay,0,0)
+
+testPeriod() =>
+    time >= testPeriodStart and time <= testPeriodStop ? true : false
+    
+//Strategy
+
+if testPeriod() and (not na(vrsi))
+    if  (RuleMRSI==false) and (Rulestop==false)
+        if (vrsi<overBoughtRSI) and (close>longma)
+            strategy.entry("RsiLE", strategy.long , comment="Open")
+        if (close>shortma)
+            strategy.close_all()
+
+    if (RuleMRSI==true) and (Rulestop==false)
+        if (vrsi<overBoughtRSI) and (close>longma) and (mrsi<overBoughtMRSI)
+            strategy.entry("RsiLE", strategy.long , comment="Open")
+        if (close>shortma)
+            strategy.close_all()
+
+    if (RuleMRSI==false) and (Rulestop==true)
+        if (vrsi<overBoughtRSI) and (close>longma)
+            strategy.entry("RsiLE", strategy.long , comment="Open")
+            strategy.exit("RsiLE", stop = stop_level)
+        if (close>shortma)
+            strategy.close_all()
+
+    if (RuleMRSI==true) and (Rulestop==true)
+        if (vrsi<overBoughtRSI) and (close>longma) and (mrsi<overBoughtMRSI)
+            strategy.entry("RsiLE", strategy.long , comment="Open")
+            strategy.exit("RsiLE", stop = stop_level)
+        if (close>shortma)
+            strategy.close_all()

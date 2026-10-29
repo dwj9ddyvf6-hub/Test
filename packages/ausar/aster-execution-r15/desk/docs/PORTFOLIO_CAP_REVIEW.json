@@ -1,0 +1,662 @@
+{
+  "review_scope": "New Aster portfolio exposure policy and PATCH/snapshot, read-only independent QA. Original reviewed repositories not imported or executed.",
+  "created_at": "2026-10-08T06:32:45.292887+00:00",
+  "status": "completed_all_findings_fixed_and_independently_verified",
+  "pre_fix_sources": [
+    {
+      "path": "/workspace/agentic-desk/backend/trading.py",
+      "sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c",
+      "lines": 1221
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/app.py",
+      "sha256": "e9fa4410463c083420eee834863398b0b7f859b875f73cb1dd32c4759c502b46",
+      "lines": 255
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/store.py",
+      "sha256": "e1a8b82058a7d4d89d955cc9984e522c92ee79c5ca4fc838b4c57043195ba00b",
+      "lines": 485
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_trading.py",
+      "sha256": "7fac20dcedb7ab5da0373c40ef9363e3fc97db333d4aaa0f46ef4b68d45f05e2",
+      "lines": 938
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_http.py",
+      "sha256": "93df7d5b0b5ac3f27702be907b665b902aec5560aa0050e15d0da4f1222a683e",
+      "lines": 184
+    },
+    {
+      "path": "/workspace/agentic-desk/AGENTS.md",
+      "sha256": "5ac39761db2ce9354c08928b68e1c87b483025e8f223886a23ad5edbb1e4e381",
+      "lines": 13
+    },
+    {
+      "path": "/workspace/agentic-desk/docs/BUILD_CONTRACT.md",
+      "sha256": "44c2b7bf9cb95c63a5bea3de4a8555069ab6c4ad246812122283ab57634bbfe7",
+      "lines": 86
+    },
+    {
+      "path": "/workspace/agentic-desk/docs/AUTONOMY_CONTRACT.md",
+      "sha256": "067740a6ff1a260bb6e4cad63e61707f5e64ed59125eeda5dbf3154bea2f8ec7",
+      "lines": 41
+    }
+  ],
+  "pre_fix_evidence": [
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "set_portfolio_policy",
+      "start_line": 242,
+      "end_line": 272,
+      "excerpt": "    def set_portfolio_policy(self, payload):\n        if set(payload) - set(PORTFOLIO_POLICY) - {\"expected_hash\"}:\n            raise DeskError(\"Unknown portfolio policy fields\", 422)\n        expected = payload.get(\"expected_hash\")\n        if expected is not None and not isinstance(expected, str):\n            raise DeskError(\"expected_hash must be a policy hash\", 422)\n        changes = {}\n        for key in PORTFOLIO_POLICY:\n            if key not in payload:\n                continue\n            value = payload[key]\n            if value is not None:\n                val = decimal(value, key)\n                if val != Decimal(cents(val)) / 100:\n                    raise DeskError(\"Portfolio caps must be positive whole USD cents or null\", 422)\n                value = number(val)\n            changes[key] = value\n        if not changes:\n            raise DeskError(\"Supply at least one portfolio policy field\", 422)\n        with self.store.transaction() as con:\n            previous = self._portfolio_policy(con)\n            if expected is not None and previous[\"hash\"] != expected:\n                raise DeskError(\"Portfolio policy changed; compare-and-swap refused the stale update\")\n            policy = {key: changes.get(key, previous[key]) for key in PORTFOLIO_POLICY}\n            serialized, ts = dump(policy), now()\n            digest, version = hashlib.sha256(serialized.encode()).hexdigest(), previous[\"version\"] + 1\n            current = {**policy, \"version\": version, \"hash\": digest, \"updated_at\": ts, \"actor\": \"operator\"}\n            con.execute(\"UPDATE p_state SET value=? WHERE key='portfolio_policy'\", (dump(current),))\n            con.execute(\"INSERT INTO p_portfolio_policy_history VALUES(?,?,?,?,?,?)\", (identifier(), version, digest, serialized, \"operator\", ts))\n            self.store.event(con, \"portfolio_policy_updated\", \"operator\", \"Updated versioned risk limits across independent autonomous books\", current)\n            return current",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "_global_exposure",
+      "start_line": 274,
+      "end_line": 346,
+      "excerpt": "    def _global_exposure(self, con, clock, candidate=None, exclude=None):\n        books = list(con.execute(\"SELECT * FROM p_books ORDER BY created_at\"))\n        positions = {(row[\"book_id\"], row[\"symbol\"]): Decimal(row[\"quantity\"]) for row in con.execute(\"SELECT * FROM p_positions WHERE quantity!='0'\") if Decimal(row[\"quantity\"])}\n        bounds, price_bounds = {}, {}\n        pending = [dict(row) for row in con.execute(\"SELECT * FROM p_intents WHERE id!=? AND status IN ('queued','open','partially_filled','blocked','submitting','cancel_requested')\", (exclude or \"\",))]\n        if candidate is not None:\n            pending.append(dict(candidate))\n        for row in pending:\n            if row.get(\"parent_id\"):\n                continue\n            key = (row[\"book_id\"], row[\"symbol\"])\n            held = positions.get(key, Decimal(0))\n            quantity = Decimal(row[\"quantity\"]) - Decimal(row.get(\"filled_quantity\", \"0\"))\n            if quantity <= 0 or self._risk_reducing(held, row[\"side\"], quantity):\n                continue\n            bounds.setdefault(key, [Decimal(0), Decimal(0)])[0 if row[\"side\"] == \"buy\" else 1] += quantity\n            for field in (\"limit_price\", \"stop_price\"):\n                if row.get(field):\n                    price_bounds[key] = max(price_bounds.get(key, Decimal(0)), Decimal(row[field]))\n        reasons, marks, quotes, unknown_books = [], [], {}, set()\n        max_age = self.store.settings(con)[\"quote_max_age_seconds\"]\n        for book in books:\n            if book[\"broker\"] != \"alpaca\":\n                continue\n            health = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"reconcile:\" + book[\"id\"],)).fetchone()\n            truth = con.execute(\"SELECT observed_at FROM p_broker_truth WHERE book_id=?\", (book[\"id\"],)).fetchone()\n            if not truth or not health or json.loads(health[0]).get(\"status\") != \"ok\":\n                reasons.append(\"Broker state is unknown for book \" + book[\"id\"])\n                unknown_books.add(book[\"id\"])\n            elif not -5 <= (clock - datetime.fromisoformat(truth[0])).total_seconds() <= max_age:\n                reasons.append(\"Broker state is stale for book \" + book[\"id\"])\n                unknown_books.add(book[\"id\"])\n            external = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"external_locks:\" + book[\"id\"],)).fetchone()\n            if external and json.loads(external[0]):\n                reasons.append(\"Unattributed broker orders make pending exposure unknown for book \" + book[\"id\"])\n                unknown_books.add(book[\"id\"])\n        for sym in sorted({key[1] for key in positions} | {key[1] for key in bounds}):\n            try:\n                quote = self._raw_quote(con, sym, clock)\n                quotes[sym] = Decimal(quote[\"price\"])\n                marks.append({\"symbol\": sym, \"price\": number(quote[\"price\"]), \"as_of\": quote[\"as_of\"], \"source\": quote[\"source\"]})\n            except DeskError as exc:\n                reasons.append(sym + \": \" + exc.detail)\n        missing_symbols = {key[1] for key in positions.keys() | bounds.keys()} - quotes.keys()\n        for book_id, sym in positions.keys() | bounds.keys():\n            if sym in missing_symbols:\n                unknown_books.add(book_id)\n        symbol_values = {sym: [0, 0] for sym in {key[1] for key in positions.keys() | bounds.keys()}}\n        book_values = {book[\"id\"]: [0, 0] for book in books}\n        for key in positions.keys() | bounds.keys():\n            book_id, sym = key\n            if sym not in quotes:\n                continue\n            held = positions.get(key, Decimal(0))\n            buys, sells = bounds.get(key, [Decimal(0), Decimal(0)])\n            observed = abs(cents(held * quotes[sym]))\n            reserved_price = max(quotes[sym], price_bounds.get(key, Decimal(0)))\n            projected = max(abs(cents((held + buys) * reserved_price)), abs(cents((held - sells) * reserved_price)), observed)\n            symbol_values.setdefault(sym, [0, 0])\n            for index, value in enumerate((observed, projected)):\n                symbol_values[sym][index] += value\n                book_values[book_id][index] += value\n        complete = not reasons\n        gross, projected = sum(row[0] for row in book_values.values()), sum(row[1] for row in book_values.values())\n        mark_times = [datetime.fromisoformat(mark[\"as_of\"]) for mark in marks]\n        return {\"valuation_status\": \"complete\" if complete else \"incomplete\", \"incomplete_reasons\": reasons,\n                \"calculated_at\": clock.isoformat(), \"gross_exposure\": gross / 100 if complete else None,\n                \"projected_gross_exposure\": projected / 100 if complete else None,\n                \"symbols\": [{\"symbol\": sym, \"gross_exposure\": values[0] / 100 if complete else None, \"projected_gross_exposure\": values[1] / 100 if complete else None} for sym, values in sorted(symbol_values.items())],\n                \"books\": [{\"book_id\": rid, \"valuation_status\": \"incomplete\" if rid in unknown_books else \"complete\", \"gross_exposure\": values[0] / 100 if rid not in unknown_books else None, \"projected_gross_exposure\": values[1] / 100 if rid not in unknown_books else None} for rid, values in book_values.items()],\n                \"marks\": marks, \"mark_span_seconds\": (max(mark_times) - min(mark_times)).total_seconds() if mark_times else 0,\n                \"scope\": \"autonomous_books_only\", \"max_mark_age_seconds\": max_age,\n                \"method\": \"Sum per-book absolute exposure with pending entry quantity and explicit price bounds; independent books never net\"}",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "_validate_global_capacity",
+      "start_line": 348,
+      "end_line": 361,
+      "excerpt": "    def _validate_global_capacity(self, con, data, exclude=None, clock=None):\n        policy = self._portfolio_policy(con)\n        if all(policy[key] is None for key in PORTFOLIO_POLICY):\n            return\n        exposure = self._global_exposure(con, clock or datetime.now(UTC), data, exclude)\n        if exposure[\"valuation_status\"] != \"complete\":\n            raise DeskError(\"Portfolio entry gate requires coherent fresh marks and known broker state: \" + \"; \".join(exposure[\"incomplete_reasons\"]))\n        gross = Decimal(str(exposure[\"projected_gross_exposure\"]))\n        if policy[\"gross_exposure_cap\"] is not None and gross > Decimal(str(policy[\"gross_exposure_cap\"])):\n            raise DeskError(\"Operator portfolio gross exposure cap would be exceeded\")\n        if policy[\"symbol_exposure_cap\"] is not None:\n            cap = Decimal(str(policy[\"symbol_exposure_cap\"]))\n            if any(Decimal(str(row[\"projected_gross_exposure\"])) > cap for row in exposure[\"symbols\"]):\n                raise DeskError(\"Operator portfolio symbol exposure cap would be exceeded\")",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "_validate_capacity",
+      "start_line": 419,
+      "end_line": 494,
+      "excerpt": "    def _validate_capacity(self, con, book, data, price, exclude=None, clock=None):\n        clock = clock or datetime.now(UTC)\n        policy = json.loads(book[\"policy\"])\n        foreign_locks = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"external_locks:\" + book[\"id\"],)).fetchone()\n        if foreign_locks and data[\"symbol\"] in json.loads(foreign_locks[0]):\n            raise DeskError(\"Unattributed external broker orders lock this symbol until they are resolved\")\n        pos = self._position(con, book[\"id\"], data[\"symbol\"])\n        qty = Decimal(pos[\"quantity\"]) if pos else Decimal(0)\n        order_qty = Decimal(data[\"quantity\"]) - Decimal(data.get(\"filled_quantity\", \"0\"))\n        if pos and pos[\"locked\"]:\n            raise DeskError(\"This external broker position is locked pending explicit operator acknowledgement\")\n        reducing = self._risk_reducing(qty, data[\"side\"], order_qty)\n        if policy[\"halted\"] and not reducing:\n            raise DeskError(\"This book is halted for entries; risk-reducing exits remain available\")\n        account, positions = self._account(con, book, clock)\n        if policy[\"drawdown_brake_percent\"] is not None and account[\"drawdown_percent\"] >= policy[\"drawdown_brake_percent\"] and not reducing:\n            raise DeskError(\"Operator drawdown brake blocks additional entry exposure\")\n        remaining_signed = order_qty if data[\"side\"] == \"buy\" else -order_qty\n        projected = qty + remaining_signed\n        if projected < 0 and not policy[\"allow_short\"] and not reducing:\n            raise DeskError(\"Short entries require the operator's allow_short policy\")\n        active = list(con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND id!=? AND status IN ('queued','open','partially_filled','blocked','submitting','cancel_requested')\", (book[\"id\"], exclude or \"\")))\n        # Protective OCO siblings represent one liability, not duplicate share claims.\n        shares, seen_groups = Decimal(0), set()\n        for intent in active:\n            if intent[\"symbol\"] != data[\"symbol\"] or intent[\"side\"] != data[\"side\"]:\n                continue\n            if intent[\"oco_group\"]:\n                if intent[\"oco_group\"] in seen_groups or intent[\"oco_group\"] == data.get(\"oco_group\"):\n                    continue\n                seen_groups.add(intent[\"oco_group\"])\n            shares += Decimal(intent[\"reserved_quantity\"])\n        if data[\"side\"] == \"sell\" and qty > 0 and min(order_qty, qty) + shares > qty:\n            raise DeskError(\"Insufficient unreserved shares in this independent book\")\n        if data[\"side\"] == \"buy\" and qty < 0 and min(order_qty, -qty) + shares > -qty:\n            raise DeskError(\"Insufficient unreserved short shares to cover\")\n        estimated = cents(order_qty * price)\n        fee = cents(Decimal(str(policy[\"fees_per_order\"]))) if Decimal(data.get(\"filled_quantity\", \"0\")) == 0 else 0\n        other_cash = sum(r[\"reserved_cents\"] for r in active)\n        # Existing short liabilities may be closed even when cash has deteriorated.\n        if data[\"side\"] == \"buy\" and not (reducing and qty < 0) and book[\"cash_cents\"] - other_cash < estimated + fee:\n            raise DeskError(\"Insufficient unreserved cash in this independent book\")\n        if not reducing:\n            self._validate_global_capacity(con, data, exclude, clock)\n            # Reserve exposure as well as cash: separate pending short entries\n            # must not evade operator caps merely because they generate proceeds.\n            pending_by_symbol = {}\n            for pending in active:\n                if pending[\"parent_id\"]:\n                    continue\n                p = self._position(con, book[\"id\"], pending[\"symbol\"])\n                held = Decimal(p[\"quantity\"]) if p else Decimal(0)\n                remaining = Decimal(pending[\"quantity\"]) - Decimal(pending[\"filled_quantity\"])\n                if self._risk_reducing(held, pending[\"side\"], remaining):\n                    continue\n                pending_by_symbol.setdefault(pending[\"symbol\"], [Decimal(0), Decimal(0)])\n                pending_by_symbol[pending[\"symbol\"]][0 if pending[\"side\"] == \"buy\" else 1] += remaining\n            pending_by_symbol.setdefault(data[\"symbol\"], [Decimal(0), Decimal(0)])[0 if data[\"side\"] == \"buy\" else 1] += order_qty\n            bounds = pending_by_symbol[data[\"symbol\"]]\n            projected_value = max(abs(cents((qty + bounds[0]) * price)), abs(cents((qty - bounds[1]) * price)))\n            if policy[\"symbol_exposure_cap\"] is not None and projected_value > cents(Decimal(str(policy[\"symbol_exposure_cap\"]))):\n                raise DeskError(\"Operator symbol exposure cap would be exceeded\")\n            gross = 0\n            all_symbols = {p[\"symbol\"] for p in positions} | set(pending_by_symbol)\n            for sym in all_symbols:\n                held_pos = self._position(con, book[\"id\"], sym)\n                held_qty = Decimal(held_pos[\"quantity\"]) if held_pos else Decimal(0)\n                observed = price if sym == data[\"symbol\"] else Decimal(self._raw_quote(con, sym, clock)[\"price\"])\n                positive, negative = pending_by_symbol.get(sym, [Decimal(0), Decimal(0)])\n                gross += max(abs(cents((held_qty + positive) * observed)), abs(cents((held_qty - negative) * observed)))\n            if policy[\"gross_exposure_cap\"] is not None and gross > cents(Decimal(str(policy[\"gross_exposure_cap\"]))):\n                raise DeskError(\"Operator gross exposure cap would be exceeded\")\n        reserve_cash = estimated + fee if data[\"side\"] == \"buy\" and not (reducing and qty < 0) else 0\n        closing_direction = qty > 0 and data[\"side\"] == \"sell\" or qty < 0 and data[\"side\"] == \"buy\"\n        reserve_qty = min(order_qty, abs(qty)) if closing_direction else Decimal(0)\n        return reserve_cash, reserve_qty",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "submit_intent",
+      "start_line": 496,
+      "end_line": 531,
+      "excerpt": "    def submit_intent(self, payload):\n        data = self._normalize_intent(payload)\n        digest = hashlib.sha256(dump(data).encode()).hexdigest()\n        with self.store.transaction() as con:\n            book = self._book(con, data[\"book_id\"])\n            existing = con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND client_id=?\", (book[\"id\"], data[\"client_id\"])).fetchone()\n            if existing:\n                if existing[\"payload_hash\"] != digest:\n                    raise DeskError(\"client_id already identifies a different autonomous intent\")\n                return self._intent_public(existing)\n            quote = self._raw_quote(con, data[\"symbol\"], datetime.now(UTC))\n            position = self._position(con, book[\"id\"], data[\"symbol\"])\n            held = Decimal(position[\"quantity\"]) if position else Decimal(0)\n            signed = Decimal(data[\"quantity\"]) * (1 if data[\"side\"] == \"buy\" else -1)\n            if book[\"broker\"] == \"alpaca\" and held * signed < 0 and (data[\"take_profit\"] or data[\"stop_loss\"]):\n                raise DeskError(\"Broker-native protection cannot cover or flip an existing opposite position; close it separately before a protected new entry\", 422)\n            reference = Decimal(data[\"limit_price\"] or quote[\"price\"])\n            notional_cents = cents(Decimal(data[\"quantity\"]) * reference)\n            if not 1 <= notional_cents <= 9_000_000_000_000_000_000:\n                raise DeskError(\"Intent notional must be at least one cent and fit the integer-cents ledger\", 422)\n            if data[\"take_profit\"]:\n                target = Decimal(data[\"take_profit\"])\n                if data[\"side\"] == \"buy\" and target <= reference or data[\"side\"] == \"sell\" and target >= reference:\n                    raise DeskError(\"Take-profit must be beyond the entry reference in the trade direction\", 422)\n            if data[\"stop_loss\"]:\n                stop = Decimal(data[\"stop_loss\"])\n                if data[\"side\"] == \"buy\" and stop >= reference or data[\"side\"] == \"sell\" and stop <= reference:\n                    raise DeskError(\"Stop-loss must be on the protective side of the entry reference\", 422)\n            reserve_cash, reserve_qty = self._validate_capacity(con, book, data, reference)\n            rid, ts = identifier(), now()\n            columns = list(data) + [\"id\", \"payload_hash\", \"status\", \"reserved_cents\", \"reserved_quantity\", \"broker_client_id\", \"created_at\", \"updated_at\", \"policy_version\"]\n            values = list(data.values()) + [rid, digest, \"queued\", reserve_cash, str(reserve_qty), \"aster_\" + rid, ts, ts, book[\"policy_version\"]]\n            con.execute(f\"INSERT INTO p_intents({','.join(columns)}) VALUES({','.join('?' for _ in columns)})\", values)\n            con.execute(\"INSERT OR IGNORE INTO watchlist VALUES(?,?)\", (data[\"symbol\"], ts))\n            self.store.event(con, \"autonomous_intent_authorized\", \"operator\", f\"Operator authorized {data['side']} {data['quantity']} {data['symbol']} in {book['name']}\", {\"intent_id\": rid, \"book_id\": book[\"id\"], \"client_id\": data[\"client_id\"], \"policy_version\": book[\"policy_version\"], \"execution\": \"automatic order mechanics; no strategy decision\"})\n            return self._intent_public(con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone())",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "snapshot",
+      "start_line": 565,
+      "end_line": 584,
+      "excerpt": "    def snapshot(self):\n        with self.store.connect() as con:\n            con.execute(\"BEGIN\")\n            books, all_positions = [], []\n            for book in con.execute(\"SELECT * FROM p_books ORDER BY created_at\"):\n                account, positions = self._account(con, book, datetime.now(UTC))\n                all_positions.extend(positions)\n                health = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"reconcile:\" + book[\"id\"],)).fetchone()\n                books.append({\"id\": book[\"id\"], \"name\": book[\"name\"], \"kind\": book[\"kind\"], \"broker\": book[\"broker\"], \"connection_id\": book[\"connection_id\"], \"description\": book[\"description\"], \"account\": account, \"policy\": json.loads(book[\"policy\"]), \"policy_version\": book[\"policy_version\"], \"policy_hash\": book[\"policy_hash\"], \"created_at\": book[\"created_at\"], \"updated_at\": book[\"updated_at\"], \"reconciliation_health\": json.loads(health[0]) if health else {\"status\": \"not_checked\"}})\n            return {\"books\": books, \"intents\": [self._intent_public(r) for r in con.execute(\"SELECT * FROM p_intents ORDER BY created_at DESC LIMIT 1000\")], \"positions\": all_positions,\n                    \"fills\": [{**dict(r), \"quantity\": number(r[\"quantity\"]), \"price\": number(r[\"price\"]), \"notional\": r[\"notional_cents\"] / 100, \"fee\": r[\"fee_cents\"] / 100, \"realized_pnl\": r[\"realized_cents\"] / 100} for r in con.execute(\"SELECT * FROM p_fills ORDER BY observed_at DESC LIMIT 1000\")],\n                    \"equity_history\": [{\"book_id\": r[\"book_id\"], \"timestamp\": r[\"timestamp\"], \"equity\": r[\"equity_cents\"] / 100, \"cash\": r[\"cash_cents\"] / 100, \"missing_marks\": r[\"missing_marks\"], \"stale_marks\": r[\"stale_marks\"]} for r in con.execute(\"SELECT * FROM (SELECT * FROM p_equity ORDER BY timestamp DESC LIMIT 2000) ORDER BY timestamp\")],\n                    \"reconciliations\": [{**dict(r), \"payload\": json.loads(r[\"payload\"])} for r in con.execute(\"SELECT * FROM p_reconciliations ORDER BY timestamp DESC LIMIT 100\")],\n                    \"policy_history\": [{**dict(r), \"policy\": json.loads(r[\"policy\"])} for r in con.execute(\"SELECT * FROM p_policy_history ORDER BY timestamp DESC LIMIT 200\")],\n                    \"broker_truth\": [{\"book_id\": r[\"book_id\"], \"account\": json.loads(r[\"account\"]), \"positions\": json.loads(r[\"positions\"]), \"orders\": json.loads(r[\"orders\"]), \"observed_at\": r[\"observed_at\"]} for r in con.execute(\"SELECT * FROM p_broker_truth\")], \"strategy_count\": 0,\n                    \"strategy_extension\": {\"enabled\": False, \"registry\": [], \"authorization\": \"Future strategies require explicit operator installation and approval; research and inbox output have no order authority\"},\n                    \"protection_capability\": {\"local\": \"Persistent operator-priced OCO exits, resized after measured partial fills and restricted to newly opened exposure\", \"broker\": \"Operator-priced native brackets with parent/leg polling and owned-order adoption\", \"automatic_broker_repair\": False, \"limitation\": \"Missing or mismatched broker protection is not automatically cancelled or replaced; a verified broker protection repair workflow is not installed\"},\n                    \"performance\": self._performance(con, books), \"global_policy\": self._portfolio_policy(con),\n                    \"global_exposure\": self._global_exposure(con, datetime.now(UTC)),\n                    \"global_policy_history\": [{**dict(row), \"policy\": json.loads(row[\"policy\"])} for row in con.execute(\"SELECT * FROM p_portfolio_policy_history ORDER BY version DESC LIMIT 100\")]}",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "process",
+      "start_line": 751,
+      "end_line": 832,
+      "excerpt": "    def process(self, providers, clock=None):\n        dynamic_clock = clock is None\n        clock = clock_time(clock)\n        result = {\"processed\": 0, \"fills\": 0, \"submitted\": 0, \"errors\": []}\n        try:\n            calendar = providers.calendar(clock)\n        except Exception:\n            result[\"errors\"].append(\"Exchange calendar unavailable; execution deferred\")\n            calendar = None\n        ids = self._service_ids()\n        for rid in ids:\n            if dynamic_clock:\n                clock = clock_time(None)\n                try:\n                    calendar = providers.calendar(clock)\n                except Exception:\n                    calendar = None\n            with self.store.transaction() as con:\n                intent = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone()\n                if not intent or intent[\"status\"] not in ACTIVE:\n                    continue\n                book = self._book(con, intent[\"book_id\"])\n                reconciliation = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"reconcile:\" + book[\"id\"],)).fetchone()\n                if reconciliation and json.loads(reconciliation[0])[\"status\"] == \"failed\" and intent[\"status\"] not in {\"cancel_requested\", \"submitting\"}:\n                    self._block(con, intent, \"This book's reconciliation failed; other books remain independent\", clock)\n                    result[\"errors\"].append({\"book_id\": book[\"id\"], \"detail\": \"Book reconciliation failed\"})\n                    continue\n                if book[\"broker\"] == \"alpaca\":\n                    remote = True\n                else:\n                    remote = False\n                    try:\n                        if calendar is None:\n                            raise DeskError(\"Exchange calendar unavailable; no new local fill authorized\")\n                        original_calendar = providers.calendar(datetime.fromisoformat(intent[\"not_before\"] or intent[\"created_at\"])) if intent[\"session_close\"] is None and intent[\"time_in_force\"] != \"gtc\" else None\n                        if not self._window(con, intent, calendar, clock, initial_calendar=original_calendar):\n                            continue\n                        quote = self._raw_quote(con, intent[\"symbol\"], clock)\n                        quote_time = datetime.fromisoformat(quote[\"as_of\"])\n                        if calendar.get(\"open_at\") and quote_time < datetime.fromisoformat(timestamp(calendar[\"open_at\"], \"calendar open\")):\n                            raise DeskError(\"Quote predates the exchange session; no auction or daily-close replay\")\n                        if intent[\"time_in_force\"] == \"cls\" and quote_time < datetime.fromisoformat(timestamp(calendar[\"close_at\"], \"calendar close\")) - timedelta(seconds=60):\n                            raise DeskError(\"Closing simulation needs a quote from its documented final-minute window\")\n                        policy = json.loads(book[\"policy\"])\n                        observed = Decimal(quote[\"price\"])\n                        triggered = intent[\"triggered\"]\n                        if intent[\"order_type\"] in {\"stop\", \"stop_limit\"}:\n                            threshold = Decimal(intent[\"stop_price\"])\n                            triggered = triggered or (observed >= threshold if intent[\"side\"] == \"buy\" else observed <= threshold)\n                            if not triggered:\n                                continue\n                            con.execute(\"UPDATE p_intents SET triggered=1 WHERE id=?\", (rid,))\n                        slip = Decimal(str(policy[\"slippage_bps\"])) / 10000\n                        price = observed * (1 + slip if intent[\"side\"] == \"buy\" else 1 - slip)\n                        if intent[\"order_type\"] in {\"limit\", \"stop_limit\"}:\n                            limit = Decimal(intent[\"limit_price\"])\n                            if intent[\"side\"] == \"buy\" and price > limit or intent[\"side\"] == \"sell\" and price < limit:\n                                continue\n                        remaining = Decimal(intent[\"quantity\"]) - Decimal(intent[\"filled_quantity\"])\n                        capacity_data = dict(intent)\n                        self._validate_capacity(con, book, capacity_data, price, rid, clock)\n                        max_fill = intent[\"max_fill_quantity\"] or policy[\"max_fill_quantity\"]\n                        quantity = min(remaining, Decimal(str(max_fill))) if max_fill else remaining\n                        fee = cents(Decimal(str(policy[\"fees_per_order\"]))) if Decimal(intent[\"filled_quantity\"]) == 0 else 0\n                        notional = cents(quantity * price)\n                        if notional < 1:\n                            raise DeskError(\"Fill notional is below one cent\")\n                        fill_key = rid + \":local:\" + str(Decimal(intent[\"filled_quantity\"]) + quantity)\n                        if dynamic_clock:\n                            clock = clock_time(None)\n                            calendar = providers.calendar(clock)\n                            if not self._window(con, intent, calendar, clock, initial_calendar=original_calendar):\n                                continue\n                            self._raw_quote(con, intent[\"symbol\"], clock)\n                        result[\"fills\"] += int(self._fill(con, intent, quantity, notional, price, fee, clock, fill_key, \"local quote-based simulation\", quote=quote))\n                        result[\"processed\"] += 1\n                    except DeskError as exc:\n                        self._block(con, intent, exc.detail, clock)\n                        result[\"errors\"].append({\"intent_id\": rid, \"detail\": exc.detail})\n            if remote:\n                self._process_broker(providers, rid, calendar, clock, result, dynamic_clock)\n        return result",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "_accepted_cancel_reason",
+      "start_line": 834,
+      "end_line": 858,
+      "excerpt": "    def _accepted_cancel_reason(self, con, intent, book, clock):\n        if intent[\"expires_at\"] and clock >= datetime.fromisoformat(intent[\"expires_at\"]):\n            return \"Explicit operator expiry reached; broker cancellation must be verified\"\n        if intent[\"session_close\"] and intent[\"time_in_force\"] in {\"day\", \"cls\"} and clock > datetime.fromisoformat(intent[\"session_close\"]):\n            return \"Authorized exchange session ended; broker cancellation must be verified\"\n        if intent[\"session_open\"] and intent[\"time_in_force\"] == \"opg\" and clock > datetime.fromisoformat(intent[\"session_open\"]) + timedelta(seconds=60):\n            return \"Opening window ended; no fallback; broker cancellation must be verified\"\n        position = self._position(con, book[\"id\"], intent[\"symbol\"])\n        held = Decimal(position[\"quantity\"]) if position else Decimal(0)\n        remaining = Decimal(intent[\"quantity\"]) - Decimal(intent[\"filled_quantity\"])\n        reducing = self._risk_reducing(held, intent[\"side\"], remaining)\n        policy = json.loads(book[\"policy\"])\n        if not reducing:\n            if policy[\"halted\"]:\n                return \"Operator halt cancels outstanding entry exposure; existing exits remain active\"\n            projected = held + (remaining if intent[\"side\"] == \"buy\" else -remaining)\n            if projected < 0 and not policy[\"allow_short\"]:\n                return \"Operator short-entry permission was withdrawn\"\n            quote = con.execute(\"SELECT * FROM quotes WHERE symbol=?\", (intent[\"symbol\"],)).fetchone()\n            if quote:\n                try:\n                    self._validate_capacity(con, book, dict(intent), Decimal(intent[\"limit_price\"] or quote[\"price\"]), intent[\"id\"], clock)\n                except DeskError as exc:\n                    return \"Outstanding entry violates the current operator policy: \" + exc.detail\n        return None",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "reconcile",
+      "start_line": 1043,
+      "end_line": 1168,
+      "excerpt": "    def reconcile(self, providers, clock=None):\n        clock = clock_time(clock)\n        result = {\"books\": 0, \"adopted\": 0, \"fills\": 0, \"errors\": []}\n        self._reconcile_local(clock, result)\n        with self.store.connect() as con:\n            connected = [dict(r) for r in con.execute(\"SELECT * FROM p_books WHERE broker='alpaca'\")]\n        for book in connected:\n            broker = self._broker_for(providers, book[\"connection_id\"])\n            if broker is None:\n                result[\"errors\"].append(\"Alpaca PAPER adapter is not configured\")\n                with self.store.transaction() as con:\n                    con.execute(\"INSERT OR REPLACE INTO p_state VALUES(?,?)\", (\"reconcile:\" + book[\"id\"], dump({\"status\": \"failed\", \"observed_at\": clock.isoformat(), \"reason\": \"Paper adapter is not configured\"})))\n                continue\n            try:\n                # Commit only after all account, position and order reads succeed.\n                account, positions, orders = broker.account(), broker.positions(), broker.orders()\n                if not isinstance(account, dict) or not isinstance(positions, list) or not isinstance(orders, list):\n                    raise ValueError(\"Incomplete broker snapshot\")\n                cash_cents = cents(Decimal(str(account[\"cash\"])))\n                present_ids = {str(remote.get(\"id\")) for remote in orders}\n                for remote in orders:\n                    present_ids.update(str(leg.get(\"id\")) for leg in remote.get(\"legs\") or [])\n                with self.store.connect() as reader:\n                    missing = [dict(row) for row in reader.execute(\"SELECT * FROM p_intents WHERE book_id=? AND (broker_id IS NOT NULL OR status IN ('submitting','cancel_requested')) AND status IN ('open','partially_filled','submitting','cancel_requested')\", (book[\"id\"],)) if row[\"broker_id\"] is None or row[\"broker_id\"] not in present_ids]\n                    protective_parents = {r[\"broker_client_id\"] for r in reader.execute(\"SELECT * FROM p_intents WHERE book_id=? AND (take_profit IS NOT NULL OR stop_loss IS NOT NULL)\", (book[\"id\"],))}\n                # Network reads finish before the write transaction; broker status\n                # persistence cannot deadlock with a held account-write lock.\n                for pending in missing:\n                    actual = broker.get_order(client_id=pending[\"broker_client_id\"])\n                    if actual:\n                        orders.append(actual)\n                for index, remote in enumerate(orders):\n                    if not remote.get(\"legs\") and (remote.get(\"order_class\") in {\"bracket\", \"oto\"} or remote.get(\"client_order_id\") in protective_parents):\n                        actual = broker.get_order(client_id=remote.get(\"client_order_id\"))\n                        if actual:\n                            orders[index] = actual\n                adopted = 0\n                with self.store.transaction() as con:\n                    account_identity = str(account.get(\"id\") or account.get(\"account_number\") or \"\")\n                    if account_identity:\n                        for bound in con.execute(\"SELECT * FROM p_broker_truth\"):\n                            existing_account = json.loads(bound[\"account\"])\n                            existing_identity = str(existing_account.get(\"id\") or existing_account.get(\"account_number\") or \"\")\n                            if bound[\"book_id\"] == book[\"id\"] and existing_identity and existing_identity != account_identity:\n                                raise DeskError(\"The broker account identity changed; saved book binding was preserved\")\n                            if bound[\"book_id\"] != book[\"id\"] and existing_identity == account_identity:\n                                raise DeskError(\"The same actual paper account cannot be attributed to multiple books\")\n                    before = con.execute(\"SELECT COUNT(*) FROM p_fills WHERE book_id=?\", (book[\"id\"],)).fetchone()[0]\n                    owned_symbols = set()\n                    flattened = []\n                    observations = []\n                    for remote in orders:\n                        flattened.append((remote, None))\n                        for leg in remote.get(\"legs\") or []:\n                            flattened.append((leg, remote.get(\"id\")))\n                    for remote, parent_broker_id in flattened:\n                        current = con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND (broker_id=? OR broker_client_id=?)\", (book[\"id\"], str(remote.get(\"id\", \"\")), str(remote.get(\"client_order_id\", \"\")))).fetchone()\n                        parent = con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND broker_id=?\", (book[\"id\"], str(parent_broker_id or \"\"))).fetchone() if parent_broker_id else None\n                        if not current and (str(remote.get(\"client_order_id\", \"\")).startswith(\"aster_\") or parent is not None):\n                            current = self._adopt_order(con, book, remote, clock, parent)\n                            adopted += 1\n                        if current:\n                            owned_symbols.add(current[\"symbol\"])\n                            observations.append((current[\"id\"], remote))\n                    # Descending broker lists cannot define average-cost history.\n                    # Establish parent/leg identities first, then replay observed\n                    # cumulative deltas in their source chronology.\n                    observations.sort(key=lambda item: item[1].get(\"filled_at\") or item[1].get(\"updated_at\") or item[1].get(\"submitted_at\") or clock.isoformat())\n                    for current_id, remote in observations:\n                        current = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (current_id,)).fetchone()\n                        self._apply_remote_order(con, current, remote, clock)\n                    old_positions = {r[\"symbol\"]: dict(r) for r in con.execute(\"SELECT * FROM p_positions WHERE book_id=?\", (book[\"id\"],))}\n                    remote_symbols = set()\n                    external_order_symbols = {symbol(r[\"symbol\"]) for r, parent_id in flattened if parent_id is None and not str(r.get(\"client_order_id\", \"\")).startswith(\"aster_\") and r.get(\"status\") not in {\"filled\", \"canceled\", \"expired\", \"rejected\"}}\n                    con.execute(\"INSERT OR REPLACE INTO p_state VALUES(?,?)\", (\"external_locks:\" + book[\"id\"], dump(sorted(external_order_symbols))))\n                    for remote in positions:\n                        sym = symbol(remote[\"symbol\"])\n                        qty = Decimal(str(remote[\"qty\"]))\n                        if remote.get(\"side\") == \"short\" and qty > 0:\n                            qty = -qty\n                        price = Decimal(str(remote[\"avg_entry_price\"]))\n                        if not qty.is_finite() or not price.is_finite() or price <= 0:\n                            raise ValueError(\"Invalid broker position\")\n                        remote_symbols.add(sym)\n                        prior = old_positions.get(sym)\n                        acknowledged = prior and prior[\"source\"] == \"broker_operator_acknowledged\"\n                        expected_qty = Decimal(prior[\"quantity\"]) if prior else Decimal(0)\n                        expected_cost = prior[\"cost_cents\"] if prior else 0\n                        matches_owned_ledger = expected_qty == qty and expected_cost == cents(qty * price)\n                        owned = acknowledged or bool((sym in owned_symbols or prior and prior[\"source\"] == \"broker_owned\") and matches_owned_ledger)\n                        locked = not owned or sym in external_order_symbols\n                        source = \"broker_operator_acknowledged\" if acknowledged else \"broker_owned\" if owned else \"broker_external_unknown\"\n                        con.execute(\"INSERT OR REPLACE INTO p_positions VALUES(?,?,?,?,?,?,?,?,?)\", (book[\"id\"], sym, str(qty), cents(qty * price), prior[\"realized_cents\"] if prior else 0, prior[\"sleeve\"] if prior and owned else None, source, int(locked), clock.isoformat()))\n                        con.execute(\"INSERT OR IGNORE INTO watchlist VALUES(?,?)\", (sym, clock.isoformat()))\n                    for sym, old in old_positions.items():\n                        if sym not in remote_symbols:\n                            con.execute(\"UPDATE p_positions SET quantity='0',cost_cents=0,updated_at=? WHERE book_id=? AND symbol=?\", (clock.isoformat(), book[\"id\"], sym))\n                    # Broker legs can precede the parent's fill timestamp in a\n                    # nested snapshot. Reserve against the final complete broker\n                    # position, not the transient history replay order.\n                    for protective in con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND parent_id IS NOT NULL AND status IN ('open','partially_filled','cancel_requested')\", (book[\"id\"],)).fetchall():\n                        position = self._position(con, book[\"id\"], protective[\"symbol\"])\n                        held = Decimal(position[\"quantity\"]) if position else Decimal(0)\n                        remaining = Decimal(protective[\"quantity\"]) - Decimal(protective[\"filled_quantity\"])\n                        matching = held > 0 and protective[\"side\"] == \"sell\" or held < 0 and protective[\"side\"] == \"buy\"\n                        reserved = min(abs(held), remaining) if matching else Decimal(0)\n                        con.execute(\"UPDATE p_intents SET reserved_quantity=? WHERE id=?\", (str(reserved), protective[\"id\"]))\n                    con.execute(\"UPDATE p_books SET cash_cents=?,updated_at=? WHERE id=?\", (cash_cents, clock.isoformat(), book[\"id\"]))\n                    con.execute(\"INSERT OR REPLACE INTO p_broker_truth VALUES(?,?,?,?,?)\", (book[\"id\"], dump(account), dump(positions), dump(orders), clock.isoformat()))\n                    con.execute(\"INSERT OR REPLACE INTO p_state VALUES(?,?)\", (\"reconcile:\" + book[\"id\"], dump({\"status\": \"ok\", \"observed_at\": clock.isoformat()})))\n                    after = con.execute(\"SELECT COUNT(*) FROM p_fills WHERE book_id=?\", (book[\"id\"],)).fetchone()[0]\n                    payload = {\"position_count\": len(positions), \"order_count\": len(orders), \"new_fill_deltas\": after - before, \"external_symbols_locked\": sorted(sym for sym in remote_symbols if sym not in owned_symbols and not (old_positions.get(sym, {}).get(\"source\") == \"broker_operator_acknowledged\"))}\n                    con.execute(\"INSERT INTO p_reconciliations VALUES(?,?,?,?,?,?)\", (identifier(), book[\"id\"], clock.isoformat(), \"completed\", \"Reconciled actual Alpaca PAPER account, positions and orders\", dump(payload)))\n                    self.store.event(con, \"paper_broker_reconciled\", \"accountant\", \"Committed a complete broker snapshot and measured cumulative fill deltas\", {\"book_id\": book[\"id\"], **payload})\n                    self._equity_snapshot(con, book[\"id\"], clock)\n                result[\"fills\"] += after - before\n                result[\"books\"] += 1\n                result[\"adopted\"] += adopted\n            except Exception:\n                detail = \"Broker reconciliation failed; previously observed account, positions and orders were preserved\"\n                with self.store.transaction() as con:\n                    con.execute(\"INSERT OR REPLACE INTO p_state VALUES(?,?)\", (\"reconcile:\" + book[\"id\"], dump({\"status\": \"failed\", \"observed_at\": clock.isoformat(), \"reason\": detail})))\n                    con.execute(\"INSERT INTO p_reconciliations VALUES(?,?,?,?,?,?)\", (identifier(), book[\"id\"], clock.isoformat(), \"failed\", detail, \"{}\"))\n                    self.store.event(con, \"paper_broker_reconcile_failed\", \"accountant\", detail, {\"book_id\": book[\"id\"]})\n                result[\"errors\"].append(detail)\n        return result",
+      "source_sha256": "053616c202d3975e726f8aeb8fe95ddb198cc963c8012e2a662c20da4d0ada6c"
+    }
+  ],
+  "probes_file": "/workspace/agentic-desk/docs/qa/portfolio_cap_probe_results.json",
+  "reproducer": "/workspace/agentic-desk/docs/qa/portfolio_cap_probes.py",
+  "baseline_validation": {
+    "portfolio_trading_tests": {
+      "count": 9,
+      "result": "passed"
+    },
+    "portfolio_http_tests": {
+      "count": 1,
+      "result": "passed"
+    }
+  },
+  "findings": [
+    {
+      "id": "PC-01",
+      "severity": "high",
+      "title": "Accepted broker entry remains open when its mark disappears",
+      "mechanism": "_accepted_cancel_reason skips capacity validation when the own-symbol quotes row is absent. Enabled global caps then cannot value the outstanding order but no cancellation is requested.",
+      "source_function": "_accepted_cancel_reason",
+      "probe": "accepted_entry_missing_quote",
+      "status": "fixed_by_backend_owner_independently_verified",
+      "resolution": "Existing accepted entry now runs _validate_global_capacity before optional own-symbol quote validation, so unknown/missing marks request cancellation under an enabled portfolio cap.",
+      "final_source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "id": "PC-02",
+      "severity": "high",
+      "title": "Failed own-book reconciliation prevents over-cap accepted entry cancellation",
+      "mechanism": "process intercepts active accepted intents and _block changes them to blocked before _process_broker can inspect/cancel existing receipts. No broker cancellation occurs after a cap reduction.",
+      "source_function": "process",
+      "probe": "accepted_entry_failed_reconciliation",
+      "status": "fixed_by_backend_owner_independently_verified",
+      "resolution": "process permits already-accepted broker IDs and submission/cancellation recovery to reach lifecycle verification despite failed account reconciliation; new transport retains the reconciliation gate.",
+      "final_source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "id": "PC-03",
+      "severity": "medium",
+      "title": "Active unowned nested broker orders evade unknown pending exposure",
+      "mechanism": "reconcile computes external_order_symbols only for flattened parent_id None rows. A filled foreign parent with active foreign protective children produces no external_locks, so _global_exposure reports complete and allows new entries.",
+      "source_function": "reconcile",
+      "probe": "foreign_live_nested_order",
+      "status": "fixed_by_backend_owner_independently_verified",
+      "resolution": "reconcile identifies unowned live rows across the flattened parent/leg list using adopted broker identities; active foreign nested legs now populate external_locks.",
+      "final_source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "id": "PC-04",
+      "severity": "high",
+      "title": "Owned broker protection after external flatten or shrink is treated as zero entry liability",
+      "mechanism": "The original global helper unconditionally skipped parent_id orders. A live protective sell after broker position becomes flat, or whose remaining quantity exceeds actual held quantity, can originate new short exposure but the helper reported complete and zero/understated pending exposure. Backend owner proactively identified this; independent QA verified flat and shrunk cases.",
+      "source_function": "_global_exposure",
+      "probes": [
+        "owned_protection_against_flat_position",
+        "owned_protection_exceeds_remaining_position"
+      ],
+      "status": "fixed_by_backend_owner_independently_verified",
+      "resolution": "_global_exposure checks active broker protective remaining quantity/direction against the actual held position; a mismatch marks the book/global valuation incomplete instead of assuming a reducer. It does not cancel or replace the mismatched leg.",
+      "final_source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    }
+  ],
+  "pre_fix_probe_results": {
+    "generated_at": "2026-10-08T06:32:45.585656+00:00",
+    "safety": "Temporary SQLite files and fake providers only. No network or real broker calls.",
+    "results": [
+      {
+        "probe": "cross_instance_atomic_reservations",
+        "expected": "Exactly one $100 intent across 16 concurrent submissions and 8 books",
+        "observed": {
+          "accepted": 1,
+          "projected": 100.0
+        },
+        "passed": true
+      },
+      {
+        "probe": "explicit_price_envelope",
+        "expected": "Reject at $20 and reserve $30 for quote=$10, limit=$25, stop=$30",
+        "observed": {
+          "error": "Operator portfolio gross exposure cap would be exceeded",
+          "projected": 30.0
+        },
+        "passed": true
+      },
+      {
+        "probe": "missing_mark_truthful_view_and_gate",
+        "expected": "Global/affected-book values null, unaffected empty book zero, fresh unrelated entry rejected",
+        "observed": {
+          "valuation": "incomplete",
+          "global": null,
+          "affected": null,
+          "unaffected": 0.0,
+          "error": "Portfolio entry gate requires coherent fresh marks and known broker state: AAPL: A timestamped price is required for order validation"
+        },
+        "passed": true
+      },
+      {
+        "probe": "partial_fill_not_double_counted",
+        "expected": "Observed $30 plus remaining $70 gives projected $100",
+        "observed": {
+          "gross": 30.0,
+          "projected": 100.0
+        },
+        "passed": true
+      },
+      {
+        "probe": "cancellation_retains_capacity_until_confirmed",
+        "expected": "Project $100 until actual terminal cancellation, then $30",
+        "observed": {
+          "before": 100.0,
+          "pending_cancel": 100.0,
+          "after_terminal": 30.0
+        },
+        "passed": true
+      },
+      {
+        "probe": "accepted_entry_missing_quote",
+        "expected": "Existing entry cancellation requested when enabled cap cannot value missing mark",
+        "observed": {
+          "cancel_calls": 0,
+          "intent_status": "open",
+          "valuation": "incomplete",
+          "projected": null
+        },
+        "passed": false
+      },
+      {
+        "probe": "accepted_entry_failed_reconciliation",
+        "expected": "Existing accepted entry remains cancellable after cap reduction despite failed account read",
+        "observed": {
+          "cancel_calls": 0,
+          "intent_status": "blocked",
+          "error": "This book's reconciliation failed; other books remain independent",
+          "remote_status": "accepted"
+        },
+        "passed": false
+      },
+      {
+        "probe": "foreign_live_nested_order",
+        "expected": "Unattributed active nested broker order makes pending exposure unknown and gates entries",
+        "observed": {
+          "valuation": "complete",
+          "projected": 100.0,
+          "reasons": [],
+          "entry_error": null
+        },
+        "passed": false
+      },
+      {
+        "probe": "owned_protection_against_flat_position",
+        "expected": "Active protective sell with flat broker position makes pending exposure unknown and gates entries",
+        "observed": {
+          "valuation": "complete",
+          "projected": 0.0,
+          "reasons": [],
+          "entry_error": null
+        },
+        "passed": false
+      },
+      {
+        "probe": "owned_protection_exceeds_remaining_position",
+        "expected": "Protective quantity 10 against actual held 5 makes pending exposure unknown",
+        "observed": {
+          "valuation": "complete",
+          "projected": 50.0,
+          "reasons": []
+        },
+        "passed": false
+      }
+    ]
+  },
+  "final_sources": [
+    {
+      "path": "/workspace/agentic-desk/backend/trading.py",
+      "sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46",
+      "lines": 1235
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/app.py",
+      "sha256": "e9fa4410463c083420eee834863398b0b7f859b875f73cb1dd32c4759c502b46",
+      "lines": 255
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/store.py",
+      "sha256": "e1a8b82058a7d4d89d955cc9984e522c92ee79c5ca4fc838b4c57043195ba00b",
+      "lines": 485
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_trading.py",
+      "sha256": "36528db75a76dd4094ce5e2ab0c6d1aa667a2954a5404b458ec50723d3d45b9c",
+      "lines": 993
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_http.py",
+      "sha256": "93df7d5b0b5ac3f27702be907b665b902aec5560aa0050e15d0da4f1222a683e",
+      "lines": 184
+    },
+    {
+      "path": "/workspace/agentic-desk/AGENTS.md",
+      "sha256": "5ac39761db2ce9354c08928b68e1c87b483025e8f223886a23ad5edbb1e4e381",
+      "lines": 13
+    },
+    {
+      "path": "/workspace/agentic-desk/docs/BUILD_CONTRACT.md",
+      "sha256": "44c2b7bf9cb95c63a5bea3de4a8555069ab6c4ad246812122283ab57634bbfe7",
+      "lines": 86
+    },
+    {
+      "path": "/workspace/agentic-desk/docs/AUTONOMY_CONTRACT.md",
+      "sha256": "067740a6ff1a260bb6e4cad63e61707f5e64ed59125eeda5dbf3154bea2f8ec7",
+      "lines": 41
+    }
+  ],
+  "completed_at": "2026-10-08T06:35:31.526014+00:00",
+  "open_findings": [],
+  "final_evidence": [
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "set_portfolio_policy",
+      "start_line": 244,
+      "end_line": 274,
+      "excerpt": "    def set_portfolio_policy(self, payload):\n        if set(payload) - set(PORTFOLIO_POLICY) - {\"expected_hash\"}:\n            raise DeskError(\"Unknown portfolio policy fields\", 422)\n        expected = payload.get(\"expected_hash\")\n        if expected is not None and not isinstance(expected, str):\n            raise DeskError(\"expected_hash must be a policy hash\", 422)\n        changes = {}\n        for key in PORTFOLIO_POLICY:\n            if key not in payload:\n                continue\n            value = payload[key]\n            if value is not None:\n                val = decimal(value, key)\n                if val != Decimal(cents(val)) / 100:\n                    raise DeskError(\"Portfolio caps must be positive whole USD cents or null\", 422)\n                value = number(val)\n            changes[key] = value\n        if not changes:\n            raise DeskError(\"Supply at least one portfolio policy field\", 422)\n        with self.store.transaction() as con:\n            previous = self._portfolio_policy(con)\n            if expected is not None and previous[\"hash\"] != expected:\n                raise DeskError(\"Portfolio policy changed; compare-and-swap refused the stale update\")\n            policy = {key: changes.get(key, previous[key]) for key in PORTFOLIO_POLICY}\n            serialized, ts = dump(policy), now()\n            digest, version = hashlib.sha256(serialized.encode()).hexdigest(), previous[\"version\"] + 1\n            current = {**policy, \"version\": version, \"hash\": digest, \"updated_at\": ts, \"actor\": \"operator\"}\n            con.execute(\"UPDATE p_state SET value=? WHERE key='portfolio_policy'\", (dump(current),))\n            con.execute(\"INSERT INTO p_portfolio_policy_history VALUES(?,?,?,?,?,?)\", (identifier(), version, digest, serialized, \"operator\", ts))\n            self.store.event(con, \"portfolio_policy_updated\", \"operator\", \"Updated versioned risk limits across independent autonomous books\", current)\n            return current",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "_global_exposure",
+      "start_line": 276,
+      "end_line": 354,
+      "excerpt": "    def _global_exposure(self, con, clock, candidate=None, exclude=None):\n        books = list(con.execute(\"SELECT * FROM p_books ORDER BY created_at\"))\n        positions = {(row[\"book_id\"], row[\"symbol\"]): Decimal(row[\"quantity\"]) for row in con.execute(\"SELECT * FROM p_positions WHERE quantity!='0'\") if Decimal(row[\"quantity\"])}\n        bounds, price_bounds, mismatched_protection = {}, {}, set()\n        brokers = {book[\"id\"]: book[\"broker\"] for book in books}\n        pending = [dict(row) for row in con.execute(\"SELECT * FROM p_intents WHERE id!=? AND status IN ('queued','open','partially_filled','blocked','submitting','cancel_requested')\", (exclude or \"\",))]\n        if candidate is not None:\n            pending.append(dict(candidate))\n        for row in pending:\n            key = (row[\"book_id\"], row[\"symbol\"])\n            held = positions.get(key, Decimal(0))\n            quantity = Decimal(row[\"quantity\"]) - Decimal(row.get(\"filled_quantity\", \"0\"))\n            if row.get(\"parent_id\"):\n                if brokers.get(row[\"book_id\"]) == \"alpaca\" and quantity > 0 and not self._risk_reducing(held, row[\"side\"], quantity):\n                    mismatched_protection.add(row[\"book_id\"])\n                continue\n            if quantity <= 0 or self._risk_reducing(held, row[\"side\"], quantity):\n                continue\n            bounds.setdefault(key, [Decimal(0), Decimal(0)])[0 if row[\"side\"] == \"buy\" else 1] += quantity\n            for field in (\"limit_price\", \"stop_price\"):\n                if row.get(field):\n                    price_bounds[key] = max(price_bounds.get(key, Decimal(0)), Decimal(row[field]))\n        reasons, marks, quotes, unknown_books = [], [], {}, set()\n        for book_id in sorted(mismatched_protection):\n            reasons.append(\"Broker protection no longer matches held exposure for book \" + book_id)\n            unknown_books.add(book_id)\n        max_age = self.store.settings(con)[\"quote_max_age_seconds\"]\n        for book in books:\n            if book[\"broker\"] != \"alpaca\":\n                continue\n            health = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"reconcile:\" + book[\"id\"],)).fetchone()\n            truth = con.execute(\"SELECT observed_at FROM p_broker_truth WHERE book_id=?\", (book[\"id\"],)).fetchone()\n            if not truth or not health or json.loads(health[0]).get(\"status\") != \"ok\":\n                reasons.append(\"Broker state is unknown for book \" + book[\"id\"])\n                unknown_books.add(book[\"id\"])\n            elif not -5 <= (clock - datetime.fromisoformat(truth[0])).total_seconds() <= max_age:\n                reasons.append(\"Broker state is stale for book \" + book[\"id\"])\n                unknown_books.add(book[\"id\"])\n            external = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"external_locks:\" + book[\"id\"],)).fetchone()\n            if external and json.loads(external[0]):\n                reasons.append(\"Unattributed broker orders make pending exposure unknown for book \" + book[\"id\"])\n                unknown_books.add(book[\"id\"])\n        for sym in sorted({key[1] for key in positions} | {key[1] for key in bounds}):\n            try:\n                quote = self._raw_quote(con, sym, clock)\n                quotes[sym] = Decimal(quote[\"price\"])\n                marks.append({\"symbol\": sym, \"price\": number(quote[\"price\"]), \"as_of\": quote[\"as_of\"], \"source\": quote[\"source\"]})\n            except DeskError as exc:\n                reasons.append(sym + \": \" + exc.detail)\n        missing_symbols = {key[1] for key in positions.keys() | bounds.keys()} - quotes.keys()\n        for book_id, sym in positions.keys() | bounds.keys():\n            if sym in missing_symbols:\n                unknown_books.add(book_id)\n        symbol_values = {sym: [0, 0] for sym in {key[1] for key in positions.keys() | bounds.keys()}}\n        book_values = {book[\"id\"]: [0, 0] for book in books}\n        for key in positions.keys() | bounds.keys():\n            book_id, sym = key\n            if sym not in quotes:\n                continue\n            held = positions.get(key, Decimal(0))\n            buys, sells = bounds.get(key, [Decimal(0), Decimal(0)])\n            observed = abs(cents(held * quotes[sym]))\n            reserved_price = max(quotes[sym], price_bounds.get(key, Decimal(0)))\n            projected = max(abs(cents((held + buys) * reserved_price)), abs(cents((held - sells) * reserved_price)), observed)\n            symbol_values.setdefault(sym, [0, 0])\n            for index, value in enumerate((observed, projected)):\n                symbol_values[sym][index] += value\n                book_values[book_id][index] += value\n        complete = not reasons\n        gross, projected = sum(row[0] for row in book_values.values()), sum(row[1] for row in book_values.values())\n        mark_times = [datetime.fromisoformat(mark[\"as_of\"]) for mark in marks]\n        return {\"valuation_status\": \"complete\" if complete else \"incomplete\", \"incomplete_reasons\": reasons,\n                \"calculated_at\": clock.isoformat(), \"gross_exposure\": gross / 100 if complete else None,\n                \"projected_gross_exposure\": projected / 100 if complete else None,\n                \"symbols\": [{\"symbol\": sym, \"gross_exposure\": values[0] / 100 if complete else None, \"projected_gross_exposure\": values[1] / 100 if complete else None} for sym, values in sorted(symbol_values.items())],\n                \"books\": [{\"book_id\": rid, \"valuation_status\": \"incomplete\" if rid in unknown_books else \"complete\", \"gross_exposure\": values[0] / 100 if rid not in unknown_books else None, \"projected_gross_exposure\": values[1] / 100 if rid not in unknown_books else None} for rid, values in book_values.items()],\n                \"marks\": marks, \"mark_span_seconds\": (max(mark_times) - min(mark_times)).total_seconds() if mark_times else 0,\n                \"scope\": \"autonomous_books_only\", \"max_mark_age_seconds\": max_age,\n                \"method\": \"Sum per-book absolute exposure with pending entry quantity and explicit price bounds; independent books never net\"}",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "_validate_global_capacity",
+      "start_line": 356,
+      "end_line": 369,
+      "excerpt": "    def _validate_global_capacity(self, con, data, exclude=None, clock=None):\n        policy = self._portfolio_policy(con)\n        if all(policy[key] is None for key in PORTFOLIO_POLICY):\n            return\n        exposure = self._global_exposure(con, clock or datetime.now(UTC), data, exclude)\n        if exposure[\"valuation_status\"] != \"complete\":\n            raise DeskError(\"Portfolio entry gate requires coherent fresh marks and known broker state: \" + \"; \".join(exposure[\"incomplete_reasons\"]))\n        gross = Decimal(str(exposure[\"projected_gross_exposure\"]))\n        if policy[\"gross_exposure_cap\"] is not None and gross > Decimal(str(policy[\"gross_exposure_cap\"])):\n            raise DeskError(\"Operator portfolio gross exposure cap would be exceeded\")\n        if policy[\"symbol_exposure_cap\"] is not None:\n            cap = Decimal(str(policy[\"symbol_exposure_cap\"]))\n            if any(Decimal(str(row[\"projected_gross_exposure\"])) > cap for row in exposure[\"symbols\"]):\n                raise DeskError(\"Operator portfolio symbol exposure cap would be exceeded\")",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "_validate_capacity",
+      "start_line": 427,
+      "end_line": 502,
+      "excerpt": "    def _validate_capacity(self, con, book, data, price, exclude=None, clock=None):\n        clock = clock or datetime.now(UTC)\n        policy = json.loads(book[\"policy\"])\n        foreign_locks = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"external_locks:\" + book[\"id\"],)).fetchone()\n        if foreign_locks and data[\"symbol\"] in json.loads(foreign_locks[0]):\n            raise DeskError(\"Unattributed external broker orders lock this symbol until they are resolved\")\n        pos = self._position(con, book[\"id\"], data[\"symbol\"])\n        qty = Decimal(pos[\"quantity\"]) if pos else Decimal(0)\n        order_qty = Decimal(data[\"quantity\"]) - Decimal(data.get(\"filled_quantity\", \"0\"))\n        if pos and pos[\"locked\"]:\n            raise DeskError(\"This external broker position is locked pending explicit operator acknowledgement\")\n        reducing = self._risk_reducing(qty, data[\"side\"], order_qty)\n        if policy[\"halted\"] and not reducing:\n            raise DeskError(\"This book is halted for entries; risk-reducing exits remain available\")\n        account, positions = self._account(con, book, clock)\n        if policy[\"drawdown_brake_percent\"] is not None and account[\"drawdown_percent\"] >= policy[\"drawdown_brake_percent\"] and not reducing:\n            raise DeskError(\"Operator drawdown brake blocks additional entry exposure\")\n        remaining_signed = order_qty if data[\"side\"] == \"buy\" else -order_qty\n        projected = qty + remaining_signed\n        if projected < 0 and not policy[\"allow_short\"] and not reducing:\n            raise DeskError(\"Short entries require the operator's allow_short policy\")\n        active = list(con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND id!=? AND status IN ('queued','open','partially_filled','blocked','submitting','cancel_requested')\", (book[\"id\"], exclude or \"\")))\n        # Protective OCO siblings represent one liability, not duplicate share claims.\n        shares, seen_groups = Decimal(0), set()\n        for intent in active:\n            if intent[\"symbol\"] != data[\"symbol\"] or intent[\"side\"] != data[\"side\"]:\n                continue\n            if intent[\"oco_group\"]:\n                if intent[\"oco_group\"] in seen_groups or intent[\"oco_group\"] == data.get(\"oco_group\"):\n                    continue\n                seen_groups.add(intent[\"oco_group\"])\n            shares += Decimal(intent[\"reserved_quantity\"])\n        if data[\"side\"] == \"sell\" and qty > 0 and min(order_qty, qty) + shares > qty:\n            raise DeskError(\"Insufficient unreserved shares in this independent book\")\n        if data[\"side\"] == \"buy\" and qty < 0 and min(order_qty, -qty) + shares > -qty:\n            raise DeskError(\"Insufficient unreserved short shares to cover\")\n        estimated = cents(order_qty * price)\n        fee = cents(Decimal(str(policy[\"fees_per_order\"]))) if Decimal(data.get(\"filled_quantity\", \"0\")) == 0 else 0\n        other_cash = sum(r[\"reserved_cents\"] for r in active)\n        # Existing short liabilities may be closed even when cash has deteriorated.\n        if data[\"side\"] == \"buy\" and not (reducing and qty < 0) and book[\"cash_cents\"] - other_cash < estimated + fee:\n            raise DeskError(\"Insufficient unreserved cash in this independent book\")\n        if not reducing:\n            self._validate_global_capacity(con, data, exclude, clock)\n            # Reserve exposure as well as cash: separate pending short entries\n            # must not evade operator caps merely because they generate proceeds.\n            pending_by_symbol = {}\n            for pending in active:\n                if pending[\"parent_id\"]:\n                    continue\n                p = self._position(con, book[\"id\"], pending[\"symbol\"])\n                held = Decimal(p[\"quantity\"]) if p else Decimal(0)\n                remaining = Decimal(pending[\"quantity\"]) - Decimal(pending[\"filled_quantity\"])\n                if self._risk_reducing(held, pending[\"side\"], remaining):\n                    continue\n                pending_by_symbol.setdefault(pending[\"symbol\"], [Decimal(0), Decimal(0)])\n                pending_by_symbol[pending[\"symbol\"]][0 if pending[\"side\"] == \"buy\" else 1] += remaining\n            pending_by_symbol.setdefault(data[\"symbol\"], [Decimal(0), Decimal(0)])[0 if data[\"side\"] == \"buy\" else 1] += order_qty\n            bounds = pending_by_symbol[data[\"symbol\"]]\n            projected_value = max(abs(cents((qty + bounds[0]) * price)), abs(cents((qty - bounds[1]) * price)))\n            if policy[\"symbol_exposure_cap\"] is not None and projected_value > cents(Decimal(str(policy[\"symbol_exposure_cap\"]))):\n                raise DeskError(\"Operator symbol exposure cap would be exceeded\")\n            gross = 0\n            all_symbols = {p[\"symbol\"] for p in positions} | set(pending_by_symbol)\n            for sym in all_symbols:\n                held_pos = self._position(con, book[\"id\"], sym)\n                held_qty = Decimal(held_pos[\"quantity\"]) if held_pos else Decimal(0)\n                observed = price if sym == data[\"symbol\"] else Decimal(self._raw_quote(con, sym, clock)[\"price\"])\n                positive, negative = pending_by_symbol.get(sym, [Decimal(0), Decimal(0)])\n                gross += max(abs(cents((held_qty + positive) * observed)), abs(cents((held_qty - negative) * observed)))\n            if policy[\"gross_exposure_cap\"] is not None and gross > cents(Decimal(str(policy[\"gross_exposure_cap\"]))):\n                raise DeskError(\"Operator gross exposure cap would be exceeded\")\n        reserve_cash = estimated + fee if data[\"side\"] == \"buy\" and not (reducing and qty < 0) else 0\n        closing_direction = qty > 0 and data[\"side\"] == \"sell\" or qty < 0 and data[\"side\"] == \"buy\"\n        reserve_qty = min(order_qty, abs(qty)) if closing_direction else Decimal(0)\n        return reserve_cash, reserve_qty",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "submit_intent",
+      "start_line": 504,
+      "end_line": 539,
+      "excerpt": "    def submit_intent(self, payload):\n        data = self._normalize_intent(payload)\n        digest = hashlib.sha256(dump(data).encode()).hexdigest()\n        with self.store.transaction() as con:\n            book = self._book(con, data[\"book_id\"])\n            existing = con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND client_id=?\", (book[\"id\"], data[\"client_id\"])).fetchone()\n            if existing:\n                if existing[\"payload_hash\"] != digest:\n                    raise DeskError(\"client_id already identifies a different autonomous intent\")\n                return self._intent_public(existing)\n            quote = self._raw_quote(con, data[\"symbol\"], datetime.now(UTC))\n            position = self._position(con, book[\"id\"], data[\"symbol\"])\n            held = Decimal(position[\"quantity\"]) if position else Decimal(0)\n            signed = Decimal(data[\"quantity\"]) * (1 if data[\"side\"] == \"buy\" else -1)\n            if book[\"broker\"] == \"alpaca\" and held * signed < 0 and (data[\"take_profit\"] or data[\"stop_loss\"]):\n                raise DeskError(\"Broker-native protection cannot cover or flip an existing opposite position; close it separately before a protected new entry\", 422)\n            reference = Decimal(data[\"limit_price\"] or quote[\"price\"])\n            notional_cents = cents(Decimal(data[\"quantity\"]) * reference)\n            if not 1 <= notional_cents <= 9_000_000_000_000_000_000:\n                raise DeskError(\"Intent notional must be at least one cent and fit the integer-cents ledger\", 422)\n            if data[\"take_profit\"]:\n                target = Decimal(data[\"take_profit\"])\n                if data[\"side\"] == \"buy\" and target <= reference or data[\"side\"] == \"sell\" and target >= reference:\n                    raise DeskError(\"Take-profit must be beyond the entry reference in the trade direction\", 422)\n            if data[\"stop_loss\"]:\n                stop = Decimal(data[\"stop_loss\"])\n                if data[\"side\"] == \"buy\" and stop >= reference or data[\"side\"] == \"sell\" and stop <= reference:\n                    raise DeskError(\"Stop-loss must be on the protective side of the entry reference\", 422)\n            reserve_cash, reserve_qty = self._validate_capacity(con, book, data, reference)\n            rid, ts = identifier(), now()\n            columns = list(data) + [\"id\", \"payload_hash\", \"status\", \"reserved_cents\", \"reserved_quantity\", \"broker_client_id\", \"created_at\", \"updated_at\", \"policy_version\"]\n            values = list(data.values()) + [rid, digest, \"queued\", reserve_cash, str(reserve_qty), \"aster_\" + rid, ts, ts, book[\"policy_version\"]]\n            con.execute(f\"INSERT INTO p_intents({','.join(columns)}) VALUES({','.join('?' for _ in columns)})\", values)\n            con.execute(\"INSERT OR IGNORE INTO watchlist VALUES(?,?)\", (data[\"symbol\"], ts))\n            self.store.event(con, \"autonomous_intent_authorized\", \"operator\", f\"Operator authorized {data['side']} {data['quantity']} {data['symbol']} in {book['name']}\", {\"intent_id\": rid, \"book_id\": book[\"id\"], \"client_id\": data[\"client_id\"], \"policy_version\": book[\"policy_version\"], \"execution\": \"automatic order mechanics; no strategy decision\"})\n            return self._intent_public(con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone())",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "snapshot",
+      "start_line": 573,
+      "end_line": 592,
+      "excerpt": "    def snapshot(self):\n        with self.store.connect() as con:\n            con.execute(\"BEGIN\")\n            books, all_positions = [], []\n            for book in con.execute(\"SELECT * FROM p_books ORDER BY created_at\"):\n                account, positions = self._account(con, book, datetime.now(UTC))\n                all_positions.extend(positions)\n                health = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"reconcile:\" + book[\"id\"],)).fetchone()\n                books.append({\"id\": book[\"id\"], \"name\": book[\"name\"], \"kind\": book[\"kind\"], \"broker\": book[\"broker\"], \"connection_id\": book[\"connection_id\"], \"description\": book[\"description\"], \"account\": account, \"policy\": json.loads(book[\"policy\"]), \"policy_version\": book[\"policy_version\"], \"policy_hash\": book[\"policy_hash\"], \"created_at\": book[\"created_at\"], \"updated_at\": book[\"updated_at\"], \"reconciliation_health\": json.loads(health[0]) if health else {\"status\": \"not_checked\"}})\n            return {\"books\": books, \"intents\": [self._intent_public(r) for r in con.execute(\"SELECT * FROM p_intents ORDER BY created_at DESC LIMIT 1000\")], \"positions\": all_positions,\n                    \"fills\": [{**dict(r), \"quantity\": number(r[\"quantity\"]), \"price\": number(r[\"price\"]), \"notional\": r[\"notional_cents\"] / 100, \"fee\": r[\"fee_cents\"] / 100, \"realized_pnl\": r[\"realized_cents\"] / 100} for r in con.execute(\"SELECT * FROM p_fills ORDER BY observed_at DESC LIMIT 1000\")],\n                    \"equity_history\": [{\"book_id\": r[\"book_id\"], \"timestamp\": r[\"timestamp\"], \"equity\": r[\"equity_cents\"] / 100, \"cash\": r[\"cash_cents\"] / 100, \"missing_marks\": r[\"missing_marks\"], \"stale_marks\": r[\"stale_marks\"]} for r in con.execute(\"SELECT * FROM (SELECT * FROM p_equity ORDER BY timestamp DESC LIMIT 2000) ORDER BY timestamp\")],\n                    \"reconciliations\": [{**dict(r), \"payload\": json.loads(r[\"payload\"])} for r in con.execute(\"SELECT * FROM p_reconciliations ORDER BY timestamp DESC LIMIT 100\")],\n                    \"policy_history\": [{**dict(r), \"policy\": json.loads(r[\"policy\"])} for r in con.execute(\"SELECT * FROM p_policy_history ORDER BY timestamp DESC LIMIT 200\")],\n                    \"broker_truth\": [{\"book_id\": r[\"book_id\"], \"account\": json.loads(r[\"account\"]), \"positions\": json.loads(r[\"positions\"]), \"orders\": json.loads(r[\"orders\"]), \"observed_at\": r[\"observed_at\"]} for r in con.execute(\"SELECT * FROM p_broker_truth\")], \"strategy_count\": 0,\n                    \"strategy_extension\": {\"enabled\": False, \"registry\": [], \"authorization\": \"Future strategies require explicit operator installation and approval; research and inbox output have no order authority\"},\n                    \"protection_capability\": {\"local\": \"Persistent operator-priced OCO exits, resized after measured partial fills and restricted to newly opened exposure\", \"broker\": \"Operator-priced native brackets with parent/leg polling and owned-order adoption\", \"automatic_broker_repair\": False, \"limitation\": \"Missing or mismatched broker protection is not automatically cancelled or replaced; a verified broker protection repair workflow is not installed\"},\n                    \"performance\": self._performance(con, books), \"global_policy\": self._portfolio_policy(con),\n                    \"global_exposure\": self._global_exposure(con, datetime.now(UTC)),\n                    \"global_policy_history\": [{**dict(row), \"policy\": json.loads(row[\"policy\"])} for row in con.execute(\"SELECT * FROM p_portfolio_policy_history ORDER BY version DESC LIMIT 100\")]}",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "process",
+      "start_line": 759,
+      "end_line": 841,
+      "excerpt": "    def process(self, providers, clock=None):\n        dynamic_clock = clock is None\n        clock = clock_time(clock)\n        result = {\"processed\": 0, \"fills\": 0, \"submitted\": 0, \"errors\": []}\n        try:\n            calendar = providers.calendar(clock)\n        except Exception:\n            result[\"errors\"].append(\"Exchange calendar unavailable; execution deferred\")\n            calendar = None\n        ids = self._service_ids()\n        for rid in ids:\n            if dynamic_clock:\n                clock = clock_time(None)\n                try:\n                    calendar = providers.calendar(clock)\n                except Exception:\n                    calendar = None\n            with self.store.transaction() as con:\n                intent = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone()\n                if not intent or intent[\"status\"] not in ACTIVE:\n                    continue\n                book = self._book(con, intent[\"book_id\"])\n                reconciliation = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"reconcile:\" + book[\"id\"],)).fetchone()\n                can_verify_lifecycle = book[\"broker\"] == \"alpaca\" and (intent[\"broker_id\"] or intent[\"status\"] in {\"cancel_requested\", \"submitting\"})\n                if reconciliation and json.loads(reconciliation[0])[\"status\"] == \"failed\" and not can_verify_lifecycle:\n                    self._block(con, intent, \"This book's reconciliation failed; other books remain independent\", clock)\n                    result[\"errors\"].append({\"book_id\": book[\"id\"], \"detail\": \"Book reconciliation failed\"})\n                    continue\n                if book[\"broker\"] == \"alpaca\":\n                    remote = True\n                else:\n                    remote = False\n                    try:\n                        if calendar is None:\n                            raise DeskError(\"Exchange calendar unavailable; no new local fill authorized\")\n                        original_calendar = providers.calendar(datetime.fromisoformat(intent[\"not_before\"] or intent[\"created_at\"])) if intent[\"session_close\"] is None and intent[\"time_in_force\"] != \"gtc\" else None\n                        if not self._window(con, intent, calendar, clock, initial_calendar=original_calendar):\n                            continue\n                        quote = self._raw_quote(con, intent[\"symbol\"], clock)\n                        quote_time = datetime.fromisoformat(quote[\"as_of\"])\n                        if calendar.get(\"open_at\") and quote_time < datetime.fromisoformat(timestamp(calendar[\"open_at\"], \"calendar open\")):\n                            raise DeskError(\"Quote predates the exchange session; no auction or daily-close replay\")\n                        if intent[\"time_in_force\"] == \"cls\" and quote_time < datetime.fromisoformat(timestamp(calendar[\"close_at\"], \"calendar close\")) - timedelta(seconds=60):\n                            raise DeskError(\"Closing simulation needs a quote from its documented final-minute window\")\n                        policy = json.loads(book[\"policy\"])\n                        observed = Decimal(quote[\"price\"])\n                        triggered = intent[\"triggered\"]\n                        if intent[\"order_type\"] in {\"stop\", \"stop_limit\"}:\n                            threshold = Decimal(intent[\"stop_price\"])\n                            triggered = triggered or (observed >= threshold if intent[\"side\"] == \"buy\" else observed <= threshold)\n                            if not triggered:\n                                continue\n                            con.execute(\"UPDATE p_intents SET triggered=1 WHERE id=?\", (rid,))\n                        slip = Decimal(str(policy[\"slippage_bps\"])) / 10000\n                        price = observed * (1 + slip if intent[\"side\"] == \"buy\" else 1 - slip)\n                        if intent[\"order_type\"] in {\"limit\", \"stop_limit\"}:\n                            limit = Decimal(intent[\"limit_price\"])\n                            if intent[\"side\"] == \"buy\" and price > limit or intent[\"side\"] == \"sell\" and price < limit:\n                                continue\n                        remaining = Decimal(intent[\"quantity\"]) - Decimal(intent[\"filled_quantity\"])\n                        capacity_data = dict(intent)\n                        self._validate_capacity(con, book, capacity_data, price, rid, clock)\n                        max_fill = intent[\"max_fill_quantity\"] or policy[\"max_fill_quantity\"]\n                        quantity = min(remaining, Decimal(str(max_fill))) if max_fill else remaining\n                        fee = cents(Decimal(str(policy[\"fees_per_order\"]))) if Decimal(intent[\"filled_quantity\"]) == 0 else 0\n                        notional = cents(quantity * price)\n                        if notional < 1:\n                            raise DeskError(\"Fill notional is below one cent\")\n                        fill_key = rid + \":local:\" + str(Decimal(intent[\"filled_quantity\"]) + quantity)\n                        if dynamic_clock:\n                            clock = clock_time(None)\n                            calendar = providers.calendar(clock)\n                            if not self._window(con, intent, calendar, clock, initial_calendar=original_calendar):\n                                continue\n                            self._raw_quote(con, intent[\"symbol\"], clock)\n                        result[\"fills\"] += int(self._fill(con, intent, quantity, notional, price, fee, clock, fill_key, \"local quote-based simulation\", quote=quote))\n                        result[\"processed\"] += 1\n                    except DeskError as exc:\n                        self._block(con, intent, exc.detail, clock)\n                        result[\"errors\"].append({\"intent_id\": rid, \"detail\": exc.detail})\n            if remote:\n                self._process_broker(providers, rid, calendar, clock, result, dynamic_clock)\n        return result",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "_accepted_cancel_reason",
+      "start_line": 843,
+      "end_line": 871,
+      "excerpt": "    def _accepted_cancel_reason(self, con, intent, book, clock):\n        if intent[\"expires_at\"] and clock >= datetime.fromisoformat(intent[\"expires_at\"]):\n            return \"Explicit operator expiry reached; broker cancellation must be verified\"\n        if intent[\"session_close\"] and intent[\"time_in_force\"] in {\"day\", \"cls\"} and clock > datetime.fromisoformat(intent[\"session_close\"]):\n            return \"Authorized exchange session ended; broker cancellation must be verified\"\n        if intent[\"session_open\"] and intent[\"time_in_force\"] == \"opg\" and clock > datetime.fromisoformat(intent[\"session_open\"]) + timedelta(seconds=60):\n            return \"Opening window ended; no fallback; broker cancellation must be verified\"\n        position = self._position(con, book[\"id\"], intent[\"symbol\"])\n        held = Decimal(position[\"quantity\"]) if position else Decimal(0)\n        remaining = Decimal(intent[\"quantity\"]) - Decimal(intent[\"filled_quantity\"])\n        reducing = self._risk_reducing(held, intent[\"side\"], remaining)\n        policy = json.loads(book[\"policy\"])\n        if not reducing:\n            if policy[\"halted\"]:\n                return \"Operator halt cancels outstanding entry exposure; existing exits remain active\"\n            projected = held + (remaining if intent[\"side\"] == \"buy\" else -remaining)\n            if projected < 0 and not policy[\"allow_short\"]:\n                return \"Operator short-entry permission was withdrawn\"\n            try:\n                self._validate_global_capacity(con, dict(intent), intent[\"id\"], clock)\n            except DeskError as exc:\n                return \"Outstanding entry cannot satisfy the current portfolio policy: \" + exc.detail\n            quote = con.execute(\"SELECT * FROM quotes WHERE symbol=?\", (intent[\"symbol\"],)).fetchone()\n            if quote:\n                try:\n                    self._validate_capacity(con, book, dict(intent), Decimal(intent[\"limit_price\"] or quote[\"price\"]), intent[\"id\"], clock)\n                except DeskError as exc:\n                    return \"Outstanding entry violates the current operator policy: \" + exc.detail\n        return None",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/trading.py",
+      "function": "reconcile",
+      "start_line": 1056,
+      "end_line": 1182,
+      "excerpt": "    def reconcile(self, providers, clock=None):\n        clock = clock_time(clock)\n        result = {\"books\": 0, \"adopted\": 0, \"fills\": 0, \"errors\": []}\n        self._reconcile_local(clock, result)\n        with self.store.connect() as con:\n            connected = [dict(r) for r in con.execute(\"SELECT * FROM p_books WHERE broker='alpaca'\")]\n        for book in connected:\n            broker = self._broker_for(providers, book[\"connection_id\"])\n            if broker is None:\n                result[\"errors\"].append(\"Alpaca PAPER adapter is not configured\")\n                with self.store.transaction() as con:\n                    con.execute(\"INSERT OR REPLACE INTO p_state VALUES(?,?)\", (\"reconcile:\" + book[\"id\"], dump({\"status\": \"failed\", \"observed_at\": clock.isoformat(), \"reason\": \"Paper adapter is not configured\"})))\n                continue\n            try:\n                # Commit only after all account, position and order reads succeed.\n                account, positions, orders = broker.account(), broker.positions(), broker.orders()\n                if not isinstance(account, dict) or not isinstance(positions, list) or not isinstance(orders, list):\n                    raise ValueError(\"Incomplete broker snapshot\")\n                cash_cents = cents(Decimal(str(account[\"cash\"])))\n                present_ids = {str(remote.get(\"id\")) for remote in orders}\n                for remote in orders:\n                    present_ids.update(str(leg.get(\"id\")) for leg in remote.get(\"legs\") or [])\n                with self.store.connect() as reader:\n                    missing = [dict(row) for row in reader.execute(\"SELECT * FROM p_intents WHERE book_id=? AND (broker_id IS NOT NULL OR status IN ('submitting','cancel_requested')) AND status IN ('open','partially_filled','submitting','cancel_requested')\", (book[\"id\"],)) if row[\"broker_id\"] is None or row[\"broker_id\"] not in present_ids]\n                    protective_parents = {r[\"broker_client_id\"] for r in reader.execute(\"SELECT * FROM p_intents WHERE book_id=? AND (take_profit IS NOT NULL OR stop_loss IS NOT NULL)\", (book[\"id\"],))}\n                # Network reads finish before the write transaction; broker status\n                # persistence cannot deadlock with a held account-write lock.\n                for pending in missing:\n                    actual = broker.get_order(client_id=pending[\"broker_client_id\"])\n                    if actual:\n                        orders.append(actual)\n                for index, remote in enumerate(orders):\n                    if not remote.get(\"legs\") and (remote.get(\"order_class\") in {\"bracket\", \"oto\"} or remote.get(\"client_order_id\") in protective_parents):\n                        actual = broker.get_order(client_id=remote.get(\"client_order_id\"))\n                        if actual:\n                            orders[index] = actual\n                adopted = 0\n                with self.store.transaction() as con:\n                    account_identity = str(account.get(\"id\") or account.get(\"account_number\") or \"\")\n                    if account_identity:\n                        for bound in con.execute(\"SELECT * FROM p_broker_truth\"):\n                            existing_account = json.loads(bound[\"account\"])\n                            existing_identity = str(existing_account.get(\"id\") or existing_account.get(\"account_number\") or \"\")\n                            if bound[\"book_id\"] == book[\"id\"] and existing_identity and existing_identity != account_identity:\n                                raise DeskError(\"The broker account identity changed; saved book binding was preserved\")\n                            if bound[\"book_id\"] != book[\"id\"] and existing_identity == account_identity:\n                                raise DeskError(\"The same actual paper account cannot be attributed to multiple books\")\n                    before = con.execute(\"SELECT COUNT(*) FROM p_fills WHERE book_id=?\", (book[\"id\"],)).fetchone()[0]\n                    owned_symbols = set()\n                    flattened = []\n                    observations = []\n                    for remote in orders:\n                        flattened.append((remote, None))\n                        for leg in remote.get(\"legs\") or []:\n                            flattened.append((leg, remote.get(\"id\")))\n                    for remote, parent_broker_id in flattened:\n                        current = con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND (broker_id=? OR broker_client_id=?)\", (book[\"id\"], str(remote.get(\"id\", \"\")), str(remote.get(\"client_order_id\", \"\")))).fetchone()\n                        parent = con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND broker_id=?\", (book[\"id\"], str(parent_broker_id or \"\"))).fetchone() if parent_broker_id else None\n                        if not current and (str(remote.get(\"client_order_id\", \"\")).startswith(\"aster_\") or parent is not None):\n                            current = self._adopt_order(con, book, remote, clock, parent)\n                            adopted += 1\n                        if current:\n                            owned_symbols.add(current[\"symbol\"])\n                            observations.append((current[\"id\"], remote))\n                    # Descending broker lists cannot define average-cost history.\n                    # Establish parent/leg identities first, then replay observed\n                    # cumulative deltas in their source chronology.\n                    observations.sort(key=lambda item: item[1].get(\"filled_at\") or item[1].get(\"updated_at\") or item[1].get(\"submitted_at\") or clock.isoformat())\n                    for current_id, remote in observations:\n                        current = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (current_id,)).fetchone()\n                        self._apply_remote_order(con, current, remote, clock)\n                    old_positions = {r[\"symbol\"]: dict(r) for r in con.execute(\"SELECT * FROM p_positions WHERE book_id=?\", (book[\"id\"],))}\n                    remote_symbols = set()\n                    owned_broker_ids = {r[0] for r in con.execute(\"SELECT broker_id FROM p_intents WHERE book_id=? AND broker_id IS NOT NULL\", (book[\"id\"],))}\n                    external_order_symbols = {symbol(r[\"symbol\"]) for r, parent_id in flattened if str(r.get(\"id\")) not in owned_broker_ids and not str(r.get(\"client_order_id\", \"\")).startswith(\"aster_\") and r.get(\"status\") not in {\"filled\", \"canceled\", \"cancelled\", \"expired\", \"rejected\"}}\n                    con.execute(\"INSERT OR REPLACE INTO p_state VALUES(?,?)\", (\"external_locks:\" + book[\"id\"], dump(sorted(external_order_symbols))))\n                    for remote in positions:\n                        sym = symbol(remote[\"symbol\"])\n                        qty = Decimal(str(remote[\"qty\"]))\n                        if remote.get(\"side\") == \"short\" and qty > 0:\n                            qty = -qty\n                        price = Decimal(str(remote[\"avg_entry_price\"]))\n                        if not qty.is_finite() or not price.is_finite() or price <= 0:\n                            raise ValueError(\"Invalid broker position\")\n                        remote_symbols.add(sym)\n                        prior = old_positions.get(sym)\n                        acknowledged = prior and prior[\"source\"] == \"broker_operator_acknowledged\"\n                        expected_qty = Decimal(prior[\"quantity\"]) if prior else Decimal(0)\n                        expected_cost = prior[\"cost_cents\"] if prior else 0\n                        matches_owned_ledger = expected_qty == qty and expected_cost == cents(qty * price)\n                        owned = acknowledged or bool((sym in owned_symbols or prior and prior[\"source\"] == \"broker_owned\") and matches_owned_ledger)\n                        locked = not owned or sym in external_order_symbols\n                        source = \"broker_operator_acknowledged\" if acknowledged else \"broker_owned\" if owned else \"broker_external_unknown\"\n                        con.execute(\"INSERT OR REPLACE INTO p_positions VALUES(?,?,?,?,?,?,?,?,?)\", (book[\"id\"], sym, str(qty), cents(qty * price), prior[\"realized_cents\"] if prior else 0, prior[\"sleeve\"] if prior and owned else None, source, int(locked), clock.isoformat()))\n                        con.execute(\"INSERT OR IGNORE INTO watchlist VALUES(?,?)\", (sym, clock.isoformat()))\n                    for sym, old in old_positions.items():\n                        if sym not in remote_symbols:\n                            con.execute(\"UPDATE p_positions SET quantity='0',cost_cents=0,updated_at=? WHERE book_id=? AND symbol=?\", (clock.isoformat(), book[\"id\"], sym))\n                    # Broker legs can precede the parent's fill timestamp in a\n                    # nested snapshot. Reserve against the final complete broker\n                    # position, not the transient history replay order.\n                    for protective in con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND parent_id IS NOT NULL AND status IN ('open','partially_filled','cancel_requested')\", (book[\"id\"],)).fetchall():\n                        position = self._position(con, book[\"id\"], protective[\"symbol\"])\n                        held = Decimal(position[\"quantity\"]) if position else Decimal(0)\n                        remaining = Decimal(protective[\"quantity\"]) - Decimal(protective[\"filled_quantity\"])\n                        matching = held > 0 and protective[\"side\"] == \"sell\" or held < 0 and protective[\"side\"] == \"buy\"\n                        reserved = min(abs(held), remaining) if matching else Decimal(0)\n                        con.execute(\"UPDATE p_intents SET reserved_quantity=? WHERE id=?\", (str(reserved), protective[\"id\"]))\n                    con.execute(\"UPDATE p_books SET cash_cents=?,updated_at=? WHERE id=?\", (cash_cents, clock.isoformat(), book[\"id\"]))\n                    con.execute(\"INSERT OR REPLACE INTO p_broker_truth VALUES(?,?,?,?,?)\", (book[\"id\"], dump(account), dump(positions), dump(orders), clock.isoformat()))\n                    con.execute(\"INSERT OR REPLACE INTO p_state VALUES(?,?)\", (\"reconcile:\" + book[\"id\"], dump({\"status\": \"ok\", \"observed_at\": clock.isoformat()})))\n                    after = con.execute(\"SELECT COUNT(*) FROM p_fills WHERE book_id=?\", (book[\"id\"],)).fetchone()[0]\n                    payload = {\"position_count\": len(positions), \"order_count\": len(orders), \"new_fill_deltas\": after - before, \"external_symbols_locked\": sorted(sym for sym in remote_symbols if sym not in owned_symbols and not (old_positions.get(sym, {}).get(\"source\") == \"broker_operator_acknowledged\"))}\n                    con.execute(\"INSERT INTO p_reconciliations VALUES(?,?,?,?,?,?)\", (identifier(), book[\"id\"], clock.isoformat(), \"completed\", \"Reconciled actual Alpaca PAPER account, positions and orders\", dump(payload)))\n                    self.store.event(con, \"paper_broker_reconciled\", \"accountant\", \"Committed a complete broker snapshot and measured cumulative fill deltas\", {\"book_id\": book[\"id\"], **payload})\n                    self._equity_snapshot(con, book[\"id\"], clock)\n                result[\"fills\"] += after - before\n                result[\"books\"] += 1\n                result[\"adopted\"] += adopted\n            except Exception:\n                detail = \"Broker reconciliation failed; previously observed account, positions and orders were preserved\"\n                with self.store.transaction() as con:\n                    con.execute(\"INSERT OR REPLACE INTO p_state VALUES(?,?)\", (\"reconcile:\" + book[\"id\"], dump({\"status\": \"failed\", \"observed_at\": clock.isoformat(), \"reason\": detail})))\n                    con.execute(\"INSERT INTO p_reconciliations VALUES(?,?,?,?,?,?)\", (identifier(), book[\"id\"], clock.isoformat(), \"failed\", detail, \"{}\"))\n                    self.store.event(con, \"paper_broker_reconcile_failed\", \"accountant\", detail, {\"book_id\": book[\"id\"]})\n                result[\"errors\"].append(detail)\n        return result",
+      "source_sha256": "9fddb057767fa587e1f7064aef32015232756d8415c53b7d8b213418a75f0f46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/store.py",
+      "function": "transaction",
+      "start_line": 125,
+      "end_line": 135,
+      "excerpt": "    def transaction(self):\n        con = self.connect()\n        try:\n            con.execute(\"BEGIN IMMEDIATE\")\n            yield con\n            con.commit()\n        except BaseException:\n            con.rollback()\n            raise\n        finally:\n            con.close()",
+      "source_sha256": "e1a8b82058a7d4d89d955cc9984e522c92ee79c5ca4fc838b4c57043195ba00b"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/app.py",
+      "function": "set_portfolio_policy",
+      "start_line": 115,
+      "end_line": 116,
+      "excerpt": "    def set_portfolio_policy(payload: dict):\n        return trading.set_portfolio_policy(payload)",
+      "source_sha256": "e9fa4410463c083420eee834863398b0b7f859b875f73cb1dd32c4759c502b46"
+    },
+    {
+      "file": "/workspace/agentic-desk/backend/app.py",
+      "function": "autonomous_snapshot",
+      "start_line": 99,
+      "end_line": 100,
+      "excerpt": "    def autonomous_snapshot():\n        return {\"trading\": trading.snapshot(), \"runtime\": autonomy.snapshot(), \"lab\": lab.snapshot(), \"research\": research.snapshot(), \"reports\": analytics.snapshot(), \"notifications\": notifications.snapshot()}",
+      "source_sha256": "e9fa4410463c083420eee834863398b0b7f859b875f73cb1dd32c4759c502b46"
+    }
+  ],
+  "post_fix_probe_results": {
+    "generated_at": "2026-10-08T06:34:19.684244+00:00",
+    "safety": "Temporary SQLite files and fake providers only. No network or real broker calls.",
+    "results": [
+      {
+        "probe": "cross_instance_atomic_reservations",
+        "expected": "Exactly one $100 intent across 16 concurrent submissions and 8 books",
+        "observed": {
+          "accepted": 1,
+          "projected": 100.0
+        },
+        "passed": true
+      },
+      {
+        "probe": "explicit_price_envelope",
+        "expected": "Reject at $20 and reserve $30 for quote=$10, limit=$25, stop=$30",
+        "observed": {
+          "error": "Operator portfolio gross exposure cap would be exceeded",
+          "projected": 30.0
+        },
+        "passed": true
+      },
+      {
+        "probe": "missing_mark_truthful_view_and_gate",
+        "expected": "Global/affected-book values null, unaffected empty book zero, fresh unrelated entry rejected",
+        "observed": {
+          "valuation": "incomplete",
+          "global": null,
+          "affected": null,
+          "unaffected": 0.0,
+          "error": "Portfolio entry gate requires coherent fresh marks and known broker state: AAPL: A timestamped price is required for order validation"
+        },
+        "passed": true
+      },
+      {
+        "probe": "partial_fill_not_double_counted",
+        "expected": "Observed $30 plus remaining $70 gives projected $100",
+        "observed": {
+          "gross": 30.0,
+          "projected": 100.0
+        },
+        "passed": true
+      },
+      {
+        "probe": "cancellation_retains_capacity_until_confirmed",
+        "expected": "Project $100 until actual terminal cancellation, then $30",
+        "observed": {
+          "before": 100.0,
+          "pending_cancel": 100.0,
+          "after_terminal": 30.0
+        },
+        "passed": true
+      },
+      {
+        "probe": "accepted_entry_missing_quote",
+        "expected": "Existing entry cancellation requested when enabled cap cannot value missing mark",
+        "observed": {
+          "cancel_calls": 1,
+          "intent_status": "cancel_requested",
+          "valuation": "incomplete",
+          "projected": null
+        },
+        "passed": true
+      },
+      {
+        "probe": "accepted_entry_failed_reconciliation",
+        "expected": "Existing accepted entry remains cancellable after cap reduction despite failed account read",
+        "observed": {
+          "cancel_calls": 1,
+          "intent_status": "cancel_requested",
+          "error": null,
+          "remote_status": "canceled"
+        },
+        "passed": true
+      },
+      {
+        "probe": "foreign_live_nested_order",
+        "expected": "Unattributed active nested broker order makes pending exposure unknown and gates entries",
+        "observed": {
+          "valuation": "incomplete",
+          "projected": null,
+          "reasons": [
+            "Unattributed broker orders make pending exposure unknown for book b9085b177642471087c9dc0412016389"
+          ],
+          "entry_error": "Portfolio entry gate requires coherent fresh marks and known broker state: Unattributed broker orders make pending exposure unknown for book b9085b177642471087c9dc0412016389"
+        },
+        "passed": true
+      },
+      {
+        "probe": "owned_protection_against_flat_position",
+        "expected": "Active protective sell with flat broker position makes pending exposure unknown and gates entries",
+        "observed": {
+          "valuation": "incomplete",
+          "projected": null,
+          "reasons": [
+            "Broker protection no longer matches held exposure for book c8819ec25f684b5181d7d152454a5626"
+          ],
+          "entry_error": "Portfolio entry gate requires coherent fresh marks and known broker state: Broker protection no longer matches held exposure for book c8819ec25f684b5181d7d152454a5626"
+        },
+        "passed": true
+      },
+      {
+        "probe": "owned_protection_exceeds_remaining_position",
+        "expected": "Protective quantity 10 against actual held 5 makes pending exposure unknown",
+        "observed": {
+          "valuation": "incomplete",
+          "projected": null,
+          "reasons": [
+            "Broker protection no longer matches held exposure for book 5001cfd64bc94a7b841a2fb4335a9452"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "probe": "matched_native_oco_not_double_counted",
+        "expected": "Correctly matched OCO exits produce complete $100 observed/projected exposure",
+        "observed": {
+          "valuation": "complete",
+          "gross": 100.0,
+          "projected": 100.0,
+          "reasons": []
+        },
+        "passed": true
+      },
+      {
+        "probe": "halted_short_cover_survives_global_unknown",
+        "expected": "Explicit reducing cover fills under halt, exceeded cap and unrelated unknown broker state",
+        "observed": {
+          "fills": 1,
+          "status": "filled",
+          "positions": []
+        },
+        "passed": true
+      }
+    ]
+  },
+  "final_validation": {
+    "independent_probe_count": 12,
+    "independent_probes_passed": 12,
+    "trading_regressions": {
+      "command": "python -m unittest discover -s tests -p test_trading.py -v",
+      "count": 61,
+      "result": "passed",
+      "runtime_seconds": 2.067
+    },
+    "portfolio_http_regression": {
+      "command": "python -m unittest discover -s tests -p test_http.py -k portfolio -v",
+      "count": 1,
+      "result": "passed",
+      "runtime_seconds": 0.626
+    },
+    "reproducer_sha256": "ef4b7f3c795e96a181d68774037e000b1523af765af0c2fe50b9d52c784923e5",
+    "results_sha256": "1c48661e4f32db3c64138bd7e070956f3dea8d003dc98df5577296e370580f69"
+  },
+  "verified_contracts": [
+    {
+      "contract": "Opt-in operator risk policy",
+      "evidence": [
+        "PORTFOLIO_POLICY",
+        "set_portfolio_policy",
+        "PATCH /api/portfolio-policy"
+      ],
+      "detail": "Gross and per-symbol limits default null, accept positive whole USD cents or null, reject unknown fields/nonfinite values, preserve partial updates, version/hash append-only history, support expected-hash compare-and-swap and expose operator actor."
+    },
+    {
+      "contract": "Atomic cross-book reservations",
+      "evidence": [
+        "Store.transaction",
+        "submit_intent",
+        "_validate_global_capacity"
+      ],
+      "detail": "SQLite BEGIN IMMEDIATE serializes policy read, complete portfolio valuation including active pending intents plus candidate, and durable candidate insert; independent instances cannot reserve over the global cap."
+    },
+    {
+      "contract": "Independent books never net",
+      "evidence": [
+        "_global_exposure"
+      ],
+      "detail": "Compute per-book absolute observed exposure and worst directional held-plus-pending-entry bounds; sum those absolute values across books and per symbol. Cash/share reservation and ledger ownership remain independent."
+    },
+    {
+      "contract": "Conservative pending-price bounds",
+      "evidence": [
+        "_global_exposure"
+      ],
+      "detail": "Reserve using the larger of the fresh quote and explicit pending limit/stop prices. Remaining quantity subtracts cumulative fills; accepted/submitting/blocked/cancel-requested entries continue reserving exposure until terminal verification."
+    },
+    {
+      "contract": "Fresh complete truth required only for new entry exposure under enabled portfolio caps",
+      "evidence": [
+        "_global_exposure",
+        "_validate_global_capacity",
+        "_validate_capacity"
+      ],
+      "detail": "Unknown/failed/stale broker truth, unowned active orders, protective mismatches, missing/stale/future/historical marks make aggregate valuation incomplete and refuse entry. Explicit reducers bypass global caps/halt while retaining their own capacity/quote/ownership checks."
+    },
+    {
+      "contract": "Truthful snapshots",
+      "evidence": [
+        "snapshot",
+        "_global_exposure",
+        "GET /api/autonomy"
+      ],
+      "detail": "A read transaction keeps the snapshot coherent. Incomplete global and affected-book exposure values are null with reasons; known unaffected books can retain computed values. Marks carry prices, timestamps, sources, allowed age and observed span. Scope explicitly autonomous_books_only."
+    },
+    {
+      "contract": "Outstanding accepted entry lifecycle",
+      "evidence": [
+        "process",
+        "_accepted_cancel_reason",
+        "_process_broker"
+      ],
+      "detail": "Lowered caps or unavailable required valuation can request actual broker cancellation, including after own account-read failure or missing quote. Saved reservations remain until a real terminal receipt; no accepted response is represented as a fill."
+    },
+    {
+      "contract": "Correct protection accounting",
+      "evidence": [
+        "_global_exposure",
+        "reconcile"
+      ],
+      "detail": "Matched native OCO reducers add no duplicate entry exposure. Flat/oversized/wrong-direction active protection becomes unknown exposure; no automatic repair transport is introduced."
+    }
+  ],
+  "boundaries": [
+    "All checks used newly built Aster code and isolated temporary SQLite databases with fake providers. No network, real broker calls, original source execution, application-code edits or test edits were performed by this reviewer.",
+    "Portfolio limits cover autonomous p_books only; the separately retained manual ledger is deliberately outside this advertised scope.",
+    "These caps are a software reservation and fresh-mark gate. Future market movements, asynchronous external account changes and unbounded market-order execution prices cannot be proven by static review or fake-provider tests.",
+    "Incomplete broker protection requires operator investigation; the feature gates new exposure and does not authorize automatic broker cancellation/replacement repair."
+  ]
+}

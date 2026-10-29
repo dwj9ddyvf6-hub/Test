@@ -1,0 +1,386 @@
+{
+  "id": "UIR-01",
+  "name": "Unpriced Information Relay",
+  "version": "research-spec-v1.0",
+  "created_utc_date": "2026-10-08",
+  "status": "invented_unvalidated_research_specification",
+  "primary_objective": "Maximize net cash-account compound growth; test positive paired net log-growth advantage against BOTH dividend-reinvested QQQ and SPY. No invented strategy backtest, expected return or Sharpe is claimed.",
+  "canonical_account": {
+    "starting_capital_usd": 1000000,
+    "capital_is_design_hypothesis": true,
+    "variant": "long_only_cash_funded",
+    "maximum_gross": 0.95,
+    "leverage": 1,
+    "cash": "Actual available cash/T-bill return convention after fund/account fees",
+    "benchmark_dates": "Identical first funded observation, endpoint and dividend convention"
+  },
+  "mechanism": "Unexpected operating information at a listed source changes a receiver's economics through a previously documented directional cash-flow exposure; trade only the modeled impact not yet absorbed by receiver prices. Existing source/receiver price momentum is a confound and direct baseline.",
+  "novel_contribution": {
+    "proposal": "Event-specific economically oriented residual text surprise transported through pre-existing signed edges, corrected for response age and observed pricing; one-event-per-receiver first-arrival ledger with invalidation and shared shock exposure caps.",
+    "priority": "No global originality, conservation theorem, structural causal identification or positive net edge is asserted.",
+    "ledger": "Accounting for conditional predictions and risk. Returns and information do not physically conserve.",
+    "exclusions": [
+      "Scheduled earnings surprise",
+      "Tender/corporate-action arbitrage",
+      "Bar-path continuation",
+      "Opening liquidity",
+      "Portfolio allocator as source of alpha"
+    ]
+  },
+  "universe": {
+    "markets": [
+      "NYSE",
+      "Nasdaq"
+    ],
+    "instruments": "Ordinary US common stocks",
+    "point_in_time": true,
+    "price_min_usd": 10,
+    "market_cap_min_usd": 2000000000,
+    "trailing_20_session_dollar_ADV_min": 50000000,
+    "history_min_sessions": 252,
+    "exclude": [
+      "ETF",
+      "ADR",
+      "OTC",
+      "Halted security"
+    ],
+    "delistings": "Retain historical members and delisting/terminal outcomes",
+    "default_status": "All limits are preregistered hypotheses, not optimized values"
+  },
+  "horizon": {
+    "forecast_sessions_from_public_release": 20,
+    "new_entry_max_event_age_sessions": 10,
+    "holding_until": "Earliest original event horizon, invalidation, receiver disclosure, or exhausted net edge. First fill never restarts the event horizon.",
+    "session_age": "Completed exchange sessions after publication plus progress within current eligible session divided by that session scheduled minutes; first partial session denominator is its remaining scheduled minutes. After-close releases begin age sessions at next open. Original twentieth eligible session close is age20 even on half days; H is fitted on exactly this clock."
+  },
+  "events": {
+    "include": [
+      "Unscheduled operating demand revision",
+      "Unscheduled operating capacity/supply interruption"
+    ],
+    "primary_sources": [
+      "Issuer release",
+      "SEC filing"
+    ],
+    "timestamped_secondary_feed": "Used with primary source evidence and actual provider receipt",
+    "exclude": [
+      "Scheduled earnings",
+      "M&A",
+      "Tender",
+      "Dividend",
+      "Capital issuance",
+      "Analyst opinion"
+    ],
+    "classification": "Frozen event rulebook, evidence spans, immutable classifier/model identity; ambiguous mixed events abstain",
+    "dedup": "Issuer permanent ID + accession/document identity + near-duplicate text/time cluster, with every article retained but one economic shock"
+  },
+  "features": {
+    "required_fields": [
+      "first_publication_utc",
+      "provider_receipt_utc",
+      "first_ingestion_utc",
+      "document_version",
+      "document_sha256",
+      "inference_completed_utc",
+      "encoder_id_and_hash",
+      "source_permanent_id",
+      "receiver_permanent_id",
+      "edge_known_at_utc",
+      "edge_direction",
+      "directional_exposure_fraction",
+      "event_class",
+      "closed_quote_bar_time_utc",
+      "knowledge_vintage"
+    ],
+    "availability": "available_at = max(provider_receipt, ingestion, inference_completed); relations known_at < first_publication",
+    "pre_event_numeric_controls": [
+      "Historical size and industry",
+      "Value",
+      "Profitability",
+      "12-1 momentum",
+      "Prior source coverage"
+    ],
+    "encoder": "Annual/fold frozen historical checkpoint trained solely on prior-available documents; if dated weights unavailable, chronological TF-IDF/ridge baseline; current checkpoint permitted only prospectively",
+    "residual_text": "v = z - E_hat[z|pre_event_numeric_controls], all transforms/PCA/vocabulary fit only on training",
+    "source_label": "20-session source factor-residual log return from publication reference, divided by pre-event sqrt(20)*std(last 60 pre-event daily residual returns)",
+    "orientation": {
+      "demand": {
+        "kappa": 1,
+        "positive_q": "Unexpectedly stronger demand",
+        "receiver_type": "Supplier",
+        "s": 1,
+        "exposure": "Share of receiver supplier revenue from source customer"
+      },
+      "interruption": {
+        "kappa": -1,
+        "positive_q": "Unexpectedly more severe interruption",
+        "receiver_type": "Customer",
+        "s": -1,
+        "exposure": "Share of receiver customer cost attributable to source supplier"
+      }
+    },
+    "orientation_warning": "Source-price-to-operating meaning must agree with disclosure quantities/duration and frozen class rule; ambiguous effects on source margin/market power abstain.",
+    "initial_model_defaults": {
+      "text_dimensions": 32,
+      "dimension_reduction": "Training-only PCA for dense encoder; chronological TF-IDF limited to 1000 terms for baseline",
+      "residualizer_ridge_penalty": 10,
+      "source_projection_ridge_penalty": 10,
+      "receiver_coefficient_ridge_penalty": 1,
+      "standardization": "Training-only means/scales; dimensionless penalties applied to standardized predictor coordinates",
+      "minimum_distinct_event_clusters_per_class": 100,
+      "sparse_class_policy": "Pool timing curve only; abstain if receiver transmission cannot be estimated",
+      "defaults_are_unoptimized_hypotheses": true
+    },
+    "graph": "One-hop pre-event documented customer/supplier relation; competitor sign inferred from industry alone forbidden; unknown weight/sign abstains",
+    "sigma_horizon": "sqrt(20)*std(last 60 daily factor-residual log returns preceding public event)",
+    "observed_absorption": "Receiver cumulative log return from last completed minute mark before first public release to allowed current mark, minus pre-event rolling market/industry beta prediction. Mark includes actual receipt delay, overnight and completed pre-entry prices. Known splits and dividends adjusted consistently with factor-residual outcomes.",
+    "factor_residualizer": "252 completed pre-event daily observations, intercept + SPY total-return proxy + historical receiver-industry ETF total-return proxy; coefficients frozen per event; synchronized minute/overnight benchmark returns over receiver's exact intervals. No contemporaneous refit.",
+    "attention": "Optional diagnostic only: prior daily Wikipedia/coverage vintages, missing coverage unknown; not canonical admission feature"
+  },
+  "signal": {
+    "source_surprise": "q = kappa[event_class] * OOF_ridge_prediction(source_label | residual_text)",
+    "receiver_training": "Fit b_c>=0 minimizing sum((receiver_20_session_residual_log_return/sigma_horizon - b_c*a*s*q_OOF)^2) + ridge_penalty*b_c^2 on mature training events. Entire source predictor pipeline evaluated out of fold. Negative economically expected class fit becomes b=0 and abstention.",
+    "original_impact": "mu = clip(sigma_horizon*b_c*exposure_fraction*s*q, -0.05, 0.05)",
+    "units": {
+      "q": "dimensionless source horizon-risk units",
+      "b": "dimensionless",
+      "exposure": "dimensionless fraction",
+      "mu": "Factor-residual log-return fraction",
+      "H": "dimensionless response fraction",
+      "C": "Observed factor-residual log-return fraction",
+      "u": "Unresolved factor-residual log-impact fraction",
+      "costs": "Simple-return fraction, compared to transformed directional simple-return forecast."
+    },
+    "delay_curve": "Training-only monotone response fraction H(age) on knots [0,1,2,5,10,20], bounded [0,1], H(20)=1; linear interpolation; response-monotonicity is a testable hypothesis",
+    "raw_unpriced": "u = (1-H)*mu - 0.5*(C-H*mu)",
+    "bounded_unpriced": "d=sign(mu); u = d*max(0,min(d*mu,d*raw_unpriced))",
+    "absorption_discount": 0.5,
+    "discount_status": "Fixed unoptimized hypothesis",
+    "controls": [
+      {
+        "name": "No absorption, normal age curve",
+        "lambda": 0
+      },
+      {
+        "name": "Full predicted-impact subtraction",
+        "lambda": 1
+      },
+      {
+        "name": "Routing with no age/absorption adjustment",
+        "formula": "u=mu"
+      }
+    ],
+    "overlapping_events": "One independent active event per receiver. Duplicate cluster uses largest absolute conditional forecast, opposing cluster signs abstain. Second independent event retires prior forecast and exits next window; block until 20 sessions after latest publication. No proportional allocation of differently originated cumulative price responses.",
+    "uncertainty": "Connected-event/date-cluster full-pipeline resampling uncertainty in conditional mean; ranking threshold is heuristic and does not imply post-selection coverage.",
+    "entry_equation": "d*(exp(u - d*1.645*SE_mean_forecast)-1) - expected_round_trip_cost > 0.002. This transforms a heuristic uncertainty-adjusted log forecast to directional simple-return units; no post-ranking confidence coverage is claimed.",
+    "net_floor_fraction": 0.002,
+    "forecast_interpretation": "mu and u are factor-residual log impacts. exp(u)-1 is a conditional relative-price effect, not absolute unhedged stock-return prediction. Admission is an incremental-alpha-versus-cost screen; unhedged market/sector losses remain and benchmark outperformance must be measured from actual net account NAV."
+  },
+  "entry": {
+    "canonical": "Positive signed bounded remaining forecasts only; eligible at D 18:30, refreshed absorption/risk at D+1 09:44:59, orders 09:45-10:00",
+    "orders": "Bounded marketable limits/participation using quotes available at submission; exact limit boundary and cancellation reason logged.",
+    "limit_rule": "Buy at at most 5 bps above received best ask, capped by positive lower-bound edge budget; short research sell symmetrically 5 bps below bid. Only executable observed liquidity counts; no guaranteed fill.",
+    "staleness": "Quote age <=2 seconds at order/refresh; older mark blocks entry.",
+    "partial_fills": "Persist actual filled quantity; remaining expires at 10:00; no synthetic full-position completion."
+  },
+  "exit": {
+    "rules": [
+      "Material receiver-specific disclosure retires inherited forecast",
+      "Correction invalidates source interpretation",
+      "Second independent event on receiver",
+      "Relationship invalidation known to desk",
+      "Signed remaining forecast net of expected exit cost <=0",
+      "Original event age reaches 20-session horizon"
+    ],
+    "routine_window": "Next eligible 09:45-10:00 window; price at actual obtainable quote and size, no threshold-price fiction",
+    "horizon_liquidation": "For age-20 horizon, predeclared closing-window liquidation at or before endpoint using prior scheduled event clock; no prediction persists past endpoint.",
+    "emergency": "Corporate action, borrow recall, or predeclared account risk policy permits obtainable immediate liquidation; loss caps do not guarantee against gaps",
+    "duplicates": "Never reset event or holding clock"
+  },
+  "portfolio": {
+    "rank": "Lower-confidence-bound post-cost expected edge",
+    "maximum_positions": 30,
+    "weights": "Normalize positive net-edge/annualized-variance scores to stock budget 0.95; apply stock/sector/shock caps with iterative redistribution only among qualifying eligible names; unallocated amount stays cash. Scale down only if ex-ante volatility exceeds target.",
+    "single_name_max": 0.04,
+    "sector_max": 0.25,
+    "connected_shock_cluster_max": 0.15,
+    "annualized_volatility_target": 0.12,
+    "covariance": "252 prior completed sessions, shrink covariance, previous-close snapshot hash",
+    "short_variant": {
+      "status": "Separate diagnostic research account; never mix its performance with canonical account",
+      "max_gross": 1,
+      "max_absolute_net": 0.2,
+      "requirements": [
+        "Observed dated borrow availability and price",
+        "Short-dividend obligations",
+        "Cash collateral and short proceeds separation",
+        "Borrow recalls",
+        "Financing"
+      ]
+    }
+  },
+  "costs": {
+    "side_formula": "fees + spread_fraction/2 + eta*daily_volatility*sqrt(order_dollar_notional/daily_dollar_ADV)",
+    "eta": 0.5,
+    "eta_status": "Uncalibrated stress hypothesis; calibrate prospectively without changing frozen holdout",
+    "round_trip": "Expected entry + expected exit cost and carrying costs as relevant",
+    "no_double_count": "Use simulated executable price concession OR matching spread/impact proxy component, not both for the same concession",
+    "data_compute": "Dollar cash expenses charged to NAV at payment dates; amortized diagnostics shown separately",
+    "daily_ADV_participation_max": 0.01,
+    "minute_volume_participation_max": 0.05,
+    "capacity_accounts_usd": [
+      100000,
+      1000000,
+      10000000
+    ]
+  },
+  "timeline": {
+    "formation_document_receipt_cutoff": "17:00 America/New_York on session D",
+    "formation_inference_and_decision_cutoff": "18:30 on D",
+    "price_cutoff_for_initial_candidate": "Completed bars through D 16:00",
+    "pre_entry_absorption_refresh": "Completed marks and received quotes through D+1 09:44:59 only",
+    "order_window": "D+1 09:45-10:00",
+    "late_document": "Wait next formation; never backdate availability",
+    "training": "Five-year initial fit, expanding annual frozen updates; label endpoint < refit cutoff; purge/embargo 20 sessions at fold boundaries",
+    "weights_rule": "No encoder/prompt/model upgrades within frozen evaluation; revisions restart challenger rather than silently overwrite incumbent"
+  },
+  "state_machine": [
+    "INGESTED",
+    "CLASSIFIED",
+    "ROUTED",
+    "CANDIDATE",
+    "ORDERED",
+    "PARTIALLY_FILLED",
+    "FILLED",
+    "MONITORED",
+    "RETIRED",
+    "REJECTED",
+    "EXPIRED",
+    "DATA_HOLD"
+  ],
+  "prior_art": [
+    {
+      "title": "The Inefficient Pricing of News",
+      "url": "https://www.nber.org/system/files/working_papers/w35093/w35093.pdf",
+      "scope": "Residual text surprise prior, not evidence for UIR"
+    },
+    {
+      "title": "Economic Links and Predictable Returns",
+      "url": "https://www.aqr.com/Insights/Research/Journal-Article/Economic-Links-and-Predictable-Returns",
+      "scope": "Customer momentum is established prior art"
+    },
+    {
+      "title": "Supply Chain Propagation of Textual Signals: LLM Embeddings and Cross-Sectional Return Predictability",
+      "url": "https://arxiv.org/abs/2606.29290",
+      "scope": "June 2026 annual-report embedding + graph prior; abstract inspected, full methods unavailable"
+    },
+    {
+      "title": "Next-Day Return Prediction with Directional Supply Chain Exposure",
+      "url": "https://www.altsets.com/research/next-day-return-prediction-directional-supply-chain-exposure",
+      "scope": "Directional-denominator and nonmonotonic-response prior; small panel, not proven strategy"
+    },
+    {
+      "title": "Nonsynchronous Trading and Lead-Lag Bias in Supply Chain Equity Pairs",
+      "url": "https://www.altsets.com/research/nonsynchronous-trading-lead-lag-bias-supply-chain-equity-pairs",
+      "scope": "Sampling-clock confound; US-only synchronized marks reduce but do not eliminate stale-price artifacts"
+    }
+  ],
+  "validation": {
+    "primary_endpoint": "Annualized paired net log NAV growth difference versus QQQ AND SPY total return, same funded periods.",
+    "baselines": [
+      "Raw direct-news ranks",
+      "Residual direct-news ranks",
+      "Linked-source 20-day momentum",
+      "Receiver own 1/5/20-day factor-residual momentum/reversal",
+      "Industry momentum",
+      "Same-feature small regression conditioning on source/receiver pre-entry returns",
+      "Residual-news one-hop routing with no absorption",
+      "12-1 long-only momentum",
+      "Equal-weight eligible stocks",
+      "Cash",
+      "Dividend-reinvested QQQ",
+      "Dividend-reinvested SPY"
+    ],
+    "negative_controls": [
+      "Graph rewiring preserving industry/size/degree",
+      "Event sign permutation within source/date blocks",
+      "Anticipated disclosures",
+      "Matched pre-entry residual return",
+      "Entire source-issuer/component holdouts",
+      "Delayed entry +1 and +3 sessions",
+      "Exclude low-attention receivers",
+      "Strict first-arrival vintage equality checks"
+    ],
+    "claims_gate": "Prespecified simultaneous 95% lower bounds on net log-growth advantage positive against BOTH indexes in untouched holdout. Monthly/event dependence-preserving resampling; root family protocol governs joint five-strategy claims. Strong statistical significance still does not prove permanence.",
+    "forward_minimum": {
+      "months": 12,
+      "distinct_event_clusters": 200,
+      "status": "Initial unoptimized evidence gate; not sufficient proof or deployment authorization"
+    },
+    "secondary_metrics": [
+      "Net CAGR and net terminal wealth",
+      "Compound excess return versus each benchmark",
+      "Maximum drawdown",
+      "Turnover",
+      "Concentration",
+      "Crisis performance",
+      "Beta/sector/size exposures",
+      "Sharpe",
+      "Forecast calibration/IC"
+    ],
+    "residual_momentum_failure": "If a same-feature price-only control or pre-entry residual-return matching reproduces/absorbs the benefit, classify the mechanism as momentum/reversal rather than new information diffusion."
+  },
+  "dependencies": [
+    "Timestamped archived issuer/news document vintages and actual first receipt",
+    "Directional customer/supplier exposure vintages with known_at dates",
+    "Minute bars/quotes and executable size",
+    "Permanent security IDs, historical universe and delistings",
+    "Dividend-inclusive corporate actions and benchmarks",
+    "Frozen chronological encoder/vocabulary/checkpoints",
+    "Graph/text licensing budget",
+    "Borrow/collateral for separate short account"
+  ],
+  "kill_conditions": [
+    "Required historical vintages unavailable: retrospective test infeasible",
+    "Sign orientation inconsistent with operating quantities/source economics",
+    "Graph rewiring performs similarly",
+    "No incremental benefit versus simple routing/price controls",
+    "Benefit isolated to one shock/component",
+    "Plausible spread/impact/licenses remove net edge",
+    "Fails paired growth objective versus either benchmark",
+    "Price/identity/model provenance failures"
+  ],
+  "worked_synthetic_example": {
+    "label": "Invented arithmetic only; not a backtest",
+    "demand": {
+      "q": 2,
+      "sigma_horizon": 0.06,
+      "b": 0.5,
+      "exposure": 0.4,
+      "s": 1,
+      "mu": 0.024,
+      "H": 0.25,
+      "C": 0.004,
+      "u": 0.019,
+      "SE_mean": 0.003,
+      "cost_RT": 0.0015,
+      "admit": true,
+      "provisional_notional_usd": 40000,
+      "transformed_lower_bound_post_cost": 0.012664377480652802,
+      "u_interpretation": "1.9% forecast residual log impact; not an absolute stock-return forecast or actual profit."
+    },
+    "interruption": {
+      "source_forecast_risk_units": -2,
+      "kappa": -1,
+      "q": 2,
+      "s": -1,
+      "mu": -0.024,
+      "interpretation": "Harm to receiver customer; short diagnostic only, canonical long-only abstains"
+    },
+    "already_absorbed": {
+      "C": 0.04,
+      "u": 0.001,
+      "admit": false
+    }
+  }
+}

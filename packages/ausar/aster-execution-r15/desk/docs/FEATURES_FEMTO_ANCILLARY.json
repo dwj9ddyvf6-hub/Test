@@ -1,0 +1,565 @@
+{
+  "title": "Femto ancillary engine and diagnostic I/O review",
+  "repository": "dwj9ddyvf6-hub/Midna",
+  "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+  "review_method": "Static body reading, exact Gitblob verification from recovery receipts; no module imports, source execution, tests or provider calls. Numerical strategy internals explicitly excluded from operational transfer.",
+  "features": [
+    {
+      "id": "ancillary_structured_engine_cli",
+      "title": "Optional structured algorithm worker contract",
+      "observed_mechanism": "Node CLIs accept explicit JSON on stdin, read an explicitly named model where applicable, align supplied daily/weekly inputs and return JSON result/error envelopes on stdout. These modules have no broker submit/cancel authority.",
+      "implementable_requirement": "If the operator later installs a strategy plugin, isolate its typed observation contract from execution; keep no installed engine or scoring model in Aster now.",
+      "source_evidence": [
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_1h.mjs",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_1h.mjs",
+          "line_start": 1,
+          "line_end": 114,
+          "blob_sha": "f1b7e4d9b32830b60bb08d895294a72336a4d920",
+          "sha256": "3b43d73118a99b92057b59876a9271ead2ad254a95fe3c47749d8c6f5a0f47ca",
+          "git_blob_verified": true,
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4/workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_1h.mjs#L1-L114"
+        },
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_score.mjs",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_score.mjs",
+          "line_start": 350,
+          "line_end": 663,
+          "blob_sha": "44f33da120361b9399fda03e38a6be8954aedf54",
+          "sha256": "e8e29c3a33cd631e2614835f19ce4ecc763add889dc94b3f996766a20d5b17f8",
+          "git_blob_verified": true,
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4/workspace/alpaca-swing-desk/dcg_scorer/dcg_score.mjs#L350-L663"
+        },
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_score.mjs",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_score.mjs",
+          "line_start": 386,
+          "line_end": 703,
+          "blob_sha": "e455631386ca8c10192a735438678aa179f82c24",
+          "sha256": "214e97baadc4f092f96261d33a8d3e163812184ea38f02d1fae91d4240e030d7",
+          "git_blob_verified": true,
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4/workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_score.mjs#L386-L703"
+        }
+      ],
+      "transfer_status": "Interface pattern only; no algorithm, model, ranking, signal or historical defaults imported."
+    },
+    {
+      "id": "ancillary_offline_replay_harnesses",
+      "title": "Separate observational replay from trading workers",
+      "observed_mechanism": "Python diagnostic harnesses assemble explicit cached/provider bar inputs, write replay payloads and invoke bounded Node subprocesses with 300/600/1800-second timeouts. They summarize outputs and do not mutate broker books. Some harnesses retrieve/cache provider bars, so they are not pure read-only functions.",
+      "implementable_requirement": "Expose research jobs with declared data/cache/subprocess side effects, bounded timeouts and captured input/output receipts; research never originates orders.",
+      "source_evidence": [
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_test_harness.py",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_test_harness.py",
+          "line_start": 1,
+          "line_end": 94,
+          "blob_sha": "55295c851c2b252f3d7cf954847e08e9a4097f66",
+          "sha256": "fecbcd0bf3aff92c871df71b8f9ade6d1ba24103911be150479837d576e8a748",
+          "git_blob_verified": true,
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4/workspace/alpaca-swing-desk/dcg_scorer/dcg_test_harness.py#L1-L94"
+        },
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_history_test.py",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_history_test.py",
+          "line_start": 1,
+          "line_end": 99,
+          "blob_sha": "309f75a7e526f2a8f6b05ecb4af7a7bd8d160617",
+          "sha256": "85a80b3924810dc70137e6cf09d0418eac56446b50b49f4f41c7fdfd27c26b0a",
+          "git_blob_verified": true,
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4/workspace/alpaca-swing-desk/dcg_scorer/dcg_history_test.py#L1-L99"
+        },
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_deep_test.py",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_deep_test.py",
+          "line_start": 1,
+          "line_end": 91,
+          "blob_sha": "25949becf77eca15d8bb4b92485d186e5e239f9c",
+          "sha256": "efd2bd80e8b3909ceeea10c5aa8050dde1625878ea9827dd2e0bb8180619263f",
+          "git_blob_verified": true,
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4/workspace/alpaca-swing-desk/dcg_scorer/dcg_deep_test.py#L1-L91"
+        }
+      ],
+      "transfer_status": "Generic replay/job design only; no historical strategies or results imported."
+    },
+    {
+      "id": "ancillary_cross_sectional_missing_data",
+      "title": "Explicit missing-data provenance for analytical inputs",
+      "observed_mechanism": "Cross-sectional helper reads explicit ticker cache universe, computes observational inputs and replaces nonfinite output with null; scorer inputs restore null as unavailable and align symbols against benchmark calendar instead of inventing bars.",
+      "implementable_requirement": "Record analytical input coverage, cache dates and missingness; do not silently replace unavailable data with valid zero observations.",
+      "source_evidence": [
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_xsect.py",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_xsect.py",
+          "line_start": 1,
+          "line_end": 256,
+          "blob_sha": "50426b358c4664b62533704f61615a3a17ee5d60",
+          "sha256": "067261e909b26fd49912fb61f7c36da49fde38597c7331cbb7d9fb715edab440",
+          "git_blob_verified": true,
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4/workspace/alpaca-swing-desk/dcg_scorer/dcg_xsect.py#L1-L256"
+        },
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_score.mjs",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_score.mjs",
+          "line_start": 350,
+          "line_end": 663,
+          "blob_sha": "44f33da120361b9399fda03e38a6be8954aedf54",
+          "sha256": "e8e29c3a33cd631e2614835f19ce4ecc763add889dc94b3f996766a20d5b17f8",
+          "git_blob_verified": true,
+          "url": "https://github.com/dwj9ddyvf6-hub/Midna/blob/b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4/workspace/alpaca-swing-desk/dcg_scorer/dcg_score.mjs#L350-L663"
+        }
+      ],
+      "transfer_status": "Data contract pattern only; numerical formulas and universe selections excluded."
+    },
+    {
+      "id": "ancillary_dated_broker_review",
+      "title": "Independent dated broker review with raw receipts",
+      "observed_mechanism": "Archived scratch tools fetch paginated closed/all broker orders and positions into raw JSON plus fetch coverage, then perform signed FIFO matching including option multipliers and explicit client-prefix attribution. These are dated review tools, not workers.",
+      "implementable_requirement": "Build independent accounting review from all actual fill deltas with explicit opening-balance and fee coverage; preserve raw receipts and ownership uncertainty instead of claiming profitability from incomplete ledger windows.",
+      "source_evidence": [
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fetch_fills.py",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fetch_fills.py",
+          "line_start": 1,
+          "line_end": 92,
+          "blob_sha": "9aee71b751ec7092cbb9ba73c245ef88c1ccf6b2",
+          "sha256": "66bc112c67921b5b886279c4ab705de78f9f8065ed971987b3d028c248af0eee",
+          "git_blob_verified": true
+        },
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fifo_match.py",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fifo_match.py",
+          "line_start": 1,
+          "line_end": 118,
+          "blob_sha": "b757924f12c4bf5b510e3ecfd87853901a4b2a51",
+          "sha256": "e5c9753b1516282e2d882864c238f9fe0017d78024f1cf6e3d4ba51c64e89d41",
+          "git_blob_verified": true
+        },
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/attribute_trades.py",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/attribute_trades.py",
+          "line_start": 1,
+          "line_end": 84,
+          "blob_sha": "23d11dcf3dbb184672f926712fccaca679b2ff6d",
+          "sha256": "76b806305d7311a66f4d97252ce80e6758916e9f7c911caa530038571989a810",
+          "git_blob_verified": true
+        },
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/build_ledger_summary.py",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/build_ledger_summary.py",
+          "line_start": 1,
+          "line_end": 263,
+          "blob_sha": "64e9e2c9677667c9e1353234cea56d407d1d06d1",
+          "sha256": "19fe53bef600ec524623f9b034e98a55ffd1b650466900974f44fdca9c97ae17",
+          "git_blob_verified": true
+        }
+      ],
+      "transfer_status": "Generic review workflow only; historical symbols/sleeves/dates/capital/formulas not imported."
+    },
+    {
+      "id": "ancillary_completed_bar_qualifier_contract",
+      "title": "Optional completed-bar analytical plugin isolation",
+      "observed_mechanism": "Confluence CLI merges explicit weekly cache revisions by timestamp, derives a modal latest bar date, rejects unavailable/malformed/stale series, validates output timestamp continuity and emits structured observations. It has no broker calls.",
+      "implementable_requirement": "If a later operator-installed analytical plugin exists, require completed-bar provenance and structured unavailable status; no qualifier/strategy is installed now.",
+      "source_evidence": [
+        {
+          "repository": "dwj9ddyvf6-hub/Midna",
+          "commit": "b19f9d7a1f92f12883ced3c7cd3fa30e37a0c8c4",
+          "path": "workspace/alpaca-swing-desk/desk/sleeves/confluence/qualify_week.mjs",
+          "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/sleeves/confluence/qualify_week.mjs",
+          "line_start": 1,
+          "line_end": 133,
+          "blob_sha": "330e0b6c06762045da34c3ac377ee59424896145",
+          "sha256": "41c4a429f4af0466aa20ce4ba9644f4b68921196054dfe1ac70b995b595944ee",
+          "git_blob_verified": true
+        }
+      ],
+      "transfer_status": "Interface and provenance only; no strategy logic imported."
+    }
+  ],
+  "reviewed_files": [
+    {
+      "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_xsect.py",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_xsect.py",
+      "lines": 256,
+      "reviewed_ranges": [
+        [
+          1,
+          256
+        ]
+      ],
+      "reviewed_lines": 256,
+      "scope": "fullbody",
+      "blob_sha": "50426b358c4664b62533704f61615a3a17ee5d60",
+      "sha256": "067261e909b26fd49912fb61f7c36da49fde38597c7331cbb7d9fb715edab440",
+      "git_blob_verified": true,
+      "functions": [
+        {
+          "name": "nan_to_null",
+          "line": 25,
+          "end_line": 38
+        },
+        {
+          "name": "load_universe",
+          "line": 43,
+          "end_line": 45
+        },
+        {
+          "name": "compute_xsect",
+          "line": 48,
+          "end_line": 243
+        },
+        {
+          "name": "roll",
+          "line": 221,
+          "end_line": 235
+        }
+      ]
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_test_harness.py",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_test_harness.py",
+      "lines": 94,
+      "reviewed_ranges": [
+        [
+          1,
+          94
+        ]
+      ],
+      "reviewed_lines": 94,
+      "scope": "fullbody",
+      "blob_sha": "55295c851c2b252f3d7cf954847e08e9a4097f66",
+      "sha256": "fecbcd0bf3aff92c871df71b8f9ade6d1ba24103911be150479837d576e8a748",
+      "git_blob_verified": true,
+      "functions": [
+        {
+          "name": "nan_to_null",
+          "line": 10,
+          "end_line": 20
+        },
+        {
+          "name": "main",
+          "line": 22,
+          "end_line": 91
+        },
+        {
+          "name": "series",
+          "line": 30,
+          "end_line": 35
+        },
+        {
+          "name": "ohlc",
+          "line": 36,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_history_test.py",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_history_test.py",
+      "lines": 99,
+      "reviewed_ranges": [
+        [
+          1,
+          99
+        ]
+      ],
+      "reviewed_lines": 99,
+      "scope": "fullbody",
+      "blob_sha": "309f75a7e526f2a8f6b05ecb4af7a7bd8d160617",
+      "sha256": "85a80b3924810dc70137e6cf09d0418eac56446b50b49f4f41c7fdfd27c26b0a",
+      "git_blob_verified": true,
+      "functions": [
+        {
+          "name": "nan_to_null",
+          "line": 11,
+          "end_line": 15
+        },
+        {
+          "name": "main",
+          "line": 17,
+          "end_line": 96
+        },
+        {
+          "name": "series",
+          "line": 29,
+          "end_line": 34
+        },
+        {
+          "name": "ohlc",
+          "line": 35,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_deep_test.py",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_deep_test.py",
+      "lines": 91,
+      "reviewed_ranges": [
+        [
+          1,
+          91
+        ]
+      ],
+      "reviewed_lines": 91,
+      "scope": "fullbody",
+      "blob_sha": "25949becf77eca15d8bb4b92485d186e5e239f9c",
+      "sha256": "efd2bd80e8b3909ceeea10c5aa8050dde1625878ea9827dd2e0bb8180619263f",
+      "git_blob_verified": true,
+      "functions": [
+        {
+          "name": "nan_to_null",
+          "line": 8,
+          "end_line": 18
+        },
+        {
+          "name": "main",
+          "line": 26,
+          "end_line": 88
+        },
+        {
+          "name": "series",
+          "line": 43,
+          "end_line": 48
+        },
+        {
+          "name": "ohlc",
+          "line": 49,
+          "end_line": 50
+        }
+      ]
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_1h.mjs",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_1h.mjs",
+      "lines": 114,
+      "reviewed_ranges": [
+        [
+          1,
+          114
+        ]
+      ],
+      "reviewed_lines": 114,
+      "scope": "fullbody",
+      "blob_sha": "f1b7e4d9b32830b60bb08d895294a72336a4d920",
+      "sha256": "3b43d73118a99b92057b59876a9271ead2ad254a95fe3c47749d8c6f5a0f47ca",
+      "git_blob_verified": true
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_score.mjs",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_score.mjs",
+      "lines": 663,
+      "reviewed_ranges": [
+        [
+          1,
+          35
+        ],
+        [
+          350,
+          663
+        ]
+      ],
+      "reviewed_lines": 349,
+      "scope": "full I/O, dispatch and CLI body; intermediate numerical helper bodies excluded",
+      "blob_sha": "44f33da120361b9399fda03e38a6be8954aedf54",
+      "sha256": "e8e29c3a33cd631e2614835f19ce4ecc763add889dc94b3f996766a20d5b17f8",
+      "git_blob_verified": true
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_score.mjs",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/dcg_scorer/dcg_rule_score.mjs",
+      "lines": 703,
+      "reviewed_ranges": [
+        [
+          1,
+          33
+        ],
+        [
+          386,
+          703
+        ]
+      ],
+      "reviewed_lines": 351,
+      "scope": "full I/O, dispatch and CLI body; intermediate numerical helper bodies excluded",
+      "blob_sha": "e455631386ca8c10192a735438678aa179f82c24",
+      "sha256": "214e97baadc4f092f96261d33a8d3e163812184ea38f02d1fae91d4240e030d7",
+      "git_blob_verified": true
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/attribute_trades.py",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/attribute_trades.py",
+      "lines": 84,
+      "reviewed_ranges": [
+        [
+          1,
+          84
+        ]
+      ],
+      "reviewed_lines": 84,
+      "scope": "fullbody",
+      "blob_sha": "23d11dcf3dbb184672f926712fccaca679b2ff6d",
+      "sha256": "76b806305d7311a66f4d97252ce80e6758916e9f7c911caa530038571989a810",
+      "git_blob_verified": true,
+      "runtime_status": "dated scratch review tool; not active daemon",
+      "functions": [
+        {
+          "name": "sleeve_from_client_id",
+          "line": 10,
+          "end_line": 28
+        }
+      ]
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fetch_fills.py",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fetch_fills.py",
+      "lines": 92,
+      "reviewed_ranges": [
+        [
+          1,
+          92
+        ]
+      ],
+      "reviewed_lines": 92,
+      "scope": "fullbody",
+      "blob_sha": "9aee71b751ec7092cbb9ba73c245ef88c1ccf6b2",
+      "sha256": "66bc112c67921b5b886279c4ab705de78f9f8065ed971987b3d028c248af0eee",
+      "git_blob_verified": true,
+      "runtime_status": "dated scratch review tool; not active daemon",
+      "functions": [
+        {
+          "name": "get_page",
+          "line": 23,
+          "end_line": 36
+        },
+        {
+          "name": "fetch_all_orders",
+          "line": 39,
+          "end_line": 55
+        },
+        {
+          "name": "main",
+          "line": 58,
+          "end_line": 88
+        }
+      ]
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fifo_match.py",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fifo_match.py",
+      "lines": 118,
+      "reviewed_ranges": [
+        [
+          1,
+          118
+        ]
+      ],
+      "reviewed_lines": 118,
+      "scope": "fullbody",
+      "blob_sha": "b757924f12c4bf5b510e3ecfd87853901a4b2a51",
+      "sha256": "e5c9753b1516282e2d882864c238f9fe0017d78024f1cf6e3d4ba51c64e89d41",
+      "git_blob_verified": true,
+      "runtime_status": "dated scratch review tool; not active daemon",
+      "functions": []
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/build_ledger_summary.py",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/build_ledger_summary.py",
+      "lines": 263,
+      "reviewed_ranges": [
+        [
+          1,
+          263
+        ]
+      ],
+      "reviewed_lines": 263,
+      "scope": "fullbody",
+      "blob_sha": "64e9e2c9677667c9e1353234cea56d407d1d06d1",
+      "sha256": "19fe53bef600ec524623f9b034e98a55ffd1b650466900974f44fdca9c97ae17",
+      "git_blob_verified": true,
+      "runtime_status": "dated scratch review tool; not active daemon",
+      "functions": [
+        {
+          "name": "load_week",
+          "line": 11,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "path": "workspace/alpaca-swing-desk/desk/sleeves/confluence/qualify_week.mjs",
+      "local_path": "/workspace/github-review/historical-source/Midna/b19f9d7a/workspace/alpaca-swing-desk/desk/sleeves/confluence/qualify_week.mjs",
+      "lines": 133,
+      "reviewed_ranges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "reviewed_lines": 133,
+      "scope": "fullbody",
+      "blob_sha": "330e0b6c06762045da34c3ac377ee59424896145",
+      "sha256": "41c4a429f4af0466aa20ce4ba9644f4b68921196054dfe1ac70b995b595944ee",
+      "git_blob_verified": true,
+      "runtime_status": "weekly optional strategy qualifier; generic interface only"
+    }
+  ],
+  "coverage": {
+    "files": 12,
+    "reviewed_lines": 2044,
+    "full_body_files": 10
+  },
+  "limitations": [
+    "dcg_score.mjs intermediate numerical helper bodies 36-349 and dcg_rule_score.mjs intermediate helper bodies 34-385 were not fully semantically reviewed.",
+    "dcg_scorer/engine.mjs and engine-extra.mjs numerical formula libraries, retired engine/swing_engine.py and its self-test, and nine recovered exact Tensor algorithm referents were recovered and inventoried; their formula semantics are not claimed fully reviewed in this operational-only companion.",
+    "No historical diagnostic script was executed. A complete recovered source inventory is not a claim of successful deployment, complete runtime validation or certified financial results.",
+    "No engine, model, strategy, symbol selection, ranking, signal threshold or allocation default is transferred into the new zero-strategy desk.",
+    "Dated scratch summaries include fixed narrative claims; their hardcoded historical notes are not independent proof of the actual events or reviewed result accuracy."
+  ],
+  "operational_gaps": [
+    {
+      "id": "ARCHIVE-FILL-COVERAGE",
+      "title": "Archived FIFO accounting excludes terminal partial fills and earlier opening lots",
+      "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/fifo_match.py",
+      "line": 14,
+      "evidence": "Only status filled orders are included despite canceled/expired terminal orders potentially retaining filled_qty; fetch window begins2026-09-27 and matcher starts every symbol with no opening lots.",
+      "impact": "Historical report may omit real executions or infer shorts from an earlier long position whose opening fill lies outside fetch window.",
+      "fix": "Match actual executions/fill deltas including terminalpartials and explicit opening inventory; declare unresolved coverage.",
+      "confidence": "static confirmed mechanism; historical result impact not certified"
+    },
+    {
+      "id": "ARCHIVE-ATTRIBUTION",
+      "title": "Archived sleeve attribution guesses by timestamp/symbol and last buy",
+      "path": "workspace/alpaca-swing-desk/desk/reviews/_scratch-weekly-2026-10-02/attribute_trades.py",
+      "line": 38,
+      "evidence": "Closed trade joins only truncated timestamp and symbol, selecting first match; open position attribution uses last buy fill. Source lacks durable lot-to-intent ownership join.",
+      "impact": "Shared symbol/concurrent fill or short inventory can receive incorrect sleeve label.",
+      "fix": "Preserve immutable execution\u2192intent\u2192book/lot identifiers; unresolved origin remains unknown.",
+      "confidence": "confirmed static"
+    }
+  ]
+}

@@ -1,0 +1,268 @@
+{
+  "audit": "Full frontend and HTTP boundary audit",
+  "audited_at": "2026-10-08T07:36:08.421140+00:00",
+  "files": [
+    {
+      "path": "backend/app.py",
+      "bytes": 12920,
+      "sha256": "5d584466154bb829a4fb29160da1dee20653f963fbebebef302466cca94e86a6",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "backend/models.py",
+      "bytes": 2023,
+      "sha256": "2b201bdb8309c4921224194806128745781775896494c6e4383666d438efa5cf",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "tests/test_http.py",
+      "bytes": 18403,
+      "sha256": "6ba31668ebdebedb6ea13d95d6ab2b4ab723e7ce71581920564e73911fd6f1be",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/index.html",
+      "bytes": 505,
+      "sha256": "2aa247f8065879ef475b824d050d4651c5ef9051f5a9a76a078a68742ea932a8",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/package.json",
+      "bytes": 657,
+      "sha256": "fd9c987399cf900b07e1e1629bc6cfe200986c9966deafd4085f6d8a7ae86bdf",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "bytes": 62583,
+      "sha256": "df97f0db72cfc212442f15b529f0f4bc20adaffd5d19e11f898cf9d27e4bb8f6",
+      "inspection": "Full lock manifest parsed; package metadata reviewed, vendored dependency bodies outside scope"
+    },
+    {
+      "path": "frontend/tsconfig.json",
+      "bytes": 526,
+      "sha256": "af38e9ab5cccee73633b7df57b4d8f655c784fbfff1500eadfb66bed94ffb7e4",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/vite.config.ts",
+      "bytes": 223,
+      "sha256": "41cbce6fecc9cce98463029d5c262af0ac42626c3f74fe3f3cf0f2324c673de9",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/public/sw.js",
+      "bytes": 1135,
+      "sha256": "3e67325cae718a5daa318cb9c3c8b8683899dc5454fd0ca4bc2abd3bcdfb2a40",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "bytes": 50344,
+      "sha256": "3f58c7b7a9b5db5634e1d34144f3208613cc066123fa5baeec33727c6806827e",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/src/Autonomy.tsx",
+      "bytes": 91135,
+      "sha256": "4be51aa67f2d56ce54257b88976eaad0cd4b17d8c3ee645b8f6eafd6b091ea15",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/src/api.ts",
+      "bytes": 1322,
+      "sha256": "997aa030818db179ee282a503f42f8e45d83a04933e1f9be14c15f8b9cbcf577",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/src/main.tsx",
+      "bytes": 493,
+      "sha256": "1920dc2e5b53e806a00886b83d2bab51fb8cdbba530e6a6dc9f94b85ed557446",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/src/styles.css",
+      "bytes": 53500,
+      "sha256": "499a03cd042d2a64656e435fcc28055cc1ae94f76d11ce7ffe0b984133991cbf",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "bytes": 3527,
+      "sha256": "9a7d563c6bb4a5b6731abdc08135672241794edfe14f4228c9e7d111910e88fa",
+      "inspection": "All first-party body/functions and contract paths inspected"
+    }
+  ],
+  "coverage": {
+    "http_routes": 38,
+    "ui_views": 11,
+    "forms": "All modal cases and operational/settings/research/workflow/notification forms traced to route payloads and error handling",
+    "other_frontend": "Polling generations, charts, receipts/downloads, dialogs, source links, mobile/responsive navigation, data availability labels, PWA push and unsubscribe",
+    "css_rules": 871,
+    "lock_entries": 123,
+    "boundary_models": "Every Pydantic input type, finite Decimal validation, timezone requirement, extra-field rejection, request error encoding",
+    "runtime": "Production hosting, unknown API routes, joined snapshots, app state binding and worker lifespan"
+  },
+  "findings": [
+    {
+      "id": "FAPI-01",
+      "severity": "medium",
+      "status": "repaired",
+      "defect": "Supervisor startup or shutdown failure skipped operational-worker cleanup",
+      "repair": "Move starts inside lifespan try and always stop the operational worker in nested finally",
+      "evidence": [
+        "tests.test_http.HTTPTest.test_lifespan_cleans_up_worker_when_supervisor_start_fails",
+        "tests.test_http.HTTPTest.test_lifespan_cleans_up_worker_when_supervisor_stop_fails"
+      ]
+    },
+    {
+      "id": "FAPI-02",
+      "severity": "medium",
+      "status": "repaired",
+      "defect": "Raw JSON export could combine manual, autonomous, lab and research rows from different SQLite states",
+      "repair": "Read all raw sections in one read transaction and identify derived views as separately observed",
+      "evidence": [
+        "tests.test_http.HTTPTest.test_export_replaces_initial_manual_read_with_coherent_raw_evidence"
+      ]
+    },
+    {
+      "id": "FAPI-03",
+      "severity": "high",
+      "status": "repaired",
+      "defect": "A stale per-book policy form could overwrite a newer operator kill switch or policy",
+      "repair": "Pass the captured policy hash through PATCH/books into the existing domain transaction compare-and-swap; reject malformed envelopes",
+      "evidence": [
+        "tests.test_http.HTTPTest.test_book_policy_route_fences_stale_operator_forms",
+        "browser stale policy refusal and reopened form success"
+      ]
+    },
+    {
+      "id": "FAPI-04",
+      "severity": "medium",
+      "status": "repaired",
+      "defect": "Operations badge stopped updating on non-autonomous views and treated running configuration as a live worker",
+      "repair": "Poll actual health continuously across views; distinguish paused, unavailable, degraded and active runtime in the topbar and overview/operations",
+      "evidence": [
+        "browser Agent team runtime changes while remaining on the view"
+      ]
+    },
+    {
+      "id": "FAPI-05",
+      "severity": "medium",
+      "status": "repaired",
+      "defect": "A new chart request immediately relabeled old symbol bars as the new symbol",
+      "repair": "Commit chart symbol with its successful bar response, and fence superseded/unmounted reads",
+      "evidence": [
+        "browser AAPL fixture remains AAPL while delayed MSFT request is pending"
+      ]
+    },
+    {
+      "id": "FAPI-06",
+      "severity": "medium",
+      "status": "repaired",
+      "defect": "An earlier research GET could overwrite refreshed collection evidence; service errors survived successful reads",
+      "repair": "Serialize/dedupe source reads, fence generations and unmount, force a post-collection read, and separate service-read errors from action errors",
+      "evidence": [
+        "browser collection after delayed older source GET"
+      ]
+    },
+    {
+      "id": "FAPI-07",
+      "severity": "low",
+      "status": "repaired",
+      "defect": "Valid null push JSON caused an uncaught service-worker payload access",
+      "repair": "Normalize primitive/null/object payloads and notification title/body before display",
+      "evidence": [
+        "service-worker VM checks for seven payload shapes"
+      ]
+    },
+    {
+      "id": "FAPI-08",
+      "severity": "low",
+      "status": "repaired",
+      "defect": "Browser subscription cleanup failures escaped as rejected promises after server disable, leaving stale local ownership",
+      "repair": "Clear ownership after confirmed server disable and catch/describe unsupported or failing browser cleanup",
+      "evidence": [
+        "browser real disabled subscription plus injected browser cleanup failure; local storage cleared and zero active subscriptions"
+      ]
+    },
+    {
+      "id": "FAPI-09",
+      "severity": "medium",
+      "status": "repaired",
+      "defect": "Client timeout messages suggested failed mutations although the server outcome was unknown; two historical fallback transports could exceed 15 seconds",
+      "repair": "Report mutation outcome as unconfirmed with refresh-before-retry guidance, and allow 45 seconds for bounded historical reads/continuation",
+      "evidence": [
+        "HTTP client VM timeout and historical request budget checks"
+      ]
+    },
+    {
+      "id": "FAPI-10",
+      "severity": "low",
+      "status": "repaired",
+      "defect": "A position without a mark was labeled stale even though no mark existed",
+      "repair": "Show missing mark state distinctly before testing freshness",
+      "evidence": [
+        "UI-only missing-mark receipt fixture"
+      ]
+    },
+    {
+      "id": "FAPI-11",
+      "severity": "high",
+      "status": "repaired",
+      "defect": "Broker cumulative receipts cannot prove complete realized execution chronology; UI/raw export did not state the resulting source coverage explicitly",
+      "repair": "Bind nullable broker accounting fields to visible coverage/reasons without substituting unknown values with zero; retain verified cash/equity and average-entry basis, add raw reconstruction-estimate and incomplete-fee notes to JSON export",
+      "evidence": [
+        "tests.test_http.HTTPTest.test_broker_snapshot_and_export_withhold_unverified_realized_accounting",
+        "artifacts/audit-broker-accounting-ui-results.json"
+      ]
+    },
+    {
+      "id": "FAPI-12",
+      "severity": "medium",
+      "status": "repaired",
+      "defect": "Execution table read fill.fees instead of the public fill.fee, hiding measured local fees",
+      "repair": "Read the singular public fee field; preserve explicit unverified complete broker fee scope",
+      "evidence": [
+        "Local receipt singular fee fixture displays $0.25"
+      ]
+    },
+    {
+      "id": "FAPI-13",
+      "severity": "medium",
+      "status": "repaired",
+      "defect": "Execution table read timestamp/created_at while receipt contract exposes observed_at, displaying Not yet for measured receipts",
+      "repair": "Display receipt observed_at and separate full source_timestamp evidence; do not imply cumulative source receipts constitute ordered execution activities",
+      "evidence": [
+        "Broker/local fixture observation cells contain the actual supplied observation date"
+      ]
+    }
+  ],
+  "validation": {
+    "http_unittests": {
+      "passed": 15,
+      "new_regression_cases": 5,
+      "command": "ASTER_DB_PATH=<isolated-import-db> ASTER_MARKET_DATA=manual .venv/bin/python -m unittest tests.test_http -v"
+    },
+    "typecheck": "npm run typecheck passed",
+    "production_build": "npm run typecheck and npm run build passed; index-CHhv1Bb5.js / index-Sdmf3nfc.css",
+    "browser": "artifacts/audit-frontend-api-results.json",
+    "screenshots": [
+      "artifacts/audit-api-desktop.png",
+      "artifacts/audit-api-mobile.png",
+      "artifacts/audit-broker-accounting-ui.png"
+    ],
+    "browser_check_groups": 12,
+    "broker_followup_browser_check_groups": 4,
+    "broker_followup": "artifacts/audit-broker-accounting-ui-results.json"
+  },
+  "limits": [
+    "No strategy installed or originated.",
+    "Default desk database was not changed by audit interactions. QA used isolated manual-feed DB, worker disabled; market/source and missing-mark UI receipts are explicitly identified fixtures.",
+    "No actual broker order, external notification delivery or public push subscription was attempted. An inert push.audit.invalid subscription was disabled through the real local API to exercise cleanup.",
+    "Optional live broker/model/external delivery integrations were not end-to-end connected by this frontend audit.",
+    "Generated distribution bundles and font/dependency bodies are build outputs/vendor code, not independently reviewed first-party implementations.",
+    "Atomic raw JSON evidence does not make derived provider/account/report views simultaneous; export explicitly identifies their scope.",
+    "Broker accounting browser follow-up uses explicit response fixtures for unknown basis, known source basis and local receipt fields; HTTP coverage separately exercises measured cumulative fills through a simulated broker object."
+  ]
+}
