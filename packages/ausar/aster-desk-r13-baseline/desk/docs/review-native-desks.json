@@ -1,0 +1,730 @@
+{
+  "title": "Native desk infrastructure review for Aster Desk",
+  "generated_at_utc": "2026-10-08T05:12:02.927243+00:00",
+  "review_mode": "Read-only source tracing; no app source edits, production actions, remote service tests or strategy design.",
+  "scope": [
+    "Runtime and task/agent model",
+    "Persistence and receipts",
+    "Paper accounting and data provenance",
+    "Lifecycle and operator controls",
+    "Implemented capability versus published/deployed claims"
+  ],
+  "excluded": [
+    "Strategies, scanners, signals, ranking, indicators, allocation policies",
+    "Security audit"
+  ],
+  "summary": "Reuse durable operational evidence and lifecycle patterns, rather than existing trading decisions. ChatGPT has the most explicit durable scheduling and browser-task boundary; Sable has a process-worker and full paper-book facade; Author supplies file-worker/receipt patterns with important health-claim limits; Femto is a published read-only surface. None is an existing general six-agent operational task desk.",
+  "repositories": [
+    {
+      "repo": "autopilot-desk",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "names": [
+        "Sable paper desk",
+        "Cassius operator/terminal"
+      ],
+      "runtime": {
+        "statement": "TanStack React Start/Vite server application. The worker uses a process-global 30-second interval, 15-second watchdog, per-process in-flight flag and persisted heartbeat. It loops onboarded books and records per-cycle reports. This is a bounded deterministic desk worker, not a generic durable task queue or distributed agent scheduler.",
+        "source_ids": [
+          "A-runtime",
+          "A-clock"
+        ]
+      },
+      "task_agent_model": [
+        {
+          "statement": "Cassius duty contracts describe permitted reads/actions and paper-only boundaries. The terminal actually reads persisted books, obtains completed daily paths and a read-only Alpaca MCP probe, assembles a structured view and writes a diary card. The Cassius CLI calls those HTTP operations; its name/comment does not implement a separate reasoning agent.",
+          "source_ids": [
+            "A-contract",
+            "A-terminal",
+            "A-cli"
+          ]
+        },
+        {
+          "statement": "Optional Grok 4.5 performs one constrained prose-to-schema interpretation when configured. Missing/model-failed cases return the deterministic interpretation. This call is not a autonomous tool loop, task delegation system or continuous public-news researcher.",
+          "source_ids": [
+            "A-optional-model"
+          ]
+        },
+        {
+          "statement": "A separate bounded Edge/scout cycle is genuinely implemented: scheduled/manual cadence gating, public Yahoo/calendar/headline reads, structured SEEN/INFERRED/missing-evidence brief and durable policy/brief records. Optional Skyvern can launch one read-only Yahoo-page task with an eight-step budget and cooldown; this path records a launch URL rather than establishing a completed browser result. Optional paper hands are a separate deterministic desk-action path, not free-form model control.",
+          "source_ids": [
+            "A-scout-loop",
+            "A-scout-research",
+            "A-scout-browser"
+          ]
+        }
+      ],
+      "persistence": {
+        "statement": "PostgreSQL when DATABASE_URL is configured; otherwise PGlite on a disk directory. A per-user JSON snapshot is projected into account/event/order/fill/position/bracket tables. Event idempotency and fill IDs preserve receipts; cycle reports persist input freshness and resulting entity IDs. Snapshot projections are sequential writes, not one transaction over the whole book.",
+        "source_ids": [
+          "A-database",
+          "A-ledger",
+          "A-cycle-receipts"
+        ]
+      },
+      "paper_accounting": {
+        "statement": "Local paper fills update cash, quantity, weighted average and marked equity. The simulator applies explicit simulated slippage. Connected Alpaca-paper orders remain pending until broker evidence reports fills, and reconciliation refreshes account/positions. Simulator values and broker values are distinct paths; the existing numeric/rounding model is not a Decimal accounting foundation to copy.",
+        "source_ids": [
+          "A-account",
+          "A-paper-fill",
+          "A-broker"
+        ]
+      },
+      "data_truth": {
+        "statement": "Provider-derived quotes come from completed bars; absent history is not synthesized into live-read evidence. Demo/live-read/stale modes, provider fetch time, completed-bar time and worker time are tracked separately. Quote/print marks can fall back to cost when no quote exists, so marked equity should retain missing-mark provenance.",
+        "source_ids": [
+          "A-truth",
+          "A-account"
+        ]
+      },
+      "lifecycle_limits": [
+        {
+          "statement": "A local preview GET starts the process timer. Other GETs can perform an opportunistic sweep when the heartbeat is stale. The Vercel scheduled endpoint is one daily pulse, whose branch writes a running heartbeat and returns before performing a sweep. Source therefore does not establish uninterrupted unattended production operation.",
+          "source_ids": [
+            "A-http-lifecycle",
+            "A-cron"
+          ]
+        },
+        {
+          "statement": "Pause/park blocks new work while existing protection evaluation remains enabled. UI pause/resume mutates a local clone and saves it; the worker tries to merge concurrent events/orders, but this is not a fenced generic task state machine.",
+          "source_ids": [
+            "A-protection-lifecycle",
+            "A-ui",
+            "A-runtime"
+          ]
+        }
+      ],
+      "operator_controls": {
+        "statement": "The UI exposes pause/resume, approvals, manual paper tickets, cancellations, position closes, broker sync and freshness/worker health. These are real server/store operations, not decorative activity cards.",
+        "source_ids": [
+          "A-ui",
+          "A-status-ui",
+          "A-broker"
+        ]
+      },
+      "deployment_evidence": "Reviewed pinned source only. No current running process, configured broker, external Grok availability or production uptime was tested."
+    },
+    {
+      "repo": "ChatGPT",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "names": [
+        "Native AutopilotDesk / FolioTend Desk"
+      ],
+      "runtime": {
+        "statement": "Main route renders AutopilotDesk. The Cloudflare Worker scheduled handler invokes the desk sweep and outbox dispatcher; source configuration supplies a five-minute cron. Active saved desks are dispatched independently of browser requests. Runtime deployment/configuration was not observed remotely.",
+        "source_ids": [
+          "C-entry",
+          "C-schedule",
+          "C-trigger",
+          "C-sweep"
+        ]
+      },
+      "task_agent_model": [
+        {
+          "statement": "Saved prompt/mandate versions are durable objects. The mandate compiler is explicitly deterministic. Research runs, observations and execution decisions are bounded application jobs, not free-form agents with arbitrary tools.",
+          "source_ids": [
+            "C-mandates",
+            "C-compiler",
+            "C-compiler-identity",
+            "C-ledger"
+          ]
+        },
+        {
+          "statement": "Optional Skyvern is a real external browser-task boundary with persisted lifecycle/result/proposals. It defaults disabled and OBSERVE; enabled/configured tasks can propose only enumerated actions. Server gates apply paper actions according to explicit approval or PAPER_AUTOMATIC. This is not an unrestricted agent or a live-broker capability.",
+          "source_ids": [
+            "C-browser-default",
+            "C-browser-lifecycle",
+            "C-browser-proposals",
+            "C-browser-gates"
+          ]
+        }
+      ],
+      "persistence": {
+        "statement": "D1 records versioned desks, run/context/observation/candidate provenance, audit events and paper decision\u2192intent\u2192fill\u2192protection\u2192reconciliation\u2192outcome links. Worker leases are per desk/window, expire after four minutes and fence completion by token. Stable run IDs allow retrying a window without inventing a new history entry. Health, bounded retry budget, provider cooldown, dead letters and notification outbox expose real failure states.",
+        "source_ids": [
+          "C-mandates",
+          "C-ledger",
+          "C-chain",
+          "C-execution-schema",
+          "C-leases",
+          "C-sweep"
+        ]
+      },
+      "paper_accounting": [
+        {
+          "statement": "PaperLedgerAdapter submits a PENDING handle and fills only from a later completed REAL_DATA bar supplied by the server. Cumulative fill quantities cannot move backward/overfill or rewrite terminal states. Order/fill/protection are committed together; position projection is updated afterward and failures are recorded as reconciliation mismatches.",
+          "source_ids": [
+            "C-paper-adapter",
+            "C-fill-lifecycle"
+          ]
+        },
+        {
+          "statement": "Positions track weighted cost and realized P&L; exposure is reconstructed from durable open positions plus unfilled pending intents. The risk row has a seeded/cached account_equity value, and position market_value initially reflects cost. This is not a complete independent funding/cash/equity accounting ledger.",
+          "source_ids": [
+            "C-paper-position",
+            "C-risk"
+          ]
+        }
+      ],
+      "data_truth": {
+        "statement": "Yahoo requests are bounded, cached and try a secondary origin. Bars are filtered to completed intervals; source status/provider health and retrieved/completed timestamps remain explicit. Anonymous preview is a labeled fixture; saved desks can request provider-backed runs. A preview/compiled mandate is not evidence that real work executed.",
+        "source_ids": [
+          "C-truth",
+          "C-preview",
+          "C-ui"
+        ]
+      },
+      "lifecycle_limits": {
+        "statement": "Separate controls exist for whole-desk active/paused status and paper-risk entry pause/park/kill switch. The scheduled query processes only active desks; risk pause still allows the active desk to settle protection/orders. These scopes should be explicit in a generic operational desk.",
+        "source_ids": [
+          "C-sweep",
+          "C-risk",
+          "C-ui"
+        ]
+      },
+      "operator_controls": {
+        "statement": "Compile/accept/save/version/compare/export, run preview or server research, desk pause/resume, entry controls, paper review/cancel-replace, and optional browser-task run/status/review are implemented UI routes. They depend on durable saved owner-scoped objects; no general task inbox or six-agent operational handoff UI is present.",
+        "source_ids": [
+          "C-mandates",
+          "C-ui",
+          "C-preview",
+          "C-browser-gates"
+        ]
+      },
+      "deployment_evidence": "Reviewed pinned source and configuration. No deployed D1 contents, cron delivery, model connection, Skyvern session or paper-provider operation was tested."
+    },
+    {
+      "repo": "Author-desk / Author-desk-backup",
+      "commit_sha": "652db7afcc4312b6bd44d41547ca0f73981fe3ff",
+      "summary": "Deterministic Node/file workdesk with JSON persisted book/receipts, PID locks and heartbeat/watchdog recovery. Both repos preserve the same tree. Current halt flags disable paper execution and publishing; some workers still operate. LIVE_CLOCK=zero is not a global process halt. Status literals/same-day scan stamps and successful workflow exits do not independently prove delivery.",
+      "detail_review": "review-Author-infrastructure.json",
+      "portable_patterns": [
+        "Single publisher and recorded external delivery receipts",
+        "Completed-bar duplicate boundaries",
+        "Book/receipt and operator status views",
+        "Worker restart/heartbeat observability"
+      ],
+      "limits": [
+        "No generic agent/task reasoning runtime",
+        "Do not reuse literal renderer health or heartbeat-as-delivery semantics",
+        "Archived book snapshot is not current broker truth"
+      ]
+    },
+    {
+      "repo": "Femto",
+      "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+      "summary": "Published static HTML terminals and a JSON feed. The browser fetches/render snapshots with fallback and freshness labels. No agent runner, task producer, ledger writer, order handling or enforcement source is present here.",
+      "detail_review": "review-femto-published-ui.json",
+      "portable_patterns": [
+        "Read-only desk visibility with timestamped provenance",
+        "Retain last known snapshot on feed failure while making age visible",
+        "Operator-facing book, activity, pending-work and review surfaces"
+      ],
+      "limits": [
+        "Feed freshness is not engine or broker health",
+        "Published values were not reconciled independently",
+        "Saved GitHub Pages success supports publication of this commit, not present live operation"
+      ]
+    }
+  ],
+  "patterns_for_strategy_free_desk": [
+    {
+      "pattern": "Durable task and ordered attempt/step history",
+      "application": "Store queued/running/completed/failed/cancelled operational work; identify each worker attempt and actor. A display card or event row alone is not an agent task."
+    },
+    {
+      "pattern": "Fenced claims and restart recovery",
+      "application": "Persist a lease/token or equivalent single-worker exclusion, bound attempts and recover expired in-flight work. Keep stable task/effect identities across retries."
+    },
+    {
+      "pattern": "Independent accounting authority",
+      "application": "Reconcile human funding and recorded fills into cash, reserved cash, positions, cost and realized P&L. Commit reservation/fill effects atomically using exact monetary values."
+    },
+    {
+      "pattern": "Truthful empty state and evidence clocks",
+      "application": "Start with zero funding/positions/orders/strategies. Preserve manual quote source, as-of time, ingestion time, missing/stale marks and the time a task actually completed."
+    },
+    {
+      "pattern": "Local automation versus configured reasoning",
+      "application": "Operational local workers can audit/reconcile/journal without a model. Show reasoning configuration and observed task results separately; only explicit brief/note requests may call the optional provider."
+    },
+    {
+      "pattern": "Explicit human action boundary",
+      "application": "Agents report pending intents and operational gaps. They cannot fund accounts, create strategy decisions or approve/fill human orders."
+    },
+    {
+      "pattern": "Receipt-based health",
+      "application": "Expose last successful effect, last attempt, active lease, error/degraded state and evidence age. A running timer, green workflow exit or recent HTTP pulse is insufficient proof of delivery."
+    },
+    {
+      "pattern": "Scoped pause/cancel semantics",
+      "application": "Pause prevents new recurring cycles; manual tasks remain available. Cancellation stops future steps while preserving already completed receipts and history."
+    },
+    {
+      "pattern": "Audit trail and export",
+      "application": "Record actor/time/object transitions and source references. Preserve settings, tasks, quotes, account facts and receipts in a portable export."
+    }
+  ],
+  "actual_agent_capabilities_and_limits": {
+    "implemented": [
+      "Deterministic bounded desk work and explicit cycle/receipt persistence",
+      "Optional constrained Grok mandate interpretation in Sable",
+      "Sable bounded public-data scout briefs and optional one-page Skyvern launch; a launch is not a completed browser result",
+      "Optional configured Skyvern browser tasks in ChatGPT, with server-applied enumerated paper actions",
+      "Static feed publication/rendering in Femto"
+    ],
+    "not_established": [
+      "General-purpose autonomous multi-agent planning/delegation",
+      "A common durable agent/task inbox spanning these repos",
+      "Current deployed uptime or enabled model/broker connections",
+      "Full accounting solely from cached risk/equity or published feed values"
+    ],
+    "new_desk_boundary": "The six Aster roles should be actual operational task steps, not strategy labels. Local automation, optional reasoning, human accounting/order operations and immutable evidence must remain distinct."
+  },
+  "sources": {
+    "A-runtime": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/worker.ts",
+      "line_start": 1305,
+      "line_end": 1444,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/worker.ts#L1305-L1444",
+      "git_blob_sha": "4827b02658e447b4d46b9f194a1c3c84ec13aa46"
+    },
+    "A-clock": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/worker-record.mjs",
+      "line_start": 1,
+      "line_end": 73,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/worker-record.mjs#L1-L73",
+      "git_blob_sha": "baf572799252df0ec44f3eab745c3dd7bd27e29b"
+    },
+    "A-http-lifecycle": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/routes/api/desk-worker.ts",
+      "line_start": 112,
+      "line_end": 167,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/routes/api/desk-worker.ts#L112-L167",
+      "git_blob_sha": "bce7fd23be7cf024fdd94fd4078b0b79c3f29605"
+    },
+    "A-cron": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "vercel.json",
+      "line_start": 1,
+      "line_end": 13,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/vercel.json#L1-L13",
+      "git_blob_sha": "8453ed0a88cba21e937b8ba48c738906e736a9cb"
+    },
+    "A-database": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/db.ts",
+      "line_start": 1,
+      "line_end": 159,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/db.ts#L1-L159",
+      "git_blob_sha": "407471b84280a424d9f930deb2fd2c307fcfa3cd"
+    },
+    "A-ledger": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/persist.ts",
+      "line_start": 7,
+      "line_end": 153,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/persist.ts#L7-L153",
+      "git_blob_sha": "d29341fa3c111ec3a791c745af799d7bd35087cd"
+    },
+    "A-cycle-receipts": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/worker.ts",
+      "line_start": 610,
+      "line_end": 677,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/worker.ts#L610-L677",
+      "git_blob_sha": "4827b02658e447b4d46b9f194a1c3c84ec13aa46"
+    },
+    "A-account": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/engine.ts",
+      "line_start": 44,
+      "line_end": 83,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/engine.ts#L44-L83",
+      "git_blob_sha": "35ec6a8c85d948a8e8d1d8d27e9c8eb11a4e2cc1"
+    },
+    "A-paper-fill": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/engine.ts",
+      "line_start": 238,
+      "line_end": 294,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/engine.ts#L238-L294",
+      "git_blob_sha": "35ec6a8c85d948a8e8d1d8d27e9c8eb11a4e2cc1"
+    },
+    "A-broker": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/broker/execute.ts",
+      "line_start": 17,
+      "line_end": 215,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/broker/execute.ts#L17-L215",
+      "git_blob_sha": "4f48458e8697084da96d30f2d5af48720301f3f1"
+    },
+    "A-truth": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/worker.ts",
+      "line_start": 152,
+      "line_end": 229,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/worker.ts#L152-L229",
+      "git_blob_sha": "4827b02658e447b4d46b9f194a1c3c84ec13aa46"
+    },
+    "A-optional-model": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/scanner/server.ts",
+      "line_start": 49,
+      "line_end": 101,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/scanner/server.ts#L49-L101",
+      "git_blob_sha": "60d55d3ce329cc0a06e5ecafb6bb401a43b249c2"
+    },
+    "A-scout-loop": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/scanner/scout-cycle.ts",
+      "line_start": 23,
+      "line_end": 126,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/scanner/scout-cycle.ts#L23-L126",
+      "git_blob_sha": "c69a8dcfebc6b8e304c01c0302d3a28e1424d070"
+    },
+    "A-scout-research": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/scanner/scout-research.mjs",
+      "line_start": 81,
+      "line_end": 185,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/scanner/scout-research.mjs#L81-L185",
+      "git_blob_sha": "346c80aefb6c698176f463afb5bd761df6b2ed49"
+    },
+    "A-scout-browser": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/scanner/scout-run.mjs",
+      "line_start": 264,
+      "line_end": 341,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/scanner/scout-run.mjs#L264-L341",
+      "git_blob_sha": "9be50847f1f0ead28487d1b91f52bcfa3b343b48"
+    },
+    "A-contract": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/scanner/cassius-core.mjs",
+      "line_start": 21,
+      "line_end": 71,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/scanner/cassius-core.mjs#L21-L71",
+      "git_blob_sha": "c4b49a60f035c9dbed74348e401f76e45a51fcf6"
+    },
+    "A-terminal": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/cassius-sit.ts",
+      "line_start": 63,
+      "line_end": 117,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/cassius-sit.ts#L63-L117",
+      "git_blob_sha": "14e80aff22dfb88d76565466b86e9e51a4d447e7"
+    },
+    "A-cli": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "scripts/cassius.mjs",
+      "line_start": 37,
+      "line_end": 91,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/scripts/cassius.mjs#L37-L91",
+      "git_blob_sha": "49c5876227456b3ed6a063020da3a89bfa7bb9ec"
+    },
+    "A-protection-lifecycle": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/always-on-core.mjs",
+      "line_start": 51,
+      "line_end": 64,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/always-on-core.mjs#L51-L64",
+      "git_blob_sha": "0acb87a777d0997e659fc52be73fb9acea1c7a82"
+    },
+    "A-ui": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/lib/desk/store.ts",
+      "line_start": 179,
+      "line_end": 215,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/lib/desk/store.ts#L179-L215",
+      "git_blob_sha": "62b1dc003dba41a1a6446725262a1e03db15c908"
+    },
+    "A-status-ui": {
+      "repo": "autopilot-desk",
+      "branch": "main",
+      "commit_sha": "48e8f90f5d9def28363eb4013dac4dd8d78f74bf",
+      "path": "src/routes/desk/health.tsx",
+      "line_start": 37,
+      "line_end": 109,
+      "url": "https://github.com/dwj9ddyvf6-hub/autopilot-desk/blob/48e8f90f5d9def28363eb4013dac4dd8d78f74bf/src/routes/desk/health.tsx#L37-L109",
+      "git_blob_sha": "17ec319d5038099dd852f0fb9dd346a31c765fc2"
+    },
+    "C-entry": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/page.tsx",
+      "line_start": 1,
+      "line_end": 5,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/page.tsx#L1-L5",
+      "git_blob_sha": "e3bd5e0f674fbe4c81f630e75af17725a7f97b07"
+    },
+    "C-schedule": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "worker/index.ts",
+      "line_start": 72,
+      "line_end": 84,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/worker/index.ts#L72-L84",
+      "git_blob_sha": "004340c0f634eba69aea8ebe2d7c3d7cd204a679"
+    },
+    "C-trigger": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "vite.config.ts",
+      "line_start": 14,
+      "line_end": 20,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/vite.config.ts#L14-L20",
+      "git_blob_sha": "168e6ead90d28a8e8b531db4e2d45dfdc10f251c"
+    },
+    "C-leases": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/desk-worker.ts",
+      "line_start": 87,
+      "line_end": 149,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/desk-worker.ts#L87-L149",
+      "git_blob_sha": "56e5982984dfa3a28f7dc66d7dc3434a914de039"
+    },
+    "C-sweep": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/desk-worker.ts",
+      "line_start": 288,
+      "line_end": 390,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/desk-worker.ts#L288-L390",
+      "git_blob_sha": "56e5982984dfa3a28f7dc66d7dc3434a914de039"
+    },
+    "C-mandates": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/desk-store.ts",
+      "line_start": 25,
+      "line_end": 135,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/desk-store.ts#L25-L135",
+      "git_blob_sha": "a7f07c215d6d5abac815940a2f55e11ec7929dfa"
+    },
+    "C-ledger": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/desk-runtime-store.ts",
+      "line_start": 5,
+      "line_end": 149,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/desk-runtime-store.ts#L5-L149",
+      "git_blob_sha": "b362a3bbe6ba11bdb4a754054c942b9ac2aa74f8"
+    },
+    "C-chain": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/desk-runtime-store.ts",
+      "line_start": 183,
+      "line_end": 219,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/desk-runtime-store.ts#L183-L219",
+      "git_blob_sha": "b362a3bbe6ba11bdb4a754054c942b9ac2aa74f8"
+    },
+    "C-execution-schema": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/paper-execution-store.ts",
+      "line_start": 10,
+      "line_end": 113,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/paper-execution-store.ts#L10-L113",
+      "git_blob_sha": "5894f61411cc1a23e022edb4cd9c52e180764f2e"
+    },
+    "C-paper-adapter": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/paper-execution-adapter.ts",
+      "line_start": 25,
+      "line_end": 82,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/paper-execution-adapter.ts#L25-L82",
+      "git_blob_sha": "aec33c2a47b2bd0eeb9e90099c1c0e2e4aa3913b"
+    },
+    "C-paper-position": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/paper-execution-store.ts",
+      "line_start": 178,
+      "line_end": 200,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/paper-execution-store.ts#L178-L200",
+      "git_blob_sha": "5894f61411cc1a23e022edb4cd9c52e180764f2e"
+    },
+    "C-fill-lifecycle": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/paper-execution-store.ts",
+      "line_start": 407,
+      "line_end": 470,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/paper-execution-store.ts#L407-L470",
+      "git_blob_sha": "5894f61411cc1a23e022edb4cd9c52e180764f2e"
+    },
+    "C-risk": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/paper-risk-store.ts",
+      "line_start": 7,
+      "line_end": 112,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/paper-risk-store.ts#L7-L112",
+      "git_blob_sha": "86fed53343ab93e39f7d7f873dec35804f38163b"
+    },
+    "C-truth": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/desk-market-provider.ts",
+      "line_start": 53,
+      "line_end": 130,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/desk-market-provider.ts#L53-L130",
+      "git_blob_sha": "6c0c8498944751ef89dc066f0b1bdafccec07bd9"
+    },
+    "C-compiler": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/api/mandate/compile/route.ts",
+      "line_start": 1,
+      "line_end": 17,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/api/mandate/compile/route.ts#L1-L17",
+      "git_blob_sha": "13a3b0c62275447d3ce7b7fd673ba35ee264e6bf"
+    },
+    "C-compiler-identity": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/mandate-compiler.ts",
+      "line_start": 316,
+      "line_end": 321,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/mandate-compiler.ts#L316-L321",
+      "git_blob_sha": "9a32a3e76dc6a434bdae81c858a5a03bc723a1b2"
+    },
+    "C-browser-proposals": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/skyvern-trader.ts",
+      "line_start": 44,
+      "line_end": 56,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/skyvern-trader.ts#L44-L56",
+      "git_blob_sha": "5a19eeb8175f78c46a0dfef3ed5569004454e301"
+    },
+    "C-browser-gates": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/skyvern-trader.ts",
+      "line_start": 126,
+      "line_end": 194,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/skyvern-trader.ts#L126-L194",
+      "git_blob_sha": "5a19eeb8175f78c46a0dfef3ed5569004454e301"
+    },
+    "C-browser-lifecycle": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/skyvern-trader.ts",
+      "line_start": 251,
+      "line_end": 309,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/skyvern-trader.ts#L251-L309",
+      "git_blob_sha": "5a19eeb8175f78c46a0dfef3ed5569004454e301"
+    },
+    "C-browser-default": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/lib/skyvern-store.ts",
+      "line_start": 155,
+      "line_end": 186,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/lib/skyvern-store.ts#L155-L186",
+      "git_blob_sha": "f65fbeaa1af968c3a4d40a0cf5d09a19e31ac677"
+    },
+    "C-ui": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/components/AutopilotDesk.tsx",
+      "line_start": 854,
+      "line_end": 880,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/components/AutopilotDesk.tsx#L854-L880",
+      "git_blob_sha": "6b56a2745b3c4847592d8b2bdeffbc6926f9eb92"
+    },
+    "C-preview": {
+      "repo": "ChatGPT",
+      "branch": "main",
+      "commit_sha": "34f690003cfa2e503eebe3b3f4b0be9eaad11703",
+      "path": "app/components/AutopilotDesk.tsx",
+      "line_start": 651,
+      "line_end": 674,
+      "url": "https://github.com/dwj9ddyvf6-hub/ChatGPT/blob/34f690003cfa2e503eebe3b3f4b0be9eaad11703/app/components/AutopilotDesk.tsx#L651-L674",
+      "git_blob_sha": "6b56a2745b3c4847592d8b2bdeffbc6926f9eb92"
+    }
+  },
+  "limitations": [
+    "Focused infrastructure source review, not every line of these repositories.",
+    "Strategies and security intentionally excluded.",
+    "No remote deployed services or production effects were exercised.",
+    "Companion Author/Femto reports preserve their deeper source paths and exact implementation/publication distinctions."
+  ],
+  "Author_detail_available": true,
+  "femto_detail_available": true,
+  "verification": {
+    "source_refs_checked": 43,
+    "git_blob_matches": 43,
+    "tests_run": false,
+    "production_actions": false,
+    "source_repositories_modified": false
+  }
+}

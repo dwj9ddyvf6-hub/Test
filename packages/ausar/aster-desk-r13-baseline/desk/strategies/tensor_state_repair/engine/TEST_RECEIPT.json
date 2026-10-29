@@ -1,0 +1,41 @@
+{
+  "schema": "aster-tensor-native-adapter-validation/1",
+  "status": "PASS",
+  "exit_code": 0,
+  "executed_at": "2026-10-09T11:52:06.927215+00:00",
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "tests.test_tensor_engine",
+    "-v"
+  ],
+  "checks": 14,
+  "native_frames": [
+    "1h",
+    "1d",
+    "1wk"
+  ],
+  "financial_tests": 0,
+  "fitted_models": 0,
+  "source_manifest_sha256": "f87496a6e4542f362a1d3b23e165ea90dd613be7b7de66d3a17bbfaf3884a4c2",
+  "files": {
+    "backend/tensor_engine.py": {
+      "size": 15268,
+      "sha256": "40f179ab7f368b6f049f28f70fee406b7a0e07882a85fdfdd820c93d2f230694"
+    },
+    "tests/test_tensor_engine.py": {
+      "size": 13106,
+      "sha256": "22182b1b076264d4ce53216b45adaf6af4fcd1b734f36ee1d407afadd1cfd373"
+    },
+    "strategies/tensor_state_repair/engine/TEST_TRANSCRIPT.txt": {
+      "size": 2545,
+      "sha256": "d0b2c8b2ed47d690ada10296572030d5a1aa120a96d065a136d584c7524dbdc2"
+    },
+    "strategies/tensor_state_repair/engine/fixtures/PROVENANCE.json": {
+      "size": 2851,
+      "sha256": "b9c47a5ee6d6230b53c1b13ef26c46ad2dc0684577613f159b850b7df46830aa"
+    }
+  },
+  "verification_adjustment": "First independent-arithmetic check used a $0.0000001 absolute dollar-volume tolerance on a ~$23bn weekly mean. JavaScript/Python sums differed by $0.00000762939453125 (a few binary64 ULP). Replaced that test-only check with relative1e-12/absolute1e-7 tolerance; all93field source-exporter checks remain exact and allproductionformulas unchanged."
+}

@@ -1,0 +1,174 @@
+{
+  "title": "Independent Aster autonomous runtime and reporting review",
+  "scope": "New Aster scheduler, lease fencing, pass ordering, timestamps, truthful status and analytics. Trading financial/protection review is assigned separately to paper_infrastructure. No original desk execution, provider network, broker mutation or app code edits.",
+  "instructions_read": [
+    "AGENTS.md",
+    "docs/BUILD_CONTRACT.md",
+    "docs/AUTONOMY_CONTRACT.md"
+  ],
+  "reviewed_files": [
+    {
+      "path": "/workspace/agentic-desk/AGENTS.md",
+      "sha256": "5ac39761db2ce9354c08928b68e1c87b483025e8f223886a23ad5edbb1e4e381",
+      "lines": 13,
+      "scope": "fullbody static review"
+    },
+    {
+      "path": "/workspace/agentic-desk/docs/BUILD_CONTRACT.md",
+      "sha256": "f8efe1dbb5998ffd982a83f1189b121be9dd269265a524036e68a0a0df001a4c",
+      "lines": 82,
+      "scope": "fullbody static review"
+    },
+    {
+      "path": "/workspace/agentic-desk/docs/AUTONOMY_CONTRACT.md",
+      "sha256": "a36df86f322b72adb8d6157c0be9fe9286e9606d2a9964055d72b3c9ef3c3106",
+      "lines": 41,
+      "scope": "fullbody static review"
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/autonomy.py",
+      "sha256": "8e9dbe35b710f7c019f20c3ae133a13bbaf93232d1ea3c6ff8ff8263dedcf094",
+      "lines": 516,
+      "scope": "fullbody static review"
+    },
+    {
+      "path": "/workspace/agentic-desk/backend/analytics.py",
+      "sha256": "57015d5e9edee0b8ade9f1b46c1a39b236594583a8a839330d21020c266cf96b",
+      "lines": 144,
+      "scope": "fullbody static review"
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_autonomy.py",
+      "sha256": "5de31734efa4b9f4113d3bd9e9ccd3fdbf241c0f8f7a0587c252d1ca31517864",
+      "lines": 240,
+      "scope": "fullbody static review"
+    },
+    {
+      "path": "/workspace/agentic-desk/tests/test_analytics.py",
+      "sha256": "5151626bdb16d7e2ce9627d6191401a77f7a0b0dfb637a487e823f1c5e65a1d7",
+      "lines": 65,
+      "scope": "fullbody static review"
+    }
+  ],
+  "confirmed_features": [
+    "File lock plus SQLite owner/expiry fence protects the operational supervisor; broker submit/cancel are wrapped with an immediate owner check.",
+    "Interval failures remain due with bounded backoff; session occurrences have explicit expiry and missed-window records.",
+    "Data refresh precedes reconcile then processing; failed books retain independent gates, while configured journal-integrity failure blocks financial processing.",
+    "Supervisor/model task creation has no order-originating or funding interface; default books and strategies remain empty.",
+    "Analytics counts completed signed-position episodes rather than every partial exit and labels brokerage cashflow coverage as incomplete."
+  ],
+  "findings": [
+    {
+      "id": "ASTER-AUTONOMY-001",
+      "severity": "high",
+      "title": "Production cycle freezes wall clock before slow data/reconciliation work",
+      "paths": [
+        {
+          "path": "backend/autonomy.py",
+          "lines": [
+            367,
+            305,
+            312,
+            320,
+            422,
+            438,
+            456
+          ]
+        },
+        {
+          "path": "backend/trading.py",
+          "lines": [
+            572,
+            598,
+            600,
+            637
+          ]
+        }
+      ],
+      "evidence": "run_once captures UTC once and sends the same datetime after refresh/reconcile and through all jobs/intents. Window expiry, quote age, fills, completion and backoff use that old timestamp.",
+      "minimal_reproduction": {
+        "environment": "Temporary SQLite only, real Store and TradingDesk, fake calendar/provider, no network or sleeps",
+        "steps": [
+          "Fund local main100; ingest manual AAPL10 at t.",
+          "Submit explicit GTC buy1 with expiry t+5seconds.",
+          "Patch production autonomy.utc_clock(None) to fake current. Fake provider refresh advances fake current from t to t+30seconds.",
+          "Call runtime.run_once() without explicit clock."
+        ],
+        "observed": {
+          "cycle_started_at": "2026-10-08T06:06:55.630489+00:00",
+          "actual_after_refresh": "2026-10-08T06:07:25.630489+00:00",
+          "intent_expires_at": "2026-10-08T06:07:00.630489+00:00",
+          "intent_status": "filled",
+          "filled_quantity": 1,
+          "fill_count": 1
+        },
+        "expected": "No fill after expiry; intent expired at fresh execution-time UTC."
+      },
+      "impact": "Late auction/explicit-expiry execution and stale/future quote classification; retries and successes can be stamped before completion.",
+      "fix": "Preserve explicit injected test clock; recompute production wall clock before each job/window/financial processing and after potentially slow broker reads before submit. Record actual completion and retry time.",
+      "status": "Fixed by runtime and trading owners; independently retested with zero late fills",
+      "confidence": "confirmed isolated reproduction"
+    },
+    {
+      "id": "ASTER-AUTONOMY-002",
+      "severity": "medium",
+      "title": "Refresh universe retained terminal instructions and zero positions without active coverage priority",
+      "paths": [
+        {
+          "path": "backend/autonomy.py",
+          "lines": [
+            271,
+            284
+          ]
+        }
+      ],
+      "evidence": "Initial SQL selected every distinct symbol from intents/positions without status/quantity predicate and globally rotated all names.",
+      "impact": "Historical symbols consumed limited feed capacity while active holdings/protection lacked priority.",
+      "fix": "Owner now filters terminal/zeroqty, prioritizes held/protective symbols then active instructions, rotates remaining observations and exposes overcapacity/deferred active symbols.",
+      "status": "Fixed; independently tested90terminalintents and21heldsymbol rotation/capacity evidence",
+      "confidence": "confirmed initial source and isolated fix verification"
+    }
+  ],
+  "checks": [
+    {
+      "command": "Isolated Python fake-time reproduction against real Store+TradingDesk",
+      "result": "Confirmed intent fills25seconds after its explicit expiry using the pre-refresh timestamp."
+    },
+    {
+      "command": "Independent fake production-clock retest with real Store+TradingDesk, temporaryDB, fake provider, no network/sleep",
+      "result": {
+        "intent_status": "expired",
+        "fills": 0,
+        "completed_at": "2026-10-08T06:19:11.702073+00:00",
+        "actual_after_refresh": "2026-10-08T06:19:11.702073+00:00"
+      }
+    },
+    {
+      "command": "Independent refresh-priority/coverage temporaryDB fixture",
+      "result": {
+        "terminal_intents": 90,
+        "initial_selected": [
+          "ZZZ"
+        ],
+        "zero_position_excluded": true,
+        "held_symbols_after_expansion": 21,
+        "per_pass": 16,
+        "union_of_two_passes": 21,
+        "visible_deferred_active": 5
+      }
+    }
+  ],
+  "limitations": [
+    "Static review is not an off-host supervisor/deployment verification.",
+    "No real market or paper-broker requests submitted.",
+    "Original Femto source was not executed.",
+    "Financial engine accounting, short, OCO, broker adoption and fill deltas were separately reviewed and all7confirmedfixes independently verified in BACKEND_TRADING_REVIEW.json.",
+    "Source owner may change files during integration; recorded hashes identify reviewed versions."
+  ],
+  "fix_verification": {
+    "autonomy_source_sha256": "213a2bf88dbcc654999e43e34478f00c871a1db34131e12c231dc6624ca11a61",
+    "trading_source_sha256": "08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+    "scope": "Re-read all changed runtime methods and exact timing/coverage probes; financial engine all7independent probe families in BACKEND_TRADING_REVIEW.json.",
+    "remaining_confirmed_findings": 0
+  }
+}

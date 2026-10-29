@@ -1,0 +1,1418 @@
+{
+  "title": "Independent Aster TradingDesk financial lifecycle source review",
+  "scope": "NEW Aster source only, read-only code review and meaningful isolated runtime probes. Full933-line trading.py read plus Store transaction/quote helpers, Alpaca adapter contract and relevant test fixtures. Parent separately reviews autonomy scheduling/analytics. No application code edits, historical Femto execution, network/broker calls, credentials, external messages or default database mutation.",
+  "contracts": [
+    "/workspace/agentic-desk/AGENTS.md",
+    "/workspace/agentic-desk/docs/BUILD_CONTRACT.md",
+    "/workspace/agentic-desk/docs/AUTONOMY_CONTRACT.md"
+  ],
+  "reviewed_source": {
+    "path": "/workspace/agentic-desk/backend/trading.py",
+    "initial_snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+    "sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+    "line_count": 933,
+    "full_body_read": true,
+    "functions": [
+      {
+        "name": "decimal",
+        "line_start": 25,
+        "line_end": 32
+      },
+      {
+        "name": "timestamp",
+        "line_start": 35,
+        "line_end": 44
+      },
+      {
+        "name": "clock_time",
+        "line_start": 47,
+        "line_end": 50
+      },
+      {
+        "name": "dump",
+        "line_start": 53,
+        "line_end": 54
+      },
+      {
+        "name": "__init__",
+        "line_start": 58,
+        "line_end": 85
+      },
+      {
+        "name": "_create_book",
+        "line_start": 87,
+        "line_end": 95
+      },
+      {
+        "name": "_book",
+        "line_start": 98,
+        "line_end": 102
+      },
+      {
+        "name": "create_book",
+        "line_start": 104,
+        "line_end": 123
+      },
+      {
+        "name": "fund_book",
+        "line_start": 125,
+        "line_end": 146
+      },
+      {
+        "name": "set_book",
+        "line_start": 148,
+        "line_end": 189
+      },
+      {
+        "name": "_normalize_intent",
+        "line_start": 191,
+        "line_end": 228
+      },
+      {
+        "name": "_raw_quote",
+        "line_start": 230,
+        "line_end": 240
+      },
+      {
+        "name": "_position",
+        "line_start": 243,
+        "line_end": 244
+      },
+      {
+        "name": "_risk_reducing",
+        "line_start": 247,
+        "line_end": 248
+      },
+      {
+        "name": "_account",
+        "line_start": 250,
+        "line_end": 284
+      },
+      {
+        "name": "_validate_capacity",
+        "line_start": 286,
+        "line_end": 358
+      },
+      {
+        "name": "submit_intent",
+        "line_start": 360,
+        "line_end": 390
+      },
+      {
+        "name": "_intent_public",
+        "line_start": 393,
+        "line_end": 400
+      },
+      {
+        "name": "cancel_intent",
+        "line_start": 402,
+        "line_end": 413
+      },
+      {
+        "name": "_equity_snapshot",
+        "line_start": 415,
+        "line_end": 422
+      },
+      {
+        "name": "snapshot",
+        "line_start": 424,
+        "line_end": 440
+      },
+      {
+        "name": "_performance",
+        "line_start": 442,
+        "line_end": 454
+      },
+      {
+        "name": "_fill",
+        "line_start": 456,
+        "line_end": 497
+      },
+      {
+        "name": "_create_protection",
+        "line_start": 499,
+        "line_end": 509
+      },
+      {
+        "name": "_oco_after_fill",
+        "line_start": 511,
+        "line_end": 521
+      },
+      {
+        "name": "_terminal",
+        "line_start": 523,
+        "line_end": 525
+      },
+      {
+        "name": "_block",
+        "line_start": 527,
+        "line_end": 530
+      },
+      {
+        "name": "_window",
+        "line_start": 532,
+        "line_end": 569
+      },
+      {
+        "name": "process",
+        "line_start": 571,
+        "line_end": 638
+      },
+      {
+        "name": "_process_broker",
+        "line_start": 640,
+        "line_end": 726
+      },
+      {
+        "name": "_apply_remote_order",
+        "line_start": 728,
+        "line_end": 750
+      },
+      {
+        "name": "_adopt_order",
+        "line_start": 752,
+        "line_end": 763
+      },
+      {
+        "name": "reconcile",
+        "line_start": 765,
+        "line_end": 880
+      },
+      {
+        "name": "_broker_for",
+        "line_start": 883,
+        "line_end": 887
+      },
+      {
+        "name": "_reconcile_local",
+        "line_start": 889,
+        "line_end": 933
+      }
+    ]
+  },
+  "method": "Temporary SQLite databases, fake account/order/position providers and manual labeled quote fixtures; initial NEW source snapshot pinned because backend owner was concurrently fixing findings. No strategies installed. Baseline probe script imports this reviewed NEW-code snapshot, not historical reference code.",
+  "probe_script": "/tmp/aster-trading-review-probes.py",
+  "probe_results_path": "/tmp/aster-trading-review-probe-results.json",
+  "baseline_probe_source_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+  "findings": [
+    {
+      "id": "T01",
+      "severity": "high",
+      "title": "Protective exits can reopen exposure after short covers and flips",
+      "status": "repaired and independently verified on source SHA 08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+      "trigger": "Allow shorts; sell10AAPL@10; buy10 or15 with explicit target12/stop8; execute target at observed12.",
+      "observed": "Cover10 becomes flat yet creates sell10 protection; target creates new short10. Flipbuy15 becomes long5 but creates sell15 protection and target ends short10.",
+      "expected": "Create protection only for newly opened signed exposure; closing component must never generate a new position. Reject broker-native bracket cover/flip combinations unless leg quantity can match opened exposure.",
+      "evidence": [
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 456,
+          "line_end": 478,
+          "excerpt": "    def _fill(self, con, intent, quantity, notional, price, fee, clock, fill_key, source, source_timestamp=None, quote=None):\n        if con.execute(\"SELECT 1 FROM p_fills WHERE fill_key=?\", (fill_key,)).fetchone():\n            return False\n        book = self._book(con, intent[\"book_id\"])\n        pos = self._position(con, book[\"id\"], intent[\"symbol\"])\n        old_qty = Decimal(pos[\"quantity\"]) if pos else Decimal(0)\n        old_cost, old_realized = (pos[\"cost_cents\"], pos[\"realized_cents\"]) if pos else (0, 0)\n        delta = quantity if intent[\"side\"] == \"buy\" else -quantity\n        realized = 0\n        if old_qty == 0 or old_qty * delta >= 0:\n            new_cost = old_cost + (notional if delta > 0 else -notional)\n        else:\n            closing = min(abs(old_qty), quantity)\n            basis_abs = abs(old_cost) if closing == abs(old_qty) else int((Decimal(abs(old_cost)) * closing / abs(old_qty)).quantize(Decimal(1), rounding=ROUND_HALF_UP))\n            closing_notional = notional if closing == quantity else int((Decimal(notional) * closing / quantity).quantize(Decimal(1), rounding=ROUND_HALF_UP))\n            realized = closing_notional - basis_abs if old_qty > 0 else basis_abs - closing_notional\n            signed_basis = basis_abs if old_qty > 0 else -basis_abs\n            opening_notional = notional - closing_notional\n            new_cost = old_cost - signed_basis + (opening_notional if delta > 0 else -opening_notional)\n        new_qty = old_qty + delta\n        if new_qty == 0:\n            new_cost = 0\n        sleeve = intent[\"sleeve\"] if not pos or old_qty == 0 else pos[\"sleeve\"] if pos[\"sleeve\"] == intent[\"sleeve\"] else None"
+        },
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 491,
+          "line_end": 509,
+          "excerpt": "        if book[\"broker\"] == \"local\":\n            if intent[\"parent_id\"]:\n                self._oco_after_fill(con, intent, remaining, clock)\n            elif intent[\"take_profit\"] or intent[\"stop_loss\"]:\n                self._create_protection(con, intent, quantity, fid, book, clock)\n        self._equity_snapshot(con, book[\"id\"], clock)\n        return True\n\n    def _create_protection(self, con, parent, qty, fill_id, book, clock):\n        group = parent[\"id\"] + \":\" + fill_id\n        side = \"sell\" if parent[\"side\"] == \"buy\" else \"buy\"\n        for kind, key in ((\"limit\", \"take_profit\"), (\"stop\", \"stop_loss\")):\n            if not parent[key]:\n                continue\n            rid, ts = identifier(), clock.isoformat()\n            data = {\"id\": rid, \"book_id\": book[\"id\"], \"client_id\": \"protect_\" + rid, \"payload_hash\": hashlib.sha256(group.encode()).hexdigest(), \"symbol\": parent[\"symbol\"], \"side\": side, \"quantity\": str(qty), \"order_type\": kind, \"time_in_force\": \"gtc\", \"limit_price\": parent[key] if kind == \"limit\" else None, \"stop_price\": parent[key] if kind == \"stop\" else None, \"status\": \"open\", \"reserved_quantity\": str(qty), \"parent_id\": parent[\"id\"], \"oco_group\": group, \"broker_client_id\": \"aster_\" + rid, \"created_at\": ts, \"updated_at\": ts, \"policy_version\": book[\"policy_version\"], \"sleeve\": parent[\"sleeve\"], \"reason\": \"Explicit operator-defined protective \" + key, \"source\": \"operator_protection\"}\n            columns = list(data)\n            con.execute(f\"INSERT INTO p_intents({','.join(columns)}) VALUES({','.join('?' for _ in columns)})\", list(data.values()))\n            self.store.event(con, \"protective_order_created\", \"execution_clerk\", \"Created persistent protection using the operator's explicit price\", {\"intent_id\": rid, \"parent_id\": parent[\"id\"], \"oco_group\": group, \"price\": number(parent[key]), \"quantity\": number(qty), \"order_type\": kind})"
+        }
+      ],
+      "probe_result": {
+        "after_cover": {
+          "positions": [
+            {
+              "symbol": "AAPL",
+              "quantity": 5.0,
+              "source": "local_simulation",
+              "locked": false
+            }
+          ],
+          "intents": [
+            {
+              "client_id": "protect_fe4fd420bcab4bdd9300c5134936ae39",
+              "side": "sell",
+              "quantity": 15.0,
+              "filled_quantity": 0.0,
+              "status": "open",
+              "parent_id": "09cdc26ea2f64ff4ad3dda684e77d4f9",
+              "reserved": 0.0,
+              "reserved_quantity": 15.0,
+              "error": null
+            },
+            {
+              "client_id": "protect_7aa1bb8dee4f4048a26078d65fc72748",
+              "side": "sell",
+              "quantity": 15.0,
+              "filled_quantity": 0.0,
+              "status": "open",
+              "parent_id": "09cdc26ea2f64ff4ad3dda684e77d4f9",
+              "reserved": 0.0,
+              "reserved_quantity": 15.0,
+              "error": null
+            },
+            {
+              "client_id": "cover",
+              "side": "buy",
+              "quantity": 15.0,
+              "filled_quantity": 15.0,
+              "status": "filled",
+              "parent_id": null,
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            },
+            {
+              "client_id": "short",
+              "side": "sell",
+              "quantity": 10.0,
+              "filled_quantity": 10.0,
+              "status": "filled",
+              "parent_id": null,
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 950.0,
+            "equity": 1000.0,
+            "market_value": 50.0,
+            "gross_exposure": 50.0,
+            "reserved_cash": 0.0,
+            "available_cash": 950.0,
+            "realized_pnl": 0.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0
+          }
+        },
+        "after_target": {
+          "positions": [
+            {
+              "symbol": "AAPL",
+              "quantity": -10.0,
+              "source": "local_simulation",
+              "locked": false
+            }
+          ],
+          "intents": [
+            {
+              "client_id": "protect_fe4fd420bcab4bdd9300c5134936ae39",
+              "side": "sell",
+              "quantity": 15.0,
+              "filled_quantity": 15.0,
+              "status": "filled",
+              "parent_id": "09cdc26ea2f64ff4ad3dda684e77d4f9",
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            },
+            {
+              "client_id": "protect_7aa1bb8dee4f4048a26078d65fc72748",
+              "side": "sell",
+              "quantity": 15.0,
+              "filled_quantity": 0.0,
+              "status": "cancelled",
+              "parent_id": "09cdc26ea2f64ff4ad3dda684e77d4f9",
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": "OCO sibling filled"
+            },
+            {
+              "client_id": "cover",
+              "side": "buy",
+              "quantity": 15.0,
+              "filled_quantity": 15.0,
+              "status": "filled",
+              "parent_id": null,
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            },
+            {
+              "client_id": "short",
+              "side": "sell",
+              "quantity": 10.0,
+              "filled_quantity": 10.0,
+              "status": "filled",
+              "parent_id": null,
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 1130.0,
+            "equity": 1010.0,
+            "market_value": -120.0,
+            "gross_exposure": 120.0,
+            "reserved_cash": 0.0,
+            "available_cash": 1130.0,
+            "realized_pnl": 10.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0
+          }
+        }
+      },
+      "reproduction_case": "cover_protection_15",
+      "fix_verification": {
+        "id": "T01",
+        "passed": true,
+        "observed": [
+          {
+            "cover_quantity": 10,
+            "protection_quantity": [],
+            "end_position_count": 0
+          },
+          {
+            "cover_quantity": 15,
+            "protection_quantity": [
+              5.0,
+              5.0
+            ],
+            "end_position_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "T02",
+      "severity": "high",
+      "title": "Accepted broker intents ignore explicit expiry and new entry policy",
+      "status": "repaired and independently verified on source SHA 08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+      "trigger": "Submit broker GTC buy10 with expires_at, then process after expiry.",
+      "observed": "No broker cancellation; intent remains open. Accepted broker_id return precedes expiry and policy checks.",
+      "expected": "Require verified cancellation for explicit expiry or incompatible operator entry policy; preserve measured fills and risk-reducing protection.",
+      "evidence": [
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 667,
+          "line_end": 685,
+          "excerpt": "        with self.store.transaction() as con:\n            intent = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone()\n            book = self._book(con, intent[\"book_id\"])\n            if intent[\"status\"] in TERMINAL:\n                return\n            cancelling = intent[\"status\"] == \"cancel_requested\"\n            if not cancelling and intent[\"broker_id\"]:\n                return  # Account/order poll supplies measured status and fills.\n            try:\n                truth = con.execute(\"SELECT observed_at FROM p_broker_truth WHERE book_id=?\", (book[\"id\"],)).fetchone()\n                if not truth or (clock - datetime.fromisoformat(truth[0])).total_seconds() > self.store.settings(con)[\"quote_max_age_seconds\"]:\n                    raise DeskError(\"A recent successful complete broker reconciliation is required before transport\")\n                original_calendar = providers.calendar(datetime.fromisoformat(intent[\"not_before\"] or intent[\"created_at\"])) if intent[\"session_close\"] is None and intent[\"time_in_force\"] != \"gtc\" else None\n                if not cancelling and not self._window(con, intent, calendar, clock, broker=True, initial_calendar=original_calendar):\n                    return\n                if not cancelling:\n                    quote = self._raw_quote(con, intent[\"symbol\"], clock)\n                    self._validate_capacity(con, book, dict(intent), Decimal(intent[\"limit_price\"] or quote[\"price\"]), rid)\n            except DeskError as exc:"
+        }
+      ],
+      "probe_result": {
+        "state": {
+          "positions": [],
+          "intents": [
+            {
+              "client_id": "expiry",
+              "side": "buy",
+              "quantity": 10.0,
+              "filled_quantity": 0.0,
+              "status": "open",
+              "parent_id": null,
+              "reserved": 100.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 1000.0,
+            "equity": 1000.0,
+            "market_value": 0.0,
+            "gross_exposure": 0.0,
+            "reserved_cash": 100.0,
+            "available_cash": 900.0,
+            "realized_pnl": 0.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0,
+            "broker_reported_equity": 1000.0,
+            "broker_observed_at": "2026-10-08T06:11:23.078508+00:00"
+          }
+        },
+        "broker_cancels": 0,
+        "remote_status": "accepted"
+      },
+      "reproduction_case": "broker_expiry",
+      "fix_verification": {
+        "id": "T02",
+        "passed": true,
+        "observed": {
+          "cancels": 1,
+          "reserve_until_cancel_receipt": 100.0
+        }
+      }
+    },
+    {
+      "id": "T03",
+      "severity": "high",
+      "title": "Reconciliation failure erases operator cancellation",
+      "status": "repaired and independently verified on source SHA 08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+      "trigger": "Accept broker buy10; operator cancel; broker account read fails; process; recover reconciliation; process.",
+      "observed": "cancel_requested overwritten blocked; later remote observation restores open and cancels remains0.",
+      "expected": "Cancellation/uncertain transport are durable lifecycle states and must survive data/policy failures; prioritize risk-reducing cancellation.",
+      "evidence": [
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 402,
+          "line_end": 413,
+          "excerpt": "    def cancel_intent(self, rid):\n        with self.store.transaction() as con:\n            row = con.execute(\"SELECT i.*,b.broker FROM p_intents i JOIN p_books b ON b.id=i.book_id WHERE i.id=?\", (rid,)).fetchone()\n            if not row:\n                raise DeskError(\"Autonomous intent not found\", 404)\n            if row[\"status\"] == \"filled\":\n                raise DeskError(\"A filled intent cannot be cancelled\")\n            if row[\"status\"] not in TERMINAL:\n                status = \"cancel_requested\" if row[\"broker\"] == \"alpaca\" and row[\"broker_id\"] or row[\"status\"] == \"submitting\" else \"cancelled\"\n                con.execute(\"UPDATE p_intents SET status=?,reserved_cents=CASE WHEN ?='cancelled' THEN 0 ELSE reserved_cents END,reserved_quantity=CASE WHEN ?='cancelled' THEN '0' ELSE reserved_quantity END,completed_at=CASE WHEN ?='cancelled' THEN ? ELSE completed_at END,updated_at=? WHERE id=?\", (status, status, status, status, now(), now(), rid))\n                self.store.event(con, \"autonomous_cancel_requested\", \"operator\", \"Operator requested cancellation of an autonomous intent\", {\"intent_id\": rid, \"status\": status})\n            return self._intent_public(con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone())"
+        },
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 583,
+          "line_end": 591,
+          "excerpt": "                intent = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone()\n                if not intent or intent[\"status\"] not in ACTIVE:\n                    continue\n                book = self._book(con, intent[\"book_id\"])\n                reconciliation = con.execute(\"SELECT value FROM p_state WHERE key=?\", (\"reconcile:\" + book[\"id\"],)).fetchone()\n                if reconciliation and json.loads(reconciliation[0])[\"status\"] == \"failed\":\n                    self._block(con, intent, \"This book's reconciliation failed; other books remain independent\", clock)\n                    result[\"errors\"].append({\"book_id\": book[\"id\"], \"detail\": \"Book reconciliation failed\"})\n                    continue"
+        },
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 746,
+          "line_end": 750,
+          "excerpt": "        remote_status = str(remote.get(\"status\", \"unknown\"))\n        status = {\"filled\": \"filled\", \"partially_filled\": \"partially_filled\", \"canceled\": \"cancelled\", \"cancelled\": \"cancelled\", \"expired\": \"expired\", \"rejected\": \"rejected\", \"pending_cancel\": \"cancel_requested\"}.get(remote_status, \"partially_filled\" if qty else \"open\")\n        if intent[\"status\"] == \"cancel_requested\" and status not in TERMINAL:\n            status = \"cancel_requested\"\n        con.execute(\"UPDATE p_intents SET broker_id=?,broker_status=?,status=?,updated_at=?,completed_at=CASE WHEN ? THEN ? ELSE completed_at END,reserved_cents=CASE WHEN ? THEN 0 ELSE reserved_cents END,reserved_quantity=CASE WHEN ? THEN '0' ELSE reserved_quantity END,error=NULL WHERE id=?\", (str(remote.get(\"id\", intent[\"broker_id\"] or \"\")), remote_status, status, clock.isoformat(), status in TERMINAL, clock.isoformat(), status in TERMINAL, status in TERMINAL, intent[\"id\"]))"
+        }
+      ],
+      "probe_result": {
+        "during_failure": {
+          "positions": [],
+          "intents": [
+            {
+              "client_id": "cancel",
+              "side": "buy",
+              "quantity": 10.0,
+              "filled_quantity": 0.0,
+              "status": "blocked",
+              "parent_id": null,
+              "reserved": 100.0,
+              "reserved_quantity": 0.0,
+              "error": "This book's reconciliation failed; other books remain independent"
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 1000.0,
+            "equity": 1000.0,
+            "market_value": 0.0,
+            "gross_exposure": 0.0,
+            "reserved_cash": 100.0,
+            "available_cash": 900.0,
+            "realized_pnl": 0.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0,
+            "broker_reported_equity": 1000.0,
+            "broker_observed_at": "2026-10-08T06:11:23.091369+00:00"
+          }
+        },
+        "after_recovery": {
+          "positions": [],
+          "intents": [
+            {
+              "client_id": "cancel",
+              "side": "buy",
+              "quantity": 10.0,
+              "filled_quantity": 0.0,
+              "status": "open",
+              "parent_id": null,
+              "reserved": 100.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 1000.0,
+            "equity": 1000.0,
+            "market_value": 0.0,
+            "gross_exposure": 0.0,
+            "reserved_cash": 100.0,
+            "available_cash": 900.0,
+            "realized_pnl": 0.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0,
+            "broker_reported_equity": 1000.0,
+            "broker_observed_at": "2026-10-08T06:11:23.104222+00:00"
+          }
+        },
+        "broker_cancels": 0
+      },
+      "reproduction_case": "cancel_lost_on_reconcile_failure",
+      "fix_verification": {
+        "id": "T03",
+        "passed": true,
+        "observed": [
+          {
+            "failure": "read",
+            "cancels": 1
+          },
+          {
+            "failure": "adapter",
+            "cancels": 1
+          },
+          {
+            "failure": "calendar",
+            "cancels": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "T04",
+      "severity": "medium",
+      "title": "Partial limit buy under-reserves remaining limit liability",
+      "status": "repaired and independently verified on source SHA 08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+      "trigger": "Fund1000; observed8; buy100 limit10 max_fill10; first10 fill@8; submit extra buy20@8.",
+      "observed": "Cash920 but remaining reserve720 instead of900; extra160 intent accepted against overstated available cash. Local final-fill checks prevent negative cash, but pending commitments oversubscribe; broker in-flight execution cannot be locally blocked.",
+      "expected": "Reserve remaining limit/stop-limit buys using execution bound, including outstanding fees, and atomically prevent competing commitments.",
+      "evidence": [
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 321,
+          "line_end": 358,
+          "excerpt": "        estimated = cents(order_qty * price)\n        fee = cents(Decimal(str(policy[\"fees_per_order\"]))) if Decimal(data.get(\"filled_quantity\", \"0\")) == 0 else 0\n        other_cash = sum(r[\"reserved_cents\"] for r in active)\n        # Existing short liabilities may be closed even when cash has deteriorated.\n        if data[\"side\"] == \"buy\" and not (reducing and qty < 0) and book[\"cash_cents\"] - other_cash < estimated + fee:\n            raise DeskError(\"Insufficient unreserved cash in this independent book\")\n        if not reducing:\n            # Reserve exposure as well as cash: separate pending short entries\n            # must not evade operator caps merely because they generate proceeds.\n            pending_by_symbol = {}\n            for pending in active:\n                if pending[\"parent_id\"]:\n                    continue\n                p = self._position(con, book[\"id\"], pending[\"symbol\"])\n                held = Decimal(p[\"quantity\"]) if p else Decimal(0)\n                remaining = Decimal(pending[\"quantity\"]) - Decimal(pending[\"filled_quantity\"])\n                if self._risk_reducing(held, pending[\"side\"], remaining):\n                    continue\n                pending_by_symbol.setdefault(pending[\"symbol\"], [Decimal(0), Decimal(0)])\n                pending_by_symbol[pending[\"symbol\"]][0 if pending[\"side\"] == \"buy\" else 1] += remaining\n            pending_by_symbol.setdefault(data[\"symbol\"], [Decimal(0), Decimal(0)])[0 if data[\"side\"] == \"buy\" else 1] += order_qty\n            bounds = pending_by_symbol[data[\"symbol\"]]\n            projected_value = max(abs(cents((qty + bounds[0]) * price)), abs(cents((qty - bounds[1]) * price)))\n            if policy[\"symbol_exposure_cap\"] is not None and projected_value > cents(Decimal(str(policy[\"symbol_exposure_cap\"]))):\n                raise DeskError(\"Operator symbol exposure cap would be exceeded\")\n            gross = 0\n            all_symbols = {p[\"symbol\"] for p in positions} | set(pending_by_symbol)\n            for sym in all_symbols:\n                held_pos = self._position(con, book[\"id\"], sym)\n                held_qty = Decimal(held_pos[\"quantity\"]) if held_pos else Decimal(0)\n                observed = price if sym == data[\"symbol\"] else Decimal(self._raw_quote(con, sym, datetime.now(UTC))[\"price\"])\n                positive, negative = pending_by_symbol.get(sym, [Decimal(0), Decimal(0)])\n                gross += max(abs(cents((held_qty + positive) * observed)), abs(cents((held_qty - negative) * observed)))\n            if policy[\"gross_exposure_cap\"] is not None and gross > cents(Decimal(str(policy[\"gross_exposure_cap\"]))):\n                raise DeskError(\"Operator gross exposure cap would be exceeded\")\n        reserve_cash = estimated + fee if data[\"side\"] == \"buy\" and not (reducing and qty < 0) else 0\n        reserve_qty = min(order_qty, abs(qty)) if reducing else Decimal(0)\n        return reserve_cash, reserve_qty"
+        },
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 484,
+          "line_end": 489,
+          "excerpt": "        filled = Decimal(intent[\"filled_quantity\"]) + quantity\n        remaining = Decimal(intent[\"quantity\"]) - filled\n        status = \"filled\" if remaining <= 0 else \"partially_filled\"\n        reserve_cash = cents(remaining * price) if intent[\"side\"] == \"buy\" and new_qty >= 0 else 0\n        reserve_qty = min(remaining, abs(new_qty)) if self._risk_reducing(new_qty, intent[\"side\"], remaining) else Decimal(0)\n        con.execute(\"UPDATE p_intents SET filled_quantity=?,filled_notional_cents=filled_notional_cents+?,fees_cents=fees_cents+?,status=?,reserved_cents=?,reserved_quantity=?,completed_at=?,updated_at=?,error=NULL WHERE id=?\", (str(filled), notional, fee, status, reserve_cash, str(reserve_qty), clock.isoformat() if status == \"filled\" else None, clock.isoformat(), intent[\"id\"]))"
+        }
+      ],
+      "probe_result": {
+        "after_partial": {
+          "positions": [
+            {
+              "symbol": "AAPL",
+              "quantity": 10.0,
+              "source": "local_simulation",
+              "locked": false
+            }
+          ],
+          "intents": [
+            {
+              "client_id": "limit",
+              "side": "buy",
+              "quantity": 100.0,
+              "filled_quantity": 10.0,
+              "status": "partially_filled",
+              "parent_id": null,
+              "reserved": 720.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 920.0,
+            "equity": 1000.0,
+            "market_value": 80.0,
+            "gross_exposure": 80.0,
+            "reserved_cash": 720.0,
+            "available_cash": 200.0,
+            "realized_pnl": 0.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0
+          }
+        },
+        "after_extra": {
+          "positions": [
+            {
+              "symbol": "AAPL",
+              "quantity": 10.0,
+              "source": "local_simulation",
+              "locked": false
+            }
+          ],
+          "intents": [
+            {
+              "client_id": "additional",
+              "side": "buy",
+              "quantity": 20.0,
+              "filled_quantity": 0.0,
+              "status": "queued",
+              "parent_id": null,
+              "reserved": 160.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            },
+            {
+              "client_id": "limit",
+              "side": "buy",
+              "quantity": 100.0,
+              "filled_quantity": 10.0,
+              "status": "partially_filled",
+              "parent_id": null,
+              "reserved": 720.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 920.0,
+            "equity": 1000.0,
+            "market_value": 80.0,
+            "gross_exposure": 80.0,
+            "reserved_cash": 880.0,
+            "available_cash": 40.0,
+            "realized_pnl": 0.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0
+          }
+        },
+        "extra_intent": "d2581aa5108b415984a4ec2696350c84",
+        "expected_remaining_limit_reservation": 900
+      },
+      "reproduction_case": "partial_limit_reservation",
+      "fix_verification": {
+        "id": "T04",
+        "passed": true,
+        "observed": {
+          "remaining_reserve": 900.0,
+          "extra_commitment_rejected": true
+        }
+      }
+    },
+    {
+      "id": "T05",
+      "severity": "high",
+      "title": "Adopted broker protection reserves no shares",
+      "status": "repaired and independently verified on source SHA 08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+      "trigger": "Observe filled buy10 and two accepted broker TP/SL sell10 legs; reconcile, then authorize an unrelated manual sell10.",
+      "observed": "Both protective child intents reserved_quantity0; additional sell10 accepted against same holdings.",
+      "expected": "Reserve shared OCO liability once per group using actual remaining exposure, distinguish held/active children and keep independent exits from double-committing shares.",
+      "evidence": [
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 306,
+          "line_end": 320,
+          "excerpt": "        active = list(con.execute(\"SELECT * FROM p_intents WHERE book_id=? AND id!=? AND status IN ('queued','open','partially_filled','blocked','submitting','cancel_requested')\", (book[\"id\"], exclude or \"\")))\n        # Protective OCO siblings represent one liability, not duplicate share claims.\n        shares, seen_groups = Decimal(0), set()\n        for intent in active:\n            if intent[\"symbol\"] != data[\"symbol\"] or intent[\"side\"] != data[\"side\"]:\n                continue\n            if intent[\"oco_group\"]:\n                if intent[\"oco_group\"] in seen_groups or intent[\"oco_group\"] == data.get(\"oco_group\"):\n                    continue\n                seen_groups.add(intent[\"oco_group\"])\n            shares += Decimal(intent[\"reserved_quantity\"])\n        if data[\"side\"] == \"sell\" and qty > 0 and min(order_qty, qty) + shares > qty:\n            raise DeskError(\"Insufficient unreserved shares in this independent book\")\n        if data[\"side\"] == \"buy\" and qty < 0 and min(order_qty, -qty) + shares > -qty:\n            raise DeskError(\"Insufficient unreserved short shares to cover\")"
+        },
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 728,
+          "line_end": 750,
+          "excerpt": "    def _apply_remote_order(self, con, intent, remote, clock):\n        qty = Decimal(str(remote.get(\"filled_qty\") or \"0\"))\n        previous = Decimal(intent[\"filled_quantity\"])\n        if qty < previous or qty > Decimal(intent[\"quantity\"]):\n            raise DeskError(\"Broker cumulative fill quantity is inconsistent; saved ledger preserved\")\n        if qty > previous:\n            avg = Decimal(str(remote.get(\"filled_avg_price\") or \"0\"))\n            if not avg.is_finite() or avg <= 0:\n                raise DeskError(\"Broker fill has no valid cumulative execution price\")\n            cumulative_notional = cents(qty * avg)\n            delta_notional = cumulative_notional - intent[\"filled_notional_cents\"]\n            if delta_notional <= 0:\n                raise DeskError(\"Broker cumulative notional is inconsistent\")\n            delta_qty = qty - previous\n            actual_delta_price = Decimal(delta_notional) / 100 / delta_qty\n            observed_timestamp = remote.get(\"filled_at\") or remote.get(\"updated_at\")\n            observed_timestamp = timestamp(observed_timestamp, \"broker fill timestamp\") if observed_timestamp else None\n            self._fill(con, intent, delta_qty, delta_notional, actual_delta_price, 0, clock, intent[\"id\"] + \":broker:\" + str(qty.normalize()), \"Alpaca PAPER cumulative fill delta\", source_timestamp=observed_timestamp)\n        remote_status = str(remote.get(\"status\", \"unknown\"))\n        status = {\"filled\": \"filled\", \"partially_filled\": \"partially_filled\", \"canceled\": \"cancelled\", \"cancelled\": \"cancelled\", \"expired\": \"expired\", \"rejected\": \"rejected\", \"pending_cancel\": \"cancel_requested\"}.get(remote_status, \"partially_filled\" if qty else \"open\")\n        if intent[\"status\"] == \"cancel_requested\" and status not in TERMINAL:\n            status = \"cancel_requested\"\n        con.execute(\"UPDATE p_intents SET broker_id=?,broker_status=?,status=?,updated_at=?,completed_at=CASE WHEN ? THEN ? ELSE completed_at END,reserved_cents=CASE WHEN ? THEN 0 ELSE reserved_cents END,reserved_quantity=CASE WHEN ? THEN '0' ELSE reserved_quantity END,error=NULL WHERE id=?\", (str(remote.get(\"id\", intent[\"broker_id\"] or \"\")), remote_status, status, clock.isoformat(), status in TERMINAL, clock.isoformat(), status in TERMINAL, status in TERMINAL, intent[\"id\"]))"
+        },
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 752,
+          "line_end": 763,
+          "excerpt": "    def _adopt_order(self, con, book, remote, clock, parent=None):\n        client = str(remote.get(\"client_order_id\") or \"\")\n        rid = identifier()\n        qty = decimal(remote.get(\"qty\"), \"broker order quantity\")\n        side = remote.get(\"side\")\n        if side not in {\"buy\", \"sell\"}:\n            raise DeskError(\"Broker order side is invalid\")\n        data = {\"id\": rid, \"book_id\": book[\"id\"], \"client_id\": \"adopted_\" + str(remote[\"id\"]), \"payload_hash\": hashlib.sha256(dump(remote).encode()).hexdigest(), \"symbol\": symbol(remote[\"symbol\"]), \"side\": side, \"quantity\": str(qty), \"order_type\": remote.get(\"type\", \"market\"), \"time_in_force\": remote.get(\"time_in_force\", \"day\"), \"limit_price\": str(remote[\"limit_price\"]) if remote.get(\"limit_price\") is not None else None, \"stop_price\": str(remote[\"stop_price\"]) if remote.get(\"stop_price\") is not None else None, \"status\": \"open\", \"broker_id\": str(remote[\"id\"]), \"broker_client_id\": client or \"adopted_\" + str(remote[\"id\"]), \"created_at\": timestamp(remote.get(\"submitted_at\"), \"broker submitted_at\") or clock.isoformat(), \"updated_at\": clock.isoformat(), \"submitted_at\": timestamp(remote.get(\"submitted_at\"), \"broker submitted_at\"), \"policy_version\": book[\"policy_version\"], \"reason\": \"Adopted an existing Aster-prefixed broker order; originating local receipt is unavailable\", \"source\": \"broker_orphan\" if parent is None else \"broker_protection\", \"parent_id\": parent[\"id\"] if parent else None, \"oco_group\": parent[\"id\"] if parent else None}\n        columns = list(data)\n        con.execute(f\"INSERT INTO p_intents({','.join(columns)}) VALUES({','.join('?' for _ in columns)})\", list(data.values()))\n        self.store.event(con, \"paper_broker_orphan_adopted\", \"accountant\", \"Adopted an owned broker order using its source identity; no invented sleeve\", {\"intent_id\": rid, \"broker_id\": remote[\"id\"], \"book_id\": book[\"id\"], \"source\": data[\"source\"]})\n        return con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone()"
+        }
+      ],
+      "probe_result": {
+        "before_manual_exit": {
+          "positions": [
+            {
+              "symbol": "AAPL",
+              "quantity": 10.0,
+              "source": "broker_owned",
+              "locked": false
+            }
+          ],
+          "intents": [
+            {
+              "client_id": "adopted_take-profit",
+              "side": "sell",
+              "quantity": 10.0,
+              "filled_quantity": 0.0,
+              "status": "open",
+              "parent_id": "b4c7cbccba05493b9f859c90c34961df",
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            },
+            {
+              "client_id": "adopted_stop",
+              "side": "sell",
+              "quantity": 10.0,
+              "filled_quantity": 0.0,
+              "status": "open",
+              "parent_id": "b4c7cbccba05493b9f859c90c34961df",
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            },
+            {
+              "client_id": "bracket",
+              "side": "buy",
+              "quantity": 10.0,
+              "filled_quantity": 10.0,
+              "status": "filled",
+              "parent_id": null,
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 900.0,
+            "equity": 1000.0,
+            "market_value": 100.0,
+            "gross_exposure": 100.0,
+            "reserved_cash": 0.0,
+            "available_cash": 900.0,
+            "realized_pnl": 0.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0,
+            "broker_reported_equity": 900.0,
+            "broker_observed_at": "2026-10-08T06:11:23.125913+00:00"
+          }
+        },
+        "after_manual_exit": {
+          "positions": [
+            {
+              "symbol": "AAPL",
+              "quantity": 10.0,
+              "source": "broker_owned",
+              "locked": false
+            }
+          ],
+          "intents": [
+            {
+              "client_id": "manual-exit",
+              "side": "sell",
+              "quantity": 10.0,
+              "filled_quantity": 0.0,
+              "status": "queued",
+              "parent_id": null,
+              "reserved": 0.0,
+              "reserved_quantity": 10.0,
+              "error": null
+            },
+            {
+              "client_id": "adopted_take-profit",
+              "side": "sell",
+              "quantity": 10.0,
+              "filled_quantity": 0.0,
+              "status": "open",
+              "parent_id": "b4c7cbccba05493b9f859c90c34961df",
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            },
+            {
+              "client_id": "adopted_stop",
+              "side": "sell",
+              "quantity": 10.0,
+              "filled_quantity": 0.0,
+              "status": "open",
+              "parent_id": "b4c7cbccba05493b9f859c90c34961df",
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            },
+            {
+              "client_id": "bracket",
+              "side": "buy",
+              "quantity": 10.0,
+              "filled_quantity": 10.0,
+              "status": "filled",
+              "parent_id": null,
+              "reserved": 0.0,
+              "reserved_quantity": 0.0,
+              "error": null
+            }
+          ],
+          "account": {
+            "currency": "USD",
+            "cash": 900.0,
+            "equity": 1000.0,
+            "market_value": 100.0,
+            "gross_exposure": 100.0,
+            "reserved_cash": 0.0,
+            "available_cash": 900.0,
+            "realized_pnl": 0.0,
+            "unrealized_pnl": 0.0,
+            "fees": 0.0,
+            "missing_marks": 0,
+            "stale_marks": 0,
+            "drawdown_percent": 0.0,
+            "broker_reported_equity": 900.0,
+            "broker_observed_at": "2026-10-08T06:11:23.125913+00:00"
+          }
+        },
+        "extra_intent": "e7054eb643fa4a19adfd59bf1c088363"
+      },
+      "reproduction_case": "broker_protection_unreserved",
+      "fix_verification": {
+        "id": "T05",
+        "passed": true,
+        "observed": {
+          "oco_leg_reservations": [
+            10.0,
+            10.0
+          ],
+          "competing_exit_rejected": true
+        }
+      }
+    },
+    {
+      "id": "T06",
+      "severity": "high",
+      "title": "Oldest 200 active entries starve protective exits",
+      "status": "repaired and independently verified on source SHA 08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+      "trigger": "Authorize protected buy10(stop9) before200waiting buy-limit1 intents. First pass fills parent/creates stop. Observe8 and run two passes.",
+      "observed": "Both passes fill0; long10 remains; stop stays open. Old200limits retain selection indefinitely.",
+      "expected": "Priority/fair draining must service cancellations, protection and risk reductions independently of blocked or resting entries, with bounded work and no starvation.",
+      "evidence": [
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 579,
+          "line_end": 585,
+          "excerpt": "        with self.store.connect() as con:\n            ids = [r[0] for r in con.execute(\"SELECT id FROM p_intents WHERE status IN ('queued','open','partially_filled','blocked','submitting','cancel_requested') ORDER BY created_at LIMIT 200\")]\n        for rid in ids:\n            with self.store.transaction() as con:\n                intent = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone()\n                if not intent or intent[\"status\"] not in ACTIVE:\n                    continue"
+        },
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 499,
+          "line_end": 509,
+          "excerpt": "    def _create_protection(self, con, parent, qty, fill_id, book, clock):\n        group = parent[\"id\"] + \":\" + fill_id\n        side = \"sell\" if parent[\"side\"] == \"buy\" else \"buy\"\n        for kind, key in ((\"limit\", \"take_profit\"), (\"stop\", \"stop_loss\")):\n            if not parent[key]:\n                continue\n            rid, ts = identifier(), clock.isoformat()\n            data = {\"id\": rid, \"book_id\": book[\"id\"], \"client_id\": \"protect_\" + rid, \"payload_hash\": hashlib.sha256(group.encode()).hexdigest(), \"symbol\": parent[\"symbol\"], \"side\": side, \"quantity\": str(qty), \"order_type\": kind, \"time_in_force\": \"gtc\", \"limit_price\": parent[key] if kind == \"limit\" else None, \"stop_price\": parent[key] if kind == \"stop\" else None, \"status\": \"open\", \"reserved_quantity\": str(qty), \"parent_id\": parent[\"id\"], \"oco_group\": group, \"broker_client_id\": \"aster_\" + rid, \"created_at\": ts, \"updated_at\": ts, \"policy_version\": book[\"policy_version\"], \"sleeve\": parent[\"sleeve\"], \"reason\": \"Explicit operator-defined protective \" + key, \"source\": \"operator_protection\"}\n            columns = list(data)\n            con.execute(f\"INSERT INTO p_intents({','.join(columns)}) VALUES({','.join('?' for _ in columns)})\", list(data.values()))\n            self.store.event(con, \"protective_order_created\", \"execution_clerk\", \"Created persistent protection using the operator's explicit price\", {\"intent_id\": rid, \"parent_id\": parent[\"id\"], \"oco_group\": group, \"price\": number(parent[key]), \"quantity\": number(qty), \"order_type\": kind})"
+        }
+      ],
+      "probe_result": {
+        "fills_at_stop": [
+          0,
+          0
+        ],
+        "position_qty": 10.0,
+        "stop_intents": [
+          {
+            "side": "sell",
+            "quantity": 10.0,
+            "status": "open",
+            "stop_price": 9.0
+          }
+        ],
+        "active_count": 201
+      },
+      "reproduction_case": "protection_starvation",
+      "fix_verification": {
+        "id": "T06",
+        "passed": true,
+        "observed": {
+          "protective_exit_fills": 1,
+          "remaining_positions": 0,
+          "waiting_entries": 200
+        }
+      }
+    },
+    {
+      "id": "T07",
+      "severity": "high",
+      "title": "Slow identity lookup crosses expiry before broker send",
+      "status": "repaired and independently verified on source SHA 08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+      "trigger": "Use actual wall clock; expiry30ms ahead; fake get_order takes70ms then returns not found.",
+      "observed": "One submit after expiry; intent ends open. Single pass clock/window predates transport lookup.",
+      "expected": "Refresh real clock/calendar and revalidate quote, intent lifecycle and policy immediately before local fill/broker send and between intents; preserve explicitly injected test clocks.",
+      "evidence": [
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 571,
+          "line_end": 576,
+          "excerpt": "    def process(self, providers, clock=None):\n        clock = clock_time(clock)\n        result = {\"processed\": 0, \"fills\": 0, \"submitted\": 0, \"errors\": []}\n        try:\n            calendar = providers.calendar(clock)\n        except Exception:"
+        },
+        {
+          "path": "backend/trading.py",
+          "snapshot_path": "/tmp/aster-trading-initial-review-source.py",
+          "snapshot_sha256": "988c97efacfff8ab402b8b40d33e0c9df6d1b55b1f6030a293ada771c167872c",
+          "line_start": 675,
+          "line_end": 713,
+          "excerpt": "            try:\n                truth = con.execute(\"SELECT observed_at FROM p_broker_truth WHERE book_id=?\", (book[\"id\"],)).fetchone()\n                if not truth or (clock - datetime.fromisoformat(truth[0])).total_seconds() > self.store.settings(con)[\"quote_max_age_seconds\"]:\n                    raise DeskError(\"A recent successful complete broker reconciliation is required before transport\")\n                original_calendar = providers.calendar(datetime.fromisoformat(intent[\"not_before\"] or intent[\"created_at\"])) if intent[\"session_close\"] is None and intent[\"time_in_force\"] != \"gtc\" else None\n                if not cancelling and not self._window(con, intent, calendar, clock, broker=True, initial_calendar=original_calendar):\n                    return\n                if not cancelling:\n                    quote = self._raw_quote(con, intent[\"symbol\"], clock)\n                    self._validate_capacity(con, book, dict(intent), Decimal(intent[\"limit_price\"] or quote[\"price\"]), rid)\n            except DeskError as exc:\n                self._block(con, intent, exc.detail, clock)\n                return\n            data = dict(intent)\n            # Persist submission identity before any request can leave this process.\n            if not cancelling:\n                con.execute(\"UPDATE p_intents SET status='submitting',submitted_at=COALESCE(submitted_at,?),updated_at=? WHERE id=?\", (clock.isoformat(), clock.isoformat(), rid))\n        try:\n            # Lookup occurs before every first send/retry. Failure never authorizes resend.\n            existing = None if resolved_missing else broker.get_order(client_id=data[\"broker_client_id\"])\n            if cancelling:\n                if existing:\n                    broker.cancel(existing[\"id\"])\n                    with self.store.transaction() as con:\n                        con.execute(\"UPDATE p_intents SET broker_id=?,broker_status='pending_cancel',updated_at=? WHERE id=?\", (existing[\"id\"], clock.isoformat(), rid))\n                else:\n                    with self.store.transaction() as con:\n                        current = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone()\n                        self._terminal(con, current, \"cancelled\", \"Broker confirmed client identity was not submitted\", clock)\n                return\n            remote = existing\n            if remote is None:\n                with self.store.transaction() as con:\n                    current = con.execute(\"SELECT * FROM p_intents WHERE id=?\", (rid,)).fetchone()\n                    if current[\"status\"] == \"cancel_requested\":\n                        self._terminal(con, current, \"cancelled\", \"Operator cancelled before paper-broker transport\", clock)\n                        return\n                submission = {**data, \"client_id\": data[\"broker_client_id\"], \"quantity\": number(data[\"quantity\"])}\n                remote = broker.submit(submission)"
+        }
+      ],
+      "probe_result": {
+        "submits": 1,
+        "expired_at_submit": true,
+        "status": "open"
+      },
+      "reproduction_case": "clock_stale_after_lookup",
+      "fix_verification": {
+        "id": "T07",
+        "passed": true,
+        "observed": [
+          {
+            "explicit_clock": false,
+            "submits": 0,
+            "status": "expired"
+          },
+          {
+            "explicit_clock": true,
+            "submits": 1,
+            "status": "open"
+          }
+        ]
+      }
+    }
+  ],
+  "confirmed_guarantees_from_read_source": [
+    "Separate p_ tables and per-book transaction-scoped cash/position mutations preserve legacy manual book isolation.",
+    "Funding and client intent identities check payload mismatch under BEGIN IMMEDIATE.",
+    "Local fills maintain signed average cost, measured realized P&L, integer cents, unique fill keys and atomic event/equity changes.",
+    "Broker paths persist stable identity before send and recover ambiguous transport by client identity; acceptance alone is not a fill.",
+    "Broker cumulative deltas are unique and complete reconciliation writes rollback on read/shape failure; independent local funding/fill replay detects drift.",
+    "Versioned operator policies and empty strategy registry remain separate from research/inbox outputs.",
+    "Observed external positions/orders lock symbols; named broker book/account binding and duplicate account-identity checks prevent basic cross-account merging."
+  ],
+  "static_scope_limits": [
+    "Confirmed source guarantees are bounded to read code and tested cases; they are not exhaustive behavioral proof.",
+    "Broker cumulative average fill receipts do not reconstruct exchange fill-level chronology; unobserved fees are zero observed fees, not proved zero commissions.",
+    "Sequential account/positions/orders reads are not an atomic exchange snapshot; provider timestamps/consistency checks remain material.",
+    "Model provider, off-host liveness and real Alpaca order transport were not exercised.",
+    "Independent probes verify reported repairs; this remains bounded paper-simulation/fake-provider verification, not a real brokerage transport or exhaustive behavioral certification."
+  ],
+  "fix_verification": {
+    "status": "all seven confirmed baseline findings independently verified repaired on pinned source snapshot",
+    "source_sha256": "08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+    "source_lines": 1083,
+    "current_working_source_matches_verified_snapshot": true,
+    "cases": [
+      {
+        "id": "T01",
+        "passed": true,
+        "observed": [
+          {
+            "cover_quantity": 10,
+            "protection_quantity": [],
+            "end_position_count": 0
+          },
+          {
+            "cover_quantity": 15,
+            "protection_quantity": [
+              5.0,
+              5.0
+            ],
+            "end_position_count": 0
+          }
+        ]
+      },
+      {
+        "id": "T02",
+        "passed": true,
+        "observed": {
+          "cancels": 1,
+          "reserve_until_cancel_receipt": 100.0
+        }
+      },
+      {
+        "id": "T03",
+        "passed": true,
+        "observed": [
+          {
+            "failure": "read",
+            "cancels": 1
+          },
+          {
+            "failure": "adapter",
+            "cancels": 1
+          },
+          {
+            "failure": "calendar",
+            "cancels": 1
+          }
+        ]
+      },
+      {
+        "id": "T04",
+        "passed": true,
+        "observed": {
+          "remaining_reserve": 900.0,
+          "extra_commitment_rejected": true
+        }
+      },
+      {
+        "id": "T05",
+        "passed": true,
+        "observed": {
+          "oco_leg_reservations": [
+            10.0,
+            10.0
+          ],
+          "competing_exit_rejected": true
+        }
+      },
+      {
+        "id": "T06",
+        "passed": true,
+        "observed": {
+          "protective_exit_fills": 1,
+          "remaining_positions": 0,
+          "waiting_entries": 200
+        }
+      },
+      {
+        "id": "T07",
+        "passed": true,
+        "observed": [
+          {
+            "explicit_clock": false,
+            "submits": 0,
+            "status": "expired"
+          },
+          {
+            "explicit_clock": true,
+            "submits": 1,
+            "status": "open"
+          }
+        ]
+      }
+    ],
+    "probe_script": "/tmp/aster-trading-review-verify.py",
+    "results_path": "/tmp/aster-trading-review-verification.json",
+    "method": "Independent case-specific assertions against temporary databases and fake providers. T03 includes failed reads, missing adapter and failed calendar variants. T07 checks actual wall clock and stable explicit clock injection. No app code edits, network calls or default state writes."
+  },
+  "reviewed_fixed_source": {
+    "path": "/workspace/agentic-desk/backend/trading.py",
+    "snapshot_path": "/tmp/aster-trading-current-review-source.py",
+    "sha256": "08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+    "line_count": 1083,
+    "coverage": "Complete initial 933-line body plus all repair/addition diff hunks read; source changes inspected and seven isolated edge-case families independently verified.",
+    "functions": [
+      {
+        "name": "decimal",
+        "line_start": 25,
+        "line_end": 32
+      },
+      {
+        "name": "timestamp",
+        "line_start": 35,
+        "line_end": 44
+      },
+      {
+        "name": "clock_time",
+        "line_start": 47,
+        "line_end": 50
+      },
+      {
+        "name": "dump",
+        "line_start": 53,
+        "line_end": 54
+      },
+      {
+        "name": "__init__",
+        "line_start": 58,
+        "line_end": 85
+      },
+      {
+        "name": "_create_book",
+        "line_start": 87,
+        "line_end": 95
+      },
+      {
+        "name": "_book",
+        "line_start": 98,
+        "line_end": 102
+      },
+      {
+        "name": "create_book",
+        "line_start": 104,
+        "line_end": 123
+      },
+      {
+        "name": "fund_book",
+        "line_start": 125,
+        "line_end": 146
+      },
+      {
+        "name": "set_book",
+        "line_start": 148,
+        "line_end": 189
+      },
+      {
+        "name": "_normalize_intent",
+        "line_start": 191,
+        "line_end": 228
+      },
+      {
+        "name": "_raw_quote",
+        "line_start": 230,
+        "line_end": 240
+      },
+      {
+        "name": "_position",
+        "line_start": 243,
+        "line_end": 244
+      },
+      {
+        "name": "_risk_reducing",
+        "line_start": 247,
+        "line_end": 248
+      },
+      {
+        "name": "_account",
+        "line_start": 250,
+        "line_end": 284
+      },
+      {
+        "name": "_validate_capacity",
+        "line_start": 286,
+        "line_end": 359
+      },
+      {
+        "name": "submit_intent",
+        "line_start": 361,
+        "line_end": 396
+      },
+      {
+        "name": "_intent_public",
+        "line_start": 399,
+        "line_end": 406
+      },
+      {
+        "name": "cancel_intent",
+        "line_start": 408,
+        "line_end": 419
+      },
+      {
+        "name": "_equity_snapshot",
+        "line_start": 421,
+        "line_end": 428
+      },
+      {
+        "name": "snapshot",
+        "line_start": 430,
+        "line_end": 446
+      },
+      {
+        "name": "_performance",
+        "line_start": 448,
+        "line_end": 460
+      },
+      {
+        "name": "_fill",
+        "line_start": 462,
+        "line_end": 508
+      },
+      {
+        "name": "_create_protection",
+        "line_start": 510,
+        "line_end": 520
+      },
+      {
+        "name": "_oco_after_fill",
+        "line_start": 522,
+        "line_end": 532
+      },
+      {
+        "name": "_terminal",
+        "line_start": 534,
+        "line_end": 536
+      },
+      {
+        "name": "_block",
+        "line_start": 538,
+        "line_end": 542
+      },
+      {
+        "name": "_window",
+        "line_start": 544,
+        "line_end": 581
+      },
+      {
+        "name": "_service_ids",
+        "line_start": 583,
+        "line_end": 611
+      },
+      {
+        "name": "process",
+        "line_start": 613,
+        "line_end": 694
+      },
+      {
+        "name": "_accepted_cancel_reason",
+        "line_start": 696,
+        "line_end": 720
+      },
+      {
+        "name": "_process_broker",
+        "line_start": 722,
+        "line_end": 859
+      },
+      {
+        "name": "_apply_remote_order",
+        "line_start": 861,
+        "line_end": 890
+      },
+      {
+        "name": "_adopt_order",
+        "line_start": 892,
+        "line_end": 903
+      },
+      {
+        "name": "reconcile",
+        "line_start": 905,
+        "line_end": 1030
+      },
+      {
+        "name": "_broker_for",
+        "line_start": 1033,
+        "line_end": 1037
+      },
+      {
+        "name": "_reconcile_local",
+        "line_start": 1039,
+        "line_end": 1083
+      }
+    ]
+  },
+  "verification_history": [
+    {
+      "status": "all seven confirmed baseline findings independently verified repaired on pinned source snapshot",
+      "source_sha256": "08ae3381a453e88a85516ddc26955ea73467dbbe855fbaf3e71db6181c41fc8b",
+      "source_lines": 1083,
+      "current_working_source_matches_verified_snapshot": true,
+      "cases": [
+        {
+          "id": "T01",
+          "passed": true,
+          "observed": [
+            {
+              "cover_quantity": 10,
+              "protection_quantity": [],
+              "end_position_count": 0
+            },
+            {
+              "cover_quantity": 15,
+              "protection_quantity": [
+                5.0,
+                5.0
+              ],
+              "end_position_count": 0
+            }
+          ]
+        },
+        {
+          "id": "T02",
+          "passed": true,
+          "observed": {
+            "cancels": 1,
+            "reserve_until_cancel_receipt": 100.0
+          }
+        },
+        {
+          "id": "T03",
+          "passed": true,
+          "observed": [
+            {
+              "failure": "read",
+              "cancels": 1
+            },
+            {
+              "failure": "adapter",
+              "cancels": 1
+            },
+            {
+              "failure": "calendar",
+              "cancels": 1
+            }
+          ]
+        },
+        {
+          "id": "T04",
+          "passed": true,
+          "observed": {
+            "remaining_reserve": 900.0,
+            "extra_commitment_rejected": true
+          }
+        },
+        {
+          "id": "T05",
+          "passed": true,
+          "observed": {
+            "oco_leg_reservations": [
+              10.0,
+              10.0
+            ],
+            "competing_exit_rejected": true
+          }
+        },
+        {
+          "id": "T06",
+          "passed": true,
+          "observed": {
+            "protective_exit_fills": 1,
+            "remaining_positions": 0,
+            "waiting_entries": 200
+          }
+        },
+        {
+          "id": "T07",
+          "passed": true,
+          "observed": [
+            {
+              "explicit_clock": false,
+              "submits": 0,
+              "status": "expired"
+            },
+            {
+              "explicit_clock": true,
+              "submits": 1,
+              "status": "open"
+            }
+          ]
+        }
+      ],
+      "probe_script": "/tmp/aster-trading-review-verify.py",
+      "results_path": "/tmp/aster-trading-review-verification.json",
+      "method": "Independent case-specific assertions against temporary databases and fake providers. T03 includes failed reads, missing adapter and failed calendar variants. T07 checks actual wall clock and stable explicit clock injection. No app code edits, network calls or default state writes."
+    }
+  ],
+  "owner_test_report": {
+    "reporter": "/root/desk_backend",
+    "evidence_class": "owner-reported test result; independent review separately ran the seven recorded probe families",
+    "full_suite_passed": 141,
+    "trading_tests_passed": 48,
+    "coverage_reported": [
+      "All seven reported defects",
+      "Partial cover/flip closing-share and remaining-cash reservations",
+      "Calendar-independent cancellation and identity recovery",
+      "Missing-adapter cancellation persistence",
+      "Round-robin restart fairness"
+    ],
+    "real_broker_calls": false
+  }
+}

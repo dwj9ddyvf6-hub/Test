@@ -1,0 +1,521 @@
+{
+  "repo": "Femto",
+  "review_kind": "read-only published infrastructure review",
+  "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+  "scope": [
+    "static publication",
+    "browser runtime",
+    "feed contract",
+    "operator controls",
+    "state and ledger projections",
+    "paper accounting display"
+  ],
+  "excluded": [
+    "strategy evaluation",
+    "security audit",
+    "production interactions",
+    "tests",
+    "source modifications"
+  ],
+  "snapshot_scope": {
+    "branches": [
+      {
+        "branch": "main",
+        "sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d"
+      }
+    ],
+    "tags": 0,
+    "releases": 0,
+    "tracked_files": [
+      "docs/desk-terminal-feed.json",
+      "docs/desk-terminal-live/index.html",
+      "docs/desk-terminal/index.html"
+    ],
+    "agents_md_found": false
+  },
+  "summary": "Femto is a deployed static dashboard for an external paper desk. It implements feed polling, snapshot fallback, freshness labels and read-only observability, not agents, durable task orchestration, order handling or authoritative bookkeeping.",
+  "publication_evidence": {
+    "saved_github_metadata": {
+      "has_pages": true,
+      "workflow": "pages-build-deployment",
+      "latest_run_id": 37678481631,
+      "run_url": "https://github.com/dwj9ddyvf6-hub/Femto/actions/runs/37678481631",
+      "head_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+      "conclusion": "success",
+      "updated_at": "2026-10-07T19:58:49Z"
+    },
+    "interpretation": "Saved metadata supports publication of this commit by GitHub Pages. No current remote service observation was performed."
+  },
+  "architecture_patterns": [
+    {
+      "id": "static-publication",
+      "pattern": "Static publication of an external paper desk",
+      "finding": "The complete current tracked tree contains two HTML terminals and one JSON feed. There is no package, server, runner, task queue, agent configuration, broker adapter, writable state store or ledger producer in Femto. The browser application is runnable static presentation code; the trading system is external.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 89,
+          "line_end": 104,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L89-L104"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal/index.html",
+          "line_start": 339,
+          "line_end": 341,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal/index.html#L339-L341"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 3188,
+          "line_end": 3223,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L3188-L3223"
+        }
+      ]
+    },
+    {
+      "id": "dual-feed-clients",
+      "pattern": "Two views over the same published feed",
+      "finding": "The earlier terminal starts empty and polls raw.githubusercontent.com on main every 60 seconds. The newer terminal contains an embedded fallback snapshot and polls the GitHub Pages feed every 60 seconds. Neither fetch is pinned to a commit during operation.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal/index.html",
+          "line_start": 223,
+          "line_end": 231,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal/index.html#L223-L231"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal/index.html",
+          "line_start": 339,
+          "line_end": 341,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal/index.html#L339-L341"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal/index.html",
+          "line_start": 922,
+          "line_end": 935,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal/index.html#L922-L935"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 192,
+          "line_end": 194,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L192-L194"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5492,
+          "line_end": 5493,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5492-L5493"
+        }
+      ]
+    },
+    {
+      "id": "fallback-last-valid",
+      "pattern": "Embedded fallback and last-valid in-memory retention",
+      "finding": "The newer HTML embeds 2026-10-06 12:16 UTC data; the tracked JSON is newer, 2026-10-07 19:57 UTC. The initial renderer parses embedded JSON. Invalid or unreachable remote data leaves the existing presentation in place. Persistence is the checked-in snapshot plus current DOM/script memory; no browser state store or runtime ledger is implemented.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 192,
+          "line_end": 204,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L192-L204"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5177,
+          "line_end": 5181,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5177-L5181"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5558,
+          "line_end": 5565,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5558-L5565"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5570,
+          "line_end": 5588,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5570-L5588"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 1,
+          "line_end": 11,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L1-L11"
+        }
+      ]
+    },
+    {
+      "id": "feed-contract",
+      "pattern": "A shallow read contract rather than runtime reconciliation",
+      "finding": "The newer client checks object shape, presence of generated_at_utc, positive equity, positions.length equal to position_count and nonnegative gross exposure before refresh. It does not verify producer identity, individual mark age, order lifecycle, accounting reconciliation, agent health or engine hashes. This is a display intake check.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5520,
+          "line_end": 5528,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5520-L5528"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5572,
+          "line_end": 5581,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5572-L5581"
+        }
+      ]
+    },
+    {
+      "id": "freshness",
+      "pattern": "Publication freshness and market clock",
+      "finding": "The newer client labels LIVE when the feed timestamp is less than 15 minutes old and its weekday 09:30\u201316:00 ET clock is open. It labels closed, stale, invalid or offline states separately. This is publication age, not an execution heartbeat or exchange holiday calendar. The earlier UI labels every successful fetch LIVE regardless of timestamp age.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5492,
+          "line_end": 5493,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5492-L5493"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5505,
+          "line_end": 5511,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5505-L5511"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5535,
+          "line_end": 5541,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5535-L5541"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal/index.html",
+          "line_start": 908,
+          "line_end": 913,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal/index.html#L908-L913"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal/index.html",
+          "line_start": 922,
+          "line_end": 932,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal/index.html#L922-L932"
+        }
+      ]
+    },
+    {
+      "id": "refresh-replay",
+      "pattern": "Full presentation replay on newer snapshots",
+      "finding": "The newer client replaces embedded JSON and appends a copy of the application script to render the entire view again, then restores active tab and scroll position. It polls on visibility return and skips polls while hidden. There is no streaming event transport or server-side session. Chart range is reset to ALL by each application rerun.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5380,
+          "line_end": 5387,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5380-L5387"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5542,
+          "line_end": 5565,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5542-L5565"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5570,
+          "line_end": 5588,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5570-L5588"
+        }
+      ]
+    },
+    {
+      "id": "operator-read-model",
+      "pattern": "Read-only operator projection",
+      "finding": "PULSE exposes account metrics, exposure, kill-switch proximity and broker-snapshot positions. MODEL exposes sleeve state, engine metadata, recorded outcomes and review text. UNIVERSE exposes context. TAPE exposes signals, receipts and ledger tail. Controls are four presentation tabs, chart-range buttons and disclosure elements. There is no submit, cancel, approve, flatten, pause or agent-task control.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 99,
+          "line_end": 185,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L99-L185"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5380,
+          "line_end": 5387,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5380-L5387"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5483,
+          "line_end": 5486,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5483-L5486"
+        }
+      ]
+    },
+    {
+      "id": "reported-risk-state",
+      "pattern": "Risk controls are displayed, not operated",
+      "finding": "Kill-switch and gross-cap states arrive in the feed. The client draws proximity to a prior-day baseline and reports cap headroom and armed/tripped labels; it does not enforce a trading gate. A kill-switch status in this UI cannot be treated as a browser-operated emergency stop.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 18,
+          "line_end": 25,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L18-L25"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 3216,
+          "line_end": 3223,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L3216-L3223"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5321,
+          "line_end": 5321,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5321-L5321"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5363,
+          "line_end": 5368,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5363-L5368"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5421,
+          "line_end": 5428,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5421-L5428"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal/index.html",
+          "line_start": 887,
+          "line_end": 904,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal/index.html#L887-L904"
+        }
+      ]
+    },
+    {
+      "id": "state-and-journal-projection",
+      "pattern": "Sleeve state and journal views without task agents",
+      "finding": "The newer UI derives sleeve badges from positions, open_positions, pending buys/sells, enabled, armed and state_known. It displays a journal count, signal tape and ledger tail, plus nightly/weekly review excerpts. These are feed projections rather than durable task records: no task IDs, leases, agent assignments, retry states or write endpoints are implemented in Femto.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5441,
+          "line_end": 5451,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5441-L5451"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5458,
+          "line_end": 5458,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5458-L5458"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5479,
+          "line_end": 5483,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5479-L5483"
+        }
+      ]
+    },
+    {
+      "id": "metrics-projection",
+      "pattern": "Recorded accounting and observability, not independent bookkeeping",
+      "finding": "Position tables and P/L charts render provided marks. Sleeve P/L combines recorded closed receipts with current position unrealized values. Drawdown, win rate and profit factor are computed over the supplied curve and closed-trade board; the UI explicitly leaves Sharpe unavailable because observations are irregular. This is useful observability, not a general ledger or lifecycle reconstruction.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5323,
+          "line_end": 5329,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5323-L5329"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5370,
+          "line_end": 5377,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5370-L5377"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5431,
+          "line_end": 5452,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5431-L5452"
+        }
+      ]
+    },
+    {
+      "id": "engine-labels",
+      "pattern": "Engine provenance displayed as feed claims",
+      "finding": "The UI shows v625, byte_exact, last_snapshot_seen and drift fields from the snapshot. No engine bundle, byte comparison or hash verification exists in Femto. The production-signal heading describes the external desk, not an executable engine in this repository.",
+      "evidence": [
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-feed.json",
+          "line_start": 1280,
+          "line_end": 1284,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-feed.json#L1280-L1284"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 139,
+          "line_end": 144,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L139-L144"
+        },
+        {
+          "repo": "Femto",
+          "branch": "main",
+          "commit_sha": "8913e55f387062ba1546b714faa00e3db7e7ec1d",
+          "path": "docs/desk-terminal-live/index.html",
+          "line_start": 5455,
+          "line_end": 5455,
+          "url": "https://github.com/dwj9ddyvf6-hub/Femto/blob/8913e55f387062ba1546b714faa00e3db7e7ec1d/docs/desk-terminal-live/index.html#L5455-L5455"
+        }
+      ]
+    }
+  ],
+  "agent_capabilities": {
+    "implemented_here": [
+      "Fetch and render published desk snapshots",
+      "Retain an embedded or current in-memory snapshot when the remote feed fails",
+      "Display publication freshness, positions, pending sleeve summaries, signals, review excerpts and ledger tails",
+      "Navigate four terminal tabs and filter the displayed equity-curve range"
+    ],
+    "external_or_unavailable_here": [
+      "Create or schedule agent tasks",
+      "Persist operational decisions or append ledger events",
+      "Reconcile broker fills and balances",
+      "Submit, amend, cancel or flatten paper orders",
+      "Enforce exposure, protection or kill-switch gates",
+      "Recompute or verify engine outputs"
+    ]
+  },
+  "followup_source": "The sibling paper_infrastructure/femto_runtime review covers the published JSON accounting and order-state claims. Agentic-Trading-Desk and Author-desk are separate source counterparts; their runtime behavior must be established from their own pinned commits, not inferred from Femto labels.",
+  "verification": {
+    "method": "Static source and saved metadata inspection only",
+    "tests_run": false,
+    "remote_requests": false,
+    "source_modified": false,
+    "scope_limit": "No current deployment, external producer, broker account or execution heartbeat was observed."
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "passed": true,
+  "url": "http://127.0.0.1:8787",
+  "financial_state_preserved": {
+    "books": [
+      {
+        "id": "main",
+        "broker": "local",
+        "cash": 0.0
+      }
+    ],
+    "positions": 0,
+    "intents": 0,
+    "fills": 0
+  },
+  "strategies": 0,
+  "health": {
+    "worker": {
+      "alive": true,
+      "owns_lease": true,
+      "lease_active": true,
+      "last_tick_at": "2026-10-08T07:49:05.439415+00:00",
+      "error": null
+    },
+    "database": {
+      "status": "ok",
+      "journal_mode": "wal"
+    },
+    "reasoning": {
+      "provider": "local",
+      "configured": false,
+      "model": null,
+      "cognitive_roles": [],
+      "reachability": "not checked",
+      "last_success_at": null,
+      "last_error": null
+    },
+    "market_data": {
+      "connected": false,
+      "last_attempt_at": "2026-10-08T06:54:38.508738+00:00",
+      "last_error": null,
+      "last_success_at": "2026-10-08T06:54:38.508738+00:00",
+      "kind": "yahoo",
+      "configured": true,
+      "delayed": true,
+      "description": "Yahoo Finance public data; may be delayed"
+    },
+    "broker": {
+      "kind": "alpaca-paper",
+      "configured": false,
+      "connected": false,
+      "paper_only": true,
+      "accounts": [
+        {
+          "connection_id": "default",
+          "configured": false,
+          "connected": false,
+          "paper_only": true
+        }
+      ],
+      "connection_ids": []
+    },
+    "strategy_count": 0,
+    "manual_ledger": {
+      "market_data": "manual; no external feed",
+      "broker": "paper ledger; no live broker"
+    },
+    "autonomy": {
+      "running": true,
+      "refresh_seconds": 60,
+      "brief_seconds": 900,
+      "minimum_free_bytes": 10000000,
+      "heartbeat_at": "2026-10-08T07:49:04.978296+00:00",
+      "last_progress_at": "2026-10-08T07:49:04.978308+00:00",
+      "sqlite_status": "ok",
+      "disk_free_bytes": 4794470400,
+      "last_error": null,
+      "active_job_id": null,
+      "active_job_started_at": null,
+      "quote_coverage": {
+        "maximum_per_pass": 16,
+        "held_or_protective_symbols": 0,
+        "active_symbols": 0,
+        "observational_symbols": 0,
+        "selected_symbols": [],
+        "deferred_active_symbols": [],
+        "deferred_active_count": 0,
+        "capacity_limited": false,
+        "policy": "Held positions and active protection first, then active instructions; rotate only remaining capacity. Over-capacity tiers rotate with an explicit warning."
+      },
+      "last_cycle_at": "2026-10-08T07:48:29.538238+00:00",
+      "last_success_at": "2026-10-08T07:48:29.538238+00:00",
+      "session_catchup": {
+        "maximum_calendar_days_per_pass": 7,
+        "backlog": [],
+        "complete": true,
+        "scope": "Known schedules only; first observation establishes availability, expired windows are recorded without execution"
+      },
+      "journal_integrity": {
+        "status": "ok",
+        "checked_at": "2026-10-08T07:47:59.956064+00:00",
+        "verified_events": 57,
+        "last_verified_hash": "1f9166273d8b5f6677babcd52ac3d800bc59916a48406f79965bd4691ade215e",
+        "error_row": null,
+        "checkpoint_event_id": 57,
+        "checkpoint_hash": "1f9166273d8b5f6677babcd52ac3d800bc59916a48406f79965bd4691ade215e",
+        "latest_event_id": 58,
+        "latest_event_hash": "1699f847357bcff1af41717ae0ee0417e7ddd82fb16ea5da72b1c1f53b17496a",
+        "cached": true
+      },
+      "worker_alive": true,
+      "worker_stale": false,
+      "progress_stale": false,
+      "healthy": true,
+      "heartbeat_age_seconds": 0.585794,
+      "pending_jobs": 0,
+      "retrying_jobs": 0,
+      "failed_jobs": 0,
+      "providers": {
+        "market_data": {
+          "connected": false,
+          "last_attempt_at": "2026-10-08T06:54:38.508738+00:00",
+          "last_error": null,
+          "last_success_at": "2026-10-08T06:54:38.508738+00:00",
+          "kind": "yahoo",
+          "configured": true,
+          "delayed": true,
+          "description": "Yahoo Finance public data; may be delayed"
+        },
+        "broker": {
+          "kind": "alpaca-paper",
+          "configured": false,
+          "connected": false,
+          "paper_only": true,
+          "accounts": [
+            {
+              "connection_id": "default",
+              "configured": false,
+              "connected": false,
+              "paper_only": true
+            }
+          ],
+          "connection_ids": []
+        },
+        "historical_data": {
+          "primary": "yahoo",
+          "fallbacks": [
+            "stooq"
+          ],
+          "adapters": [
+            {
+              "connected": false,
+              "last_attempt_at": "2026-10-08T06:54:38.507809+00:00",
+              "last_error": null,
+              "last_success_at": "2026-10-08T06:54:38.507809+00:00",
+              "provider": "yahoo",
+              "configured": true,
+              "enabled": true,
+              "intervals": [
+                "15m",
+                "1d",
+                "1m",
+                "1mo",
+                "1wk",
+                "30m",
+                "5m",
+                "60m"
+              ],
+              "historical_only": false
+            },
+            {
+              "provider": "alpaca",
+              "configured": false,
+              "enabled": false,
+              "connected": false,
+              "intervals": [
+                "15m",
+                "1d",
+                "1m",
+                "1mo",
+                "1wk",
+                "30m",
+                "5m",
+                "60m"
+              ],
+              "historical_only": false
+            },
+            {
+              "provider": "stooq",
+              "configured": true,
+              "enabled": true,
+              "connected": false,
+              "intervals": [
+                "1d"
+              ],
+              "historical_only": true
+            }
+          ],
+          "daily_bars_are_executable_quotes": false
+        }
+      },
+      "calendar": {
+        "exchange": "XNYS",
+        "timezone": "America/New_York",
+        "timestamp": "2026-10-08T07:49:05.565118+00:00",
+        "date": "2026-10-08",
+        "is_session": true,
+        "is_open": false,
+        "session_date": "2026-10-08",
+        "open_at": "2026-10-08T13:30:00+00:00",
+        "close_at": "2026-10-08T20:00:00+00:00",
+        "previous_session": "2026-10-07",
+        "next_session": "2026-10-09",
+        "previous_open_at": "2026-10-07T13:30:00+00:00",
+        "previous_close_at": "2026-10-07T20:00:00+00:00",
+        "next_open_at": "2026-10-08T13:30:00+00:00",
+        "next_close_at": "2026-10-08T20:00:00+00:00",
+        "early_close": false,
+        "source": "exchange_calendars XNYS"
+      },
+      "reasoning": {
+        "provider": "local",
+        "configured": false,
+        "model": null,
+        "cognitive_roles": []
+      },
+      "automation": "deterministic operational workers; optional configured read-only models"
+    },
+    "journal_integrity": {
+      "status": "ok",
+      "checked_at": "2026-10-08T07:47:59.956064+00:00",
+      "verified_events": 57,
+      "last_verified_hash": "1f9166273d8b5f6677babcd52ac3d800bc59916a48406f79965bd4691ade215e",
+      "error_row": null,
+      "checkpoint_event_id": 57,
+      "checkpoint_hash": "1f9166273d8b5f6677babcd52ac3d800bc59916a48406f79965bd4691ade215e",
+      "latest_event_id": 58,
+      "latest_event_hash": "1699f847357bcff1af41717ae0ee0417e7ddd82fb16ea5da72b1c1f53b17496a",
+      "cached": true
+    }
+  },
+  "monitor": {
+    "healthy": true,
+    "problems": [],
+    "heartbeat_at": "2026-10-08T07:49:04.978296+00:00"
+  },
+  "repository_library": {
+    "configured": true,
+    "available": true
+  }
+}
