@@ -29,3 +29,7 @@ Two recovered rulebooks plus the recovered forward recipe engine, ported into th
 - `packages/ausar/ausar-archive-rulebooks/sleeves/fwd_alpaca_ada_rsi2.py`
 - `packages/ausar/ausar-archive-rulebooks/sleeves/fwd_alpaca_enj_iu_body.py`
 - `packages/ausar/ausar-archive-rulebooks/sleeves/fwd_alpaca_link_ai_volume.py`
+
+## Sanitization note
+
+This copy was sanitized at 1 point(s) to pass the public-repo privacy gate; the private original in dwj9ddyvf6-hub/codex-complete-archive (ported copies in the local femto-lean desk tree) is the verbatim source. (file: packages/ausar/ausar-archive-rulebooks/core/etf_feeds.py); This copy was sanitized at 7 point(s) to pass the public-repo privacy gate; the private original in dwj9ddyvf6-hub/codex-complete-archive (ported copies in the local femto-lean desk tree) is the verbatim source. (file: packages/ausar/ausar-archive-rulebooks/core/options_feeds.py); This copy was sanitized at 1 point(s) to pass the public-repo privacy gate; the private original in dwj9ddyvf6-hub/codex-complete-archive (ported copies in the local femto-lean desk tree) is the verbatim source. (file: packages/ausar/ausar-archive-rulebooks/core/crypto_feeds.py); This copy was sanitized at 1 point(s) to pass the public-repo privacy gate; the private original in dwj9ddyvf6-hub/codex-complete-archive (ported copies in the local femto-lean desk tree) is the verbatim source. (file: packages/ausar/ausar-archive-rulebooks/core/recipe_features.py)
