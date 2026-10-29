@@ -1,0 +1,229 @@
+--- femto-lean@7f2a996/sleeves/ts_momentum_decile.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/ts_momentum_decile.py
+@@ -23,14 +23,33 @@
+ The rank drops the forming bar (last bar dated >= session is excluded,
+ the old rank_decile point-in-time law).
+ 
++Master-desk restoration of the old runtime (the femto port emitted the
++diff on every call and sized off the prior close): the rebalance runs on
++the first trading day of the month (old cron dom 1-4 10:00 ET, self-gated
++on first-trading-day + once-per-month). The rank stages the diff at
++>= 10:00 once the genome carries the previous session (by 15:30 it ranks
++on what it has, never skipping the month); the next pass fills it: sells
++first (full qty, market, day), then buys — per_name = equity x 0.95 /
++N(sector-capped decile), qty = max(1, floor(per_name / ref)), ref = the
++fresh regular-hours mid (old: the topped-up cache's intraday close at
++10:00), else the last close; market, day. The rank sees what the old one
++saw: its fetch top-up kept 400 bars including today's partial (dropped),
++so the last 399 completed bars. Named divergence: the desk-wide earnings
++blackout (desk/earnings.py, Decision #8) is not applied — the cutover
++doctrine — like the 150% breaker, drawdown brake, context gate and
++Decision #75 the old fill path also called.
++
+ Inputs via context.extra:
+   "sleeve_state": {SYM: {"position": {"entry_px","entry_date","qty"} | None}}
++  "meta": the sleeve's stamps (pending, last_rank_month, filled_month)
++  "quotes": {SYM: {"bid","ask","t"}} for held and staged names
++  "nyse_holidays": ["YYYY-MM-DD", ...]
+ Bars: daily dicts {"t","o","h","l","c","v"} ascending, genome universe
+-(bars keys). Rebalance gating (first trading day / once per month) is
+-the Scheduler's; this function emits the rebalance diff whenever called.
++(bars keys), completed sessions.
+ """
+ import math
+-from datetime import datetime, timezone
++from datetime import date, datetime, timedelta, timezone
++from zoneinfo import ZoneInfo
+ 
+ from .compat import BaseSleeve, Intent, SleeveConfig
+ 
+@@ -41,6 +60,11 @@
+ EQUITY_UTIL = 0.95
+ NEW_ENTRIES_PAUSED = False  # was Decision #86's enforcer; park lifted by User 2026-10-14 21:54
+ SECTOR_CAP = 0.25
++FETCH_KEEP = 400          # old fetch_bars top-up keep (incl. today's partial bar, dropped by the rank)
++RANK_HM = (10, 0)         # old cron dom 1-4 10:00 ET
++LAST_CALL_HM = (15, 30)   # rank on whatever the genome carries rather than skip the month
++MIN_FRESH = 0.5           # share of ranked names that must carry the previous session
++ET = ZoneInfo("America/New_York")
+ 
+ # Verbatim from the old sleeve (strategic audit 2026-10-07, MF-052).
+ SECTOR_MAP = {
+@@ -190,51 +214,146 @@
+              "cut_ret": scored[n - 1][1] if scored and n else None})
+ 
+ 
++def _trading_day(d, holidays):
++    return d.weekday() < 5 and d.isoformat() not in holidays
++
++
++def first_trading_day(year, month, holidays):
++    d = date(year, month, 1)
++    while not _trading_day(d, holidays):
++        d += timedelta(days=1)
++    return d
++
++
++def prev_trading_day(d, holidays):
++    d -= timedelta(days=1)
++    while not _trading_day(d, holidays):
++        d -= timedelta(days=1)
++    return d
++
++
++def _now_et(context):
++    return datetime.fromtimestamp(float(context.now), tz=ET)
++
++
++def _holidays(context):
++    return set((context.extra or {}).get("nyse_holidays") or ())
++
++
++def _phase(context):
++    """the rebalance day (the month's first trading day) during the session after 10:00 ET."""
++    t = _now_et(context)
++    if t.date() != first_trading_day(t.year, t.month, _holidays(context)):
++        return None
++    if (t.hour, t.minute) < RANK_HM or t.hour >= 16:
++        return None
++    return "rebalance"
++
++
++def _book(state):
++    return {s: v["position"] for s, v in state.items() if isinstance(v, dict) and v.get("position")}
++
++
++def rank(bars, context):
++    """old mode_rank: the sector-capped top decile on the last 399 completed bars, buys = decile names not
++    held, sells = held names out of the decile. None while the genome lacks the previous session."""
++    today = context.session
++    t = _now_et(context)
++    prev = prev_trading_day(t.date(), _holidays(context)).isoformat()
++    trimmed = {s: bl[-(FETCH_KEEP - 1):] for s, bl in bars.items() if bl}
++    if (t.hour, t.minute) < LAST_CALL_HM:
++        long_enough = [bl for bl in trimmed.values() if len(bl) >= MIN_BARS]
++        fresh = sum(1 for bl in long_enough if _dates(bl[-1:])[0] >= prev)
++        if not long_enough or fresh < MIN_FRESH * len(long_enough):
++            return None
++    decile, eligible, stats = rank_decile(trimmed, today)
++    decile, trims = apply_sector_cap(decile)
++    book = _book((context.extra or {}).get("sleeve_state") or {})
++    dset = set(decile)
++    return {"buys": [s for s in decile if s not in book], "sells": [s for s in book if s not in dset],
++            "decile": decile, "eligible": eligible, "trims": [s for s, _sec in trims],
++            "excluded_artifact": [s for s, _ym in stats["excluded_artifact"]], "rank_date": today}
++
++
++def _ref_px(sym, bars, quotes, now):
++    q = quotes.get(sym) or {}
++    try:
++        bid, ask = float(q.get("bid") or 0), float(q.get("ask") or 0)
++    except (TypeError, ValueError):
++        bid = ask = 0.0
++    if 0 < bid <= ask and q.get("t") is not None and now - float(q["t"]) <= 900:
++        t = datetime.fromtimestamp(float(q["t"]), tz=ET)
++        if (9, 30) <= (t.hour, t.minute) < (16, 0):
++            return (bid + ask) / 2.0
++    bl = bars.get(sym) or []
++    return float(bl[-1]["c"]) if bl else None
++
++
+ class TsMomentumDecile(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
++        """the fill pass: the staged sells, then equal-weight buys (old mode_fill minus the desk gates)."""
+         extra = context.extra or {}
++        meta = extra.get("meta") or {}
++        pend = meta.get("pending") or {}
++        if _phase(context) != "rebalance" or pend.get("rank_date") != context.session \
++                or meta.get("filled_month") == context.session[:7]:
++            return []
+         state = extra.get("sleeve_state") or {}
+-        equity = float(context.equity or 0.0)
+-        decile, _eligible, _stats = rank_decile(bars, context.session)
+-        decile, _trims = apply_sector_cap(decile)
+-        target = set(decile)
++        book = _book(state)
++        now = float(context.now)
++        close_ts = _now_et(context).replace(hour=16, minute=0, second=0, microsecond=0).timestamp()
++        order = {"type": "market", "tif": "day", "not_after": close_ts}
+         intents = []
+-        book = {s: (state.get(s) or {}).get("position")
+-                for s in state if (state.get(s) or {}).get("position")}
+-        # Rebalance sells: held names no longer in the decile exit.
+-        for sym, p in book.items():
+-            if sym in target:
++        for sym in pend.get("sells") or []:
++            p = book.get(sym) or {}
++            qty = float(p.get("qty") or 0)
++            if qty <= 0 or p.get("exit_submitted"):
+                 continue
+             bl = bars.get(sym) or []
+-            qty = int(float(p.get("qty") or 0))
+-            if qty > 0 and bl:
+-                intents.append(Intent(
+-                    "exit", sym, qty_hint=qty,
+-                    price_hint=round(float(bl[-1]["c"]), 2),
+-                    reason="ts_momentum_decile rebalance: dropped from "
+-                           "top decile"))
+-        # Entries: emitted only when not paused (NEW_ENTRIES_PAUSED is
+-        # False since User lifted the #86 park on 2026-10-14 21:54).
++            intents.append(Intent("exit", sym, qty=qty, price_hint=round(float(bl[-1]["c"]), 2) if bl else None,
++                                  order=dict(order), signal_key="%s:%s:tsmom_sell" % (sym, context.session),
++                                  reason="ts_momentum_decile rebalance: dropped from top decile"))
++        equity = float(context.equity or 0.0)
+         if NEW_ENTRIES_PAUSED or equity <= 0:
+             return intents
+-        per_name = equity * EQUITY_UTIL / max(1, len(decile))
+-        for sym in decile:
+-            if sym in book:
++        decile = pend.get("decile") or []
++        buys = list(pend.get("buys") or [])
++        n_target = len(decile) if decile else max(1, len(buys) + len(book))
++        per_name = equity * EQUITY_UTIL / n_target
++        quotes = extra.get("quotes") or {}
++        for sym in buys:
++            if sym in book or (state.get(sym) or {}).get("pending_entry"):
+                 continue
+-            bl = bars.get(sym) or []
+-            if not bl:
++            ref = _ref_px(sym, bars, quotes, now)
++            if not ref or ref <= 0:
+                 continue
+-            px = float(bl[-1]["c"])
+-            if px <= 0:
+-                continue
+-            qty = max(1, int(per_name // px))  # 1-share min (Decision #20)
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(px, 2),
+-                reason="ts_momentum_decile rebalance: top-decile 252d "
+-                       "momentum, equal weight %.2f" % per_name))
++            qty = max(1, math.floor(per_name / ref))             # 1-share minimum (Decision #20)
++            intents.append(Intent("enter", sym, qty=float(qty), price_hint=round(ref, 2), order=dict(order),
++                                  signal_key="%s:%s:tsmom_buy" % (sym, context.session),
++                                  reason="ts_momentum_decile rebalance: top-decile 252d momentum, equal weight "
++                                         "%.2f of %d" % (per_name, n_target)))
+         return intents
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    extra = context.extra or {}
++    meta = dict(extra.get("meta") or {})
++    if _phase(context) != "rebalance":
++        return meta
++    month = context.session[:7]
++    pend = meta.get("pending") or {}
++    if meta.get("last_rank_month") != month:
++        p = rank(bars, context)
++        if p is not None:
++            meta.update(pending=p, last_rank_month=month)
++    elif pend.get("rank_date") == context.session and meta.get("filled_month") != month:
++        meta["filled_month"] = month                            # the fill pass ran (signal emitted the diff)
++        meta["last_fill"] = {"date": context.session, "buys": [i.symbol for i in intents if i.kind == "enter"],
++                             "sells": [i.symbol for i in intents if i.kind == "exit"]}
++        meta["pending"] = {}
++    return meta
+ 
+ 
+ def signal(bars, slice_state, context):

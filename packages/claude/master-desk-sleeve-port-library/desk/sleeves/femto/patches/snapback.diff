@@ -1,0 +1,194 @@
+--- femto-lean@7f2a996/sleeves/snapback.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/snapback.py
+@@ -74,7 +74,11 @@
+     for s, bl in daily.items():
+         dly[s] = ([_bar_date(b).isoformat() for b in bl], bl)
+     cands = []
+-    for s in set(wk) & set(dly):
++    # master-desk: in symbol order. The old code iterated the set itself, whose order is the string hash's and so
++    # changes with every process's PYTHONHASHSEED; the stable sorts below keep it among exact ties of the weekly
++    # dollar volume (names that never traded, one history under two tickers), so the band edge, the terciles and
++    # the flagged order there were a coin toss per run. Without such a tie the result is the same.
++    for s in sorted(set(wk) & set(dly)):
+         mons, closes, vols = wk[s]
+         widx = bisect_left(mons, M) - 1
+         if widx < 51:
+@@ -138,60 +142,130 @@
+     return flagged
+ 
+ 
++# ---------------------------------------------------------------- master-desk: the old runtime, restored
++from zoneinfo import ZoneInfo  # noqa: E402
++
++from . import sleeve_core as core  # noqa: E402
++
++ET = ZoneInfo("America/New_York")
++MIN_FRESH = 0.5            # rank waits until most of the genome carries the rank day's bar (old: rank_wait)
++
++
++def weekly_from_daily(daily):
++    """Monday-bucketed weekly bars from daily bars (close = the week's last close, volume = the week's sum):
++    what the old Alpaca 1Week bars carried for compute_flags."""
++    out = {}
++    for s, bl in (daily or {}).items():
++        wk = {}
++        for b in bl or ():
++            m = monday_of(_bar_date(b))
++            e = wk.get(m)
++            if e is None:
++                wk[m] = {"t": float(b["t"]), "c": float(b["c"]), "v": float(b.get("v") or 0)}
++            else:
++                e["c"] = float(b["c"])
++                e["v"] += float(b.get("v") or 0)
++        out[s] = [wk[m] for m in sorted(wk)]
++    return out
++
++
++def _now_et(context):
++    return datetime.fromtimestamp(float(context.now), tz=ET)
++
++
++def _phase(context):
++    """rank: Friday after the close (old cron 16:35; here once the genome refresh landed); fill: Monday 10:35."""
++    t = _now_et(context)
++    if t.weekday() == 4 and (t.hour, t.minute) >= (16, 35):
++        return "rank"
++    if t.weekday() == 0 and (10, 35) <= (t.hour, t.minute) < (16, 0):
++        return "fill"
++    return None
++
++
++def rank(bars, context, meta):
++    """old mode_rank on completed bars: flagged names not held and not exited within 91 days, the capacity
++    break, fill-Monday + 91 exit dates, positions due by today staged to sell, merged into the surviving
++    pending (old buys first). None when the genome's bars are not yet the rank day's (rank waits)."""
++    extra = context.extra or {}
++    state = extra.get("sleeve_state") or {}
++    today = context.session
++    dated = sum(1 for bl in bars.values() if bl and _bar_date(bl[-1]).isoformat() == today)
++    if not bars or dated < MIN_FRESH * len(bars):
++        return None
++    friday = date.fromisoformat(today)
++    while friday.weekday() != 4:
++        friday -= timedelta(days=1)
++    flagged = compute_flags(weekly_from_daily(bars), bars, friday)
++    book = core.book_of(state)
++    old = dict(meta.get("pending") or {})
++    prev_staged = set(old.get("buys") or [])
++    buys = []
++    for f in flagged:
++        s = f["symbol"]
++        if s in book:
++            continue
++        le = (state.get(s) or {}).get("last_exit_date")
++        if le:
++            try:
++                if (date.fromisoformat(today) - date.fromisoformat(str(le)[:10])).days < HOLD_DAYS:
++                    continue
++            except ValueError:
++                pass
++        buys.append(s)
++        if len(buys) + len(book) + len(prev_staged - set(book) - set(buys)) >= core.MAX_POSITIONS:
++            break
++    fill_monday = date.fromisoformat(today)
++    while fill_monday.weekday() != 0:
++        fill_monday += timedelta(days=1)
++    exit_dates = {s: (fill_monday + timedelta(days=HOLD_DAYS)).isoformat() for s in buys}
++    sells = [s for s, p in book.items() if p.get("exit_due_date") and str(p["exit_due_date"]) <= today]
++    old_sells = list(old.get("sells") or [])
++    merged_dates = dict(old.get("exit_dates") or {})
++    merged_dates.update(exit_dates)
++    return {"buys": core.merge_pending_buys(old.get("buys") or [], buys, len(book)),
++            "sells": old_sells + [s for s in sells if s not in old_sells],
++            "exit_dates": merged_dates, "rank_friday": friday.isoformat(), "flagged": len(flagged)}
++
++
+ class Snapback(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
++        """master-desk: the old two-phase runtime. Friday after the close the rank stages pending (next_meta);
++        Monday 10:35 the old sleeve_core fill law executes it (30% sleeve budget split over the staged names,
++        all-in at 150bp/side, max 10 names, exits on the 91-day due date)."""
++        if _phase(context) != "fill":
++            return []
+         extra = context.extra or {}
+-        weekly = extra.get("weekly") or {}
+-        state = extra.get("sleeve_state") or {}
+-        last_exit = extra.get("last_exit") or {}
+-        equity = float(context.equity or 0.0)
+-        today = date.fromisoformat(context.session)
+-        intents = []
+-        # time exits: 91 calendar days held (old bookkeeping is date-based)
+-        for sym, st in state.items():
+-            p = (st or {}).get("position")
+-            if not p or not p.get("entry_date"):
+-                continue
+-            try:
+-                held = (today - date.fromisoformat(str(p["entry_date"])[:10])).days
+-            except ValueError:
+-                continue
+-            qty = int(float(p.get("qty") or 0))
+-            if held >= HOLD_DAYS and qty > 0:
+-                bl = bars.get(sym) or []
+-                px = round(float(bl[-1]["c"]), 2) if bl else None
+-                intents.append(Intent(
+-                    "exit", sym, qty_hint=qty, price_hint=px,
+-                    reason="snapback time exit: held %dd >= %d" % (held, HOLD_DAYS)))
+-        if equity <= 0 or not weekly:
+-            return intents
+-        # signal week = the week ending the most recent Friday <= today
+-        friday = today - timedelta(days=(today.weekday() - 4) % 7)
+-        held_syms = {s for s, st in state.items() if (st or {}).get("position")}
+-        for row in compute_flags(weekly, bars, friday):
+-            sym = row["symbol"]
+-            if sym in held_syms:
+-                continue
+-            le = last_exit.get(sym)
+-            if le:
+-                try:
+-                    if (today - date.fromisoformat(str(le)[:10])).days < HOLD_DAYS:
+-                        continue  # 91-day rebuy de-overlap
+-                except ValueError:
+-                    pass
+-            px = row["close"]
+-            if px <= 0:
+-                continue
+-            qty = max(1, int((equity * 0.01) // px))
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=px,
+-                exit_rules=(ExitRule("time_bars", float(HOLD_DAYS)),),
+-                reason="snapback flag: spread=%.4f ret13=%s near_low=%s wkvol=%.0f"
+-                       % (row["spread"], row["ret13"], row["near_low"],
+-                          row["wkvol"])))
++        meta = extra.get("meta") or {}
++        close_ts = _now_et(context).replace(hour=16, minute=0, second=0, microsecond=0).timestamp()
++        intents, _left = core.fill_intents(Intent, extra.get("sleeve_state") or {}, meta.get("pending") or {},
++                                           float(context.equity or 0.0), extra.get("quotes") or {}, COST_BPS_SIDE,
++                                           context.session, float(context.now), "snapback", close_ts)
+         return intents
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    extra = context.extra or {}
++    meta = dict(extra.get("meta") or {})
++    ph = _phase(context)
++    if ph == "rank":
++        friday = date.fromisoformat(context.session)
++        while friday.weekday() != 4:
++            friday -= timedelta(days=1)
++        if meta.get("rank_friday") != friday.isoformat():
++            pend = rank(bars, context, meta)
++            if pend is not None:
++                meta["pending"] = {k: v for k, v in pend.items() if k not in ("rank_friday", "flagged")}
++                meta["rank_friday"] = pend["rank_friday"]
++                meta["last_flagged"] = pend["flagged"]
++    elif ph == "fill":
++        _s, _b, left = core.fill(extra.get("sleeve_state") or {}, meta.get("pending") or {},
++                                 float(context.equity or 0.0), extra.get("quotes") or {}, COST_BPS_SIDE,
++                                 context.session, float(context.now), "snapback")
++        meta["pending"] = left
++    return meta
+ 
+ 
+ def signal(bars, slice_state, context):

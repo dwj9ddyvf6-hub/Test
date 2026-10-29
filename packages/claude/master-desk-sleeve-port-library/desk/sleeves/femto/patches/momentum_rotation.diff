@@ -1,0 +1,47 @@
+--- femto-lean@7f2a996/sleeves/momentum_rotation.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/momentum_rotation.py
+@@ -91,6 +91,8 @@
+             return []
+         if not rebalance_due(extra.get("last_rebalance"), today):
+             return []
++        # master-desk: the old daily_pass keeps only symbols with > WARMUP_BARS bars in bars_map
++        bars = {s: bl for s, bl in bars.items() if bl and len(bl) >= WARMUP_BARS + 1}
+         ranks = compute_ranks(bars)
+         if not ranks:
+             return []
+@@ -100,7 +102,9 @@
+         # sells: held ranked worse than the cutoff (or unranked)
+         for sym, p in held.items():
+             r = ranks.get(sym)
+-            if r is None or r[0] > SELL_RANK_CUTOFF:
++            if r is None:
++                continue        # master-desk: old rebalance_hold_unranked — no 60d momentum, hold fail-closed
++            if r[0] > SELL_RANK_CUTOFF:
+                 qty = int(float(p.get("qty") or 0))
+                 if qty > 0:
+                     intents.append(Intent(
+@@ -111,15 +115,23 @@
+         # buys: top-5 not held, sized to the 20% target weight
+         top = [s for s, (rk, _m) in sorted(ranks.items(), key=lambda kv: kv[1][0])
+                if rk <= TOP_HOLD]
++        # master-desk: old capacity rule — positions + pending entries (sold-this-pass still count) >= 5 stops buying
++        committed = sum(1 for v in state.values() if isinstance(v, dict)
++                        and (v.get("position") or v.get("pending_entry")))
+         for sym in top:
+             if sym in held:
++                continue
++            if committed >= TOP_HOLD:
++                break
++            if (state.get(sym) or {}).get("position") or (state.get(sym) or {}).get("pending_entry"):
+                 continue
+             px = float(bars[sym][-1]["c"])
+             if px <= 0:
+                 continue
+-            qty = int((equity * TARGET_WEIGHT) // px)
++            qty = int((equity * TARGET_WEIGHT) / px)
+             if qty < 1:
+                 continue
++            committed += 1
+             stop_px = round(px * (1 - DISASTER_STOP), 2)
+             intents.append(Intent(
+                 "enter", sym, qty_hint=qty, price_hint=round(px, 2),

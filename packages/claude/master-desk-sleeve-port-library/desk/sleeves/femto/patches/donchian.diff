@@ -1,0 +1,111 @@
+--- femto-lean@7f2a996/sleeves/donchian.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/donchian.py
+@@ -68,6 +68,8 @@
+     c = float(bars[-1]["c"])
+     if not math.isfinite(c):
+         return False
++    if float(bars[-1].get("v") or 0) <= 0:   # master-desk: old detect_breakout requires volume > 0
++        return False
+     prior = [float(b["h"]) for b in bars[-ENTRY_CHANNEL - 1:-1]]
+     if not all(math.isfinite(x) for x in prior):
+         return False
+@@ -85,13 +87,35 @@
+     return c < min(prior)
+ 
+ 
+-def size_qty(equity, ref_px, atr):
+-    """Risk-sized qty: risk budget / (ATR_MULT x ATR); 1-share minimum
+-    convention of the desk sleeves; never negative."""
+-    if not atr or atr <= 0 or not ref_px or ref_px <= 0:
+-        return 1
+-    qty = int((equity * RISK_FRACTION) // (ATR_MULT * atr))
+-    return max(1, qty)
++def size_qty(equity, ref_px, atr=None):
++    """master-desk: the old size_qty verbatim — 0.25% risk on the 25%
++    disaster-stop distance, capped at the 25% notional (the femto port
++    sized on 2 x ATR, which is not the SPEC's rule). atr is unused."""
++    risk_amt = equity * RISK_FRACTION
++    risk_per_share = (ref_px or 0) * DISASTER_STOP
++    if risk_per_share <= 0:
++        return 0
++    qty = int(risk_amt / risk_per_share)
++    max_qty = int((equity * SLEEVE_NOTIONAL_CAP) / ref_px) if ref_px > 0 else 0
++    return min(qty, max_qty)
++
++
++def trail_level(bars, entry_date, entry_px, window=100):
++    """master-desk: the old ratcheting ATR trail, recomputed purely from
++    bars — initial fill x 0.96, then each daily pass after the entry
++    ratchets max(trail, close - ATR_MULT x ATR(14)) on the bar window
++    the old pass fetched (100 bars). Never loosens."""
++    trail = round(float(entry_px) * 0.96, 2) if entry_px else None
++    dates = _dates(bars)
++    for k in range(len(bars)):
++        if dates[k] < str(entry_date):
++            continue
++        atr = calc_atr(bars[max(0, k + 1 - window):k + 1])
++        if atr is None:
++            continue
++        new = float(bars[k]["c"]) - ATR_MULT * atr
++        trail = new if trail is None else max(trail, new)
++    return trail
+ 
+ 
+ class Donchian(BaseSleeve):
+@@ -105,7 +129,11 @@
+         today = context.session
+         intents = []
+         open_n = sum(1 for s in universe
+-                     if (state.get(s) or {}).get("position"))
++                     if (state.get(s) or {}).get("position")
++                     or (state.get(s) or {}).get("pending_entry"))
++        used = sum(float((state.get(s) or {}).get("position", {}).get("qty") or 0)
++                   * float((state.get(s) or {}).get("position", {}).get("entry_px") or 0)
++                   for s in universe if (state.get(s) or {}).get("position"))
+         for sym in universe:
+             bl = bars.get(sym) or []
+             if len(bl) < WARMUP_BARS:
+@@ -118,23 +146,22 @@
+                 qty = int(float(pos.get("qty") or 0))
+                 if qty <= 0:
+                     continue
+-                # exits: channel break, ATR trail, or time stop
+-                atr = calc_atr(bl)
+-                trail = None
+-                if atr:
+-                    # trailing stop tracks the highest close since entry
+-                    trail = last_px - ATR_MULT * atr
++                # exits: channel break, ATR trail, or time stop (old
++                # check_exit order; the trail is the old ratchet)
++                trail = trail_level(bl, pos.get("entry_date") or "",
++                                    pos.get("entry_px"))
++                trail_hit = trail is not None and float(bl[-1]["l"]) <= trail
+                 due = pos.get("entry_date") and dates and \
+-                    _sessions_since(dates, pos["entry_date"]) >= HOLD_DAYS
+-                if exit_channel_hit(bl) or due:
++                    sum(1 for d in dates if d > str(pos["entry_date"])) >= HOLD_DAYS
++                if exit_channel_hit(bl) or trail_hit or due:
+                     rules = (ExitRule("stop",
+                                       round(float(pos["entry_px"]) *
+                                             (1 - DISASTER_STOP), 2)),)
+                     intents.append(Intent(
+                         "exit", sym, qty_hint=qty, price_hint=round(last_px, 2),
+                         exit_rules=rules,
+-                        reason="donchian exit: channel=%s time_due=%s atr_trail=%s"
+-                               % (exit_channel_hit(bl), bool(due),
++                        reason="donchian exit: channel=%s trail_hit=%s time_due=%s atr_trail=%s"
++                               % (exit_channel_hit(bl), trail_hit, bool(due),
+                                   None if trail is None else round(trail, 2))))
+                 continue
+             if open_n >= MAX_POSITIONS or equity <= 0:
+@@ -142,8 +169,8 @@
+             if entry_signal(bl):
+                 atr = calc_atr(bl)
+                 qty = size_qty(equity, last_px, atr)
+-                if qty * last_px > SLEEVE_NOTIONAL_CAP * equity and open_n > 0:
+-                    continue
++                if qty <= 0 or used + qty * last_px > SLEEVE_NOTIONAL_CAP * equity:
++                    continue                 # old check_sleeve_notional_cap (sleeve-wide)
+                 stop_px = round(last_px * (1 - DISASTER_STOP), 2)
+                 intents.append(Intent(
+                     "enter", sym, qty_hint=qty, price_hint=round(last_px, 2),

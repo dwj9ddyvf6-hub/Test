@@ -1,0 +1,119 @@
+--- femto-lean@7f2a996/sleeves/rule_1d_green_tom.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/rule_1d_green_tom.py
+@@ -34,7 +34,8 @@
+ from datetime import date as _date, timedelta
+ from datetime import datetime, timezone
+ 
+-from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++from . import dcg_core
++from .compat import BaseSleeve, Intent, SleeveConfig
+ 
+ HOLD_BARS = 63
+ LANE = "1D"
+@@ -184,70 +185,46 @@
+         return None
+ 
+ 
++RANK_HM, FILL_HM = (16, 36), (10, 36)       # old crons rank 16:36, fill 10:36 ET
++COST_BPS_SIDE = 0.001
++
++
++def signals(scores, context=None):
++    """old mode_rank: the rule on the signal bar (the name's last bar) + the desk filter, scorer order."""
++    facts = scores.get("facts") or {}
++    out = []
++    for s, f in ((scores.get("rules") or {}).get("1D:green") or {}).items():
++        fa = facts.get(s) or {}
++        if f.get("date") != fa.get("date"):
++            continue
++        feats = dict(f.get("features") or {})
++        feats["tom"] = 1 if is_tom(_date.fromisoformat(fa["date"]), scores.get("recent_days")) else 0
++        if not rule_pass(feats, CONDITIONS):
++            continue
++        px = fa.get("px")
++        if px is None or not (px >= MIN_PX):
++            continue
++        if (fa.get("dv20") or 0) < MIN_DV20:
++            continue
++        out.append((s, f["date"]))
++    return out
++
++
+ class Rule1dGreenTom(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        fires = extra.get("rule_fires") or {}
+-        trading_days = extra.get("trading_days") or []
+-        equity = float(context.equity or 0.0)
+-        intents = []
+-        book = {s: (state.get(s) or {}).get("position")
+-                for s in state if (state.get(s) or {}).get("position")}
+-        for sym, p in book.items():
+-            bl = bars.get(sym) or []
+-            n = sessions_since(bl, p.get("entry_date")) if p.get("entry_date") else None
+-            if n is not None and n >= HOLD_BARS - 1:
+-                qty = int(float(p.get("qty") or 0))
+-                if qty > 0 and bl:
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty,
+-                        price_hint=round(float(bl[-1]["c"]), 2),
+-                        exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                        reason="rule_1d_green_tom: %d sessions >= hold %d (staged early)"
+-                               % (n, HOLD_BARS)))
+-        if equity <= 0 or not fires:
+-            return intents
+-        open_n = len(book)
+-        for sym in sorted(fires):
+-            if sym in book or open_n >= MAX_POSITIONS:
+-                continue
+-            bl = bars.get(sym) or []
+-            if not bl:
+-                continue
+-            dates = _dates(bl)
+-            last_date = dates[-1]
+-            px = float(bl[-1]["c"])
+-            hit = None
+-            for f in fires.get(sym) or []:
+-                if not isinstance(f, dict) or f.get("date") != last_date:
+-                    continue
+-                feats = dict(f.get("features") or {})
+-                # TOM recomputed exactly (scorer tom is vacuous live).
+-                try:
+-                    d = _date.fromisoformat(str(f["date"])[:10])
+-                    days = trading_days or dates
+-                    feats["tom"] = 1 if is_tom(d, days) else 0
+-                except Exception:
+-                    pass  # old law: keep scorer value on parse failure
+-                if rule_pass(feats):
+-                    hit = f
+-                    break
+-            if hit is None:
+-                continue
+-            if px < MIN_PX or dv20(bl) < MIN_DV20:
+-                continue
+-            qty = max(1, int((equity * 0.01) // px))
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(px, 2),
+-                exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                reason="rule_1d_green_tom: green fire %s mom121/disp pass, "
+-                       "tom=1 (exact trading-day), px=%.2f dv20=%.0f"
+-                       % (last_date, px, dv20(bl))))
+-            open_n += 1
+-        return intents
++        """master-desk: the old runtime (dcg_core) — the rank stages after the close (next_meta), the next
++        session's fill pass executes the old sleeve_core fill law, market-on-close."""
++        if dcg_core.phase(context, RANK_HM, FILL_HM) != "fill":
++            return []
++        meta = (context.extra or {}).get("meta") or {}
++        return dcg_core.fill(Intent, context, meta, COST_BPS_SIDE, "rule_1d_green_tom", disaster_stop=None)
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    return dcg_core.next_meta(context, (context.extra or {}).get("meta") or {}, signals, HOLD_BARS, bars,
++                              COST_BPS_SIDE, "rule_1d_green_tom", RANK_HM, FILL_HM)
+ 
+ 
+ def signal(bars, slice_state, context):

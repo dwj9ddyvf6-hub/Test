@@ -1,0 +1,482 @@
+--- femto-lean@7f2a996/sleeves/ema_vwap_options.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/ema_vwap_options.py
+@@ -1,29 +1,58 @@
+-"""EMA-VWAP Options — call debit spreads — lean-desk port (Wave B).
+-
+-EXTRACTED from the old desk's ema_vwap_options.py. Signal identical to
+-the equity sleeve (the old file imported ema_vwap_sleeve's helpers so
+-the two could never drift; the VWAP helpers are mirrored here for the
+-same reason). Execution: call debit spread on the nearest 14-30 DTE
+-expiry — long leg ~2% OTM, width 6% (short ~8% OTM) — via the pure
+-form of desk/options_exec.select_debit_spread over a chain snapshot
+-the core Data door provides. See ports/ema_vwap_options.md.
+-
+-Risk 0.25%/trade sized on debit paid; max 5. Long options are
+-defined-risk: no disaster stop; time exits instead.
+-Exits (first trigger): 50% of max profit (conservative live value =
+-long bid - short ask), 7-DTE time stop, underlying reverted to/above
+-VWAP (mean reversion complete), 21-day max hold.
++"""EMA-VWAP Options — call debit spreads on the VWAP mean-reversion signal — lean-desk port (Wave B).
++
++master-desk: the old desk's ema_vwap_options.py restored on the engine. The equity sleeve's signal (the old module
++imported ema_vwap_sleeve's bars, VWAP and deviation helpers so the two could never drift; here the restored
++desk/sleeves/femto/ema_vwap.py functions) traded as a defined-risk call debit spread: buy the ~2% OTM call, sell the
++~8% OTM call on the nearest 14-30 DTE expiry; out at 50% of max profit, 7 DTE, the reversion, or 21 days.
++
++  signal ... the last completed daily close strictly below 98% of the 20-day rolling VWAP (typical price x volume /
++             volume; a zero-volume day in the window voids it, the old pandas NaN), on >= 31 completed bars.
++  spread ... calls 14-30 DTE, the nearest expiry: long = the highest strike <= 1.02 x that close (the lowest strike
++             when none is), short = the first strike >= 1.06 x the long strike (none: no spread); both legs quoted;
++             long ask > 0 and, when it has a bid, (ask - bid) / mid <= 10%; debit = long ask - short bid > 0; no
++             debit / width band (fragment 098); then the old's submit-time re-quote: long bid, long ask and short
++             bid all > 0; the debit to the cent, max profit = width - that debit.
++  size ..... floor(0.25% of equity / (debit x 100)) spreads (0: skip); at most 5 spreads held or in flight, the
++             basket in its order; one package, both legs at once, at the natural debit (long ask - short bid). A
++             name exited today can be bought again today (one order key per round trip).
++  exits .... (never gated, every pass, on >= 31 completed bars) in the old order: the conservative value (long bid
++             - short ask) less the debit paid >= 50% of max profit; <= 7 DTE; the close back at/above the VWAP; 21
++             days since the fill. The package closes at its natural (long at the bid, short at the ask), never
++             without a long bid and a short ask (the old's one-sided-quote rule: the exit waits a pass).
++
++Gone under the cutover doctrine: the risk gate (kill switch, fail closed), the drawdown brake (block / halve), the
++Decision #75 chart gate (pre_buy red-day + chart staging, the staged-intent release replay with its red-day and
++earnings re-checks, the 72h pending TTL), the Decision #8 earnings blackout (ema_vwap_sleeve.earnings_veto: a stale
++calendar, an unknown date or earnings within 3 days — the desk-wide rail: the SPEC files it with the desk's
++constraints, not with this sleeve's rules, and the restored equity sibling dropped it too) and the 150% desk gross-
++exposure cap with its intra-pass accumulator (and the desk exposure ledger it fed). Named divergences: one atomic
++two-leg package at the natural debit to open (the old sent two single-leg day limits, long first, at the long ask
++and the short bid — the same prices — and flattened any leg that filled alone) and one at the natural to close (the
++old: two single-leg limits, long at its bid, short at its ask); hourly passes at :31 in the session (the old cron ran
++hourly at :31 on weekdays around the clock, holidays included); the legs' quotes come from the chain snapshot (the
++old re-quoted each leg with a separate latest-quote call, at selection and again at submit); an unfilled package
++lapses after an hour and the rules then decide again, at the then natural (the old's legs were day orders resting
++at their first prices: an entry held its slot until the close, and a sent close stayed in its closing book, re-fired
++at the next session's quotes until the broker was flat, whatever the rules then said); the 21-day clock runs from
++the fill (the old started it at the pass that first saw the fills).
+ 
+ Inputs via context.extra:
+-  "chains":       {SYM: [{"symbol","strike","expiration"}]} (calls)
+-  "quotes":       {OCC: {"bid","ask"}}
+-  "sleeve_state": {SYM: {"position": {...} | None}}
+-Bars (arg): daily dicts ascending (same series as the equity sleeve).
+-"""
+-import math
+-from datetime import datetime, timezone
++  "universe"       the basket, in scan order (default: the bars' keys)
++  "chains"         {SYM: call rows 14-30 DTE {"symbol","strike","expiration","bid","ask",...}} (fetched on demand)
++  "option_quotes"  {OCC: {"bid","ask"}} — the held legs
++  "closed_trades"  the sleeve's closed trades (one order key per round trip)
++  "sleeve_state"   {SYM: {"position": spread group {qty, net_entry, opened_at, legs, spread} | None,
++                   "pending_entry": {..., "key"}}} (an in-flight package may sit under its group id; its order key
++                   names the underlying)
++Bars (arg): daily bars, completed sessions (the old fetch_daily: SIP split-adjusted, the last 120)."""
++from datetime import date, datetime
++
++from zoneinfo import ZoneInfo
+ 
+ from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++from .ema_vwap import deviation_below, reverted_to_vwap, rolling_vwap   # the stock sleeve's signal, as the old
++
++_ET = ZoneInfo("America/New_York")
+ 
+ RISK_FRACTION = 0.0025
+ MAX_POSITIONS = 5
+@@ -34,48 +63,12 @@
+ PROFIT_TARGET_PCT = 0.50
+ MAX_HOLD_DAYS = 21
+ WARMUP_BARS = 30
+-VWAP_WINDOW = 20
+-DEV_PCT = 0.02
+ LIQ_GATE_FRAC = 0.10  # select_debit_spread's long-leg liquidity gate
++WINDOW_S = 3600       # an unfilled package lapses after an hour; the rules then decide again
+ 
+ CONFIG = SleeveConfig(
+     sleeve_id="ema_vwap_options", cadence_s=300, universe=(),
+     state_schema={"position": "dict|None"}, risk_pct=RISK_FRACTION)
+-
+-
+-# --- signal helpers mirrored from ema_vwap_sleeve (via sleeves/ema_vwap)
+-def rolling_vwap(bars, window=VWAP_WINDOW):
+-    if len(bars) < window:
+-        return None
+-    num = den = 0.0
+-    for b in bars[-window:]:
+-        v = float(b["v"])
+-        if v == 0:
+-            continue
+-        tp = (float(b["h"]) + float(b["l"]) + float(b["c"])) / 3.0
+-        num += tp * v
+-        den += v
+-    return num / den if den > 0 else None
+-
+-
+-def deviation_below(bars, pct=DEV_PCT):
+-    if len(bars) < 21:
+-        return False
+-    v = rolling_vwap(bars)
+-    c = float(bars[-1]["c"])
+-    if v is None or not math.isfinite(v) or v <= 0:
+-        return False
+-    return bool(c < v * (1.0 - pct))
+-
+-
+-def reverted_to_vwap(bars):
+-    if len(bars) < 21:
+-        return False
+-    v = rolling_vwap(bars)
+-    c = float(bars[-1]["c"])
+-    if v is None or not math.isfinite(v) or v <= 0:
+-        return False
+-    return bool(c >= v)
+ 
+ 
+ # --- options selection (pure select_debit_spread) -------------------
+@@ -85,19 +78,19 @@
+     """Pure form of desk/options_exec.select_debit_spread: nearest
+     expiry in the DTE window; long = highest strike <= target_price
+     (chain[0] if none); short = first strike >= long*(1+width_pct);
+-    long-leg (ask-bid)/mid <= 10% when bid > 0; debit = long ask -
+-    short bid must be > 0; optional debit/width ratio band veto."""
+-    from datetime import date as _date
+-    try:
+-        ref = _date.fromisoformat(session_iso)
+-    except ValueError:
++    both legs quoted; long ask > 0; long-leg (ask-bid)/mid <= 10% when
++    bid > 0; debit = long ask - short bid must be > 0; a debit/width
++    ratio band only when one is passed (2026-10-13: None = no veto)."""
++    try:
++        ref = date.fromisoformat(session_iso)
++    except (TypeError, ValueError):
+         return None
+     by_exp = {}
+     for c in chain or []:
+         exp = str(c.get("expiration") or c.get("expiration_date") or "")[:10]
+         try:
+             strike = float(c["strike"])
+-            dte = (_date.fromisoformat(exp) - ref).days
++            dte = (date.fromisoformat(exp) - ref).days
+         except (TypeError, ValueError, KeyError):
+             continue
+         if dte_min <= dte <= dte_max:
+@@ -117,8 +110,10 @@
+     short_leg = next((c for c in legs if c["strike"] >= target_short), None)
+     if short_leg is None:
+         return None
+-    lq = (quotes or {}).get(long_leg["occ"]) or {}
+-    sq = (quotes or {}).get(short_leg["occ"]) or {}
++    lq = (quotes or {}).get(long_leg["occ"])
++    sq = (quotes or {}).get(short_leg["occ"])
++    if not lq or not sq:
++        return None                                   # master-desk: the old's unquoted leg
+     try:
+         long_ask, long_bid = float(lq.get("ask") or 0), float(lq.get("bid") or 0)
+         short_bid = float(sq.get("bid") or 0)
+@@ -133,10 +128,9 @@
+     if debit <= 0:
+         return None
+     width = short_leg["strike"] - long_leg["strike"]
+-    if debit_range is not None and width > 0:
+-        ratio = debit / width
+-        if not (debit_range[0] <= ratio <= debit_range[1]):
+-            return None
++    ratio = debit / width if width > 0 else 1
++    if debit_range is not None and not (debit_range[0] <= ratio <= debit_range[1]):
++        return None
+     return {"expiry": expiry,
+             "long_leg": dict(long_leg, ask=long_ask, bid=long_bid),
+             "short_leg": dict(short_leg, bid=short_bid),
+@@ -159,10 +153,34 @@
+     return max(0, int((equity * risk_fraction) / (debit * 100)))
+ 
+ 
++def requote(spread, quotes):
++    """master-desk: the old refresh_spread_quotes at submit — both legs quoted with long ask, long bid and short bid
++    all > 0; the debit re-derived to the cent and max profit = width - that debit (the values the old's position
++    kept). None: the old aborted the entry."""
++    lq = (quotes or {}).get(spread["long_leg"]["occ"])
++    sq = (quotes or {}).get(spread["short_leg"]["occ"])
++    if not lq or not sq:
++        return None
++    try:
++        la, lb = float(lq.get("ask") or 0), float(lq.get("bid") or 0)
++        sb = float(sq.get("bid") or 0)
++    except (TypeError, ValueError):
++        return None
++    if la <= 0 or lb <= 0 or sb <= 0:
++        return None
++    sp = dict(spread, long_leg=dict(spread["long_leg"], ask=la, bid=lb), short_leg=dict(spread["short_leg"], bid=sb))
++    sp["debit"] = round(la - sb, 2)
++    sp["max_profit"] = round(sp["width"] - sp["debit"], 2)
++    return sp if sp["debit"] > 0 else None
++
++
+ def spread_value(spread, quotes):
+-    """Conservative live value: long bid - short ask. None unquotable."""
+-    lq = (quotes or {}).get(spread["long_leg"]["occ"]) or {}
+-    sq = (quotes or {}).get(spread["short_leg"]["occ"]) or {}
++    """Conservative live value: long bid - short ask. None unquotable
++    (either leg without a quote, a bid on the long or an ask on the short)."""
++    lq = (quotes or {}).get(spread["long_leg"]["occ"])
++    sq = (quotes or {}).get(spread["short_leg"]["occ"])
++    if not lq or not sq:
++        return None
+     try:
+         lb, sa = float(lq.get("bid") or 0), float(sq.get("ask") or 0)
+     except (TypeError, ValueError):
+@@ -172,93 +190,176 @@
+     return lb - sa
+ 
+ 
+-def _dte(expiry, session_iso):
+-    try:
+-        from datetime import date as _date
+-        return (_date.fromisoformat(str(expiry)[:10])
+-                - _date.fromisoformat(session_iso)).days
+-    except (ValueError, TypeError):
+-        return None
+-
+-
+-def _dates(bars):
+-    return [datetime.fromtimestamp(float(b["t"]) + 4 * 3600,
+-                                   tz=timezone.utc).date().isoformat()
+-            for b in bars]
+-
+-
+-def exit_due(pos, bars, quotes, session_iso):
+-    """(reason, value) — verbatim old order: 50% max profit, 7-DTE,
+-    VWAP reversion, 21-day max hold (sessions since entry date)."""
+-    spread = pos["spread"]
+-    value = spread_value(spread, quotes)
+-    if value is not None and spread["max_profit"] > 0:
+-        if value - pos["entry_debit"] >= PROFIT_TARGET_PCT * spread["max_profit"]:
+-            return "profit_target_50pct", value
+-    dte = _dte(spread.get("expiry"), session_iso)
+-    if dte is not None and dte <= EXIT_DTE:
+-        return "dte_time_stop_7", value
++def exit_due(spread, entry_debit, bars, value, now, opened_at, session_iso):
++    """master-desk: the old exit_due, in its order — 50% of max profit on the conservative value less the debit
++    paid, <= 7 DTE, the close back at/above the VWAP, 21 days since the fill."""
++    if value is not None and float(spread.get("max_profit") or 0) > 0:
++        if value - entry_debit >= PROFIT_TARGET_PCT * spread["max_profit"]:
++            return "profit_target_50pct"
++    try:
++        if (date.fromisoformat(str(spread["expiry"])[:10]) - date.fromisoformat(session_iso)).days <= EXIT_DTE:
++            return "dte_time_stop_7"
++    except (KeyError, TypeError, ValueError):
++        pass
+     if bars and reverted_to_vwap(bars):
+-        return "vwap_reversion", value
+-    dates = _dates(bars) if bars else []
+-    if pos.get("entry_date") and pos["entry_date"] in dates:
+-        if len(dates) - 1 - dates.index(pos["entry_date"]) >= MAX_HOLD_DAYS:
+-            return "max_hold_21d", value
+-    return None, value
++        return "vwap_reversion"
++    if opened_at is not None and int((float(now) - float(opened_at)) // 86400) >= MAX_HOLD_DAYS:
++        return "max_hold_21d"
++    return None
++
++
++def _occ_parts(occ):
++    """(expiry ISO, strike) from an OCC symbol."""
++    t = str(occ)[-15:]
++    return "20%s-%s-%s" % (t[0:2], t[2:4], t[4:6]), int(t[7:]) / 1000.0
++
++
++def held_spread(pos):
++    """master-desk: the held spread — its legs from the book (long > 0, short < 0), its selection from the entry's
++    meta (derived from the OCCs when absent), the debit paid (the fill, to the cent as the old read its fills),
++    the contracts and the fill time. None unless exactly one long and one short leg."""
++    legs = pos.get("legs") or {}
++    longs = [o for o, q in legs.items() if float(q) > 0]
++    shorts = [o for o, q in legs.items() if float(q) < 0]
++    if len(longs) != 1 or len(shorts) != 1:
++        return None
++    sp = dict(pos.get("spread") or {})
++    net = pos.get("net_entry")
++    if not sp.get("expiry") or sp.get("max_profit") is None or sp.get("width") is None:
++        try:
++            exp, kl = _occ_parts(longs[0])
++            ks = _occ_parts(shorts[0])[1]
++        except (ValueError, IndexError):
++            return None
++        width = round(ks - kl, 2)
++        debit = round(float(net), 2) if net is not None else 0.0
++        sp = dict(sp, expiry=exp, width=width, debit=debit, max_profit=round(width - debit, 2),
++                  long_leg={"strike": kl}, short_leg={"strike": ks})
++    sp["long_leg"] = dict(sp.get("long_leg") or {}, occ=longs[0])
++    sp["short_leg"] = dict(sp.get("short_leg") or {}, occ=shorts[0])
++    return {"spread": sp, "entry_debit": round(float(net), 2) if net is not None else float(sp.get("debit") or 0),
++            "contracts": int(abs(float(pos.get("qty") or 0))), "opened_at": pos.get("opened_at")}
++
++
++def in_flight(state):
++    """master-desk: the underlyings with an entry in flight and no position yet (the old's awaiting fills). The
++    adapter files an in-flight package under its group id; the order key (SYM:session:...) names the underlying."""
++    out = []
++    for k, st in (state or {}).items():
++        st = st or {}
++        pe = st.get("pending_entry")
++        if pe and not st.get("position"):
++            key = str((pe or {}).get("key") or "")
++            sym = key.split(":")[0] if ":" in key else k
++            if sym not in out:
++                out.append(sym)
++    return out
++
++
++def _et_date(ts):
++    return datetime.fromtimestamp(float(ts), tz=_ET).date().isoformat()
++
++
++def entry_key(sym, session, closed=()):
++    """master-desk: one order key per round trip — the old minted a fresh client order id per submit, so a name
++    exited today can be bought again today: the session's closed round trips of the name number the key."""
++    seen = set()
++    for t in closed or ():
++        try:
++            if str(t.get("symbol") or "").upper() == sym and _et_date(t["closed_at"]) == session:
++                seen.add(t.get("signal_key") or t["closed_at"])
++        except (KeyError, TypeError, ValueError, OverflowError, OSError):
++            continue
++    return "%s:%s:ema-vwap-options" % (sym, session) + (":%d" % len(seen) if seen else "")
++
++
++def decide(bars, context):
++    """intents: the held spreads' exits first, then the basket's entries, at most MAX_POSITIONS held or in flight."""
++    extra = context.extra or {}
++    state = extra.get("sleeve_state") or {}
++    oq = extra.get("option_quotes") or {}
++    chains = extra.get("chains") or {}
++    equity = float(context.equity or 0.0)
++    today = context.session
++    now = float(context.now)
++    intents = []
++    held = [s for s, st in state.items() if (st or {}).get("position")]
++    for sym in held:
++        pos = state[sym]["position"]
++        if pos.get("exit_submitted"):
++            continue
++        h = held_spread(pos)
++        if h is None or h["contracts"] <= 0:
++            continue
++        bl = bars.get(sym) or []
++        if len(bl) < WARMUP_BARS + 1:
++            continue                                  # the old manage_positions: no exit without 31 closed bars
++        sp = h["spread"]
++        value = spread_value(sp, oq)
++        why = exit_due(sp, h["entry_debit"], bl, value, now, h["opened_at"], today)
++        if why is None or value is None:
++            continue                                  # value None: no long bid / short ask -> the old's close waits
++        lb = float(oq[sp["long_leg"]["occ"]]["bid"])
++        sa = float(oq[sp["short_leg"]["occ"]]["ask"])
++        net = round(sa - lb, 2)                       # the natural: long sold at its bid, short bought at its ask
++        intents.append(Intent(
++            "exit", sym, qty_hint=h["contracts"], net_price=net, order={"window_s": WINDOW_S},
++            signal_key="%s:%s:ema-vwap-options-exit:%d" % (sym, today, int(float(h["opened_at"] or 0))),
++            reason="ema_vwap_options exit: %s value=%.2f entry_debit=%.2f max_profit=%.2f legs=%s/%s natural=%.2f"
++                   % (why, value, h["entry_debit"], float(sp.get("max_profit") or 0), sp["long_leg"]["occ"],
++                      sp["short_leg"]["occ"], -net)))
++    busy = set(held) | set(in_flight(state))
++    live = len(busy)
++    if live >= MAX_POSITIONS or equity <= 0:
++        return intents
++    closed = extra.get("closed_trades") or ()
++    for sym in extra.get("universe") or sorted(bars.keys()):
++        if live >= MAX_POSITIONS:
++            break
++        if sym in busy:
++            continue
++        bl = bars.get(sym) or []
++        if len(bl) < WARMUP_BARS + 1:                 # the old scan: < WARMUP+1 bars -> symbol untradeable
++            continue
++        if not deviation_below(bl):
++            continue
++        spot = float(bl[-1]["c"])
++        rows = chains.get(sym)
++        if not rows:
++            continue
++        q = {r["symbol"]: r for r in rows if r.get("symbol")}
++        sp = pick_spread(rows, q, spot, today)
++        if not sp:
++            continue
++        n = spread_qty_for_risk(sp["debit"], equity)
++        if n <= 0:
++            continue
++        sp = requote(sp, q)
++        if not sp:
++            continue
++        vwap = rolling_vwap(bl)
++        dev = round((spot / vwap - 1.0) * 100.0, 2) if vwap else None
++        intents.append(Intent(
++            "enter", sym, qty_hint=n, asset="mleg",
++            legs=({"symbol": sp["long_leg"]["occ"], "side": "buy", "ratio": 1, "position_intent": "buy_to_open"},
++                  {"symbol": sp["short_leg"]["occ"], "side": "sell", "ratio": 1, "position_intent": "sell_to_open"}),
++            net_price=sp["debit"], order={"window_s": WINDOW_S}, signal_key=entry_key(sym, today, closed),
++            position_meta={"spread": sp, "dev_pct": dev},
++            reason="ema_vwap_options call debit spread: long %s@%g short %s@%g expiry %s width %.2f debit %.2f "
++                   "max_profit %.2f x%d; close %.2f vs vwap20 %.4f (%s%%)"
++                   % (sp["long_leg"]["occ"], sp["long_leg"]["strike"], sp["short_leg"]["occ"],
++                      sp["short_leg"]["strike"], sp["expiry"], sp["width"], sp["debit"], sp["max_profit"], n, spot,
++                      vwap or 0.0, dev)))
++        busy.add(sym)
++        live += 1
++    return intents
+ 
+ 
+ class EmaVwapOptions(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        chains = extra.get("chains") or {}
+-        quotes = extra.get("quotes") or {}
+-        equity = float(context.equity or 0.0)
+-        universe = extra.get("universe") or sorted(bars.keys())
+-        intents = []
+-        open_n = sum(1 for s in universe if (state.get(s) or {}).get("position"))
+-        for sym in universe:
+-            bl = bars.get(sym) or []
+-            st = state.get(sym) or {}
+-            pos = st.get("position")
+-            if pos:
+-                qty = int(float(pos.get("qty") or 0))
+-                if qty <= 0:
+-                    continue
+-                reason, value = exit_due(pos, bl, quotes, context.session)
+-                if reason:
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty,
+-                        price_hint=round(float(bl[-1]["c"]), 2) if bl else None,
+-                        reason="ema_vwap_options exit: %s value=%s legs=%s/%s"
+-                               % (reason, value, pos["spread"]["long_leg"]["occ"],
+-                                  pos["spread"]["short_leg"]["occ"])))
+-                continue
+-            if open_n >= MAX_POSITIONS or equity <= 0 or len(bl) < WARMUP_BARS:
+-                continue
+-            if not deviation_below(bl):
+-                continue
+-            spot = float(bl[-1]["c"])
+-            sp = pick_spread(chains.get(sym), quotes, spot, context.session)
+-            if not sp:
+-                continue
+-            qty = spread_qty_for_risk(sp["debit"], equity)
+-            if qty <= 0:
+-                continue
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(spot, 2),
+-                reason="ema_vwap_options call_debit_spread: long=%s@%.2f "
+-                       "short=%s@%.2f expiry=%s width=%.2f debit=%.2f "
+-                       "structure=call_debit_spread dte_window=%d-%d "
+-                       "long_otm_pct=%.2f width_pct=%.2f"
+-                       % (sp["long_leg"]["occ"], sp["long_leg"]["strike"],
+-                          sp["short_leg"]["occ"], sp["short_leg"]["strike"],
+-                          sp["expiry"], sp["width"], sp["debit"],
+-                          DTE_MIN, DTE_MAX, LONG_OTM_PCT, WIDTH_PCT)))
+-            open_n += 1
+-        return intents
++        return list(decide(bars, context))
+ 
+ 
+ def signal(bars, slice_state, context):

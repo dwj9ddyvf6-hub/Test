@@ -1,0 +1,101 @@
+--- femto-lean@7f2a996/sleeves/rule_1w_cyan_mom_adx.py (import-rewritten)
++++ master-desk/desk/sleeves/femto/rule_1w_cyan_mom_adx.py
+@@ -20,7 +20,8 @@
+ import math
+ from datetime import datetime, timezone
+ 
+-from .compat import BaseSleeve, ExitRule, Intent, SleeveConfig
++from . import dcg_core
++from .compat import BaseSleeve, Intent, SleeveConfig
+ 
+ HOLD_BARS = 126
+ LANE = "1W"
+@@ -88,53 +89,45 @@
+         return None
+ 
+ 
++RANK_HM, FILL_HM = (16, 38), (10, 38)       # old crons rank 16:38, fill 10:38 ET
++COST_BPS_SIDE = 0.001
++
++
++def signals(scores, context=None):
++    """old mode_rank: the rule on the signal bar (the name's last bar) + the desk filter, scorer order."""
++    facts = scores.get("facts") or {}
++    out = []
++    for s, f in ((scores.get("rules") or {}).get("1W:cyan") or {}).items():
++        fa = facts.get(s) or {}
++        if f.get("date") != fa.get("date"):
++            continue
++        feats = dict(f.get("features") or {})
++        if not rule_pass(feats, CONDITIONS):
++            continue
++        px = fa.get("px")
++        if px is None or not (px >= MIN_PX):
++            continue
++        if (fa.get("dv20") or 0) < MIN_DV20:
++            continue
++        out.append((s, f["date"]))
++    return out
++
++
+ class Rule1wCyanMomAdx(BaseSleeve):
+     CONFIG = CONFIG
+ 
+     def signal(self, bars, slice_state, context):
+-        extra = context.extra or {}
+-        state = extra.get("sleeve_state") or {}
+-        fires = extra.get("rule_fires") or {}
+-        equity = float(context.equity or 0.0)
+-        intents = []
+-        book = {s: (state.get(s) or {}).get("position")
+-                for s in state if (state.get(s) or {}).get("position")}
+-        for sym, p in book.items():
+-            bl = bars.get(sym) or []
+-            n = sessions_since(bl, p.get("entry_date")) if p.get("entry_date") else None
+-            if n is not None and n >= HOLD_BARS - 1:
+-                qty = int(float(p.get("qty") or 0))
+-                if qty > 0 and bl:
+-                    intents.append(Intent(
+-                        "exit", sym, qty_hint=qty,
+-                        price_hint=round(float(bl[-1]["c"]), 2),
+-                        exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                        reason="rule_1w_cyan_mom_adx: %d sessions >= hold %d (staged early)"
+-                               % (n, HOLD_BARS)))
+-        if equity <= 0 or not fires:
+-            return intents
+-        open_n = len(book)
+-        for sym in sorted(fires):
+-            if sym in book or open_n >= MAX_POSITIONS:
+-                continue
+-            bl = bars.get(sym) or []
+-            if not bl:
+-                continue
+-            last_date = _dates(bl)[-1]
+-            px = float(bl[-1]["c"])
+-            hit = any(isinstance(f, dict) and f.get("date") == last_date
+-                      and rule_pass(f.get("features"))
+-                      for f in fires.get(sym) or [])
+-            if not hit or px < MIN_PX or dv20(bl) < MIN_DV20:
+-                continue
+-            qty = max(1, int((equity * 0.01) // px))
+-            intents.append(Intent(
+-                "enter", sym, qty_hint=qty, price_hint=round(px, 2),
+-                exit_rules=(ExitRule("time_bars", float(HOLD_BARS)),),
+-                reason="rule_1w_cyan_mom_adx: cyan fire %s dv/mom/adx pass, "
+-                       "px=%.2f dv20=%.0f" % (last_date, px, dv20(bl))))
+-            open_n += 1
+-        return intents
++        """master-desk: the old runtime (dcg_core) — the rank stages after the close (next_meta), the next
++        session's fill pass executes the old sleeve_core fill law, market-on-close."""
++        if dcg_core.phase(context, RANK_HM, FILL_HM) != "fill":
++            return []
++        meta = (context.extra or {}).get("meta") or {}
++        return dcg_core.fill(Intent, context, meta, COST_BPS_SIDE, "rule_1w_cyan_mom_adx", disaster_stop=None)
++
++
++def next_meta(bars, slice_state, context, intents=()):
++    return dcg_core.next_meta(context, (context.extra or {}).get("meta") or {}, signals, HOLD_BARS, bars,
++                              COST_BPS_SIDE, "rule_1w_cyan_mom_adx", RANK_HM, FILL_HM)
+ 
+ 
+ def signal(bars, slice_state, context):
