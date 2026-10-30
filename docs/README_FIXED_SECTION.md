@@ -11,7 +11,9 @@ Verify any regenerated README with:
 
 ```markdown
 <!-- BEGIN FIXED SECTION: agent guides. The README generator should emit this block verbatim (source text: docs/README_FIXED_SECTION.md). Checked by agentic-trade-desk/skeleton/tools/check_root_readme_links.py -->
-> **New: [How to build an agentic trade desk](agentic-trade-desk/README.md)** — a full guide, written for LLM agents, covering architecture, setup, order safety, reconciliation, reliability, research validation, multi-agent coordination, 130 catalogued pitfalls, checklists and generic reference code. Paper trading only; not financial advice. See also the shorter [build guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md).
-> **Guides for LLM agents:** [Agentic Trade Desk Build Guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md) (architecture and phases) · [`agentic-trade-desk/`](agentic-trade-desk/README.md) (operational kit: invariants, 130 pitfalls, reference skeleton code with tests included).
+> **Guides for LLM agents: three guides, one desk.** Start with the [three-guide reconciliation](docs/THREE-GUIDES-RECONCILIATION.md): the map between the three guides, covering what all three agree on, what only one teaches, and the differences to decide consciously.
+> **Field guide:** [How to build an agentic trade desk](docs/AGENTIC-TRADE-DESK-GUIDE.md): judgment under operation, scoping and evidence grading, the cross-desk sleeve accounting standard, forecast grading machinery, and 60 catalogued pitfalls.
+> **Operational kit:** [`agentic-trade-desk/`](agentic-trade-desk/README.md): the running machine, one order path, reconciliation, reliability and failover operations, 130 catalogued pitfalls, and a runnable skeleton with tests. Paper trading only.
+> **Companion build guide:** [Agentic Trade Desk Build Guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md): architecture before code, product modes, layers and data contracts, build phases, and acceptance checklists.
 <!-- END FIXED SECTION -->
 ```
