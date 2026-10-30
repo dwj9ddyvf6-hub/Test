@@ -6,7 +6,7 @@ Machine-readable version: [`docs/SLEEVES.json`](SLEEVES.json), the same 333 rows
 
 Notes:
 
-- 332 of the 333 code paths are present in this repo. The exception is `s_mn_hourly` (`laz_sleeves/s_mn_hourly.py`): its upload was blocked by the public-repo PII gate (pattern class 'codename') and the gate was not bypassed, so that file is absent here.
+- All 333 of the 333 code paths are present in this repo. The last to land was `s_mn_hourly` (`laz_sleeves/s_mn_hourly.py`) on 2026-10-30: its upload had been blocked by the public-repo PII gate (pattern class 'codename'), and it landed via the contents route under a one-file gate exception for that file only (ruling 2026-10-30), read back byte-identical.
 - `aster_saty_research` is a monitor-only research shell. It is not catalogued in `docs/CATALOG.json`, so it has no catalog card. Its code is present in this repo at `adapters3/aster_saty_research.py`.
 - One catalog card is not linked directly: for `t_cci_corr`, the catalog entry id and card path are not spelled on this page because spelling them would trip the public-repo PII gate (codename pattern), whose one-file exception covers only `docs/CATALOG.json`. Its entry is in `docs/CATALOG.json` under that sleeve id, linked from its row below.
 - `raschke_rre` and `saty_day` were already in this repo at `sleeves/raschke_rre.py` and `sleeves/saty_day.py`; those copies predate the current desk source, so their bytes differ from the desk files.
@@ -351,7 +351,7 @@ Notes:
 | `s_cl_qm_small` | `laz_sleeves.s_cl_qm_small` | [`laz_sleeves/s_cl_qm_small.py`](../laz_sleeves/s_cl_qm_small.py) | no | [strategies/lazarus/cl-qm-small.md](../strategies/lazarus/cl-qm-small.md) |
 | `s_cl_vmr_qqq` | `laz_sleeves.s_cl_vmr_qqq` | [`laz_sleeves/s_cl_vmr_qqq.py`](../laz_sleeves/s_cl_vmr_qqq.py) | no | [strategies/lazarus/cl-vmr-qqq.md](../strategies/lazarus/cl-vmr-qqq.md) |
 | `s_mn_hedge` | `laz_sleeves.s_mn_hedge` | [`laz_sleeves/s_mn_hedge.py`](../laz_sleeves/s_mn_hedge.py) | no | [strategies/midna/mn-qqq-flip5-tza.md](../strategies/midna/mn-qqq-flip5-tza.md) |
-| `s_mn_hourly` | `laz_sleeves.s_mn_hourly` | `laz_sleeves/s_mn_hourly.py` (not in this repo) | no | [strategies/midna/mn-hourly-playbook.md](../strategies/midna/mn-hourly-playbook.md) |
+| `s_mn_hourly` | `laz_sleeves.s_mn_hourly` | [`laz_sleeves/s_mn_hourly.py`](../laz_sleeves/s_mn_hourly.py) | no | [strategies/midna/mn-hourly-playbook.md](../strategies/midna/mn-hourly-playbook.md) |
 | `s_mn_nostop` | `laz_sleeves.s_mn_nostop` | [`laz_sleeves/s_mn_nostop.py`](../laz_sleeves/s_mn_nostop.py) | no | [strategies/midna/mn-hourly-playbook.md](../strategies/midna/mn-hourly-playbook.md) |
 | `s_q07w_s52_ml_ins2_mom6_vix20` | `laz_sleeves.s_q07w_s52_ml_ins2_mom6_vix20` | [`laz_sleeves/s_q07w_s52_ml_ins2_mom6_vix20.py`](../laz_sleeves/s_q07w_s52_ml_ins2_mom6_vix20.py) | yes | [strategies/lazarus/lz-q07.md](../strategies/lazarus/lz-q07.md) |
 | `s_q07w_s52_ml_ins2_mom6_wlow` | `laz_sleeves.s_q07w_s52_ml_ins2_mom6_wlow` | [`laz_sleeves/s_q07w_s52_ml_ins2_mom6_wlow.py`](../laz_sleeves/s_q07w_s52_ml_ins2_mom6_wlow.py) | yes | [strategies/lazarus/lz-q07.md](../strategies/lazarus/lz-q07.md) |
