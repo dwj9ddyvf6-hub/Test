@@ -8,8 +8,6 @@
 
 Monitors and research recorders are not listed as strategies in any of the three views.
 
-Day to day use: [run this desk as your own alert system](docs/YOUR-OWN-ALERT-SYSTEM.md), and see how it stands in for the vendor stack.
-
 <!-- BEGIN FIXED SECTION: agent guides. The README generator should emit this block verbatim (source text: docs/README_FIXED_SECTION.md). Checked by agentic-trade-desk/skeleton/tools/check_root_readme_links.py -->
 > **Guides for LLM agents: three guides, one desk.** Start with the [three-guide reconciliation](docs/THREE-GUIDES-RECONCILIATION.md): the map between the three guides, covering what all three agree on, what only one teaches, and the differences to decide consciously.
 > **Field guide:** [How to build an agentic trade desk](docs/AGENTIC-TRADE-DESK-GUIDE.md): judgment under operation, scoping and evidence grading, the cross-desk sleeve accounting standard, forecast grading machinery, and 60 catalogued pitfalls.
@@ -31,7 +29,6 @@ Day to day use: [run this desk as your own alert system](docs/YOUR-OWN-ALERT-SYS
 | `docs/ALL-SLEEVES.md` | the curated accounting: every strategy ever built across all desks, deduplicated, arranged by type, with its algorithm and variants |
 | `docs/ALL-SLEEVES.json` | the same curated accounting in machine-readable form |
 | `docs/THREE-GUIDES-RECONCILIATION.md` | the map between the three agent guides: shared invariants, unique lessons, and the differences to decide consciously |
-| `docs/YOUR-OWN-ALERT-SYSTEM.md` | how to run this desk as your own alert system (home screen, agent notifications), and how it replicates the expensive vendor services |
 | `docs/VERIFY.md` | the code lines each card rule was read from (one page a family in `docs/verify/`), and where each copied file came from |
 
 The master desk runs these sleeves on the Femto-lean framework (branch master-desk). Not in this repo: the framework itself (trading engine, order handling, data hub) and the Tensor indicator engine.
@@ -40,7 +37,7 @@ The master desk runs these sleeves on the Femto-lean framework (branch master-de
 
 Every distinct strategy ever built across all desks, deduplicated from 1,562 recorded ids, arranged by type. Each name links to its full entry in [the accounting](docs/ALL-SLEEVES.md): the recorded algorithm and every distinct variant. 104 entries are flagged unresolved in the accounting (kept separate, never force-merged); monitors and recorders sit in the accounting closing section, not in this list.
 
-### Trend following (41)
+### Trend following (200)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -85,8 +82,167 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [Daily SMA200 spot allocation](docs/ALL-SLEEVES.md#daily-sma200-spot-allocation-2) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
 | [Daily SMA200 spot allocation](docs/ALL-SLEEVES.md#daily-sma200-spot-allocation-3) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
 | [TRADER_DONCHIAN55](docs/ALL-SLEEVES.md#trader_donchian55) | No strategy description recorded in consulted sources. | 1 |
+| [Q07 w_cyan H52 small cheap5+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-small-cheap5mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 small deep70+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-small-deep70insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 small insider2+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-small-insider2mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 midlarge stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 small deep70+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-small-deep70insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 micro cheap5+deep70+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-cheap5deep70stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-mom6stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 midlarge stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 small mom6+stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-small-mom6stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 small stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-small-stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 micro cheap5+deep70+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5deep70stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 micro cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 midlarge cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 midlarge deep70+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-deep70insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 midlarge deep70+stress_vix20+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-deep70stress_vix20wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 midlarge insider2+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-insider2mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 small cheap5+deep70+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-small-cheap5deep70stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 small cheap5+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-small-cheap5insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 small cheap5+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-small-cheap5mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 small cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-small-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 micro cheap5+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-cheap5mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 midlarge cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 midlarge deep70+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-deep70insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 small cheap5+deep70+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-small-cheap5deep70stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 small cheap5+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-small-cheap5insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 small cheap5+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-small-cheap5mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 small cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-small-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [s_q07w_c52_sm_cheap5_mom6_vix20](docs/ALL-SLEEVES.md#s_q07w_c52_sm_cheap5_mom6_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_mi_cheap5_deep70_vix20](docs/ALL-SLEEVES.md#s_q07w_g78_mi_cheap5_deep70_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_sm_mom6_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_sm_mom6_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_sm_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_sm_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_mi_cheap5_deep70_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_deep70_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_mi_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_sm_cheap5_deep70_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_sm_cheap5_deep70_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_sm_cheap5_mom6_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_sm_cheap5_mom6_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_sm_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_sm_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_mi_cheap5_mom6_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_mi_cheap5_mom6_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_sm_cheap5_deep70_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_sm_cheap5_deep70_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_sm_cheap5_mom6_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_sm_cheap5_mom6_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_sm_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_sm_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [Q07 Tensor alt-data confluence cells](docs/ALL-SLEEVES.md#q07-tensor-alt-data-confluence-cells) | US equities · 1w · Tracker universe by PIT SEC band. Full recorded algorithm in the accounting entry. | 2 |
+| [s_q07w_g52_ml_cheap5](docs/ALL-SLEEVES.md#s_q07w_g52_ml_cheap5) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_ml_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_ml_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_ml_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_ml_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_ml_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_ml_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_ml_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_ml_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_ml_mom6_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_ml_mom6_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_ml_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_ml_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_ml_cheap5](docs/ALL-SLEEVES.md#s_q07w_s52_ml_cheap5) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_ml_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_ml_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_ml_cheap5](docs/ALL-SLEEVES.md#s_q07w_s78_ml_cheap5) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_ml_cheap5_mom6](docs/ALL-SLEEVES.md#s_q07w_s78_ml_cheap5_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_ml_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_ml_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [Midna Faber (Midna port)](docs/ALL-SLEEVES.md#midna-faber-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna VWAP (Midna port)](docs/ALL-SLEEVES.md#midna-vwap-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna W green calm SMH (Midna port)](docs/ALL-SLEEVES.md#midna-w-green-calm-smh-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 micro cheap5+deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-cheap5deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 micro cheap5+mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-cheap5mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 micro cheap5+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-cheap5tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 micro deep70+mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-deep70mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 micro deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 micro mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 midlarge mom6+tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-midlarge-mom6tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 midlarge mom6+wiki_spike2 (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-midlarge-mom6wiki_spike2-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 midlarge tierA+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-midlarge-tierawiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H52 midlarge tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-midlarge-tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 micro cheap5+deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-cheap5deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 micro cheap5+mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-cheap5mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 micro cheap5+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-cheap5tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 micro deep70+mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-deep70mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 micro mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 micro tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 midlarge deep70+tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-midlarge-deep70tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 midlarge mom6+tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-midlarge-mom6tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 midlarge tierA+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-midlarge-tierawiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_cyan H78 midlarge tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-midlarge-tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 micro cheap5+deep70 (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-cheap5deep70-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 micro cheap5+deep70+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-cheap5deep70mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 micro cheap5+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-cheap5tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 micro deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 micro mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 micro tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 midlarge ats_z1+mom6+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-ats_z1mom6wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 midlarge cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 midlarge insider2+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-insider2wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 midlarge mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H52 midlarge tierA+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-tierawiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 micro cheap5+deep70+insider2 (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-cheap5deep70insider2-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 micro cheap5+deep70+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-cheap5deep70mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 micro cheap5+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-cheap5tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 micro deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 micro mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 micro tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 midlarge deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 midlarge mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_green H78 midlarge tierA+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-tierawiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 micro cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 micro cheap5+deep70 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5deep70-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 micro cheap5+deep70+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5deep70mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 micro cheap5+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 midlarge cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 midlarge deep70+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-deep70wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H52 midlarge insider2+mom6+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-insider2mom6wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 micro ats_z1+cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-ats_z1cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 micro ats_z1+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-ats_z1mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 micro cheap5+deep70+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-cheap5deep70mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 micro cheap5+insider2+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-cheap5insider2mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 micro cheap5+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-cheap5mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 midlarge cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 midlarge cheap5+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-cheap5mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 midlarge deep70+gamma_low+insider2 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-deep70gamma_lowinsider2-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 midlarge deep70+mom6+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-deep70mom6wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q07 w_swing H78 midlarge deep70+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-deep70wiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Anna PhD location printer](docs/ALL-SLEEVES.md#anna-phd-location-printer) | US equities and ETFs · 1d · Anna's labeled census: 115 names. Full recorded algorithm in the accounting entry. | 1 |
+| [Q14 under-$5 weekly book](docs/ALL-SLEEVES.md#q14-under-5-weekly-book) | US equities · 1w · Tracker universe. Full recorded algorithm in the accounting entry. | 1 |
+| [Saty Magnum (SPY shares)](docs/ALL-SLEEVES.md#saty-magnum-spy-shares) | SPY shares, long and short · 3m · 10m · 1h · 1d · SPY. Full recorded algorithm in the accounting entry. | 1 |
+| [Weekly cyan transition](docs/ALL-SLEEVES.md#weekly-cyan-transition) | US equities · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
+| [s_q07_ins2](docs/ALL-SLEEVES.md#s_q07_ins2) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07_wiki](docs/ALL-SLEEVES.md#s_q07_wiki) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c52_mi_cheap5_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_cheap5_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c52_mi_cheap5_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_cheap5_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c52_mi_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c52_mi_deep70_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_deep70_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c52_mi_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c52_mi_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c52_sm_cheap5_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_sm_cheap5_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c52_sm_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_sm_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_mi_cheap5_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_cheap5_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_mi_cheap5_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_cheap5_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_mi_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_mi_deep70_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_deep70_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_mi_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_mi_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_sm_cheap5_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_sm_cheap5_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_sm_cheap5_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_sm_cheap5_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_c78_sm_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_sm_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_mi_cheap5_deep70](docs/ALL-SLEEVES.md#s_q07w_g52_mi_cheap5_deep70) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_mi_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_g52_mi_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_mi_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_mi_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_mi_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_mi_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_mi_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_mi_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_mi_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_mi_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_sm_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_g52_sm_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_sm_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_sm_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g52_sm_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_sm_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_mi_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_g78_mi_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_mi_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_mi_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_mi_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_mi_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_mi_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_mi_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_mi_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_mi_tiera) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_sm_cheap5_deep70](docs/ALL-SLEEVES.md#s_q07w_g78_sm_cheap5_deep70) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_g78_sm_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_g78_sm_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_mi_cheap5](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_mi_cheap5_deep70](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_deep70) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_mi_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s52_mi_cheap5_mom6](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_mi_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_s78_mi_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_q07w_s78_mi_cheap5_mom6](docs/ALL-SLEEVES.md#s_q07w_s78_mi_cheap5_mom6) | No strategy description recorded in consulted sources. | 1 |
+| [s_wait_intraweek](docs/ALL-SLEEVES.md#s_wait_intraweek) | No strategy description recorded in consulted sources. | 1 |
 
-### Momentum (24)
+### Momentum (41)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -114,8 +270,25 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [PO10 extreme (QQQ)](docs/ALL-SLEEVES.md#po10-extreme-qqq) | PO10 - QQQ 10-minute momentum | 1 |
 | [Raschke PF3 momentum (SPY)](docs/ALL-SLEEVES.md#raschke-pf3-momentum-spy) | SPY shares, long and short · 5m · SPY. Full recorded algorithm in the accounting entry. | 1 |
 | [Leader genome](docs/ALL-SLEEVES.md#leader-genome) | US equities · 1h · 1d · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
+| [Midna MACD (Midna port)](docs/ALL-SLEEVES.md#midna-macd-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [CHASE (WAIT)](docs/ALL-SLEEVES.md#chase-wait) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Kraken ENJ order-book imbalance (spot)](docs/ALL-SLEEVES.md#kraken-enj-order-book-imbalance-spot) | Kraken ENJ order-book imbalance (spot) Adapter for free_kraken_enj_spot — interface glue ONLY (DESIGN §4). | 1 |
+| [Gap continuation (legacy setup)](docs/ALL-SLEEVES.md#gap-continuation-legacy-setup) | US equities · 1m (15-minute cycle) · SPY, QQQ, IWM, the SCOPE radar's top 100, held names. Full recorded algorithm in the accounting entry. | 1 |
+| [Positive earnings surprise drift](docs/ALL-SLEEVES.md#positive-earnings-surprise-drift) | US equities · 1d (20-session hold) · SCOPE stocks (ETF basket excluded). Full recorded algorithm in the accounting entry. | 1 |
+| [Top-decile SUE drift](docs/ALL-SLEEVES.md#top-decile-sue-drift) | US equities · 1d (20-session hold) · SCOPE stocks (ETF basket excluded). Full recorded algorithm in the accounting entry. | 1 |
+| [Earnings-day overnight scalp](docs/ALL-SLEEVES.md#earnings-day-overnight-scalp) | US equities · 1d (overnight) · Nasdaq earnings-calendar names. Full recorded algorithm in the accounting entry. | 1 |
+| [PEAD price surprise](docs/ALL-SLEEVES.md#pead-price-surprise) | US equities · 1d (event) · Nasdaq earnings-calendar names. Full recorded algorithm in the accounting entry. | 1 |
+| [Strong-afternoon continuation](docs/ALL-SLEEVES.md#strong-afternoon-continuation) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Strong-afternoon continuation](docs/ALL-SLEEVES.md#strong-afternoon-continuation-1) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Strong-afternoon continuation](docs/ALL-SLEEVES.md#strong-afternoon-continuation-2) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Strong-afternoon continuation](docs/ALL-SLEEVES.md#strong-afternoon-continuation-3) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Fast Numbers earnings surprise](docs/ALL-SLEEVES.md#fast-numbers-earnings-surprise) | US equities (long and short) · 1d (open to close) · US stocks with reported and consensus EPS. Full recorded algorithm in the accounting entry. | 1 |
+| [Weekly green recovery](docs/ALL-SLEEVES.md#weekly-green-recovery) | US equities · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
+| [PUBLIC_AI_VOLUME_SPOT100](docs/ALL-SLEEVES.md#public_ai_volume_spot100) | No strategy description recorded in consulted sources. | 1 |
+| [PUBLIC_IU_BODY_SPOT100](docs/ALL-SLEEVES.md#public_iu_body_spot100) | No strategy description recorded in consulted sources. | 1 |
+| [s_mn_csmom](docs/ALL-SLEEVES.md#s_mn_csmom) | No strategy description recorded in consulted sources. | 1 |
 
-### Mean reversion (62)
+### Mean reversion (67)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -181,8 +354,13 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [Support scanner (5-minute)](docs/ALL-SLEEVES.md#support-scanner-5-minute) | US equities · 5m · Sable catalog: 488 stocks. Full recorded algorithm in the accounting entry. | 1 |
 | [SPAN Harvest](docs/ALL-SLEEVES.md#span-harvest) | Prediction markets · Trade prints (60 s passes) · Polymarket MLB, NPB, UFC and boxing moneylines. Full recorded algorithm in the accounting entry. | 1 |
 | [Leaders Rest v1.1 on daily buy-greens](docs/ALL-SLEEVES.md#leaders-rest-v11-on-daily-buy-greens) | US equities · 1d · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
+| [Beaten-down weekly qualifiers](docs/ALL-SLEEVES.md#beaten-down-weekly-qualifiers) | Beaten-down weekly qualifiers Adapter for beatendown — v2 interface glue ONLY (DESIGN §4a). | 1 |
+| [Qullamaggie parabolic short](docs/ALL-SLEEVES.md#qullamaggie-parabolic-short) | US equities · 1d setup · 1m trigger · 1,838-name genome. Full recorded algorithm in the accounting entry. | 1 |
+| [Deep Reset cross-scan](docs/ALL-SLEEVES.md#deep-reset-cross-scan) | US equities · 1d · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
+| [PUBLIC_TOMAZETTI_RSI2_SPOT100](docs/ALL-SLEEVES.md#public_tomazetti_rsi2_spot100) | No strategy description recorded in consulted sources. | 1 |
+| [TRADER_RSI2](docs/ALL-SLEEVES.md#trader_rsi2) | No strategy description recorded in consulted sources. | 1 |
 
-### Breakout (44)
+### Breakout (52)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -230,8 +408,16 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [Coiled Spring genome](docs/ALL-SLEEVES.md#coiled-spring-genome) | US equities · 1h · 1d · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
 | [Daily green base expansion](docs/ALL-SLEEVES.md#daily-green-base-expansion) | US equities · 1d · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
 | [Weekly cyan accumulation](docs/ALL-SLEEVES.md#weekly-cyan-accumulation) | US equities · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
+| [Midna Turtle (Midna port)](docs/ALL-SLEEVES.md#midna-turtle-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Kraken breakdown short (ADA / LINK)](docs/ALL-SLEEVES.md#kraken-breakdown-short-ada--link) | Crypto perpetual · 4h · ADA, LINK (Kraken). Full recorded algorithm in the accounting entry. | 1 |
+| [Kraken crowded-long failure short (ADA / LINK)](docs/ALL-SLEEVES.md#kraken-crowded-long-failure-short-ada--link) | Crypto perpetual · 4h · ADA, LINK (Kraken). Full recorded algorithm in the accounting entry. | 1 |
+| [Bilbo Golden Gate (SPY)](docs/ALL-SLEEVES.md#bilbo-golden-gate-spy) | US ETF · 1m · 1h Phase Oscillator · SPY. Full recorded algorithm in the accounting entry. | 1 |
+| [Day Golden Gate (SPY)](docs/ALL-SLEEVES.md#day-golden-gate-spy) | US ETF · 1m (daily ATR levels) · SPY. Full recorded algorithm in the accounting entry. | 1 |
+| [Multi-day Golden Gate (weekly ATR)](docs/ALL-SLEEVES.md#multi-day-golden-gate-weekly-atr) | US equities, index ETFs and futures · 1d (weekly ATR levels) · 1,822 US stocks + 14 index ETFs and futures. Full recorded algorithm in the accounting entry. | 1 |
+| [Swing Golden Gate (monthly ATR)](docs/ALL-SLEEVES.md#swing-golden-gate-monthly-atr) | US equities, index ETFs and futures · 1d (monthly ATR levels) · 1,822 US stocks + 14 index ETFs and futures. Full recorded algorithm in the accounting entry. | 1 |
+| [s_mn_turtle](docs/ALL-SLEEVES.md#s_mn_turtle) | No strategy description recorded in consulted sources. | 1 |
 
-### Divergence reversal (8)
+### Divergence reversal (15)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -243,16 +429,24 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [RSI × OBV intraday (5-minute)](docs/ALL-SLEEVES.md#rsi--obv-intraday-5-minute) | US equities · 5m · MU, ARM, SNDK, WDC, CLS, ANF, CVNA, FFIV. Full recorded algorithm in the accounting entry. | 1 |
 | [Band-touch RSI divergence](docs/ALL-SLEEVES.md#band-touch-rsi-divergence) | Band-touch RSI divergence Adapter for bb_rsi_divergence — v2 plumbing only, no strategy math. | 1 |
 | [Trullas divergence (QQQ 1-minute)](docs/ALL-SLEEVES.md#trullas-divergence-qqq-1-minute) | QQQ shares, long and short · 1m · QQQ. Full recorded algorithm in the accounting entry. | 1 |
+| [Trullas variant v01: 2m chart (timeframe: a slightly slower chart; fewer micro-pivots)](docs/ALL-SLEEVES.md#trullas-variant-v01-2m-chart-timeframe-a-slightly-slower-chart-fewer-micro-pivots) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Trullas variant v02: 3m chart, patient window (timeframe + patience: reads a 3m chart and](docs/ALL-SLEEVES.md#trullas-variant-v02-3m-chart-patient-window-timeframe--patience-reads-a-3m-chart-and) | Trullas variant v02: 3m chart, patient window (timeframe + patience: reads a 3m chart and keeps looking unt) | 1 |
+| [Trullas variant v03: 5m chart, extended window (timeframe + session length: a 5m chart nee](docs/ALL-SLEEVES.md#trullas-variant-v03-5m-chart-extended-window-timeframe--session-length-a-5m-chart-nee) | Trullas variant v03: 5m chart, extended window (timeframe + session length: a 5m chart needs ~25 min to form) | 1 |
+| [Trullas variant v04: strict swings, wide stop (pivot strictness: only a swing that stands](docs/ALL-SLEEVES.md#trullas-variant-v04-strict-swings-wide-stop-pivot-strictness-only-a-swing-that-stands) | Trullas variant v04: strict swings, wide stop (pivot strictness: only a swing that stands out (>=2 ATR prom) | 1 |
+| [Trullas variant v05: loose fast eye, tight stop (pivot looseness + speed: 2-bar fractals,](docs/ALL-SLEEVES.md#trullas-variant-v05-loose-fast-eye-tight-stop-pivot-looseness--speed-2-bar-fractals) | Trullas variant v05: loose fast eye, tight stop (pivot looseness + speed: 2-bar fractals, no prominence test,) | 1 |
+| [Trullas variant v08: key-level reader (visual level reading: P2 must sit within 2 ATR of p](docs/ALL-SLEEVES.md#trullas-variant-v08-key-level-reader-visual-level-reading-p2-must-sit-within-2-atr-of-p) | Trullas variant v08: key-level reader (visual level reading: P2 must sit within 2 ATR of prior-day ) | 1 |
+| [Trullas variant v10: scale-out runner (trade management: half off at 38.2%, runner to 66%](docs/ALL-SLEEVES.md#trullas-variant-v10-scale-out-runner-trade-management-half-off-at-382-runner-to-66) | Trullas variant v10: scale-out runner (trade management: half off at 38.2%, runner to 66% with stop) | 1 |
 
-### Pairs and statistical arbitrage (3)
+### Pairs and statistical arbitrage (4)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
 | [Midna Pairs (Midna port)](docs/ALL-SLEEVES.md#midna-pairs-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
 | [Distance pairs](docs/ALL-SLEEVES.md#distance-pairs) | US equities · 1d · NYSE, NASDAQ and AMEX listings. Full recorded algorithm in the accounting entry. | 1 |
 | [Distance-pair shares](docs/ALL-SLEEVES.md#distance-pair-shares) | US equities · 1d · 40 large caps. Full recorded algorithm in the accounting entry. | 1 |
+| [SPY put-call parity package](docs/ALL-SLEEVES.md#spy-put-call-parity-package) | ETF options · 1d (5-minute passes) · SPY (SPY / QQQ for the pair). Full recorded algorithm in the accounting entry. | 1 |
 
-### Options income (9)
+### Options income (10)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -265,8 +459,9 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [LEAPS momentum with covered calls](docs/ALL-SLEEVES.md#leaps-momentum-with-covered-calls) | Equity options · 1d (hourly checks) · The momentum book's names (114-name swing basket). Full recorded algorithm in the accounting entry. | 1 |
 | [QQQ weekly put ladder](docs/ALL-SLEEVES.md#qqq-weekly-put-ladder) | ETF options · 1d (weekly layers) · QQQ listed puts. Full recorded algorithm in the accounting entry. | 1 |
 | [SPY 30-delta wheel](docs/ALL-SLEEVES.md#spy-30-delta-wheel) | ETF options · 1d (5-minute passes) · SPY (SPY / QQQ for the pair). Full recorded algorithm in the accounting entry. | 1 |
+| [OPT_WHEEL_LIFECYCLE](docs/ALL-SLEEVES.md#opt_wheel_lifecycle) | No strategy description recorded in consulted sources. | 1 |
 
-### Options directional (31)
+### Options directional (37)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -301,39 +496,18 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [Opening-range options · long, 0.5% risk](docs/ALL-SLEEVES.md#opening-range-options--long-05-risk) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 | [Opening-range options · long, 2.0% risk](docs/ALL-SLEEVES.md#opening-range-options--long-20-risk) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 | [BOLT event tilt (SPY / QQQ)](docs/ALL-SLEEVES.md#bolt-event-tilt-spy--qqq) | US ETFs (SPY, QQQ) · Event windows (about 10 sessions) · SPY, QQQ; SPX and NDX options as information. Full recorded algorithm in the accounting entry. | 1 |
+| [Tail put after a -3% day](docs/ALL-SLEEVES.md#tail-put-after-a--3-day) | ETF options · 1d (5-minute passes) · SPY (SPY / QQQ for the pair). Full recorded algorithm in the accounting entry. | 1 |
+| [Milkman 0DTE (SPX)](docs/ALL-SLEEVES.md#milkman-0dte-spx) | SPX index options (0DTE) · Intraday · SPX. Full recorded algorithm in the accounting entry. | 1 |
+| [Post-earnings response · long, 0.5% risk](docs/ALL-SLEEVES.md#post-earnings-response--long-05-risk) | Recorded by name; the accounting entry carries what the sources hold. | 3 |
+| [Post-earnings response · long, 2.0% risk](docs/ALL-SLEEVES.md#post-earnings-response--long-20-risk) | Recorded by name; the accounting entry carries what the sources hold. | 3 |
+| [Post-earnings response · vertical, 0.5% risk](docs/ALL-SLEEVES.md#post-earnings-response--vertical-05-risk) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Post-earnings response · vertical, 2.0% risk](docs/ALL-SLEEVES.md#post-earnings-response--vertical-20-risk) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 
-### Volatility (72)
+### Volatility (36)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
 | [Midna W cyan mid-VIX (Midna port)](docs/ALL-SLEEVES.md#midna-w-cyan-mid-vix-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 small cheap5+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-small-cheap5mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 small deep70+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-small-deep70insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 small insider2+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-small-insider2mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 midlarge stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 small deep70+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-small-deep70insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 micro cheap5+deep70+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-cheap5deep70stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-mom6stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 midlarge stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 small mom6+stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-small-mom6stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 small stress_vix20+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-small-stress_vix20tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 micro cheap5+deep70+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5deep70stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 micro cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 midlarge cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 midlarge deep70+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-deep70insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 midlarge deep70+stress_vix20+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-deep70stress_vix20wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 midlarge insider2+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-insider2mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 small cheap5+deep70+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-small-cheap5deep70stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 small cheap5+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-small-cheap5insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 small cheap5+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-small-cheap5mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 small cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-small-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 micro cheap5+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-cheap5mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 midlarge cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 midlarge deep70+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-deep70insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 small cheap5+deep70+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-small-cheap5deep70stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 small cheap5+insider2+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-small-cheap5insider2stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 small cheap5+mom6+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-small-cheap5mom6stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 small cheap5+stress_vix20 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-small-cheap5stress_vix20-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
 | [APEX C3: Follow-through](docs/ALL-SLEEVES.md#apex-c3-follow-through) | US ETFs (incl. 3× leveraged) · 1d · QQQ, TQQQ, BIL. Full recorded algorithm in the accounting entry. | 1 |
 | [APEX C4: Broken Hedge](docs/ALL-SLEEVES.md#apex-c4-broken-hedge) | US ETFs (incl. 3× leveraged) · 1d · QQQ, TQQQ, IEF, GLD, UUP, BIL. Full recorded algorithm in the accounting entry. | 1 |
 | [APEX C6: SLINGSHOT](docs/ALL-SLEEVES.md#apex-c6-slingshot) | US ETFs (incl. 3× leveraged) · 1d · QQQ, TQQQ, BIL. Full recorded algorithm in the accounting entry. | 1 |
@@ -365,21 +539,12 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [Three-minute compression drift (SPY)](docs/ALL-SLEEVES.md#three-minute-compression-drift-spy) | US ETF · 3m · SPY. Full recorded algorithm in the accounting entry. | 1 |
 | [Volatility-squeeze breakout · 1d](docs/ALL-SLEEVES.md#volatility-squeeze-breakout--1d) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
 | [Volatility-squeeze breakout · 1d](docs/ALL-SLEEVES.md#volatility-squeeze-breakout--1d-1) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [s_q07w_c52_sm_cheap5_mom6_vix20](docs/ALL-SLEEVES.md#s_q07w_c52_sm_cheap5_mom6_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_mi_cheap5_deep70_vix20](docs/ALL-SLEEVES.md#s_q07w_g78_mi_cheap5_deep70_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_sm_mom6_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_sm_mom6_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_sm_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_sm_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_mi_cheap5_deep70_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_deep70_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_mi_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_sm_cheap5_deep70_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_sm_cheap5_deep70_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_sm_cheap5_mom6_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_sm_cheap5_mom6_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_sm_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_sm_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_mi_cheap5_mom6_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_mi_cheap5_mom6_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_sm_cheap5_deep70_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_sm_cheap5_deep70_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_sm_cheap5_mom6_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_sm_cheap5_mom6_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_sm_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_sm_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [ChartsLector market-fear rebound (QQQ)](docs/ALL-SLEEVES.md#chartslector-market-fear-rebound-qqq) | US ETF · 1d · QQQ. Full recorded algorithm in the accounting entry. | 1 |
+| [OPT_OWN_IV_RESIDUAL](docs/ALL-SLEEVES.md#opt_own_iv_residual) | No strategy description recorded in consulted sources. | 1 |
+| [OPT_RELEASE_CONVEXITY](docs/ALL-SLEEVES.md#opt_release_convexity) | No strategy description recorded in consulted sources. | 1 |
+| [TRADER_SQUEEZE20](docs/ALL-SLEEVES.md#trader_squeeze20) | No strategy description recorded in consulted sources. | 1 |
 
-### Market timing and rotation (11)
+### Market timing and rotation (20)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -394,6 +559,15 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [O'Neil follow-through-day race](docs/ALL-SLEEVES.md#oneil-follow-through-day-race) | US index ETFs and futures · 1d · 14 index ETFs and futures. Full recorded algorithm in the accounting entry. | 2 |
 | [Weekday open-to-close (Monday)](docs/ALL-SLEEVES.md#weekday-open-to-close-monday) | US index ETFs and futures · 1d · 14 index ETFs and futures. Full recorded algorithm in the accounting entry. | 2 |
 | [FinRL-X adaptive rotation](docs/ALL-SLEEVES.md#finrl-x-adaptive-rotation) | US equities and ETFs · 1w · 21 stocks and ETFs in three groups, plus SPY and QQQ. Full recorded algorithm in the accounting entry. | 1 |
+| [Midna QQQ→TZA hedge (Midna port)](docs/ALL-SLEEVES.md#midna-qqqtza-hedge-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [ETF leader confirmed across two sources · 150% exposure](docs/ALL-SLEEVES.md#etf-leader-confirmed-across-two-sources--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [ETF leader confirmed across two sources · 98% exposure](docs/ALL-SLEEVES.md#etf-leader-confirmed-across-two-sources--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [ETF leader excluding semiconductors · 150% exposure](docs/ALL-SLEEVES.md#etf-leader-excluding-semiconductors--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [ETF leader excluding semiconductors · 98% exposure](docs/ALL-SLEEVES.md#etf-leader-excluding-semiconductors--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [ETF leader with unchanged-share holding · 150% exposure](docs/ALL-SLEEVES.md#etf-leader-with-unchanged-share-holding--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [ETF leader with unchanged-share holding · 98% exposure](docs/ALL-SLEEVES.md#etf-leader-with-unchanged-share-holding--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Two-source ETF leader with unchanged-share holding · 150% exposure](docs/ALL-SLEEVES.md#two-source-etf-leader-with-unchanged-share-holding--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Two-source ETF leader with unchanged-share holding · 98% exposure](docs/ALL-SLEEVES.md#two-source-etf-leader-with-unchanged-share-holding--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 
 ### Crypto basis and funding (6)
 
@@ -406,7 +580,7 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [R19_ENJUSDT_BASIS_REPAIR_COLLECTOR](docs/ALL-SLEEVES.md#r19_enjusdt_basis_repair_collector) | No strategy description recorded in consulted sources. | 1 |
 | [R19_LINKUSDT_BASIS_REPAIR_COLLECTOR](docs/ALL-SLEEVES.md#r19_linkusdt_basis_repair_collector) | No strategy description recorded in consulted sources. | 1 |
 
-### Forecast and ML models (87)
+### Forecast and ML models (100)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -464,7 +638,6 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [Lab 1D Green trees](docs/ALL-SLEEVES.md#lab-1d-green-trees) | US equities · 1d · Lab panel names. Full recorded algorithm in the accounting entry. | 1 |
 | [Lab 1W Cyan books](docs/ALL-SLEEVES.md#lab-1w-cyan-books) | US equities · 1w · Lab panel names. Full recorded algorithm in the accounting entry. | 1 |
 | [Lab 1W Swing covered](docs/ALL-SLEEVES.md#lab-1w-swing-covered) | US equities · 1w · Lab panel names. Full recorded algorithm in the accounting entry. | 1 |
-| [Q07 Tensor alt-data confluence cells](docs/ALL-SLEEVES.md#q07-tensor-alt-data-confluence-cells) | US equities · 1w · Tracker universe by PIT SEC band. Full recorded algorithm in the accounting entry. | 2 |
 | [R2 Daily Cyan extended](docs/ALL-SLEEVES.md#r2-daily-cyan-extended) | R2 Daily Cyan extended (WAIT) | 1 |
 | [Tensor tracker lanes (1H / 1D / 1W)](docs/ALL-SLEEVES.md#tensor-tracker-lanes-1h--1d--1w) | US equities · 1h · 1d · 1w · The tracker's canonical universe. Full recorded algorithm in the accounting entry. | 3 |
 | [Weekly Cyan tier A](docs/ALL-SLEEVES.md#weekly-cyan-tier-a) | US equities · 1w · Tracker universe by PIT SEC band. Full recorded algorithm in the accounting entry. | 1 |
@@ -485,116 +658,37 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [Daily price, volume and trend model · daily](docs/ALL-SLEEVES.md#daily-price-volume-and-trend-model--daily) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
 | [Tensor 1H Swing (v615)](docs/ALL-SLEEVES.md#tensor-1h-swing-v615) | US equities · 1h · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 2 |
 | [D20TENSOR](docs/ALL-SLEEVES.md#d20tensor) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_ml_cheap5](docs/ALL-SLEEVES.md#s_q07w_g52_ml_cheap5) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_ml_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_ml_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_ml_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_ml_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_ml_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_ml_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_ml_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_ml_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_ml_mom6_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_ml_mom6_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_ml_vix20_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_ml_vix20_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_ml_cheap5](docs/ALL-SLEEVES.md#s_q07w_s52_ml_cheap5) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_ml_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s52_ml_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_ml_cheap5](docs/ALL-SLEEVES.md#s_q07w_s78_ml_cheap5) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_ml_cheap5_mom6](docs/ALL-SLEEVES.md#s_q07w_s78_ml_cheap5_mom6) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_ml_cheap5_vix20](docs/ALL-SLEEVES.md#s_q07w_s78_ml_cheap5_vix20) | No strategy description recorded in consulted sources. | 1 |
+| [Lab 1D Green trees (test)](docs/ALL-SLEEVES.md#lab-1d-green-trees-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna D green $10-20 (Midna port)](docs/ALL-SLEEVES.md#midna-d-green-10-20-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna Daily cyan trees (Midna port)](docs/ALL-SLEEVES.md#midna-daily-cyan-trees-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna Hourly 1D (Midna port)](docs/ALL-SLEEVES.md#midna-hourly-1d-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna Kronos (Midna port)](docs/ALL-SLEEVES.md#midna-kronos-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna W cyan high ADX (Midna port)](docs/ALL-SLEEVES.md#midna-w-cyan-high-adx-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna Hourly (Midna port)](docs/ALL-SLEEVES.md#midna-hourly-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [1W Swing stress pockets (test)](docs/ALL-SLEEVES.md#1w-swing-stress-pockets-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Lab 1W Swing covered (test)](docs/ALL-SLEEVES.md#lab-1w-swing-covered-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [R19 hourly confirmed swing](docs/ALL-SLEEVES.md#r19-hourly-confirmed-swing) | US equities · 1h · Frozen 42-name list. Full recorded algorithm in the accounting entry. | 1 |
+| [Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay](docs/ALL-SLEEVES.md#confirmed-hourly-swing--minimum-1-atr-stop-distance-no-extra-bar-delay) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay](docs/ALL-SLEEVES.md#confirmed-hourly-swing--minimum-1-atr-stop-distance-one-bar-delay) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Confirmed hourly swing · native stop, no extra bar delay](docs/ALL-SLEEVES.md#confirmed-hourly-swing--native-stop-no-extra-bar-delay) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Confirmed hourly swing · native stop, one-bar delay](docs/ALL-SLEEVES.md#confirmed-hourly-swing--native-stop-one-bar-delay) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
+| [Lab rule books (1D / 1W)](docs/ALL-SLEEVES.md#lab-rule-books-1d--1w) | US equities · 1d · 1w · Lab panel names. Full recorded algorithm in the accounting entry. | 2 |
+| [CRG own-stock filing surprise](docs/ALL-SLEEVES.md#crg-own-stock-filing-surprise) | US equities and ETFs · 1d (20-session hold) · CAT, DE, MSFT. Full recorded algorithm in the accounting entry. | 1 |
+| [Hourly multi-indicator recovery · hourly](docs/ALL-SLEEVES.md#hourly-multi-indicator-recovery--hourly) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Weekly multi-indicator recovery · weekly](docs/ALL-SLEEVES.md#weekly-multi-indicator-recovery--weekly) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Swing Transition (1H)](docs/ALL-SLEEVES.md#swing-transition-1h) | US equities · 1h · AG, CMG, CRDO, FLY, LTBR, UAMY, VRT, XPEV. Full recorded algorithm in the accounting entry. | 1 |
+| [D20PV](docs/ALL-SLEEVES.md#d20pv) | No strategy description recorded in consulted sources. | 1 |
+| [H1STATE](docs/ALL-SLEEVES.md#h1state) | No strategy description recorded in consulted sources. | 1 |
+| [s_mn_gbm_1d_cyan](docs/ALL-SLEEVES.md#s_mn_gbm_1d_cyan) | No strategy description recorded in consulted sources. | 1 |
+| [s_mn_hourly_1d](docs/ALL-SLEEVES.md#s_mn_hourly_1d) | No strategy description recorded in consulted sources. | 1 |
+| [s_mn_w_cyan_adx](docs/ALL-SLEEVES.md#s_mn_w_cyan_adx) | No strategy description recorded in consulted sources. | 1 |
+| [s_wait_r2_dcyan](docs/ALL-SLEEVES.md#s_wait_r2_dcyan) | No strategy description recorded in consulted sources. | 1 |
+| [WSTATE](docs/ALL-SLEEVES.md#wstate) | No strategy description recorded in consulted sources. | 1 |
 
-### Other (253)
+### Buy and hold (12)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
-| [Lab 1D Green trees (test)](docs/ALL-SLEEVES.md#lab-1d-green-trees-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Lab rule 1D (test)](docs/ALL-SLEEVES.md#lab-rule-1d-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [legacy exit (hidden)](docs/ALL-SLEEVES.md#legacy-exit-hidden) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna D green $10-20 (Midna port)](docs/ALL-SLEEVES.md#midna-d-green-10-20-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Daily cyan trees (Midna port)](docs/ALL-SLEEVES.md#midna-daily-cyan-trees-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Faber (Midna port)](docs/ALL-SLEEVES.md#midna-faber-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Hourly 1D (Midna port)](docs/ALL-SLEEVES.md#midna-hourly-1d-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Kronos (Midna port)](docs/ALL-SLEEVES.md#midna-kronos-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna MACD (Midna port)](docs/ALL-SLEEVES.md#midna-macd-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Moonshot (Midna port)](docs/ALL-SLEEVES.md#midna-moonshot-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna QQQ Ladder (Midna port)](docs/ALL-SLEEVES.md#midna-qqq-ladder-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna QQQ→TZA hedge (Midna port)](docs/ALL-SLEEVES.md#midna-qqqtza-hedge-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Turtle (Midna port)](docs/ALL-SLEEVES.md#midna-turtle-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna VWAP (Midna port)](docs/ALL-SLEEVES.md#midna-vwap-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna W cyan high ADX (Midna port)](docs/ALL-SLEEVES.md#midna-w-cyan-high-adx-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna W green calm SMH (Midna port)](docs/ALL-SLEEVES.md#midna-w-green-calm-smh-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Hourly (Midna port)](docs/ALL-SLEEVES.md#midna-hourly-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Nostop (Midna port)](docs/ALL-SLEEVES.md#midna-nostop-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [1W Swing stress pockets (test)](docs/ALL-SLEEVES.md#1w-swing-stress-pockets-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [CHASE (WAIT)](docs/ALL-SLEEVES.md#chase-wait) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Lab 1W Swing covered (test)](docs/ALL-SLEEVES.md#lab-1w-swing-covered-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Lab rule 1W (test)](docs/ALL-SLEEVES.md#lab-rule-1w-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Midna Hourly 1W (Midna port)](docs/ALL-SLEEVES.md#midna-hourly-1w-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Moonshot (test)](docs/ALL-SLEEVES.md#moonshot-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [OLX R1/R2 books for the other lanes (WAIT)](docs/ALL-SLEEVES.md#olx-r1r2-books-for-the-other-lanes-wait) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 micro cheap5+deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-cheap5deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 micro cheap5+mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-cheap5mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 micro cheap5+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-cheap5tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 micro deep70+mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-deep70mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 micro deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 micro mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-micro-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 midlarge mom6+tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-midlarge-mom6tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 midlarge mom6+wiki_spike2 (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-midlarge-mom6wiki_spike2-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 midlarge tierA+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-midlarge-tierawiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H52 midlarge tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h52-midlarge-tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 micro cheap5+deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-cheap5deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 micro cheap5+mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-cheap5mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 micro cheap5+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-cheap5tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 micro deep70+mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-deep70mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 micro mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 micro tierA (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-micro-tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 midlarge deep70+tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-midlarge-deep70tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 midlarge mom6+tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-midlarge-mom6tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 midlarge tierA+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-midlarge-tierawiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_cyan H78 midlarge tierA+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_cyan-h78-midlarge-tierawiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 micro cheap5+deep70 (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-cheap5deep70-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 micro cheap5+deep70+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-cheap5deep70mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 micro cheap5+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-cheap5tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 micro deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 micro mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 micro tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-micro-tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 midlarge ats_z1+mom6+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-ats_z1mom6wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 midlarge cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 midlarge insider2+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-insider2wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 midlarge mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H52 midlarge tierA+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_green-h52-midlarge-tierawiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 micro cheap5+deep70+insider2 (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-cheap5deep70insider2-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 micro cheap5+deep70+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-cheap5deep70mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 micro cheap5+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-cheap5tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 micro deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 micro mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 micro tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-micro-tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 midlarge deep70+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-deep70tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 midlarge mom6+tierA (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-mom6tiera-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_green H78 midlarge tierA+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_green-h78-midlarge-tierawiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 micro cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 micro cheap5+deep70 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5deep70-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 micro cheap5+deep70+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5deep70mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 micro cheap5+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-micro-cheap5mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 midlarge cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 midlarge deep70+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-deep70wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H52 midlarge insider2+mom6+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_swing-h52-midlarge-insider2mom6wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 micro ats_z1+cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-ats_z1cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 micro ats_z1+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-ats_z1mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 micro cheap5+deep70+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-cheap5deep70mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 micro cheap5+insider2+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-cheap5insider2mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 micro cheap5+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-micro-cheap5mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 midlarge cheap5 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-cheap5-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 midlarge cheap5+mom6 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-cheap5mom6-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 midlarge deep70+gamma_low+insider2 (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-deep70gamma_lowinsider2-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 midlarge deep70+mom6+wiki_low (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-deep70mom6wiki_low-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q07 w_swing H78 midlarge deep70+wiki_cov (test)](docs/ALL-SLEEVES.md#q07-w_swing-h78-midlarge-deep70wiki_cov-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Q14 pxcap5 book (WAIT)](docs/ALL-SLEEVES.md#q14-pxcap5-book-wait) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [APEX C7: COUNCIL](docs/ALL-SLEEVES.md#apex-c7-council) | US ETFs, ETF options and Bitcoin · 1d (monthly options) · QQQ, TQQQ, GLD, BIL, BTC/USD; QQQ listed options. Full recorded algorithm in the accounting entry. | 1 |
-| [APEX QQQ benchmark](docs/ALL-SLEEVES.md#apex-qqq-benchmark) | US ETFs · 1d · QQQ. Full recorded algorithm in the accounting entry. | 1 |
-| [R19 causal overnight hold](docs/ALL-SLEEVES.md#r19-causal-overnight-hold) | US equities · 30m · Frozen 42-name list. Full recorded algorithm in the accounting entry. | 1 |
-| [R19 hourly confirmed swing](docs/ALL-SLEEVES.md#r19-hourly-confirmed-swing) | US equities · 1h · Frozen 42-name list. Full recorded algorithm in the accounting entry. | 1 |
-| [ETF leader confirmed across two sources · 150% exposure](docs/ALL-SLEEVES.md#etf-leader-confirmed-across-two-sources--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [ETF leader confirmed across two sources · 98% exposure](docs/ALL-SLEEVES.md#etf-leader-confirmed-across-two-sources--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [ETF leader excluding semiconductors · 150% exposure](docs/ALL-SLEEVES.md#etf-leader-excluding-semiconductors--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [ETF leader excluding semiconductors · 98% exposure](docs/ALL-SLEEVES.md#etf-leader-excluding-semiconductors--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [ETF leader with unchanged-share holding · 150% exposure](docs/ALL-SLEEVES.md#etf-leader-with-unchanged-share-holding--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [ETF leader with unchanged-share holding · 98% exposure](docs/ALL-SLEEVES.md#etf-leader-with-unchanged-share-holding--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 | [QLD buy and hold · 100% exposure](docs/ALL-SLEEVES.md#qld-buy-and-hold--100-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 | [QLD monthly rebalance · 100% exposure](docs/ALL-SLEEVES.md#qld-monthly-rebalance--100-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 | [QQQ and QLD equal-weight buy and hold · 100% exposure](docs/ALL-SLEEVES.md#qqq-and-qld-equal-weight-buy-and-hold--100-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
@@ -607,154 +701,62 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [S&P 500 ETF monthly rebalance · 98% exposure](docs/ALL-SLEEVES.md#sp-500-etf-monthly-rebalance--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 | [Semiconductor ETF buy and hold · 150% exposure](docs/ALL-SLEEVES.md#semiconductor-etf-buy-and-hold--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 | [Semiconductor ETF buy and hold · 98% exposure](docs/ALL-SLEEVES.md#semiconductor-etf-buy-and-hold--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Two-source ETF leader with unchanged-share holding · 150% exposure](docs/ALL-SLEEVES.md#two-source-etf-leader-with-unchanged-share-holding--150-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Two-source ETF leader with unchanged-share holding · 98% exposure](docs/ALL-SLEEVES.md#two-source-etf-leader-with-unchanged-share-holding--98-exposure) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Beaten-down weekly qualifiers](docs/ALL-SLEEVES.md#beaten-down-weekly-qualifiers) | Beaten-down weekly qualifiers Adapter for beatendown — v2 interface glue ONLY (DESIGN §4a). | 1 |
-| [Kraken breakdown short (ADA / LINK)](docs/ALL-SLEEVES.md#kraken-breakdown-short-ada--link) | Crypto perpetual · 4h · ADA, LINK (Kraken). Full recorded algorithm in the accounting entry. | 1 |
-| [Kraken crowded-long failure short (ADA / LINK)](docs/ALL-SLEEVES.md#kraken-crowded-long-failure-short-ada--link) | Crypto perpetual · 4h · ADA, LINK (Kraken). Full recorded algorithm in the accounting entry. | 1 |
-| [Kraken ENJ order-book imbalance (spot)](docs/ALL-SLEEVES.md#kraken-enj-order-book-imbalance-spot) | Kraken ENJ order-book imbalance (spot) Adapter for free_kraken_enj_spot — interface glue ONLY (DESIGN §4). | 1 |
+
+### Other (51)
+
+| Strategy | What the record shows | Variants |
+|---|---|---:|
+| [Lab rule 1D (test)](docs/ALL-SLEEVES.md#lab-rule-1d-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [legacy exit (hidden)](docs/ALL-SLEEVES.md#legacy-exit-hidden) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna Moonshot (Midna port)](docs/ALL-SLEEVES.md#midna-moonshot-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna QQQ Ladder (Midna port)](docs/ALL-SLEEVES.md#midna-qqq-ladder-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna Nostop (Midna port)](docs/ALL-SLEEVES.md#midna-nostop-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Lab rule 1W (test)](docs/ALL-SLEEVES.md#lab-rule-1w-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Midna Hourly 1W (Midna port)](docs/ALL-SLEEVES.md#midna-hourly-1w-midna-port) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Moonshot (test)](docs/ALL-SLEEVES.md#moonshot-test) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [OLX R1/R2 books for the other lanes (WAIT)](docs/ALL-SLEEVES.md#olx-r1r2-books-for-the-other-lanes-wait) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [Q14 pxcap5 book (WAIT)](docs/ALL-SLEEVES.md#q14-pxcap5-book-wait) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
+| [APEX C7: COUNCIL](docs/ALL-SLEEVES.md#apex-c7-council) | US ETFs, ETF options and Bitcoin · 1d (monthly options) · QQQ, TQQQ, GLD, BIL, BTC/USD; QQQ listed options. Full recorded algorithm in the accounting entry. | 1 |
+| [APEX QQQ benchmark](docs/ALL-SLEEVES.md#apex-qqq-benchmark) | US ETFs · 1d · QQQ. Full recorded algorithm in the accounting entry. | 1 |
+| [R19 causal overnight hold](docs/ALL-SLEEVES.md#r19-causal-overnight-hold) | US equities · 30m · Frozen 42-name list. Full recorded algorithm in the accounting entry. | 1 |
 | [R4 blowoff (daily / hourly)](docs/ALL-SLEEVES.md#r4-blowoff-daily--hourly) | US equities · 1d · 1h · 1,838-name research genome (daily) · 41-name old-desk basket (hourly). Full recorded algorithm in the accounting entry. | 2 |
-| [SPY put-call parity package](docs/ALL-SLEEVES.md#spy-put-call-parity-package) | ETF options · 1d (5-minute passes) · SPY (SPY / QQQ for the pair). Full recorded algorithm in the accounting entry. | 1 |
-| [Tail put after a -3% day](docs/ALL-SLEEVES.md#tail-put-after-a--3-day) | ETF options · 1d (5-minute passes) · SPY (SPY / QQQ for the pair). Full recorded algorithm in the accounting entry. | 1 |
 | [Winner confluence (weekly qualifiers)](docs/ALL-SLEEVES.md#winner-confluence-weekly-qualifiers) | Winner confluence (weekly qualifiers) Adapter for confluence — v2 interface glue ONLY (DESIGN §4a). | 1 |
-| [Anna PhD location printer](docs/ALL-SLEEVES.md#anna-phd-location-printer) | US equities and ETFs · 1d · Anna's labeled census: 115 names. Full recorded algorithm in the accounting entry. | 1 |
 | [Echo swing](docs/ALL-SLEEVES.md#echo-swing) | US equities · Posts (3-minute sweeps) · 1d · Names in @EchoAnalysis's buy posts. Full recorded algorithm in the accounting entry. | 1 |
 | [Scanner book swing](docs/ALL-SLEEVES.md#scanner-book-swing) | US equities · 1d · 5m session tape · 411-stock Galath universe (Signal Prism US 413 without its two crypto pairs). Full recorded algorithm in the accounting entry. | 1 |
 | [Sector-first bottom](docs/ALL-SLEEVES.md#sector-first-bottom) | US equities · 1d · 5m session tape · 411-stock Galath universe (Signal Prism US 413 without its two crypto pairs). Full recorded algorithm in the accounting entry. | 1 |
-| [Gap continuation (legacy setup)](docs/ALL-SLEEVES.md#gap-continuation-legacy-setup) | US equities · 1m (15-minute cycle) · SPY, QQQ, IWM, the SCOPE radar's top 100, held names. Full recorded algorithm in the accounting entry. | 1 |
 | [Parallax](docs/ALL-SLEEVES.md#parallax) | US equities · 1d · SCOPE universe: 550 US names. Full recorded algorithm in the accounting entry. | 1 |
-| [Positive earnings surprise drift](docs/ALL-SLEEVES.md#positive-earnings-surprise-drift) | US equities · 1d (20-session hold) · SCOPE stocks (ETF basket excluded). Full recorded algorithm in the accounting entry. | 1 |
-| [Top-decile SUE drift](docs/ALL-SLEEVES.md#top-decile-sue-drift) | US equities · 1d (20-session hold) · SCOPE stocks (ETF basket excluded). Full recorded algorithm in the accounting entry. | 1 |
-| [Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay](docs/ALL-SLEEVES.md#confirmed-hourly-swing--minimum-1-atr-stop-distance-no-extra-bar-delay) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay](docs/ALL-SLEEVES.md#confirmed-hourly-swing--minimum-1-atr-stop-distance-one-bar-delay) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Confirmed hourly swing · native stop, no extra bar delay](docs/ALL-SLEEVES.md#confirmed-hourly-swing--native-stop-no-extra-bar-delay) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Confirmed hourly swing · native stop, one-bar delay](docs/ALL-SLEEVES.md#confirmed-hourly-swing--native-stop-one-bar-delay) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Trullas variant v01: 2m chart (timeframe: a slightly slower chart; fewer micro-pivots)](docs/ALL-SLEEVES.md#trullas-variant-v01-2m-chart-timeframe-a-slightly-slower-chart-fewer-micro-pivots) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Trullas variant v02: 3m chart, patient window (timeframe + patience: reads a 3m chart and](docs/ALL-SLEEVES.md#trullas-variant-v02-3m-chart-patient-window-timeframe--patience-reads-a-3m-chart-and) | Trullas variant v02: 3m chart, patient window (timeframe + patience: reads a 3m chart and keeps looking unt) | 1 |
-| [Trullas variant v03: 5m chart, extended window (timeframe + session length: a 5m chart nee](docs/ALL-SLEEVES.md#trullas-variant-v03-5m-chart-extended-window-timeframe--session-length-a-5m-chart-nee) | Trullas variant v03: 5m chart, extended window (timeframe + session length: a 5m chart needs ~25 min to form) | 1 |
-| [Trullas variant v04: strict swings, wide stop (pivot strictness: only a swing that stands](docs/ALL-SLEEVES.md#trullas-variant-v04-strict-swings-wide-stop-pivot-strictness-only-a-swing-that-stands) | Trullas variant v04: strict swings, wide stop (pivot strictness: only a swing that stands out (>=2 ATR prom) | 1 |
-| [Trullas variant v05: loose fast eye, tight stop (pivot looseness + speed: 2-bar fractals,](docs/ALL-SLEEVES.md#trullas-variant-v05-loose-fast-eye-tight-stop-pivot-looseness--speed-2-bar-fractals) | Trullas variant v05: loose fast eye, tight stop (pivot looseness + speed: 2-bar fractals, no prominence test,) | 1 |
-| [Trullas variant v08: key-level reader (visual level reading: P2 must sit within 2 ATR of p](docs/ALL-SLEEVES.md#trullas-variant-v08-key-level-reader-visual-level-reading-p2-must-sit-within-2-atr-of-p) | Trullas variant v08: key-level reader (visual level reading: P2 must sit within 2 ATR of prior-day ) | 1 |
-| [Trullas variant v10: scale-out runner (trade management: half off at 38.2%, runner to 66%](docs/ALL-SLEEVES.md#trullas-variant-v10-scale-out-runner-trade-management-half-off-at-382-runner-to-66) | Trullas variant v10: scale-out runner (trade management: half off at 38.2%, runner to 66% with stop) | 1 |
-| [Earnings-day overnight scalp](docs/ALL-SLEEVES.md#earnings-day-overnight-scalp) | US equities · 1d (overnight) · Nasdaq earnings-calendar names. Full recorded algorithm in the accounting entry. | 1 |
-| [PEAD price surprise](docs/ALL-SLEEVES.md#pead-price-surprise) | US equities · 1d (event) · Nasdaq earnings-calendar names. Full recorded algorithm in the accounting entry. | 1 |
-| [ChartsLector market-fear rebound (QQQ)](docs/ALL-SLEEVES.md#chartslector-market-fear-rebound-qqq) | US ETF · 1d · QQQ. Full recorded algorithm in the accounting entry. | 1 |
 | [FLOW short volume / FTD / dark pool](docs/ALL-SLEEVES.md#flow-short-volume--ftd--dark-pool) | FLOW short volume / FTD / dark-pool (WAIT) | 1 |
-| [Lab rule books (1D / 1W)](docs/ALL-SLEEVES.md#lab-rule-books-1d--1w) | US equities · 1d · 1w · Lab panel names. Full recorded algorithm in the accounting entry. | 2 |
 | [Moonshot weekly lane](docs/ALL-SLEEVES.md#moonshot-weekly-lane) | US equities · 1w · Tracker universe · Midna's swing basket. Full recorded algorithm in the accounting entry. | 1 |
 | [OLX R1/R2 books](docs/ALL-SLEEVES.md#olx-r1r2-books) | US equities · 1d · Lab panel names. Full recorded algorithm in the accounting entry. | 1 |
-| [Q14 under-$5 weekly book](docs/ALL-SLEEVES.md#q14-under-5-weekly-book) | US equities · 1w · Tracker universe. Full recorded algorithm in the accounting entry. | 1 |
 | [QQQ flip5 TZA hedge](docs/ALL-SLEEVES.md#qqq-flip5-tza-hedge) | Leveraged ETF · 1d · TZA (QQQ signal). Full recorded algorithm in the accounting entry. | 1 |
 | [ATR level cascade (SPY)](docs/ALL-SLEEVES.md#atr-level-cascade-spy) | US ETF · 1m · SPY. Full recorded algorithm in the accounting entry. | 1 |
-| [Bilbo Golden Gate (SPY)](docs/ALL-SLEEVES.md#bilbo-golden-gate-spy) | US ETF · 1m · 1h Phase Oscillator · SPY. Full recorded algorithm in the accounting entry. | 1 |
-| [Day Golden Gate (SPY)](docs/ALL-SLEEVES.md#day-golden-gate-spy) | US ETF · 1m (daily ATR levels) · SPY. Full recorded algorithm in the accounting entry. | 1 |
-| [Milkman 0DTE (SPX)](docs/ALL-SLEEVES.md#milkman-0dte-spx) | SPX index options (0DTE) · Intraday · SPX. Full recorded algorithm in the accounting entry. | 1 |
-| [Multi-day Golden Gate (weekly ATR)](docs/ALL-SLEEVES.md#multi-day-golden-gate-weekly-atr) | US equities, index ETFs and futures · 1d (weekly ATR levels) · 1,822 US stocks + 14 index ETFs and futures. Full recorded algorithm in the accounting entry. | 1 |
-| [Swing Golden Gate (monthly ATR)](docs/ALL-SLEEVES.md#swing-golden-gate-monthly-atr) | US equities, index ETFs and futures · 1d (monthly ATR levels) · 1,822 US stocks + 14 index ETFs and futures. Full recorded algorithm in the accounting entry. | 1 |
-| [Saty Magnum (SPY shares)](docs/ALL-SLEEVES.md#saty-magnum-spy-shares) | SPY shares, long and short · 3m · 10m · 1h · 1d · SPY. Full recorded algorithm in the accounting entry. | 1 |
-| [Strong-afternoon continuation](docs/ALL-SLEEVES.md#strong-afternoon-continuation) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Strong-afternoon continuation](docs/ALL-SLEEVES.md#strong-afternoon-continuation-1) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Strong-afternoon continuation](docs/ALL-SLEEVES.md#strong-afternoon-continuation-2) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Strong-afternoon continuation](docs/ALL-SLEEVES.md#strong-afternoon-continuation-3) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [OPT_OWN_IV_RESIDUAL](docs/ALL-SLEEVES.md#opt_own_iv_residual) | No strategy description recorded in consulted sources. | 1 |
-| [Post-earnings response · long, 0.5% risk](docs/ALL-SLEEVES.md#post-earnings-response--long-05-risk) | Recorded by name; the accounting entry carries what the sources hold. | 3 |
-| [Post-earnings response · long, 2.0% risk](docs/ALL-SLEEVES.md#post-earnings-response--long-20-risk) | Recorded by name; the accounting entry carries what the sources hold. | 3 |
-| [Post-earnings response · vertical, 0.5% risk](docs/ALL-SLEEVES.md#post-earnings-response--vertical-05-risk) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
-| [Post-earnings response · vertical, 2.0% risk](docs/ALL-SLEEVES.md#post-earnings-response--vertical-20-risk) | Recorded by name; the accounting entry carries what the sources hold. | 2 |
 | [AIRT auction impulse](docs/ALL-SLEEVES.md#airt-auction-impulse) | US equities · Intraday (≤ 30 minutes) · Registered morning episodes. Full recorded algorithm in the accounting entry. | 1 |
 | [CARM recovery memory](docs/ALL-SLEEVES.md#carm-recovery-memory) | US equities and QQQ · Intraday (≤ 30 minutes) · QQQ and registered episode stocks. Full recorded algorithm in the accounting entry. | 1 |
 | [CER entitlement repricing](docs/ALL-SLEEVES.md#cer-entitlement-repricing) | US equities and ETFs · 1d (21- or 63-session hold) · QQQ, SPY and registered project issuers. Full recorded algorithm in the accounting entry. | 1 |
 | [CQR contract queue revaluation](docs/ALL-SLEEVES.md#cqr-contract-queue-revaluation) | US equities · 1d (up to 63 sessions) · Registered contract issuers. Full recorded algorithm in the accounting entry. | 1 |
 | [CRD capital release](docs/ALL-SLEEVES.md#crd-capital-release) | US equities · 1w decisions · Registered decision documents. Full recorded algorithm in the accounting entry. | 1 |
-| [CRG own-stock filing surprise](docs/ALL-SLEEVES.md#crg-own-stock-filing-surprise) | US equities and ETFs · 1d (20-session hold) · CAT, DE, MSFT. Full recorded algorithm in the accounting entry. | 1 |
-| [Fast Numbers earnings surprise](docs/ALL-SLEEVES.md#fast-numbers-earnings-surprise) | US equities (long and short) · 1d (open to close) · US stocks with reported and consensus EPS. Full recorded algorithm in the accounting entry. | 1 |
 | [Spectral Echo Drift](docs/ALL-SLEEVES.md#spectral-echo-drift) | US equities · 1m (from IEX quotes) · 20 Nasdaq leaders. Full recorded algorithm in the accounting entry. | 1 |
 | [TCFT index-flow swap](docs/ALL-SLEEVES.md#tcft-index-flow-swap) | US equities and QQQ · 1d (to the event's endpoint) · QQQ and registered index-event stocks. Full recorded algorithm in the accounting entry. | 1 |
 | [UIR filing relay](docs/ALL-SLEEVES.md#uir-filing-relay) | US equities and ETFs · 1d (20-session hold) · Senders CAT, DE, MSFT; receivers DE, CAT, AAPL, AMZN, GOOGL, NVDA, AVGO, ORCL. Full recorded algorithm in the accounting entry. | 1 |
-| [Qullamaggie parabolic short](docs/ALL-SLEEVES.md#qullamaggie-parabolic-short) | US equities · 1d setup · 1m trigger · 1,838-name genome. Full recorded algorithm in the accounting entry. | 1 |
-| [OPT_RELEASE_CONVEXITY](docs/ALL-SLEEVES.md#opt_release_convexity) | No strategy description recorded in consulted sources. | 1 |
 | [Saty Research v0.3 - SPY equity paper](docs/ALL-SLEEVES.md#saty-research-v03---spy-equity-paper) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
 | [OPT_STATIONARY_PAIR](docs/ALL-SLEEVES.md#opt_stationary_pair) | No strategy description recorded in consulted sources. | 1 |
 | [OPT_TAIL_STATE](docs/ALL-SLEEVES.md#opt_tail_state) | No strategy description recorded in consulted sources. | 1 |
-| [Hourly multi-indicator recovery · hourly](docs/ALL-SLEEVES.md#hourly-multi-indicator-recovery--hourly) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
-| [Weekly multi-indicator recovery · weekly](docs/ALL-SLEEVES.md#weekly-multi-indicator-recovery--weekly) | Recorded by name; the accounting entry carries what the sources hold. | 1 |
 | [Comeback genome](docs/ALL-SLEEVES.md#comeback-genome) | US equities · 1h · 1d · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
-| [Deep Reset cross-scan](docs/ALL-SLEEVES.md#deep-reset-cross-scan) | US equities · 1d · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
 | [Edge paper hands (10 lineages)](docs/ALL-SLEEVES.md#edge-paper-hands-10-lineages) | US equities · 1h · AAPL, MSFT, NVDA, AMZN, JPM, XOM (SPY, QQQ, IWM, SMH as context). Full recorded algorithm in the accounting entry. | 1 |
 | [Hourly Core / Burst transition](docs/ALL-SLEEVES.md#hourly-core--burst-transition) | US equities · 1h · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
-| [Swing Transition (1H)](docs/ALL-SLEEVES.md#swing-transition-1h) | US equities · 1h · AG, CMG, CRDO, FLY, LTBR, UAMY, VRT, XPEV. Full recorded algorithm in the accounting entry. | 1 |
-| [Weekly cyan transition](docs/ALL-SLEEVES.md#weekly-cyan-transition) | US equities · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
-| [Weekly green recovery](docs/ALL-SLEEVES.md#weekly-green-recovery) | US equities · 1wk · 1,838-name genome roster. Full recorded algorithm in the accounting entry. | 1 |
 | [aster_saty_research](docs/ALL-SLEEVES.md#aster_saty_research) | No strategy description recorded in consulted sources. | 1 |
-| [D20PV](docs/ALL-SLEEVES.md#d20pv) | No strategy description recorded in consulted sources. | 1 |
-| [H1STATE](docs/ALL-SLEEVES.md#h1state) | No strategy description recorded in consulted sources. | 1 |
 | [legacy_exit](docs/ALL-SLEEVES.md#legacy_exit) | No strategy description recorded in consulted sources. | 1 |
-| [PUBLIC_AI_VOLUME_SPOT100](docs/ALL-SLEEVES.md#public_ai_volume_spot100) | No strategy description recorded in consulted sources. | 1 |
-| [PUBLIC_IU_BODY_SPOT100](docs/ALL-SLEEVES.md#public_iu_body_spot100) | No strategy description recorded in consulted sources. | 1 |
-| [PUBLIC_TOMAZETTI_RSI2_SPOT100](docs/ALL-SLEEVES.md#public_tomazetti_rsi2_spot100) | No strategy description recorded in consulted sources. | 1 |
 | [R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR](docs/ALL-SLEEVES.md#r19_adausdt_breakdown_base_collector) | No strategy description recorded in consulted sources. | 1 |
 | [R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR](docs/ALL-SLEEVES.md#r19_adausdt_crowded_long_failure_collector) | No strategy description recorded in consulted sources. | 1 |
 | [R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR](docs/ALL-SLEEVES.md#r19_enjusdt_breakdown_base_collector) | No strategy description recorded in consulted sources. | 1 |
 | [R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR](docs/ALL-SLEEVES.md#r19_enjusdt_crowded_long_failure_collector) | No strategy description recorded in consulted sources. | 1 |
 | [R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR](docs/ALL-SLEEVES.md#r19_linkusdt_breakdown_base_collector) | No strategy description recorded in consulted sources. | 1 |
 | [R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR](docs/ALL-SLEEVES.md#r19_linkusdt_crowded_long_failure_collector) | No strategy description recorded in consulted sources. | 1 |
-| [s_mn_csmom](docs/ALL-SLEEVES.md#s_mn_csmom) | No strategy description recorded in consulted sources. | 1 |
-| [s_mn_gbm_1d_cyan](docs/ALL-SLEEVES.md#s_mn_gbm_1d_cyan) | No strategy description recorded in consulted sources. | 1 |
-| [s_mn_hourly_1d](docs/ALL-SLEEVES.md#s_mn_hourly_1d) | No strategy description recorded in consulted sources. | 1 |
 | [s_mn_qqq_ladder](docs/ALL-SLEEVES.md#s_mn_qqq_ladder) | No strategy description recorded in consulted sources. | 1 |
-| [s_mn_turtle](docs/ALL-SLEEVES.md#s_mn_turtle) | No strategy description recorded in consulted sources. | 1 |
-| [s_mn_w_cyan_adx](docs/ALL-SLEEVES.md#s_mn_w_cyan_adx) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07_ins2](docs/ALL-SLEEVES.md#s_q07_ins2) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07_wiki](docs/ALL-SLEEVES.md#s_q07_wiki) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c52_mi_cheap5_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_cheap5_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c52_mi_cheap5_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_cheap5_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c52_mi_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c52_mi_deep70_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_deep70_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c52_mi_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c52_mi_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_mi_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c52_sm_cheap5_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_sm_cheap5_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c52_sm_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_c52_sm_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_mi_cheap5_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_cheap5_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_mi_cheap5_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_cheap5_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_mi_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_mi_deep70_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_deep70_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_mi_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_mi_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_mi_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_sm_cheap5_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_sm_cheap5_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_sm_cheap5_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_sm_cheap5_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_c78_sm_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_c78_sm_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_mi_cheap5_deep70](docs/ALL-SLEEVES.md#s_q07w_g52_mi_cheap5_deep70) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_mi_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_g52_mi_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_mi_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_mi_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_mi_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_mi_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_mi_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_mi_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_mi_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_mi_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_sm_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_g52_sm_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_sm_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_sm_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g52_sm_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_g52_sm_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_mi_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_g78_mi_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_mi_cheap5_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_mi_cheap5_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_mi_deep70_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_mi_deep70_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_mi_mom6_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_mi_mom6_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_mi_tierA](docs/ALL-SLEEVES.md#s_q07w_g78_mi_tiera) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_sm_cheap5_deep70](docs/ALL-SLEEVES.md#s_q07w_g78_sm_cheap5_deep70) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_g78_sm_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_g78_sm_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_mi_cheap5](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_mi_cheap5_deep70](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_deep70) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_mi_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s52_mi_cheap5_mom6](docs/ALL-SLEEVES.md#s_q07w_s52_mi_cheap5_mom6) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_mi_cheap5_deep70_mom6](docs/ALL-SLEEVES.md#s_q07w_s78_mi_cheap5_deep70_mom6) | No strategy description recorded in consulted sources. | 1 |
-| [s_q07w_s78_mi_cheap5_mom6](docs/ALL-SLEEVES.md#s_q07w_s78_mi_cheap5_mom6) | No strategy description recorded in consulted sources. | 1 |
 | [s_wait_chase](docs/ALL-SLEEVES.md#s_wait_chase) | No strategy description recorded in consulted sources. | 1 |
 | [s_wait_flow](docs/ALL-SLEEVES.md#s_wait_flow) | No strategy description recorded in consulted sources. | 1 |
-| [s_wait_intraweek](docs/ALL-SLEEVES.md#s_wait_intraweek) | No strategy description recorded in consulted sources. | 1 |
 | [s_wait_olx_books](docs/ALL-SLEEVES.md#s_wait_olx_books) | No strategy description recorded in consulted sources. | 1 |
 | [s_wait_q14](docs/ALL-SLEEVES.md#s_wait_q14) | No strategy description recorded in consulted sources. | 1 |
-| [s_wait_r2_dcyan](docs/ALL-SLEEVES.md#s_wait_r2_dcyan) | No strategy description recorded in consulted sources. | 1 |
-| [TRADER_RSI2](docs/ALL-SLEEVES.md#trader_rsi2) | No strategy description recorded in consulted sources. | 1 |
-| [TRADER_SQUEEZE20](docs/ALL-SLEEVES.md#trader_squeeze20) | No strategy description recorded in consulted sources. | 1 |
-| [WSTATE](docs/ALL-SLEEVES.md#wstate) | No strategy description recorded in consulted sources. | 1 |
-| [OPT_WHEEL_LIFECYCLE](docs/ALL-SLEEVES.md#opt_wheel_lifecycle) | No strategy description recorded in consulted sources. | 1 |
 
 ## Catalog cards by family (269)
 
