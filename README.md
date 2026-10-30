@@ -20,6 +20,8 @@ Monitors and research recorders are not listed.
 | `docs/CATALOG.json` | every strategy with its variants and row ids |
 | `docs/SLEEVES.md` | every sleeve on the desk (333), one row each, with its code file in this repo |
 | `docs/SLEEVES.json` | the same every-sleeve index in machine-readable form |
+| `docs/ALL-SLEEVES.md` | the curated accounting: every strategy ever built across all desks, deduplicated, arranged by type, with its algorithm and variants |
+| `docs/ALL-SLEEVES.json` | the same curated accounting in machine-readable form |
 | `docs/VERIFY.md` | the code lines each card rule was read from (one page a family in `docs/verify/`), and where each copied file came from |
 
 The master desk runs these sleeves on the Femto-lean framework (branch master-desk). Not in this repo: the framework itself (trading engine, order handling, data hub) and the Tensor indicator engine.
