@@ -1,0 +1,81 @@
+{
+ "sleeve": "mk_zerodte_spx",
+ "install": "MILKMAN-0DTE-INSTALL-20261027",
+ "installed": "2026-10-27",
+ "paper_only": true,
+ "source": {
+  "repo": "Femto-lean",
+  "branch": "milkman-0dte",
+  "commit": "8c64cd5c (Claude master-desk, per SEMANTIC-AUDIT-2026-10-27 \u00a73.8)",
+  "manifest": "~/workspace/peer-execute-20261027/sources/MANIFEST.json group d_milkman"
+ },
+ "files": {
+  "desk3/milkman_0dte/milkman_0dte.py": "202841b379c96120b6e859a4a576d76fde8b4b24f7653b57a56ce7d04be106ee (BYTE-EXACT vs manifest)",
+  "desk3/milkman_0dte/2026-10-27-milkman-0dte-parity.md": "47ef6e9a6a9c69f998dbf74ce4563e138ae2ed67b953390801d0145e6e81fa27 (BYTE-EXACT vs manifest)",
+  "desk3/milkman_0dte/spx_probe.py": "b001b4bb04cae086252c9624f479d2f34598dd4d0635ae9caad72cb6f86e80b4 (PORT-ADAPT from manifest 2aa56969b48ce4f146f55736f77e3ff20d220efb318912eae0177d4b683e83ce)",
+  "sleeves/milkman_0dte.py": "5b735da166b664ce011e8c0fabffdfc8c802e5ea68569af6a9b8b5ede26caf93",
+  "adapters/milkman_0dte.py": "3c323bb01af9b7bb03e715a69e8bea7bd36c1f7d64cb1c06836b0b99c649169b",
+  "adapters3/milkman_0dte.py": "fa1b9d47f9fd113f01dbb260ac9dfabe35a82926bc599220c444258585c25434",
+  "tests/test_milkman_0dte_20261027_blockers.py": "dd56a74868302261b5cf72d23ff21a022bb6d34ff64203091798eb4fa553acff"
+ },
+ "authored_parameters": {
+  "instrument": "SPX/SPXW 0DTE (today's expiry only)",
+  "daily_stop_usd": -10000.0,
+  "premium_per_trade_usd": 2500.0,
+  "max_open": 4,
+  "target_delta": 0.4,
+  "max_spread_frac": 0.2,
+  "quote_max_age_s": 180.0,
+  "no_entry_before_close_min": 30,
+  "hard_exit_before_close_min": 15,
+  "excluded_setups": [
+   "ESMON",
+   "OPX4"
+  ],
+  "virtual_book_usd_authored": 1000000.0
+ },
+ "slice_usd": 10000.0,
+ "config": {
+  "cadence_s": 60,
+  "parked": true,
+  "session": "rth",
+  "inputs": [
+   "bars",
+   "positions",
+   "milkman_0dte_chain"
+  ],
+  "roster": "313 -> 314"
+ },
+ "feed_state": {
+  "state": "UNFED + PARKED",
+  "probe_2026_10_27": {
+   "route": "desk3.run_live.credential_env + desk3.producers.fetch_option_contracts/fetch_option_snapshots (read-only)",
+   "contracts_expiring_today": {
+    "SPX": 504,
+    "SPXW": 0,
+    "XSP": 556,
+    "SPY": 298
+   },
+   "spx_snapshots": 504,
+   "spx_two_sided_quoted_after_close": 252,
+   "with_delta": 0,
+   "finding": "contracts + two-sided quotes reachable; greeks/delta absent on this tier (feed=indicative no greeks, feed=opra 403) - authored pick requires delta"
+  },
+  "named_open_items": [
+   "MILKMAN-INTRADAY-PORT: Femto-lean desk/sleeves/milkman/intraday.py (signal study) not in vendored set, no v3 counterpart - no authored lane signals until ported",
+   "SPX-GREEKS-ROUTE: greeks-bearing SPX chain feed (OPRA tier or proven vendor route), proven via probe with_delta count"
+  ]
+ },
+ "test_evidence": {
+  "file": "tests/test_milkman_0dte_20261027_blockers.py",
+  "tests": 22,
+  "result": "22/22 OK",
+  "fail_first": "pre-install tree: collection FileNotFoundError; TARGET_DELTA 0.40->0.55: 3 fail; DAILY_STOP -10000->-5000: 2 fail; restored byte-identical, green again"
+ },
+ "gate": {
+  "result": "GREEN",
+  "tests": 1277,
+  "exit_code": 0,
+  "note": "1255 pre-install + 22 new milkman blockers; roster pins 313->314 updated at source in test_deploy_blockers.py + test_harden_batch1_blockers.py"
+ }
+}
