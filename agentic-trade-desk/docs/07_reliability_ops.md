@@ -110,3 +110,16 @@ Report the *specific* finding, not "market conditions". In one incident, three d
 
 ## 7.10 Operations checklist
 See `11_checklists.md`.
+
+
+## Addendum — platform, supervision and diagnostics (from the archive review)
+
+- **Everything on the box can vanish.** Put the schedule or a dead-man's switch **off the box**: an external routine that runs the idempotent start script several times per weekday and pages on a missing heartbeat. Detaching a process is not host-reset recovery (P-99). A dead worker must leave enough on disk for the next one to converge to the truth; a pass that died mid-run and one that never started should look the same — idempotent passes and the broker read-back sort it out.
+- **'Slot done' only on success; retry = the next tight tick (+5 min), not in-band retry.** Verify before retrying (look for partial effects), submit idempotently, and add a **post-window verifier** that confirms the intended end state — the retry makes it likely, the verifier makes it *known*. Derive 'what's new' from durable state (ledger diff), not 'what happened in the last N minutes', so a missed poll is harmless.
+- **Time:** use a wall-clock cadence for *when* to run and monotonic time for *how long*; after a reboot ask 'am I inside my window right now?' rather than 'did I run at T' (P-105). Keep external cron windows wide around DST.
+- **Supervisor child exits:** record exit **code and signal** separately, pid/start identity, who requested the stop, last progress and memory; capped exponential backoff; detect alive-but-stalled via heartbeat + birth + exact lease ownership and terminate only your own child (P-98). Liveness by effects (pid + cmdline + heartbeat age ≤ 3× cycle) (P-100).
+- **Persist gates and plans** (cadence, prefetch) — fresh-process-per-pass designs lose memory (P-101). Inventory producers→consumers→schedule; name any **UNFED** input (P-102).
+- **Never-delete list and gated restores** (P-97): ledgers, outcomes, journals, hidden state are never wiped; only rebuildable caches. Gate bulk restores on free disk and keep them out of market hours; `gc.auto=0` on backup clones. Exclude shared inboxes from sync (P-96).
+- **Starved host runbook** (P-109): provider web console → `cat /proc/pressure/{cpu,memory,io}`, `free -m`, `vmstat 1 5`, `ps -eo pid,ppid,comm,%cpu,%mem,rss --sort=-rss | head`, per-cgroup usage, kernel OOM log; stop/renice only the dominant **non-trading** process; reconcile positions/orders before any restart.
+- **Measure before optimising** (P-106): cgroup quotas can hide behind a parent's accounting; add read-only no-op checks before rewriting caches; prove byte-identical decisions after a speed-up.
+- **Agent programs:** small fenced, resumable steps; commit early; never re-run completed work (P-107). A chat-pasted secret is leaked: rotate (P-108).

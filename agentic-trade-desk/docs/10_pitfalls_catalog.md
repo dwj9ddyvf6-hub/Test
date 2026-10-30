@@ -4,7 +4,7 @@ Each entry: **Symptom → Cause → Fix → Guard**. IDs are stable; other docum
 
 How to use: (1) skim headings once; (2) when designing a component, read its theme section fully; (3) when something breaks, search the symptom here before debugging from scratch.
 
-**Severity hints**: P-01, P-02, P-05, P-06, P-12, P-17, P-37, P-58 each risked wrong orders, wrong positions, or unprotected exposure.
+**Severity hints**: P-01, P-02, P-05, P-06, P-12, P-17, P-37, P-58, P-79, P-88, P-89 each risked wrong orders, wrong positions, or unprotected exposure.
 
 
 ## A. Identity and idempotency
@@ -495,6 +495,338 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Fix:** Perimeter list; ask only for authority/material choice.
 - **Guard:** AGENTS.md review.
 
+## J. Order ids, ownership and exits (added from archive review)
+
+### P-78 — Order ids collide with themselves after a fill plus a quantity change
+- **Symptom:** A burst of broker 422 duplicate-id rejections in one morning.
+- **Cause:** The id was minted from the *signal* alone; after a partial fill and a changed quantity the same id was used for a different order.
+- **Fix:** Mint ids from the signal **and the fill state** (cumulative filled qty / attempt counter). Test: fill, change qty, resend → new id, no collision.
+- **Guard:** Id-collision test with partial fill followed by a resize.
+
+### P-79 — A human/operator order and a sleeve exit reach for the same shares
+- **Symptom:** The sleeve's exit ate broker rejections ('held for orders') because an operator's resting trim held every share.
+- **Cause:** No shared view of which shares are already committed to open orders.
+- **Fix:** One **reservation ledger per account+symbol** shared by every sleeve and every operator order: count open, partial and cancel-pending sells against available shares; reconcile broker positions/open orders immediately before dispatch; after a submit timeout keep the reservation as UNKNOWN until reconciled; recompute after fill/cancel races; one fenced writer owns dispatch. The desk stands down (named reason) rather than provoking a broker rejection. Consider giving an operator lane its own virtual book.
+- **Guard:** Race fixture: operator trim + sleeve exit on one position ⇒ no broker rejection, one sell wins, the other logs `stand_down`.
+
+### P-80 — Partial first fill, then a price jump, exceeds the intended stop risk
+- **Symptom:** A stop sized for the planned entry price risked more than intended.
+- **Cause:** Stop computed before the fill and not re-pinned.
+- **Fix:** Pin the stop to the **actual first fill** and cancel the unfilled remainder before later fill boundaries; keep stop and quote units comparable across splits.
+- **Guard:** Partial-fill-then-gap test asserting risk ≤ limit.
+
+### P-81 — An unrelated data failure delays a healthy held-position exit
+- **Symptom:** A position's exit waited because a different instrument's feed failed.
+- **Cause:** Exit assessment shared the entry path's all-or-nothing data census.
+- **Fix:** Held-symbol exits use **their own causal data source**; only *new entries* require the complete census. Test across disable/halt/restart.
+- **Guard:** Break an unrelated feed ⇒ held exit still evaluates.
+
+### P-82 — A transient failure at the admission guard becomes a permanent denial
+- **Symptom:** A signal was never admitted because one check failed once.
+- **Cause:** The guard recorded a final denial on a retryable error.
+- **Fix:** Defer and retry the same verified binding inside the real window; only final reasons are final.
+- **Guard:** Fail-once-then-pass test.
+
+### P-83 — Background data reads consume a protected decision window
+- **Symptom:** An entry deadline was missed while a broad refresh ran.
+- **Cause:** Unrelated acquisition ran concurrently with the critical window.
+- **Fix:** Defer unrelated acquisition around protected windows; required fills and held exits keep priority.
+- **Guard:** Window test with a slow background read.
+
+### P-84 — A dependent buy executes although its paired sale missed
+- **Symptom:** A rotation bought the replacement while still holding the donor.
+- **Cause:** Buy and sell treated as independent intents.
+- **Fix:** Store targets; the buy waits until the sale has a quote/fill. Model dependencies explicitly.
+- **Guard:** Missed-sale test ⇒ no replacement buy.
+
+### P-85 — Sub-minimum remainders ('dust') after exits
+- **Symptom:** Tiny residual quantities no order can close.
+- **Cause:** Partial exits and lot increments ignored venue minimums.
+- **Fix:** Prevent creating sub-minimum remainders (round the exit up/down by policy); keep residuals **visible** — no fake close, no inventory top-up, no silent deletion; define an allowed resolve policy.
+- **Guard:** Exit-sizing test across lot increments.
+
+### P-86 — Cash availability uses the exchange calendar instead of the settlement calendar
+- **Symptom:** Simulated sale cash was reusable a day too early over a settlement holiday.
+- **Cause:** Exchange sessions ≠ securities settlement days; settlement cycle (T+2→T+1) changed over time; a generic federal-holiday calendar differs from the clearinghouse's.
+- **Fix:** Use the official settlement calendar and cycle by date; **fail closed** for years without data; keep old release rows, bind policy version to new ones; re-run research with the corrected calendar and keep the rejected outputs labelled rejected.
+- **Guard:** Dated fixtures around a settlement holiday.
+
+### P-87 — A cost is applied twice
+- **Symptom:** P&L disagreed with cash: a haircut was in the fill price and subtracted again.
+- **Cause:** Two layers each applied the same cost.
+- **Fix:** P&L = (sell − entry average) × shares with costs applied in exactly one place; reconcile cash against P&L.
+- **Guard:** Round-trip accounting identity test.
+
+
+## K. State truth, recorders and protection (added from archive review)
+
+### P-88 — A risk number downstream of a cache trips a breaker on fiction
+- **Symptom:** An exposure circuit-breaker tripped at a phantom 177% when the real figure was ~130%.
+- **Cause:** The exposure ledger held a ghost position the broker did not, and missed real positions because the broker→ledger sync hadn't run; short legs were skipped entirely.
+- **Fix:** Every risk metric is computed from **broker truth** (or reconciled to it every pass); shorts and legs count; stale caches are labelled stale. Prefer 'lock the symbol and alert' over a global breaker.
+- **Guard:** Phantom-position test: ledger ghost + missing broker rows ⇒ metric uses broker.
+
+### P-89 — Some writers bypass the recorder
+- **Symptom:** The replay proof was clean, yet reconciling against the broker found most of a day's fills had no ledger row.
+- **Cause:** Live loops recorded fills around the filing path, so the replay never saw them: 'evidence at the actual writer' was missing.
+- **Fix:** All fill recording goes through one door; add a **bypass blocker** (test that any direct write fails); reconcile ledger vs broker *by fills* daily, not just positions.
+- **Guard:** Fill-count reconciliation vs broker.
+
+### P-90 — Protection verified in the desk's own state, not at the broker
+- **Symptom:** Stops existed in state but not at the broker (or vice versa).
+- **Cause:** The check read internal records.
+- **Fix:** Verify protective orders **at the broker** (list open stops per lot, coverage %, refused lots) and treat foreign stops explicitly.
+- **Guard:** Coverage check against a fake broker.
+
+### P-91 — Adopted/legacy positions owned by nobody
+- **Symptom:** Positions inherited from a retired desk were neither managed nor protected, or got managed by the wrong sleeve.
+- **Cause:** No explicit ownership baseline.
+- **Fix:** Record a baseline: either adopt (owner sleeve, exit rules, stops) or declare 'owned by no writer; never managed'. Reconcile guards that baseline.
+- **Guard:** Baseline ownership test.
+
+### P-92 — Per-fire block reasons are not kept
+- **Symptom:** A once-per-signal sleeve sat in cash and nobody could tell whether the market gate, the name or an unknown colour was the reason.
+- **Cause:** Decisions logged without the reason or expiry.
+- **Fix:** Persist reason, inputs, and expiry per fire (append-only reasons log).
+- **Guard:** Reasons-log completeness test.
+
+### P-93 — A stale response overwrites a newer good read
+- **Symptom:** An error banner or old price replaced a newer good value.
+- **Cause:** Late failed poll won the race.
+- **Fix:** Responses carry a sequence/timestamp; ignore any response older than the last accepted.
+- **Guard:** Out-of-order response test.
+
+### P-94 — A forecast dated before the book existed is treated as fresh
+- **Symptom:** The next forecast never started.
+- **Cause:** Freshness compared to 'now', not to the book's birth/last-used date.
+- **Fix:** Compare against the last consumed signal date and the book birth.
+- **Guard:** Dated-fixture test.
+
+### P-95 — The wrong 'previous close' makes a red day look green
+- **Symptom:** A gate waited on a day the rule allowed.
+- **Cause:** A multi-day chart's `previousClose` field was the start of the chart range, not yesterday.
+- **Fix:** Derive previous close from the daily series by session date; never from range metadata.
+- **Guard:** Fixture where chart metadata disagrees with the daily series.
+
+
+## L. Operations, platform and agents (added from archive review)
+
+### P-96 — A bulk backup sync wipes a shared agent inbox
+- **Symptom:** A shared dead-drop file was deleted three times in one evening.
+- **Cause:** The sync mirrored the working tree, including a directory other agents write to.
+- **Fix:** Exclude shared channels from sync; additive-only pushes; pre-push hooks refuse deletions and ref deletes; the sync aborts on any staged deletion; restore from git history.
+- **Guard:** Guard test: staged deletion ⇒ abort.
+
+### P-97 — Cleanup/restore destroys irreplaceable files or fills the disk
+- **Symptom:** A health sentinel froze the desk over 'missing' files that had been deliberately moved off-box; a restore of ~17k files plus a garbage-collect collapsed free space to ~300 MB.
+- **Cause:** No explicit never-delete list; manifests treated every missing file as damage; no disk gate.
+- **Fix:** A written **never-delete list** (ledgers, outcomes, journals, hidden state); only rebuildable caches are fair game; the backup manifest excludes deliberately archived folders; restores are gated on free space and blocked during market hours; `gc.auto=0` on backup clones.
+- **Guard:** Sentinel test: archived folder missing ⇒ no freeze.
+
+### P-98 — A child exits with 'null' and nobody knows why
+- **Symptom:** 'Loop exited null' twice with no stack.
+- **Cause:** Only the exit code was recorded.
+- **Fix:** Record **code and signal separately**, pid/start identity, whether the supervisor requested the stop, the last progress marker, memory at the last heartbeat, and OOM evidence. Null code + null signal with no error event often means an external SIGKILL (the OOM killer) or a dead IPC channel.
+- **Guard:** Supervisor fixtures: SIGABRT, SIGKILL, timeout.
+
+### P-99 — Detaching a process is mistaken for host-reset recovery
+- **Symptom:** After a host reset nothing restarted the desk — including the on-box supervisor.
+- **Cause:** Everything lived on the box.
+- **Fix:** Put the schedule/dead-man's switch **off the box** (external routine or pinger that fires the idempotent start script several times a day and alerts when no heartbeat arrives).
+- **Guard:** Boot drill.
+
+### P-100 — Liveness judged by process name
+- **Symptom:** A wrong process matched; a dead desk looked alive.
+- **Cause:** Name matching.
+- **Fix:** Liveness by *effects*: pid alive AND cmdline matches AND heartbeat age ≤ 3× the cycle.
+- **Guard:** Impostor-process test.
+
+### P-101 — Cadence or prefetch state lives in process memory
+- **Symptom:** A cadence gate reset on every pass (each pass is a fresh process); two deploys emptied the prefetch plans.
+- **Cause:** State kept in memory.
+- **Fix:** Persist gates, plans and cursors on disk (atomic).
+- **Guard:** Restart test.
+
+### P-102 — A producer exists but is never scheduled
+- **Symptom:** Every consumer reported a data gap.
+- **Cause:** Nobody wired the producer into a schedule.
+- **Fix:** Inventory producers → consumers → schedule; an alert for any declared input with no producer ('UNFED by name'), never a silent abstention.
+- **Guard:** Inventory check.
+
+### P-103 — A sleeve that never traded can never fire
+- **Symptom:** A premium-selling sleeve's entry required 14 bars while its window served 12.
+- **Cause:** Never exercised end-to-end.
+- **Fix:** **Dead-sleeve audit**: for each sleeve inject a synthetic fire / run on real history and prove at least one entry and one exit are *reachable*; sleeves never seen to trade are listed first in every audit.
+- **Guard:** Reachability test per sleeve.
+
+### P-104 — Tests stub libraries the production host does not have
+- **Symptom:** A sleeve failed every pass at runtime although tests passed.
+- **Cause:** Tests stubbed two libraries loaded at decision time.
+- **Fix:** A test walks the runtime's imports and fails on any module the host environment lacks.
+- **Guard:** Import-walker test.
+
+### P-105 — Timer semantics: monotonic sleep stalls across suspends; sparse cron misses runs
+- **Symptom:** Snapshots were missing for hours; only 1 of ~20 scheduled runs fired.
+- **Cause:** `sleep 900` uses a clock that does not advance during a pause; a 20-minute external cron fires rarely on a pausable platform.
+- **Fix:** Use **wall-clock cadence for 'when to run'** (60 s tick comparing to the last-run time) and **monotonic time for 'how long it may take'**; raise external trigger frequency (e.g. every 5 minutes) and widen UTC windows around DST.
+- **Guard:** Cadence test with a mocked pause.
+
+### P-106 — Hidden resource limits and wasted work
+- **Symptom:** A job ran at a fraction of expected speed; warm runs rewrote a large cache for nothing.
+- **Cause:** A parent cgroup quota was invisible to the child's accounting; no 'already compact' check.
+- **Fix:** Measure the whole path stage by stage; read cgroup limits; add read-only no-op checks before rewriting caches; bound LRUs; compare decision bytes before/after any speed-up.
+- **Guard:** Before/after identical-output test.
+
+### P-107 — Long monolithic agent tasks die on the agent's own time limit
+- **Symptom:** A multi-hour agent program timed out twice.
+- **Cause:** One huge step.
+- **Fix:** Small fenced steps, commit early, completed work never re-run, resumable via a manifest.
+- **Guard:** Resume-after-kill drill.
+
+### P-108 — A secret is pasted into a chat
+- **Symptom:** A token appeared in a conversation.
+- **Cause:** Convenience.
+- **Fix:** Treat as leaked: **revoke/rotate** immediately ('not committed' is not safety); use credential helpers or secret stores instead.
+- **Guard:** Process rule.
+
+### P-109 — The host is starved and SSH accepts but never shows a banner
+- **Symptom:** Could not log in during a memory/CPU crunch.
+- **Cause:** A ballooning non-trading process plus swap thrash.
+- **Fix:** Use the provider's web console; read `/proc/pressure/{cpu,memory,io}`, `free`, `ps --sort=-rss`, per-cgroup usage and the kernel OOM log; stop or renice only the dominant **non-trading** process; never restart before a fresh broker reconciliation.
+- **Guard:** Runbook entry.
+
+### P-110 — A history mirror crawls because it re-censuses everything
+- **Symptom:** A mirror took far too long and lost progress on a dropped connection.
+- **Cause:** Per-object checks each pass; no retries.
+- **Fix:** Range-limited census, transport retries, and the host's recursive tree API (mind documented size caps; never trust a truncated response).
+- **Guard:** Timing test.
+
+
+## M. Research, data and measurement (added from archive review)
+
+### P-111 — Survivors-only fundamentals and universes create look-ahead
+- **Symptom:** Rules based on filings could only fire on names that survived; a model learned that missing filings meant 'later delisted'.
+- **Cause:** Data fetched only for currently listed names.
+- **Fix:** Point-in-time universes including delisted names; cover rates reported separately; models never see features whose *missingness* encodes the future; score covered-universe rules against controls built from the same covered universe.
+- **Guard:** Missingness-leak test.
+
+### P-112 — Clipping and one benchmark hide (or fake) edge
+- **Symptom:** Top-1% clipping removed the big winners a tail strategy exists to catch; the only benchmark was an average stock that leans small and volatile.
+- **Cause:** Measurement choices.
+- **Fix:** Don't clip the tail you claim to harvest; compare against **matched controls** (same volatility/size) and against the *same conditions without the signal*; multiple horizons.
+- **Guard:** Matched-control report.
+
+### P-113 — Too few null draws and selection among many books
+- **Symptom:** Five random draws could not reject anything (min p ≈ 0.17); one winner among 24 tried books.
+- **Cause:** Weak null; hidden multiplicity.
+- **Fix:** Many null draws; report the number of books/variants tried; deflated Sharpe; freeze the design before reading holdout/fresh results.
+- **Guard:** Null-draw count assertion.
+
+### P-114 — A ranking rule is credited for what the basket did
+- **Symptom:** A momentum rule looked great on micro-caps, where random same-width books did better.
+- **Cause:** No random-basket control.
+- **Fix:** Compare the rule to random books of the same width drawn from the same eligible names; check where ranking adds least.
+- **Guard:** Random-basket control.
+
+### P-115 — Indicators that describe the past
+- **Symptom:** Signals fired after the move; post-entry excess was ~0.
+- **Cause:** The signal day itself was already an outperformance day.
+- **Fix:** Measure excess **after entry**, not including the signal bar; test timing separately from selection.
+- **Guard:** Post-entry excess table.
+
+### P-116 — Provisional vs completed candles and auction inclusion
+- **Symptom:** Signals evaluated post-close used a point quote that predated the closing auction; some hourly/daily frames errored while others quarantined the same tail.
+- **Cause:** A quote is not a candle; a completed bar's volume includes the auction; post-market rows can carry prices with zero volume; pre/post-market rows can sit off the grid.
+- **Fix:** A `candle_complete` flag; usable-at = max(completed, observed, fetched); label provisional decisions and log provisional-vs-completed disagreements; quarantine non-native tail rows consistently across frames; use one canonical volume source for volume rules; never backfill a label with the next morning's revision.
+- **Guard:** Pre-close cached body fixture; early-close short bucket fixture.
+
+### P-117 — Fabricated or mismatched symbols and mixed-start series
+- **Symptom:** Requested tickers 404'd; two ETFs existed only at the end of the sample.
+- **Cause:** Universe file contained non-provider symbols.
+- **Fix:** Data census before any test: loaded / failed / short-history; exclude or label.
+- **Guard:** Census report.
+
+### P-118 — A 'self-improving' desk rewriting rules from n≈0
+- **Symptom:** Learning loops changed nothing because forward closes were zero — or would have overfit to a week.
+- **Cause:** Learning without evidence thresholds.
+- **Fix:** Gate learning on forward sample size; run alternatives in **shadow books** beside the live rule; promotions need pre-registered evidence; the learner records excursions without editing rules.
+- **Guard:** Promotion-gate test.
+
+### P-119 — Publication artifacts contradict each other
+- **Symptom:** A sealed publication contradicted the cards it sealed; the board was empty on its first live day.
+- **Cause:** No cross-check between summary and members.
+- **Fix:** Cross-checks on every publish artifact (counts, sets, dates) before it goes out.
+- **Guard:** Publish contract test.
+
+### P-120 — Retroactive unit changes in corporate-action data
+- **Symptom:** Distributions normalised for later splits inflated cash fivefold when combined with historical quantities.
+- **Cause:** Unit/basis mismatch.
+- **Fix:** Reconcile per-share units to a primary source; carry the adjustment basis with every value.
+- **Guard:** Unit-basis fixture.
+
+
+## N. Observability, services and governance (added from the companion guide)
+
+### P-121 — One green badge for everything
+- **Symptom:** A dashboard said 'healthy' with a stale provider.
+- **Cause:** Process, input, account and strategy readiness were merged.
+- **Fix:** Display **process, input freshness, account reconciliation, strategy readiness** separately; none says anything about expected returns.
+- **Guard:** UI contract test.
+
+### P-122 — Health checks that repair
+- **Symptom:** A diagnostic restarted or rebuilt production.
+- **Cause:** Probe and repair shared one entry point.
+- **Fix:** Health endpoints are read-only; repairs are explicitly named actions with logs.
+- **Guard:** Probe side-effect test.
+
+### P-123 — Alert delivery conflated with alert creation
+- **Symptom:** A notification arrived but the dashboard lacked the event (or vice versa).
+- **Cause:** One 'sent' flag.
+- **Fix:** Record created / enqueued / submitted / delivered / displayed / acknowledged separately; dedupe by stable event id; mark late, provisional or corrected signals.
+- **Guard:** Outbox lifecycle test.
+
+### P-124 — Agreeing agents are not independent evidence
+- **Symptom:** Several agents endorsed a bad trade.
+- **Cause:** Shared data, model, prompts or anchoring.
+- **Fix:** Structured outputs with source-backed claims, counterevidence and missing inputs; deterministic policy gates; models never parsed into orders.
+- **Guard:** Schema validation test.
+
+### P-125 — A card or snapshot is mistaken for a running system
+- **Symptom:** A repository 'contained a strategy' but lacked engine, data or config.
+- **Cause:** Catalog ≠ runtime.
+- **Fix:** Trace card → source → config → adapter → tests → runtime owner; mark each link present/absent/historical/synthetic/unverified.
+- **Guard:** Trace table.
+
+### P-126 — Risk-policy rollback erases a newer decision
+- **Symptom:** An automatic rollback reverted a later operator change.
+- **Cause:** Rollback by value instead of by version.
+- **Fix:** Compare-and-swap on the policy hash; automatic rollback applies only to the approved trial.
+- **Guard:** CAS test.
+
+### P-127 — Disabling a sleeve deletes ownership and exit obligations
+- **Symptom:** A position had no safe exit after its sleeve was paused.
+- **Cause:** Entry permission and position ownership were one flag.
+- **Fix:** Separate 'may open new positions' from 'owns and must service existing positions'.
+- **Guard:** Disable-then-exit test.
+
+### P-128 — Silent feed fallback
+- **Symptom:** Numbers changed meaning after a provider switched.
+- **Cause:** Automatic substitution.
+- **Fix:** Provider, feed, delay and price basis are explicit and visible; a fallback is an alert and a labelled state.
+- **Guard:** Fallback-label test.
+
+### P-129 — Zero volume vs no trade vs omitted bar vs closed vs unknown
+- **Symptom:** 'No signal' hid five different situations.
+- **Cause:** Collapsed states.
+- **Fix:** Reason-coded coverage states (FRESH/STALE/INCOMPLETE/UNAVAILABLE/UNENTITLED/INVALID/BLOCKED) and distinct 'no signal' reasons.
+- **Guard:** State-table test.
+
+### P-130 — Multi-user claims without tenant isolation
+- **Symptom:** 'Everyone gets their own instance' with shared in-memory state.
+- **Cause:** Assumed isolation.
+- **Fix:** Tenant-bound state, quotas, concurrency limits, queue backpressure, and isolation tests; load capacity and isolation are proven separately.
+- **Guard:** Cross-tenant access test.
+
 
 ---
-*77 entries (P-77 sits with theme A).* Add yours: when a new failure class appears, add an entry with the next free id and a guard test.
+*130 entries (P-77 sits with theme A; P-78–P-120 added from the archive review of inter-agent notes and original research logs; P-121–P-130 from the companion guide).* Add yours: when a new failure class appears, add an entry with the next free id and a guard test.
