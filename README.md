@@ -4,7 +4,10 @@ Every trading strategy across our desks, one card each: what it trades, its rule
 
 Monitors and research recorders are not listed.
 
+<!-- BEGIN FIXED SECTION: agent guides. The README generator should emit this block verbatim (source text: docs/README_FIXED_SECTION.md). Checked by agentic-trade-desk/skeleton/tools/check_root_readme_links.py -->
 > **New: [How to build an agentic trade desk](agentic-trade-desk/README.md)** — a full guide, written for LLM agents, covering architecture, setup, order safety, reconciliation, reliability, research validation, multi-agent coordination, 130 catalogued pitfalls, checklists and generic reference code. Paper trading only; not financial advice. See also the shorter [build guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md).
+> **Guides for LLM agents:** [Agentic Trade Desk Build Guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md) (architecture and phases) · [`agentic-trade-desk/`](agentic-trade-desk/README.md) (operational kit: invariants, 130 pitfalls, tested skeleton code).
+<!-- END FIXED SECTION -->
 
 ## Layout
 
