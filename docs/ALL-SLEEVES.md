@@ -19,7 +19,7 @@
 - Algorithm completeness: FULL **224**, PARTIAL **427** (each PARTIAL entry names its specific gap).
 
 
-# Type: trend following (41 strategies)
+# Type: trend following (200 strategies)
 
 
 ## Q07 w_cyan H52 small cheap5+insider2+mom6 (test)
@@ -1156,7 +1156,4576 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-# Type: momentum (24 strategies)
+## Q07 w_cyan H52 small cheap5+mom6+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 small cheap5+mom6+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_sm_cheap5_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_sm_cheap5_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_sm_cheap5_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_sm_cheap5_mom6_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_sm_cheap5_mom6_vix20` — md2_catalog: installed
+
+## Q07 w_cyan H78 small deep70+insider2+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 small deep70+insider2+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_sm_deep70_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_sm_deep70_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_sm_deep70_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_sm_deep70_ins2_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_sm_deep70_ins2_vix20` — md2_catalog: installed
+
+## Q07 w_cyan H78 small insider2+mom6+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 small insider2+mom6+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_sm_ins2_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_sm_ins2_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_sm_ins2_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_sm_ins2_mom6_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_sm_ins2_mom6_vix20` — md2_catalog: installed
+
+## Q07 w_green H52 midlarge stress_vix20+tierA (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 midlarge stress_vix20+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_ml_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_ml_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_ml_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_ml_vix20_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_ml_vix20_tierA` — md2_catalog: installed
+
+## Q07 w_green H52 small deep70+insider2+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 small deep70+insider2+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_sm_deep70_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_sm_deep70_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_sm_deep70_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_sm_deep70_ins2_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_sm_deep70_ins2_vix20` — md2_catalog: installed
+
+## Q07 w_green H78 micro cheap5+deep70+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 micro cheap5+deep70+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_mi_cheap5_deep70_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_mi_cheap5_deep70_vix20` — md2_catalog: installed
+
+## Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_ml_mom6_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_ml_mom6_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_ml_mom6_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_ml_mom6_vix20_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_ml_mom6_vix20_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 midlarge stress_vix20+tierA (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 midlarge stress_vix20+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_ml_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_ml_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_ml_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_ml_vix20_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_ml_vix20_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 small mom6+stress_vix20+tierA (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 small mom6+stress_vix20+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_sm_mom6_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_sm_mom6_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_sm_mom6_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_sm_mom6_vix20_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_sm_mom6_vix20_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 small stress_vix20+tierA (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 small stress_vix20+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_sm_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_sm_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_sm_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_sm_vix20_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_sm_vix20_tierA` — md2_catalog: installed
+
+## Q07 w_swing H52 micro cheap5+deep70+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 micro cheap5+deep70+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_mi_cheap5_deep70_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_mi_cheap5_deep70_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_mi_cheap5_deep70_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_mi_cheap5_deep70_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_mi_cheap5_deep70_vix20` — md2_catalog: installed
+
+## Q07 w_swing H52 micro cheap5+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 micro cheap5+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_mi_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_mi_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_mi_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_mi_cheap5_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_mi_cheap5_vix20` — md2_catalog: installed
+
+## Q07 w_swing H52 midlarge cheap5+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 midlarge cheap5+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_ml_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_ml_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_ml_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_ml_cheap5_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_ml_cheap5_vix20` — md2_catalog: installed
+
+## Q07 w_swing H52 midlarge deep70+insider2+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 midlarge deep70+insider2+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_ml_deep70_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_ml_deep70_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_ml_deep70_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_ml_deep70_ins2_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_ml_deep70_ins2_vix20` — md2_catalog: installed
+
+## Q07 w_swing H52 midlarge deep70+stress_vix20+wiki_low (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 midlarge deep70+stress_vix20+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_ml_deep70_vix20_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_ml_deep70_vix20_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_ml_deep70_vix20_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_ml_deep70_vix20_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_ml_deep70_vix20_wlow` — md2_catalog: installed
+
+## Q07 w_swing H52 midlarge insider2+mom6+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 midlarge insider2+mom6+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_ml_ins2_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_ml_ins2_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_ml_ins2_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_ml_ins2_mom6_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_ml_ins2_mom6_vix20` — md2_catalog: installed
+
+## Q07 w_swing H52 small cheap5+deep70+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 small cheap5+deep70+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_sm_cheap5_deep70_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_sm_cheap5_deep70_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_sm_cheap5_deep70_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_sm_cheap5_deep70_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_sm_cheap5_deep70_vix20` — md2_catalog: installed
+
+## Q07 w_swing H52 small cheap5+insider2+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 small cheap5+insider2+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_sm_cheap5_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_sm_cheap5_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_sm_cheap5_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_sm_cheap5_ins2_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_sm_cheap5_ins2_vix20` — md2_catalog: installed
+
+## Q07 w_swing H52 small cheap5+mom6+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 small cheap5+mom6+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_sm_cheap5_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_sm_cheap5_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_sm_cheap5_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_sm_cheap5_mom6_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_sm_cheap5_mom6_vix20` — md2_catalog: installed
+
+## Q07 w_swing H52 small cheap5+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 small cheap5+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_sm_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_sm_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_sm_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_sm_cheap5_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_sm_cheap5_vix20` — md2_catalog: installed
+
+## Q07 w_swing H78 micro cheap5+mom6+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 micro cheap5+mom6+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_mi_cheap5_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_mi_cheap5_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_mi_cheap5_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_mi_cheap5_mom6_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_mi_cheap5_mom6_vix20` — md2_catalog: installed
+
+## Q07 w_swing H78 midlarge cheap5+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 midlarge cheap5+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_ml_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_ml_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_ml_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_ml_cheap5_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_ml_cheap5_vix20` — md2_catalog: installed
+
+## Q07 w_swing H78 midlarge deep70+insider2+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 midlarge deep70+insider2+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_ml_deep70_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_ml_deep70_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_ml_deep70_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_ml_deep70_ins2_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_ml_deep70_ins2_vix20` — md2_catalog: installed
+
+## Q07 w_swing H78 small cheap5+deep70+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 small cheap5+deep70+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_sm_cheap5_deep70_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_sm_cheap5_deep70_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_sm_cheap5_deep70_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_sm_cheap5_deep70_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_sm_cheap5_deep70_vix20` — md2_catalog: installed
+
+## Q07 w_swing H78 small cheap5+insider2+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 small cheap5+insider2+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_sm_cheap5_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_sm_cheap5_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_sm_cheap5_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_sm_cheap5_ins2_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_sm_cheap5_ins2_vix20` — md2_catalog: installed
+
+## Q07 w_swing H78 small cheap5+mom6+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 small cheap5+mom6+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_sm_cheap5_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_sm_cheap5_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_sm_cheap5_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_sm_cheap5_mom6_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_sm_cheap5_mom6_vix20` — md2_catalog: installed
+
+## Q07 w_swing H78 small cheap5+stress_vix20 (test)
+
+- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 small cheap5+stress_vix20 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_sm_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_sm_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_sm_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_sm_cheap5_vix20
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_sm_cheap5_vix20` — md2_catalog: installed
+
+## s_q07w_c52_sm_cheap5_mom6_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_sm_cheap5_mom6_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_sm_cheap5_mom6_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_sm_cheap5_mom6_vix20
+
+### Aliases (1) and status history
+- `s_q07w_c52_sm_cheap5_mom6_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_mi_cheap5_deep70_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_mi_cheap5_deep70_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_mi_cheap5_deep70_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_mi_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_mi_cheap5_deep70_vix20
+
+### Aliases (1) and status history
+- `s_q07w_g78_mi_cheap5_deep70_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_sm_mom6_vix20_tierA
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_sm_mom6_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_sm_mom6_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_sm_mom6_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_sm_mom6_vix20_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_sm_mom6_vix20_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_sm_vix20_tierA
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_sm_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_sm_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_sm_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_sm_vix20_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_sm_vix20_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_mi_cheap5_deep70_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_mi_cheap5_deep70_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_mi_cheap5_deep70_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_mi_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_mi_cheap5_deep70_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s52_mi_cheap5_deep70_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_mi_cheap5_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_mi_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_mi_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_mi_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_mi_cheap5_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s52_mi_cheap5_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_sm_cheap5_deep70_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_sm_cheap5_deep70_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_sm_cheap5_deep70_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_sm_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_sm_cheap5_deep70_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s52_sm_cheap5_deep70_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_sm_cheap5_mom6_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_sm_cheap5_mom6_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_sm_cheap5_mom6_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_sm_cheap5_mom6_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s52_sm_cheap5_mom6_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_sm_cheap5_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_sm_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_sm_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_sm_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_sm_cheap5_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s52_sm_cheap5_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_mi_cheap5_mom6_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_mi_cheap5_mom6_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_mi_cheap5_mom6_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_mi_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_mi_cheap5_mom6_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s78_mi_cheap5_mom6_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_sm_cheap5_deep70_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_sm_cheap5_deep70_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_sm_cheap5_deep70_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_sm_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_sm_cheap5_deep70_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s78_sm_cheap5_deep70_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_sm_cheap5_mom6_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_sm_cheap5_mom6_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_sm_cheap5_mom6_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_sm_cheap5_mom6_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s78_sm_cheap5_mom6_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_sm_cheap5_vix20
+
+- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_sm_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_sm_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_sm_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_sm_cheap5_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s78_sm_cheap5_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## Q07 Tensor alt-data confluence cells
+
+- Type: forecast and ML models | Family: lazarus | Style evidence (catalog): Tensor signal + alt data
+- Trades: US equities — Tracker universe by PIT SEC band
+- Timeframe: 1w
+- Created by / source: Galath research lab (Q07 confluence cells), run by Lazarus
+- Description (from source records): Q07 Tensor alt-data confluence cells
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07_ins2] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [lz_s_q07_wiki] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_1wsw_stress] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c52_ml_mom6_tierA_wlow] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c52_ml_mom6_wspike2] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c52_ml_tierA_wcov] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c52_ml_tierA_wlow] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c52_sm_cheap5_ins2_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c52_sm_cheap5_wcov] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c52_sm_deep70_wcov] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c52_sm_tierA_wcov] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_q07w_c78_ml_deep70_tierA_wlow] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07_ins2] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = per cell lane)", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [lz_s_q07_wiki] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = per cell lane)", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_1wsw_stress] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52))", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c52_ml_mom6_tierA_wlow] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c52_ml_mom6_wspike2] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c52_ml_tierA_wcov] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c52_ml_tierA_wlow] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c52_sm_cheap5_ins2_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c52_sm_cheap5_wcov] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c52_sm_deep70_wcov] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c52_sm_tierA_wcov] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_q07w_c78_ml_deep70_tierA_wlow] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_1wsw_stress] v3 slice: {"capital_usd": 1335.0, "cash_usd": 1335.0} parked=True
+  - [s_1wsw_stress] lz_engine sizing: {"budget_usd": 1335, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+  - [s_q07w_c52_ml_mom6_tierA_wlow] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
+  - [s_q07w_c52_ml_mom6_tierA_wlow] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+  - [s_q07w_c52_ml_mom6_wspike2] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
+  - [s_q07w_c52_ml_mom6_wspike2] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+  - [s_q07w_c52_ml_tierA_wcov] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
+  - [s_q07w_c52_ml_tierA_wcov] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - [lz_s_q07_ins2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+  - [lz_s_q07_wiki] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+- Variant axes (catalog): [{"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}, {"Dimension": "Band", "Values": "micro (`mi`) \u00b7 small (`sm`) \u00b7 mid/large (`ml`)"}, {"Dimension": "Tags", "Values": "tierA, deep70, cheap5, mom6, vix20, wcov, wlow, wspike2, ins2, ats_z1, glow"}, {"Dimension": "Also", "Values": "`lz_1wsw_stress`: w_swing cheap5 + deep70 + VIX \u2265 20, all bands, 52 weeks"}, {"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}, {"Dimension": "Band", "Values": "micro (`mi`) \u00b7 small (`sm`) \u00b7 mid/large (`ml`)"}, {"Dimension": "Tags", "Values": "tierA, deep70, cheap5, mom6, vix20, wcov, wlow, wspike2, ins2, ats_z1, glow"}, {"Dimension": "Also", "Values": "`lz_1wsw_stress`: w_swing cheap5 + deep70 + VIX \u2265 20, all bands, 52 weeks"}, {"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}]
+
+### Variants (2)
+- **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: lz_1wsw_stress, s_1wsw_stress
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: lz_q07_ins2, lz_q07_wiki, lz_q07w_c52_ml_mom6_tierA_wlow, lz_q07w_c52_ml_mom6_wspike2, lz_q07w_c52_ml_tierA_wcov, lz_q07w_c52_ml_tierA_wlow, lz_q07w_c52_sm_cheap5_ins2_mom6, lz_q07w_c52_sm_cheap5_wcov, lz_q07w_c52_sm_deep70_wcov, lz_q07w_c52_sm_tierA_wcov, lz_q07w_c78_ml_deep70_tierA_wlow, lz_q07w_c78_ml_mom6_tierA_wlow, lz_q07w_c78_ml_tierA_wcov, lz_q07w_c78_ml_tierA_wlow, lz_q07w_c78_sm_deep70_ins2_vix20, lz_q07w_c78_sm_deep70_wcov, lz_q07w_c78_sm_ins2_mom6_vix20, lz_q07w_c78_sm_tierA_wcov, lz_q07w_g52_ml_ats_z1_mom6_wlow, lz_q07w_g52_ml_ins2_wlow, lz_q07w_g52_ml_tierA_wcov, lz_q07w_g52_sm_deep70_ins2_vix20, lz_q07w_g52_sm_deep70_wcov, lz_q07w_g52_sm_ins2_wcov, lz_q07w_g52_sm_tierA_wcov, lz_q07w_g78_mi_cheap5_deep70_ins2, lz_q07w_g78_ml_tierA_wcov, lz_q07w_g78_sm_cheap5_ins2, lz_q07w_g78_sm_deep70_ins2, lz_q07w_g78_sm_deep70_wcov, lz_q07w_g78_sm_tierA_wcov, lz_q07w_s52_ml_deep70_ins2_vix20, lz_q07w_s52_ml_deep70_vix20_wlow, lz_q07w_s52_ml_deep70_wlow, lz_q07w_s52_ml_ins2_mom6_vix20, lz_q07w_s52_ml_ins2_mom6_wlow, lz_q07w_s52_sm_cheap5_deep70_ins2, lz_q07w_s52_sm_cheap5_ins2_vix20, lz_q07w_s52_sm_cheap5_wcov, lz_q07w_s52_sm_deep70_wcov, lz_q07w_s78_mi_ats_z1_cheap5, lz_q07w_s78_mi_ats_z1_mom6, lz_q07w_s78_mi_cheap5_ins2_mom6, lz_q07w_s78_ml_deep70_glow_ins2, lz_q07w_s78_ml_deep70_ins2_vix20, lz_q07w_s78_ml_deep70_mom6_wlow, lz_q07w_s78_ml_deep70_wcov, lz_q07w_s78_sm_cheap5_ins2_vix20, lz_q07w_s78_sm_cheap5_wcov, lz_q07w_s78_sm_deep70_ins2, lz_q07w_s78_sm_deep70_wcov, lz_s_q07_ins2, lz_s_q07_wiki, s_q07w_c52_ml_mom6_tierA_wlow, s_q07w_c52_ml_mom6_wspike2, s_q07w_c52_ml_tierA_wcov, s_q07w_c52_ml_tierA_wlow, s_q07w_c52_sm_cheap5_ins2_mom6, s_q07w_c52_sm_cheap5_wcov, s_q07w_c52_sm_deep70_wcov, s_q07w_c52_sm_tierA_wcov, s_q07w_c78_ml_deep70_tierA_wlow, s_q07w_c78_ml_mom6_tierA_wlow, s_q07w_c78_ml_tierA_wcov, s_q07w_c78_ml_tierA_wlow, s_q07w_c78_sm_deep70_ins2_vix20, s_q07w_c78_sm_deep70_wcov, s_q07w_c78_sm_ins2_mom6_vix20, s_q07w_c78_sm_tierA_wcov, s_q07w_g52_ml_ats_z1_mom6_wlow, s_q07w_g52_ml_ins2_wlow, s_q07w_g52_ml_tierA_wcov, s_q07w_g52_sm_deep70_ins2_vix20, s_q07w_g52_sm_deep70_wcov, s_q07w_g52_sm_ins2_wcov, s_q07w_g52_sm_tierA_wcov, s_q07w_g78_mi_cheap5_deep70_ins2, s_q07w_g78_ml_tierA_wcov, s_q07w_g78_sm_cheap5_ins2, s_q07w_g78_sm_deep70_ins2, s_q07w_g78_sm_deep70_wcov, s_q07w_g78_sm_tierA_wcov, s_q07w_s52_ml_deep70_ins2_vix20, s_q07w_s52_ml_deep70_vix20_wlow, s_q07w_s52_ml_deep70_wlow, s_q07w_s52_ml_ins2_mom6_vix20, s_q07w_s52_ml_ins2_mom6_wlow, s_q07w_s52_sm_cheap5_deep70_ins2, s_q07w_s52_sm_cheap5_ins2_vix20, s_q07w_s52_sm_cheap5_wcov, s_q07w_s52_sm_deep70_wcov, s_q07w_s78_mi_ats_z1_cheap5, s_q07w_s78_mi_ats_z1_mom6, s_q07w_s78_mi_cheap5_ins2_mom6, s_q07w_s78_ml_deep70_glow_ins2, s_q07w_s78_ml_deep70_ins2_vix20, s_q07w_s78_ml_deep70_mom6_wlow, s_q07w_s78_ml_deep70_wcov, s_q07w_s78_sm_cheap5_ins2_vix20, s_q07w_s78_sm_cheap5_wcov, s_q07w_s78_sm_deep70_ins2, s_q07w_s78_sm_deep70_wcov
+- Variant not recorded in any source for 102 alias(es); counted, never guessed.
+
+### Aliases (104) and status history
+- `lz_1wsw_stress` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07_wiki` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c52_ml_mom6_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c52_ml_mom6_wspike2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c52_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c52_ml_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c52_sm_cheap5_ins2_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c52_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c52_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c78_ml_deep70_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c78_ml_mom6_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c78_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c78_ml_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c78_sm_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c78_sm_ins2_mom6_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_c78_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g52_ml_ats_z1_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g52_ml_ins2_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g52_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g52_sm_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g52_sm_ins2_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g52_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g78_mi_cheap5_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g78_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g78_sm_cheap5_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g78_sm_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_g78_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_ml_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_ml_deep70_vix20_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_ml_deep70_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_ml_ins2_mom6_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_ml_ins2_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_sm_cheap5_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_sm_cheap5_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_mi_ats_z1_cheap5` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_mi_ats_z1_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_mi_cheap5_ins2_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_ml_deep70_glow_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_ml_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_ml_deep70_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_ml_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_sm_cheap5_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_sm_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_q07w_s78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
+- `lz_s_q07_ins2` — md2_catalog: off
+- `lz_s_q07_wiki` — md2_catalog: off
+- `s_1wsw_stress` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_c52_ml_mom6_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c52_ml_mom6_wspike2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c52_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c52_ml_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c52_sm_cheap5_ins2_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c52_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c52_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c78_ml_deep70_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c78_ml_mom6_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c78_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c78_ml_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c78_sm_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c78_sm_ins2_mom6_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_c78_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g52_ml_ats_z1_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g52_ml_ins2_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g52_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g52_sm_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g52_sm_ins2_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g52_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g78_mi_cheap5_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g78_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g78_sm_cheap5_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g78_sm_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_g78_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_q07w_s52_ml_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s52_ml_deep70_vix20_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s52_ml_deep70_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s52_ml_ins2_mom6_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s52_ml_ins2_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s52_sm_cheap5_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s52_sm_cheap5_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s52_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_mi_ats_z1_cheap5` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_mi_ats_z1_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_mi_cheap5_ins2_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_ml_deep70_glow_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_ml_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_ml_deep70_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_ml_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_sm_cheap5_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_sm_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+- `s_q07w_s78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
+
+Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stress ~ lz_q07_wiki; [A] lz_1wsw_stress ~ lz_q07w_c52_ml_mom6_tierA_wlow; [A] lz_1wsw_stress ~ lz_q07w_c52_ml_mom6_wspike2; [A] lz_1wsw_stress ~ lz_q07w_c52_ml_tierA_wcov; [A] lz_1wsw_stress ~ lz_q07w_c52_ml_tierA_wlow (full evidence in MERGES.md)
+
+## s_q07w_g52_ml_cheap5
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_ml_cheap5] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_ml_cheap5] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_ml_cheap5
+
+### Aliases (1) and status history
+- `s_q07w_g52_ml_cheap5` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_ml_mom6_tierA
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_ml_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_ml_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_ml_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_ml_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g52_ml_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_ml_vix20_tierA
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_ml_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_ml_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_ml_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_ml_vix20_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g52_ml_vix20_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_ml_deep70_tierA
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_ml_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_ml_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_ml_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_ml_deep70_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_ml_deep70_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_ml_mom6_tierA
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_ml_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_ml_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_ml_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_ml_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_ml_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_ml_mom6_vix20_tierA
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_ml_mom6_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_ml_mom6_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_ml_mom6_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_ml_mom6_vix20_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_ml_mom6_vix20_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_ml_vix20_tierA
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_ml_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_ml_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_ml_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_ml_vix20_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_ml_vix20_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_ml_cheap5
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_ml_cheap5] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_ml_cheap5] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_ml_cheap5
+
+### Aliases (1) and status history
+- `s_q07w_s52_ml_cheap5` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_ml_cheap5_vix20
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_ml_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_ml_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_ml_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_ml_cheap5_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s52_ml_cheap5_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_ml_cheap5
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_ml_cheap5] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_ml_cheap5] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_ml_cheap5
+
+### Aliases (1) and status history
+- `s_q07w_s78_ml_cheap5` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_ml_cheap5_mom6
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_ml_cheap5_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_ml_cheap5_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_ml_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_ml_cheap5_mom6
+
+### Aliases (1) and status history
+- `s_q07w_s78_ml_cheap5_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_ml_cheap5_vix20
+
+- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_ml_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_ml_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_ml_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_ml_cheap5_vix20
+
+### Aliases (1) and status history
+- `s_q07w_s78_ml_cheap5_vix20` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## Midna Faber (Midna port)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna Faber (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_faber] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_faber] {"rule": "Midna plan: Faber below 10m SMA exit", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_faber] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_faber
+
+### Aliases (1) and status history
+- `lz_s_mn_faber` — md2_catalog: installed
+
+## Midna VWAP (Midna port)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna VWAP (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_vwap] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_vwap] {"rule": "Midna plan: VWAP down exit", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_vwap] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_vwap
+
+### Aliases (1) and status history
+- `lz_s_mn_vwap` — md2_catalog: installed
+
+## Midna W green calm SMH (Midna port)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna W green calm SMH (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_w_green_smh] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_w_green_smh] {"rule": "Midna plan: no stop / time exit 126 sessions", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 126, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_w_green_smh] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_w_green_smh
+
+### Aliases (1) and status history
+- `lz_s_mn_w_green_smh` — md2_catalog: installed
+
+## Q07 w_cyan H52 micro cheap5+deep70+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 micro cheap5+deep70+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_mi_cheap5_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_mi_cheap5_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_mi_cheap5_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_mi_cheap5_deep70_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_mi_cheap5_deep70_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H52 micro cheap5+mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 micro cheap5+mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_mi_cheap5_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_mi_cheap5_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_mi_cheap5_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_mi_cheap5_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_mi_cheap5_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H52 micro cheap5+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 micro cheap5+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_mi_cheap5_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_mi_cheap5_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_mi_cheap5_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_mi_cheap5_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_mi_cheap5_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H52 micro deep70+mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 micro deep70+mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_mi_deep70_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_mi_deep70_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_mi_deep70_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_mi_deep70_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_mi_deep70_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H52 micro deep70+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 micro deep70+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_mi_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_mi_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_mi_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_mi_deep70_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_mi_deep70_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H52 micro mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 micro mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_mi_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_mi_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_mi_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_mi_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_mi_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H52 midlarge mom6+tierA+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 midlarge mom6+tierA+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_ml_mom6_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_ml_mom6_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_ml_mom6_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_ml_mom6_tierA_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_ml_mom6_tierA_wlow` — md2_catalog: installed
+
+## Q07 w_cyan H52 midlarge mom6+wiki_spike2 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 midlarge mom6+wiki_spike2 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_ml_mom6_wspike2] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_ml_mom6_wspike2] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_ml_mom6_wspike2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_ml_mom6_wspike2
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_ml_mom6_wspike2` — md2_catalog: installed
+
+## Q07 w_cyan H52 midlarge tierA+wiki_cov (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 midlarge tierA+wiki_cov (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_ml_tierA_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_ml_tierA_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_ml_tierA_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_ml_tierA_wcov
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_ml_tierA_wcov` — md2_catalog: installed
+
+## Q07 w_cyan H52 midlarge tierA+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H52 midlarge tierA+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c52_ml_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c52_ml_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c52_ml_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c52_ml_tierA_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_c52_ml_tierA_wlow` — md2_catalog: installed
+
+## Q07 w_cyan H78 micro cheap5+deep70+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 micro cheap5+deep70+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_mi_cheap5_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_mi_cheap5_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_mi_cheap5_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_mi_cheap5_deep70_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_mi_cheap5_deep70_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H78 micro cheap5+mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 micro cheap5+mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_mi_cheap5_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_mi_cheap5_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_mi_cheap5_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_mi_cheap5_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_mi_cheap5_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H78 micro cheap5+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 micro cheap5+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_mi_cheap5_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_mi_cheap5_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_mi_cheap5_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_mi_cheap5_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_mi_cheap5_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H78 micro deep70+mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 micro deep70+mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_mi_deep70_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_mi_deep70_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_mi_deep70_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_mi_deep70_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_mi_deep70_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H78 micro mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 micro mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_mi_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_mi_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_mi_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_mi_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_mi_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H78 micro tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 micro tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_mi_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_mi_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_mi_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_mi_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_mi_tierA` — md2_catalog: installed
+
+## Q07 w_cyan H78 midlarge deep70+tierA+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 midlarge deep70+tierA+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_ml_deep70_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_ml_deep70_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_ml_deep70_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_ml_deep70_tierA_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_ml_deep70_tierA_wlow` — md2_catalog: installed
+
+## Q07 w_cyan H78 midlarge mom6+tierA+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 midlarge mom6+tierA+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_ml_mom6_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_ml_mom6_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_ml_mom6_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_ml_mom6_tierA_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_ml_mom6_tierA_wlow` — md2_catalog: installed
+
+## Q07 w_cyan H78 midlarge tierA+wiki_cov (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 midlarge tierA+wiki_cov (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_ml_tierA_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_ml_tierA_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_ml_tierA_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_ml_tierA_wcov
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_ml_tierA_wcov` — md2_catalog: installed
+
+## Q07 w_cyan H78 midlarge tierA+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_cyan H78 midlarge tierA+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_c78_ml_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_c78_ml_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_c78_ml_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_c78_ml_tierA_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_c78_ml_tierA_wlow` — md2_catalog: installed
+
+## Q07 w_green H52 micro cheap5+deep70 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 micro cheap5+deep70 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_mi_cheap5_deep70] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_mi_cheap5_deep70] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_mi_cheap5_deep70] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_mi_cheap5_deep70
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_mi_cheap5_deep70` — md2_catalog: installed
+
+## Q07 w_green H52 micro cheap5+deep70+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 micro cheap5+deep70+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_mi_cheap5_deep70_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_mi_cheap5_deep70_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_mi_cheap5_deep70_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_mi_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_mi_cheap5_deep70_mom6` — md2_catalog: installed
+
+## Q07 w_green H52 micro cheap5+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 micro cheap5+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_mi_cheap5_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_mi_cheap5_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_mi_cheap5_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_mi_cheap5_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_mi_cheap5_tierA` — md2_catalog: installed
+
+## Q07 w_green H52 micro deep70+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 micro deep70+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_mi_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_mi_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_mi_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_mi_deep70_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_mi_deep70_tierA` — md2_catalog: installed
+
+## Q07 w_green H52 micro mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 micro mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_mi_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_mi_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_mi_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_mi_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_mi_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_green H52 micro tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 micro tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_mi_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_mi_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_mi_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_mi_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_mi_tierA` — md2_catalog: installed
+
+## Q07 w_green H52 midlarge ats_z1+mom6+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 midlarge ats_z1+mom6+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_ml_ats_z1_mom6_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_ml_ats_z1_mom6_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_ml_ats_z1_mom6_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_ml_ats_z1_mom6_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_ml_ats_z1_mom6_wlow` — md2_catalog: installed
+
+## Q07 w_green H52 midlarge cheap5 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 midlarge cheap5 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_ml_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_ml_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_ml_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_ml_cheap5
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_ml_cheap5` — md2_catalog: installed
+
+## Q07 w_green H52 midlarge insider2+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 midlarge insider2+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_ml_ins2_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_ml_ins2_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_ml_ins2_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_ml_ins2_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_ml_ins2_wlow` — md2_catalog: installed
+
+## Q07 w_green H52 midlarge mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 midlarge mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_ml_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_ml_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_ml_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_ml_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_ml_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_green H52 midlarge tierA+wiki_cov (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H52 midlarge tierA+wiki_cov (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g52_ml_tierA_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g52_ml_tierA_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g52_ml_tierA_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g52_ml_tierA_wcov
+
+### Aliases (1) and status history
+- `lz_s_q07w_g52_ml_tierA_wcov` — md2_catalog: installed
+
+## Q07 w_green H78 micro cheap5+deep70+insider2 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 micro cheap5+deep70+insider2 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_ins2] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_ins2] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_ins2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_mi_cheap5_deep70_ins2
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_mi_cheap5_deep70_ins2` — md2_catalog: installed
+
+## Q07 w_green H78 micro cheap5+deep70+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 micro cheap5+deep70+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_mi_cheap5_deep70_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_mi_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_mi_cheap5_deep70_mom6` — md2_catalog: installed
+
+## Q07 w_green H78 micro cheap5+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 micro cheap5+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_mi_cheap5_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_mi_cheap5_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_mi_cheap5_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_mi_cheap5_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_mi_cheap5_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 micro deep70+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 micro deep70+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_mi_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_mi_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_mi_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_mi_deep70_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_mi_deep70_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 micro mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 micro mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_mi_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_mi_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_mi_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_mi_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_mi_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 micro tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 micro tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_mi_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_mi_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_mi_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_mi_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_mi_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 midlarge deep70+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 midlarge deep70+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_ml_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_ml_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_ml_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_ml_deep70_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_ml_deep70_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 midlarge mom6+tierA (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 midlarge mom6+tierA (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_ml_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_ml_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_ml_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_ml_mom6_tierA
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_ml_mom6_tierA` — md2_catalog: installed
+
+## Q07 w_green H78 midlarge tierA+wiki_cov (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_green H78 midlarge tierA+wiki_cov (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_g78_ml_tierA_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_g78_ml_tierA_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_g78_ml_tierA_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_g78_ml_tierA_wcov
+
+### Aliases (1) and status history
+- `lz_s_q07w_g78_ml_tierA_wcov` — md2_catalog: installed
+
+## Q07 w_swing H52 micro cheap5 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 micro cheap5 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_mi_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_mi_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_mi_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_mi_cheap5
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_mi_cheap5` — md2_catalog: installed
+
+## Q07 w_swing H52 micro cheap5+deep70 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 micro cheap5+deep70 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_mi_cheap5_deep70] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_mi_cheap5_deep70] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_mi_cheap5_deep70] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_mi_cheap5_deep70
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_mi_cheap5_deep70` — md2_catalog: installed
+
+## Q07 w_swing H52 micro cheap5+deep70+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 micro cheap5+deep70+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_mi_cheap5_deep70_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_mi_cheap5_deep70_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_mi_cheap5_deep70_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_mi_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_mi_cheap5_deep70_mom6` — md2_catalog: installed
+
+## Q07 w_swing H52 micro cheap5+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 micro cheap5+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_mi_cheap5_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_mi_cheap5_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_mi_cheap5_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_mi_cheap5_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_mi_cheap5_mom6` — md2_catalog: installed
+
+## Q07 w_swing H52 midlarge cheap5 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 midlarge cheap5 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_ml_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_ml_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_ml_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_ml_cheap5
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_ml_cheap5` — md2_catalog: installed
+
+## Q07 w_swing H52 midlarge deep70+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 midlarge deep70+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_ml_deep70_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_ml_deep70_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_ml_deep70_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_ml_deep70_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_ml_deep70_wlow` — md2_catalog: installed
+
+## Q07 w_swing H52 midlarge insider2+mom6+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H52 midlarge insider2+mom6+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s52_ml_ins2_mom6_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s52_ml_ins2_mom6_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s52_ml_ins2_mom6_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s52_ml_ins2_mom6_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_s52_ml_ins2_mom6_wlow` — md2_catalog: installed
+
+## Q07 w_swing H78 micro ats_z1+cheap5 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 micro ats_z1+cheap5 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_mi_ats_z1_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_mi_ats_z1_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_mi_ats_z1_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_mi_ats_z1_cheap5
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_mi_ats_z1_cheap5` — md2_catalog: installed
+
+## Q07 w_swing H78 micro ats_z1+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 micro ats_z1+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_mi_ats_z1_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_mi_ats_z1_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_mi_ats_z1_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_mi_ats_z1_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_mi_ats_z1_mom6` — md2_catalog: installed
+
+## Q07 w_swing H78 micro cheap5+deep70+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 micro cheap5+deep70+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_mi_cheap5_deep70_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_mi_cheap5_deep70_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_mi_cheap5_deep70_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_mi_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_mi_cheap5_deep70_mom6` — md2_catalog: installed
+
+## Q07 w_swing H78 micro cheap5+insider2+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 micro cheap5+insider2+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_mi_cheap5_ins2_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_mi_cheap5_ins2_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_mi_cheap5_ins2_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_mi_cheap5_ins2_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_mi_cheap5_ins2_mom6` — md2_catalog: installed
+
+## Q07 w_swing H78 micro cheap5+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 micro cheap5+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_mi_cheap5_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_mi_cheap5_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_mi_cheap5_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_mi_cheap5_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_mi_cheap5_mom6` — md2_catalog: installed
+
+## Q07 w_swing H78 midlarge cheap5 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 midlarge cheap5 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_ml_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_ml_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_ml_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_ml_cheap5
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_ml_cheap5` — md2_catalog: installed
+
+## Q07 w_swing H78 midlarge cheap5+mom6 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 midlarge cheap5+mom6 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_ml_cheap5_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_ml_cheap5_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_ml_cheap5_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_ml_cheap5_mom6
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_ml_cheap5_mom6` — md2_catalog: installed
+
+## Q07 w_swing H78 midlarge deep70+gamma_low+insider2 (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 midlarge deep70+gamma_low+insider2 (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_ml_deep70_glow_ins2] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_ml_deep70_glow_ins2] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_ml_deep70_glow_ins2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_ml_deep70_glow_ins2
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_ml_deep70_glow_ins2` — md2_catalog: installed
+
+## Q07 w_swing H78 midlarge deep70+mom6+wiki_low (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 midlarge deep70+mom6+wiki_low (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_ml_deep70_mom6_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_ml_deep70_mom6_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_ml_deep70_mom6_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_ml_deep70_mom6_wlow
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_ml_deep70_mom6_wlow` — md2_catalog: installed
+
+## Q07 w_swing H78 midlarge deep70+wiki_cov (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q07 w_swing H78 midlarge deep70+wiki_cov (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_q07w_s78_ml_deep70_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_q07w_s78_ml_deep70_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_q07w_s78_ml_deep70_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_q07w_s78_ml_deep70_wcov
+
+### Aliases (1) and status history
+- `lz_s_q07w_s78_ml_deep70_wcov` — md2_catalog: installed
+
+## Anna PhD location printer
+
+- Type: other | Family: galath | Style evidence (catalog): Printer signal (seven votes + location)
+- Trades: US equities and ETFs — Anna's labeled census: 115 names
+- Timeframe: 1d
+- Created by / source: The Galath desk's gospel PhD replay of Anna's printer (galath-desk-backup scripts/anna-phd-replay.mjs); a recorder made a book by the owner's D32
+- Description (from source records): Anna PhD location printer
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: mon_galath_annaphdlocationoverriddenprintergrid
+
+### Aliases (1) and status history
+- `mon_galath_annaphdlocationoverriddenprintergrid` — test_catalog: entry galath-anna-phd-printer status_counts={'waiting': 1}
+
+## Q14 under-$5 weekly book
+
+- Type: other | Family: lazarus | Style evidence (catalog): Value
+- Trades: US equities — Tracker universe
+- Timeframe: 1w
+- Created by / source: Galath Research Lab frozen spec, wired on the master desk
+- Description (from source records): Q14 under-$5 weekly book
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_wait_q14
+
+### Aliases (1) and status history
+- `lz_wait_q14` — test_catalog: entry lz-wait-q14 status_counts={'waiting': 1}
+
+## Saty Magnum (SPY shares)
+
+- Type: other | Family: muse | Style evidence (catalog): Intraday ATR levels
+- Trades: SPY shares, long and short — SPY
+- Timeframe: 3m · 10m · 1h · 1d
+- Created by / source: Saty Mahajan's system (ATR Levels, Pivot Ribbon Pro, Phase Oscillator, Volume Stack), from his posts
+- Description (from source records): Saty Magnum (SPY shares)
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [saty_magnum] sleeve-owned (sleeves/saty_magnum.py)
+- Exit rules:
+  - [saty_magnum] sleeve-owned exit intents
+- Sizing:
+  - [saty_magnum] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+- Filters / data:
+  - [saty_magnum] data: WARMUP_BARS={"5Min": 300, "1Min": 390}
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: muse_saty_magnum, saty_magnum
+
+### Aliases (2) and status history
+- `muse_saty_magnum` — test_catalog: entry muse-saty-magnum status_counts={'waiting': 1}
+- `saty_magnum` — test_catalog: entry muse-saty-magnum status_counts={'waiting': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+
+Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in MERGES.md)
+
+## Weekly cyan transition
+
+- Type: other | Family: tensor_research | Style evidence (catalog): Early markup
+- Trades: US equities — 1,838-name genome roster
+- Timeframe: 1wk
+- Created by / source: FolioTend / Griffith Tensor research (archived desk research), as a forward-test book
+- Description (from source records): Weekly cyan transition
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: ro_weekly_cyan_transition
+
+### Aliases (1) and status history
+- `ro_weekly_cyan_transition` — test_catalog: entry tr-ro-weekly-cyan-transition status_counts={'waiting': 1}
+
+## s_q07_ins2
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07_ins2] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07_ins2] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = per cell lane)", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07_ins2] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07_ins2
+
+### Aliases (1) and status history
+- `s_q07_ins2` — md2_lz_engine: dead
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07_wiki
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07_wiki] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07_wiki] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = per cell lane)", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07_wiki] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07_wiki
+
+### Aliases (1) and status history
+- `s_q07_wiki` — md2_lz_engine: dead
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c52_mi_cheap5_deep70_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_mi_cheap5_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_mi_cheap5_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_mi_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_mi_cheap5_deep70_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c52_mi_cheap5_deep70_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c52_mi_cheap5_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_mi_cheap5_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_mi_cheap5_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_mi_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_mi_cheap5_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c52_mi_cheap5_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c52_mi_cheap5_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_mi_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_mi_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_mi_cheap5_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c52_mi_cheap5_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c52_mi_deep70_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_mi_deep70_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_mi_deep70_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_mi_deep70_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_mi_deep70_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c52_mi_deep70_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c52_mi_deep70_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_mi_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_mi_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_mi_deep70_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c52_mi_deep70_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c52_mi_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_mi_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_mi_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_mi_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c52_mi_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c52_sm_cheap5_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_sm_cheap5_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_sm_cheap5_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_sm_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_sm_cheap5_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c52_sm_cheap5_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c52_sm_cheap5_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c52_sm_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c52_sm_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c52_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c52_sm_cheap5_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c52_sm_cheap5_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_mi_cheap5_deep70_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_mi_cheap5_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_mi_cheap5_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_mi_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_mi_cheap5_deep70_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_mi_cheap5_deep70_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_mi_cheap5_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_mi_cheap5_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_mi_cheap5_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_mi_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_mi_cheap5_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_mi_cheap5_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_mi_cheap5_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_mi_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_mi_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_mi_cheap5_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_mi_cheap5_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_mi_deep70_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_mi_deep70_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_mi_deep70_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_mi_deep70_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_mi_deep70_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_mi_deep70_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_mi_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_mi_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_mi_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_mi_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_mi_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_mi_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_mi_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_mi_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_mi_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_mi_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_sm_cheap5_deep70_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_sm_cheap5_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_sm_cheap5_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_sm_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_sm_cheap5_deep70_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_sm_cheap5_deep70_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_sm_cheap5_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_sm_cheap5_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_sm_cheap5_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_sm_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_sm_cheap5_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_sm_cheap5_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_c78_sm_cheap5_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_c78_sm_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_c78_sm_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_c78_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_c78_sm_cheap5_tierA
+
+### Aliases (1) and status history
+- `s_q07w_c78_sm_cheap5_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_mi_cheap5_deep70
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_mi_cheap5_deep70] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_mi_cheap5_deep70] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_mi_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_mi_cheap5_deep70
+
+### Aliases (1) and status history
+- `s_q07w_g52_mi_cheap5_deep70` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_mi_cheap5_deep70_mom6
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_mi_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_mi_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_mi_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `s_q07w_g52_mi_cheap5_deep70_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_mi_cheap5_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_mi_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_mi_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_mi_cheap5_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g52_mi_cheap5_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_mi_deep70_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_mi_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_mi_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_mi_deep70_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g52_mi_deep70_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_mi_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_mi_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_mi_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_mi_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g52_mi_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_mi_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_mi_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_mi_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_mi_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g52_mi_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_sm_cheap5_deep70_mom6
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_sm_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_sm_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_sm_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_sm_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `s_q07w_g52_sm_cheap5_deep70_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_sm_cheap5_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_sm_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_sm_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_sm_cheap5_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g52_sm_cheap5_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g52_sm_deep70_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g52_sm_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g52_sm_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g52_sm_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g52_sm_deep70_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g52_sm_deep70_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_mi_cheap5_deep70_mom6
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_mi_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_mi_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_mi_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `s_q07w_g78_mi_cheap5_deep70_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_mi_cheap5_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_mi_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_mi_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_mi_cheap5_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_mi_cheap5_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_mi_deep70_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_mi_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_mi_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_mi_deep70_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_mi_deep70_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_mi_mom6_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_mi_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_mi_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_mi_mom6_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_mi_mom6_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_mi_tierA
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_mi_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_mi_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_mi_tierA
+
+### Aliases (1) and status history
+- `s_q07w_g78_mi_tierA` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_sm_cheap5_deep70
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_sm_cheap5_deep70] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_sm_cheap5_deep70] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_sm_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_sm_cheap5_deep70
+
+### Aliases (1) and status history
+- `s_q07w_g78_sm_cheap5_deep70` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_g78_sm_cheap5_deep70_mom6
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_g78_sm_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_g78_sm_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_g78_sm_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_g78_sm_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `s_q07w_g78_sm_cheap5_deep70_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_mi_cheap5
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_mi_cheap5] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_mi_cheap5] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_mi_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_mi_cheap5
+
+### Aliases (1) and status history
+- `s_q07w_s52_mi_cheap5` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_mi_cheap5_deep70
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_mi_cheap5_deep70] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_mi_cheap5_deep70] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_mi_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_mi_cheap5_deep70
+
+### Aliases (1) and status history
+- `s_q07w_s52_mi_cheap5_deep70` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_mi_cheap5_deep70_mom6
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_mi_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_mi_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_mi_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `s_q07w_s52_mi_cheap5_deep70_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s52_mi_cheap5_mom6
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s52_mi_cheap5_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s52_mi_cheap5_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s52_mi_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s52_mi_cheap5_mom6
+
+### Aliases (1) and status history
+- `s_q07w_s52_mi_cheap5_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_mi_cheap5_deep70_mom6
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_mi_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_mi_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_mi_cheap5_deep70_mom6
+
+### Aliases (1) and status history
+- `s_q07w_s78_mi_cheap5_deep70_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_q07w_s78_mi_cheap5_mom6
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_q07w_s78_mi_cheap5_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_q07w_s78_mi_cheap5_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_q07w_s78_mi_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_q07w_s78_mi_cheap5_mom6
+
+### Aliases (1) and status history
+- `s_q07w_s78_mi_cheap5_mom6` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_wait_intraweek
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_wait_intraweek] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_wait_intraweek] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_wait_intraweek] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_wait_intraweek
+
+### Aliases (1) and status history
+- `s_wait_intraweek` — md2_lz_engine: dead
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+# Type: momentum (41 strategies)
 
 
 ## Midna CS momentum (Midna port)
@@ -1920,7 +6489,488 @@ Merge evidence (tiers A): [A] muse_raschke_pf3 ~ raschke_pf3 (full evidence in M
 ### Aliases (1) and status history
 - `genome_leader` — test_catalog: entry tr-genome-leader status_counts={'live': 1}
 
-# Type: mean reversion (62 strategies)
+## Midna MACD (Midna port)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna MACD (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_macd] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_macd] {"rule": "Midna plan: MACD down exit", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_macd] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_macd
+
+### Aliases (1) and status history
+- `lz_s_mn_macd` — md2_catalog: installed
+
+## CHASE (WAIT)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): CHASE (WAIT)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_wait_chase] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_wait_chase] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_wait_chase] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_wait_chase
+
+### Aliases (1) and status history
+- `lz_s_wait_chase` — md2_catalog: off
+
+## Kraken ENJ order-book imbalance (spot)
+
+- Type: other | Family: femto | Style evidence (catalog): Order-book imbalance
+- Trades: Crypto spot — ENJ/USD (Kraken)
+- Timeframe: 1h checks
+- Created by / source: Aurelia (Agentic-Trading-Desk) ENJ spot row; order logic designed for Midna's v3 desk
+- Description (from source records): Kraken ENJ order-book imbalance (spot) Adapter for free_kraken_enj_spot — interface glue ONLY (DESIGN §4).
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [free_kraken_enj_spot] sleeve-owned (sleeves/free_kraken_enj_spot.py)
+- Exit rules:
+  - [free_kraken_enj_spot] sleeve-owned exit intents
+- Sizing:
+  - [free_kraken_enj_spot] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+- Filters / data:
+  - [free_kraken_enj_spot] data: WARMUP_BARS={}
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: free_kraken_enj_spot
+
+### Aliases (1) and status history
+- `free_kraken_enj_spot` — test_catalog: entry femto-free-kraken-enj-spot status_counts={'midna_only': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+
+## Gap continuation (legacy setup)
+
+- Type: other | Family: griffith | Style evidence (catalog): Gap continuation
+- Trades: US equities — SPY, QQQ, IWM, the SCOPE radar's top 100, held names
+- Timeframe: 1m (15-minute cycle)
+- Created by / source: Griffith / Ledge desk agentic runtime, SetupAgents gap_continuation
+- Description (from source records): Gap continuation (legacy setup)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: griffith_gap_continuation
+
+### Aliases (1) and status history
+- `griffith_gap_continuation` — test_catalog: entry griffith-gap-continuation status_counts={'live': 1}
+
+## Positive earnings surprise drift
+
+- Type: other | Family: griffith | Style evidence (catalog): Earnings drift
+- Trades: US equities — SCOPE stocks (ETF basket excluded)
+- Timeframe: 1d (20-session hold)
+- Created by / source: Griffith R4 tournament registration PEAD_1_0_0, on Nasdaq's public earnings calendar
+- Description (from source records): Positive earnings surprise drift
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: griffith_pead_sue
+
+### Aliases (1) and status history
+- `griffith_pead_sue` — test_catalog: entry griffith-pead-sue status_counts={'live': 1}
+
+## Top-decile SUE drift
+
+- Type: other | Family: griffith | Style evidence (catalog): Earnings drift
+- Trades: US equities — SCOPE stocks (ETF basket excluded)
+- Timeframe: 1d (20-session hold)
+- Created by / source: Griffith R4 parallel lab registration PEAD_SUE_20D_1_0_0, on Nasdaq's public earnings calendar
+- Description (from source records): Top-decile SUE drift
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: griffith_top_decile_sue
+
+### Aliases (1) and status history
+- `griffith_top_decile_sue` — test_catalog: entry griffith-top-decile-sue status_counts={'live': 1}
+
+## Earnings-day overnight scalp
+
+- Type: other | Family: killed | Style evidence (catalog): Earnings overnight
+- Trades: US equities — Nasdaq earnings-calendar names
+- Timeframe: 1d (overnight)
+- Created by / source: The old Alpaca swing desk's killed research studies, forward-tested on the master desk
+- Description (from source records): Earnings-day overnight scalp
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: killed_pead_spillover_scalp
+
+### Aliases (1) and status history
+- `killed_pead_spillover_scalp` — test_catalog: entry killed-pead-spillover-scalp status_counts={'live': 1}
+
+## PEAD price surprise
+
+- Type: other | Family: killed | Style evidence (catalog): Earnings drift
+- Trades: US equities — Nasdaq earnings-calendar names
+- Timeframe: 1d (event)
+- Created by / source: The old Alpaca swing desk's killed research studies, forward-tested on the master desk
+- Description (from source records): PEAD price surprise
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: killed_pead_price_surprise
+
+### Aliases (1) and status history
+- `killed_pead_price_surprise` — test_catalog: entry killed-pead-price-surprise status_counts={'live': 1}
+
+## Strong-afternoon continuation
+
+- Type: other | Family: overnight | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Strong-afternoon continuation
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [ausar_r19_R19_TIMING_OVERNIGHT_5BP] Compares the current 13:00-to-15:00 return with the historical 80th percentile over up to 252 full sessions, requiring at least 126. Early-close days are excluded.
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_r19_R19_TIMING_OVERNIGHT_5BP] data: posted r19 data adapters
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: ausar_r19_R19_TIMING_OVERNIGHT_5BP
+
+### Aliases (1) and status history
+- `ausar_r19_R19_TIMING_OVERNIGHT_5BP` — md2_catalog: blocked
+
+## Strong-afternoon continuation
+
+- Type: other | Family: overnight | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Strong-afternoon continuation
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_TIMING_OVERNIGHT_5BP] ausar variant: Strong-afternoon continuation
+  - [ausar_pb156] Compares the current 13:00-to-15:00 return with the historical 80th percentile over up to 252 full sessions, requiring at least 126. Early-close days are excluded.
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb156] data: Completed thirty-minute bars and actual exchange calendar.
+- Key parameters (recorded, per alias): {"R19_TIMING_OVERNIGHT_5BP": {"kind": "overnight", "slots": 8, "notional": 0.1, "fee_bps": 5}}
+
+### Variants (2)
+- **Strong-afternoon continuation**: recorded distinguishing tokens/parameters for this form: Strong-afternoon continuation (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_TIMING_OVERNIGHT_5BP
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb156
+- Variant not recorded in any source for 1 alias(es); counted, never guessed.
+
+### Aliases (2) and status history
+- `R19_TIMING_OVERNIGHT_5BP` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
+- `ausar_pb156` — md2_catalog: replaced; md2_ausar_map: present in roster
+
+Merge evidence (tiers A): [A] ausar_pb156 ~ R19_TIMING_OVERNIGHT_5BP (full evidence in MERGES.md)
+
+## Strong-afternoon continuation
+
+- Type: other | Family: overnight | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Strong-afternoon continuation
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_TIMING_OVERNIGHT_25BP] ausar variant: Strong-afternoon continuation
+  - [ausar_pb155] Compares the current 13:00-to-15:00 return with the historical 80th percentile over up to 252 full sessions, requiring at least 126. Early-close days are excluded.
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb155] data: Completed thirty-minute bars and actual exchange calendar.
+- Key parameters (recorded, per alias): {"R19_TIMING_OVERNIGHT_25BP": {"kind": "overnight", "slots": 8, "notional": 0.1, "fee_bps": 25}}
+
+### Variants (2)
+- **Strong-afternoon continuation**: recorded distinguishing tokens/parameters for this form: Strong-afternoon continuation (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_TIMING_OVERNIGHT_25BP
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb155
+- Variant not recorded in any source for 1 alias(es); counted, never guessed.
+
+### Aliases (2) and status history
+- `R19_TIMING_OVERNIGHT_25BP` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
+- `ausar_pb155` — md2_catalog: replaced; md2_ausar_map: present in roster
+
+Merge evidence (tiers A): [A] ausar_pb155 ~ R19_TIMING_OVERNIGHT_25BP (full evidence in MERGES.md)
+
+## Strong-afternoon continuation
+
+- Type: other | Family: overnight | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Strong-afternoon continuation
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [ausar_r19_R19_TIMING_OVERNIGHT_25BP] Compares the current 13:00-to-15:00 return with the historical 80th percentile over up to 252 full sessions, requiring at least 126. Early-close days are excluded.
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_r19_R19_TIMING_OVERNIGHT_25BP] data: posted r19 data adapters
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: ausar_r19_R19_TIMING_OVERNIGHT_25BP
+
+### Aliases (1) and status history
+- `ausar_r19_R19_TIMING_OVERNIGHT_25BP` — md2_catalog: blocked
+
+## Fast Numbers earnings surprise
+
+- Type: other | Family: quant_research | Style evidence (catalog): Earnings surprise, intraday hold
+- Trades: US equities (long and short) — US stocks with reported and consensus EPS
+- Timeframe: 1d (open to close)
+- Created by / source: Fast Numbers / Slow Words, principal numeric ledger, reconstructed in the desk's six-strategy study
+- Description (from source records): Fast Numbers earnings surprise
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: qr_fastnumbersslowwordseventreconstruct
+
+### Aliases (1) and status history
+- `qr_fastnumbersslowwordseventreconstruct` — test_catalog: entry qr-fastnumbersslowwordseventreconstruct status_counts={'live': 1}
+
+## Weekly green recovery
+
+- Type: other | Family: tensor_research | Style evidence (catalog): Early markup
+- Trades: US equities — 1,838-name genome roster
+- Timeframe: 1wk
+- Created by / source: FolioTend / Griffith Tensor research (archived desk research), as a forward-test book
+- Description (from source records): Weekly green recovery
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: ro_weekly_green_recovery
+
+### Aliases (1) and status history
+- `ro_weekly_green_recovery` — test_catalog: entry tr-ro-weekly-green-recovery status_counts={'waiting': 1}
+
+## PUBLIC_AI_VOLUME_SPOT100
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: none recorded
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **vol**: recorded distinguishing tokens/parameters for this form: vol (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: PUBLIC_AI_VOLUME_SPOT100
+
+### Aliases (1) and status history
+- `PUBLIC_AI_VOLUME_SPOT100` — ausar_deployed: mode=original_independent_local_paper running=False
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## PUBLIC_IU_BODY_SPOT100
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: none recorded
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: PUBLIC_IU_BODY_SPOT100
+
+### Aliases (1) and status history
+- `PUBLIC_IU_BODY_SPOT100` — ausar_deployed: mode=original_independent_local_paper running=False
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_mn_csmom
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_mn_csmom] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_mn_csmom] lz_engine exit config: {"rule": "Midna plan: rank exit / circuit -40%", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 63, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - [s_mn_csmom] lz_engine sizing: {"budget_usd": 9000, "max_slots": 9, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_mn_csmom
+
+### Aliases (1) and status history
+- `s_mn_csmom` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+# Type: mean reversion (67 strategies)
 
 
 ## Midna Reversal (Midna port)
@@ -3856,7 +8906,149 @@ Merge evidence (tiers A): [A] muse_shen_fade ~ shen_fade (full evidence in MERGE
 ### Aliases (1) and status history
 - `ro_leaders_rest_v11` — test_catalog: entry tr-ro-leaders-rest-v11 status_counts={'live': 1}
 
-# Type: breakout (44 strategies)
+## Beaten-down weekly qualifiers
+
+- Type: other | Family: femto | Style evidence (catalog): Weekly signal, value
+- Trades: US equities — The weekly M2 qualifier list
+- Timeframe: 1w
+- Created by / source: The old Alpaca swing desk, via Femto-lean
+- Description (from source records): Beaten-down weekly qualifiers Adapter for beatendown — v2 interface glue ONLY (DESIGN §4a).
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [beatendown] sleeve-owned (sleeves/beatendown.py)
+- Exit rules:
+  - [beatendown] sleeve-owned exit intents
+- Sizing:
+  - [beatendown] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+- Filters / data:
+  - [beatendown] data: WARMUP_BARS={"1Day": 1}
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: beatendown, femto_beatendown
+
+### Aliases (2) and status history
+- `beatendown` — test_catalog: entry femto-beatendown status_counts={'waiting': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+- `femto_beatendown` — test_catalog: entry femto-beatendown status_counts={'waiting': 1}
+
+Merge evidence (tiers A): [A] femto_beatendown ~ beatendown (full evidence in MERGES.md)
+
+## Qullamaggie parabolic short
+
+- Type: other | Family: qullamaggie | Style evidence (catalog): Parabolic short
+- Trades: US equities — 1,838-name genome
+- Timeframe: 1d setup · 1m trigger
+- Created by / source: Kristjan Kullamägi (Qullamaggie), "My 3 timeless setups"; the pass-3 research desk
+- Description (from source records): Qullamaggie parabolic short
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **short**: recorded distinguishing tokens/parameters for this form: short (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: qm_parabolic_short
+
+### Aliases (1) and status history
+- `qm_parabolic_short` — test_catalog: entry qm-parabolic-short status_counts={'waiting': 1}
+
+## Deep Reset cross-scan
+
+- Type: other | Family: tensor_research | Style evidence (catalog): Reset after a drawdown
+- Trades: US equities — 1,838-name genome roster
+- Timeframe: 1d · 1wk
+- Created by / source: FolioTend's Deep Reset cross-scan, as a forward-test book
+- Description (from source records): Deep Reset cross-scan
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: ro_deep_reset_cross_scan
+
+### Aliases (1) and status history
+- `ro_deep_reset_cross_scan` — test_catalog: entry tr-ro-deep-reset-cross-scan status_counts={'live': 1}
+
+## PUBLIC_TOMAZETTI_RSI2_SPOT100
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: none recorded
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: PUBLIC_TOMAZETTI_RSI2_SPOT100
+
+### Aliases (1) and status history
+- `PUBLIC_TOMAZETTI_RSI2_SPOT100` — ausar_deployed: mode=original_independent_local_paper running=False
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## TRADER_RSI2
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: none recorded
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: TRADER_RSI2
+
+### Aliases (1) and status history
+- `TRADER_RSI2` — ausar_deployed: mode=original_independent_local_paper running=False
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+# Type: breakout (52 strategies)
 
 
 ## AI volume spike crypto (4h)
@@ -5325,7 +10517,245 @@ Merge evidence (tiers A): [A] femto_qullamaggie ~ femto_qullamaggie_paper; [A] f
 ### Aliases (1) and status history
 - `ro_weekly_cyan_accumulation` — test_catalog: entry tr-ro-weekly-cyan-accumulation status_counts={'waiting': 1}
 
-# Type: divergence reversal (8 strategies)
+## Midna Turtle (Midna port)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna Turtle (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_turtle] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_turtle] {"rule": "Midna plan: turtle ATR stop / exit10", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_turtle] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_turtle
+
+### Aliases (1) and status history
+- `lz_s_mn_turtle` — md2_catalog: installed
+
+## Kraken breakdown short (ADA / LINK)
+
+- Type: other | Family: femto | Style evidence (catalog): Breakdown short
+- Trades: Crypto perpetual — ADA, LINK (Kraken)
+- Timeframe: 4h
+- Created by / source: Aurelia (Agentic-Trading-Desk) Kraken research books, via Femto-lean
+- Description (from source records): Kraken breakdown short (ADA / LINK)
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [free_kraken_ada_breakdown] sleeve-owned (sleeves/free_kraken_ada_breakdown.py)
+  - [free_kraken_link_breakdown] sleeve-owned (sleeves/free_kraken_link_breakdown.py)
+- Exit rules:
+  - [free_kraken_ada_breakdown] sleeve-owned exit intents
+  - [free_kraken_link_breakdown] sleeve-owned exit intents
+- Sizing:
+  - [free_kraken_ada_breakdown] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+  - [free_kraken_link_breakdown] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+- Filters / data:
+  - [free_kraken_ada_breakdown] data: WARMUP_BARS={"240Min": 22}
+  - [free_kraken_link_breakdown] data: WARMUP_BARS={"4Hour": 22}
+- Variant axes (catalog): [{"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}]
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: femto_free_kraken_ada_breakdown, femto_free_kraken_link_breakdown, free_kraken_ada_breakdown, free_kraken_link_breakdown
+
+### Aliases (4) and status history
+- `femto_free_kraken_ada_breakdown` — test_catalog: entry femto-kraken-breakdown status_counts={'live': 2}
+- `femto_free_kraken_link_breakdown` — test_catalog: entry femto-kraken-breakdown status_counts={'live': 2}
+- `free_kraken_ada_breakdown` — test_catalog: entry femto-kraken-breakdown status_counts={'live': 2}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+- `free_kraken_link_breakdown` — test_catalog: entry femto-kraken-breakdown status_counts={'live': 2}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+
+Merge evidence (tiers A): [A] femto_free_kraken_ada_breakdown ~ femto_free_kraken_link_breakdown; [A] femto_free_kraken_ada_breakdown ~ free_kraken_ada_breakdown; [A] femto_free_kraken_ada_breakdown ~ free_kraken_link_breakdown (full evidence in MERGES.md)
+
+## Kraken crowded-long failure short (ADA / LINK)
+
+- Type: other | Family: femto | Style evidence (catalog): Breakdown short (funding filter)
+- Trades: Crypto perpetual — ADA, LINK (Kraken)
+- Timeframe: 4h
+- Created by / source: Aurelia (Agentic-Trading-Desk) Kraken research books, via Femto-lean
+- Description (from source records): Kraken crowded-long failure short (ADA / LINK)
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [free_kraken_ada_crowded] sleeve-owned (sleeves/free_kraken_ada_crowded.py)
+  - [free_kraken_link_crowded] sleeve-owned (sleeves/free_kraken_link_crowded.py)
+- Exit rules:
+  - [free_kraken_ada_crowded] sleeve-owned exit intents
+  - [free_kraken_link_crowded] sleeve-owned exit intents
+- Sizing:
+  - [free_kraken_ada_crowded] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+  - [free_kraken_link_crowded] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+- Filters / data:
+  - [free_kraken_ada_crowded] data: WARMUP_BARS={"240Min": 22}
+  - [free_kraken_link_crowded] data: WARMUP_BARS={"4Hour": 22}
+- Variant axes (catalog): [{"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}]
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: femto_free_kraken_ada_crowded, femto_free_kraken_link_crowded, free_kraken_ada_crowded, free_kraken_link_crowded
+
+### Aliases (4) and status history
+- `femto_free_kraken_ada_crowded` — test_catalog: entry femto-kraken-crowded status_counts={'live': 2}
+- `femto_free_kraken_link_crowded` — test_catalog: entry femto-kraken-crowded status_counts={'live': 2}
+- `free_kraken_ada_crowded` — test_catalog: entry femto-kraken-crowded status_counts={'live': 2}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+- `free_kraken_link_crowded` — test_catalog: entry femto-kraken-crowded status_counts={'live': 2}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+
+Merge evidence (tiers A): [A] femto_free_kraken_ada_crowded ~ femto_free_kraken_link_crowded; [A] femto_free_kraken_ada_crowded ~ free_kraken_ada_crowded; [A] femto_free_kraken_ada_crowded ~ free_kraken_link_crowded (full evidence in MERGES.md)
+
+## Bilbo Golden Gate (SPY)
+
+- Type: other | Family: milkman | Style evidence (catalog): Intraday ATR levels
+- Trades: US ETF — SPY
+- Timeframe: 1m · 1h Phase Oscillator
+- Created by / source: Milkman Trades (milkmantrades.com), Bilbo Golden Gate; the Milkman v2 study
+- Description (from source records): Bilbo Golden Gate (SPY)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: mk_bilbogoldengate
+
+### Aliases (1) and status history
+- `mk_bilbogoldengate` — test_catalog: entry mk-bilbogoldengate status_counts={'waiting': 1}
+
+## Day Golden Gate (SPY)
+
+- Type: other | Family: milkman | Style evidence (catalog): Intraday ATR levels
+- Trades: US ETF — SPY
+- Timeframe: 1m (daily ATR levels)
+- Created by / source: Milkman Trades (milkmantrades.com), Golden Gate; the Milkman v2 study
+- Description (from source records): Day Golden Gate (SPY)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: mk_daygoldengate
+
+### Aliases (1) and status history
+- `mk_daygoldengate` — test_catalog: entry mk-daygoldengate status_counts={'waiting': 1}
+
+## Multi-day Golden Gate (weekly ATR)
+
+- Type: other | Family: milkman | Style evidence (catalog): ATR levels
+- Trades: US equities, index ETFs and futures — 1,822 US stocks + 14 index ETFs and futures
+- Timeframe: 1d (weekly ATR levels)
+- Created by / source: Milkman Trades (milkmantrades.com), Multi-day GG; the Milkman v2 study
+- Description (from source records): Multi-day Golden Gate (weekly ATR)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: mk_multidaygoldengateweekly
+
+### Aliases (1) and status history
+- `mk_multidaygoldengateweekly` — test_catalog: entry mk-multidaygoldengateweekly status_counts={'live': 1}
+
+## Swing Golden Gate (monthly ATR)
+
+- Type: other | Family: milkman | Style evidence (catalog): ATR levels
+- Trades: US equities, index ETFs and futures — 1,822 US stocks + 14 index ETFs and futures
+- Timeframe: 1d (monthly ATR levels)
+- Created by / source: Milkman Trades (milkmantrades.com), Swing GG; the Milkman v2 study
+- Description (from source records): Swing Golden Gate (monthly ATR)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: mk_swinggoldengatemonthly
+
+### Aliases (1) and status history
+- `mk_swinggoldengatemonthly` — test_catalog: entry mk-swinggoldengatemonthly status_counts={'live': 1}
+
+## s_mn_turtle
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_mn_turtle] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_mn_turtle] lz_engine exit config: {"rule": "Midna plan: turtle ATR stop / exit10", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - [s_mn_turtle] lz_engine sizing: {"budget_usd": 2000, "max_slots": 2, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_mn_turtle
+
+### Aliases (1) and status history
+- `s_mn_turtle` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+# Type: divergence reversal (15 strategies)
 
 
 ## David Trullas MACD divergence + Fibonacci open scalp (QQQ 1m signals, QQQM)
@@ -5565,7 +10995,196 @@ Merge evidence (tiers A): [A] femto_qullamaggie ~ femto_qullamaggie_paper; [A] f
 
 Merge evidence (tiers A): [A] trullas_divergence ~ trullas_v01; [A] trullas_divergence ~ trullas_v02; [A] trullas_divergence ~ trullas_v03; [A] trullas_divergence ~ trullas_v04; [A] trullas_divergence ~ trullas_v05; [A] trullas_divergence ~ trullas_v06 (full evidence in MERGES.md)
 
-# Type: pairs and statistical arbitrage (3 strategies)
+## Trullas variant v01: 2m chart (timeframe: a slightly slower chart; fewer micro-pivots)
+
+- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Trullas variant v01: 2m chart (timeframe: a slightly slower chart; fewer micro-pivots)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: t_trullas_v01
+
+### Aliases (1) and status history
+- `t_trullas_v01` — md2_catalog: installed
+
+## Trullas variant v02: 3m chart, patient window (timeframe + patience: reads a 3m chart and 
+
+- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Trullas variant v02: 3m chart, patient window (timeframe + patience: reads a 3m chart and keeps looking unt)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: t_trullas_v02
+
+### Aliases (1) and status history
+- `t_trullas_v02` — md2_catalog: installed
+
+## Trullas variant v03: 5m chart, extended window (timeframe + session length: a 5m chart nee
+
+- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Trullas variant v03: 5m chart, extended window (timeframe + session length: a 5m chart needs ~25 min to form)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: t_trullas_v03
+
+### Aliases (1) and status history
+- `t_trullas_v03` — md2_catalog: installed
+
+## Trullas variant v04: strict swings, wide stop (pivot strictness: only a swing that stands 
+
+- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Trullas variant v04: strict swings, wide stop (pivot strictness: only a swing that stands out (>=2 ATR prom)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: t_trullas_v04
+
+### Aliases (1) and status history
+- `t_trullas_v04` — md2_catalog: installed
+
+## Trullas variant v05: loose fast eye, tight stop (pivot looseness + speed: 2-bar fractals, 
+
+- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Trullas variant v05: loose fast eye, tight stop (pivot looseness + speed: 2-bar fractals, no prominence test,)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: t_trullas_v05
+
+### Aliases (1) and status history
+- `t_trullas_v05` — md2_catalog: installed
+
+## Trullas variant v08: key-level reader (visual level reading: P2 must sit within 2 ATR of p
+
+- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Trullas variant v08: key-level reader (visual level reading: P2 must sit within 2 ATR of prior-day )
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: t_trullas_v08
+
+### Aliases (1) and status history
+- `t_trullas_v08` — md2_catalog: installed
+
+## Trullas variant v10: scale-out runner (trade management: half off at 38.2%, runner to 66% 
+
+- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Trullas variant v10: scale-out runner (trade management: half off at 38.2%, runner to 66% with stop)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: t_trullas_v10
+
+### Aliases (1) and status history
+- `t_trullas_v10` — md2_catalog: installed
+
+# Type: pairs and statistical arbitrage (4 strategies)
 
 
 ## Midna Pairs (Midna port)
@@ -5657,7 +11276,37 @@ Merge evidence (tiers A): [A] killed_pairs_distance_coint ~ killed_pairs_news_fi
 
 Merge evidence (tiers A): [A] midna_distance_pair_shares ~ s_mn_pairs (full evidence in MERGES.md)
 
-# Type: options income (9 strategies)
+## SPY put-call parity package
+
+- Type: other | Family: femto | Style evidence (catalog): Arbitrage
+- Trades: ETF options — SPY (SPY / QQQ for the pair)
+- Timeframe: 1d (5-minute passes)
+- Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
+- Description (from source records): SPY put-call parity package
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [free_opt_parity] sleeve-owned (sleeves/free_opt_parity.py)
+- Exit rules:
+  - [free_opt_parity] sleeve-owned exit intents
+- Sizing:
+  - [free_opt_parity] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+- Filters / data:
+  - [free_opt_parity] data: WARMUP_BARS={}
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: femto_free_opt_parity, free_opt_parity
+
+### Aliases (2) and status history
+- `femto_free_opt_parity` — test_catalog: entry femto-free-opt-parity status_counts={'waiting': 1}
+- `free_opt_parity` — test_catalog: entry femto-free-opt-parity status_counts={'waiting': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+
+Merge evidence (tiers A): [A] femto_free_opt_parity ~ free_opt_parity (full evidence in MERGES.md)
+
+# Type: options income (10 strategies)
 
 
 ## APEX O3: regime put-write
@@ -5976,7 +11625,37 @@ Merge evidence (tiers A): [A] femto_qqq_put_ladder ~ midna_qqq_csp_ladder; [A] f
 
 Merge evidence (tiers A): [A] femto_free_opt_wheel ~ free_opt_wheel (full evidence in MERGES.md)
 
-# Type: options directional (31 strategies)
+## OPT_WHEEL_LIFECYCLE
+
+- Type: other | Family: wheel | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
+- Algorithm sources consulted: femto land-wt config params
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+- Key parameters (recorded, per alias): {"OPT_WHEEL_LIFECYCLE": {"symbols": []}}
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: OPT_WHEEL_LIFECYCLE
+
+### Aliases (1) and status history
+- `OPT_WHEEL_LIFECYCLE` — ausar_deployed: mode=unfunded_monitor running=False; femto_land_wt: present in roster
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+# Type: options directional (37 strategies)
 
 
 ## Midna Opt Pairs (Midna port)
@@ -7135,7 +12814,222 @@ Merge evidence (tiers A, C): [A] ausar_pb14 ~ OPT_OPENING_GAMMA_A; [C] OPT_OPENI
 ### Aliases (1) and status history
 - `qr_bracketedoptionlawtransport` — test_catalog: entry qr-bracketedoptionlawtransport status_counts={'blocked': 1}
 
-# Type: volatility (72 strategies)
+## Tail put after a -3% day
+
+- Type: other | Family: femto | Style evidence (catalog): Tail hedge
+- Trades: ETF options — SPY (SPY / QQQ for the pair)
+- Timeframe: 1d (5-minute passes)
+- Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
+- Description (from source records): Tail put after a -3% day
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [free_opt_tail] sleeve-owned (sleeves/free_opt_tail.py)
+- Exit rules:
+  - [free_opt_tail] sleeve-owned exit intents
+- Sizing:
+  - [free_opt_tail] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+- Filters / data:
+  - [free_opt_tail] data: WARMUP_BARS={}
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: femto_free_opt_tail, free_opt_tail
+
+### Aliases (2) and status history
+- `femto_free_opt_tail` — test_catalog: entry femto-free-opt-tail status_counts={'blocked': 1}
+- `free_opt_tail` — test_catalog: entry femto-free-opt-tail status_counts={'blocked': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+
+Merge evidence (tiers A): [A] femto_free_opt_tail ~ free_opt_tail (full evidence in MERGES.md)
+
+## Milkman 0DTE (SPX)
+
+- Type: other | Family: milkman | Style evidence (catalog): Long premium day trading
+- Trades: SPX index options (0DTE) — SPX
+- Timeframe: Intraday
+- Created by / source: Milkman Trades' 0DTE SPX method, from his 2026-10-21 answers and the authored Femto-lean sleeve (milkman-0dte branch), installed 2026-10-27
+- Description (from source records): Milkman 0DTE (SPX)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - [mk_zerodte_spx] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=True
+- Filters / data:
+  - not recorded in any consulted source
+- Key parameters (recorded, per alias): {"mk_zerodte_spx": {"daily_stop": -10000.0, "premium_per_trade": 2500.0, "max_open": 4, "target_delta": 0.4, "excluded_setups": ["ESMON", "OPX4"], "inert_reason": "SPX 0DTE chain not available: PARKED + UNFED at install 2026-10-27 - (1) Milkman intraday study (Femto-lean desk/sleeves/milkman/intraday.py) not ported, no authored lane signals; (2) no delta/greeks on this account tier (feed=indicative carries none, feed=opra 403), authored contract pick requires delta. See desk3/milkman_0dte/PROVENANCE.md"}}
+- Variant axes (catalog): [{"Parameter": "Contract pick", "Values": "today's expiry, |delta| nearest 0.40, fresh two-sided quotes at most 20% wide, bought at the ask"}, {"Parameter": "Excluded lanes", "Values": "ESMON, OPX4"}]
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: mk_zerodte_spx
+
+### Aliases (1) and status history
+- `mk_zerodte_spx` — test_catalog: entry mk-zerodte-spx status_counts={'midna_only': 1}; muse_desk_v3: parked
+
+## Post-earnings response · long, 0.5% risk
+
+- Type: other | Family: pead | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Post-earnings response · long, 0.5% risk
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [OPT_PEAD_LONG_B] ausar variant: Post-earnings response · long, 0.5% risk
+  - [ausar_pb17] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
+  - [ausar_r19_OPT_PEAD_LONG_B] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb17] data: Observed earnings publication and response, underlying bars, indicative/model option inputs.
+  - [ausar_r19_OPT_PEAD_LONG_B] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"OPT_PEAD_LONG_B": {"structure": "long", "dte": [21, 35], "delta": [0.5, 0.65], "hold_sessions": 10, "risk_fraction": 0.005, "max_premium_spot": 0.02, "symbols": []}}
+
+### Variants (3)
+- **Post-earnings response · long, 0.5% risk**: recorded distinguishing tokens/parameters for this form: Post-earnings response · long, 0.5% risk (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: OPT_PEAD_LONG_B
+- **long**: recorded distinguishing tokens/parameters for this form: long (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: ausar_r19_OPT_PEAD_LONG_B
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb17
+- Variant not recorded in any source for 1 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `OPT_PEAD_LONG_B` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb17` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_OPT_PEAD_LONG_B` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb17 ~ OPT_PEAD_LONG_B; [C] OPT_PEAD_LONG_B ~ ausar_r19_OPT_PEAD_LONG_B (full evidence in MERGES.md)
+
+## Post-earnings response · long, 2.0% risk
+
+- Type: other | Family: pead | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Post-earnings response · long, 2.0% risk
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [OPT_PEAD_LONG_A] ausar variant: Post-earnings response · long, 2.0% risk
+  - [ausar_pb16] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
+  - [ausar_r19_OPT_PEAD_LONG_A] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb16] data: Observed earnings publication and response, underlying bars, indicative/model option inputs.
+  - [ausar_r19_OPT_PEAD_LONG_A] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"OPT_PEAD_LONG_A": {"structure": "long", "dte": [21, 35], "delta": [0.5, 0.65], "hold_sessions": 10, "risk_fraction": 0.02, "max_premium_spot": 0.04, "symbols": []}}
+
+### Variants (3)
+- **Post-earnings response · long, 2.0% risk**: recorded distinguishing tokens/parameters for this form: Post-earnings response · long, 2.0% risk (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: OPT_PEAD_LONG_A
+- **long**: recorded distinguishing tokens/parameters for this form: long (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: ausar_r19_OPT_PEAD_LONG_A
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb16
+- Variant not recorded in any source for 1 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `OPT_PEAD_LONG_A` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb16` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_OPT_PEAD_LONG_A` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb16 ~ OPT_PEAD_LONG_A; [C] ausar_r19_OPT_PEAD_LONG_A ~ OPT_PEAD_LONG_A (full evidence in MERGES.md)
+
+## Post-earnings response · vertical, 0.5% risk
+
+- Type: other | Family: pead | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Post-earnings response · vertical, 0.5% risk
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [OPT_PEAD_VERTICAL_B] ausar variant: Post-earnings response · vertical, 0.5% risk
+  - [ausar_pb19] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
+  - [ausar_r19_OPT_PEAD_VERTICAL_B] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb19] data: Observed earnings publication and response, underlying bars, indicative/model option inputs.
+  - [ausar_r19_OPT_PEAD_VERTICAL_B] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"OPT_PEAD_VERTICAL_B": {"structure": "vertical", "dte": [21, 35], "delta": [0.5, 0.65], "hold_sessions": 10, "risk_fraction": 0.005, "max_premium_spot": 0.02, "symbols": []}}
+
+### Variants (2)
+- **Post-earnings response · vertical, 0.5% risk**: recorded distinguishing tokens/parameters for this form: Post-earnings response · vertical, 0.5% risk (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: OPT_PEAD_VERTICAL_B
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb19, ausar_r19_OPT_PEAD_VERTICAL_B
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `OPT_PEAD_VERTICAL_B` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb19` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_OPT_PEAD_VERTICAL_B` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb19 ~ OPT_PEAD_VERTICAL_B; [C] ausar_r19_OPT_PEAD_VERTICAL_B ~ OPT_PEAD_VERTICAL_B (full evidence in MERGES.md)
+
+## Post-earnings response · vertical, 2.0% risk
+
+- Type: other | Family: pead | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Post-earnings response · vertical, 2.0% risk
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [OPT_PEAD_VERTICAL_A] ausar variant: Post-earnings response · vertical, 2.0% risk
+  - [ausar_pb18] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
+  - [ausar_r19_OPT_PEAD_VERTICAL_A] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb18] data: Observed earnings publication and response, underlying bars, indicative/model option inputs.
+  - [ausar_r19_OPT_PEAD_VERTICAL_A] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"OPT_PEAD_VERTICAL_A": {"structure": "vertical", "dte": [21, 35], "delta": [0.5, 0.65], "hold_sessions": 10, "risk_fraction": 0.02, "max_premium_spot": 0.04, "symbols": []}}
+
+### Variants (2)
+- **Post-earnings response · vertical, 2.0% risk**: recorded distinguishing tokens/parameters for this form: Post-earnings response · vertical, 2.0% risk (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: OPT_PEAD_VERTICAL_A
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb18, ausar_r19_OPT_PEAD_VERTICAL_A
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `OPT_PEAD_VERTICAL_A` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb18` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_OPT_PEAD_VERTICAL_A` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19_OPT_PEAD_VERTICAL_A ~ OPT_PEAD_VERTICAL_A (full evidence in MERGES.md)
+
+# Type: volatility (36 strategies)
 
 
 ## Midna W cyan mid-VIX (Midna port)
@@ -7164,735 +13058,6 @@ Merge evidence (tiers A, C): [A] ausar_pb14 ~ OPT_OPENING_GAMMA_A; [C] OPT_OPENI
 
 ### Aliases (1) and status history
 - `lz_s_mn_w_cyan_vix` — md2_catalog: installed
-
-## Q07 w_cyan H52 small cheap5+mom6+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 small cheap5+mom6+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_sm_cheap5_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_sm_cheap5_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_sm_cheap5_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_sm_cheap5_mom6_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_sm_cheap5_mom6_vix20` — md2_catalog: installed
-
-## Q07 w_cyan H78 small deep70+insider2+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 small deep70+insider2+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_sm_deep70_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_sm_deep70_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_sm_deep70_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_sm_deep70_ins2_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_sm_deep70_ins2_vix20` — md2_catalog: installed
-
-## Q07 w_cyan H78 small insider2+mom6+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 small insider2+mom6+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_sm_ins2_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_sm_ins2_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_sm_ins2_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_sm_ins2_mom6_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_sm_ins2_mom6_vix20` — md2_catalog: installed
-
-## Q07 w_green H52 midlarge stress_vix20+tierA (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 midlarge stress_vix20+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_ml_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_ml_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_ml_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_ml_vix20_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_ml_vix20_tierA` — md2_catalog: installed
-
-## Q07 w_green H52 small deep70+insider2+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 small deep70+insider2+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_sm_deep70_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_sm_deep70_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_sm_deep70_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_sm_deep70_ins2_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_sm_deep70_ins2_vix20` — md2_catalog: installed
-
-## Q07 w_green H78 micro cheap5+deep70+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 micro cheap5+deep70+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_mi_cheap5_deep70_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_mi_cheap5_deep70_vix20` — md2_catalog: installed
-
-## Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_ml_mom6_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_ml_mom6_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_ml_mom6_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_ml_mom6_vix20_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_ml_mom6_vix20_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 midlarge stress_vix20+tierA (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 midlarge stress_vix20+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_ml_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_ml_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_ml_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_ml_vix20_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_ml_vix20_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 small mom6+stress_vix20+tierA (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 small mom6+stress_vix20+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_sm_mom6_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_sm_mom6_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_sm_mom6_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_sm_mom6_vix20_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_sm_mom6_vix20_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 small stress_vix20+tierA (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 small stress_vix20+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_sm_vix20_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_sm_vix20_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_sm_vix20_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_sm_vix20_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_sm_vix20_tierA` — md2_catalog: installed
-
-## Q07 w_swing H52 micro cheap5+deep70+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 micro cheap5+deep70+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_mi_cheap5_deep70_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_mi_cheap5_deep70_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_mi_cheap5_deep70_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_mi_cheap5_deep70_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_mi_cheap5_deep70_vix20` — md2_catalog: installed
-
-## Q07 w_swing H52 micro cheap5+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 micro cheap5+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_mi_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_mi_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_mi_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_mi_cheap5_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_mi_cheap5_vix20` — md2_catalog: installed
-
-## Q07 w_swing H52 midlarge cheap5+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 midlarge cheap5+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_ml_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_ml_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_ml_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_ml_cheap5_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_ml_cheap5_vix20` — md2_catalog: installed
-
-## Q07 w_swing H52 midlarge deep70+insider2+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 midlarge deep70+insider2+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_ml_deep70_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_ml_deep70_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_ml_deep70_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_ml_deep70_ins2_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_ml_deep70_ins2_vix20` — md2_catalog: installed
-
-## Q07 w_swing H52 midlarge deep70+stress_vix20+wiki_low (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 midlarge deep70+stress_vix20+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_ml_deep70_vix20_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_ml_deep70_vix20_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_ml_deep70_vix20_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_ml_deep70_vix20_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_ml_deep70_vix20_wlow` — md2_catalog: installed
-
-## Q07 w_swing H52 midlarge insider2+mom6+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 midlarge insider2+mom6+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_ml_ins2_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_ml_ins2_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_ml_ins2_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_ml_ins2_mom6_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_ml_ins2_mom6_vix20` — md2_catalog: installed
-
-## Q07 w_swing H52 small cheap5+deep70+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 small cheap5+deep70+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_sm_cheap5_deep70_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_sm_cheap5_deep70_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_sm_cheap5_deep70_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_sm_cheap5_deep70_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_sm_cheap5_deep70_vix20` — md2_catalog: installed
-
-## Q07 w_swing H52 small cheap5+insider2+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 small cheap5+insider2+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_sm_cheap5_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_sm_cheap5_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_sm_cheap5_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_sm_cheap5_ins2_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_sm_cheap5_ins2_vix20` — md2_catalog: installed
-
-## Q07 w_swing H52 small cheap5+mom6+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 small cheap5+mom6+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_sm_cheap5_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_sm_cheap5_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_sm_cheap5_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_sm_cheap5_mom6_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_sm_cheap5_mom6_vix20` — md2_catalog: installed
-
-## Q07 w_swing H52 small cheap5+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 small cheap5+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_sm_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_sm_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_sm_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_sm_cheap5_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_sm_cheap5_vix20` — md2_catalog: installed
-
-## Q07 w_swing H78 micro cheap5+mom6+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 micro cheap5+mom6+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_mi_cheap5_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_mi_cheap5_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_mi_cheap5_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_mi_cheap5_mom6_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_mi_cheap5_mom6_vix20` — md2_catalog: installed
-
-## Q07 w_swing H78 midlarge cheap5+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 midlarge cheap5+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_ml_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_ml_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_ml_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_ml_cheap5_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_ml_cheap5_vix20` — md2_catalog: installed
-
-## Q07 w_swing H78 midlarge deep70+insider2+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 midlarge deep70+insider2+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_ml_deep70_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_ml_deep70_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_ml_deep70_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_ml_deep70_ins2_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_ml_deep70_ins2_vix20` — md2_catalog: installed
-
-## Q07 w_swing H78 small cheap5+deep70+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 small cheap5+deep70+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_sm_cheap5_deep70_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_sm_cheap5_deep70_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_sm_cheap5_deep70_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_sm_cheap5_deep70_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_sm_cheap5_deep70_vix20` — md2_catalog: installed
-
-## Q07 w_swing H78 small cheap5+insider2+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 small cheap5+insider2+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_sm_cheap5_ins2_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_sm_cheap5_ins2_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_sm_cheap5_ins2_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_sm_cheap5_ins2_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_sm_cheap5_ins2_vix20` — md2_catalog: installed
-
-## Q07 w_swing H78 small cheap5+mom6+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 small cheap5+mom6+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_sm_cheap5_mom6_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_sm_cheap5_mom6_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_sm_cheap5_mom6_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_sm_cheap5_mom6_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_sm_cheap5_mom6_vix20` — md2_catalog: installed
-
-## Q07 w_swing H78 small cheap5+stress_vix20 (test)
-
-- Type: volatility | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 small cheap5+stress_vix20 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_sm_cheap5_vix20] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_sm_cheap5_vix20] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_sm_cheap5_vix20] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_sm_cheap5_vix20
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_sm_cheap5_vix20` — md2_catalog: installed
 
 ## APEX C3: Follow-through
 
@@ -8772,384 +13937,130 @@ Merge evidence (tiers A): [A] femto_vix_hedge ~ vix_hedge (full evidence in MERG
 ### Aliases (1) and status history
 - `ausar_g_trader_squeeze20_public_v1` — md2_catalog: installed
 
-## s_q07w_c52_sm_cheap5_mom6_vix20
+## ChartsLector market-fear rebound (QQQ)
 
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Type: other | Family: lazarus | Style evidence (catalog): Fear rebound
+- Trades: US ETF — QQQ
+- Timeframe: 1d
+- Created by / source: ChartsLector (his VIX Mood Ring), via Lazarus
+- Description (from source records): ChartsLector market-fear rebound (QQQ)
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_cl_vmr_qqq] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_cl_vmr_qqq] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_cl_vmr_qqq] {"rule": "the sleeve feed fire's plan (no stop / time exit; hold = 5 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_cl_vmr_qqq] lz_engine exit config: {"rule": "the sleeve feed fire's plan (no stop / time exit; hold = 5 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_cl_vmr_qqq] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
+  - [s_cl_vmr_qqq] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - [lz_s_cl_vmr_qqq] data: cl_live (ChartsLector screens) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_cl_vmr_qqq, lz_s_cl_vmr_qqq, s_cl_vmr_qqq
+
+### Aliases (3) and status history
+- `lz_cl_vmr_qqq` — test_catalog: entry cl-vmr-qqq status_counts={'waiting': 1}
+- `lz_s_cl_vmr_qqq` — md2_catalog: installed
+- `s_cl_vmr_qqq` — test_catalog: entry cl-vmr-qqq status_counts={'waiting': 1}; muse_desk_v3: active roster; md2_lz_engine: live
+
+Merge evidence (tiers A, C): [A] lz_cl_vmr_qqq ~ s_cl_vmr_qqq; [C] lz_cl_vmr_qqq ~ lz_s_cl_vmr_qqq (full evidence in MERGES.md)
+
+## OPT_OWN_IV_RESIDUAL
+
+- Type: other | Family: own_iv_residual | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
+- Algorithm sources consulted: femto land-wt config params
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [s_q07w_c52_sm_cheap5_mom6_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - not recorded in any consulted source
 - Exit rules:
-  - [s_q07w_c52_sm_cheap5_mom6_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - not recorded in any consulted source
 - Sizing:
-  - [s_q07w_c52_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+  - not recorded in any consulted source
 - Filters / data:
   - not recorded in any consulted source
+- Key parameters (recorded, per alias): {"OPT_OWN_IV_RESIDUAL": {"symbols": []}}
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_sm_cheap5_mom6_vix20
+  - aliases: OPT_OWN_IV_RESIDUAL
 
 ### Aliases (1) and status history
-- `s_q07w_c52_sm_cheap5_mom6_vix20` — md2_lz_engine: live
+- `OPT_OWN_IV_RESIDUAL` — ausar_deployed: mode=unfunded_monitor running=False; femto_land_wt: present in roster
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-## s_q07w_g78_mi_cheap5_deep70_vix20
+## OPT_RELEASE_CONVEXITY
 
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Type: other | Family: release_convexity | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
+- Algorithm sources consulted: femto land-wt config params
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [s_q07w_g78_mi_cheap5_deep70_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - not recorded in any consulted source
 - Exit rules:
-  - [s_q07w_g78_mi_cheap5_deep70_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - not recorded in any consulted source
 - Sizing:
-  - [s_q07w_g78_mi_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+  - not recorded in any consulted source
 - Filters / data:
   - not recorded in any consulted source
+- Key parameters (recorded, per alias): {"OPT_RELEASE_CONVEXITY": {"symbols": []}}
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_mi_cheap5_deep70_vix20
+  - aliases: OPT_RELEASE_CONVEXITY
 
 ### Aliases (1) and status history
-- `s_q07w_g78_mi_cheap5_deep70_vix20` — md2_lz_engine: live
+- `OPT_RELEASE_CONVEXITY` — ausar_deployed: mode=unfunded_monitor running=False; femto_land_wt: present in roster
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-## s_q07w_g78_sm_mom6_vix20_tierA
+## TRADER_SQUEEZE20
 
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: none recorded
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [s_q07w_g78_sm_mom6_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - not recorded in any consulted source
 - Exit rules:
-  - [s_q07w_g78_sm_mom6_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - not recorded in any consulted source
 - Sizing:
-  - [s_q07w_g78_sm_mom6_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+  - not recorded in any consulted source
 - Filters / data:
   - not recorded in any consulted source
 
 ### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_sm_mom6_vix20_tierA
+- **squeeze**: recorded distinguishing tokens/parameters for this form: squeeze (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: TRADER_SQUEEZE20
 
 ### Aliases (1) and status history
-- `s_q07w_g78_sm_mom6_vix20_tierA` — md2_lz_engine: live
+- `TRADER_SQUEEZE20` — ausar_deployed: mode=original_independent_local_paper running=False
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-## s_q07w_g78_sm_vix20_tierA
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_sm_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_sm_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_sm_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_sm_vix20_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_sm_vix20_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_mi_cheap5_deep70_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_mi_cheap5_deep70_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_mi_cheap5_deep70_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_mi_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_mi_cheap5_deep70_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s52_mi_cheap5_deep70_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_mi_cheap5_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_mi_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_mi_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_mi_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_mi_cheap5_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s52_mi_cheap5_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_sm_cheap5_deep70_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_sm_cheap5_deep70_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_sm_cheap5_deep70_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_sm_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_sm_cheap5_deep70_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s52_sm_cheap5_deep70_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_sm_cheap5_mom6_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_sm_cheap5_mom6_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_sm_cheap5_mom6_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_sm_cheap5_mom6_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s52_sm_cheap5_mom6_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_sm_cheap5_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_sm_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_sm_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_sm_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_sm_cheap5_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s52_sm_cheap5_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_mi_cheap5_mom6_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_mi_cheap5_mom6_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_mi_cheap5_mom6_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_mi_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_mi_cheap5_mom6_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s78_mi_cheap5_mom6_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_sm_cheap5_deep70_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_sm_cheap5_deep70_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_sm_cheap5_deep70_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_sm_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_sm_cheap5_deep70_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s78_sm_cheap5_deep70_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_sm_cheap5_mom6_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_sm_cheap5_mom6_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_sm_cheap5_mom6_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_sm_cheap5_mom6_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s78_sm_cheap5_mom6_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_sm_cheap5_vix20
-
-- Type: volatility | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_sm_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_sm_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_sm_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_sm_cheap5_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s78_sm_cheap5_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-# Type: market timing and rotation (11 strategies)
+# Type: market timing and rotation (20 strategies)
 
 
 ## Midna W cyan breadth (Midna port)
@@ -9567,6 +14478,345 @@ Merge evidence (tiers A): [A] mk_weekdayopentocloseproxy ~ mk_weekdayopentoclose
 ### Aliases (1) and status history
 - `qr_finrlxreleasedadaptiverotationrecons` — test_catalog: entry qr-finrlxreleasedadaptiverotationrecons status_counts={'live': 1}
 
+## Midna QQQ→TZA hedge (Midna port)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna QQQ→TZA hedge (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_hedge] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_hedge] {"rule": "Midna plan: hedge exit on flip off / max 20 sessions", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 20, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_hedge] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_hedge
+
+### Aliases (1) and status history
+- `lz_s_mn_hedge` — md2_catalog: installed
+
+## ETF leader confirmed across two sources · 150% exposure
+
+- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): ETF leader confirmed across two sources · 150% exposure
+- Algorithm status: **FULL**
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_ETF_INTERVAL1_M150] ausar variant: ETF leader confirmed across two sources · 150% exposure
+  - [ausar_pb90] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. Targets ETF holdings worth 150% of the paper account's net value
+  - [ausar_r19_R19_ETF_INTERVAL1_M150] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. Targets ETF holdings worth 150% of the paper account's net value
+- Exit rules:
+  - [ausar_pb90] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_r19_R19_ETF_INTERVAL1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb90] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
+  - [ausar_r19_R19_ETF_INTERVAL1_M150] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"R19_ETF_INTERVAL1_M150": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+
+### Variants (2)
+- **ETF leader confirmed across two sources · 150% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader confirmed across two sources · 150% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_ETF_INTERVAL1_M150
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb90, ausar_r19_R19_ETF_INTERVAL1_M150
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `R19_ETF_INTERVAL1_M150` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb90` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_R19_ETF_INTERVAL1_M150` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb90 ~ R19_ETF_INTERVAL1_M150; [C] R19_ETF_INTERVAL1_M150 ~ ausar_r19_R19_ETF_INTERVAL1_M150 (full evidence in MERGES.md)
+
+## ETF leader confirmed across two sources · 98% exposure
+
+- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): ETF leader confirmed across two sources · 98% exposure
+- Algorithm status: **FULL**
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_ETF_INTERVAL1_C098] ausar variant: ETF leader confirmed across two sources · 98% exposure
+  - [ausar_pb89] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. Targets ETF holdings worth 98% of the paper account's net value,
+  - [ausar_r19_R19_ETF_INTERVAL1_C098] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. Targets ETF holdings worth 98% of the paper account's net value,
+- Exit rules:
+  - [ausar_pb89] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_r19_R19_ETF_INTERVAL1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb89] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
+  - [ausar_r19_R19_ETF_INTERVAL1_C098] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"R19_ETF_INTERVAL1_C098": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+
+### Variants (2)
+- **ETF leader confirmed across two sources · 98% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader confirmed across two sources · 98% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_ETF_INTERVAL1_C098
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb89, ausar_r19_R19_ETF_INTERVAL1_C098
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `R19_ETF_INTERVAL1_C098` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb89` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_R19_ETF_INTERVAL1_C098` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb89 ~ R19_ETF_INTERVAL1_C098; [C] R19_ETF_INTERVAL1_C098 ~ ausar_r19_R19_ETF_INTERVAL1_C098 (full evidence in MERGES.md)
+
+## ETF leader excluding semiconductors · 150% exposure
+
+- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): ETF leader excluding semiconductors · 150% exposure
+- Algorithm status: **FULL**
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_ETF_EXSMH1_M150] ausar variant: ETF leader excluding semiconductors · 150% exposure
+  - [ausar_pb88] Excludes SMH, the semiconductor ETF, then ranks the remaining configured funds by completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. Targets ETF holdings worth 150% of the paper account's net value, rounded down to whole shares. The excess uses simulated borrowing.
+  - [ausar_r19_R19_ETF_EXSMH1_M150] Excludes SMH, the semiconductor ETF, then ranks the remaining configured funds by completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. Targets ETF holdings worth 150% of the paper account's net value, rounded down to whole shares. The excess uses simulated borrowing.
+- Exit rules:
+  - [ausar_pb88] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_r19_R19_ETF_EXSMH1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb88] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
+  - [ausar_r19_R19_ETF_EXSMH1_M150] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"R19_ETF_EXSMH1_M150": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+
+### Variants (2)
+- **ETF leader excluding semiconductors · 150% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader excluding semiconductors · 150% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_ETF_EXSMH1_M150
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb88, ausar_r19_R19_ETF_EXSMH1_M150
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `R19_ETF_EXSMH1_M150` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb88` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_R19_ETF_EXSMH1_M150` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb88 ~ R19_ETF_EXSMH1_M150; [C] R19_ETF_EXSMH1_M150 ~ ausar_r19_R19_ETF_EXSMH1_M150 (full evidence in MERGES.md)
+
+## ETF leader excluding semiconductors · 98% exposure
+
+- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): ETF leader excluding semiconductors · 98% exposure
+- Algorithm status: **FULL**
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_ETF_EXSMH1_C098] ausar variant: ETF leader excluding semiconductors · 98% exposure
+  - [ausar_pb87] Excludes SMH, the semiconductor ETF, then ranks the remaining configured funds by completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. Targets ETF holdings worth 98% of the paper account's net value, rounded down to whole shares.
+  - [ausar_r19_R19_ETF_EXSMH1_C098] Excludes SMH, the semiconductor ETF, then ranks the remaining configured funds by completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. Targets ETF holdings worth 98% of the paper account's net value, rounded down to whole shares.
+- Exit rules:
+  - [ausar_pb87] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_r19_R19_ETF_EXSMH1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb87] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
+  - [ausar_r19_R19_ETF_EXSMH1_C098] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"R19_ETF_EXSMH1_C098": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+
+### Variants (2)
+- **ETF leader excluding semiconductors · 98% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader excluding semiconductors · 98% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_ETF_EXSMH1_C098
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb87, ausar_r19_R19_ETF_EXSMH1_C098
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `R19_ETF_EXSMH1_C098` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb87` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_R19_ETF_EXSMH1_C098` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb87 ~ R19_ETF_EXSMH1_C098; [C] ausar_r19_R19_ETF_EXSMH1_C098 ~ R19_ETF_EXSMH1_C098 (full evidence in MERGES.md)
+
+## ETF leader with unchanged-share holding · 150% exposure
+
+- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): ETF leader with unchanged-share holding · 150% exposure
+- Algorithm status: **FULL**
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_ETF_DRIFT1_M150] ausar variant: ETF leader with unchanged-share holding · 150% exposure
+  - [ausar_pb86] Ranks the configured ETF basket by its completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. If the same incumbent remains the winner and is still held, retain its existing share count instead of resizing it. Targets ETF holdings worth 150% of the paper account's net value, rounded down to whole shares. The excess uses simulated borrowing.
+  - [ausar_r19_R19_ETF_DRIFT1_M150] Ranks the configured ETF basket by its completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. If the same incumbent remains the winner and is still held, retain its existing share count instead of resizing it. Targets ETF holdings worth 150% of the paper account's net value, rounded down to whole shares. The excess uses simulated borrowing.
+- Exit rules:
+  - [ausar_pb86] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_r19_R19_ETF_DRIFT1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb86] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
+  - [ausar_r19_R19_ETF_DRIFT1_M150] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"R19_ETF_DRIFT1_M150": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+
+### Variants (2)
+- **ETF leader with unchanged-share holding · 150% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader with unchanged-share holding · 150% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_ETF_DRIFT1_M150
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb86, ausar_r19_R19_ETF_DRIFT1_M150
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `R19_ETF_DRIFT1_M150` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb86` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_R19_ETF_DRIFT1_M150` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb86 ~ R19_ETF_DRIFT1_M150; [C] ausar_r19_R19_ETF_DRIFT1_M150 ~ R19_ETF_DRIFT1_M150 (full evidence in MERGES.md)
+
+## ETF leader with unchanged-share holding · 98% exposure
+
+- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): ETF leader with unchanged-share holding · 98% exposure
+- Algorithm status: **FULL**
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_ETF_DRIFT1_C098] ausar variant: ETF leader with unchanged-share holding · 98% exposure
+  - [ausar_pb85] Ranks the configured ETF basket by its completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. If the same incumbent remains the winner and is still held, retain its existing share count instead of resizing it. Targets ETF holdings worth 98% of the paper account's net value, rounded down to whole shares.
+  - [ausar_r19_R19_ETF_DRIFT1_C098] Ranks the configured ETF basket by its completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. If the same incumbent remains the winner and is still held, retain its existing share count instead of resizing it. Targets ETF holdings worth 98% of the paper account's net value, rounded down to whole shares.
+- Exit rules:
+  - [ausar_pb85] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_r19_R19_ETF_DRIFT1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb85] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
+  - [ausar_r19_R19_ETF_DRIFT1_C098] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"R19_ETF_DRIFT1_C098": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+
+### Variants (2)
+- **ETF leader with unchanged-share holding · 98% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader with unchanged-share holding · 98% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_ETF_DRIFT1_C098
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb85, ausar_r19_R19_ETF_DRIFT1_C098
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `R19_ETF_DRIFT1_C098` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb85` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_R19_ETF_DRIFT1_C098` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb85 ~ R19_ETF_DRIFT1_C098; [C] R19_ETF_DRIFT1_C098 ~ ausar_r19_R19_ETF_DRIFT1_C098 (full evidence in MERGES.md)
+
+## Two-source ETF leader with unchanged-share holding · 150% exposure
+
+- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Two-source ETF leader with unchanged-share holding · 150% exposure
+- Algorithm status: **FULL**
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_ETF_INTERVAL_DRIFT1_M150] ausar variant: Two-source ETF leader with unchanged-share holding · 150% exposure
+  - [ausar_pb94] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. If the same incumbent remains the winner and is still held, reta
+  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. If the same incumbent remains the winner and is still held, reta
+- Exit rules:
+  - [ausar_pb94] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb94] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
+  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"R19_ETF_INTERVAL_DRIFT1_M150": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+
+### Variants (2)
+- **Two-source ETF leader with unchanged-share holding · 150% exposure**: recorded distinguishing tokens/parameters for this form: Two-source ETF leader with unchanged-share holding · 150% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_ETF_INTERVAL_DRIFT1_M150
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb94, ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `R19_ETF_INTERVAL_DRIFT1_M150` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb94` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb94 ~ R19_ETF_INTERVAL_DRIFT1_M150; [C] R19_ETF_INTERVAL_DRIFT1_M150 ~ ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150 (full evidence in MERGES.md)
+
+## Two-source ETF leader with unchanged-share holding · 98% exposure
+
+- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Two-source ETF leader with unchanged-share holding · 98% exposure
+- Algorithm status: **FULL**
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [R19_ETF_INTERVAL_DRIFT1_C098] ausar variant: Two-source ETF leader with unchanged-share holding · 98% exposure
+  - [ausar_pb93] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. If the same incumbent remains the winner and is still held, reta
+  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. If the same incumbent remains the winner and is still held, reta
+- Exit rules:
+  - [ausar_pb93] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [ausar_pb93] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
+  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098] data: posted r19 data adapters
+- Key parameters (recorded, per alias): {"R19_ETF_INTERVAL_DRIFT1_C098": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+
+### Variants (2)
+- **Two-source ETF leader with unchanged-share holding · 98% exposure**: recorded distinguishing tokens/parameters for this form: Two-source ETF leader with unchanged-share holding · 98% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_ETF_INTERVAL_DRIFT1_C098
+- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
+  - aliases: ausar_pb93, ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098
+- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+
+### Aliases (3) and status history
+- `R19_ETF_INTERVAL_DRIFT1_C098` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
+- `ausar_pb93` — md2_catalog: replaced; md2_ausar_map: present in roster
+- `ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098` — md2_catalog: blocked
+
+Merge evidence (tiers A, C): [A] ausar_pb93 ~ R19_ETF_INTERVAL_DRIFT1_C098; [C] ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098 ~ R19_ETF_INTERVAL_DRIFT1_C098 (full evidence in MERGES.md)
+
 # Type: crypto basis and funding (6 strategies)
 
 
@@ -9925,7 +15175,7 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_basis ~ femto_free_kraken_li
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-# Type: forecast and ML models (87 strategies)
+# Type: forecast and ML models (100 strategies)
 
 
 ## Tensor relative-market cohort · cash funded, all volatility, 25 positions
@@ -11778,172 +17028,6 @@ Merge evidence (tiers A, C): [A] lz_1wlab ~ s_1wlab; [C] s_1wlab ~ lz_s_1wlab (f
 
 Merge evidence (tiers A): [A] lz_1wsw ~ s_1wsw (full evidence in MERGES.md)
 
-## Q07 Tensor alt-data confluence cells
-
-- Type: forecast and ML models | Family: lazarus | Style evidence (catalog): Tensor signal + alt data
-- Trades: US equities — Tracker universe by PIT SEC band
-- Timeframe: 1w
-- Created by / source: Galath research lab (Q07 confluence cells), run by Lazarus
-- Description (from source records): Q07 Tensor alt-data confluence cells
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07_ins2] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [lz_s_q07_wiki] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_1wsw_stress] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c52_ml_mom6_tierA_wlow] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c52_ml_mom6_wspike2] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c52_ml_tierA_wcov] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c52_ml_tierA_wlow] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c52_sm_cheap5_ins2_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c52_sm_cheap5_wcov] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c52_sm_deep70_wcov] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c52_sm_tierA_wcov] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_q07w_c78_ml_deep70_tierA_wlow] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07_ins2] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = per cell lane)", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [lz_s_q07_wiki] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = per cell lane)", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_1wsw_stress] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52))", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c52_ml_mom6_tierA_wlow] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c52_ml_mom6_wspike2] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c52_ml_tierA_wcov] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c52_ml_tierA_wlow] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c52_sm_cheap5_ins2_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c52_sm_cheap5_wcov] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c52_sm_deep70_wcov] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c52_sm_tierA_wcov] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_q07w_c78_ml_deep70_tierA_wlow] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_1wsw_stress] v3 slice: {"capital_usd": 1335.0, "cash_usd": 1335.0} parked=True
-  - [s_1wsw_stress] lz_engine sizing: {"budget_usd": 1335, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-  - [s_q07w_c52_ml_mom6_tierA_wlow] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
-  - [s_q07w_c52_ml_mom6_tierA_wlow] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-  - [s_q07w_c52_ml_mom6_wspike2] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
-  - [s_q07w_c52_ml_mom6_wspike2] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-  - [s_q07w_c52_ml_tierA_wcov] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
-  - [s_q07w_c52_ml_tierA_wcov] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - [lz_s_q07_ins2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-  - [lz_s_q07_wiki] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-- Variant axes (catalog): [{"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}, {"Dimension": "Band", "Values": "micro (`mi`) \u00b7 small (`sm`) \u00b7 mid/large (`ml`)"}, {"Dimension": "Tags", "Values": "tierA, deep70, cheap5, mom6, vix20, wcov, wlow, wspike2, ins2, ats_z1, glow"}, {"Dimension": "Also", "Values": "`lz_1wsw_stress`: w_swing cheap5 + deep70 + VIX \u2265 20, all bands, 52 weeks"}, {"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}, {"Dimension": "Band", "Values": "micro (`mi`) \u00b7 small (`sm`) \u00b7 mid/large (`ml`)"}, {"Dimension": "Tags", "Values": "tierA, deep70, cheap5, mom6, vix20, wcov, wlow, wspike2, ins2, ats_z1, glow"}, {"Dimension": "Also", "Values": "`lz_1wsw_stress`: w_swing cheap5 + deep70 + VIX \u2265 20, all bands, 52 weeks"}, {"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}]
-
-### Variants (2)
-- **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: lz_1wsw_stress, s_1wsw_stress
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: lz_q07_ins2, lz_q07_wiki, lz_q07w_c52_ml_mom6_tierA_wlow, lz_q07w_c52_ml_mom6_wspike2, lz_q07w_c52_ml_tierA_wcov, lz_q07w_c52_ml_tierA_wlow, lz_q07w_c52_sm_cheap5_ins2_mom6, lz_q07w_c52_sm_cheap5_wcov, lz_q07w_c52_sm_deep70_wcov, lz_q07w_c52_sm_tierA_wcov, lz_q07w_c78_ml_deep70_tierA_wlow, lz_q07w_c78_ml_mom6_tierA_wlow, lz_q07w_c78_ml_tierA_wcov, lz_q07w_c78_ml_tierA_wlow, lz_q07w_c78_sm_deep70_ins2_vix20, lz_q07w_c78_sm_deep70_wcov, lz_q07w_c78_sm_ins2_mom6_vix20, lz_q07w_c78_sm_tierA_wcov, lz_q07w_g52_ml_ats_z1_mom6_wlow, lz_q07w_g52_ml_ins2_wlow, lz_q07w_g52_ml_tierA_wcov, lz_q07w_g52_sm_deep70_ins2_vix20, lz_q07w_g52_sm_deep70_wcov, lz_q07w_g52_sm_ins2_wcov, lz_q07w_g52_sm_tierA_wcov, lz_q07w_g78_mi_cheap5_deep70_ins2, lz_q07w_g78_ml_tierA_wcov, lz_q07w_g78_sm_cheap5_ins2, lz_q07w_g78_sm_deep70_ins2, lz_q07w_g78_sm_deep70_wcov, lz_q07w_g78_sm_tierA_wcov, lz_q07w_s52_ml_deep70_ins2_vix20, lz_q07w_s52_ml_deep70_vix20_wlow, lz_q07w_s52_ml_deep70_wlow, lz_q07w_s52_ml_ins2_mom6_vix20, lz_q07w_s52_ml_ins2_mom6_wlow, lz_q07w_s52_sm_cheap5_deep70_ins2, lz_q07w_s52_sm_cheap5_ins2_vix20, lz_q07w_s52_sm_cheap5_wcov, lz_q07w_s52_sm_deep70_wcov, lz_q07w_s78_mi_ats_z1_cheap5, lz_q07w_s78_mi_ats_z1_mom6, lz_q07w_s78_mi_cheap5_ins2_mom6, lz_q07w_s78_ml_deep70_glow_ins2, lz_q07w_s78_ml_deep70_ins2_vix20, lz_q07w_s78_ml_deep70_mom6_wlow, lz_q07w_s78_ml_deep70_wcov, lz_q07w_s78_sm_cheap5_ins2_vix20, lz_q07w_s78_sm_cheap5_wcov, lz_q07w_s78_sm_deep70_ins2, lz_q07w_s78_sm_deep70_wcov, lz_s_q07_ins2, lz_s_q07_wiki, s_q07w_c52_ml_mom6_tierA_wlow, s_q07w_c52_ml_mom6_wspike2, s_q07w_c52_ml_tierA_wcov, s_q07w_c52_ml_tierA_wlow, s_q07w_c52_sm_cheap5_ins2_mom6, s_q07w_c52_sm_cheap5_wcov, s_q07w_c52_sm_deep70_wcov, s_q07w_c52_sm_tierA_wcov, s_q07w_c78_ml_deep70_tierA_wlow, s_q07w_c78_ml_mom6_tierA_wlow, s_q07w_c78_ml_tierA_wcov, s_q07w_c78_ml_tierA_wlow, s_q07w_c78_sm_deep70_ins2_vix20, s_q07w_c78_sm_deep70_wcov, s_q07w_c78_sm_ins2_mom6_vix20, s_q07w_c78_sm_tierA_wcov, s_q07w_g52_ml_ats_z1_mom6_wlow, s_q07w_g52_ml_ins2_wlow, s_q07w_g52_ml_tierA_wcov, s_q07w_g52_sm_deep70_ins2_vix20, s_q07w_g52_sm_deep70_wcov, s_q07w_g52_sm_ins2_wcov, s_q07w_g52_sm_tierA_wcov, s_q07w_g78_mi_cheap5_deep70_ins2, s_q07w_g78_ml_tierA_wcov, s_q07w_g78_sm_cheap5_ins2, s_q07w_g78_sm_deep70_ins2, s_q07w_g78_sm_deep70_wcov, s_q07w_g78_sm_tierA_wcov, s_q07w_s52_ml_deep70_ins2_vix20, s_q07w_s52_ml_deep70_vix20_wlow, s_q07w_s52_ml_deep70_wlow, s_q07w_s52_ml_ins2_mom6_vix20, s_q07w_s52_ml_ins2_mom6_wlow, s_q07w_s52_sm_cheap5_deep70_ins2, s_q07w_s52_sm_cheap5_ins2_vix20, s_q07w_s52_sm_cheap5_wcov, s_q07w_s52_sm_deep70_wcov, s_q07w_s78_mi_ats_z1_cheap5, s_q07w_s78_mi_ats_z1_mom6, s_q07w_s78_mi_cheap5_ins2_mom6, s_q07w_s78_ml_deep70_glow_ins2, s_q07w_s78_ml_deep70_ins2_vix20, s_q07w_s78_ml_deep70_mom6_wlow, s_q07w_s78_ml_deep70_wcov, s_q07w_s78_sm_cheap5_ins2_vix20, s_q07w_s78_sm_cheap5_wcov, s_q07w_s78_sm_deep70_ins2, s_q07w_s78_sm_deep70_wcov
-- Variant not recorded in any source for 102 alias(es); counted, never guessed.
-
-### Aliases (104) and status history
-- `lz_1wsw_stress` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07_wiki` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c52_ml_mom6_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c52_ml_mom6_wspike2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c52_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c52_ml_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c52_sm_cheap5_ins2_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c52_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c52_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c78_ml_deep70_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c78_ml_mom6_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c78_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c78_ml_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c78_sm_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c78_sm_ins2_mom6_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_c78_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g52_ml_ats_z1_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g52_ml_ins2_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g52_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g52_sm_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g52_sm_ins2_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g52_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g78_mi_cheap5_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g78_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g78_sm_cheap5_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g78_sm_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_g78_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_ml_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_ml_deep70_vix20_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_ml_deep70_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_ml_ins2_mom6_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_ml_ins2_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_sm_cheap5_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_sm_cheap5_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_mi_ats_z1_cheap5` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_mi_ats_z1_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_mi_cheap5_ins2_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_ml_deep70_glow_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_ml_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_ml_deep70_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_ml_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_sm_cheap5_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_sm_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_q07w_s78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}
-- `lz_s_q07_ins2` — md2_catalog: off
-- `lz_s_q07_wiki` — md2_catalog: off
-- `s_1wsw_stress` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_c52_ml_mom6_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c52_ml_mom6_wspike2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c52_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c52_ml_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c52_sm_cheap5_ins2_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c52_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c52_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c78_ml_deep70_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c78_ml_mom6_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c78_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c78_ml_tierA_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c78_sm_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c78_sm_ins2_mom6_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_c78_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g52_ml_ats_z1_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g52_ml_ins2_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g52_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g52_sm_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g52_sm_ins2_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g52_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g78_mi_cheap5_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g78_ml_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g78_sm_cheap5_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g78_sm_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_g78_sm_tierA_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_q07w_s52_ml_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s52_ml_deep70_vix20_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s52_ml_deep70_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s52_ml_ins2_mom6_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s52_ml_ins2_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s52_sm_cheap5_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s52_sm_cheap5_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s52_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s52_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_mi_ats_z1_cheap5` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_mi_ats_z1_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_mi_cheap5_ins2_mom6` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_ml_deep70_glow_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_ml_deep70_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_ml_deep70_mom6_wlow` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_ml_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_sm_cheap5_ins2_vix20` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_sm_cheap5_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_sm_deep70_ins2` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-- `s_q07w_s78_sm_deep70_wcov` — test_catalog: entry lz-q07 status_counts={'blocked': 52}; muse_desk_v3: parked; md2_lz_engine: live
-
-Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stress ~ lz_q07_wiki; [A] lz_1wsw_stress ~ lz_q07w_c52_ml_mom6_tierA_wlow; [A] lz_1wsw_stress ~ lz_q07w_c52_ml_mom6_wspike2; [A] lz_1wsw_stress ~ lz_q07w_c52_ml_tierA_wcov; [A] lz_1wsw_stress ~ lz_q07w_c52_ml_tierA_wlow (full evidence in MERGES.md)
-
 ## R2 Daily Cyan extended
 
 - Type: forecast and ML models | Family: lazarus | Style evidence (catalog): Tensor signal + rules
@@ -12614,357 +17698,6 @@ Merge evidence (tiers A): [A] ro_tensor_1h_swing_v615 ~ ro_winner_census_10_20_3
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-## s_q07w_g52_ml_cheap5
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_ml_cheap5] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_ml_cheap5] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_ml_cheap5
-
-### Aliases (1) and status history
-- `s_q07w_g52_ml_cheap5` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_ml_mom6_tierA
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_ml_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_ml_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_ml_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_ml_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g52_ml_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_ml_vix20_tierA
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_ml_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_ml_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_ml_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_ml_vix20_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g52_ml_vix20_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_ml_deep70_tierA
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_ml_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_ml_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_ml_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_ml_deep70_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_ml_deep70_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_ml_mom6_tierA
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_ml_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_ml_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_ml_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_ml_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_ml_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_ml_mom6_vix20_tierA
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_ml_mom6_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_ml_mom6_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_ml_mom6_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_ml_mom6_vix20_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_ml_mom6_vix20_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_ml_vix20_tierA
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_ml_vix20_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_ml_vix20_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_ml_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_ml_vix20_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_ml_vix20_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_ml_cheap5
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_ml_cheap5] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_ml_cheap5] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_ml_cheap5
-
-### Aliases (1) and status history
-- `s_q07w_s52_ml_cheap5` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_ml_cheap5_vix20
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_ml_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_ml_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_ml_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_ml_cheap5_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s52_ml_cheap5_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_ml_cheap5
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_ml_cheap5] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_ml_cheap5] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_ml_cheap5
-
-### Aliases (1) and status history
-- `s_q07w_s78_ml_cheap5` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_ml_cheap5_mom6
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_ml_cheap5_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_ml_cheap5_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_ml_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_ml_cheap5_mom6
-
-### Aliases (1) and status history
-- `s_q07w_s78_ml_cheap5_mom6` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_ml_cheap5_vix20
-
-- Type: forecast and ML models | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_ml_cheap5_vix20] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_ml_cheap5_vix20] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_ml_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_ml_cheap5_vix20
-
-### Aliases (1) and status history
-- `s_q07w_s78_ml_cheap5_vix20` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-# Type: other (253 strategies)
-
-
 ## Lab 1D Green trees (test)
 
 - Type: other | Family: 1d | Style evidence (catalog): not recorded
@@ -12991,60 +17724,6 @@ Merge evidence (tiers A): [A] ro_tensor_1h_swing_v615 ~ ro_winner_census_10_20_3
 
 ### Aliases (1) and status history
 - `lz_s_1dg` — md2_catalog: installed
-
-## Lab rule 1D (test)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Lab rule 1D (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_rules_1d] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_rules_1d] {"rule": "the sleeve feed fire's plan (no stop / time exit; hold = the rule horizon H + 1 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_rules_1d] data: lab_live books (native Lazarus routing) :: DESK_INTEGRATION/lab_live/out/latest/*.json
-
-### Variants (1)
-- **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: lz_s_rules_1d
-
-### Aliases (1) and status history
-- `lz_s_rules_1d` — md2_catalog: installed
-
-## legacy exit (hidden)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): legacy exit (hidden)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_legacy_exit] {"policy": "none", "max_delay_minutes": 0, "limit_band_pct": 0.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_legacy_exit] {"rule": "each owned position's stored plan (unchanged)", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_legacy_exit] data: none (exit-only) :: None
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_legacy_exit
-
-### Aliases (1) and status history
-- `lz_legacy_exit` — md2_catalog: off
 
 ## Midna D green $10-20 (Midna port)
 
@@ -13100,33 +17779,6 @@ Merge evidence (tiers A): [A] ro_tensor_1h_swing_v615 ~ ro_winner_census_10_20_3
 ### Aliases (1) and status history
 - `lz_s_mn_gbm_1d_cyan` — md2_catalog: installed
 
-## Midna Faber (Midna port)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna Faber (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_faber] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_faber] {"rule": "Midna plan: Faber below 10m SMA exit", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_faber] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_faber
-
-### Aliases (1) and status history
-- `lz_s_mn_faber` — md2_catalog: installed
-
 ## Midna Hourly 1D (Midna port)
 
 - Type: other | Family: 1d | Style evidence (catalog): not recorded
@@ -13181,168 +17833,6 @@ Merge evidence (tiers A): [A] ro_tensor_1h_swing_v615 ~ ro_winner_census_10_20_3
 ### Aliases (1) and status history
 - `lz_s_mn_kronos` — md2_catalog: installed
 
-## Midna MACD (Midna port)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna MACD (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_macd] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_macd] {"rule": "Midna plan: MACD down exit", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_macd] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_macd
-
-### Aliases (1) and status history
-- `lz_s_mn_macd` — md2_catalog: installed
-
-## Midna Moonshot (Midna port)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna Moonshot (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_moonshot] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_moonshot] {"rule": "Midna plan: no stop / time exit 78 weeks", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": 99.0, "max_bars": 78, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_moonshot] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_moonshot
-
-### Aliases (1) and status history
-- `lz_s_mn_moonshot` — md2_catalog: installed
-
-## Midna QQQ Ladder (Midna port)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna QQQ Ladder (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_qqq_ladder] {"policy": "midna_none", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_qqq_ladder] {"rule": "Midna plan: ladder mark-to-market (shadow)", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_qqq_ladder] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_qqq_ladder
-
-### Aliases (1) and status history
-- `lz_s_mn_qqq_ladder` — md2_catalog: installed
-
-## Midna QQQ→TZA hedge (Midna port)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna QQQ→TZA hedge (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_hedge] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_hedge] {"rule": "Midna plan: hedge exit on flip off / max 20 sessions", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 20, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_hedge] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_hedge
-
-### Aliases (1) and status history
-- `lz_s_mn_hedge` — md2_catalog: installed
-
-## Midna Turtle (Midna port)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna Turtle (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_turtle] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_turtle] {"rule": "Midna plan: turtle ATR stop / exit10", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_turtle] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_turtle
-
-### Aliases (1) and status history
-- `lz_s_mn_turtle` — md2_catalog: installed
-
-## Midna VWAP (Midna port)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna VWAP (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_vwap] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_vwap] {"rule": "Midna plan: VWAP down exit", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_vwap] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_vwap
-
-### Aliases (1) and status history
-- `lz_s_mn_vwap` — md2_catalog: installed
-
 ## Midna W cyan high ADX (Midna port)
 
 - Type: other | Family: 1d | Style evidence (catalog): not recorded
@@ -13369,33 +17859,6 @@ Merge evidence (tiers A): [A] ro_tensor_1h_swing_v615 ~ ro_winner_census_10_20_3
 
 ### Aliases (1) and status history
 - `lz_s_mn_w_cyan_adx` — md2_catalog: installed
-
-## Midna W green calm SMH (Midna port)
-
-- Type: other | Family: 1d | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna W green calm SMH (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_w_green_smh] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_w_green_smh] {"rule": "Midna plan: no stop / time exit 126 sessions", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 126, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_w_green_smh] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_w_green_smh
-
-### Aliases (1) and status history
-- `lz_s_mn_w_green_smh` — md2_catalog: installed
 
 ## Midna Hourly (Midna port)
 
@@ -13424,33 +17887,6 @@ Merge evidence (tiers A): [A] ro_tensor_1h_swing_v615 ~ ro_winner_census_10_20_3
 ### Aliases (1) and status history
 - `lz_s_mn_hourly` — md2_catalog: installed
 
-## Midna Nostop (Midna port)
-
-- Type: other | Family: 1h | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna Nostop (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_nostop] {"policy": "midna_block", "max_delay_minutes": 30, "limit_band_pct": 3.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_nostop] {"rule": "Midna plan: no stop / time exit 60 bars", "hold_from": "plan", "hold_unit_kind": "1h", "stop_pct": 99.0, "max_bars": 60, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_nostop] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_mn_nostop
-
-### Aliases (1) and status history
-- `lz_s_mn_nostop` — md2_catalog: installed
-
 ## 1W Swing stress pockets (test)
 
 - Type: other | Family: 1w | Style evidence (catalog): not recorded
@@ -13478,33 +17914,6 @@ Merge evidence (tiers A): [A] ro_tensor_1h_swing_v615 ~ ro_winner_census_10_20_3
 ### Aliases (1) and status history
 - `lz_s_1wsw_stress` — md2_catalog: installed
 
-## CHASE (WAIT)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): CHASE (WAIT)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_wait_chase] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_wait_chase] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_wait_chase] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_wait_chase
-
-### Aliases (1) and status history
-- `lz_s_wait_chase` — md2_catalog: off
-
 ## Lab 1W Swing covered (test)
 
 - Type: other | Family: 1w | Style evidence (catalog): not recorded
@@ -13531,1772 +17940,6 @@ Merge evidence (tiers A): [A] ro_tensor_1h_swing_v615 ~ ro_winner_census_10_20_3
 
 ### Aliases (1) and status history
 - `lz_s_1wsw` — md2_catalog: installed
-
-## Lab rule 1W (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Lab rule 1W (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_rules_1w] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_rules_1w] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = the rule horizon H + 1 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_rules_1w] data: lab_live books (native Lazarus routing) :: DESK_INTEGRATION/lab_live/out/latest/*.json
-
-### Variants (1)
-- **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: lz_s_rules_1w
-
-### Aliases (1) and status history
-- `lz_s_rules_1w` — md2_catalog: installed
-
-## Midna Hourly 1W (Midna port)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Midna Hourly 1W (Midna port)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_mn_hourly_1w] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_mn_hourly_1w] {"rule": "Midna plan: calibrated plan / time exit 52 weeks", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": 15.0, "max_bars": 52, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_mn_hourly_1w] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
-
-### Variants (1)
-- **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: lz_s_mn_hourly_1w
-
-### Aliases (1) and status history
-- `lz_s_mn_hourly_1w` — md2_catalog: installed
-
-## Moonshot (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Moonshot (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_moonshot] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_moonshot] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52, inventory) / W78 (draft spec))", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_moonshot] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_moonshot
-
-### Aliases (1) and status history
-- `lz_s_moonshot` — md2_catalog: off
-
-## OLX R1/R2 books for the other lanes (WAIT)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): OLX R1/R2 books for the other lanes (WAIT)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_wait_olx_books] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_wait_olx_books] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_wait_olx_books] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_wait_olx_books
-
-### Aliases (1) and status history
-- `lz_s_wait_olx_books` — md2_catalog: off
-
-## Q07 w_cyan H52 micro cheap5+deep70+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 micro cheap5+deep70+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_mi_cheap5_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_mi_cheap5_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_mi_cheap5_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_mi_cheap5_deep70_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_mi_cheap5_deep70_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H52 micro cheap5+mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 micro cheap5+mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_mi_cheap5_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_mi_cheap5_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_mi_cheap5_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_mi_cheap5_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_mi_cheap5_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H52 micro cheap5+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 micro cheap5+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_mi_cheap5_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_mi_cheap5_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_mi_cheap5_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_mi_cheap5_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_mi_cheap5_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H52 micro deep70+mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 micro deep70+mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_mi_deep70_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_mi_deep70_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_mi_deep70_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_mi_deep70_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_mi_deep70_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H52 micro deep70+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 micro deep70+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_mi_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_mi_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_mi_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_mi_deep70_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_mi_deep70_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H52 micro mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 micro mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_mi_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_mi_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_mi_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_mi_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_mi_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H52 midlarge mom6+tierA+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 midlarge mom6+tierA+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_ml_mom6_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_ml_mom6_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_ml_mom6_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_ml_mom6_tierA_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_ml_mom6_tierA_wlow` — md2_catalog: installed
-
-## Q07 w_cyan H52 midlarge mom6+wiki_spike2 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 midlarge mom6+wiki_spike2 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_ml_mom6_wspike2] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_ml_mom6_wspike2] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_ml_mom6_wspike2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_ml_mom6_wspike2
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_ml_mom6_wspike2` — md2_catalog: installed
-
-## Q07 w_cyan H52 midlarge tierA+wiki_cov (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 midlarge tierA+wiki_cov (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_ml_tierA_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_ml_tierA_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_ml_tierA_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_ml_tierA_wcov
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_ml_tierA_wcov` — md2_catalog: installed
-
-## Q07 w_cyan H52 midlarge tierA+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H52 midlarge tierA+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c52_ml_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c52_ml_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c52_ml_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c52_ml_tierA_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_c52_ml_tierA_wlow` — md2_catalog: installed
-
-## Q07 w_cyan H78 micro cheap5+deep70+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 micro cheap5+deep70+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_mi_cheap5_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_mi_cheap5_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_mi_cheap5_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_mi_cheap5_deep70_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_mi_cheap5_deep70_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H78 micro cheap5+mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 micro cheap5+mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_mi_cheap5_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_mi_cheap5_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_mi_cheap5_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_mi_cheap5_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_mi_cheap5_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H78 micro cheap5+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 micro cheap5+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_mi_cheap5_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_mi_cheap5_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_mi_cheap5_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_mi_cheap5_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_mi_cheap5_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H78 micro deep70+mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 micro deep70+mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_mi_deep70_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_mi_deep70_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_mi_deep70_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_mi_deep70_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_mi_deep70_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H78 micro mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 micro mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_mi_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_mi_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_mi_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_mi_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_mi_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H78 micro tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 micro tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_mi_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_mi_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_mi_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_mi_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_mi_tierA` — md2_catalog: installed
-
-## Q07 w_cyan H78 midlarge deep70+tierA+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 midlarge deep70+tierA+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_ml_deep70_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_ml_deep70_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_ml_deep70_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_ml_deep70_tierA_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_ml_deep70_tierA_wlow` — md2_catalog: installed
-
-## Q07 w_cyan H78 midlarge mom6+tierA+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 midlarge mom6+tierA+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_ml_mom6_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_ml_mom6_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_ml_mom6_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_ml_mom6_tierA_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_ml_mom6_tierA_wlow` — md2_catalog: installed
-
-## Q07 w_cyan H78 midlarge tierA+wiki_cov (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 midlarge tierA+wiki_cov (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_ml_tierA_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_ml_tierA_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_ml_tierA_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_ml_tierA_wcov
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_ml_tierA_wcov` — md2_catalog: installed
-
-## Q07 w_cyan H78 midlarge tierA+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_cyan H78 midlarge tierA+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_c78_ml_tierA_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_c78_ml_tierA_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_c78_ml_tierA_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_c78_ml_tierA_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_c78_ml_tierA_wlow` — md2_catalog: installed
-
-## Q07 w_green H52 micro cheap5+deep70 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 micro cheap5+deep70 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_mi_cheap5_deep70] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_mi_cheap5_deep70] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_mi_cheap5_deep70] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_mi_cheap5_deep70
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_mi_cheap5_deep70` — md2_catalog: installed
-
-## Q07 w_green H52 micro cheap5+deep70+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 micro cheap5+deep70+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_mi_cheap5_deep70_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_mi_cheap5_deep70_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_mi_cheap5_deep70_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_mi_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_mi_cheap5_deep70_mom6` — md2_catalog: installed
-
-## Q07 w_green H52 micro cheap5+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 micro cheap5+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_mi_cheap5_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_mi_cheap5_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_mi_cheap5_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_mi_cheap5_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_mi_cheap5_tierA` — md2_catalog: installed
-
-## Q07 w_green H52 micro deep70+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 micro deep70+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_mi_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_mi_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_mi_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_mi_deep70_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_mi_deep70_tierA` — md2_catalog: installed
-
-## Q07 w_green H52 micro mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 micro mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_mi_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_mi_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_mi_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_mi_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_mi_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_green H52 micro tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 micro tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_mi_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_mi_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_mi_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_mi_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_mi_tierA` — md2_catalog: installed
-
-## Q07 w_green H52 midlarge ats_z1+mom6+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 midlarge ats_z1+mom6+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_ml_ats_z1_mom6_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_ml_ats_z1_mom6_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_ml_ats_z1_mom6_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_ml_ats_z1_mom6_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_ml_ats_z1_mom6_wlow` — md2_catalog: installed
-
-## Q07 w_green H52 midlarge cheap5 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 midlarge cheap5 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_ml_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_ml_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_ml_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_ml_cheap5
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_ml_cheap5` — md2_catalog: installed
-
-## Q07 w_green H52 midlarge insider2+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 midlarge insider2+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_ml_ins2_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_ml_ins2_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_ml_ins2_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_ml_ins2_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_ml_ins2_wlow` — md2_catalog: installed
-
-## Q07 w_green H52 midlarge mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 midlarge mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_ml_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_ml_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_ml_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_ml_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_ml_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_green H52 midlarge tierA+wiki_cov (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H52 midlarge tierA+wiki_cov (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g52_ml_tierA_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g52_ml_tierA_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g52_ml_tierA_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g52_ml_tierA_wcov
-
-### Aliases (1) and status history
-- `lz_s_q07w_g52_ml_tierA_wcov` — md2_catalog: installed
-
-## Q07 w_green H78 micro cheap5+deep70+insider2 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 micro cheap5+deep70+insider2 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_ins2] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_ins2] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_ins2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_mi_cheap5_deep70_ins2
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_mi_cheap5_deep70_ins2` — md2_catalog: installed
-
-## Q07 w_green H78 micro cheap5+deep70+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 micro cheap5+deep70+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_mi_cheap5_deep70_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_mi_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_mi_cheap5_deep70_mom6` — md2_catalog: installed
-
-## Q07 w_green H78 micro cheap5+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 micro cheap5+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_mi_cheap5_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_mi_cheap5_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_mi_cheap5_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_mi_cheap5_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_mi_cheap5_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 micro deep70+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 micro deep70+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_mi_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_mi_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_mi_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_mi_deep70_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_mi_deep70_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 micro mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 micro mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_mi_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_mi_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_mi_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_mi_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_mi_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 micro tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 micro tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_mi_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_mi_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_mi_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_mi_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_mi_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 midlarge deep70+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 midlarge deep70+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_ml_deep70_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_ml_deep70_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_ml_deep70_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_ml_deep70_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_ml_deep70_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 midlarge mom6+tierA (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 midlarge mom6+tierA (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_ml_mom6_tierA] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_ml_mom6_tierA] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_ml_mom6_tierA] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_ml_mom6_tierA
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_ml_mom6_tierA` — md2_catalog: installed
-
-## Q07 w_green H78 midlarge tierA+wiki_cov (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_green H78 midlarge tierA+wiki_cov (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_g78_ml_tierA_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_g78_ml_tierA_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_g78_ml_tierA_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_g78_ml_tierA_wcov
-
-### Aliases (1) and status history
-- `lz_s_q07w_g78_ml_tierA_wcov` — md2_catalog: installed
-
-## Q07 w_swing H52 micro cheap5 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 micro cheap5 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_mi_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_mi_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_mi_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_mi_cheap5
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_mi_cheap5` — md2_catalog: installed
-
-## Q07 w_swing H52 micro cheap5+deep70 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 micro cheap5+deep70 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_mi_cheap5_deep70] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_mi_cheap5_deep70] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_mi_cheap5_deep70] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_mi_cheap5_deep70
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_mi_cheap5_deep70` — md2_catalog: installed
-
-## Q07 w_swing H52 micro cheap5+deep70+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 micro cheap5+deep70+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_mi_cheap5_deep70_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_mi_cheap5_deep70_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_mi_cheap5_deep70_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_mi_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_mi_cheap5_deep70_mom6` — md2_catalog: installed
-
-## Q07 w_swing H52 micro cheap5+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 micro cheap5+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_mi_cheap5_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_mi_cheap5_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_mi_cheap5_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_mi_cheap5_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_mi_cheap5_mom6` — md2_catalog: installed
-
-## Q07 w_swing H52 midlarge cheap5 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 midlarge cheap5 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_ml_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_ml_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_ml_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_ml_cheap5
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_ml_cheap5` — md2_catalog: installed
-
-## Q07 w_swing H52 midlarge deep70+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 midlarge deep70+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_ml_deep70_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_ml_deep70_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_ml_deep70_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_ml_deep70_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_ml_deep70_wlow` — md2_catalog: installed
-
-## Q07 w_swing H52 midlarge insider2+mom6+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H52 midlarge insider2+mom6+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s52_ml_ins2_mom6_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s52_ml_ins2_mom6_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s52_ml_ins2_mom6_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s52_ml_ins2_mom6_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_s52_ml_ins2_mom6_wlow` — md2_catalog: installed
-
-## Q07 w_swing H78 micro ats_z1+cheap5 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 micro ats_z1+cheap5 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_mi_ats_z1_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_mi_ats_z1_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_mi_ats_z1_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_mi_ats_z1_cheap5
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_mi_ats_z1_cheap5` — md2_catalog: installed
-
-## Q07 w_swing H78 micro ats_z1+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 micro ats_z1+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_mi_ats_z1_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_mi_ats_z1_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_mi_ats_z1_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_mi_ats_z1_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_mi_ats_z1_mom6` — md2_catalog: installed
-
-## Q07 w_swing H78 micro cheap5+deep70+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 micro cheap5+deep70+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_mi_cheap5_deep70_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_mi_cheap5_deep70_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_mi_cheap5_deep70_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_mi_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_mi_cheap5_deep70_mom6` — md2_catalog: installed
-
-## Q07 w_swing H78 micro cheap5+insider2+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 micro cheap5+insider2+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_mi_cheap5_ins2_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_mi_cheap5_ins2_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_mi_cheap5_ins2_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_mi_cheap5_ins2_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_mi_cheap5_ins2_mom6` — md2_catalog: installed
-
-## Q07 w_swing H78 micro cheap5+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 micro cheap5+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_mi_cheap5_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_mi_cheap5_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_mi_cheap5_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_mi_cheap5_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_mi_cheap5_mom6` — md2_catalog: installed
-
-## Q07 w_swing H78 midlarge cheap5 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 midlarge cheap5 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_ml_cheap5] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_ml_cheap5] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_ml_cheap5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_ml_cheap5
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_ml_cheap5` — md2_catalog: installed
-
-## Q07 w_swing H78 midlarge cheap5+mom6 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 midlarge cheap5+mom6 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_ml_cheap5_mom6] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_ml_cheap5_mom6] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_ml_cheap5_mom6] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_ml_cheap5_mom6
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_ml_cheap5_mom6` — md2_catalog: installed
-
-## Q07 w_swing H78 midlarge deep70+gamma_low+insider2 (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 midlarge deep70+gamma_low+insider2 (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_ml_deep70_glow_ins2] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_ml_deep70_glow_ins2] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_ml_deep70_glow_ins2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_ml_deep70_glow_ins2
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_ml_deep70_glow_ins2` — md2_catalog: installed
-
-## Q07 w_swing H78 midlarge deep70+mom6+wiki_low (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 midlarge deep70+mom6+wiki_low (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_ml_deep70_mom6_wlow] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_ml_deep70_mom6_wlow] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_ml_deep70_mom6_wlow] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_ml_deep70_mom6_wlow
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_ml_deep70_mom6_wlow` — md2_catalog: installed
-
-## Q07 w_swing H78 midlarge deep70+wiki_cov (test)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q07 w_swing H78 midlarge deep70+wiki_cov (test)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_q07w_s78_ml_deep70_wcov] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_q07w_s78_ml_deep70_wcov] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_q07w_s78_ml_deep70_wcov] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_q07w_s78_ml_deep70_wcov
-
-### Aliases (1) and status history
-- `lz_s_q07w_s78_ml_deep70_wcov` — md2_catalog: installed
-
-## Q14 pxcap5 book (WAIT)
-
-- Type: other | Family: 1w | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Q14 pxcap5 book (WAIT)
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_wait_q14] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_wait_q14] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [lz_s_wait_q14] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_s_wait_q14
-
-### Aliases (1) and status history
-- `lz_s_wait_q14` — md2_catalog: off
-
-## APEX C7: COUNCIL
-
-- Type: other | Family: apex | Style evidence (catalog): Multi-strategy mix
-- Trades: US ETFs, ETF options and Bitcoin — QQQ, TQQQ, GLD, BIL, BTC/USD; QQQ listed options
-- Timeframe: 1d (monthly options)
-- Created by / source: APEX research desk (Cursor2), round 3 C7 and the invention report's Council
-- Description (from source records): APEX C7: COUNCIL
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-- Variant axes (catalog): [{"Row": "`apex_c7_council`", "Nasdaq (N6)": "55%", "Gold": "25%", "Bitcoin": "none", "Variance Value": "20%"}, {"Row": "`apex_council_btc`", "Nasdaq (N6)": "49.5%", "Gold": "22.5%", "Bitcoin": "10%", "Variance Value": "18%"}, {"Row": "`apex_c7_council`", "Nasdaq (N6)": "55%", "Gold": "25%", "Bitcoin": "none", "Variance Value": "20%"}, {"Row": "`apex_council_btc`", "Nasdaq (N6)": "49.5%", "Gold": "22.5%", "Bitcoin": "10%", "Variance Value": "18%"}]
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: apex_c7_council, apex_council_btc
-
-### Aliases (2) and status history
-- `apex_c7_council` — test_catalog: entry apex-c7-council status_counts={'live': 2}
-- `apex_council_btc` — test_catalog: entry apex-c7-council status_counts={'live': 2}
-
-Merge evidence (tiers A): [A] apex_c7_council ~ apex_council_btc (full evidence in MERGES.md)
-
-## APEX QQQ benchmark
-
-- Type: other | Family: apex | Style evidence (catalog): Benchmark (buy and hold)
-- Trades: US ETFs — QQQ
-- Timeframe: 1d
-- Created by / source: APEX research desk (Cursor2), APEX-NDX v1.0 benchmark
-- Description (from source records): APEX QQQ benchmark
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: apex_benchmarks
-
-### Aliases (1) and status history
-- `apex_benchmarks` — test_catalog: entry apex-benchmarks status_counts={'live': 1}
-
-## R19 causal overnight hold
-
-- Type: other | Family: ausar | Style evidence (catalog): Overnight
-- Trades: US equities — Frozen 42-name list
-- Timeframe: 30m
-- Created by / source: Ausar R18 overnight research
-- Description (from source records): R19 causal overnight hold
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - [aster_r19_timing_overnight_25bp] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-  - [aster_r19_timing_overnight_5bp] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-- Filters / data:
-  - not recorded in any consulted source
-- Variant axes (catalog): [{"Book": "OVERNIGHT_5BP", "Cost per side": "5 bps"}, {"Book": "OVERNIGHT_25BP", "Cost per side": "25 bps"}, {"Book": "OVERNIGHT_5BP", "Cost per side": "5 bps"}, {"Book": "OVERNIGHT_25BP", "Cost per side": "25 bps"}, {"Book": "OVERNIGHT_5BP", "Cost per side": "5 bps"}, {"Book": "OVERNIGHT_25BP", "Cost per side": "25 bps"}, {"Book": "OVERNIGHT_5BP", "Cost per side": "5 bps"}, {"Book": "OVERNIGHT_25BP", "Cost per side": "25 bps"}]
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: aster_r19_timing_overnight_25bp, aster_r19_timing_overnight_5bp, r19_timing_overnight_25bp, r19_timing_overnight_5bp
-
-### Aliases (4) and status history
-- `aster_r19_timing_overnight_25bp` — test_catalog: entry r19-timing-overnight status_counts={'live': 2}; muse_desk_v3: active roster
-- `aster_r19_timing_overnight_5bp` — test_catalog: entry r19-timing-overnight status_counts={'live': 2}; muse_desk_v3: active roster
-- `r19_timing_overnight_25bp` — test_catalog: entry r19-timing-overnight status_counts={'live': 2}
-- `r19_timing_overnight_5bp` — test_catalog: entry r19-timing-overnight status_counts={'live': 2}
-
-Merge evidence (tiers A): [A] r19_timing_overnight_25bp ~ r19_timing_overnight_5bp; [A] r19_timing_overnight_25bp ~ aster_r19_timing_overnight_25bp; [A] r19_timing_overnight_25bp ~ aster_r19_timing_overnight_5bp (full evidence in MERGES.md)
 
 ## R19 hourly confirmed swing
 
@@ -15348,239 +17991,499 @@ Merge evidence (tiers A): [A] r19_timing_overnight_25bp ~ r19_timing_overnight_5
 
 Merge evidence (tiers A, C): [A] r19_timing_hour_floor0_delay0 ~ r19_timing_hour_floor0_delay1; [A] r19_timing_hour_floor0_delay0 ~ r19_timing_hour_floor1_delay0; [A] r19_timing_hour_floor0_delay0 ~ r19_timing_hour_floor1_delay1; [A] r19_timing_hour_floor0_delay0 ~ aster_r19_timing_hour_floor0_delay0; [A] r19_timing_hour_floor0_delay0 ~ aster_r19_timing_hour_floor0_delay1; [A] r19_timing_hour_floor0_delay0 ~ aster_r19_timing_hour_floor1_delay0 (full evidence in MERGES.md)
 
-## ETF leader confirmed across two sources · 150% exposure
+## Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay
 
-- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Type: other | Family: hourly | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
-- Description (from source records): ETF leader confirmed across two sources · 150% exposure
-- Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Description (from source records): Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [R19_ETF_INTERVAL1_M150] ausar variant: ETF leader confirmed across two sources · 150% exposure
-  - [ausar_pb90] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. Targets ETF holdings worth 150% of the paper account's net value
-  - [ausar_r19_R19_ETF_INTERVAL1_M150] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. Targets ETF holdings worth 150% of the paper account's net value
+  - [R19_TIMING_HOUR_FLOOR1_DELAY0] ausar variant: Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay
+  - [ausar_pb153] Requires a causal confirmed Tensor swing with score at least 8, no bearish conflict and valid stop < entry < target. Transition candles have additional ATR geometry checks. A delayed variant waits one bar and discards geometry invalidated during that wait.
 - Exit rules:
-  - [ausar_pb90] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-  - [ausar_r19_R19_ETF_INTERVAL1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - not recorded in any consulted source
 - Sizing:
   - not recorded in any consulted source
 - Filters / data:
-  - [ausar_pb90] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
-  - [ausar_r19_R19_ETF_INTERVAL1_M150] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"R19_ETF_INTERVAL1_M150": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+  - [ausar_pb153] data: Completed hourly bars and canonical Tensor v698 swing geometry.
+- Key parameters (recorded, per alias): {"R19_TIMING_HOUR_FLOOR1_DELAY0": {"kind": "hourly", "slots": 8, "notional": 0.1, "floor": 1, "delay": 0, "fee_bps": 5}}
 
 ### Variants (2)
-- **ETF leader confirmed across two sources · 150% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader confirmed across two sources · 150% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_ETF_INTERVAL1_M150
+- **Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay**: recorded distinguishing tokens/parameters for this form: Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_TIMING_HOUR_FLOOR1_DELAY0
 - **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb90, ausar_r19_R19_ETF_INTERVAL1_M150
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+  - aliases: ausar_pb153
+- Variant not recorded in any source for 1 alias(es); counted, never guessed.
 
-### Aliases (3) and status history
-- `R19_ETF_INTERVAL1_M150` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb90` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_R19_ETF_INTERVAL1_M150` — md2_catalog: blocked
+### Aliases (2) and status history
+- `R19_TIMING_HOUR_FLOOR1_DELAY0` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
+- `ausar_pb153` — md2_catalog: replaced; md2_ausar_map: present in roster
 
-Merge evidence (tiers A, C): [A] ausar_pb90 ~ R19_ETF_INTERVAL1_M150; [C] R19_ETF_INTERVAL1_M150 ~ ausar_r19_R19_ETF_INTERVAL1_M150 (full evidence in MERGES.md)
+Merge evidence (tiers A): [A] ausar_pb153 ~ R19_TIMING_HOUR_FLOOR1_DELAY0 (full evidence in MERGES.md)
 
-## ETF leader confirmed across two sources · 98% exposure
+## Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay
 
-- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Type: other | Family: hourly | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
-- Description (from source records): ETF leader confirmed across two sources · 98% exposure
-- Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Description (from source records): Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [R19_ETF_INTERVAL1_C098] ausar variant: ETF leader confirmed across two sources · 98% exposure
-  - [ausar_pb89] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. Targets ETF holdings worth 98% of the paper account's net value,
-  - [ausar_r19_R19_ETF_INTERVAL1_C098] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. Targets ETF holdings worth 98% of the paper account's net value,
+  - [R19_TIMING_HOUR_FLOOR1_DELAY1] ausar variant: Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay
+  - [ausar_pb154] Requires a causal confirmed Tensor swing with score at least 8, no bearish conflict and valid stop < entry < target. Transition candles have additional ATR geometry checks. A delayed variant waits one bar and discards geometry invalidated during that wait.
 - Exit rules:
-  - [ausar_pb89] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-  - [ausar_r19_R19_ETF_INTERVAL1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - not recorded in any consulted source
 - Sizing:
   - not recorded in any consulted source
 - Filters / data:
-  - [ausar_pb89] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
-  - [ausar_r19_R19_ETF_INTERVAL1_C098] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"R19_ETF_INTERVAL1_C098": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+  - [ausar_pb154] data: Completed hourly bars and canonical Tensor v698 swing geometry.
+- Key parameters (recorded, per alias): {"R19_TIMING_HOUR_FLOOR1_DELAY1": {"kind": "hourly", "slots": 8, "notional": 0.1, "floor": 1, "delay": 1, "fee_bps": 5}}
 
 ### Variants (2)
-- **ETF leader confirmed across two sources · 98% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader confirmed across two sources · 98% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_ETF_INTERVAL1_C098
+- **Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay**: recorded distinguishing tokens/parameters for this form: Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_TIMING_HOUR_FLOOR1_DELAY1
 - **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb89, ausar_r19_R19_ETF_INTERVAL1_C098
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+  - aliases: ausar_pb154
+- Variant not recorded in any source for 1 alias(es); counted, never guessed.
 
-### Aliases (3) and status history
-- `R19_ETF_INTERVAL1_C098` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb89` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_R19_ETF_INTERVAL1_C098` — md2_catalog: blocked
+### Aliases (2) and status history
+- `R19_TIMING_HOUR_FLOOR1_DELAY1` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
+- `ausar_pb154` — md2_catalog: replaced; md2_ausar_map: present in roster
 
-Merge evidence (tiers A, C): [A] ausar_pb89 ~ R19_ETF_INTERVAL1_C098; [C] R19_ETF_INTERVAL1_C098 ~ ausar_r19_R19_ETF_INTERVAL1_C098 (full evidence in MERGES.md)
+Merge evidence (tiers A): [A] ausar_pb154 ~ R19_TIMING_HOUR_FLOOR1_DELAY1 (full evidence in MERGES.md)
 
-## ETF leader excluding semiconductors · 150% exposure
+## Confirmed hourly swing · native stop, no extra bar delay
 
-- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Type: other | Family: hourly | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
-- Description (from source records): ETF leader excluding semiconductors · 150% exposure
-- Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Description (from source records): Confirmed hourly swing · native stop, no extra bar delay
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [R19_ETF_EXSMH1_M150] ausar variant: ETF leader excluding semiconductors · 150% exposure
-  - [ausar_pb88] Excludes SMH, the semiconductor ETF, then ranks the remaining configured funds by completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. Targets ETF holdings worth 150% of the paper account's net value, rounded down to whole shares. The excess uses simulated borrowing.
-  - [ausar_r19_R19_ETF_EXSMH1_M150] Excludes SMH, the semiconductor ETF, then ranks the remaining configured funds by completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. Targets ETF holdings worth 150% of the paper account's net value, rounded down to whole shares. The excess uses simulated borrowing.
+  - [R19_TIMING_HOUR_FLOOR0_DELAY0] ausar variant: Confirmed hourly swing · native stop, no extra bar delay
+  - [ausar_pb151] Requires a causal confirmed Tensor swing with score at least 8, no bearish conflict and valid stop < entry < target. Transition candles have additional ATR geometry checks. A delayed variant waits one bar and discards geometry invalidated during that wait.
 - Exit rules:
-  - [ausar_pb88] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-  - [ausar_r19_R19_ETF_EXSMH1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - not recorded in any consulted source
 - Sizing:
   - not recorded in any consulted source
 - Filters / data:
-  - [ausar_pb88] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
-  - [ausar_r19_R19_ETF_EXSMH1_M150] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"R19_ETF_EXSMH1_M150": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+  - [ausar_pb151] data: Completed hourly bars and canonical Tensor v698 swing geometry.
+- Key parameters (recorded, per alias): {"R19_TIMING_HOUR_FLOOR0_DELAY0": {"kind": "hourly", "slots": 8, "notional": 0.1, "floor": 0, "delay": 0, "fee_bps": 5}}
 
 ### Variants (2)
-- **ETF leader excluding semiconductors · 150% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader excluding semiconductors · 150% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_ETF_EXSMH1_M150
+- **Confirmed hourly swing · native stop, no extra bar delay**: recorded distinguishing tokens/parameters for this form: Confirmed hourly swing · native stop, no extra bar delay (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_TIMING_HOUR_FLOOR0_DELAY0
 - **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb88, ausar_r19_R19_ETF_EXSMH1_M150
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+  - aliases: ausar_pb151
+- Variant not recorded in any source for 1 alias(es); counted, never guessed.
 
-### Aliases (3) and status history
-- `R19_ETF_EXSMH1_M150` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb88` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_R19_ETF_EXSMH1_M150` — md2_catalog: blocked
+### Aliases (2) and status history
+- `R19_TIMING_HOUR_FLOOR0_DELAY0` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
+- `ausar_pb151` — md2_catalog: replaced; md2_ausar_map: present in roster
 
-Merge evidence (tiers A, C): [A] ausar_pb88 ~ R19_ETF_EXSMH1_M150; [C] R19_ETF_EXSMH1_M150 ~ ausar_r19_R19_ETF_EXSMH1_M150 (full evidence in MERGES.md)
+Merge evidence (tiers A): [A] ausar_pb151 ~ R19_TIMING_HOUR_FLOOR0_DELAY0 (full evidence in MERGES.md)
 
-## ETF leader excluding semiconductors · 98% exposure
+## Confirmed hourly swing · native stop, one-bar delay
 
-- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Type: other | Family: hourly | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
-- Description (from source records): ETF leader excluding semiconductors · 98% exposure
-- Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Description (from source records): Confirmed hourly swing · native stop, one-bar delay
+- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [R19_ETF_EXSMH1_C098] ausar variant: ETF leader excluding semiconductors · 98% exposure
-  - [ausar_pb87] Excludes SMH, the semiconductor ETF, then ranks the remaining configured funds by completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. Targets ETF holdings worth 98% of the paper account's net value, rounded down to whole shares.
-  - [ausar_r19_R19_ETF_EXSMH1_C098] Excludes SMH, the semiconductor ETF, then ranks the remaining configured funds by completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. Targets ETF holdings worth 98% of the paper account's net value, rounded down to whole shares.
+  - [R19_TIMING_HOUR_FLOOR0_DELAY1] ausar variant: Confirmed hourly swing · native stop, one-bar delay
+  - [ausar_pb152] Requires a causal confirmed Tensor swing with score at least 8, no bearish conflict and valid stop < entry < target. Transition candles have additional ATR geometry checks. A delayed variant waits one bar and discards geometry invalidated during that wait.
 - Exit rules:
-  - [ausar_pb87] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-  - [ausar_r19_R19_ETF_EXSMH1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - not recorded in any consulted source
 - Sizing:
   - not recorded in any consulted source
 - Filters / data:
-  - [ausar_pb87] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
-  - [ausar_r19_R19_ETF_EXSMH1_C098] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"R19_ETF_EXSMH1_C098": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+  - [ausar_pb152] data: Completed hourly bars and canonical Tensor v698 swing geometry.
+- Key parameters (recorded, per alias): {"R19_TIMING_HOUR_FLOOR0_DELAY1": {"kind": "hourly", "slots": 8, "notional": 0.1, "floor": 0, "delay": 1, "fee_bps": 5}}
 
 ### Variants (2)
-- **ETF leader excluding semiconductors · 98% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader excluding semiconductors · 98% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_ETF_EXSMH1_C098
+- **Confirmed hourly swing · native stop, one-bar delay**: recorded distinguishing tokens/parameters for this form: Confirmed hourly swing · native stop, one-bar delay (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: R19_TIMING_HOUR_FLOOR0_DELAY1
 - **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb87, ausar_r19_R19_ETF_EXSMH1_C098
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+  - aliases: ausar_pb152
+- Variant not recorded in any source for 1 alias(es); counted, never guessed.
 
-### Aliases (3) and status history
-- `R19_ETF_EXSMH1_C098` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb87` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_R19_ETF_EXSMH1_C098` — md2_catalog: blocked
+### Aliases (2) and status history
+- `R19_TIMING_HOUR_FLOOR0_DELAY1` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
+- `ausar_pb152` — md2_catalog: replaced; md2_ausar_map: present in roster
 
-Merge evidence (tiers A, C): [A] ausar_pb87 ~ R19_ETF_EXSMH1_C098; [C] ausar_r19_R19_ETF_EXSMH1_C098 ~ R19_ETF_EXSMH1_C098 (full evidence in MERGES.md)
+Merge evidence (tiers A): [A] ausar_pb152 ~ R19_TIMING_HOUR_FLOOR0_DELAY1 (full evidence in MERGES.md)
 
-## ETF leader with unchanged-share holding · 150% exposure
+## Lab rule books (1D / 1W)
 
-- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Type: other | Family: lazarus | Style evidence (catalog): Rule set
+- Trades: US equities — Lab panel names
+- Timeframe: 1d · 1w
+- Created by / source: Galath research lab (frozen rules), run by Lazarus
+- Description (from source records): Lab rule books (1D / 1W)
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_rules_1d] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+  - [s_rules_1w] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_rules_1d] lz_engine exit config: {"rule": "the sleeve feed fire's plan (no stop / time exit; hold = the rule horizon H + 1 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+  - [s_rules_1w] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = the rule horizon H + 1 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_rules_1d] v3 slice: {"capital_usd": 44000.0, "cash_usd": 44000.0} parked=False
+  - [s_rules_1d] lz_engine sizing: {"budget_usd": 44000, "max_slots": 44, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+  - [s_rules_1w] v3 slice: {"capital_usd": 6000.0, "cash_usd": 6000.0} parked=False
+  - [s_rules_1w] lz_engine sizing: {"budget_usd": 6000, "max_slots": 6, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+- Variant axes (catalog): [{"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}]
+
+### Variants (2)
+- **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: lz_rules_1d, s_rules_1d
+- **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: lz_rules_1w, s_rules_1w
+
+### Aliases (4) and status history
+- `lz_rules_1d` — test_catalog: entry lz-lab-rules status_counts={'live': 2}
+- `lz_rules_1w` — test_catalog: entry lz-lab-rules status_counts={'live': 2}
+- `s_rules_1d` — test_catalog: entry lz-lab-rules status_counts={'live': 2}; muse_desk_v3: active roster; md2_lz_engine: live
+- `s_rules_1w` — test_catalog: entry lz-lab-rules status_counts={'live': 2}; muse_desk_v3: active roster; md2_lz_engine: live
+
+Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rules_1d; [A] lz_rules_1d ~ s_rules_1w (full evidence in MERGES.md)
+
+## CRG own-stock filing surprise
+
+- Type: other | Family: quant_research | Style evidence (catalog): Filing-surprise drift
+- Trades: US equities and ETFs — CAT, DE, MSFT
+- Timeframe: 1d (20-session hold)
+- Created by / source: CRG, R8's surprise-history policy on R3's SEC filing events (desk research)
+- Description (from source records): CRG own-stock filing surprise
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: qr_catalystresolutiongap
+
+### Aliases (1) and status history
+- `qr_catalystresolutiongap` — test_catalog: entry qr-catalystresolutiongap status_counts={'live': 1}
+
+## Hourly multi-indicator recovery · hourly
+
+- Type: other | Family: tensor | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
-- Description (from source records): ETF leader with unchanged-share holding · 150% exposure
-- Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Description (from source records): Hourly multi-indicator recovery · hourly
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [R19_ETF_DRIFT1_M150] ausar variant: ETF leader with unchanged-share holding · 150% exposure
-  - [ausar_pb86] Ranks the configured ETF basket by its completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. If the same incumbent remains the winner and is still held, retain its existing share count instead of resizing it. Targets ETF holdings worth 150% of the paper account's net value, rounded down to whole shares. The excess uses simulated borrowing.
-  - [ausar_r19_R19_ETF_DRIFT1_M150] Ranks the configured ETF basket by its completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. If the same incumbent remains the winner and is still held, retain its existing share count instead of resizing it. Targets ETF holdings worth 150% of the paper account's net value, rounded down to whole shares. The excess uses simulated borrowing.
+  - [ausar_pb3] A four-completed-bar panel must show Tensor balance improving by at least two, with at least two of seven component votes increasing. Requires seven votes, ready inputs, price ≥ $5, twenty-bar dollar volume ≥ $1 million and positive ATR. Rank by repair + 0.01 × current balance + 0.001 × clipped OBV-slope/volume. The installed cooldown prevents repeated overlapping opportunities.
 - Exit rules:
-  - [ausar_pb86] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-  - [ausar_r19_R19_ETF_DRIFT1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_pb3] Exit after twenty completed hourly holding bars; an overdue owned exit remains eligible when a new price arrives.
 - Sizing:
   - not recorded in any consulted source
 - Filters / data:
-  - [ausar_pb86] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
-  - [ausar_r19_R19_ETF_DRIFT1_M150] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"R19_ETF_DRIFT1_M150": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+  - [ausar_pb3] data: Completed Yahoo bars, canonical v698 where applicable, actual received execution quotes.
 
-### Variants (2)
-- **ETF leader with unchanged-share holding · 150% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader with unchanged-share holding · 150% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_ETF_DRIFT1_M150
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb86, ausar_r19_R19_ETF_DRIFT1_M150
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: ausar_pb3
 
-### Aliases (3) and status history
-- `R19_ETF_DRIFT1_M150` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb86` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_R19_ETF_DRIFT1_M150` — md2_catalog: blocked
+### Aliases (1) and status history
+- `ausar_pb3` — md2_catalog: blocked; md2_ausar_map: present in roster
 
-Merge evidence (tiers A, C): [A] ausar_pb86 ~ R19_ETF_DRIFT1_M150; [C] ausar_r19_R19_ETF_DRIFT1_M150 ~ R19_ETF_DRIFT1_M150 (full evidence in MERGES.md)
+## Weekly multi-indicator recovery · weekly
 
-## ETF leader with unchanged-share holding · 98% exposure
-
-- Type: other | Family: etf | Style evidence (catalog): not recorded
+- Type: other | Family: tensor | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
-- Description (from source records): ETF leader with unchanged-share holding · 98% exposure
-- Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Description (from source records): Weekly multi-indicator recovery · weekly
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [R19_ETF_DRIFT1_C098] ausar variant: ETF leader with unchanged-share holding · 98% exposure
-  - [ausar_pb85] Ranks the configured ETF basket by its completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. If the same incumbent remains the winner and is still held, retain its existing share count instead of resizing it. Targets ETF holdings worth 98% of the paper account's net value, rounded down to whole shares.
-  - [ausar_r19_R19_ETF_DRIFT1_C098] Ranks the configured ETF basket by its completed 126-session price return; equal scores use alphabetical ticker order. Allocates to the selected fund. If the same incumbent remains the winner and is still held, retain its existing share count instead of resizing it. Targets ETF holdings worth 98% of the paper account's net value, rounded down to whole shares.
+  - [ausar_pb4] A four-completed-bar panel must show Tensor balance improving by at least two, with at least two of seven component votes increasing. Requires seven votes, ready inputs, price ≥ $5, twenty-bar dollar volume ≥ $1 million and positive ATR. Rank by repair + 0.01 × current balance + 0.001 × clipped OBV-slope/volume. The installed cooldown prevents repeated overlapping opportunities.
 - Exit rules:
-  - [ausar_pb85] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-  - [ausar_r19_R19_ETF_DRIFT1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [ausar_pb4] Exit after twenty completed weekly holding bars; an overdue owned exit remains eligible when a new price arrives.
 - Sizing:
   - not recorded in any consulted source
 - Filters / data:
-  - [ausar_pb85] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
-  - [ausar_r19_R19_ETF_DRIFT1_C098] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"R19_ETF_DRIFT1_C098": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
+  - [ausar_pb4] data: Completed Yahoo bars, canonical v698 where applicable, actual received execution quotes.
 
-### Variants (2)
-- **ETF leader with unchanged-share holding · 98% exposure**: recorded distinguishing tokens/parameters for this form: ETF leader with unchanged-share holding · 98% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_ETF_DRIFT1_C098
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb85, ausar_r19_R19_ETF_DRIFT1_C098
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: ausar_pb4
 
-### Aliases (3) and status history
-- `R19_ETF_DRIFT1_C098` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb85` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_R19_ETF_DRIFT1_C098` — md2_catalog: blocked
+### Aliases (1) and status history
+- `ausar_pb4` — md2_catalog: blocked; md2_ausar_map: present in roster
 
-Merge evidence (tiers A, C): [A] ausar_pb85 ~ R19_ETF_DRIFT1_C098; [C] R19_ETF_DRIFT1_C098 ~ ausar_r19_R19_ETF_DRIFT1_C098 (full evidence in MERGES.md)
+## Swing Transition (1H)
+
+- Type: other | Family: tensor_research | Style evidence (catalog): Swing confirmation
+- Trades: US equities — AG, CMG, CRDO, FLY, LTBR, UAMY, VRT, XPEV
+- Timeframe: 1h
+- Created by / source: FolioTend v698 Swing Transition (the frozen ST classifier), as a forward-test book
+- Description (from source records): Swing Transition (1H)
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **1h**: recorded distinguishing tokens/parameters for this form: 1h (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: ro_swing_transition_1h_v1
+
+### Aliases (1) and status history
+- `ro_swing_transition_1h_v1` — test_catalog: entry tr-ro-swing-transition-1h-v1 status_counts={'waiting': 1}
+
+## D20PV
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: none recorded
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: D20PV
+
+### Aliases (1) and status history
+- `D20PV` — ausar_deployed: mode=original_independent_local_paper running=False
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## H1STATE
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: none recorded
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: H1STATE
+
+### Aliases (1) and status history
+- `H1STATE` — ausar_deployed: mode=original_independent_local_paper running=False
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_mn_gbm_1d_cyan
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_mn_gbm_1d_cyan] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_mn_gbm_1d_cyan] lz_engine exit config: {"rule": "Midna plan: no stop / time exit 21 sessions", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 21, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - [s_mn_gbm_1d_cyan] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: s_mn_gbm_1d_cyan
+
+### Aliases (1) and status history
+- `s_mn_gbm_1d_cyan` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_mn_hourly_1d
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_mn_hourly_1d] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_mn_hourly_1d] lz_engine exit config: {"rule": "Midna plan: calibrated plan / time exit 40 sessions", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 15.0, "max_bars": 40, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - [s_mn_hourly_1d] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: s_mn_hourly_1d
+
+### Aliases (1) and status history
+- `s_mn_hourly_1d` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_mn_w_cyan_adx
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_mn_w_cyan_adx] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_mn_w_cyan_adx] lz_engine exit config: {"rule": "Midna plan: no stop / time exit 126 sessions", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 126, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - [s_mn_w_cyan_adx] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_mn_w_cyan_adx
+
+### Aliases (1) and status history
+- `s_mn_w_cyan_adx` — md2_lz_engine: live
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## s_wait_r2_dcyan
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [s_wait_r2_dcyan] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [s_wait_r2_dcyan] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - [s_wait_r2_dcyan] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: s_wait_r2_dcyan
+
+### Aliases (1) and status history
+- `s_wait_r2_dcyan` — md2_lz_engine: dead
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## WSTATE
+
+- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): No strategy description recorded in consulted sources.
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: none recorded
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: WSTATE
+
+### Aliases (1) and status history
+- `WSTATE` — ausar_deployed: mode=original_independent_local_paper running=False
+
+**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+# Type: buy and hold (12 strategies)
+
 
 ## QLD buy and hold · 100% exposure
 
@@ -16054,214 +18957,370 @@ Merge evidence (tiers A, C): [A] ausar_pb105 ~ R19_ETF_SMH_HOLD_M150; [C] R19_ET
 
 Merge evidence (tiers A, C): [A] ausar_pb104 ~ R19_ETF_SMH_HOLD_C098; [C] ausar_r19_R19_ETF_SMH_HOLD_C098 ~ R19_ETF_SMH_HOLD_C098 (full evidence in MERGES.md)
 
-## Two-source ETF leader with unchanged-share holding · 150% exposure
+# Type: other (51 strategies)
 
-- Type: other | Family: etf | Style evidence (catalog): not recorded
+
+## Lab rule 1D (test)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
 - Trades: not recorded — not recorded in consulted sources
 - Timeframe: not recorded
 - Created by / source: not recorded
-- Description (from source records): Two-source ETF leader with unchanged-share holding · 150% exposure
-- Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Description (from source records): Lab rule 1D (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
 
 ### Detailed algorithm
 - Signal / entry rules:
-  - [R19_ETF_INTERVAL_DRIFT1_M150] ausar variant: Two-source ETF leader with unchanged-share holding · 150% exposure
-  - [ausar_pb94] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. If the same incumbent remains the winner and is still held, reta
-  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. If the same incumbent remains the winner and is still held, reta
+  - [lz_s_rules_1d] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
 - Exit rules:
-  - [ausar_pb94] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
+  - [lz_s_rules_1d] {"rule": "the sleeve feed fire's plan (no stop / time exit; hold = the rule horizon H + 1 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
 - Sizing:
   - not recorded in any consulted source
 - Filters / data:
-  - [ausar_pb94] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
-  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"R19_ETF_INTERVAL_DRIFT1_M150": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
-
-### Variants (2)
-- **Two-source ETF leader with unchanged-share holding · 150% exposure**: recorded distinguishing tokens/parameters for this form: Two-source ETF leader with unchanged-share holding · 150% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_ETF_INTERVAL_DRIFT1_M150
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb94, ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
-
-### Aliases (3) and status history
-- `R19_ETF_INTERVAL_DRIFT1_M150` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb94` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150` — md2_catalog: blocked
-
-Merge evidence (tiers A, C): [A] ausar_pb94 ~ R19_ETF_INTERVAL_DRIFT1_M150; [C] R19_ETF_INTERVAL_DRIFT1_M150 ~ ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150 (full evidence in MERGES.md)
-
-## Two-source ETF leader with unchanged-share holding · 98% exposure
-
-- Type: other | Family: etf | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Two-source ETF leader with unchanged-share holding · 98% exposure
-- Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [R19_ETF_INTERVAL_DRIFT1_C098] ausar variant: Two-source ETF leader with unchanged-share holding · 98% exposure
-  - [ausar_pb93] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. If the same incumbent remains the winner and is still held, reta
-  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098] Calculates each ETF’s completed 126-session return separately from Alpaca and Yahoo. The two values form a range. A new leader is chosen only when its lower return exceeds every competitor’s higher return. When ranges overlap, retain the incumbent if it is still a possible winner; otherwise select QQQ. Allocates to the selected fund. If the same incumbent remains the winner and is still held, reta
-- Exit rules:
-  - [ausar_pb93] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb93] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
-  - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"R19_ETF_INTERVAL_DRIFT1_C098": {"symbols": ["QQQ", "SPY", "SMH", "XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]}}
-
-### Variants (2)
-- **Two-source ETF leader with unchanged-share holding · 98% exposure**: recorded distinguishing tokens/parameters for this form: Two-source ETF leader with unchanged-share holding · 98% exposure (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_ETF_INTERVAL_DRIFT1_C098
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb93, ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
-
-### Aliases (3) and status history
-- `R19_ETF_INTERVAL_DRIFT1_C098` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb93` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098` — md2_catalog: blocked
-
-Merge evidence (tiers A, C): [A] ausar_pb93 ~ R19_ETF_INTERVAL_DRIFT1_C098; [C] ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098 ~ R19_ETF_INTERVAL_DRIFT1_C098 (full evidence in MERGES.md)
-
-## Beaten-down weekly qualifiers
-
-- Type: other | Family: femto | Style evidence (catalog): Weekly signal, value
-- Trades: US equities — The weekly M2 qualifier list
-- Timeframe: 1w
-- Created by / source: The old Alpaca swing desk, via Femto-lean
-- Description (from source records): Beaten-down weekly qualifiers Adapter for beatendown — v2 interface glue ONLY (DESIGN §4a).
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [beatendown] sleeve-owned (sleeves/beatendown.py)
-- Exit rules:
-  - [beatendown] sleeve-owned exit intents
-- Sizing:
-  - [beatendown] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-- Filters / data:
-  - [beatendown] data: WARMUP_BARS={"1Day": 1}
+  - [lz_s_rules_1d] data: lab_live books (native Lazarus routing) :: DESK_INTEGRATION/lab_live/out/latest/*.json
 
 ### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: beatendown, femto_beatendown
-
-### Aliases (2) and status history
-- `beatendown` — test_catalog: entry femto-beatendown status_counts={'waiting': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
-- `femto_beatendown` — test_catalog: entry femto-beatendown status_counts={'waiting': 1}
-
-Merge evidence (tiers A): [A] femto_beatendown ~ beatendown (full evidence in MERGES.md)
-
-## Kraken breakdown short (ADA / LINK)
-
-- Type: other | Family: femto | Style evidence (catalog): Breakdown short
-- Trades: Crypto perpetual — ADA, LINK (Kraken)
-- Timeframe: 4h
-- Created by / source: Aurelia (Agentic-Trading-Desk) Kraken research books, via Femto-lean
-- Description (from source records): Kraken breakdown short (ADA / LINK)
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [free_kraken_ada_breakdown] sleeve-owned (sleeves/free_kraken_ada_breakdown.py)
-  - [free_kraken_link_breakdown] sleeve-owned (sleeves/free_kraken_link_breakdown.py)
-- Exit rules:
-  - [free_kraken_ada_breakdown] sleeve-owned exit intents
-  - [free_kraken_link_breakdown] sleeve-owned exit intents
-- Sizing:
-  - [free_kraken_ada_breakdown] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-  - [free_kraken_link_breakdown] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-- Filters / data:
-  - [free_kraken_ada_breakdown] data: WARMUP_BARS={"240Min": 22}
-  - [free_kraken_link_breakdown] data: WARMUP_BARS={"4Hour": 22}
-- Variant axes (catalog): [{"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}]
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: femto_free_kraken_ada_breakdown, femto_free_kraken_link_breakdown, free_kraken_ada_breakdown, free_kraken_link_breakdown
-
-### Aliases (4) and status history
-- `femto_free_kraken_ada_breakdown` — test_catalog: entry femto-kraken-breakdown status_counts={'live': 2}
-- `femto_free_kraken_link_breakdown` — test_catalog: entry femto-kraken-breakdown status_counts={'live': 2}
-- `free_kraken_ada_breakdown` — test_catalog: entry femto-kraken-breakdown status_counts={'live': 2}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
-- `free_kraken_link_breakdown` — test_catalog: entry femto-kraken-breakdown status_counts={'live': 2}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
-
-Merge evidence (tiers A): [A] femto_free_kraken_ada_breakdown ~ femto_free_kraken_link_breakdown; [A] femto_free_kraken_ada_breakdown ~ free_kraken_ada_breakdown; [A] femto_free_kraken_ada_breakdown ~ free_kraken_link_breakdown (full evidence in MERGES.md)
-
-## Kraken crowded-long failure short (ADA / LINK)
-
-- Type: other | Family: femto | Style evidence (catalog): Breakdown short (funding filter)
-- Trades: Crypto perpetual — ADA, LINK (Kraken)
-- Timeframe: 4h
-- Created by / source: Aurelia (Agentic-Trading-Desk) Kraken research books, via Femto-lean
-- Description (from source records): Kraken crowded-long failure short (ADA / LINK)
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [free_kraken_ada_crowded] sleeve-owned (sleeves/free_kraken_ada_crowded.py)
-  - [free_kraken_link_crowded] sleeve-owned (sleeves/free_kraken_link_crowded.py)
-- Exit rules:
-  - [free_kraken_ada_crowded] sleeve-owned exit intents
-  - [free_kraken_link_crowded] sleeve-owned exit intents
-- Sizing:
-  - [free_kraken_ada_crowded] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-  - [free_kraken_link_crowded] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-- Filters / data:
-  - [free_kraken_ada_crowded] data: WARMUP_BARS={"240Min": 22}
-  - [free_kraken_link_crowded] data: WARMUP_BARS={"4Hour": 22}
-- Variant axes (catalog): [{"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}]
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: femto_free_kraken_ada_crowded, femto_free_kraken_link_crowded, free_kraken_ada_crowded, free_kraken_link_crowded
-
-### Aliases (4) and status history
-- `femto_free_kraken_ada_crowded` — test_catalog: entry femto-kraken-crowded status_counts={'live': 2}
-- `femto_free_kraken_link_crowded` — test_catalog: entry femto-kraken-crowded status_counts={'live': 2}
-- `free_kraken_ada_crowded` — test_catalog: entry femto-kraken-crowded status_counts={'live': 2}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
-- `free_kraken_link_crowded` — test_catalog: entry femto-kraken-crowded status_counts={'live': 2}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
-
-Merge evidence (tiers A): [A] femto_free_kraken_ada_crowded ~ femto_free_kraken_link_crowded; [A] femto_free_kraken_ada_crowded ~ free_kraken_ada_crowded; [A] femto_free_kraken_ada_crowded ~ free_kraken_link_crowded (full evidence in MERGES.md)
-
-## Kraken ENJ order-book imbalance (spot)
-
-- Type: other | Family: femto | Style evidence (catalog): Order-book imbalance
-- Trades: Crypto spot — ENJ/USD (Kraken)
-- Timeframe: 1h checks
-- Created by / source: Aurelia (Agentic-Trading-Desk) ENJ spot row; order logic designed for Midna's v3 desk
-- Description (from source records): Kraken ENJ order-book imbalance (spot) Adapter for free_kraken_enj_spot — interface glue ONLY (DESIGN §4).
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [free_kraken_enj_spot] sleeve-owned (sleeves/free_kraken_enj_spot.py)
-- Exit rules:
-  - [free_kraken_enj_spot] sleeve-owned exit intents
-- Sizing:
-  - [free_kraken_enj_spot] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-- Filters / data:
-  - [free_kraken_enj_spot] data: WARMUP_BARS={}
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: free_kraken_enj_spot
+- **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: lz_s_rules_1d
 
 ### Aliases (1) and status history
-- `free_kraken_enj_spot` — test_catalog: entry femto-free-kraken-enj-spot status_counts={'midna_only': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
+- `lz_s_rules_1d` — md2_catalog: installed
+
+## legacy exit (hidden)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): legacy exit (hidden)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_legacy_exit] {"policy": "none", "max_delay_minutes": 0, "limit_band_pct": 0.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_legacy_exit] {"rule": "each owned position's stored plan (unchanged)", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_legacy_exit] data: none (exit-only) :: None
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_legacy_exit
+
+### Aliases (1) and status history
+- `lz_legacy_exit` — md2_catalog: off
+
+## Midna Moonshot (Midna port)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna Moonshot (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_moonshot] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_moonshot] {"rule": "Midna plan: no stop / time exit 78 weeks", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": 99.0, "max_bars": 78, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_moonshot] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_moonshot
+
+### Aliases (1) and status history
+- `lz_s_mn_moonshot` — md2_catalog: installed
+
+## Midna QQQ Ladder (Midna port)
+
+- Type: other | Family: 1d | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna QQQ Ladder (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_qqq_ladder] {"policy": "midna_none", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_qqq_ladder] {"rule": "Midna plan: ladder mark-to-market (shadow)", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_qqq_ladder] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_qqq_ladder
+
+### Aliases (1) and status history
+- `lz_s_mn_qqq_ladder` — md2_catalog: installed
+
+## Midna Nostop (Midna port)
+
+- Type: other | Family: 1h | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna Nostop (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_nostop] {"policy": "midna_block", "max_delay_minutes": 30, "limit_band_pct": 3.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_nostop] {"rule": "Midna plan: no stop / time exit 60 bars", "hold_from": "plan", "hold_unit_kind": "1h", "stop_pct": 99.0, "max_bars": 60, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_nostop] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_mn_nostop
+
+### Aliases (1) and status history
+- `lz_s_mn_nostop` — md2_catalog: installed
+
+## Lab rule 1W (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Lab rule 1W (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_rules_1w] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_rules_1w] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = the rule horizon H + 1 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_rules_1w] data: lab_live books (native Lazarus routing) :: DESK_INTEGRATION/lab_live/out/latest/*.json
+
+### Variants (1)
+- **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: lz_s_rules_1w
+
+### Aliases (1) and status history
+- `lz_s_rules_1w` — md2_catalog: installed
+
+## Midna Hourly 1W (Midna port)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Midna Hourly 1W (Midna port)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_mn_hourly_1w] {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_mn_hourly_1w] {"rule": "Midna plan: calibrated plan / time exit 52 weeks", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": 15.0, "max_bars": 52, "rest": "time", "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_mn_hourly_1w] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json
+
+### Variants (1)
+- **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
+  - aliases: lz_s_mn_hourly_1w
+
+### Aliases (1) and status history
+- `lz_s_mn_hourly_1w` — md2_catalog: installed
+
+## Moonshot (test)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Moonshot (test)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_moonshot] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_moonshot] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52, inventory) / W78 (draft spec))", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_moonshot] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_moonshot
+
+### Aliases (1) and status history
+- `lz_s_moonshot` — md2_catalog: off
+
+## OLX R1/R2 books for the other lanes (WAIT)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): OLX R1/R2 books for the other lanes (WAIT)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_wait_olx_books] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_wait_olx_books] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_wait_olx_books] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_wait_olx_books
+
+### Aliases (1) and status history
+- `lz_s_wait_olx_books` — md2_catalog: off
+
+## Q14 pxcap5 book (WAIT)
+
+- Type: other | Family: 1w | Style evidence (catalog): not recorded
+- Trades: not recorded — not recorded in consulted sources
+- Timeframe: not recorded
+- Created by / source: not recorded
+- Description (from source records): Q14 pxcap5 book (WAIT)
+- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
+- Algorithm sources consulted: md2 catalog entry/exit/strategy text
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [lz_s_wait_q14] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
+- Exit rules:
+  - [lz_s_wait_q14] {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - [lz_s_wait_q14] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: lz_s_wait_q14
+
+### Aliases (1) and status history
+- `lz_s_wait_q14` — md2_catalog: off
+
+## APEX C7: COUNCIL
+
+- Type: other | Family: apex | Style evidence (catalog): Multi-strategy mix
+- Trades: US ETFs, ETF options and Bitcoin — QQQ, TQQQ, GLD, BIL, BTC/USD; QQQ listed options
+- Timeframe: 1d (monthly options)
+- Created by / source: APEX research desk (Cursor2), round 3 C7 and the invention report's Council
+- Description (from source records): APEX C7: COUNCIL
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+- Variant axes (catalog): [{"Row": "`apex_c7_council`", "Nasdaq (N6)": "55%", "Gold": "25%", "Bitcoin": "none", "Variance Value": "20%"}, {"Row": "`apex_council_btc`", "Nasdaq (N6)": "49.5%", "Gold": "22.5%", "Bitcoin": "10%", "Variance Value": "18%"}, {"Row": "`apex_c7_council`", "Nasdaq (N6)": "55%", "Gold": "25%", "Bitcoin": "none", "Variance Value": "20%"}, {"Row": "`apex_council_btc`", "Nasdaq (N6)": "49.5%", "Gold": "22.5%", "Bitcoin": "10%", "Variance Value": "18%"}]
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: apex_c7_council, apex_council_btc
+
+### Aliases (2) and status history
+- `apex_c7_council` — test_catalog: entry apex-c7-council status_counts={'live': 2}
+- `apex_council_btc` — test_catalog: entry apex-c7-council status_counts={'live': 2}
+
+Merge evidence (tiers A): [A] apex_c7_council ~ apex_council_btc (full evidence in MERGES.md)
+
+## APEX QQQ benchmark
+
+- Type: other | Family: apex | Style evidence (catalog): Benchmark (buy and hold)
+- Trades: US ETFs — QQQ
+- Timeframe: 1d
+- Created by / source: APEX research desk (Cursor2), APEX-NDX v1.0 benchmark
+- Description (from source records): APEX QQQ benchmark
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - not recorded in any consulted source
+- Filters / data:
+  - not recorded in any consulted source
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: apex_benchmarks
+
+### Aliases (1) and status history
+- `apex_benchmarks` — test_catalog: entry apex-benchmarks status_counts={'live': 1}
+
+## R19 causal overnight hold
+
+- Type: other | Family: ausar | Style evidence (catalog): Overnight
+- Trades: US equities — Frozen 42-name list
+- Timeframe: 30m
+- Created by / source: Ausar R18 overnight research
+- Description (from source records): R19 causal overnight hold
+- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
+- Algorithm sources consulted: Test catalog entry/variants, muse-desk-v3 roster params/slice
+
+### Detailed algorithm
+- Signal / entry rules:
+  - not recorded in any consulted source
+- Exit rules:
+  - not recorded in any consulted source
+- Sizing:
+  - [aster_r19_timing_overnight_25bp] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+  - [aster_r19_timing_overnight_5bp] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
+- Filters / data:
+  - not recorded in any consulted source
+- Variant axes (catalog): [{"Book": "OVERNIGHT_5BP", "Cost per side": "5 bps"}, {"Book": "OVERNIGHT_25BP", "Cost per side": "25 bps"}, {"Book": "OVERNIGHT_5BP", "Cost per side": "5 bps"}, {"Book": "OVERNIGHT_25BP", "Cost per side": "25 bps"}, {"Book": "OVERNIGHT_5BP", "Cost per side": "5 bps"}, {"Book": "OVERNIGHT_25BP", "Cost per side": "25 bps"}, {"Book": "OVERNIGHT_5BP", "Cost per side": "5 bps"}, {"Book": "OVERNIGHT_25BP", "Cost per side": "25 bps"}]
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: aster_r19_timing_overnight_25bp, aster_r19_timing_overnight_5bp, r19_timing_overnight_25bp, r19_timing_overnight_5bp
+
+### Aliases (4) and status history
+- `aster_r19_timing_overnight_25bp` — test_catalog: entry r19-timing-overnight status_counts={'live': 2}; muse_desk_v3: active roster
+- `aster_r19_timing_overnight_5bp` — test_catalog: entry r19-timing-overnight status_counts={'live': 2}; muse_desk_v3: active roster
+- `r19_timing_overnight_25bp` — test_catalog: entry r19-timing-overnight status_counts={'live': 2}
+- `r19_timing_overnight_5bp` — test_catalog: entry r19-timing-overnight status_counts={'live': 2}
+
+Merge evidence (tiers A): [A] r19_timing_overnight_25bp ~ r19_timing_overnight_5bp; [A] r19_timing_overnight_25bp ~ aster_r19_timing_overnight_25bp; [A] r19_timing_overnight_25bp ~ aster_r19_timing_overnight_5bp (full evidence in MERGES.md)
 
 ## R4 blowoff (daily / hourly)
 
@@ -16296,66 +19355,6 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_crowded ~ femto_free_kraken_
 
 Merge evidence (tiers A): [A] femto_blowoff_1h ~ femto_blowoff_d (full evidence in MERGES.md)
 
-## SPY put-call parity package
-
-- Type: other | Family: femto | Style evidence (catalog): Arbitrage
-- Trades: ETF options — SPY (SPY / QQQ for the pair)
-- Timeframe: 1d (5-minute passes)
-- Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
-- Description (from source records): SPY put-call parity package
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [free_opt_parity] sleeve-owned (sleeves/free_opt_parity.py)
-- Exit rules:
-  - [free_opt_parity] sleeve-owned exit intents
-- Sizing:
-  - [free_opt_parity] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-- Filters / data:
-  - [free_opt_parity] data: WARMUP_BARS={}
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: femto_free_opt_parity, free_opt_parity
-
-### Aliases (2) and status history
-- `femto_free_opt_parity` — test_catalog: entry femto-free-opt-parity status_counts={'waiting': 1}
-- `free_opt_parity` — test_catalog: entry femto-free-opt-parity status_counts={'waiting': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
-
-Merge evidence (tiers A): [A] femto_free_opt_parity ~ free_opt_parity (full evidence in MERGES.md)
-
-## Tail put after a -3% day
-
-- Type: other | Family: femto | Style evidence (catalog): Tail hedge
-- Trades: ETF options — SPY (SPY / QQQ for the pair)
-- Timeframe: 1d (5-minute passes)
-- Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
-- Description (from source records): Tail put after a -3% day
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [free_opt_tail] sleeve-owned (sleeves/free_opt_tail.py)
-- Exit rules:
-  - [free_opt_tail] sleeve-owned exit intents
-- Sizing:
-  - [free_opt_tail] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-- Filters / data:
-  - [free_opt_tail] data: WARMUP_BARS={}
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: femto_free_opt_tail, free_opt_tail
-
-### Aliases (2) and status history
-- `femto_free_opt_tail` — test_catalog: entry femto-free-opt-tail status_counts={'blocked': 1}
-- `free_opt_tail` — test_catalog: entry femto-free-opt-tail status_counts={'blocked': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
-
-Merge evidence (tiers A): [A] femto_free_opt_tail ~ free_opt_tail (full evidence in MERGES.md)
-
 ## Winner confluence (weekly qualifiers)
 
 - Type: other | Family: femto | Style evidence (catalog): Weekly signal, confluence
@@ -16385,33 +19384,6 @@ Merge evidence (tiers A): [A] femto_free_opt_tail ~ free_opt_tail (full evidence
 - `femto_confluence` — test_catalog: entry femto-confluence status_counts={'waiting': 1}
 
 Merge evidence (tiers A): [A] femto_confluence ~ confluence (full evidence in MERGES.md)
-
-## Anna PhD location printer
-
-- Type: other | Family: galath | Style evidence (catalog): Printer signal (seven votes + location)
-- Trades: US equities and ETFs — Anna's labeled census: 115 names
-- Timeframe: 1d
-- Created by / source: The Galath desk's gospel PhD replay of Anna's printer (galath-desk-backup scripts/anna-phd-replay.mjs); a recorder made a book by the owner's D32
-- Description (from source records): Anna PhD location printer
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: mon_galath_annaphdlocationoverriddenprintergrid
-
-### Aliases (1) and status history
-- `mon_galath_annaphdlocationoverriddenprintergrid` — test_catalog: entry galath-anna-phd-printer status_counts={'waiting': 1}
 
 ## Echo swing
 
@@ -16494,33 +19466,6 @@ Merge evidence (tiers A): [A] femto_confluence ~ confluence (full evidence in ME
 ### Aliases (1) and status history
 - `galath_sector_first_bottom` — test_catalog: entry galath-sector-first-bottom status_counts={'waiting': 1}
 
-## Gap continuation (legacy setup)
-
-- Type: other | Family: griffith | Style evidence (catalog): Gap continuation
-- Trades: US equities — SPY, QQQ, IWM, the SCOPE radar's top 100, held names
-- Timeframe: 1m (15-minute cycle)
-- Created by / source: Griffith / Ledge desk agentic runtime, SetupAgents gap_continuation
-- Description (from source records): Gap continuation (legacy setup)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: griffith_gap_continuation
-
-### Aliases (1) and status history
-- `griffith_gap_continuation` — test_catalog: entry griffith-gap-continuation status_counts={'live': 1}
-
 ## Parallax
 
 - Type: other | Family: griffith | Style evidence (catalog): Multi-engine swing
@@ -16547,477 +19492,6 @@ Merge evidence (tiers A): [A] femto_confluence ~ confluence (full evidence in ME
 
 ### Aliases (1) and status history
 - `griffith_parallax` — test_catalog: entry griffith-parallax status_counts={'live': 1}
-
-## Positive earnings surprise drift
-
-- Type: other | Family: griffith | Style evidence (catalog): Earnings drift
-- Trades: US equities — SCOPE stocks (ETF basket excluded)
-- Timeframe: 1d (20-session hold)
-- Created by / source: Griffith R4 tournament registration PEAD_1_0_0, on Nasdaq's public earnings calendar
-- Description (from source records): Positive earnings surprise drift
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: griffith_pead_sue
-
-### Aliases (1) and status history
-- `griffith_pead_sue` — test_catalog: entry griffith-pead-sue status_counts={'live': 1}
-
-## Top-decile SUE drift
-
-- Type: other | Family: griffith | Style evidence (catalog): Earnings drift
-- Trades: US equities — SCOPE stocks (ETF basket excluded)
-- Timeframe: 1d (20-session hold)
-- Created by / source: Griffith R4 parallel lab registration PEAD_SUE_20D_1_0_0, on Nasdaq's public earnings calendar
-- Description (from source records): Top-decile SUE drift
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: griffith_top_decile_sue
-
-### Aliases (1) and status history
-- `griffith_top_decile_sue` — test_catalog: entry griffith-top-decile-sue status_counts={'live': 1}
-
-## Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay
-
-- Type: other | Family: hourly | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [R19_TIMING_HOUR_FLOOR1_DELAY0] ausar variant: Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay
-  - [ausar_pb153] Requires a causal confirmed Tensor swing with score at least 8, no bearish conflict and valid stop < entry < target. Transition candles have additional ATR geometry checks. A delayed variant waits one bar and discards geometry invalidated during that wait.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb153] data: Completed hourly bars and canonical Tensor v698 swing geometry.
-- Key parameters (recorded, per alias): {"R19_TIMING_HOUR_FLOOR1_DELAY0": {"kind": "hourly", "slots": 8, "notional": 0.1, "floor": 1, "delay": 0, "fee_bps": 5}}
-
-### Variants (2)
-- **Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay**: recorded distinguishing tokens/parameters for this form: Confirmed hourly swing · minimum 1-ATR stop distance, no extra bar delay (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_TIMING_HOUR_FLOOR1_DELAY0
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb153
-- Variant not recorded in any source for 1 alias(es); counted, never guessed.
-
-### Aliases (2) and status history
-- `R19_TIMING_HOUR_FLOOR1_DELAY0` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
-- `ausar_pb153` — md2_catalog: replaced; md2_ausar_map: present in roster
-
-Merge evidence (tiers A): [A] ausar_pb153 ~ R19_TIMING_HOUR_FLOOR1_DELAY0 (full evidence in MERGES.md)
-
-## Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay
-
-- Type: other | Family: hourly | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [R19_TIMING_HOUR_FLOOR1_DELAY1] ausar variant: Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay
-  - [ausar_pb154] Requires a causal confirmed Tensor swing with score at least 8, no bearish conflict and valid stop < entry < target. Transition candles have additional ATR geometry checks. A delayed variant waits one bar and discards geometry invalidated during that wait.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb154] data: Completed hourly bars and canonical Tensor v698 swing geometry.
-- Key parameters (recorded, per alias): {"R19_TIMING_HOUR_FLOOR1_DELAY1": {"kind": "hourly", "slots": 8, "notional": 0.1, "floor": 1, "delay": 1, "fee_bps": 5}}
-
-### Variants (2)
-- **Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay**: recorded distinguishing tokens/parameters for this form: Confirmed hourly swing · minimum 1-ATR stop distance, one-bar delay (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_TIMING_HOUR_FLOOR1_DELAY1
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb154
-- Variant not recorded in any source for 1 alias(es); counted, never guessed.
-
-### Aliases (2) and status history
-- `R19_TIMING_HOUR_FLOOR1_DELAY1` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
-- `ausar_pb154` — md2_catalog: replaced; md2_ausar_map: present in roster
-
-Merge evidence (tiers A): [A] ausar_pb154 ~ R19_TIMING_HOUR_FLOOR1_DELAY1 (full evidence in MERGES.md)
-
-## Confirmed hourly swing · native stop, no extra bar delay
-
-- Type: other | Family: hourly | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Confirmed hourly swing · native stop, no extra bar delay
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [R19_TIMING_HOUR_FLOOR0_DELAY0] ausar variant: Confirmed hourly swing · native stop, no extra bar delay
-  - [ausar_pb151] Requires a causal confirmed Tensor swing with score at least 8, no bearish conflict and valid stop < entry < target. Transition candles have additional ATR geometry checks. A delayed variant waits one bar and discards geometry invalidated during that wait.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb151] data: Completed hourly bars and canonical Tensor v698 swing geometry.
-- Key parameters (recorded, per alias): {"R19_TIMING_HOUR_FLOOR0_DELAY0": {"kind": "hourly", "slots": 8, "notional": 0.1, "floor": 0, "delay": 0, "fee_bps": 5}}
-
-### Variants (2)
-- **Confirmed hourly swing · native stop, no extra bar delay**: recorded distinguishing tokens/parameters for this form: Confirmed hourly swing · native stop, no extra bar delay (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_TIMING_HOUR_FLOOR0_DELAY0
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb151
-- Variant not recorded in any source for 1 alias(es); counted, never guessed.
-
-### Aliases (2) and status history
-- `R19_TIMING_HOUR_FLOOR0_DELAY0` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
-- `ausar_pb151` — md2_catalog: replaced; md2_ausar_map: present in roster
-
-Merge evidence (tiers A): [A] ausar_pb151 ~ R19_TIMING_HOUR_FLOOR0_DELAY0 (full evidence in MERGES.md)
-
-## Confirmed hourly swing · native stop, one-bar delay
-
-- Type: other | Family: hourly | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Confirmed hourly swing · native stop, one-bar delay
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [R19_TIMING_HOUR_FLOOR0_DELAY1] ausar variant: Confirmed hourly swing · native stop, one-bar delay
-  - [ausar_pb152] Requires a causal confirmed Tensor swing with score at least 8, no bearish conflict and valid stop < entry < target. Transition candles have additional ATR geometry checks. A delayed variant waits one bar and discards geometry invalidated during that wait.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb152] data: Completed hourly bars and canonical Tensor v698 swing geometry.
-- Key parameters (recorded, per alias): {"R19_TIMING_HOUR_FLOOR0_DELAY1": {"kind": "hourly", "slots": 8, "notional": 0.1, "floor": 0, "delay": 1, "fee_bps": 5}}
-
-### Variants (2)
-- **Confirmed hourly swing · native stop, one-bar delay**: recorded distinguishing tokens/parameters for this form: Confirmed hourly swing · native stop, one-bar delay (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_TIMING_HOUR_FLOOR0_DELAY1
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb152
-- Variant not recorded in any source for 1 alias(es); counted, never guessed.
-
-### Aliases (2) and status history
-- `R19_TIMING_HOUR_FLOOR0_DELAY1` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
-- `ausar_pb152` — md2_catalog: replaced; md2_ausar_map: present in roster
-
-Merge evidence (tiers A): [A] ausar_pb152 ~ R19_TIMING_HOUR_FLOOR0_DELAY1 (full evidence in MERGES.md)
-
-## Trullas variant v01: 2m chart (timeframe: a slightly slower chart; fewer micro-pivots)
-
-- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Trullas variant v01: 2m chart (timeframe: a slightly slower chart; fewer micro-pivots)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: t_trullas_v01
-
-### Aliases (1) and status history
-- `t_trullas_v01` — md2_catalog: installed
-
-## Trullas variant v02: 3m chart, patient window (timeframe + patience: reads a 3m chart and 
-
-- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Trullas variant v02: 3m chart, patient window (timeframe + patience: reads a 3m chart and keeps looking unt)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: t_trullas_v02
-
-### Aliases (1) and status history
-- `t_trullas_v02` — md2_catalog: installed
-
-## Trullas variant v03: 5m chart, extended window (timeframe + session length: a 5m chart nee
-
-- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Trullas variant v03: 5m chart, extended window (timeframe + session length: a 5m chart needs ~25 min to form)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: t_trullas_v03
-
-### Aliases (1) and status history
-- `t_trullas_v03` — md2_catalog: installed
-
-## Trullas variant v04: strict swings, wide stop (pivot strictness: only a swing that stands 
-
-- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Trullas variant v04: strict swings, wide stop (pivot strictness: only a swing that stands out (>=2 ATR prom)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: t_trullas_v04
-
-### Aliases (1) and status history
-- `t_trullas_v04` — md2_catalog: installed
-
-## Trullas variant v05: loose fast eye, tight stop (pivot looseness + speed: 2-bar fractals, 
-
-- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Trullas variant v05: loose fast eye, tight stop (pivot looseness + speed: 2-bar fractals, no prominence test,)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: t_trullas_v05
-
-### Aliases (1) and status history
-- `t_trullas_v05` — md2_catalog: installed
-
-## Trullas variant v08: key-level reader (visual level reading: P2 must sit within 2 ATR of p
-
-- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Trullas variant v08: key-level reader (visual level reading: P2 must sit within 2 ATR of prior-day )
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: t_trullas_v08
-
-### Aliases (1) and status history
-- `t_trullas_v08` — md2_catalog: installed
-
-## Trullas variant v10: scale-out runner (trade management: half off at 38.2%, runner to 66% 
-
-- Type: other | Family: intraday_macd_divergence_fib_variant | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Trullas variant v10: scale-out runner (trade management: half off at 38.2%, runner to 66% with stop)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: t_trullas_v10
-
-### Aliases (1) and status history
-- `t_trullas_v10` — md2_catalog: installed
-
-## Earnings-day overnight scalp
-
-- Type: other | Family: killed | Style evidence (catalog): Earnings overnight
-- Trades: US equities — Nasdaq earnings-calendar names
-- Timeframe: 1d (overnight)
-- Created by / source: The old Alpaca swing desk's killed research studies, forward-tested on the master desk
-- Description (from source records): Earnings-day overnight scalp
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: killed_pead_spillover_scalp
-
-### Aliases (1) and status history
-- `killed_pead_spillover_scalp` — test_catalog: entry killed-pead-spillover-scalp status_counts={'live': 1}
-
-## PEAD price surprise
-
-- Type: other | Family: killed | Style evidence (catalog): Earnings drift
-- Trades: US equities — Nasdaq earnings-calendar names
-- Timeframe: 1d (event)
-- Created by / source: The old Alpaca swing desk's killed research studies, forward-tested on the master desk
-- Description (from source records): PEAD price surprise
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: killed_pead_price_surprise
-
-### Aliases (1) and status history
-- `killed_pead_price_surprise` — test_catalog: entry killed-pead-price-surprise status_counts={'live': 1}
-
-## ChartsLector market-fear rebound (QQQ)
-
-- Type: other | Family: lazarus | Style evidence (catalog): Fear rebound
-- Trades: US ETF — QQQ
-- Timeframe: 1d
-- Created by / source: ChartsLector (his VIX Mood Ring), via Lazarus
-- Description (from source records): ChartsLector market-fear rebound (QQQ)
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [lz_s_cl_vmr_qqq] {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_cl_vmr_qqq] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [lz_s_cl_vmr_qqq] {"rule": "the sleeve feed fire's plan (no stop / time exit; hold = 5 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_cl_vmr_qqq] lz_engine exit config: {"rule": "the sleeve feed fire's plan (no stop / time exit; hold = 5 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_cl_vmr_qqq] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
-  - [s_cl_vmr_qqq] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - [lz_s_cl_vmr_qqq] data: cl_live (ChartsLector screens) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_cl_vmr_qqq, lz_s_cl_vmr_qqq, s_cl_vmr_qqq
-
-### Aliases (3) and status history
-- `lz_cl_vmr_qqq` — test_catalog: entry cl-vmr-qqq status_counts={'waiting': 1}
-- `lz_s_cl_vmr_qqq` — md2_catalog: installed
-- `s_cl_vmr_qqq` — test_catalog: entry cl-vmr-qqq status_counts={'waiting': 1}; muse_desk_v3: active roster; md2_lz_engine: live
-
-Merge evidence (tiers A, C): [A] lz_cl_vmr_qqq ~ s_cl_vmr_qqq; [C] lz_cl_vmr_qqq ~ lz_s_cl_vmr_qqq (full evidence in MERGES.md)
 
 ## FLOW short volume / FTD / dark pool
 
@@ -17048,46 +19522,6 @@ Merge evidence (tiers A, C): [A] lz_cl_vmr_qqq ~ s_cl_vmr_qqq; [C] lz_cl_vmr_qqq
 - `lz_wait_flow` — test_catalog: entry lz-wait-flow status_counts={'blocked': 1}
 
 Merge evidence (tiers C): [C] lz_s_wait_flow ~ lz_wait_flow (full evidence in MERGES.md)
-
-## Lab rule books (1D / 1W)
-
-- Type: other | Family: lazarus | Style evidence (catalog): Rule set
-- Trades: US equities — Lab panel names
-- Timeframe: 1d · 1w
-- Created by / source: Galath research lab (frozen rules), run by Lazarus
-- Description (from source records): Lab rule books (1D / 1W)
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_rules_1d] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-  - [s_rules_1w] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_rules_1d] lz_engine exit config: {"rule": "the sleeve feed fire's plan (no stop / time exit; hold = the rule horizon H + 1 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-  - [s_rules_1w] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = the rule horizon H + 1 sessions)", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_rules_1d] v3 slice: {"capital_usd": 44000.0, "cash_usd": 44000.0} parked=False
-  - [s_rules_1d] lz_engine sizing: {"budget_usd": 44000, "max_slots": 44, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-  - [s_rules_1w] v3 slice: {"capital_usd": 6000.0, "cash_usd": 6000.0} parked=False
-  - [s_rules_1w] lz_engine sizing: {"budget_usd": 6000, "max_slots": 6, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-- Variant axes (catalog): [{"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}]
-
-### Variants (2)
-- **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: lz_rules_1d, s_rules_1d
-- **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: lz_rules_1w, s_rules_1w
-
-### Aliases (4) and status history
-- `lz_rules_1d` — test_catalog: entry lz-lab-rules status_counts={'live': 2}
-- `lz_rules_1w` — test_catalog: entry lz-lab-rules status_counts={'live': 2}
-- `s_rules_1d` — test_catalog: entry lz-lab-rules status_counts={'live': 2}; muse_desk_v3: active roster; md2_lz_engine: live
-- `s_rules_1w` — test_catalog: entry lz-lab-rules status_counts={'live': 2}; muse_desk_v3: active roster; md2_lz_engine: live
-
-Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rules_1d; [A] lz_rules_1d ~ s_rules_1w (full evidence in MERGES.md)
 
 ## Moonshot weekly lane
 
@@ -17154,33 +19588,6 @@ Merge evidence (tiers A): [A] lz_moonshot ~ midna_w_cyan_moonshot; [A] lz_moonsh
 ### Aliases (1) and status history
 - `lz_wait_olx_books` — test_catalog: entry lz-wait-olx status_counts={'live': 1}
 
-## Q14 under-$5 weekly book
-
-- Type: other | Family: lazarus | Style evidence (catalog): Value
-- Trades: US equities — Tracker universe
-- Timeframe: 1w
-- Created by / source: Galath Research Lab frozen spec, wired on the master desk
-- Description (from source records): Q14 under-$5 weekly book
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: lz_wait_q14
-
-### Aliases (1) and status history
-- `lz_wait_q14` — test_catalog: entry lz-wait-q14 status_counts={'waiting': 1}
-
 ## QQQ flip5 TZA hedge
 
 - Type: other | Family: midna | Style evidence (catalog): Hedge
@@ -17238,483 +19645,6 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 
 ### Aliases (1) and status history
 - `mk_atrlevelcascade` — test_catalog: entry mk-atrlevelcascade status_counts={'waiting': 1}
-
-## Bilbo Golden Gate (SPY)
-
-- Type: other | Family: milkman | Style evidence (catalog): Intraday ATR levels
-- Trades: US ETF — SPY
-- Timeframe: 1m · 1h Phase Oscillator
-- Created by / source: Milkman Trades (milkmantrades.com), Bilbo Golden Gate; the Milkman v2 study
-- Description (from source records): Bilbo Golden Gate (SPY)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: mk_bilbogoldengate
-
-### Aliases (1) and status history
-- `mk_bilbogoldengate` — test_catalog: entry mk-bilbogoldengate status_counts={'waiting': 1}
-
-## Day Golden Gate (SPY)
-
-- Type: other | Family: milkman | Style evidence (catalog): Intraday ATR levels
-- Trades: US ETF — SPY
-- Timeframe: 1m (daily ATR levels)
-- Created by / source: Milkman Trades (milkmantrades.com), Golden Gate; the Milkman v2 study
-- Description (from source records): Day Golden Gate (SPY)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: mk_daygoldengate
-
-### Aliases (1) and status history
-- `mk_daygoldengate` — test_catalog: entry mk-daygoldengate status_counts={'waiting': 1}
-
-## Milkman 0DTE (SPX)
-
-- Type: other | Family: milkman | Style evidence (catalog): Long premium day trading
-- Trades: SPX index options (0DTE) — SPX
-- Timeframe: Intraday
-- Created by / source: Milkman Trades' 0DTE SPX method, from his 2026-10-21 answers and the authored Femto-lean sleeve (milkman-0dte branch), installed 2026-10-27
-- Description (from source records): Milkman 0DTE (SPX)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - [mk_zerodte_spx] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=True
-- Filters / data:
-  - not recorded in any consulted source
-- Key parameters (recorded, per alias): {"mk_zerodte_spx": {"daily_stop": -10000.0, "premium_per_trade": 2500.0, "max_open": 4, "target_delta": 0.4, "excluded_setups": ["ESMON", "OPX4"], "inert_reason": "SPX 0DTE chain not available: PARKED + UNFED at install 2026-10-27 - (1) Milkman intraday study (Femto-lean desk/sleeves/milkman/intraday.py) not ported, no authored lane signals; (2) no delta/greeks on this account tier (feed=indicative carries none, feed=opra 403), authored contract pick requires delta. See desk3/milkman_0dte/PROVENANCE.md"}}
-- Variant axes (catalog): [{"Parameter": "Contract pick", "Values": "today's expiry, |delta| nearest 0.40, fresh two-sided quotes at most 20% wide, bought at the ask"}, {"Parameter": "Excluded lanes", "Values": "ESMON, OPX4"}]
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: mk_zerodte_spx
-
-### Aliases (1) and status history
-- `mk_zerodte_spx` — test_catalog: entry mk-zerodte-spx status_counts={'midna_only': 1}; muse_desk_v3: parked
-
-## Multi-day Golden Gate (weekly ATR)
-
-- Type: other | Family: milkman | Style evidence (catalog): ATR levels
-- Trades: US equities, index ETFs and futures — 1,822 US stocks + 14 index ETFs and futures
-- Timeframe: 1d (weekly ATR levels)
-- Created by / source: Milkman Trades (milkmantrades.com), Multi-day GG; the Milkman v2 study
-- Description (from source records): Multi-day Golden Gate (weekly ATR)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: mk_multidaygoldengateweekly
-
-### Aliases (1) and status history
-- `mk_multidaygoldengateweekly` — test_catalog: entry mk-multidaygoldengateweekly status_counts={'live': 1}
-
-## Swing Golden Gate (monthly ATR)
-
-- Type: other | Family: milkman | Style evidence (catalog): ATR levels
-- Trades: US equities, index ETFs and futures — 1,822 US stocks + 14 index ETFs and futures
-- Timeframe: 1d (monthly ATR levels)
-- Created by / source: Milkman Trades (milkmantrades.com), Swing GG; the Milkman v2 study
-- Description (from source records): Swing Golden Gate (monthly ATR)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: mk_swinggoldengatemonthly
-
-### Aliases (1) and status history
-- `mk_swinggoldengatemonthly` — test_catalog: entry mk-swinggoldengatemonthly status_counts={'live': 1}
-
-## Saty Magnum (SPY shares)
-
-- Type: other | Family: muse | Style evidence (catalog): Intraday ATR levels
-- Trades: SPY shares, long and short — SPY
-- Timeframe: 3m · 10m · 1h · 1d
-- Created by / source: Saty Mahajan's system (ATR Levels, Pivot Ribbon Pro, Phase Oscillator, Volume Stack), from his posts
-- Description (from source records): Saty Magnum (SPY shares)
-- Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [saty_magnum] sleeve-owned (sleeves/saty_magnum.py)
-- Exit rules:
-  - [saty_magnum] sleeve-owned exit intents
-- Sizing:
-  - [saty_magnum] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
-- Filters / data:
-  - [saty_magnum] data: WARMUP_BARS={"5Min": 300, "1Min": 390}
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: muse_saty_magnum, saty_magnum
-
-### Aliases (2) and status history
-- `muse_saty_magnum` — test_catalog: entry muse-saty-magnum status_counts={'waiting': 1}
-- `saty_magnum` — test_catalog: entry muse-saty-magnum status_counts={'waiting': 1}; muse_desk_v3: active roster; md2_catalog: installed; femto_land_wt: present in roster; femto_land_wt: present in roster; md2_silicon_v2: present in roster
-
-Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in MERGES.md)
-
-## Strong-afternoon continuation
-
-- Type: other | Family: overnight | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Strong-afternoon continuation
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [ausar_r19_R19_TIMING_OVERNIGHT_5BP] Compares the current 13:00-to-15:00 return with the historical 80th percentile over up to 252 full sessions, requiring at least 126. Early-close days are excluded.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_r19_R19_TIMING_OVERNIGHT_5BP] data: posted r19 data adapters
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: ausar_r19_R19_TIMING_OVERNIGHT_5BP
-
-### Aliases (1) and status history
-- `ausar_r19_R19_TIMING_OVERNIGHT_5BP` — md2_catalog: blocked
-
-## Strong-afternoon continuation
-
-- Type: other | Family: overnight | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Strong-afternoon continuation
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [R19_TIMING_OVERNIGHT_5BP] ausar variant: Strong-afternoon continuation
-  - [ausar_pb156] Compares the current 13:00-to-15:00 return with the historical 80th percentile over up to 252 full sessions, requiring at least 126. Early-close days are excluded.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb156] data: Completed thirty-minute bars and actual exchange calendar.
-- Key parameters (recorded, per alias): {"R19_TIMING_OVERNIGHT_5BP": {"kind": "overnight", "slots": 8, "notional": 0.1, "fee_bps": 5}}
-
-### Variants (2)
-- **Strong-afternoon continuation**: recorded distinguishing tokens/parameters for this form: Strong-afternoon continuation (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_TIMING_OVERNIGHT_5BP
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb156
-- Variant not recorded in any source for 1 alias(es); counted, never guessed.
-
-### Aliases (2) and status history
-- `R19_TIMING_OVERNIGHT_5BP` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
-- `ausar_pb156` — md2_catalog: replaced; md2_ausar_map: present in roster
-
-Merge evidence (tiers A): [A] ausar_pb156 ~ R19_TIMING_OVERNIGHT_5BP (full evidence in MERGES.md)
-
-## Strong-afternoon continuation
-
-- Type: other | Family: overnight | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Strong-afternoon continuation
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [R19_TIMING_OVERNIGHT_25BP] ausar variant: Strong-afternoon continuation
-  - [ausar_pb155] Compares the current 13:00-to-15:00 return with the historical 80th percentile over up to 252 full sessions, requiring at least 126. Early-close days are excluded.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb155] data: Completed thirty-minute bars and actual exchange calendar.
-- Key parameters (recorded, per alias): {"R19_TIMING_OVERNIGHT_25BP": {"kind": "overnight", "slots": 8, "notional": 0.1, "fee_bps": 25}}
-
-### Variants (2)
-- **Strong-afternoon continuation**: recorded distinguishing tokens/parameters for this form: Strong-afternoon continuation (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: R19_TIMING_OVERNIGHT_25BP
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb155
-- Variant not recorded in any source for 1 alias(es); counted, never guessed.
-
-### Aliases (2) and status history
-- `R19_TIMING_OVERNIGHT_25BP` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False
-- `ausar_pb155` — md2_catalog: replaced; md2_ausar_map: present in roster
-
-Merge evidence (tiers A): [A] ausar_pb155 ~ R19_TIMING_OVERNIGHT_25BP (full evidence in MERGES.md)
-
-## Strong-afternoon continuation
-
-- Type: other | Family: overnight | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Strong-afternoon continuation
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [ausar_r19_R19_TIMING_OVERNIGHT_25BP] Compares the current 13:00-to-15:00 return with the historical 80th percentile over up to 252 full sessions, requiring at least 126. Early-close days are excluded.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_r19_R19_TIMING_OVERNIGHT_25BP] data: posted r19 data adapters
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: ausar_r19_R19_TIMING_OVERNIGHT_25BP
-
-### Aliases (1) and status history
-- `ausar_r19_R19_TIMING_OVERNIGHT_25BP` — md2_catalog: blocked
-
-## OPT_OWN_IV_RESIDUAL
-
-- Type: other | Family: own_iv_residual | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
-- Algorithm sources consulted: femto land-wt config params
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-- Key parameters (recorded, per alias): {"OPT_OWN_IV_RESIDUAL": {"symbols": []}}
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: OPT_OWN_IV_RESIDUAL
-
-### Aliases (1) and status history
-- `OPT_OWN_IV_RESIDUAL` — ausar_deployed: mode=unfunded_monitor running=False; femto_land_wt: present in roster
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## Post-earnings response · long, 0.5% risk
-
-- Type: other | Family: pead | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Post-earnings response · long, 0.5% risk
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [OPT_PEAD_LONG_B] ausar variant: Post-earnings response · long, 0.5% risk
-  - [ausar_pb17] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
-  - [ausar_r19_OPT_PEAD_LONG_B] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb17] data: Observed earnings publication and response, underlying bars, indicative/model option inputs.
-  - [ausar_r19_OPT_PEAD_LONG_B] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"OPT_PEAD_LONG_B": {"structure": "long", "dte": [21, 35], "delta": [0.5, 0.65], "hold_sessions": 10, "risk_fraction": 0.005, "max_premium_spot": 0.02, "symbols": []}}
-
-### Variants (3)
-- **Post-earnings response · long, 0.5% risk**: recorded distinguishing tokens/parameters for this form: Post-earnings response · long, 0.5% risk (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: OPT_PEAD_LONG_B
-- **long**: recorded distinguishing tokens/parameters for this form: long (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: ausar_r19_OPT_PEAD_LONG_B
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb17
-- Variant not recorded in any source for 1 alias(es); counted, never guessed.
-
-### Aliases (3) and status history
-- `OPT_PEAD_LONG_B` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb17` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_OPT_PEAD_LONG_B` — md2_catalog: blocked
-
-Merge evidence (tiers A, C): [A] ausar_pb17 ~ OPT_PEAD_LONG_B; [C] OPT_PEAD_LONG_B ~ ausar_r19_OPT_PEAD_LONG_B (full evidence in MERGES.md)
-
-## Post-earnings response · long, 2.0% risk
-
-- Type: other | Family: pead | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Post-earnings response · long, 2.0% risk
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [OPT_PEAD_LONG_A] ausar variant: Post-earnings response · long, 2.0% risk
-  - [ausar_pb16] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
-  - [ausar_r19_OPT_PEAD_LONG_A] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb16] data: Observed earnings publication and response, underlying bars, indicative/model option inputs.
-  - [ausar_r19_OPT_PEAD_LONG_A] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"OPT_PEAD_LONG_A": {"structure": "long", "dte": [21, 35], "delta": [0.5, 0.65], "hold_sessions": 10, "risk_fraction": 0.02, "max_premium_spot": 0.04, "symbols": []}}
-
-### Variants (3)
-- **Post-earnings response · long, 2.0% risk**: recorded distinguishing tokens/parameters for this form: Post-earnings response · long, 2.0% risk (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: OPT_PEAD_LONG_A
-- **long**: recorded distinguishing tokens/parameters for this form: long (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: ausar_r19_OPT_PEAD_LONG_A
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb16
-- Variant not recorded in any source for 1 alias(es); counted, never guessed.
-
-### Aliases (3) and status history
-- `OPT_PEAD_LONG_A` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb16` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_OPT_PEAD_LONG_A` — md2_catalog: blocked
-
-Merge evidence (tiers A, C): [A] ausar_pb16 ~ OPT_PEAD_LONG_A; [C] ausar_r19_OPT_PEAD_LONG_A ~ OPT_PEAD_LONG_A (full evidence in MERGES.md)
-
-## Post-earnings response · vertical, 0.5% risk
-
-- Type: other | Family: pead | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Post-earnings response · vertical, 0.5% risk
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [OPT_PEAD_VERTICAL_B] ausar variant: Post-earnings response · vertical, 0.5% risk
-  - [ausar_pb19] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
-  - [ausar_r19_OPT_PEAD_VERTICAL_B] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb19] data: Observed earnings publication and response, underlying bars, indicative/model option inputs.
-  - [ausar_r19_OPT_PEAD_VERTICAL_B] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"OPT_PEAD_VERTICAL_B": {"structure": "vertical", "dte": [21, 35], "delta": [0.5, 0.65], "hold_sessions": 10, "risk_fraction": 0.005, "max_premium_spot": 0.02, "symbols": []}}
-
-### Variants (2)
-- **Post-earnings response · vertical, 0.5% risk**: recorded distinguishing tokens/parameters for this form: Post-earnings response · vertical, 0.5% risk (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: OPT_PEAD_VERTICAL_B
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb19, ausar_r19_OPT_PEAD_VERTICAL_B
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
-
-### Aliases (3) and status history
-- `OPT_PEAD_VERTICAL_B` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb19` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_OPT_PEAD_VERTICAL_B` — md2_catalog: blocked
-
-Merge evidence (tiers A, C): [A] ausar_pb19 ~ OPT_PEAD_VERTICAL_B; [C] ausar_r19_OPT_PEAD_VERTICAL_B ~ OPT_PEAD_VERTICAL_B (full evidence in MERGES.md)
-
-## Post-earnings response · vertical, 2.0% risk
-
-- Type: other | Family: pead | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Post-earnings response · vertical, 2.0% risk
-- Algorithm status: **PARTIAL** — gaps: exit rule not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [OPT_PEAD_VERTICAL_A] ausar variant: Post-earnings response · vertical, 2.0% risk
-  - [ausar_pb18] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
-  - [ausar_r19_OPT_PEAD_VERTICAL_A] Requires an observed earnings occurrence and a causal subsequent price response. A future calendar date alone cannot trigger an entry.
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb18] data: Observed earnings publication and response, underlying bars, indicative/model option inputs.
-  - [ausar_r19_OPT_PEAD_VERTICAL_A] data: posted r19 data adapters
-- Key parameters (recorded, per alias): {"OPT_PEAD_VERTICAL_A": {"structure": "vertical", "dte": [21, 35], "delta": [0.5, 0.65], "hold_sessions": 10, "risk_fraction": 0.02, "max_premium_spot": 0.04, "symbols": []}}
-
-### Variants (2)
-- **Post-earnings response · vertical, 2.0% risk**: recorded distinguishing tokens/parameters for this form: Post-earnings response · vertical, 2.0% risk (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: OPT_PEAD_VERTICAL_A
-- **variant not recorded in any source**: sources do not record which variant this alias runs; not guessed
-  - aliases: ausar_pb18, ausar_r19_OPT_PEAD_VERTICAL_A
-- Variant not recorded in any source for 2 alias(es); counted, never guessed.
-
-### Aliases (3) and status history
-- `OPT_PEAD_VERTICAL_A` — md2_ausar_map: present in roster; ausar_deployed: mode=independent_local_paper running=False; femto_land_wt: present in roster
-- `ausar_pb18` — md2_catalog: replaced; md2_ausar_map: present in roster
-- `ausar_r19_OPT_PEAD_VERTICAL_A` — md2_catalog: blocked
-
-Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19_OPT_PEAD_VERTICAL_A ~ OPT_PEAD_VERTICAL_A (full evidence in MERGES.md)
 
 ## AIRT auction impulse
 
@@ -17851,60 +19781,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 ### Aliases (1) and status history
 - `qr_capitalreleasedynamics` — test_catalog: entry qr-capitalreleasedynamics status_counts={'waiting': 1}
 
-## CRG own-stock filing surprise
-
-- Type: other | Family: quant_research | Style evidence (catalog): Filing-surprise drift
-- Trades: US equities and ETFs — CAT, DE, MSFT
-- Timeframe: 1d (20-session hold)
-- Created by / source: CRG, R8's surprise-history policy on R3's SEC filing events (desk research)
-- Description (from source records): CRG own-stock filing surprise
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: qr_catalystresolutiongap
-
-### Aliases (1) and status history
-- `qr_catalystresolutiongap` — test_catalog: entry qr-catalystresolutiongap status_counts={'live': 1}
-
-## Fast Numbers earnings surprise
-
-- Type: other | Family: quant_research | Style evidence (catalog): Earnings surprise, intraday hold
-- Trades: US equities (long and short) — US stocks with reported and consensus EPS
-- Timeframe: 1d (open to close)
-- Created by / source: Fast Numbers / Slow Words, principal numeric ledger, reconstructed in the desk's six-strategy study
-- Description (from source records): Fast Numbers earnings surprise
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: qr_fastnumbersslowwordseventreconstruct
-
-### Aliases (1) and status history
-- `qr_fastnumbersslowwordseventreconstruct` — test_catalog: entry qr-fastnumbersslowwordseventreconstruct status_counts={'live': 1}
-
 ## Spectral Echo Drift
 
 - Type: other | Family: quant_research | Style evidence (catalog): Order-book spectral
@@ -17985,63 +19861,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 ### Aliases (1) and status history
 - `qr_unpricedinformationrelay` — test_catalog: entry qr-unpricedinformationrelay status_counts={'live': 1}
-
-## Qullamaggie parabolic short
-
-- Type: other | Family: qullamaggie | Style evidence (catalog): Parabolic short
-- Trades: US equities — 1,838-name genome
-- Timeframe: 1d setup · 1m trigger
-- Created by / source: Kristjan Kullamägi (Qullamaggie), "My 3 timeless setups"; the pass-3 research desk
-- Description (from source records): Qullamaggie parabolic short
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **short**: recorded distinguishing tokens/parameters for this form: short (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: qm_parabolic_short
-
-### Aliases (1) and status history
-- `qm_parabolic_short` — test_catalog: entry qm-parabolic-short status_counts={'waiting': 1}
-
-## OPT_RELEASE_CONVEXITY
-
-- Type: other | Family: release_convexity | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
-- Algorithm sources consulted: femto land-wt config params
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-- Key parameters (recorded, per alias): {"OPT_RELEASE_CONVEXITY": {"symbols": []}}
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: OPT_RELEASE_CONVEXITY
-
-### Aliases (1) and status history
-- `OPT_RELEASE_CONVEXITY` — ausar_deployed: mode=unfunded_monitor running=False; femto_land_wt: present in roster
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
 ## Saty Research v0.3 - SPY equity paper
 
@@ -18130,60 +19949,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-## Hourly multi-indicator recovery · hourly
-
-- Type: other | Family: tensor | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Hourly multi-indicator recovery · hourly
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [ausar_pb3] A four-completed-bar panel must show Tensor balance improving by at least two, with at least two of seven component votes increasing. Requires seven votes, ready inputs, price ≥ $5, twenty-bar dollar volume ≥ $1 million and positive ATR. Rank by repair + 0.01 × current balance + 0.001 × clipped OBV-slope/volume. The installed cooldown prevents repeated overlapping opportunities.
-- Exit rules:
-  - [ausar_pb3] Exit after twenty completed hourly holding bars; an overdue owned exit remains eligible when a new price arrives.
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb3] data: Completed Yahoo bars, canonical v698 where applicable, actual received execution quotes.
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: ausar_pb3
-
-### Aliases (1) and status history
-- `ausar_pb3` — md2_catalog: blocked; md2_ausar_map: present in roster
-
-## Weekly multi-indicator recovery · weekly
-
-- Type: other | Family: tensor | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): Weekly multi-indicator recovery · weekly
-- Algorithm status: **PARTIAL** — gaps: sizing not recorded in any consulted source
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [ausar_pb4] A four-completed-bar panel must show Tensor balance improving by at least two, with at least two of seven component votes increasing. Requires seven votes, ready inputs, price ≥ $5, twenty-bar dollar volume ≥ $1 million and positive ATR. Rank by repair + 0.01 × current balance + 0.001 × clipped OBV-slope/volume. The installed cooldown prevents repeated overlapping opportunities.
-- Exit rules:
-  - [ausar_pb4] Exit after twenty completed weekly holding bars; an overdue owned exit remains eligible when a new price arrives.
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - [ausar_pb4] data: Completed Yahoo bars, canonical v698 where applicable, actual received execution quotes.
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: ausar_pb4
-
-### Aliases (1) and status history
-- `ausar_pb4` — md2_catalog: blocked; md2_ausar_map: present in roster
-
 ## Comeback genome
 
 - Type: other | Family: tensor_research | Style evidence (catalog): Repair
@@ -18210,33 +19975,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 ### Aliases (1) and status history
 - `genome_comeback` — test_catalog: entry tr-genome-comeback status_counts={'live': 1}
-
-## Deep Reset cross-scan
-
-- Type: other | Family: tensor_research | Style evidence (catalog): Reset after a drawdown
-- Trades: US equities — 1,838-name genome roster
-- Timeframe: 1d · 1wk
-- Created by / source: FolioTend's Deep Reset cross-scan, as a forward-test book
-- Description (from source records): Deep Reset cross-scan
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: ro_deep_reset_cross_scan
-
-### Aliases (1) and status history
-- `ro_deep_reset_cross_scan` — test_catalog: entry tr-ro-deep-reset-cross-scan status_counts={'live': 1}
 
 ## Edge paper hands (10 lineages)
 
@@ -18292,87 +20030,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 ### Aliases (1) and status history
 - `ro_hourly_transition_core_burst` — test_catalog: entry tr-ro-hourly-transition-core-burst status_counts={'waiting': 1}
 
-## Swing Transition (1H)
-
-- Type: other | Family: tensor_research | Style evidence (catalog): Swing confirmation
-- Trades: US equities — AG, CMG, CRDO, FLY, LTBR, UAMY, VRT, XPEV
-- Timeframe: 1h
-- Created by / source: FolioTend v698 Swing Transition (the frozen ST classifier), as a forward-test book
-- Description (from source records): Swing Transition (1H)
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **1h**: recorded distinguishing tokens/parameters for this form: 1h (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: ro_swing_transition_1h_v1
-
-### Aliases (1) and status history
-- `ro_swing_transition_1h_v1` — test_catalog: entry tr-ro-swing-transition-1h-v1 status_counts={'waiting': 1}
-
-## Weekly cyan transition
-
-- Type: other | Family: tensor_research | Style evidence (catalog): Early markup
-- Trades: US equities — 1,838-name genome roster
-- Timeframe: 1wk
-- Created by / source: FolioTend / Griffith Tensor research (archived desk research), as a forward-test book
-- Description (from source records): Weekly cyan transition
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: ro_weekly_cyan_transition
-
-### Aliases (1) and status history
-- `ro_weekly_cyan_transition` — test_catalog: entry tr-ro-weekly-cyan-transition status_counts={'waiting': 1}
-
-## Weekly green recovery
-
-- Type: other | Family: tensor_research | Style evidence (catalog): Early markup
-- Trades: US equities — 1,838-name genome roster
-- Timeframe: 1wk
-- Created by / source: FolioTend / Griffith Tensor research (archived desk research), as a forward-test book
-- Description (from source records): Weekly green recovery
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: Test catalog entry/variants
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: ro_weekly_green_recovery
-
-### Aliases (1) and status history
-- `ro_weekly_green_recovery` — test_catalog: entry tr-ro-weekly-green-recovery status_counts={'waiting': 1}
-
 ## aster_saty_research
 
 - Type: other | Family: unrecorded | Style evidence (catalog): not recorded
@@ -18402,64 +20059,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-## D20PV
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: none recorded
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: D20PV
-
-### Aliases (1) and status history
-- `D20PV` — ausar_deployed: mode=original_independent_local_paper running=False
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## H1STATE
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: none recorded
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: H1STATE
-
-### Aliases (1) and status history
-- `H1STATE` — ausar_deployed: mode=original_independent_local_paper running=False
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
 ## legacy_exit
 
 - Type: other | Family: unrecorded | Style evidence (catalog): not recorded
@@ -18486,93 +20085,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 ### Aliases (1) and status history
 - `legacy_exit` — md2_lz_engine: dead
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## PUBLIC_AI_VOLUME_SPOT100
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: none recorded
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **vol**: recorded distinguishing tokens/parameters for this form: vol (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: PUBLIC_AI_VOLUME_SPOT100
-
-### Aliases (1) and status history
-- `PUBLIC_AI_VOLUME_SPOT100` — ausar_deployed: mode=original_independent_local_paper running=False
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## PUBLIC_IU_BODY_SPOT100
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: none recorded
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: PUBLIC_IU_BODY_SPOT100
-
-### Aliases (1) and status history
-- `PUBLIC_IU_BODY_SPOT100` — ausar_deployed: mode=original_independent_local_paper running=False
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## PUBLIC_TOMAZETTI_RSI2_SPOT100
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: none recorded
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: PUBLIC_TOMAZETTI_RSI2_SPOT100
-
-### Aliases (1) and status history
-- `PUBLIC_TOMAZETTI_RSI2_SPOT100` — ausar_deployed: mode=original_independent_local_paper running=False
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
@@ -18750,93 +20262,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-## s_mn_csmom
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_mn_csmom] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_mn_csmom] lz_engine exit config: {"rule": "Midna plan: rank exit / circuit -40%", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 63, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - [s_mn_csmom] lz_engine sizing: {"budget_usd": 9000, "max_slots": 9, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_mn_csmom
-
-### Aliases (1) and status history
-- `s_mn_csmom` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_mn_gbm_1d_cyan
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_mn_gbm_1d_cyan] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_mn_gbm_1d_cyan] lz_engine exit config: {"rule": "Midna plan: no stop / time exit 21 sessions", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 21, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - [s_mn_gbm_1d_cyan] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: s_mn_gbm_1d_cyan
-
-### Aliases (1) and status history
-- `s_mn_gbm_1d_cyan` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_mn_hourly_1d
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_mn_hourly_1d] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_mn_hourly_1d] lz_engine exit config: {"rule": "Midna plan: calibrated plan / time exit 40 sessions", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 15.0, "max_bars": 40, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - [s_mn_hourly_1d] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: s_mn_hourly_1d
-
-### Aliases (1) and status history
-- `s_mn_hourly_1d` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
 ## s_mn_qqq_ladder
 
 - Type: other | Family: unrecorded | Style evidence (catalog): not recorded
@@ -18863,1253 +20288,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 ### Aliases (1) and status history
 - `s_mn_qqq_ladder` — md2_lz_engine: shadow
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_mn_turtle
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_mn_turtle] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_mn_turtle] lz_engine exit config: {"rule": "Midna plan: turtle ATR stop / exit10", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - [s_mn_turtle] lz_engine sizing: {"budget_usd": 2000, "max_slots": 2, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_mn_turtle
-
-### Aliases (1) and status history
-- `s_mn_turtle` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_mn_w_cyan_adx
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_mn_w_cyan_adx] lz_engine entry config: {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_mn_w_cyan_adx] lz_engine exit config: {"rule": "Midna plan: no stop / time exit 126 sessions", "hold_from": "fill", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 126, "rest": "time", "plan_overrides": []}
-- Sizing:
-  - [s_mn_w_cyan_adx] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_mn_w_cyan_adx
-
-### Aliases (1) and status history
-- `s_mn_w_cyan_adx` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07_ins2
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07_ins2] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07_ins2] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = per cell lane)", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07_ins2] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07_ins2
-
-### Aliases (1) and status history
-- `s_q07_ins2` — md2_lz_engine: dead
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07_wiki
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07_wiki] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07_wiki] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = per cell lane)", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07_wiki] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07_wiki
-
-### Aliases (1) and status history
-- `s_q07_wiki` — md2_lz_engine: dead
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c52_mi_cheap5_deep70_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c52_mi_cheap5_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c52_mi_cheap5_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c52_mi_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_mi_cheap5_deep70_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c52_mi_cheap5_deep70_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c52_mi_cheap5_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c52_mi_cheap5_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c52_mi_cheap5_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c52_mi_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_mi_cheap5_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c52_mi_cheap5_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c52_mi_cheap5_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c52_mi_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c52_mi_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c52_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_mi_cheap5_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c52_mi_cheap5_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c52_mi_deep70_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c52_mi_deep70_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c52_mi_deep70_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c52_mi_deep70_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_mi_deep70_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c52_mi_deep70_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c52_mi_deep70_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c52_mi_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c52_mi_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c52_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_mi_deep70_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c52_mi_deep70_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c52_mi_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c52_mi_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c52_mi_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c52_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_mi_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c52_mi_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c52_sm_cheap5_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c52_sm_cheap5_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c52_sm_cheap5_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c52_sm_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_sm_cheap5_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c52_sm_cheap5_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c52_sm_cheap5_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c52_sm_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c52_sm_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c52_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c52_sm_cheap5_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c52_sm_cheap5_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_mi_cheap5_deep70_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_mi_cheap5_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_mi_cheap5_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_mi_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_mi_cheap5_deep70_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_mi_cheap5_deep70_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_mi_cheap5_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_mi_cheap5_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_mi_cheap5_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_mi_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_mi_cheap5_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_mi_cheap5_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_mi_cheap5_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_mi_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_mi_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_mi_cheap5_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_mi_cheap5_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_mi_deep70_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_mi_deep70_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_mi_deep70_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_mi_deep70_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_mi_deep70_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_mi_deep70_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_mi_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_mi_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_mi_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_mi_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_mi_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_mi_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_mi_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_mi_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_mi_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_mi_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_sm_cheap5_deep70_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_sm_cheap5_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_sm_cheap5_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_sm_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_sm_cheap5_deep70_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_sm_cheap5_deep70_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_sm_cheap5_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_sm_cheap5_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_sm_cheap5_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_sm_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_sm_cheap5_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_sm_cheap5_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_c78_sm_cheap5_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_c78_sm_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_c78_sm_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_c78_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_c78_sm_cheap5_tierA
-
-### Aliases (1) and status history
-- `s_q07w_c78_sm_cheap5_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_mi_cheap5_deep70
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_mi_cheap5_deep70] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_mi_cheap5_deep70] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_mi_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_mi_cheap5_deep70
-
-### Aliases (1) and status history
-- `s_q07w_g52_mi_cheap5_deep70` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_mi_cheap5_deep70_mom6
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_mi_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_mi_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_mi_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `s_q07w_g52_mi_cheap5_deep70_mom6` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_mi_cheap5_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_mi_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_mi_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_mi_cheap5_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g52_mi_cheap5_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_mi_deep70_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_mi_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_mi_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_mi_deep70_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g52_mi_deep70_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_mi_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_mi_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_mi_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_mi_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g52_mi_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_mi_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_mi_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_mi_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_mi_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g52_mi_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_sm_cheap5_deep70_mom6
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_sm_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_sm_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_sm_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_sm_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `s_q07w_g52_sm_cheap5_deep70_mom6` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_sm_cheap5_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_sm_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_sm_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_sm_cheap5_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g52_sm_cheap5_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g52_sm_deep70_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g52_sm_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g52_sm_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g52_sm_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g52_sm_deep70_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g52_sm_deep70_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_mi_cheap5_deep70_mom6
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_mi_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_mi_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_mi_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `s_q07w_g78_mi_cheap5_deep70_mom6` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_mi_cheap5_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_mi_cheap5_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_mi_cheap5_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_mi_cheap5_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_mi_cheap5_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_mi_deep70_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_mi_deep70_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_mi_deep70_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_mi_deep70_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_mi_deep70_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_mi_mom6_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_mi_mom6_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_mi_mom6_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_mi_mom6_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_mi_mom6_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_mi_tierA
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_mi_tierA] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_mi_tierA] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_mi_tierA
-
-### Aliases (1) and status history
-- `s_q07w_g78_mi_tierA` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_sm_cheap5_deep70
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_sm_cheap5_deep70] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_sm_cheap5_deep70] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_sm_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_sm_cheap5_deep70
-
-### Aliases (1) and status history
-- `s_q07w_g78_sm_cheap5_deep70` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_g78_sm_cheap5_deep70_mom6
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_g78_sm_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_g78_sm_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_g78_sm_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_g78_sm_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `s_q07w_g78_sm_cheap5_deep70_mom6` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_mi_cheap5
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_mi_cheap5] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_mi_cheap5] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_mi_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_mi_cheap5
-
-### Aliases (1) and status history
-- `s_q07w_s52_mi_cheap5` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_mi_cheap5_deep70
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_mi_cheap5_deep70] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_mi_cheap5_deep70] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_mi_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_mi_cheap5_deep70
-
-### Aliases (1) and status history
-- `s_q07w_s52_mi_cheap5_deep70` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_mi_cheap5_deep70_mom6
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_mi_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_mi_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_mi_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `s_q07w_s52_mi_cheap5_deep70_mom6` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s52_mi_cheap5_mom6
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s52_mi_cheap5_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s52_mi_cheap5_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s52_mi_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s52_mi_cheap5_mom6
-
-### Aliases (1) and status history
-- `s_q07w_s52_mi_cheap5_mom6` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_mi_cheap5_deep70_mom6
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_mi_cheap5_deep70_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_mi_cheap5_deep70_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_mi_cheap5_deep70_mom6
-
-### Aliases (1) and status history
-- `s_q07w_s78_mi_cheap5_deep70_mom6` — md2_lz_engine: live
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_q07w_s78_mi_cheap5_mom6
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_q07w_s78_mi_cheap5_mom6] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_q07w_s78_mi_cheap5_mom6] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))", "hold_from": "fill", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_q07w_s78_mi_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_q07w_s78_mi_cheap5_mom6
-
-### Aliases (1) and status history
-- `s_q07w_s78_mi_cheap5_mom6` — md2_lz_engine: live
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
@@ -20171,35 +20349,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-## s_wait_intraweek
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_wait_intraweek] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_wait_intraweek] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_wait_intraweek] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_wait_intraweek
-
-### Aliases (1) and status history
-- `s_wait_intraweek` — md2_lz_engine: dead
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
 ## s_wait_olx_books
 
 - Type: other | Family: unrecorded | Style evidence (catalog): not recorded
@@ -20255,152 +20404,6 @@ Merge evidence (tiers A, C): [A] ausar_pb18 ~ OPT_PEAD_VERTICAL_A; [C] ausar_r19
 
 ### Aliases (1) and status history
 - `s_wait_q14` — md2_lz_engine: dead
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## s_wait_r2_dcyan
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
-
-### Detailed algorithm
-- Signal / entry rules:
-  - [s_wait_r2_dcyan] lz_engine entry config: {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}
-- Exit rules:
-  - [s_wait_r2_dcyan] lz_engine exit config: {"rule": "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = n/a)", "hold_from": "plan", "hold_unit_kind": "1w", "stop_pct": null, "max_bars": null, "rest": null, "plan_overrides": []}
-- Sizing:
-  - [s_wait_r2_dcyan] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: s_wait_r2_dcyan
-
-### Aliases (1) and status history
-- `s_wait_r2_dcyan` — md2_lz_engine: dead
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## TRADER_RSI2
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: none recorded
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: TRADER_RSI2
-
-### Aliases (1) and status history
-- `TRADER_RSI2` — ausar_deployed: mode=original_independent_local_paper running=False
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## TRADER_SQUEEZE20
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: none recorded
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **squeeze**: recorded distinguishing tokens/parameters for this form: squeeze (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
-  - aliases: TRADER_SQUEEZE20
-
-### Aliases (1) and status history
-- `TRADER_SQUEEZE20` — ausar_deployed: mode=original_independent_local_paper running=False
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## WSTATE
-
-- Type: other | Family: unrecorded | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source; sizing not recorded in any consulted source
-- Algorithm sources consulted: none recorded
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: WSTATE
-
-### Aliases (1) and status history
-- `WSTATE` — ausar_deployed: mode=original_independent_local_paper running=False
-
-**UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
-
-## OPT_WHEEL_LIFECYCLE
-
-- Type: other | Family: wheel | Style evidence (catalog): not recorded
-- Trades: not recorded — not recorded in consulted sources
-- Timeframe: not recorded
-- Created by / source: not recorded
-- Description (from source records): No strategy description recorded in consulted sources.
-- Algorithm status: **PARTIAL** — gaps: entry/signal rule not recorded in any consulted source; exit rule not recorded in any consulted source
-- Algorithm sources consulted: femto land-wt config params
-
-### Detailed algorithm
-- Signal / entry rules:
-  - not recorded in any consulted source
-- Exit rules:
-  - not recorded in any consulted source
-- Sizing:
-  - not recorded in any consulted source
-- Filters / data:
-  - not recorded in any consulted source
-- Key parameters (recorded, per alias): {"OPT_WHEEL_LIFECYCLE": {"symbols": []}}
-
-### Variants (1)
-- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
-  - aliases: OPT_WHEEL_LIFECYCLE
-
-### Aliases (1) and status history
-- `OPT_WHEEL_LIFECYCLE` — ausar_deployed: mode=unfunded_monitor running=False; femto_land_wt: present in roster
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
