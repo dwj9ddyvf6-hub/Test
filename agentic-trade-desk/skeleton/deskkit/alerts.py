@@ -1,10 +1,11 @@
-"""Alert, don't halt.
+"""Alert delivery only; deterministic risk gates own order-path controls.
 
-A desk-wide kill switch that blocks all trading turned small data problems into missed
-entries and missed exits. Preferred pattern:
-  * a failing sleeve is isolated and reported; the others continue;
-  * missing data means "skip this decision and alert", never "guess";
-  * the only hard stops are per-trade risk exits and an operator's explicit order.
+This helper records and deduplicates alerts. It does not decide whether to allow
+orders. A complete desk should isolate sleeve-specific failures, block new exposure
+when required inputs or invariants fail, and define a tested desk-level emergency
+stop for critical shared failures. Position ownership and protective-exit behavior
+must remain explicit during a stop; never guess a price or blindly liquidate on stale
+data. See the safety-state policy in docs/07_reliability_ops.md.
 """
 from __future__ import annotations
 import time

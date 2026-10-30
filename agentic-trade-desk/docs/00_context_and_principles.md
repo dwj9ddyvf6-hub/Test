@@ -12,7 +12,7 @@ This is a build manual for an **agentic trade desk**: a software system, operate
 4. keeps itself running (supervision, failover, backups) without a human watching every minute, and
 5. reports honestly on what it did and what is broken.
 
-It was distilled from the operating history of several real desks that were built, rebuilt and repaired over a few weeks by a mix of human operators and AI agents (a "chief of staff" agent, a partner agent that owned a different desk, a code-writing agent that reviewed and ported strategies, and research agents). Those desks produced hundreds of recorded failures. The *failures* are the valuable part. A first-time builder reproduces them one by one unless they are written down; this guide writes them down.
+It distills generalized lessons from iterative desk-building work involving human operators and AI agents with research, coding, and review roles. The failure patterns are presented as anonymized composites; no account, desk, person, or private deployment is identified. A first-time builder can use them to design local safeguards, then verify those safeguards against the actual code and providers in their own environment.
 
 ## 0.2 Risk note (not optional)
 
@@ -48,9 +48,11 @@ Keep an **append-only, hash-chained event ledger**. Current positions are a pure
 Compare book vs broker per symbol, allowing for in-flight orders. Mismatch → **alert**, repair the *book* from broker truth (add-only import), never place an order to "make them match".
 → `06`
 
-### P5. Alert, don't halt
-No desk-wide kill switch that stops trading because a monitor is unhappy. A failing sleeve is isolated and reported, missing data means "skip this decision and say so", and the only automatic hard stops are **per-trade risk exits**. (A human can always say "stop"; that is an instruction, not a monitor.)
-*Why:* gates that "fail closed" repeatedly blocked every entry for a whole lane because of one stale file, a 15-minute delayed index feed, or an inverted rule — for days, invisibly.
+### P5. Fail safe by failure class; preserve the book
+Do not make every warning a desk-wide stop, and do not let an alert-only monitor stand in for a safety control. A sleeve-specific fault should normally block that sleeve's new entries while healthy sleeves continue. Missing, stale, malformed, or mismatched inputs block the affected decision; shared data-identity failures, account mismatches, ledger corruption, unexplained broker state, risk-limit breaches, and duplicate/unknown order outcomes can require a desk-wide **entry pause** or **emergency stop**. Define these states and their exact effects in deterministic code, outside the LLM.
+
+An emergency stop must specify what happens to queued and working entry orders, exits, broker-native protective orders, and existing positions. Keep ownership and exit obligations intact. Do not cancel protective orders or liquidate positions merely because a monitor failed; use trusted inputs and a preapproved contingency policy, and escalate when safe action cannot be established. Every stop and recovery is durable, visible, tested, and attributable. Never fabricate a price or silently resume after a critical integrity failure.
+*Why:* overbroad gates can suppress valid decisions for days, while alert-only monitoring can allow unsafe exposure after a shared failure. Controls must isolate local faults and stop risk growth when critical invariants fail.
 → `07_reliability_ops.md`
 
 ### P6. Assume the machine will be paused, wiped, rolled back, or killed

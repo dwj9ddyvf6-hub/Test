@@ -40,7 +40,7 @@ Do not ask "should I fix X?" for anything in this list. Tell the human what you 
 4. **Locked, atomic state writes** with add-only merge of foreign adoptions.
 5. **Reconcile every pass.** Mismatch → alert and repair the *book*; never trade to match.
 6. **Hard deadlines** on every network call and pass; **monotonic** time for timeouts; **tz database** for sessions.
-7. **Alert, don't halt.** Missing data ⇒ skip and alert, never guess. Only per-trade risk exits stop positions automatically.
+7. **Use layered fail-safe controls.** Unreliable inputs or state block new exposure; critical desk-wide integrity or risk failures can pause the order path. Preserve position ownership and protective-exit obligations. Define, test, and audit the global emergency-stop behavior; never invent prices or blindly liquidate on stale data.
 8. **Exits before entries**; every sleeve has a terminating exit that can fire with the host's inputs.
 9. **Caps count open + queued;** slots are consumed by orders only; queued entries expire.
 10. **Detach** long jobs; read back their exit codes; supervisor does TERM→KILL; loops are `setsid`-detached.

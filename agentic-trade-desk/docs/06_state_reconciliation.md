@@ -61,7 +61,7 @@ for each (account, symbol):
 * Count `closing` (exit order working) as still held; count `entry_pending` as expected-to-arrive. A position with a working exit used to show as "broker ≠ book".
 * Compare **per account**, summing across sleeves. Two sleeves may legitimately hold the same symbol; one sleeve holding the symbol must block only **itself** (not every other sleeve).
 * Account identity pin: suffix/id from config must match the key's account; abort the pass otherwise.
-* Known benign differences should be **explained once** in a file (e.g. "book has 74 lots, broker 71 positions because three symbols are held by two lots") and the check should understand it.
+* Known benign differences should be **explained once** in a file (for example, broker positions may aggregate multiple sleeve lots) and the check should understand the documented mapping.
 * A check that compares against an *old* book after a cutover is itself a bug: point audit tools at the current book and the pending-order tolerance.
 
 ## 6.7 Broker-driven import (add-only)

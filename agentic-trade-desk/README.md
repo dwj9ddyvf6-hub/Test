@@ -3,7 +3,7 @@
 > **Audience:** an AI agent (or a human) that has been pointed at this folder and asked to *build, extend, or operate* an autonomous **paper-trading** desk.
 > **Not financial advice. Paper / simulated trading only. Start on paper; stay on paper.**
 
-This guide distills the failures, repairs and design rules from several real desks built by humans and AI agents. It is generic: no particular strategy is endorsed, no account or infrastructure is described. The **pitfalls** are the main asset — each one happened.
+This guide distills generalized engineering lessons from iterative desk-building work by humans and AI agents. Scenarios are anonymized composites; any numerical values are examples to validate locally, not defaults or performance claims. No particular strategy is endorsed, and no account or infrastructure is described. The **pitfalls** are representative failure patterns, paired with guards to adapt and verify in your own system.
 
 ## Reading order
 
@@ -51,7 +51,7 @@ flowchart LR
 2. **Deterministic ids from data**, persisted *before* the order is sent; a timeout is *unknown*, not refused.
 3. **Append-only ledger**; the book is a fold of it; reconcile with the broker every pass; **never trade to fix a mismatch**.
 4. **Lock + atomic write + add-only merge** for state; **hard deadlines** and **monotonic** time everywhere.
-5. **Alert, don't halt.** Missing data → skip and alert. Only per-trade risk exits stop positions.
+5. **Fail safe by failure class.** Isolate a sleeve for sleeve-specific faults; pause new entries and apply the documented emergency-stop policy for shared data, identity, ledger, reconciliation, broker, or risk failures. Keep ownership and protective exits explicit.
 6. **Assume the machine is paused, wiped or killed**: supervisor with resume-awareness, off-box backups, restore drills, a cloud standby.
 7. **Evidence before green**; every bug → log row + a test that fails on the old code.
 

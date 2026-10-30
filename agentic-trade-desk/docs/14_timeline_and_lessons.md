@@ -1,44 +1,68 @@
-# 14 — How the desks evolved (anonymized timeline and lessons)
+# 14 — Generalized build sequence and lessons
 
-This is the story behind the rules. Dates are relative. It shows *order of discovery*, which is also a sensible order of defence.
+This chapter turns recurring engineering failures into a practical order of work. It is a composite, generalized account: it omits desk names, account details, private infrastructure, and performance claims. Use it to anticipate failure modes, not as evidence that any strategy or deployment is profitable.
 
-## Phase 1 — Many scripts, one idea per desk
-Several desks existed side by side: a research-heavy desk with a public page, a desk run by a partner agent with its own strategies, a code-agent's strategy-free "framework" desk, and a lab of studies. Each had its own scheduler, ledger and conventions. **Lessons:** identity drift (similar names meaning different things), duplicated work, and the need for a **catalog** with stable ids; a published "N sleeves" number that nobody could reproduce.
+## Phase 1 — Inventory before consolidation
 
-## Phase 2 — Consolidate onto one engine
-A single new engine replaced the older desk in one night. The old schedulers were shut down — and a supervisor restarted them two minutes later (P-17). Within days of the cutover, a first wave of bugs (≈ 25 in a few hours) appeared: bad quote fallbacks, a delayed index feed making a rule unknowable (P-34), rounding above caps (P-29), a liquidity rule copied from a template (P-33/`04` §4.6), an **inverted ported rule** (P-58). Rule: *"the first week after any cutover is an audit week"* — run readiness drills before every open.
+Early projects often have several strategy lists, schedulers, state files, and naming conventions. Similar names may refer to different rules, and a catalog count may not match the strategies actually configured or running.
 
-## Phase 3 — Execution hardening
-Order lifecycle bugs dominated: slot accounting (P-42, P-43), refusals and retries (P-03, P-04), partial fills (P-31), timeouts mistaken for refusals (P-02), final-state sets (P-30), read-back cadence, sub-penny prices (P-28). The **fake-broker lifecycle test** was born here and caught the rest. A "one decision per session" idea turned out to be too blunt.
+**Lesson:** assign stable identifiers; distinguish idea, specification, implementation, configuration, and runtime instance; record source and version provenance; generate inventory from the actual deployed configuration. Do not replace a working system until its state, schedules, and dependencies are understood.
 
-## Phase 4 — Robustness against the platform
-The host machine was paused when idle (P-12), rolled back (P-09), and its keys/venv/cache disappeared. Defences: resume-aware supervisor, persistent store, boot hook, boot sentinel, off-box backup after fills, restore drills, venv freeze. A **cloud failover** was designed (P-19, P-20, P-21) after "box suspended during a decision window" cost real entries.
+## Phase 2 — Make cutovers reversible
 
-## Phase 5 — Risk exits that survive the machine sleeping
-A standing per-trade disaster stop was added to lots that had none (P-37), broker-side GTC stops placed, the failover's stop interactions solved, and the "no kill switches" principle formalized: *per-trade stops yes, desk-wide halts no*.
+A new engine can appear correct while an old supervisor or scheduled job silently restarts the retired one. A cutover can also expose quote fallback, rounding, session-calendar, ported-rule, or configuration errors.
 
-## Phase 6 — Scale: hundreds of sleeves
-Partner and library strategies were vendored byte-for-byte and hosted in-process; a speed shim passed a 284/284 identity test; an 800-sleeve load test showed first pass seconds, steady pass sub-second, tens of MB; **exit audits** found sleeves whose exits could never fire (P-40); a restart-re-entry bug in a vendored library was fixed *around* it in the host (P-01). The inventory was reconciled: configs ≠ catalog rows ≠ running sleeves (P-49).
+**Lesson:** rehearse the cutover; name every process that can start the old and new versions; use a canary or shadow phase; preserve a rollback path; compare decisions and state; then run a heightened post-cutover audit. The operator should be able to identify exactly which version owns each job and position.
 
-## Phase 7 — Second-order operations
-Concurrent writers (failover vs main loop) exposed the lock/merge race (P-05); a stuck desk (P-08) led to hard deadlines everywhere; lane caps that had been cut to fit a smaller capacity were restored once evidence showed valid signals were being blocked, while the capacity gap was made *visible* instead of silently enforced (P-44, P-48); the weekly agent usage limit took scheduled wake-ups down (P-18); the supervisor gained wall-vs-monotonic detection.
+## Phase 3 — Treat order handling as a state machine
 
-## Phase 8 — Documentation as a deliverable
-Every fix got a log row, a guard, and a runbook line; mirrors were made non-destructive (P-10); an engineering doctrine (scope, minimum change, anti-spiral, proof before green) was adopted by every agent. This guide is the generalization.
+Order behavior is more complex than “submit, then wait”: acknowledgements can be delayed, submissions can time out after reaching the broker, fills can be partial, and cancel/replace requests can race with fills.
+
+**Lesson:** persist deterministic client order identity before submission, read back by that identity after uncertain outcomes, model every transition, and reconcile partial fills idempotently. Reserve capacity for open and queued orders. Test rejects, timeouts, partial fills, duplicate deliveries, and restarts with a simulated broker before enabling any broker-paper path.
+
+## Phase 4 — Design for interruption and rollback
+
+Laptops sleep, virtual machines pause, deployments roll back, disks fill, and network calls hang. A local state file may be newer or older than an off-box copy.
+
+**Lesson:** separate durable state from disposable runtime files; use atomic writes and concurrency control; apply hard deadlines; supervise processes with restart-aware logic; keep additive off-box backups; and practise restores into a clean location. A backup is not proven until its ledger, book, and open-order set have been checked after restoration.
+
+## Phase 5 — Separate warnings from safety controls
+
+Two opposite designs fail: a noisy monitor can disable an entire desk for a local issue, or an alert-only system can keep creating exposure after a shared integrity failure.
+
+**Lesson:** isolate local faults, block affected entries when data is unreliable, and use deterministic entry pauses or an emergency stop for critical shared failures. State exactly how stops affect queued entries, working orders, positions, exits, and broker-native protective orders. Preserve ownership and use a named contingency policy; never blindly liquidate on stale data or retry an unknown submission under a new id.
+
+## Phase 6 — Scale only with observability
+
+More sleeves increase operational interactions: shared symbols, overlapping signals, capacity limits, data dependencies, and correlated losses. Counts alone do not show which strategies are eligible, active, blocked, or retired.
+
+**Lesson:** maintain a generated inventory and per-sleeve status; audit entry and exit reachability; measure resource use and order capacity under realistic workload; and add sleeves only as fast as their specifications, risk limits, and evidence can be maintained.
+
+## Phase 7 — Coordinate concurrent writers and agents
+
+A primary process, failover worker, scheduler, or more than one coding agent can overwrite state or act on stale assumptions. Duplicate work can create incompatible implementations.
+
+**Lesson:** give every writer an explicit ownership boundary; use locks, transactions, compare-and-swap or another tested concurrency scheme; make updates idempotent and append-only where practical; record decisions and file ownership; and require a single deterministic order path. A standby should prove the primary is inactive and reconcile state before acting.
+
+## Phase 8 — Make documentation and evidence operational
+
+An implementation can be locally correct while its deployment, provider entitlement, current data, or user-facing claim remains unverified. A passing unit test does not prove live connectivity or safe recovery.
+
+**Lesson:** keep a runbook, change record, issue log, open blockers, and evidence receipts. Label each result by what it proves: synthetic test, historical replay, shadow output, local simulation, broker paper, or production observation. Read back the final artifact or remote commit before reporting completion.
 
 ## The ten sentences to remember
-1. Derive ids from data, persist them before sending, and a restart is harmless.
-2. A timeout is unknown, not refused.
-3. Lock, replace atomically, merge foreign additions add-only.
-4. Every network call, pass and job has a deadline; use monotonic time.
-5. Alert, don't halt; unknown means wait, not guess.
-6. One order path; tests can't reach it.
-7. Exits first, and every exit must be able to fire.
-8. The book is a fold of an append-only ledger and equals the broker every pass.
-9. The machine will vanish; back up off-box and practise restoring.
-10. Green is an evidence state.
 
+1. Give each sleeve a stable identity and an executable specification.
+2. Preserve provider time, receipt time, and usability time separately.
+3. Persist deterministic order identity before sending; a timeout is unknown until read back.
+4. Keep the ledger append-only and make replay reproduce the book.
+5. Use a single, deterministic order path with explicit authorization gates.
+6. Isolate local faults; pause new exposure on shared integrity or risk failures.
+7. A tested emergency stop needs explicit behavior for orders, positions, and recovery.
+8. Preserve ownership and protective exits; never guess prices to force a result.
+9. Back up off-box and prove restoration.
+10. A green status is a claim about evidence at a named boundary, not a feeling.
 
-## Addendum — what the inter-agent archive added
+## Additional recurring patterns
 
-Beyond the single-desk story above, reading months of peer notes between several independent desks surfaced recurring families: **truth drift** (a cache, ledger or published artifact disagreeing with the broker or its own parts — P-88, P-89, P-119), **platform fragility** (resets, pauses, timers, disks, starved hosts — P-97–P-110), **ownership collisions** (operator vs sleeve, adopted positions, disabled sleeves — P-79, P-91, P-127), **data-time confusion** (provisional vs completed bars, settlement vs exchange calendars — P-86, P-116), and **research self-deception** (survivors, clipped tails, weak nulls — P-111–P-115). Each now has a pitfall id and a guard.
+Broader reviews surface recurring failure families: truth drift between data, ledgers, brokers, and published status; platform fragility from pauses, resets, timers, and storage; ownership collisions between operators, sleeves, and legacy positions; confusion between provisional and completed data or between exchange and settlement calendars; and research bias from survivorship, clipping, weak null models, or over-selection. The pitfalls catalog gives each a stable reference and a guard to adapt locally.

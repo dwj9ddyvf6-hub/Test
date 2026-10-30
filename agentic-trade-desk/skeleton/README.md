@@ -19,9 +19,9 @@ cd skeleton && python3 -m unittest discover -s tests -v      # 23 tests, all sho
 | `deskkit/caps.py` | lane slots (queued entries hold slots), budget vs overnight capacity | 04 |
 | `deskkit/heartbeat.py` | progress-gated heartbeat, standby arbitration | 07 |
 | `deskkit/reconcile.py` | book vs broker with pending tolerance, orphan import | 06 |
-| `deskkit/alerts.py` | alert-don't-halt, deduped | 07 |
+| `deskkit/alerts.py` | deduped alert delivery; safety gates are separate | 07 |
 | `deskkit/gates.py` | allow / wait / skip; unknown ⇒ wait | 02, 05 |
-| `deskkit/quotes.py` | reference-price fallback chain with tags | 05 |
+| `deskkit/quotes.py` | freshness-checked reference selection; no stale-price fallback | 05 |
 | `deskkit/datahub.py` | Missing ≠ evidence; versioned bounded cache | 02, 08 |
 | `deskkit/scheduler.py` | aligned ticks, one catch-up, guaranteed window pass | 07 |
 | `deskkit/reservation.py` | share reservations (operator vs sleeve), stop pinned to the fill, settlement-calendar maturity (fail closed), latest-response-wins | 05, 10 (P-79, P-80, P-86, P-93) |

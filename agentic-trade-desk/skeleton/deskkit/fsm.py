@@ -1,7 +1,7 @@
 """Per-(sleeve, symbol) position state machine: flat -> pending -> open -> exiting -> flat.
 
 Illegal transitions raise. That is deliberate: a refused exit re-sent under the same id once
-drove an illegal exiting->flat transition in a real desk; the guard made the bug loud.
+drove an illegal exiting->flat transition; the guard makes this failure mode explicit.
 """
 ALLOWED = {
     "flat": {"pending"},
