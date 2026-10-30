@@ -1,5 +1,7 @@
 # TRULLÁS VARIANT FAMILY — SPEC v1.0 (FROZEN)
 
+Provenance: Trullas method research (GrokBot track), built from the REA teardown record. Code: sleeves/trullas_divergence.py. Doc: Author spec on file in this repo.
+
 **Commissioned by:** the desk owner, 2026-10-29 ("build multiple variants of the Trullas divergence algorithm, varying the manual and discretionary parts to sample the space his eye moves through").
 **Date frozen:** 2026-10-29. **Status: FROZEN when written. No joint value changes after any variant sees a bar. Any change after freeze is a new spec version, a new roster id, and a new forward record; it is never a retune of a live variant.**
 **Primary spec:** `TRULLAS-SPEC-2026-10-25.md` v1.0 FROZEN (same directory). **Primary sleeve:** roster id `trullas_divergence`, live paper since 2026-10-26, QQQ 1-minute SIP bars.
