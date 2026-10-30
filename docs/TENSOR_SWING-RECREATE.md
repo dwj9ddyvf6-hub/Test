@@ -1,0 +1,45 @@
+# tensor_swing: Recreation package
+
+Provenance: The old Alpaca swing desk, via Femto-lean (Source row in strategies/femto/femto-tensor-swing.md in this repo).
+
+## What this sleeve is
+This is the desk's Tensor swing staging sleeve: it never imports the Tensor engine (which runs only inside core Data's vendored canonical door, v698 pin) and instead stages the engine's ranked swing decisions supplied as data, emitting entries priced at each decision's own entry, stop and target, and managing exits from the producer's exit view (bearish trigger, 20-closed-bar time stop, then the persisted target). Sources: desk sleeves/tensor_swing.py (MIN_CONF=7, EXIT_TIME_STOP_BARS=20; CONFIG cadence_s=300) and desk3/enhance26.py (tensor_swing stale_signal_gate). Note the existing strategy doc's confidence-8, bracket and correlation-sizing numbers describe the master-desk flagship runner, not this v3 staging sleeve; the v3 code below governs this recreation.
+
+## Full algorithm
+Evaluation order in desk sleeves/tensor_swing.py TensorSwing.signal(bars, slice_state, context); the bars argument is accepted for contract shape only: pricing comes from the staged decision, never from bars.
+1. Staging (stage_candidates): iterate extra[tensor_signals] IN THE ENGINE'S SUPPLIED ORDER (ranked by the desk runner by phenotype, confidence and votes; the sleeve does not re-rank). Drop a signal if it is not a dict, has no symbol, its symbol is already held, or its symbol was already staged this pass (one candidate per symbol per pass); drop it if its confidence cannot be parsed as an int or is below MIN_CONF=7; drop it if it is flagged extended (extension/euphoria invalidates). Copy the Gold Diamond stamp for the symbol (extra[gold_diamond]) onto the row as annotation only: it never blocks, vetoes, delays or re-ranks. Stop staging when the optional extra[max_new] cap is reached. Bearish stock regime is never a veto.
+2. Entry construction per staged row, in order: entry, stop and target are read from the row itself. If any of the three is missing, unparseable or non-finite, the row emits NO intent. If entry or stop is at or below 0, or stop >= entry (per-share risk not positive), the row is skipped.
+3. ENH reward/risk floor (default ON; OFF via extra[tensor_swing_improve][reward_risk_floor]=False restores staging every priced row): refuse a row whose (target - entry) < (entry - stop).
+4. Entry intent: an enter Intent with price_hint=entry, stop=stop, target=target, signal_date = the row's bar_date, ExitRules (stop, target, time_bars 20), quantity left to core Risk / dispatch (the sleeve sets no qty_hint), and a reason naming tensor_swing staged with phenotype, confidence, regime, entry, stop and target, plus swing_bar_date and the Gold Diamond stamp when present.
+5. Exits (after staging, over the core position records in extra[sleeve_state], fed by extra[tensor_exit] per symbol): a held symbol with no tensor_exit row is not evaluated this pass (fail closed). For each held long position (qty > 0), evaluate_exit in this order: (a) if the view's bearish_exit is true, exit with the view's bearish_reason (or the default bearish exit trigger text); (b) else the time stop: closed bars strictly after the entry bar stamp (pos entry_bar_t against the view's bar_ts) greater than EXIT_TIME_STOP_BARS=20 means due, and an entry stamp older than the whole supplied window is also due; a missing entry stamp, an empty window or a stamp after the newest bar proves nothing and is not due; (c) else if the position's persisted target_px exists and the view's last_close is at or above it, exit with the target-reached reason. Each exit is the full held quantity at round(last_close, 2) when a last close is supplied, reason naming tensor_swing exit and the rule. The bracket stop leg is not an evaluated rule: it is the resting GTC broker stop core places from the intent's stop at the fill.
+6. Adapter-layer gate (desk3/enhance26.py, ENH-B26-20261024, default ON; switch extra[tensor_swing_improve2][stale_signal_gate]): an entry whose swing_bar_date is more than STALE_SIGNAL_DAYS=7 days before the session is refused; an intent with no bar date passes (no evidence). Exits are never filtered.
+
+## Files in this repo
+- Sleeve module: sleeves/tensor_swing.py (strategy logic and CONFIG).
+- v3 adapter: adapters3/tensor_swing.py (SLEEVE_ID=tensor_swing; evaluate(view, ctx) rebuilds the v2 SleeveContext via adapters3/_snapshot_ctx.SnapshotSleeveContext, delegates to adapters/tensor_swing.py, then applies desk3/enhance26.filter_entries; the _snapshot_ctx glue itself is not in this repo at its canonical path, as the audit record notes).
+- v2 adapter mirror: integration/tensor_swing_adapter.py in this repo (the adapters/tensor_swing.py evaluate it mirrors).
+- Shared engine file: engines/desk3/enhance26.py (desk desk3/enhance26.py: ENH-B26-20261024 adapter-layer gates, default ON per sleeve).
+- Existing strategy doc: strategies/femto/femto-tensor-swing.md.
+- Config: engines/config/sleeves.json (row id=tensor_swing), also at config/sleeves.json.
+
+## Configuration
+Module adapters3.tensor_swing; cadence_s 300; session rth; slice capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; inputs [bars, tensor]; parked false. Universe: symbols carried by Tensor swing signals in the snapshot (the existing doc names the 41-name old-desk basket); timeframe 1H (the engine's canonical hourly context). Source: muse-desk-v3/config/sleeves.json row id=tensor_swing.
+
+## Data inputs
+Inputs are bars and tensor. Via context.extra the sleeve consumes: tensor_signals [{symbol, decision, confidence, phenotype, regime, extended, bar_date, entry, stop, target}] (engine output via core Data ONLY, in runner rank order), gold_diamond {SYM: {stamp}} (annotation only), sleeve_state {SYM: {position}}, optional max_new, and tensor_exit {SYM: {bearish_exit, bearish_reason, last_close, bar_ts}} (the producer's exit view over the same canonical series). A held symbol with no tensor_exit row is skipped, never guessed.
+
+## Install and run
+1. Place the sleeve module and adapter at the paths listed under Files in this repo, and place every listed shared engine file at its listed repo path (an engines/ path maps back to the desk path after engines/, for example engines/desk3/enhance26.py is desk3/enhance26.py on a fresh desk; a sleeves/muse/core/ path is the same path on a fresh desk).
+2. Register the config row for `tensor_swing` from engines/config/sleeves.json (repo copy of config/sleeves.json, also at config/sleeves.json) in the fresh desk's config/sleeves.json, exactly as given in the Configuration section, with no parameter overrides: the roster row carries params {} for this sleeve.
+3. Wire the producers named in Data inputs so the inputs listed in the Configuration section arrive in the cycle snapshot (view) in the shapes the Full algorithm section describes.
+4. Entry point: the adapter module adapters3/tensor_swing.py, whose evaluate(view, ctx) delegates to adapters/tensor_swing.py, which runs sleeves/tensor_swing.py signal(bars, slice_state, context), after which desk3/enhance26.filter_entries is applied.
+5. First evaluation: run one cycle on a fixture snapshot that satisfies the entry conditions in the Full algorithm section and confirm the expected intent (symbol, side, quantity rule and reason string naming this sleeve) is emitted before enabling live paper routing. If the Configuration section says parked is true, keep entries disabled exactly as in that row; exits are still managed where the algorithm says so.
+
+## Verification
+- Fixture with two Tensor signals in engine order, the first at confidence 7, not extended, with entry 100, stop 95 and target 110, and no held positions: exactly one staged entry for the first symbol (order preserved, not re-ranked), price_hint 100, stop 95, target 110, ExitRules (stop, target, time_bars 20) and no qty_hint from the sleeve.
+- Fixture with a signal at confidence 6, or flagged extended, or with any of entry/stop/target missing, or with stop >= entry, or (default floor ON) target-entry < entry-stop: no entry for that signal.
+- Fixture with a held position whose tensor_exit row has bearish_exit true: a full exit with that bearish reason, taking precedence over the time stop and target checks on the same pass; a held symbol with no tensor_exit row receives no exit.
+- Fixture with a held position whose entry bar stamp is more than 20 closed bars before the newest bar stamp in its tensor_exit view: a time-stop exit.
+- No entry intent is emitted when a required input is missing or a filter, gate or age check has no evidence: the code fails closed.
+- Quantity, price hint, stop price and reason on every emitted intent match the sizing and price rules in the Full algorithm section for the fixture inputs.
+- The config row used by the recreation matches engines/config/sleeves.json for this sleeve id (module, cadence, session, slice, parked state and inputs).
