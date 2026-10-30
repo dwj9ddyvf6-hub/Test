@@ -6,6 +6,8 @@ For LLMs and contributors building research or trading systems, start with the [
 
 Monitors and research recorders are not listed.
 
+> **New: [How to build an agentic trade desk](agentic-trade-desk/README.md)** — a full guide, written for LLM agents, covering architecture, setup, order safety, reconciliation, reliability, research validation, multi-agent coordination, 77 catalogued pitfalls, checklists and generic reference code. Paper trading only; not financial advice.
+
 ## Layout
 
 | Folder | What |
