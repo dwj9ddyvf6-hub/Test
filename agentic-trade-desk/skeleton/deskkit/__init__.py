@@ -5,4 +5,4 @@ Every module here exists because a real desk failed without the behaviour it imp
 See docs/10_pitfalls_catalog.md for the failure stories.
 """
 __all__ = ["ids", "ledger", "fsm", "store", "netguard", "broker", "caps", "clock",
-           "heartbeat", "reconcile", "alerts", "desk"]
+           "heartbeat", "reconcile", "alerts", "desk", "reservation"]

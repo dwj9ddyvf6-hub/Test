@@ -48,3 +48,7 @@ A **declined or blocked action is final** — do not retry it through another to
 * `tools/audit_perms.sh`: key files mode ≤ 0600 and outside repos.
 * `tools/audit_remote.sh`: list remotes, refs, ensure private visibility.
 * `tools/audit_orders.py`: all broker orders in the last N days carry an allowed prefix.
+
+
+## Addendum
+A secret pasted into a chat is compromised: rotate it (P-108). Licensing, scraping and tenant-isolation boundaries are summarised in doc 17 (P-130).

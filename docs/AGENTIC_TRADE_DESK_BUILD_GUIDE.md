@@ -572,3 +572,7 @@ Make the smallest change that fulfills the request. Before claiming completion, 
 - **Usable time:** the earliest strategy decision time permitted for that input.
 - **Reconciliation:** comparison of internal orders, positions, cash, and fills against the broker or authoritative simulator.
 - **Paper:** either a local simulation or broker paper environment; always name which one.
+
+---
+
+See also: the operational companion kit in [`agentic-trade-desk/`](../agentic-trade-desk/README.md) — invariants, a tested stdlib Python skeleton, a 130-entry pitfalls catalog and runbook templates. [Reconciliation notes](../agentic-trade-desk/docs/17_companion_guide_reconciliation.md) explain how the two fit together.

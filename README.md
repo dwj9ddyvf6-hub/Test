@@ -4,6 +4,8 @@ Every trading strategy across our desks, one card each: what it trades, its rule
 
 Monitors and research recorders are not listed.
 
+> **New: [How to build an agentic trade desk](agentic-trade-desk/README.md)** — a full guide, written for LLM agents, covering architecture, setup, order safety, reconciliation, reliability, research validation, multi-agent coordination, 130 catalogued pitfalls, checklists and generic reference code. Paper trading only; not financial advice. See also the shorter [build guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md).
+
 ## Layout
 
 | Folder | What |

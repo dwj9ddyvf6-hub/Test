@@ -15,6 +15,8 @@ from deskkit.netguard import PassDeadline
 from deskkit.gates import market_condition_gate, window_gate, price_cap_gate, run_gates, ALLOW
 from deskkit.quotes import reference_price
 from deskkit.datahub import DataHub, Missing
+from deskkit.reservation import ShareReservations, StandDown, pinned_stop, settle_date, LatestWins
+from datetime import date
 from deskkit.scheduler import next_boundary, due_slot, guaranteed_pass_needed, order_tick
 
 
@@ -183,6 +185,34 @@ class T(unittest.TestCase):
         self.assertTrue(guaranteed_pass_needed(True, 0, 600))
         self.assertFalse(guaranteed_pass_needed(False, 0, 600))
         self.assertEqual(order_tick(["publish", "pass", "backup"])[0], "pass")
+
+    def test_reservation_standdown_unknown_and_release(self):
+        r = ShareReservations()
+        r.set_position("A", "X", 100)
+        r.reserve("op1", "A", "X", 100, "operator")
+        with self.assertRaises(StandDown):
+            r.reserve("s1", "A", "X", 10, "sleeve")           # operator holds every share
+        r.mark("op1", "UNKNOWN")                                # timeout: reservation persists
+        self.assertEqual(r.available("A", "X"), 0)
+        r.mark("op1", "REFUSED")                                # reconciled: released
+        r.reserve("s1", "A", "X", 10, "sleeve")
+        self.assertEqual(r.available("A", "X"), 90)
+
+    def test_pinned_stop_uses_actual_fill(self):
+        self.assertEqual(pinned_stop(110.0, 0.10), 99.0)
+
+    def test_settlement_calendar_fails_closed_and_skips_holiday(self):
+        cal = {2026: {date(2026, 10, 12)}}
+        # Fri 2026-10-09 sale, T+1 -> Mon 12th is a settlement holiday -> Tue 13th
+        self.assertEqual(settle_date(date(2026, 10, 9), cal, 1), date(2026, 10, 13))
+        with self.assertRaises(KeyError):
+            settle_date(date(2026, 12, 31), cal, 1)             # rolls into 2027, no data
+
+    def test_latest_wins_ignores_stale(self):
+        lw = LatestWins()
+        self.assertTrue(lw.offer(2, "good"))
+        self.assertFalse(lw.offer(1, "error"))
+        self.assertEqual(lw.value, "good")
 
 
 if __name__ == "__main__":

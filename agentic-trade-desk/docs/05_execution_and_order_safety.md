@@ -143,3 +143,13 @@ Test the **real path** with the fake broker at least once per change: run_pass w
 * Never re-use an id after a timeout.
 * Never cancel *all* stops for a symbol to sell one lot without re-placing the rest.
 * Never loosen a safety check to make a test or a pass go faster (the speed-up must keep identity, freshness, completeness and safety).
+
+
+## Addendum — ownership, fills and cash (from the archive review)
+
+- **Mint order ids from the signal *and the fill state*** — after a partial fill and a resize, a signal-only id collides (P-78).
+- **One reservation ledger per account+symbol.** Every sell from any sleeve or operator reserves shares first; open, partial and cancel-pending sells count; an UNKNOWN submit keeps its reservation until reconciled; a sell that cannot reserve **stands down with a named reason** instead of provoking a broker rejection (P-79; `skeleton/deskkit/reservation.py`). One fenced writer owns dispatch. If you add an operator lane, give it its own virtual book so a human order and a strategy order meet as an internal cross or a named stand-down.
+- **Pin the stop to the actual first fill**; cancel the unfilled remainder before later fill boundaries (P-80).
+- **Held-position exits use their own causal data**; only entries need the complete data census (P-81). A guard failure that is retryable is deferred, not denied (P-82). Protect decision windows from background acquisition (P-83).
+- **Dependent legs wait for each other** (sale before replacement buy) (P-84). Don't create sub-minimum remainders; keep residuals visible (P-85).
+- **Cash maturity follows the settlement calendar, not the exchange calendar**; supply the calendar by date and cycle; fail closed on missing years (P-86; `settle_date`). Apply each cost exactly once (P-87).

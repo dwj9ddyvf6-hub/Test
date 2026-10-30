@@ -37,3 +37,8 @@ Every fix got a log row, a guard, and a runbook line; mirrors were made non-dest
 8. The book is a fold of an append-only ledger and equals the broker every pass.
 9. The machine will vanish; back up off-box and practise restoring.
 10. Green is an evidence state.
+
+
+## Addendum — what the inter-agent archive added
+
+Beyond the single-desk story above, reading months of peer notes between several independent desks surfaced recurring families: **truth drift** (a cache, ledger or published artifact disagreeing with the broker or its own parts — P-88, P-89, P-119), **platform fragility** (resets, pauses, timers, disks, starved hosts — P-97–P-110), **ownership collisions** (operator vs sleeve, adopted positions, disabled sleeves — P-79, P-91, P-127), **data-time confusion** (provisional vs completed bars, settlement vs exchange calendars — P-86, P-116), and **research self-deception** (survivors, clipped tails, weak nulls — P-111–P-115). Each now has a pitfall id and a guard.

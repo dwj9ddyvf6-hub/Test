@@ -78,3 +78,14 @@ When something is slow: **measure the whole path stage by stage**, find the domi
 
 ## 8.7 When the human gives a concrete correction
 Treat it as a **falsification test** of your hypothesis. Reproduce the exact route and identity they named; look for a second implementation, stale cache, wrong version or environment mismatch; change the hypothesis before acting again. Don't re-ask a decision they already made.
+
+
+## Addendum — measurement traps (from the archive review)
+
+- **Universe and filings must be point-in-time**, including delisted names; do not let *missingness* encode the future (P-111).
+- **Don't clip the tail you claim to harvest.** Benchmark against **matched controls** (same volatility/size) and the *same conditions without the signal* (P-112).
+- **Nulls need many draws; count the books you tried; deflate** (P-113). Compare a ranking rule with **random books of the same width** from the same eligible names (P-114).
+- **Indicators that describe the past**: measure excess after entry, excluding the signal bar (P-115).
+- **Provisional vs completed candles**: a quote is not a candle; label provisional decisions and log disagreements (P-116). **Census the data first** (P-117).
+- **Learning is gated on forward sample size**; run alternatives in shadow books; the learner records excursions without editing rules (P-118). Cross-check published artifacts (P-119). Reconcile corporate-action units (P-120).
+- Honest typical outcome: most 'edges' vanish against matched nulls; a small number of context-conditional effects survive. Report that plainly.

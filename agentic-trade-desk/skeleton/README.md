@@ -4,7 +4,7 @@ Dependency-free Python 3.10+ (stdlib only). **Paper / simulated use only.** This
 it is the smallest set of modules that encode the hard-won invariants in `../docs/`.
 
 ```
-cd skeleton && python3 -m unittest discover -s tests -v      # 19 tests, all should pass
+cd skeleton && python3 -m unittest discover -s tests -v      # 23 tests, all should pass
 ```
 
 | module | invariant it encodes | doc |
@@ -24,6 +24,7 @@ cd skeleton && python3 -m unittest discover -s tests -v      # 19 tests, all sho
 | `deskkit/quotes.py` | reference-price fallback chain with tags | 05 |
 | `deskkit/datahub.py` | Missing ≠ evidence; versioned bounded cache | 02, 08 |
 | `deskkit/scheduler.py` | aligned ticks, one catch-up, guaranteed window pass | 07 |
+| `deskkit/reservation.py` | share reservations (operator vs sleeve), stop pinned to the fill, settlement-calendar maturity (fail closed), latest-response-wins | 05, 10 (P-79, P-80, P-86, P-93) |
 | `deskkit/desk.py` | the pass: recover → exits → entries → reconcile, sleeve isolation | 02, 05 |
 | `tools/secret_scan.py`, `tools/regress.py` | pre-push scan; harness where SKIP ≠ PASS | 08, 12 |
 | `ops/ensure_desk.sh` | single-instance supervisor, TERM→KILL, setsid, VM-pause grace | 07 |

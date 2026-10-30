@@ -46,6 +46,10 @@ Do not ask "should I fix X?" for anything in this list. Tell the human what you 
 10. **Detach** long jobs; read back their exit codes; supervisor does TERM→KILL; loops are `setsid`-detached.
 11. **Back up off-box, additively, with a secret scan; practise restores.**
 12. **Vendored code stays byte-identical;** adapt around it.
+13. **Reserve before you sell.** One account+symbol reservation shared by every sleeve and operator; stand down with a named reason rather than get rejected (P-79).
+14. **Truth at the writer and the broker.** Risk numbers come from broker truth; fills are recorded through one door; protective orders are verified at the broker (P-88–P-90).
+15. **Entry permission ≠ position ownership.** Disabling a sleeve never deletes its exit duty (P-127). Missing data blocks *entries*, never ownership.
+16. **Learn only from enough forward evidence;** alternatives run as shadow books (P-118).
 
 ## 5. How to work
 - **SCOPE every task**: Surface (what may change), Constraints (what must not), Outcome (observable), Proof (what evidence), Edges (dependencies/failure points). If you can't write these, you don't understand the task yet.

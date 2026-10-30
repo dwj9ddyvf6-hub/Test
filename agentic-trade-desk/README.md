@@ -20,13 +20,16 @@ This guide distills the failures, repairs and design rules from several real des
 | 07 | [Reliability and operations](docs/07_reliability_ops.md) | before running unattended |
 | 08 | [Research and validation](docs/08_research_and_validation.md) | before trusting any result |
 | 09 | [Multi-agent coordination](docs/09_multi_agent_coordination.md) | when more than one agent/human works on it |
-| 10 | [Pitfalls catalog (77)](docs/10_pitfalls_catalog.md) | when designing a component, and when anything breaks |
+| 10 | [Pitfalls catalog (130)](docs/10_pitfalls_catalog.md) | when designing a component, and when anything breaks |
 | 11 | [Checklists](docs/11_checklists.md) | daily ops, incidents, changes |
 | 12 | [Security](docs/12_security.md) | before the first key and the first push |
 | 13 | [Worked example](docs/13_worked_example.md) | to see the invariants run |
 | 14 | [Timeline and lessons](docs/14_timeline_and_lessons.md) | for the story behind the rules |
 | 15 | [Prompts and routines](docs/15_agent_prompts_and_routines.md) | when scheduling agent wake-ups and roles |
 | 16 | [FAQ and decision guide](docs/16_faq.md) | quick answers |
+| 17 | [Reconciliation with the companion guide](docs/17_companion_guide_reconciliation.md) | to merge this kit with [`docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md`](../docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md) |
+
+> **Companion guide:** a shorter architectural guide lives at [`../docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md`](../docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md). Read both; [doc 17](docs/17_companion_guide_reconciliation.md) maps them. Two differences to decide consciously: this kit uses *no automatic monitor-triggered halts* (a human-invoked halt that only blocks new entries is fine) and treats live trading as out of scope.
 
 Code: [`skeleton/`](skeleton/) (generic Python, stdlib only, tests included) · Templates: [`templates/`](templates/).
 
