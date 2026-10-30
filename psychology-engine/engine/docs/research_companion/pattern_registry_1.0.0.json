@@ -1,0 +1,657 @@
+{
+  "schema_version": "1.0.0",
+  "research_date": "2026-10-30",
+  "status": "DESIGN_ONLY_NOT_VALIDATED",
+  "scope": "Observed-population belief and narrative forecasting; incremental price-aware research; advisory-only Tensor context.",
+  "universe": "Must be agreed and frozen before experiment; no implied live ticker recommendation.",
+  "global_clock_policy": "Use available_at=max(required source receipts, completed feature computation). Include only closed market bars; prospective information ledger. Windows and sessions follow verified exchange calendar.",
+  "threshold_status": "Candidate preregistration defaults, not fitted results or recommended live thresholds. Freeze or revise on development data before untouched evaluation; log every variant.",
+  "feature_definitions": {
+    "S_g_w": "Weighted mean(p_bull-p_bear) for target-entity attributable claims first available in nonoverlapping window w, by observed population g; one capped weight per author and one independent-information weight per origin; neutral/mixed masses retained. Empty window -> null.",
+    "U_g_w": "Weighted proportion of attributable claims labeled uncertain/conditional plus explicit elicited distribution width where comparable, stored as separate fields; never average unlike units. Text uncertainty fraction is the default for cards below.",
+    "D_between": "Jensen-Shannon divergence of bullish/bearish/neutral/mixed distributions across named observed populations, using fixed equal-population weights and fixed taxonomy; require >=2 covered populations.",
+    "D_within": "Weighted variance of author-level expected stance p_bull-p_bear within each named population, reporting each population separately.",
+    "A_w": "log(1+unique information-origin count in w), seasonally standardized by comparable time-of-day/day-of-week windows fit in training. Author count and share of universe discussion are companion checks, not silently substituted.",
+    "A_velocity": "A_t-A_(t-w) for adjacent nonoverlapping comparable windows.",
+    "A_acceleration": "A_t-2*A_(t-w)+A_(t-2w) for adjacent nonoverlapping comparable windows.",
+    "novelty": "1-max cosine similarity to earlier available same-entity claim embeddings in trailing 20 completed sessions; pinned embedding version. factual_new requires a newly evidenced proposition, not semantic novelty alone.",
+    "echo_share": "Number of sampled items whose entire supported proposition set is contained in an earlier available information-origin cluster divided by all sampled items; exposure duplicates retained here, never treated as corroboration.",
+    "adoption_rate": "Unique new authors expressing the fixed claim during w divided by all eligible active covered authors during w; define author and sampling frame point-in-time; missing denominator -> null.",
+    "diffusion_breadth": "Number of named observed populations with >=2 independently authored attributable mentions of a fixed claim divided by number of covered named populations; lineage-copied texts do not qualify as independent factual corroboration.",
+    "H_narrative": "-sum(q_k*log(q_k))/log(K), K fixed predeclared narrative classes, q weighted by unique authors; K<2 or no valid text -> null; new-theme bucket retained.",
+    "concentration": "sum(q_k^2) over same fixed narrative shares used by H_narrative.",
+    "price_response": "Residual cumulative log return from the first executable observation after available_at through t, controlling in training for market/sector returns, realized volatility, spread, event class and surprise magnitude. Requires all return bars complete as of t.",
+    "expected_surprise": "Pre-event model distribution of comparable actual-minus-consensus, based only on timestamped consensus and evidence available before release. Standardize by trailing event-specific forecast-error SD fit in training; zero/unknown SD -> null.",
+    "realized_surprise": "First-release comparable actual-minus-pre-event-consensus divided by trailing event-specific forecast-error SD fit in training; available only after official receipt; retain revisions separately.",
+    "novel_claim_count": "Number of unique origin-supported propositions passing factual_new and human-calibrated entailment policy in w.",
+    "same_author_revision": "Mean current-minus-prior expected stance among a stable matched panel of authors observed in both windows, with fixed author cap; entrants and leavers reported separately.",
+    "borrow_constraint": "Vector of point-in-time published short-interest/float, report age, days-to-cover, verified borrow fee and availability; no collapse to signed score. Missing borrow components remain missing.",
+    "return_tail": "Forward residual return crossing +/-2 times ex-ante horizon volatility forecast, where volatility model is fitted using past information only.",
+    "price_aware_Z": "Current and lagged completed-bar returns, market/sector exposure, realized volatility, volume, spread/liquidity if observed, calendar and known events, event severity/surprise if already released, source coverage and latency. Unknown variables do not default to zero.",
+    "q_p": "Within-entity/source/time-of-day empirical p-quantile estimated from the training window only; thresholds frozen for evaluation. Cross-sectional fallback only if preregistered and history sparse; otherwise abstain."
+  },
+  "common_baselines": [
+    "Belief persistence and seasonal attention",
+    "Matched-capacity price-aware model",
+    "Price plus numeric event facts",
+    "Frozen Tensor policy on identical eligible opportunities"
+  ],
+  "inference": {
+    "dependence_unit": "Event/origin family and date blocks, with correlated assets clustered",
+    "labels": "Independently sampled and human-audited future expressed beliefs; forward executable residual returns separately",
+    "splits": "Chronological nested walk-forward; purge overlapping features/labels/events; embargo based on actual dependency horizon",
+    "multiple_testing": "Record all feature/threshold/source/label/model variants, adjust inferential family prospectively",
+    "unknown_results": true
+  },
+  "patterns": [
+    {
+      "id": "P01",
+      "name": "Verified-new information versus stale echo",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Information/inference: costly interpretation and independent dissemination may differ from repetition of already priced information.",
+      "exact_measurable_features": [
+        "novelty",
+        "novel_claim_count",
+        "echo_share",
+        "S_g_w",
+        "price_response",
+        "diffusion_breadth"
+      ],
+      "prespecified_candidate_trigger": "At first completed 15-minute decision window after receipt, novel_claim_count>=1 and novelty>q_0.8; compare with echo_share>q_0.8 at matched stance strength and attention. Require provenance-backed actual new fact.",
+      "comparator": "Price-aware_Z + event facts + A + S baseline; matched new versus echo windows by issuer, event class, prior move, liquidity, time since receipt, and source coverage.",
+      "target": [
+        "Signed next-window population stance change in direction of the new claim",
+        "Incremental signed residual return after information becomes actionable"
+      ],
+      "horizon": [
+        "60 completed minutes for belief adoption",
+        "next regular-session close for returns"
+      ],
+      "hypothesized_consequence": "New verified claims produce more durable belief adoption than stale echoes; any extra return response must survive price/event controls.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Fast information may already be priced before model extraction. Stale labels can be wrong when an update changes a number. Capture window may be shorter than Tensor eligibility; do not chase.",
+      "strongest_rival": "Semantic novelty proxies event severity or delayed vendor ingestion, not interpretive advantage.",
+      "falsifier": "Reject mechanism if no greater prospective adoption for new claims under matched facts, or effect survives only with incorrectly early timestamps. Reject deployability if incremental net paired utility upper bound is below preregistered minimum.",
+      "negative_control": "Duplicate a stored article under new URLs: factual evidence and prediction should not strengthen; exposure count may change only in explicit synthetic invariance test.",
+      "data_dependencies": [
+        "Original/update article bodies",
+        "receipt clocks",
+        "claim lineage",
+        "closed bars"
+      ],
+      "first_experiment_priority": "HIGH",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P02",
+      "name": "Independent attention ignition",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Limited attention: new independent coverage can precede broad adoption without implying immediate directional alpha.",
+      "exact_measurable_features": [
+        "A_w",
+        "A_velocity",
+        "A_acceleration",
+        "adoption_rate",
+        "novel_claim_count",
+        "S_g_w"
+      ],
+      "prespecified_candidate_trigger": "Prior 20-session attention below q_0.3; current 15-minute A_acceleration>q_0.9; >=3 information-origin clusters; novel_claim_count>=1. Direction carried by separately calibrated stance.",
+      "comparator": "Seasonal attention persistence + price_aware_Z; match abnormal volume, absolute prior return, event class and initial attention.",
+      "target": [
+        "Next-hour adoption_rate and diffusion_breadth",
+        "Next-session stance persistence",
+        "Secondary: absolute residual return / activity, not predetermined return sign"
+      ],
+      "horizon": [
+        "60 completed minutes",
+        "1 session"
+      ],
+      "hypothesized_consequence": "Independent attention accelerates before broader discussion; a directional trade benefit is not assumed.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Vendor batching and delayed ingest mimic acceleration; market open seasonality, trading halts, and thin books create false bursts.",
+      "strongest_rival": "Return-driven attention or one syndicated story produces the apparent effect.",
+      "falsifier": "Reject if forecast improvement disappears after source receipt/batching controls or under stable-source sampling, or same effect occurs in outage recovery windows.",
+      "negative_control": "API outage/recovery bursts and many copies of a single origin.",
+      "data_dependencies": [
+        "Stable source coverage",
+        "original author/origin identifiers",
+        "intraday receipt times"
+      ],
+      "first_experiment_priority": "HIGH",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P03",
+      "name": "Optimistic consensus exhaustion",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Belief diffusion saturation: new-adopter slowdown may weaken continuation even while average optimism remains high.",
+      "exact_measurable_features": [
+        "S_g_w",
+        "concentration",
+        "H_narrative",
+        "adoption_rate",
+        "A_acceleration",
+        "price_response"
+      ],
+      "prespecified_candidate_trigger": "Daily S>q_0.9, concentration>q_0.9, adoption_rate declines for two completed sessions and A_acceleration<q_0.2; positive trailing residual return.",
+      "comparator": "Price momentum/reversal + attention levels + same optimism without adoption slowdown; match known news, volatility and liquidity.",
+      "target": [
+        "Probability next-5-session S decreases by more than training-defined 0.5 SD",
+        "Secondary: next-5-session residual return and downside-tail probability"
+      ],
+      "horizon": [
+        "5 sessions"
+      ],
+      "hypothesized_consequence": "Belief continuation weakens after diffusion saturation; profitable contrarian trading is a separate stronger claim.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "A saturated narrative may remain correct for months; crowding is not a timing signal. Short borrow/recall and squeeze risk can dominate.",
+      "strongest_rival": "Ordinary price mean reversion or low news arrival rather than narrative exhaustion.",
+      "falsifier": "Reject mechanism if matched consensus with and without slowdown has indistinguishable prospective stance persistence at adequate precision; reject return claim if price-only explains it.",
+      "negative_control": "High consensus supported by continuing verified upward fundamental revisions.",
+      "data_dependencies": [
+        "Fixed narrative taxonomy",
+        "author panel",
+        "point-in-time fundamental event ledger"
+      ],
+      "first_experiment_priority": "MEDIUM",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P04",
+      "name": "Polarization rupture versus shared uncertainty",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Heterogeneous beliefs: confident opposing populations may redistribute stance sharply on resolving evidence.",
+      "exact_measurable_features": [
+        "D_between",
+        "D_within",
+        "U_g_w",
+        "realized_surprise",
+        "return_tail"
+      ],
+      "prespecified_candidate_trigger": "D_between>q_0.9 and each covered population U<q_0.3 before a timestamped resolving event; require >=2 populations and sufficient unique authors.",
+      "comparator": "Price-aware volatility/event baseline; compare high disagreement-low uncertainty with low disagreement-high uncertainty at equal aggregate stance and event magnitude.",
+      "target": [
+        "Post-event decline in D_between and absolute same_author_revision",
+        "Absolute residual return and tail frequency; no fixed sign"
+      ],
+      "horizon": [
+        "1 session after event",
+        "5 sessions persistence"
+      ],
+      "hypothesized_consequence": "Confident disagreement produces larger event-driven belief changes than a common uncertain view.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Event gaps and volatility premia may make option purchases lose despite correct volatility forecasts; inference must not assume risk-neutral probabilities are physical.",
+      "strongest_rival": "Population sampling changes or pre-event volatility already capture everything.",
+      "falsifier": "Reject if predeclared interaction D_between*low_U does not outperform separate levels in prospective belief changes, or effect vanishes with stable panels.",
+      "negative_control": "Replace true population labels with shuffled labels within date/entity while preserving stance counts.",
+      "data_dependencies": [
+        "Population-specific stance/uncertainty",
+        "event clocks",
+        "stable-panel labels"
+      ],
+      "first_experiment_priority": "MEDIUM",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P05",
+      "name": "Cross-population narrative migration",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Information partition: a claim can be visible to one sampled group before another; direction of migration is empirical, not a smart-money hierarchy.",
+      "exact_measurable_features": [
+        "diffusion_breadth",
+        "adoption_rate",
+        "S_g_w",
+        "novel_claim_count"
+      ],
+      "prespecified_candidate_trigger": "A verified claim is independently present in >=2 editorial/professional-origin items but absent from covered social authors over prior 60 minutes, then first social adoption occurs; use symmetric reverse-direction card as control.",
+      "comparator": "Within-source autoregression + price_aware_Z + original publication time + source lags; compare both migration directions.",
+      "target": [
+        "Future social claim share and stance revision",
+        "Secondary incremental residual returns conditional on initial price response"
+      ],
+      "horizon": [
+        "60 minutes",
+        "1 session"
+      ],
+      "hypothesized_consequence": "Observed early-source adoption predicts later adoption in another population when latency differences are genuine.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Editorial labels do not prove an institutional investor audience. Provider polling latency can manufacture lead-lag.",
+      "strongest_rival": "A common unobserved release reaches both groups simultaneously; measured migration is vendor delay.",
+      "falsifier": "Reject if direction/order disappears after original publication and receipt-latency controls, or does not improve adoption forecasts over source-specific persistence.",
+      "negative_control": "Known simultaneous syndication event and reversed timestamp placebo.",
+      "data_dependencies": [
+        "At least two stable source populations",
+        "original/receipt clocks",
+        "claim mapping"
+      ],
+      "first_experiment_priority": "MEDIUM",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P06",
+      "name": "Horizon dissonance",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Distinct holding horizons: near-term caution and long-term conviction may resolve differently than uniform pessimism.",
+      "exact_measurable_features": [
+        "S_g_w separately for explicit <=5-session and >=20-session expressed horizons",
+        "U_g_w",
+        "same_author_revision"
+      ],
+      "prespecified_candidate_trigger": "Explicit short-horizon S<q_0.2 and long-horizon S>q_0.8 in same observed population; require explicit horizons, never infer horizon from tone.",
+      "comparator": "Price-aware_Z + aggregate stance and source composition; match uniformly bearish and uniformly bullish episodes on event type.",
+      "target": [
+        "Short-horizon stance revision toward long-horizon stance",
+        "Secondary 5- versus 20-session residual returns"
+      ],
+      "horizon": [
+        "5 sessions",
+        "20 sessions"
+      ],
+      "hypothesized_consequence": "Temporary concerns fade more often when longer-horizon expectations remain positive and unchanged.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Long-horizon bullish language may be promotional boilerplate. A 20-day forecast cannot justify an intraday entry.",
+      "strongest_rival": "Different author samples rather than genuine within-author horizon distinction.",
+      "falsifier": "Reject if effect fails within same-author dual-horizon claims or explicit horizons cannot be extracted reliably.",
+      "negative_control": "Horizon-shuffled claims within author/entity and generic issuer boilerplate.",
+      "data_dependencies": [
+        "Reliable horizon annotation",
+        "same-author cross-horizon claims"
+      ],
+      "first_experiment_priority": "LOW",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P07",
+      "name": "Negative-news absorption with diminishing response",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Expectation incorporation: comparable bad news may increasingly be anticipated, reducing further belief deterioration.",
+      "exact_measurable_features": [
+        "realized_surprise",
+        "price_response",
+        "S_g_w",
+        "same_author_revision",
+        "novel_claim_count"
+      ],
+      "prespecified_candidate_trigger": "At least three separate verified same-class negative-surprise events over <=20 sessions; training-model residual absolute negative price response declines across events while surprise severity does not decline; all measured after completed response windows.",
+      "comparator": "Event/price-aware model with surprise size, beta, liquidity, volatility, elapsed time and prior cumulative drawdown; matched cases without diminishing response.",
+      "target": [
+        "Less-negative next-session stance change",
+        "Secondary positive next-5-session residual returns"
+      ],
+      "horizon": [
+        "1 session",
+        "5 sessions"
+      ],
+      "hypothesized_consequence": "Repeated bad news that moves price less may signal expectations are already depressed; not automatic bullishness.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Quiet price can reflect halted trading, illiquidity or market-wide offset. Initial response must not include future bar information.",
+      "strongest_rival": "Changing news severity, hedging flows, or broad market rally masks adverse fundamentals.",
+      "falsifier": "Reject if effect vanishes after event severity/market controls or appears equally around stale non-new stories; failure to recover is not rescued by relabeling the regime.",
+      "negative_control": "Repeated negative adjectives without fresh facts, and halted/stale-price periods excluded beforehand.",
+      "data_dependencies": [
+        "Comparable event taxonomy",
+        "point-in-time actual/expectation",
+        "valid closed-price response"
+      ],
+      "first_experiment_priority": "MEDIUM",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P08",
+      "name": "Upbeat tone but disappointment versus expectations",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Semantic inference: positive absolute news can be negative relative to already priced expectations.",
+      "exact_measurable_features": [
+        "S_g_w",
+        "realized_surprise",
+        "expected_surprise",
+        "numeric actual/consensus extraction",
+        "price_response"
+      ],
+      "prespecified_candidate_trigger": "At official release receipt, positive headline tone but standardized realized_surprise<q_0.2 for a prespecified economically relevant variable; actual/consensus units, period and definition match.",
+      "comparator": "Price-aware_Z + numerical realized surprise; compare lexicon/FinBERT tone-only versus structured expectation-relative extraction with equal parameter budget.",
+      "target": [
+        "Next-session negative population stance revision",
+        "Incremental next-session residual return beyond numeric surprise baseline"
+      ],
+      "horizon": [
+        "1 session",
+        "5-session persistence secondary"
+      ],
+      "hypothesized_consequence": "Expectation-relative extraction should avoid wrongly bullish interpretations; extra return alpha may be zero once the surprise is known.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Consensus may be stale or not comparable; guidance and segment mix can dominate a single headline metric. Need receipt lag and no pre-release leakage.",
+      "strongest_rival": "All useful information resides in the numeric surprise and price; LLM explanation adds nothing.",
+      "falsifier": "Reject LLM increment if it fails against numeric-surprise baseline, even if it beats tone-only; reject extraction if matched accounting definitions are unreliable.",
+      "negative_control": "Positive growth that genuinely beats comparable expectations, and shuffled consensus within same metric/period.",
+      "data_dependencies": [
+        "First release",
+        "point-in-time consensus",
+        "structured units/periods",
+        "source evidence spans"
+      ],
+      "first_experiment_priority": "HIGH",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P09",
+      "name": "Constrained shorts plus new positive evidence",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Constraint/access mechanism: documented bearish exposure and limited financing flexibility can amplify new information, but reported shorts need not be forced buyers.",
+      "exact_measurable_features": [
+        "borrow_constraint",
+        "novel_claim_count",
+        "S_g_w",
+        "adoption_rate",
+        "return_tail"
+      ],
+      "prespecified_candidate_trigger": "Latest legally available short-interest/float and days-to-cover both >q_0.8; verified recent borrow fee high/availability constrained; factual_new positive event and positive stable-panel stance revision. Missing borrow evidence -> unavailable, not squeeze label.",
+      "comparator": "Price/volatility/liquidity + short-interest levels + event surprise baseline; interaction with new evidence and stance must add value.",
+      "target": [
+        "Probability of next-1/5-session positive residual tail",
+        "Post-event stance/adoption change"
+      ],
+      "horizon": [
+        "1 session",
+        "5 sessions"
+      ],
+      "hypothesized_consequence": "Positive evidence combined with constrained shorts may create asymmetric upside-tail risk; use as risk context, not a guaranteed squeeze or entry.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Short-interest publication lag; hedged short positions; borrow recalls; halts; gaps; extreme spreads. Raw options OI cannot identify dealer gamma sign.",
+      "strongest_rival": "High short interest correctly reflects distress and the positive news is temporary or already priced.",
+      "falsifier": "Reject if interaction does not improve tail forecasts over price/borrow/event baseline, or only succeeds using settlement-date information before publication.",
+      "negative_control": "Daily short-sale-volume substituted for short interest must be rejected by schema; high short interest with no new evidence.",
+      "data_dependencies": [
+        "Published short-interest vintage",
+        "point-in-time float",
+        "verified borrow feed",
+        "event receipt"
+      ],
+      "first_experiment_priority": "BLOCKED_UNTIL_INPUTS",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P10",
+      "name": "Squeeze/attention exhaustion without a short signal",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Diffusion saturation after a constrained-move episode may change the distribution of future outcomes.",
+      "exact_measurable_features": [
+        "A_acceleration",
+        "adoption_rate",
+        "S_g_w",
+        "price_response",
+        "borrow_constraint"
+      ],
+      "prespecified_candidate_trigger": "Prior two sessions contain positive return_tail and A>q_0.9; next completed session adoption_rate falls and A_acceleration<q_0.2 while same-author S stops improving; no claim that covering is observed unless independently verified.",
+      "comparator": "Price reversal + volatility + post-burst elapsed time baseline; compare matched bursts with continued new adoption.",
+      "target": [
+        "Next-5-session lower stance persistence",
+        "Next-5-session downside-tail probability"
+      ],
+      "horizon": [
+        "5 sessions"
+      ],
+      "hypothesized_consequence": "Marginal diffusion cooling can forecast fragility after a burst, not an executable short by itself.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Crowded fades can squeeze again; borrow unavailable or expensive; a correct eventual reversal may lose on path/margin.",
+      "strongest_rival": "Simple post-jump mean reversion explains everything; attention cooling is inevitable calendar decay.",
+      "falsifier": "Reject if no incremental benefit over post-jump price baseline or delay/cost stress eliminates paired utility.",
+      "negative_control": "Same price burst with persistent verified fundamentals and continued new adopters.",
+      "data_dependencies": [
+        "Author adoption ledger",
+        "valid burst timestamps",
+        "price-aware baseline"
+      ],
+      "first_experiment_priority": "LOW",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P11",
+      "name": "Uncertainty compression without stance change",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Resolution of ambiguity can narrow beliefs and alter volatility independently of directional optimism.",
+      "exact_measurable_features": [
+        "U_g_w",
+        "D_between",
+        "S_g_w",
+        "verified event resolution flag"
+      ],
+      "prespecified_candidate_trigger": "A predeclared binary/quantitative uncertainty is resolved by official receipt; U falls >training q_0.8 decline while |delta S|<0.25 training SD. Use explicit distribution-width observations where available as separate validation.",
+      "comparator": "Event calendar + time-to-event + realized/option-implied volatility if available + price_aware_Z; compare equally surprising resolutions with no observed uncertainty compression.",
+      "target": [
+        "Persistence of lower expressed uncertainty",
+        "Next-session realized volatility conditional on current volatility; no return sign"
+      ],
+      "horizon": [
+        "1 session",
+        "5 sessions"
+      ],
+      "hypothesized_consequence": "Resolved ambiguity can reduce future uncertainty/volatility without bullish or bearish shift.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Option implied volatility may already anticipate crush; option selling carries tail/gap risk and requires separate mandate. Text certainty can be unjustified.",
+      "strongest_rival": "Scheduled-event passage alone explains volatility change.",
+      "falsifier": "Reject incremental claim if U adds nothing after event timing/implied-volatility baseline; reject uncertainty measure if rhetorical certainty does not track independently elicited widths where available.",
+      "negative_control": "Non-resolving speeches with confident rhetoric and no new official fact.",
+      "data_dependencies": [
+        "Official resolution evidence",
+        "uncertainty annotations",
+        "calendar"
+      ],
+      "first_experiment_priority": "MEDIUM",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P12",
+      "name": "Narrative-driver rotation",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Information reprioritization: changing causal narratives may signal changes in which fundamentals participants attend to.",
+      "exact_measurable_features": [
+        "H_narrative",
+        "concentration",
+        "novelty",
+        "fixed-theme share q_k",
+        "sector-relative returns"
+      ],
+      "prespecified_candidate_trigger": "A prespecified new-driver theme share rises by >q_0.9 while prior dominant theme share falls over 5 sessions; new claims require independent factual origins; taxonomy frozen.",
+      "comparator": "Price/factor regime baseline + sector momentum + event exposures; compare same-theme high attention without rotation.",
+      "target": [
+        "Next-5/20-session theme-share persistence",
+        "Change in cross-sectional relation of preregistered economic exposure to residual returns"
+      ],
+      "horizon": [
+        "5 sessions",
+        "20 sessions"
+      ],
+      "hypothesized_consequence": "Attention can migrate from one economic driver to another; economic exposure definitions must predate outcomes.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Topic model re-clustering can fake rotation; themes may follow returns instead of lead. Exposure estimates may be stale.",
+      "strongest_rival": "Price factor rotation causes the language change rather than the reverse.",
+      "falsifier": "Reject lead claim if rotation has no forward skill beyond lagged returns/exposures, or only works with retrospectively renamed themes.",
+      "negative_control": "Freeze labels and rerun with stylistic paraphrases; unchanged claims must not produce new-driver adoption.",
+      "data_dependencies": [
+        "Versioned taxonomy",
+        "point-in-time economic exposure data",
+        "claim provenance"
+      ],
+      "first_experiment_priority": "LOW",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P13",
+      "name": "Credibility-weighted contradiction",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Information correction: verified correction of a high-reach claim can update sampled beliefs, with magnitude depending on prior exposure and credibility.",
+      "exact_measurable_features": [
+        "echo_share",
+        "adoption_rate",
+        "source historical extraction/factual reliability",
+        "verified contradiction evidence",
+        "same_author_revision"
+      ],
+      "prespecified_candidate_trigger": "Official/primary evidence logically contradicts a claim previously adopted above q_0.8; contradiction reviewed for identical entity, metric, date and modality. Source reliability fixed using past data only.",
+      "comparator": "Price-aware_Z + correction content/severity + pre-correction reach; compare low-reach corrections and original-claim source reliability.",
+      "target": [
+        "Probability previous adopters revise/retract within 1 session",
+        "Secondary residual return after actionable correction"
+      ],
+      "horizon": [
+        "1 session",
+        "5 sessions"
+      ],
+      "hypothesized_consequence": "Corrections to strongly adopted claims may produce larger belief reversals, but some audiences may ignore them.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Apparent contradiction may be different time periods or conditional claims; correcting source may be wrong; reputational labels must be evidence-based.",
+      "strongest_rival": "Price already corrected before text adoption, or high reach simply proxies materiality.",
+      "falsifier": "Reject if no within-author revisions beyond matched materiality/price baseline; effect on price without adoption requires a different mechanism label.",
+      "negative_control": "Corrections of immaterial wording that do not change the proposition.",
+      "data_dependencies": [
+        "Original claim and adopter ledger",
+        "primary contradictory evidence",
+        "adjudication"
+      ],
+      "first_experiment_priority": "MEDIUM",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P14",
+      "name": "Entrant-driven consensus versus genuine revisions",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Selection/composition: an apparent sentiment swing created by incoming speakers may be less persistent than a change in existing speakers' beliefs.",
+      "exact_measurable_features": [
+        "S_g_w",
+        "same_author_revision",
+        "entrant_share",
+        "leaver_share"
+      ],
+      "prespecified_candidate_trigger": "Aggregate |delta S|>q_0.9; decompose into within-stable-panel, entrants and leavers using fixed weights. Compare top versus bottom q_0.8 entrant contribution fractions, conditional on equal aggregate shift.",
+      "comparator": "Aggregate stance autoregression + source coverage + price_aware_Z; stable-panel decomposition is the sole added concept.",
+      "target": [
+        "Next-5-session reversal probability of aggregate stance",
+        "Same-author stance persistence"
+      ],
+      "horizon": [
+        "5 sessions"
+      ],
+      "hypothesized_consequence": "Composition-driven shifts are hypothesized less persistent; a valid contrary result would mean new entrants contain durable information.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Missing posts/deleted accounts and API changes distort panel membership. New participants can be genuine informed adoption, not noise.",
+      "strongest_rival": "Entrants are the mechanism of true diffusion and more persistent, not less.",
+      "falsifier": "Reject proposed direction if entrant-driven shifts are equally or more persistent at adequate precision; do not discard entrants merely because hypothesis fails.",
+      "negative_control": "Known API coverage expansion, which must yield coverage alert rather than belief-change signal.",
+      "data_dependencies": [
+        "Stable pseudonymous author IDs within permitted retention",
+        "coverage health",
+        "panel weights"
+      ],
+      "first_experiment_priority": "HIGH",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P15",
+      "name": "Prior expected-surprise asymmetry",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Expectations matter twice: beliefs about a likely surprise affect the update generated by the actual release.",
+      "exact_measurable_features": [
+        "expected_surprise distribution",
+        "realized_surprise",
+        "S_g_w",
+        "U_g_w",
+        "price_response"
+      ],
+      "prespecified_candidate_trigger": "Before event, archive P(actual-consensus>delta); after release compare events with equal realized surprise but different preregistered pre-event expected-surprise quantiles and uncertainty. No post-release text in prior.",
+      "comparator": "Realized surprise + price_aware_Z + event type + consensus dispersion; augmented model adds archived pre-event expected-surprise distribution.",
+      "target": [
+        "Post-release same-author stance change",
+        "Residual price response after receipt",
+        "Next-session residual return secondary"
+      ],
+      "horizon": [
+        "first completed 60-minute window",
+        "1 session"
+      ],
+      "hypothesized_consequence": "A 'beat' already anticipated by the sampled population should create a smaller update than an equally sized unanticipated beat.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Public consensus may differ from whisper expectations; multiple release dimensions; gaps mean a correct response forecast may be untradeable.",
+      "strongest_rival": "Pre-event price fully contains the whisper expectation; text adds no incremental information.",
+      "falsifier": "Reject text increment if archived expectation distribution fails versus consensus-and-price baseline; any benefit requiring hindsight reconstruction invalidates the test.",
+      "negative_control": "Replace pre-event distribution with a post-release reconstruction: flag as forbidden leakage, not an alternative successful model.",
+      "data_dependencies": [
+        "Prospective pre-event forecasts",
+        "point-in-time consensus",
+        "first actual release"
+      ],
+      "first_experiment_priority": "MEDIUM",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    },
+    {
+      "id": "P16",
+      "name": "Narrative immunity and factual reset",
+      "evidence_stage": "HYPOTHESIS",
+      "test_result": "NOT_RUN",
+      "novelty_claim": "Original engineering synthesis; no claim of literature novelty or established alpha.",
+      "mechanism": "Habituation versus information: repeated claims may lose marginal adoption while genuinely new facts can restore it.",
+      "exact_measurable_features": [
+        "echo_share",
+        "adoption_rate",
+        "novel_claim_count",
+        "S_g_w",
+        "exposure count by fixed claim"
+      ],
+      "prespecified_candidate_trigger": "For a fixed claim, >=3 separated exposure waves with declining new-adopter rate after controlling eligible audience; test whether a newly verified supporting proposition reverses that decay.",
+      "comparator": "Attention/persistence + audience-size + elapsed-time + price_aware_Z baseline; compare repeated wording, new wording/same facts, and new facts.",
+      "target": [
+        "Incremental new-adopter rate per exposure wave",
+        "Next-session stance persistence",
+        "Secondary incremental residual returns"
+      ],
+      "horizon": [
+        "60 minutes per intraday wave",
+        "1 session",
+        "5 sessions"
+      ],
+      "hypothesized_consequence": "New wording alone should not reset informational impact; verified new evidence may do so.",
+      "permitted_current_use": "Advisory annotation / shadow forecast only. Tensor alone decides entry timing, closed-bar validity, and no-chase eligibility.",
+      "timing_and_execution_risks": "Unknown exposure denominator, recommendation algorithms and overlapping audiences prevent causal interpretation; late exposure may still reach new investors.",
+      "strongest_rival": "Audience exhaustion or changing platform distribution rather than belief habituation.",
+      "falsifier": "Reject factual-reset mechanism if paraphrases and genuine new facts have equal prospective adoption after audience controls, or effects disappear with stable coverage.",
+      "negative_control": "Paraphrase same proposition with no new facts; future outcome or later source revisions must never enter novelty calculation.",
+      "data_dependencies": [
+        "Versioned claim lineage",
+        "exposure and author counts",
+        "factual novelty adjudication"
+      ],
+      "first_experiment_priority": "LOW",
+      "promotion_rule": "Preregister minimum economically meaningful effect and uncertainty/error budget before untouched evaluation. Require incremental calibrated forecast value and, for any later trading claim, paired net utility on identical Tensor opportunities. Wide intervals -> INCONCLUSIVE; upper bound below minimum -> NOT_DEPLOYABLE. No automatic live policy change."
+    }
+  ]
+}

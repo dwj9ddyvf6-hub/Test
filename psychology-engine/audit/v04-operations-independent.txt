@@ -1,0 +1,36 @@
+test_backup_permissions_private_even_with_permissive_umask (test_operations_independent.OperationalIndependentTests.test_backup_permissions_private_even_with_permissive_umask) ... FAIL
+test_backup_restores_committed_wal_all_evidence_and_refuses_overwrite (test_operations_independent.OperationalIndependentTests.test_backup_restores_committed_wal_all_evidence_and_refuses_overwrite) ... ok
+test_capture_cannot_precede_completed_daily_observation (test_operations_independent.OperationalIndependentTests.test_capture_cannot_precede_completed_daily_observation) ... FAIL
+test_health_must_respect_latest_null_revision (test_operations_independent.OperationalIndependentTests.test_health_must_respect_latest_null_revision) ... FAIL
+test_receipt_cannot_backdate_local_availability_and_never_calls_http (test_operations_independent.OperationalIndependentTests.test_receipt_cannot_backdate_local_availability_and_never_calls_http) ... ok
+test_scheduled_one_shot_cannot_skip_permission_gate (test_operations_independent.OperationalIndependentTests.test_scheduled_one_shot_cannot_skip_permission_gate) ... ok
+
+======================================================================
+FAIL: test_backup_permissions_private_even_with_permissive_umask (test_operations_independent.OperationalIndependentTests.test_backup_permissions_private_even_with_permissive_umask)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "../audit/test_operations_independent.py", line 59, in test_backup_permissions_private_even_with_permissive_umask
+    self.assertEqual(target.stat().st_mode & 0o077,0)
+AssertionError: 36 != 0
+
+======================================================================
+FAIL: test_capture_cannot_precede_completed_daily_observation (test_operations_independent.OperationalIndependentTests.test_capture_cannot_precede_completed_daily_observation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "../audit/test_operations_independent.py", line 48, in test_capture_cannot_precede_completed_daily_observation
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_health_must_respect_latest_null_revision (test_operations_independent.OperationalIndependentTests.test_health_must_respect_latest_null_revision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "../audit/test_operations_independent.py", line 42, in test_health_must_respect_latest_null_revision
+    self.assertNotEqual(code,0)
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.013s
+
+FAILED (failures=3)

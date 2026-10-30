@@ -1,0 +1,71 @@
+{
+  "fed_press": {
+    "id": "fed_rss",
+    "access_status": "tested_public_readonly",
+    "original_observation": "Official press releases, monetary policy statements, speeches and testimony.",
+    "publication_and_availability_clock": "Event publication/RSS pubDate; capture first_seen and updated times; statement, transcript and minutes are different events.",
+    "license_and_redistribution": "Federal Reserve site terms; retain provenance and avoid third-party copyrighted attachments without permission.",
+    "decision_horizon": "minutes to weeks",
+    "can_infer": "Policy-language changes, topic emphasis and uncertainty.",
+    "cannot_infer": "Private FOMC beliefs or automatic hawkish-to-bearish equity mapping.",
+    "primary_source_urls": [
+      "https://www.federalreserve.gov/feeds/feeds.htm"
+    ],
+    "config_version": "2026-10-30-reviewed-v3",
+    "persistent_use_authorized": false,
+    "usage_scope": "bounded_research_probe_only"
+  },
+  "frbsf_news": {
+    "id": "frbsf_news",
+    "access_status": "tested_public_readonly",
+    "original_observation": "Economic news tone from 24 US newspapers via Factiva, composition-adjusted trailing weighted average.",
+    "publication_and_availability_clock": "DAILY observations but WEEKLY publication. Page updated Oct 26; probe latest row Oct 25. Historical row date is not when row was available.",
+    "license_and_redistribution": "Credited reproduction allowed except distribution for private gain under site policy; raw Factiva articles not licensed by index download.",
+    "decision_horizon": "weeks to months",
+    "can_infer": "Slow US economic-news narrative tone.",
+    "cannot_infer": "Intraday pulse, full market consensus or raw article availability.",
+    "primary_source_urls": [
+      "https://www.frbsf.org/research-and-insights/data-and-indicators/daily-news-sentiment-index/",
+      "https://www.frbsf.org/site-policies/"
+    ],
+    "config_version": "2026-10-30-reviewed-v3",
+    "persistent_use_authorized": false,
+    "usage_scope": "bounded_research_probe_only"
+  },
+  "cboe_vix": {
+    "id": "cboe_vix",
+    "access_status": "tested_public_history_rights_review",
+    "original_observation": "Option-price-derived expected 30-day SPX volatility index; daily historical OHLC.",
+    "publication_and_availability_clock": "Market index time vs EOD file publication/receipt separate; updated daily, exact EOD upload SLA not verified.",
+    "license_and_redistribution": "Public download not broad derived-product/non-display/redistribution license; confirm intended automated/commercial use with Cboe policies.",
+    "decision_horizon": "days to months",
+    "can_infer": "Market price of near-term variance exposure.",
+    "cannot_infer": "Physical crash probability, emotion score or expected direction.",
+    "primary_source_urls": [
+      "https://www.cboe.com/tradable-products/vix/vix-historical-data",
+      "https://cdn.cboe.com/api/global/us_indices/governance/VIX_Methodology.pdf",
+      "https://cdn.cboe.com/resources/membership/Market_Data_Policies_july2026.pdf"
+    ],
+    "config_version": "2026-10-30-reviewed-v3",
+    "persistent_use_authorized": false,
+    "usage_scope": "bounded_research_probe_only"
+  },
+  "wikimedia_attention": {
+    "id": "wikimedia",
+    "access_status": "tested_public_readonly",
+    "original_observation": "Per-article page requests with project/access/agent filters; user filter excludes identified automation.",
+    "publication_and_availability_clock": "Daily bin closes UTC; usually loaded in hours, sometimes >=24h. 404 may mean zero OR not loaded.",
+    "license_and_redistribution": "Analytics data CC0 1.0; honor API rate/stability policy.",
+    "decision_horizon": "days to weeks",
+    "can_infer": "Attention to predefined concepts/entities.",
+    "cannot_infer": "Direction or fear from raw pageviews; missing=zero before watermark validated.",
+    "primary_source_urls": [
+      "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/access-policy.html",
+      "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/troubleshooting.html",
+      "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/concepts/page-views.html"
+    ],
+    "config_version": "2026-10-30-reviewed-v3",
+    "persistent_use_authorized": false,
+    "usage_scope": "bounded_research_probe_only"
+  }
+}

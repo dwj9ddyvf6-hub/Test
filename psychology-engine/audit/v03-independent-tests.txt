@@ -1,0 +1,53 @@
+test_divergence_revalidates_aligned_sample_freshness_and_gaps (test_independent_regressions.IndependentRegressions.test_divergence_revalidates_aligned_sample_freshness_and_gaps) ... FAIL
+test_finite_measurements_cannot_emit_infinity (test_independent_regressions.IndependentRegressions.test_finite_measurements_cannot_emit_infinity) ... FAIL
+test_proxy_score_does_not_bridge_configuration_versions (test_independent_regressions.IndependentRegressions.test_proxy_score_does_not_bridge_configuration_versions) ... FAIL
+test_revisions_do_not_erase_historical_forecast_origins (test_independent_regressions.IndependentRegressions.test_revisions_do_not_erase_historical_forecast_origins) ... FAIL
+test_rss_normal_feed_update_preserves_old_items_and_ingests_new (test_independent_regressions.IndependentRegressions.test_rss_normal_feed_update_preserves_old_items_and_ingests_new) ... FAIL
+
+======================================================================
+FAIL: test_divergence_revalidates_aligned_sample_freshness_and_gaps (test_independent_regressions.IndependentRegressions.test_divergence_revalidates_aligned_sample_freshness_and_gaps)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "../audit/test_independent_regressions.py", line 52, in test_divergence_revalidates_aligned_sample_freshness_and_gaps
+    self.assertTrue(all(x['status']=='abstain' for x in p))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_finite_measurements_cannot_emit_infinity (test_independent_regressions.IndependentRegressions.test_finite_measurements_cannot_emit_infinity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "../audit/test_independent_regressions.py", line 82, in test_finite_measurements_cannot_emit_infinity
+    self.assertTrue(math.isfinite(p['value']))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_proxy_score_does_not_bridge_configuration_versions (test_independent_regressions.IndependentRegressions.test_proxy_score_does_not_bridge_configuration_versions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "../audit/test_independent_regressions.py", line 72, in test_proxy_score_does_not_bridge_configuration_versions
+    self.assertEqual(f['walk_forward']['n'],0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_revisions_do_not_erase_historical_forecast_origins (test_independent_regressions.IndependentRegressions.test_revisions_do_not_erase_historical_forecast_origins)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "../audit/test_independent_regressions.py", line 63, in test_revisions_do_not_erase_historical_forecast_origins
+    self.assertGreaterEqual(after['walk_forward']['n'],prior['walk_forward']['n'])
+AssertionError: 0 not greater than or equal to 5
+
+======================================================================
+FAIL: test_rss_normal_feed_update_preserves_old_items_and_ingests_new (test_independent_regressions.IndependentRegressions.test_rss_normal_feed_update_preserves_old_items_and_ingests_new)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "../audit/test_independent_regressions.py", line 42, in test_rss_normal_feed_update_preserves_old_items_and_ingests_new
+    self.assertEqual(collect(self.s,'fed_press',reader)['status'],'ok')
+AssertionError: 'failed' != 'ok'
+- failed
++ ok
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.009s
+
+FAILED (failures=5)
