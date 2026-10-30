@@ -1,0 +1,85 @@
+{
+  "as_of": "2026-10-19T12:00:00+00:00",
+  "entity": "US_MARKET",
+  "horizon": "1d",
+  "mode": "context_only",
+  "orders_allowed": false,
+  "patterns": [
+    {
+      "pattern": "attention_acceleration",
+      "status": "watch",
+      "reason": "Latest three observations versus prior three; 50% research threshold",
+      "measure": 2.0,
+      "evidence_ids": [
+        "7b9ccd52df0a66be1baa3d67bf35b2ae755f9d8b80bce9abcceda94629e6e830",
+        "19f14f0e2111f4b6b493f8038c248dfbcf5a31a37e300bd2aa43435734c1fd9e",
+        "a62d66c989abfad1086632f60beb3af6413bdec6dd770a17fdbf45237299c8a9",
+        "e13f4ebcfa9d5e23521e62c74f920b78de5370723a5e81b62c7229a28e28a967",
+        "aa1fbb6fc039980ca81320979aaa03e9fd146bcbabf00f8d29f35840b23c6c7c",
+        "92092231e395d67ad20d992505bb9504fa91ba77fece46cc89d8b1abf4344e94"
+      ]
+    },
+    {
+      "pattern": "stress_persistence",
+      "status": "watch",
+      "reason": "Three consecutive observed VIX closes >=25; risk proxy only",
+      "measure": 27.0,
+      "evidence_ids": [
+        "c2e904af147258fdf045255aaba7d8b01630ceebb336eff0eb9439e05b02d559",
+        "5380818a793acd5cf5a8e2a91bc0071f4594cc8f6ed7cf380e875ab379f6402b",
+        "0cff9440d390ea80d4c5a0b087f39e27ba76653fdc21182c29f3063bd59c7783"
+      ]
+    },
+    {
+      "pattern": "source_disagreement",
+      "status": "watch",
+      "reason": "Opposing signs across at least two declared source families; common units/model ('balance', 'declared_unit:balance')",
+      "measure": 1.05,
+      "evidence_ids": [
+        "d3fde5421d4808231bf5eb77e27bcf4b49b72b54c3367164d2b522487df947be",
+        "e212727ea1e2a3962d20d606206c1634e45782ff0ed4d6732bf16279676ad099"
+      ]
+    },
+    {
+      "pattern": "sentiment_price_divergence",
+      "status": "context",
+      "reason": "Three aligned observations; sentiment change versus sum of decimal returns (not compounded)",
+      "measure": {
+        "sentiment_change": 0.0,
+        "summed_return": -0.03
+      },
+      "evidence_ids": [
+        "9f00c6cacca5ef9cd1fe0a1ae255a45aa0a59f23fbab3328aabaeb377766d580",
+        "80a5559da8a8aa08f3d97a314c3b65fd504fc8f99a5e94ad12c0f64c7cce1797",
+        "731828999c07be87709bb7b73724391972a34e4cea6344e1a6f85d09a37c9b2f",
+        "387d14bd98a92227e8c62abc4769127dd56e54f469a2e6361c88ee3197b320cb",
+        "e212727ea1e2a3962d20d606206c1634e45782ff0ed4d6732bf16279676ad099",
+        "c9cc0a4cb0cfbb68cd1ae12141b9ad47c4451169709f9a88d9fbb17def5d2266"
+      ]
+    },
+    {
+      "pattern": "sentiment_price_divergence",
+      "status": "watch",
+      "reason": "Three aligned observations; sentiment change versus sum of decimal returns (not compounded)",
+      "measure": {
+        "sentiment_change": 0.09999999999999998,
+        "summed_return": -0.03
+      },
+      "evidence_ids": [
+        "1050f62d2513da857d8e7b6273bf57bd8d5efb9efd6b3b4fc82802ed54ef38bc",
+        "80a5559da8a8aa08f3d97a314c3b65fd504fc8f99a5e94ad12c0f64c7cce1797",
+        "097dec659fd5a21a466440bb795f971206c80543e701b6e12592f8eb6ec2ae78",
+        "387d14bd98a92227e8c62abc4769127dd56e54f469a2e6361c88ee3197b320cb",
+        "d3fde5421d4808231bf5eb77e27bcf4b49b72b54c3367164d2b522487df947be",
+        "c9cc0a4cb0cfbb68cd1ae12141b9ad47c4451169709f9a88d9fbb17def5d2266"
+      ]
+    },
+    {
+      "pattern": "narrative_concentration",
+      "status": "abstain",
+      "reason": "Not implemented: requires topic-share denominator, taxonomy version and complete topic coverage",
+      "measure": null,
+      "evidence_ids": []
+    }
+  ]
+}

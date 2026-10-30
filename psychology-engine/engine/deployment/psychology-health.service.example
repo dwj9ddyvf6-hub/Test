@@ -1,0 +1,14 @@
+[Unit]
+Description=Psychology Engine read-only operational health
+
+[Service]
+Type=oneshot
+User=psychology-research
+Group=psychology-research
+WorkingDirectory=/opt/psychology-engine
+ExecStart=/opt/psychology-engine/venv/bin/python -m psychology_engine --db /var/lib/psychology-research/evidence.sqlite health --max-check-age-hours 48
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/psychology-research
+# No timer is installed or activated by this template.
