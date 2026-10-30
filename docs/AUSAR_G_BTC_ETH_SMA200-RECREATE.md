@@ -1,45 +1,53 @@
-# Daily SMA200 spot allocation (ausar_g_BTC_ETH_SMA200): recreation package
+# ausar_g_BTC_ETH_SMA200: Recreation Package
+
+Package grade: INCOMPLETE-CODE. The algorithm text on file is reproduced below, but the genuine code that runs this book was not located in any searched GitHub repo, so this package does not claim a faithful recreation.
 
 ## Provenance
 
-ALL-SLEEVES accounting (Test docs/ALL-SLEEVES.json): canonical name 'Daily SMA200 spot allocation', type trend following, family native_trend, algorithm grade PARTIAL, unresolved false. Test strategy card: strategies/ausar/coinbase-sma200.md. Accounting gap recorded for every SMA200 variant in this batch: sizing not recorded in any consulted source; the Test card and the Test engine below do record weights and sizing rules, and this package uses those Test sources and names the conflict where the accounting entry text differs. This canonical entry carries only the alias ausar_g_BTC_ETH_SMA200. Its accounting entry text records: 'An asset qualifies when its completed daily close is above its 200-day simple moving average. Target weights: Ether 100 percent.' Data recorded in the accounting: posted Ausar runtime inputs.
+- ALL-SLEEVES accounting (Test `docs/ALL-SLEEVES.json`): canonical name "Daily SMA200 spot allocation", type trend following, family native_trend. Sole alias: `ausar_g_BTC_ETH_SMA200`, recorded installed, source md2_catalog. Algorithm grade PARTIAL; recorded gap: "sizing not recorded in any consulted source".
+- This id was created by the genuine-hosting pass recorded in Test at `packages/grokbot/master-desk-md2/mdesk/engines/ausar_genuine.py`: md2 book `ausar_pb8` was retired (status replaced) and hosted by the posted genuine code, desk `prospective_native`, book `BTC_ETH_SMA200`, origin `quant-research-backup@1692d555 backend/prospective_native.py`, with the note "rules match the TSV entry/exit text".
+- CONFLICT IN THE RECORD, stated plainly: the accounting entry text for this id reads "Target weights: Ether 100%", while its genuine book name (BTC_ETH_SMA200), the Test card `strategies/ausar/coinbase-sma200.md`, and the v3 engine spec all describe the BTC_ETH book as BTC 50% / ETH 50% and the ETH-only weight set as belonging to the sibling book ETH_SMA200. The accounting text is reproduced verbatim in the algorithm section and flagged, not silently corrected.
 
 ## What this strategy is
 
-A daily crypto spot SMA200 trend allocation as recorded above. No strategy card, catalog entry, or code file carrying this exact canonical id was located in Test; see the Files section for the search record. This package is graded INCOMPLETE-CODE.
+The genuine (original-code) hosting of the daily SMA200 spot allocation book named BTC_ETH_SMA200: assets are held while their completed daily close is above their 200-day simple moving average. It is the same strategy family as the `BTC_ETH_SMA200` package in this repo, but a distinct canonical record because it ran the posted original code rather than the md2 reimplementation or the v3 port.
 
 ## Full algorithm
 
-What the record holds, in evaluation order:
+Everything the record holds (accounting, verbatim in substance):
 
-1. Gate (accounting entry text): an asset qualifies when its completed daily close is above its 200-day simple moving average.
-2. Target weights (accounting entry text): Ether 100 percent.
-3. Exit (accounting exit text): reduce an asset when its completed daily close falls below its 200-day average; for the 50 / 50 form the accounting also records: sell reductions before buying increases.
-4. Everything else is not in the record for this canonical id: rebalance time, fees, lot rules, account size, and execution venue details are not in the record. Do not fill them from the related BTC_ETH_SMA200 or ETH_SMA200 books; those are separate canonical entries in the accounting.
+- Entry: "An asset qualifies when its completed daily close is above its 200-day simple moving average. Target weights: Ether 100%." (See the conflict note in Provenance: the weight line conflicts with the book name and every other record for this book.)
+- Exit: "Reduce Ether when its completed daily close falls below its 200-day average."
+- Sizing: not in the record.
+- Cadence, rebalance timing, fee treatment, warmup behavior: not in the record for this genuine-hosted book.
 
 ## Files in this repo
 
-- This doc: docs/AUSAR_G_BTC_ETH_SMA200-RECREATE.md
-- Accounting entry in Test: docs/ALL-SLEEVES.json, strategy 'Daily SMA200 spot allocation', alias ausar_g_BTC_ETH_SMA200
-- CODE NOT FOUND: no file carrying this canonical id, and no code file implementing this exact book, was located. Searched: Test recursive tree (sleeves/, strategies/, packages/, desk3/, adapters3/, integration/); Silicon recursive tree (research/ and desk trees); Midna recursive tree; quant-research-backup recursive tree (truncated by GitHub) plus its femto-lean subtree searched separately. Related family code exists in Test for the separate BTC_ETH_SMA200 and ETH_SMA200 books (desk3/aster_batch1.py, sleeves/aster_native_btc_eth_sma200.py, sleeves/aster_native_eth_sma200.py, packages/claude/master-desk-sleeve-port-library/desk/sleeves/families/coinbase_sma200.py); it does not name this canonical id and is not claimed here as this strategy's code.
-- No code was vendored for this package, because no code for this canonical id was found.
+- This package: `docs/AUSAR_G_BTC_ETH_SMA200-RECREATE.md`
+- Strategy card covering this book family: `strategies/ausar/coinbase-sma200.md`
+- Hosting map that created this canonical id: `packages/grokbot/master-desk-md2/mdesk/engines/ausar_genuine.py` (records the genuine book id, its desk `prospective_native`, and its origin `quant-research-backup@1692d555 backend/prospective_native.py`)
+- NOT in this repo: the genuine strategy code itself. `backend/prospective_native.py` was not found in the current tree of dwj9ddyvf6-hub/quant-research-backup, nor in dwj9ddyvf6-hub/Test, dwj9ddyvf6-hub/Silicon, or dwj9ddyvf6-hub/Midna (trees searched at package build time for prospective_native / native / sma200 paths). Test does contain a port of that same source for the sibling v3 sleeves (`desk3/aster_batch1.py` kind "native", wrappers `sleeves/aster_native_btc_eth_sma200.py` and `sleeves/aster_native_eth_sma200.py`), but that port belongs to the sibling canonical ids and is not presented here as this strategy's original code.
 
 ## Configuration
 
-- SMA period: 200 (accounting). Target weights: as recorded in the Full algorithm section.
-- Universe, timeframe beyond 'daily', cadence, sizing, session, and state: not in the record for this canonical id (accounting gap: sizing not recorded in any consulted source).
+- Universe, asset class, timeframe: "not recorded in consulted sources" in the accounting. The hosting map records only: genuine desk `prospective_native`, data "posted Ausar runtime inputs", status installed, local paper ledger `state/ausar_orig` (a path on the md2 desk, not in any searched repo).
+- Sizing: not in the record (accounting gap).
 
 ## Data inputs
 
-- Accounting filter text: data: posted Ausar runtime inputs. No further data specification is in the record for this canonical id.
+Per the accounting filter text: "data: posted Ausar runtime inputs".
 
 ## Install and run
 
-This package is INCOMPLETE-CODE: there is no code to install for this canonical id in the Test repo. Steps 1 to 3 of a recreation would be: 1. Read this package and the ALL-SLEEVES entry. 2. Stop: do not substitute the code of the separate BTC_ETH_SMA200 or ETH_SMA200 books and present it as this strategy. 3. A faithful install requires the original code or runtime record for this id, which is not in any searched GitHub repo.
+This package cannot be installed as a faithful recreation, because the genuine code is not present in any searched GitHub repo:
+
+1. Obtain `backend/prospective_native.py` (and its math module) from quant-research-backup at commit 1692d555, the origin recorded in the hosting map; it is absent from that repo's current tree.
+2. Until that code is recovered, the closest runnable relative in this repo is the sibling port `desk3/aster_batch1.py` (kind "native") used by the `BTC_ETH_SMA200` / `ETH_SMA200` packages; running it recreates the sibling v3 sleeves, not this genuine-hosted book, and must not be reported as this strategy running.
 
 ## Verification
 
-Behavior checklist from the recorded algorithm (a recreation cannot be proven against code, because no code was located):
-1. An asset whose completed daily close is above its 200-day average qualifies for its recorded target weight.
-2. An asset whose completed daily close falls below its 200-day average is reduced.
-3. Any implementation claiming to be this strategy must be checked against the original code if it is ever located; until then this package stays INCOMPLETE-CODE.
+No tests for this genuine-hosted book exist in Test. Behavior checklist from the recorded algorithm (for use once the genuine code is recovered):
+
+- A completed daily close above the asset's SMA200 qualifies the asset at its recorded target weight.
+- A completed daily close below the SMA200 reduces the asset.
+- Behavior on insufficient history, fees, and order mechanics: not in the record; to be read from the recovered code, not assumed.
