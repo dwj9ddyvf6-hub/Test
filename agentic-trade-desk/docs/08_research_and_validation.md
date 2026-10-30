@@ -5,7 +5,7 @@ Two kinds of validation matter and are often confused:
 1. **Is the strategy any good?** (statistics; slow; mostly answers "no")
 2. **Does the desk do what the strategy says?** (engineering; fast; the source of most real losses of value)
 
-Most of the value lost in desk history was in (2): exits that could never fire, fills at stale prices, missing data read as a signal, recovery sending the wrong side. A strategy's *forecast quality* was never retuned to fix these. **Fix implementation gaps against the sleeve's own spec; do not retune the strategy to compensate.**
+Common implementation failures include exits that cannot fire, fills modeled from stale prices, missing data interpreted as a signal, and recovery reversing the intended side. Retuning a strategy does not repair these defects. **Fix implementation gaps against the sleeve's own spec; do not retune the strategy to compensate.**
 
 ## 8.1 Research hygiene
 
