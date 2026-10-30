@@ -8,6 +8,8 @@
 
 Monitors and research recorders are not listed as strategies in any of the three views.
 
+Day to day use: [run this desk as your own alert system](docs/YOUR-OWN-ALERT-SYSTEM.md), and see how it stands in for the vendor stack.
+
 <!-- BEGIN FIXED SECTION: agent guides. The README generator should emit this block verbatim (source text: docs/README_FIXED_SECTION.md). Checked by agentic-trade-desk/skeleton/tools/check_root_readme_links.py -->
 > **Guides for LLM agents: three guides, one desk.** Start with the [three-guide reconciliation](docs/THREE-GUIDES-RECONCILIATION.md): the map between the three guides, covering what all three agree on, what only one teaches, and the differences to decide consciously.
 > **Field guide:** [How to build an agentic trade desk](docs/AGENTIC-TRADE-DESK-GUIDE.md): judgment under operation, scoping and evidence grading, the cross-desk sleeve accounting standard, forecast grading machinery, and 60 catalogued pitfalls.
@@ -29,6 +31,7 @@ Monitors and research recorders are not listed as strategies in any of the three
 | `docs/ALL-SLEEVES.md` | the curated accounting: every strategy ever built across all desks, deduplicated, arranged by type, with its algorithm and variants |
 | `docs/ALL-SLEEVES.json` | the same curated accounting in machine-readable form |
 | `docs/THREE-GUIDES-RECONCILIATION.md` | the map between the three agent guides: shared invariants, unique lessons, and the differences to decide consciously |
+| `docs/YOUR-OWN-ALERT-SYSTEM.md` | how to run this desk as your own alert system (home screen, agent notifications), and how it replicates the expensive vendor services |
 | `docs/VERIFY.md` | the code lines each card rule was read from (one page a family in `docs/verify/`), and where each copied file came from |
 
 The master desk runs these sleeves on the Femto-lean framework (branch master-desk). Not in this repo: the framework itself (trading engine, order handling, data hub) and the Tensor indicator engine.
