@@ -2,6 +2,8 @@
 
 Every trading strategy across our desks, one card each: what it trades, its rules as the code runs them, and where the code lives.
 
+For LLMs and contributors building research or trading systems, start with the [Agentic Trade Desk Build Guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md) and the repository-wide [AGENTS.md](AGENTS.md).
+
 Monitors and research recorders are not listed.
 
 ## Layout
