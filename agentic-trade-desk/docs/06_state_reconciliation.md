@@ -94,3 +94,13 @@ Generate the status view from the snapshot, not by reading the ledger live in th
 - [ ] import of orphan desk orders tested offline
 - [ ] off-box backup after fills (post-record) and on a timer
 - [ ] restore drill recorded in evidence
+
+
+## Addendum — truth at the writer and at the broker (from the archive review)
+
+- **Every risk number is computed from broker truth** (or reconciled to it each pass). A cache once produced a phantom exposure that tripped a breaker and hid real positions; short legs were invisible (P-88). Reconcile intraday if it costs only two read calls — but the bigger win is surfacing mismatches *loudly* and locking the symbol.
+- **All fills are recorded through one door**, with a test that fails on any bypass; reconcile **by fills** (not only positions) each day. A clean replay of the ledger proves nothing if a writer recorded around it (P-89).
+- **Verify protective orders at the broker**, not in your own state; report coverage per lot (P-90).
+- **Declare ownership of inherited positions** (adopt with an owner sleeve, or 'owned by no writer; never managed') (P-91).
+- **Keep decision reasons** (reason, inputs, expiry) per fire (P-92). Ignore stale responses (P-93). Compare freshness with the last-consumed date and the book's birth (P-94). Derive 'previous close' from the daily series (P-95).
+- A manual change at the broker is followed the same day by a state fix and a ledger note.
