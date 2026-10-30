@@ -2,60 +2,60 @@
 
 ## Provenance
 
-- ALL-SLEEVES accounting (Test `docs/ALL-SLEEVES.json`, also `docs/ALL-SLEEVES.md`): canonical name "Midna Turtle (Midna port)", type breakout, family 1d unless noted. Algorithm grade PARTIAL in the accounting, gap: sizing not recorded in its consulted sources; sources: md2 catalog entry/exit/strategy text. Alias `lz_s_mn_turtle` (md2_catalog, status installed); no Test catalog entry in the accounting (test_entries empty).
-- The accounting's sizing gap is filled by the Test record itself: the Lazarus lane config row in Test `sleeves/lazarus/vendor/lazarus/sleeves.json` (the lazarus-desk sleeves.json the Lazarus runtime resolves lanes from) carries this lane's entry, exit and sizing blocks, quoted in the Full algorithm and Configuration sections.
-- Strategy card in Test: `strategies/midna/mn-turtle.md` (Turtle System 1), whose Code section names only master-desk code: `sleeves/midna/board.py`, `sleeves/midna/vendor/midna/board_signals.py`, `sleeves/midna/common.py` - all present in Test, with rule lines in `docs/verify/midna.md` citing exact board.py / board_signals.py line ranges for every rule below. No module named s_mn_turtle exists in any searched repo (the only turtle-named sleeve module in Test is the distinct options form, sleeves/s_mn_opt_turtle.py); the lane's running logic is the board code plus its sleeves.json lane row, recorded as found.
-- Search record: fresh recursive trees of dwj9ddyvf6-hub/Test, dwj9ddyvf6-hub/Silicon, dwj9ddyvf6-hub/quant-research-backup and dwj9ddyvf6-hub/Midna were taken at batch start (b28_Test_tree.txt, b28_Silicon_tree.txt, b28_quant-research-backup_tree.txt, b28_Midna_tree.txt in the run workspace) and searched by filename for the canonical id, its s_mn_ form, and its distinguishing tokens across sleeves/, adapters/, adapters3/, integration/, strategies/, packages/, desk3/ and docs/. The files named below were fetched from Test and read.
+- ALL-SLEEVES accounting (Test `docs/ALL-SLEEVES.json`, also `docs/ALL-SLEEVES.md`): canonical name "Midna Turtle (Midna port)", type "breakout", family "1d", universe "not recorded in consulted sources", asset class "not recorded", timeframe "not recorded". Algorithm grade PARTIAL (sources: md2 catalog entry/exit/strategy text); gaps recorded: sizing not recorded in any consulted source. The accounting's own recorded lines for this id are: entry `{"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}`; exit `{"rule": "Midna plan: turtle ATR stop / exit10", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}`; filter/data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json.
+- Strategy card in Test: `strategies/midna/mn-turtle.md` (Turtle System 1); rule lines in `docs/verify/midna.md` (Turtle System 1 section). Note: `sleeves/s_mn_opt_turtle.py` in Test is the listed-options expression of this same Turtle rule and is a different canonical id; this package is the equity book.
+- Searched at batch start (fresh trees taken for this run, 2026-10-30): Test, Silicon, quant-research-backup and Midna, for the canonical id, its alias and its family terms (s_mn_*, midna_*). No code for these ids was found in Silicon, quant-research-backup or Midna beyond the traces noted in Provenance; the code named below is already in Test.
 
 ## What this strategy is
 
-Turtle System 1 breakout lane: buys 20- or 55-day closing breakouts with Turtle unit sizing and pyramiding, exits on a 2N stop or a 10-day low (card).
+Turtle System 1 on US equities: it buys 20-day (or 55-day) closing breakouts with Turtle unit sizing and pyramiding, and exits on a 2N stop or a close under the prior 10-day low. Style: breakout; timeframe 1d; universe: the Midna swing basket (card).
 
 ## Full algorithm
 
-In evaluation order, from the card and the verify rule lines (code: `sleeves/midna/board.py`, `sleeves/midna/vendor/midna/board_signals.py`):
+From the card and `docs/verify/midna.md`, read from `sleeves/midna/board.py` and `sleeves/midna/vendor/midna/board_signals.py`, in evaluation order:
 
-1. Entry signal (board_signals.py:120-165; board.py:184-206): a close above the prior 20-day (or 55-day) high, new today; at most 4 names, alphabetical (BOARD_MAX_NAMES=4 per the lane row's research line).
-2. Skip rule (board.py:194-202): a 20-day breakout right after a winning exit is skipped once; the 55-day one is taken.
-3. Pyramiding (board.py:159-171): add a unit at each +0.5N over the last add, up to 4 units. N = ATR(20).
-4. Exits (board.py:114-133, 144-157, 225-247): stop at entry - 2N (raised with adds), on any regular-hours print; signal exit on a close under the prior 10-day low. The accounting exit record names the same plan: 'turtle ATR stop / exit10', stop_pct 99.0 (no percentage stop), max_bars 0.
-5. Sizing (board.py:34-37, 48-54): unit = min(floor(1% of equity / N), floor(cash / price)), BOARD_RISK=0.01 per the lane row's research line. The Lazarus lane wrapper sizing is the sleeves.json block in Configuration ($1,000 a position, 2 slots, $2,000 budget); the two records describe the upstream book and the port respectively.
-
-Accounting / lane-config wrapper (md2 catalog text, identical in the sleeves.json row): entry policy {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}; exit {"rule": "Midna plan: turtle ATR stop / exit10", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}. The lane config also records the removed desk-wide gate for these Lazarus ports: the entry policy named midna_block is the upstream red-day buy block (QQQ red AND VIX up AND the name red on the session); the master-desk ports drop that gate, the desk halt, the cross-lane held-by-account check and the shared account cash pool (`sleeves/midna/lanes.py` header) - where a section below says the gate was removed, the config row still naming the policy is the historical record, not a live gate.
+1. Entry signal: a close above the prior 20-day high, or above the prior 55-day high, new today. At most 4 names, alphabetical.
+2. Skip rule: a 20-day breakout right after a winning exit is skipped once; the 55-day breakout is taken.
+3. Pyramiding: add a unit at each +0.5N move over the last add, up to 4 units per name. N = ATR(20).
+4. Sizing: one unit = min(floor(1% of equity / N), floor(cash / price)).
+5. Exit, stop: entry - 2N, raised with adds, acting on any regular-hours print.
+6. Exit, signal: a close under the prior 10-day low. The accounting record for this id agrees in shorthand: "turtle ATR stop / exit10", stop_pct 99.0 (the stop is ATR-based, not a fixed percent), max_bars 0 (no time exit).
+7. The card records that the master-desk port drops the source desk's desk-wide red-day buy gate and desk halt; those are not part of this book.
 
 ## Files in this repo
 
-- This package: `docs/LZ_S_MN_TURTLE-RECREATE.md`
-- Accounting: `docs/ALL-SLEEVES.json`, `docs/ALL-SLEEVES.md`
+- This doc: `docs/LZ_S_MN_TURTLE-RECREATE.md`
+- Code (already in Test): `sleeves/midna/board.py` (midna_turtle_s1 book: enter_turtle, the Turtle stop and 10-day exit paths), `sleeves/midna/vendor/midna/board_signals.py` (breakout signals), `sleeves/midna/common.py`
 - Strategy card: `strategies/midna/mn-turtle.md`
-- Code (already in Test): `sleeves/midna/board.py`, `sleeves/midna/vendor/midna/board_signals.py`, `sleeves/midna/common.py`; lane row in `sleeves/lazarus/vendor/lazarus/sleeves.json`
 - Rule lines: `docs/verify/midna.md` (Turtle System 1 section)
-- Nothing was vendored: every code file named here was already in Test.
+- Related but different id: `sleeves/s_mn_opt_turtle.py` (the options expression)
+- Accounting: `docs/ALL-SLEEVES.json`, `docs/ALL-SLEEVES.md`
 
 ## Configuration
 
-- Universe: Midna's swing basket (card); asset US equities; timeframe 1d. Unit risk 1% of equity / ATR(20); max 4 names; up to 4 units per name.
-Lane-config sizing block (sleeves.json row): budget_usd 2000, max_slots 2, position_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, global_slot_usd 1000, min_dv20_usd 100000. Account TEST (broker account id in the row is an internal test account label, omitted here); enabled true; state live unless noted; status text: ready (Midna port; start FLAT; Midna positions are reference only). Source producer: sleeve_midna (Midna entire-branch signal files + Yahoo), file shadow/paper_sleeve/live/midna/midna_fires_v1.json.
-- Research line in the row: Midna board.ts turtle enter20/enter55 BOARD_MAX_NAMES=4 BOARD_RISK=0.01.
+- Universe: the Midna swing basket (card wording; the basket list itself is not in the record: not in the record).
+- Timeframe: 1d. Breakout windows: 20 and 55 sessions. Exit channel: 10 sessions. N = ATR(20).
+- Unit: 1% of equity / N, capped by cash. At most 4 names; at most 4 units per name; add step 0.5N.
+- State per name (from board.py's header): the peak print, the units held and the skip flags live in the sleeve's state.
 
 ## Data inputs
 
-- Accounting filter record: data sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json.
-- Completed daily bars of the swing basket (card Data).
+Completed daily bars of the swing basket (card Data section).
 
 ## Install and run
 
 1. Clone the Test repo.
-2. Take the code files at the exact paths in Files, with the lane row for this id in `sleeves/lazarus/vendor/lazarus/sleeves.json`.
-3. Configure the lane with the entry, exit and sizing values in Configuration; confirm the sleeve id in code matches the s_mn_ form of the canonical id.
-4. Wire the Data inputs: the sleeve_midna fire file / Tensor-bundle fire channel and the bar / position views the code names.
-5. First evaluation: run one evaluation with no qualifying fire / signal and confirm no entry intent is emitted (fail-closed), then run the Verification checklist.
+2. Read this doc and the accounting entry for `lz_s_mn_turtle` in `docs/ALL-SLEEVES.json`.
+3. Open `sleeves/midna/board.py`; find the turtle book (IDS 'turtle' = midna_turtle_s1) and `enter_turtle`; confirm the 20/55-day breakout, the 0.5N adds to 4 units, the 2N stop and the 10-day exit match Configuration. Serve completed daily bars of the basket and run the book's regular-hours passes (stops act on any regular-hours print).
+4. Verify against the Verification section before any live use.
 
 ## Verification
 
-No dedicated test file for this lane was found in Test; rule lines at `docs/verify/midna.md`. Behaviour checklist:
+No dedicated test file for this id was found in the Test tree at batch start. Behaviour checklist from the algorithm above:
 
-- Entry only on a close above the prior 20- or 55-day high that is new today, at most 4 names in alphabetical order.
-- A 20-day breakout immediately after a winning exit is skipped once; a 55-day breakout in the same situation is taken.
-- Units add at each +0.5N to at most 4 units, sized min(floor(1% of equity / ATR20), floor(cash / price)).
-- Exit on any regular-hours print at or under entry - 2N (as raised by adds), or on a close under the prior 10-day low.
+- A close that does not exceed the prior 20-day and prior 55-day highs produces no entry.
+- A 20-day breakout immediately after a winning exit is skipped exactly once; a 55-day breakout in the same situation is taken.
+- Adds happen only at +0.5N steps over the last add and never past 4 units.
+- A regular-hours print at or below entry - 2N (as raised by adds) exits the name.
+- A close under the prior 10-day low exits the name even when the stop was not touched.
+- No more than 4 names are held at once, taken alphabetically.
