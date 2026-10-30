@@ -2,58 +2,60 @@
 
 ## Provenance
 
-- ALL-SLEEVES accounting (Test `docs/ALL-SLEEVES.json`, also `docs/ALL-SLEEVES.md`): canonical name "Midna MACD (Midna port)", type "momentum", family "1d", universe "not recorded in consulted sources", asset class "not recorded", timeframe "not recorded". Algorithm grade PARTIAL (sources: md2 catalog entry/exit/strategy text); gaps recorded: sizing not recorded in any consulted source. The accounting's own recorded lines for this id are: entry `{"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}`; exit `{"rule": "Midna plan: MACD down exit", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}`; filter/data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json.
-- Strategy card in Test: `strategies/midna/mn-macd-cci.md`; rule lines in `docs/verify/midna.md` (MACD-CCI section). The card notes the v3 reading trades a plain MACD cross with one slot and no CCI filter or chandelier; the master-desk board book adds those (kept separate below).
-- Searched at batch start (fresh trees taken for this run, 2026-10-30): Test, Silicon, quant-research-backup and Midna, for the canonical id, its alias and its family terms (s_mn_*, midna_*). No code for these ids was found in Silicon, quant-research-backup or Midna beyond the traces noted in Provenance; the code named below is already in Test.
+- ALL-SLEEVES accounting (Test `docs/ALL-SLEEVES.json`, also `docs/ALL-SLEEVES.md`): canonical name "Midna MACD (Midna port)", type momentum, family 1d unless noted. Algorithm grade PARTIAL in the accounting, gap: sizing not recorded in its consulted sources; sources: md2 catalog entry/exit/strategy text. Alias `lz_s_mn_macd` (md2_catalog, status installed); no Test catalog entry in the accounting (test_entries empty).
+- The accounting's sizing gap is filled by the Test record itself: the Lazarus lane config row in Test `sleeves/lazarus/vendor/lazarus/sleeves.json` (the lazarus-desk sleeves.json the Lazarus runtime resolves lanes from) carries this lane's entry, exit and sizing blocks, quoted in the Full algorithm and Configuration sections.
+- Strategy card in Test: `strategies/midna/mn-macd-cci.md`, whose Notes state the v3 reading plainly: Midna v3's s_mn_macd trades a plain MACD(12, 26, 9) cross with one slot, no CCI filter or chandelier. The card's fuller MACD-CCI form (master desk) is recorded as a distinct reading in the algorithm section, not merged into the v3 lane.
+- Search record: fresh recursive trees of dwj9ddyvf6-hub/Test, dwj9ddyvf6-hub/Silicon, dwj9ddyvf6-hub/quant-research-backup and dwj9ddyvf6-hub/Midna were taken at batch start (b28_Test_tree.txt, b28_Silicon_tree.txt, b28_quant-research-backup_tree.txt, b28_Midna_tree.txt in the run workspace) and searched by filename for the canonical id, its s_mn_ form, and its distinguishing tokens across sleeves/, adapters/, adapters3/, integration/, strategies/, packages/, desk3/ and docs/. The files named below were fetched from Test and read.
 
 ## What this strategy is
 
-A daily MACD momentum lane. The v3 form (`s_mn_macd`) buys the strongest fresh MACD(12,26,9) histogram cross up with a single $1,000 slot and sells on the cross down. The accounting type for this id is momentum, family 1d.
+Momentum lane: buys a daily MACD cross up and exits on the cross down, one position at a time (running v3 module).
 
 ## Full algorithm
 
-From `sleeves/s_mn_macd.py`, in evaluation order:
+In evaluation order, from `sleeves/s_mn_macd.py` `signal()` (read in full):
 
-1. Compute, per name, the MACD histogram on daily closes: EMA(12) minus EMA(26) gives the line; the signal is EMA(9) of the line; the histogram is line minus signal. A name needs at least 35 bars (MIN_BARS = 35). Crosses are evaluated on the last two closed bars.
-2. Exits first: a held name whose histogram crosses down (previous histogram >= 0, last histogram < 0) exits in full. The accounting record agrees: rule "MACD down exit", stop_pct 99.0 (no price stop), max_bars 0 (no time exit).
-3. If anything is held (or an exit was just emitted), no entry this pass: one position at a time.
-4. Entries: among names whose histogram crosses up (previous <= 0, last > 0), skipping cross-stale feeds (the ENH20 gate in the code), pick the strongest last histogram; deterministic tie-break is symbol order. Size: one slot of $1,000 (SLOT_BUDGET = 1000.0), qty = qty_for($1,000, last close). Cadence 300 seconds.
+1. MACD: fast EMA(12) and slow EMA(26) on daily closes; line = fast - slow; signal = EMA(9) of the line; histogram = line - signal (`macd_hist`). A name needs at least MIN_BARS 35 bars.
+2. Exit first: for each held name, if hist[-2] >= 0 and hist[-1] < 0 (cross down on the last two closed bars), exit the full held quantity at the last close. If any exit is emitted, or anything is held, return with no entries.
+3. Entry: scan symbols in sorted order; a cross up is hist[-2] <= 0 and hist[-1] > 0; skip stale-refused names (xstale_refused, ENH20); keep the strongest histogram (ties deterministic by symbol order); enter that one name with qty_for(SLOT_BUDGET $1,000, last close), one slot.
+4. Distinct master-desk reading (card `strategies/midna/mn-macd-cci.md`, NOT the v3 lane): MACD cross up gated by CCI(20) > 100, ranked by CCI, up to 4 names, exit on cross down or price under peak since entry - 3 x ATR(14), unit = min(floor(1% of equity / ATR14), floor(cash / price)); its code is `sleeves/midna/board.py` + `sleeves/midna/vendor/midna/board_signals.py`.
 
-Master-desk variant (different book, recorded on the same card; code `sleeves/midna/board.py` midna_macd_cci): entry additionally requires CCI(20) > 100, ranked by CCI, up to 4 names; exit is the cross back down or the price under the peak since entry minus 3 x ATR(14); one unit = min(floor(1% of equity / ATR(14)), floor(cash / price)). That variant is not the v3 lane above.
+Accounting / lane-config wrapper (md2 catalog text, identical in the sleeves.json row): entry policy {"policy": "midna_block", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}; exit {"rule": "Midna plan: MACD down exit", "hold_from": "plan", "hold_unit_kind": "1d", "stop_pct": 99.0, "max_bars": 0, "rest": "time", "plan_overrides": []}. The lane config also records the removed desk-wide gate for these Lazarus ports: the entry policy named midna_block is the upstream red-day buy block (QQQ red AND VIX up AND the name red on the session); the master-desk ports drop that gate, the desk halt, the cross-lane held-by-account check and the shared account cash pool (`sleeves/midna/lanes.py` header) - where a section below says the gate was removed, the config row still naming the policy is the historical record, not a live gate.
 
 ## Files in this repo
 
-- This doc: `docs/LZ_S_MN_MACD-RECREATE.md`
-- Code (already in Test): `sleeves/s_mn_macd.py` (imports `sleeves/laz8_common.py`, present in Test at `engines/sleeves/laz8_common.py`)
-- Code (already in Test, master variant): `sleeves/midna/board.py` (midna_macd_cci), `sleeves/midna/vendor/midna/board_signals.py`
-- Strategy card: `strategies/midna/mn-macd-cci.md`
-- Rule lines: `docs/verify/midna.md` (MACD-CCI section)
+- This package: `docs/LZ_S_MN_MACD-RECREATE.md`
 - Accounting: `docs/ALL-SLEEVES.json`, `docs/ALL-SLEEVES.md`
+- Strategy card: `strategies/midna/mn-macd-cci.md`
+- Code (already in Test): `sleeves/s_mn_macd.py`; adapters `adapters/s_mn_macd.py`, `integration/s_mn_macd_adapter.py`; lane row in `sleeves/lazarus/vendor/lazarus/sleeves.json`
+- Dependency: `sleeves/laz8_common.py` import; present in the tree at `engines/sleeves/laz8_common.py` and `engines/adapters/laz8_common.py`.
+- Rule lines: `docs/verify/midna.md` (MACD-CCI section, Midna v3 reading row cites sleeves/s_mn_macd.py)
+- Nothing was vendored: every code file named here was already in Test.
 
 ## Configuration
 
-- Universe: not recorded in the accounting for this id (not in the record); the v3 code evaluates every name in the delivered daily-bars dict.
-- Timeframe: 1d. MACD 12 / 26 / 9. Minimum bars 35.
-- Sizing: 1 slot, $1,000. Cadence: 300 s. State: the single held position.
-- Accounting entry policy: midna_block, max delay 65 minutes, limit band 5.0%, limit buffer 1.0%, capped_limit_day.
+- Sleeve id in running code: `s_mn_macd`. SleeveConfig cadence_s=300, state_schema {"position": "dict|None"}. SLOT_BUDGET $1,000, MIN_BARS 35, MACD(12,26,9), 1 slot in the running module.
+Lane-config sizing block (sleeves.json row): budget_usd 2000, max_slots 2, position_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, global_slot_usd 1000, min_dv20_usd 100000. Account TEST (broker account id in the row is an internal test account label, omitted here); enabled true; state live unless noted; status text: ready (Midna port; start FLAT; Midna positions are reference only). Source producer: sleeve_midna (Midna entire-branch signal files + Yahoo), file shadow/paper_sleeve/live/midna/midna_fires_v1.json.
+- The lane row's 2 slots / $2,000 is the wrapper config; the running module enforces one position at a time. Recorded as found; not reconciled in the record.
 
 ## Data inputs
 
-Completed daily bars (close and volume fields as delivered to the sleeve) for every candidate name.
+- Accounting filter record: data sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json.
+- Completed daily bars (closes) for the swing basket; at least 35 bars per name for any signal.
 
 ## Install and run
 
 1. Clone the Test repo.
-2. Read this doc and the accounting entry for `lz_s_mn_macd` in `docs/ALL-SLEEVES.json`.
-3. Open `sleeves/s_mn_macd.py`; confirm the MACD construction (12, 26, 9), MIN_BARS = 35 and SLOT_BUDGET = 1000.0. Serve daily bars per name and call `signal(bars, slice_state, context)` per pass; entries and exits are the returned intents.
-4. Verify against the Verification section before any live use.
+2. Take the code files at the exact paths in Files, with the lane row for this id in `sleeves/lazarus/vendor/lazarus/sleeves.json`.
+3. Configure the lane with the entry, exit and sizing values in Configuration; confirm the sleeve id in code matches the s_mn_ form of the canonical id.
+4. Wire the Data inputs: the sleeve_midna fire file / Tensor-bundle fire channel and the bar / position views the code names.
+5. First evaluation: run one evaluation with no qualifying fire / signal and confirm no entry intent is emitted (fail-closed), then run the Verification checklist.
 
 ## Verification
 
-No dedicated test file for this id was found in the Test tree at batch start. Behaviour checklist from the algorithm above:
+No dedicated test file for this sleeve was found in Test; rule lines at `docs/verify/midna.md`. Behaviour checklist:
 
-- A name with under 35 daily bars never enters or exits on a cross.
-- A held name exits exactly when the histogram moves from >= 0 to < 0 across the last two closed bars.
-- No second position opens while one is held.
-- When several names cross up on the same session, the one with the largest last histogram is bought (symbol order breaks ties).
-- The single entry never exceeds the $1,000 slot budget.
+- A held name exits exactly when the histogram crosses from >= 0 to < 0 on the last two closed bars.
+- With any position held, no new entry is emitted.
+- Among same-session cross-ups, the strongest histogram wins; symbol order breaks ties; stale names are skipped.
+- A name with fewer than 35 bars produces no intent.
