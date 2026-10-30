@@ -1,10 +1,10 @@
 # 10 — Pitfalls catalog
 
-Each entry: **Symptom → Cause → Fix → Guard**. IDs are stable; other documents cite them. Every item happened in a real desk. Order is by theme, not severity. For each pitfall you adopt, add its **guard test** to your suite *before* you consider it handled.
+Each entry: **Symptom → Cause → Fix → Guard**. IDs are stable; other documents cite them. Scenarios are generalized composites, with account and deployment details omitted. Any thresholds are illustrative, not defaults: derive them from your own risk policy, provider contract, measured workload, and instrument behavior. Order is by theme, not severity. For each pitfall you adopt, add its **guard test** to your suite *before* you consider it handled.
 
 How to use: (1) skim headings once; (2) when designing a component, read its theme section fully; (3) when something breaks, search the symptom here before debugging from scratch.
 
-**Severity hints**: P-01, P-02, P-05, P-06, P-12, P-17, P-37, P-58, P-79, P-88, P-89 each risked wrong orders, wrong positions, or unprotected exposure.
+**Severity hints**: identity, persistence, supervision, stop handling, and execution-boundary failures can create wrong orders, wrong positions, or unprotected exposure.
 
 
 ## A. Identity and idempotency
@@ -61,7 +61,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Guard:** Regression test: backup then open then `integrity_check == ok`.
 
 ### P-08 — One stalled request stalls the whole pass (and misses a time exit)
-- **Symptom:** A pass took 66 minutes; a 12:00 time exit never executed; the position was held overnight.
+- **Symptom:** A pass exceeded its decision window and delayed a time-sensitive exit.
 - **Cause:** HTTP calls had only an idle socket timeout, no total deadline; the pass had no deadline.
 - **Fix:** `urlopen_read` with a hard total deadline (broker 40 s); pass deadline (600 s, monotonic); side jobs 240 s; intraday warm 120 s with bounded concurrency; a due exit refreshes its own feed.
 - **Guard:** `SlowBroker` sleeping past the deadline: pass ends on time, alert raised, other sleeves ran.
@@ -111,7 +111,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Fix:** Heartbeat only on real progress; keep-alive requires fresh heartbeat AND a moving progress counter; honest status in the supervisor.
 - **Guard:** `keepalive_ok` truth table test.
 
-### P-16 — Supervisor kills a long but healthy tick every 900 seconds
+### P-16 — Supervisor kills a long but healthy tick at its stale limit
 - **Symptom:** Kill loop: the engine tick legitimately took longer than the stale limit.
 - **Cause:** Heartbeat written only at the end of a tick.
 - **Fix:** Progress-gated heartbeat and export *during* long ticks; stale limits sized to the longest legitimate tick.
@@ -124,16 +124,16 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Guard:** Check `ops:no_old_desk_process`.
 
 ### P-18 — Agent usage limit exhausted: scheduled agent runs fail, desk unsupervised
-- **Symptom:** Several wake runs failed with usage errors; the desk was down for ~2 hours until a script recovered it.
+- **Symptom:** Scheduled agent runs fail, leaving supervision unavailable until deterministic recovery runs.
 - **Cause:** Supervision depended on an LLM run.
 - **Fix:** Deterministic script supervisor independent of agents; wake-ups quiet when healthy; usage budget and reset date tracked; cheap checks first.
 - **Guard:** Chaos test: disable the agent, desk still restarts.
 
-### P-19 — Free-tier quota exhausted mid-morning
-- **Symptom:** Failover heartbeat writes would have failed from ~08:30 and the standby would trade beside a live primary.
-- **Cause:** Design wrote every 90 s (+ cron writes) ≈ 2,100/day vs 1,000/day.
-- **Fix:** Throttle heartbeat (≥ 4 min), write the book only on change (hash metadata), 1 write/cron, write-probe before any live order, stand down on failure; compute worst-case writes per day in a test.
-- **Guard:** KV budget simulation test: writes/day < quota, fail-closed 0 orders.
+### P-19 — Provider quota exhaustion threatens state freshness
+- **Symptom:** A standby cannot publish or read the state needed to prove it is safe to act.
+- **Cause:** The design did not calculate worst-case use against the current provider plan.
+- **Fix:** Bound and measure requests, write only changed state, retain a single writer, and stand down if freshness or mutual exclusion cannot be proved. Do not submit orders after a required state-sync operation fails.
+- **Guard:** Simulate the actual plan limits and assert that a quota failure blocks order creation without losing position ownership.
 
 ### P-20 — Failover cancels all stops for a symbol to sell one lot
 - **Symptom:** Remaining lots of the symbol unprotected.
@@ -224,15 +224,15 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 
 ### P-34 — A delayed feed makes a gate permanently unknown
 - **Symptom:** A whole family of sleeves could never buy.
-- **Cause:** The index-volatility feed was 15 minutes delayed; the freshness limit was 15 minutes.
-- **Fix:** Measure feed delay; set the limit above it; use any print from *today's* session for a prior-close comparison; only a previous-session print is unknown.
-- **Guard:** Feed-age test with a 15.3-minute-old print.
+- **Cause:** The provider's actual delay was at or beyond the configured freshness tolerance.
+- **Fix:** Measure feed delay and entitlement; define which observations the rule can use. If the required input is not fresh enough, report it unavailable instead of silently loosening the gate.
+- **Guard:** Feed-age tests on both sides of the documented freshness boundary.
 
-### P-35 — Entries consistently one share short
-- **Symptom:** Every entry got 1 fewer share than the slot allowed.
-- **Cause:** Sizing at last price, then the 'never above reserved dollars' rule cut it because the limit had a 1% buffer.
-- **Fix:** With no reservation price, size at the limit actually committed.
-- **Guard:** Sizing test with a $1,000 slot.
+### P-35 — Entry sizing disagrees with the committed price cap
+- **Symptom:** An entry is smaller than expected or breaches its reserved budget after limit-price rounding.
+- **Cause:** Sizing used one reference price while the order used another, or rounding was applied after the cap check.
+- **Fix:** Size from the price actually committed, use the instrument's authoritative tick schedule, and re-check the cap after rounding.
+- **Guard:** Boundary tests around price ticks and the configured budget cap.
 
 ### P-36 — Overlapping sells rejected by the broker
 - **Symptom:** Exit failed because a stop already covered the shares.
@@ -241,7 +241,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Guard:** Fake broker rejecting overlaps.
 
 ### P-37 — Disaster stop only lives in desk passes / evaluated one pass late
-- **Symptom:** A sleeping machine left positions unprotected; a lot sold a pass after crossing -15%.
+- **Symptom:** A sleeping machine left a position without the protection required by its documented risk policy, or an exit was evaluated after its trigger.
 - **Cause:** No broker-side stops; the 'stop refused' flag was set after exits ran.
 - **Fix:** Broker GTC stops per lot; same-pass evaluation for lots without a live stop; refused-stop fallback; coverage check; exempt list explicit.
 - **Guard:** No-lot-held-past-threshold regression check.
@@ -418,13 +418,13 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Guard:** Fixture lint.
 
 ### P-65 — Memory pressure / OOM
-- **Symptom:** Kernel killed 5–6 GB processes; loop restarts.
+- **Symptom:** The operating system kills a worker after memory use grows beyond available capacity.
 - **Cause:** Unbounded caches, long-lived workers with native memory.
 - **Fix:** Resident cap with recycle; bounded worker batches; log OOM count at starts.
 - **Guard:** Memory soak test.
 
-### P-66 — Disk filled by temp directories
-- **Symptom:** 8 GB of headless-browser profile dirs.
+### P-66 — Disk filled by temporary directories
+- **Symptom:** Accumulated temporary profiles or caches exhaust available disk space.
 - **Cause:** No cleanup on exit.
 - **Fix:** Remove in exit handlers; periodic safe cleaner (idle, not open).
 - **Guard:** Disk check in sentinel.

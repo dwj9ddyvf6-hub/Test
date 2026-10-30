@@ -85,8 +85,8 @@ At startup verify `book hash == last pass_end hash` (alert on gap). A test kills
 | latency | record `order_lat_ms` per pass (first, max) so regressions show |
 | session | equities only 09:30–16:00 exchange time on trading days; crypto 24/7 |
 
-### 5.5.1 Reference quote chain (price used for the cap and sizing)
-In order: fresh last trade (≤ 10 min) → fresh *tight* mid (≤ 10 min, spread ≤ 2%) → today's session price from a secondary provider → today's last trade even if older. **Every fallback raises an alert**; if nothing exists the decision is `wait` (entries) or `wait + alert` (exits) — never a guess, never a void.
+### 5.5.1 Price references and freshness
+A price used for sizing or a limit cap is eligible only when the instrument identity, source, market timestamp, receipt timestamp, adjustment basis, and age satisfy that sleeve's written policy. A fallback is not automatically fresh because it comes from another provider or from the same session. Do not use an old last trade as a generic fallback, and do not treat a midpoint as an executable bid or ask. Record the chosen source and timestamps. If no eligible reference exists, block a new entry and report the blocker. An exit follows its preapproved contingency policy; it does not invent a price or erase the position.
 
 ## 5.6 Exits
 

@@ -61,7 +61,7 @@ If a user already told you "fix things automatically", **do not ask again**. A h
 4. `INVENTORY.md`: generated list of sleeves/jobs/tools (regenerate; don't hand-edit).
 5. `evidence/`: receipts for each claim; `undo/` copies.
 6. **Open items** list with owner and "what would close it".
-7. A **standing decisions** list (e.g. "no desk-level kill switches", "caps are X by decision of the human on date Y").
+7. A **standing decisions** list: entry-pause and emergency-stop triggers, their effects on queued/working orders and existing positions, recovery authority, and risk/capacity limits. Record the decision owner and date.
 8. The current **state of authority**: what the agent may do unprompted.
 
 ## 9.7 Reporting to the human

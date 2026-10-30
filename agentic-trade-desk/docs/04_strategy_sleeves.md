@@ -61,8 +61,8 @@ stateDiagram-v2
 When many sleeves arrive (from a partner agent, a library, a research lab):
 
 1. **Inventory first.** One row per sleeve with a stable id and idempotency key. Reconcile against what is already installed. Count *distinct* ones; configs that overlap catalog rows must not be summed as separate sleeves.
-2. **Source identity.** Pin each source by repository + commit + content hash. "latest" is not provenance. Vendor external code **byte-for-byte** with a manifest (`vendor/MANIFEST.sha256`). If it is too slow or needs a fix, add a shim *outside* the vendor directory and prove outputs are identical on a corpus (a speed shim for an O(n²) routine was accepted only after 284/284 identical outputs).
-3. **Fidelity check against the origin.** Port rules exactly, then diff behaviour on random and historical inputs (parity test). A ported "buy block" was inverted — the original blocked on a red day and the port blocked on every *other* day — and 20 sleeves would have bought on the wrong days. A 4000-random-case parity test is what found it.
+2. **Source identity.** Pin each source by repository + commit + content hash. "latest" is not provenance. Vendor external code **byte-for-byte** with a manifest (`vendor/MANIFEST.sha256`). If it is too slow or needs a fix, add a shim *outside* the vendor directory and prove outputs remain equivalent across representative boundary, randomized, and historical inputs.
+3. **Fidelity check against the origin.** Port rules exactly, then diff behaviour on randomized and historical inputs (parity test). Inverted boolean rules and sign errors can affect every strategy that uses the port; include truth-table, boundary, and broad parity cases.
 4. **Install shadow-only** first. Sleeves that need data you do not have are installed as `blocked(reason)`, not faked.
 5. **Exit audit.** Mechanically verify every sleeve's exit routes terminate (see 4.9).
 6. **Load/rehearsal.** Run a dry rehearsal at realistic count (hundreds of sleeves) and measure first-pass time, steady-pass time, memory, and replay equality.
@@ -124,7 +124,7 @@ sum(lane budgets)  vs  overnight capacity of the account
 | "limit at 1.02× signal close" | rounding can lift a buy above the cap by half a cent; floor to the cent when binding |
 | "hold N bars" | count from the **fill**, not from the planned entry bar, if fills can land days later |
 | "trail the rest after the target" | volatility input (ATR) may never be set on new lots; trail then sells on the first pass — backfill ATR, or hold when unknown |
-| "market-wide condition" using a vol index | feed may be delayed 15 min; a freshness limit shorter than the delay makes the condition unknown forever |
+| "market-wide condition" using a vol index | provider delay exceeds the freshness tolerance, making the condition unavailable |
 | "exit when signal flips" | the exit function needs inputs (next trading day, running peak). If the host doesn't pass them the exit can never fire (P-40) |
 | options / short / crypto in a stock book | model options in contracts ×100 with premium and intrinsic expiry; shorts cover with a *buy*; crypto runs 24/7; keep non-supported instruments shadow-only |
 
@@ -132,11 +132,13 @@ sum(lane budgets)  vs  overnight capacity of the account
 
 For every sleeve assert **at least one exit route that can fire given the inputs the host really provides**, and that the time exit counts from the fill. Generate a table: `sleeve | entry → exit routes | terminates? | stop`. A sleeve that reports `terminates: no` is a bug until proven otherwise.
 
-### 4.9.1 Per-trade risk exits (the only automatic hard stops)
-* A **standing disaster stop** (e.g. −15% from entry) on every lot whose research plan has no stop, *recorded on the lot* so it is visible and so it survives restarts. Exempt lots only by explicit id list with a recorded decision.
-* The stop must be evaluated **in the same pass** it becomes true — if the code that learns "the broker refused the stop" runs after exits, the lot sells one pass late.
-* Place **broker-side stop orders** for open lots (good-til-cancelled) so a sleeping machine does not leave positions unprotected; handle: one stop per lot, replace on qty change, a refusal (price already through) falls back to the desk stop, a foreign stop for the symbol satisfies the requirement, and **any sell must first cancel and confirm cancellation of overlapping stops** (brokers reject overlapping sells).
-* Gapped through the stop → the stop fills at the market; record that honestly ("gapped through the stop").
+### 4.9.1 Position exits and risk controls
+* Specify the strategy exit, time exit (measured from the actual fill where appropriate), risk-reduction or stop logic, and the behavior when required inputs or the order route are unavailable. Record these rules on the position so they survive restarts.
+* There is no universal stop percentage. Select any stop or loss limit using a documented, instrument- and strategy-specific risk policy that accounts for volatility, liquidity, gaps, and order behavior. A stop order does not guarantee its trigger price or limit a gap loss.
+* If the approved risk policy requires a protective order and it cannot be verified as accepted, follow a deterministic contingency: block new exposure, retain ownership, alert, reconcile, and use only the preapproved fallback. Do not silently waive the control or invent a market price.
+* Use broker-native protective orders only when the broker, account, instrument, and order type support the intended semantics. Track acceptance and quantity; handle replacements and cancels idempotently; confirm cancellation before submitting a potentially overlapping exit when required by the broker.
+* A desk-level entry pause or emergency stop is a separate control from a position stop. Define its effects on queued entries, working orders, protective orders, positions, and recovery in the runbook; see `07_reliability_ops.md`.
+* If the market gaps through a stop, record the actual fill and the gap. Never report the trigger price as the fill unless that is what the broker confirms.
 
 ## 4.10 Fill-price semantics
 

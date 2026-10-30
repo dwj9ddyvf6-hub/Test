@@ -2,7 +2,7 @@
 
 For strategy, market-data, research, trading, or deployment work:
 
-1. Read [docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md), this repository's README, [docs/CATALOG.json](docs/CATALOG.json), and [docs/VERIFY.md](docs/VERIFY.md).
+1. Read [docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md), this repository's README, [docs/CATALOG.json](docs/CATALOG.json), and [docs/VERIFY.md](docs/VERIFY.md). For trade-desk architecture, setup, risk, operations, and LLM routines, follow the reading order in [agentic-trade-desk/README.md](agentic-trade-desk/README.md) and its nested `AGENTS.md`.
 2. Read and follow any narrower AGENTS.md under the package or code path you will touch. Do not treat a historical package as the current runtime without checking its provenance and version.
 3. Trace a strategy from card to exact source, configuration, adapter, tests, state owner, and execution boundary. Distinguish research-only, local simulation, broker paper, and live.
 4. Keep LLM and research outputs read-only by default. Route any explicitly permitted action through deterministic authorization, data, risk, idempotency, and audit controls.
