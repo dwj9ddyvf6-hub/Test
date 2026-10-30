@@ -158,7 +158,7 @@ class T(unittest.TestCase):
         now = 1000.0
         self.assertEqual(reference_price((10.0, now - 60), None, lambda: None, now), (10.0, "last"))
         self.assertEqual(reference_price((10.0, now - 9000), (9.9, 10.1, now - 30), lambda: None, now), (10.0, "mid"))
-        self.assertEqual(reference_price((10.0, now - 9000), (9.0, 11.0, now - 30), lambda: 10.5, now), (10.5, "secondary"))
+        self.assertEqual(reference_price((10.0, now - 9000), (9.0, 11.0, now - 30), (10.5, now - 30), now), (10.5, "secondary"))
         self.assertEqual(reference_price(None, None, lambda: None, now), (None, "none"))
 
     def test_datahub_missing_stale_and_replace(self):

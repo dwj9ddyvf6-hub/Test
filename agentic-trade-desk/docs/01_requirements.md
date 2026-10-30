@@ -13,13 +13,13 @@ Everything you need *before* writing code. Collect these and write the result in
 ## 1.2 Accounts
 
 1. **Source control host** (e.g. GitHub) with a *private* repository for the desk code and a second *private* location for state backups. Agents authenticate with a CLI login or a credential helper — **never** a token pasted into a file in the repo.
-2. **A paper brokerage account** with an API (examples: Alpaca paper trading; Interactive Brokers paper via its API; others). Prefer **two** paper accounts if you can: a "main" account for conservative sleeves and a "test" account for experimental sleeves. Keep their keys in separate files.
-3. **A market-data source**. Free tiers exist (Yahoo-style endpoints, the broker's free IEX-quality feed) but have delays, gaps and rate limits. A paid consolidated feed is more reliable. *Whatever you choose, record its delay and its failure modes.* (A free index-volatility feed was 15 minutes delayed; treating it as real-time made a whole family of rules unable to fire.)
+2. **A paper brokerage account** with an API that supports the order lifecycle you need: client order identity, lookup after timeouts, positions, fills, cancellations, and relevant order types. A separate test account can isolate experimental work. Keep credentials separate by account and service.
+3. **A market-data source** with explicit feed, delay, coverage, adjustment, and licensing terms. Free and paid plans can both have gaps, limits, or restrictions. Record the actual entitlement and observed failure modes; a feed whose delay exceeds the strategy's freshness tolerance is unavailable for that decision.
 4. **Optionally** a free-tier cloud function account for the failover worker (check quotas: write limits per day, CPU ms per invocation).
 5. **Optionally** a static-hosting account for a read-only status page.
 
-### 1.2.1 Reg T, margin and what "buying power" means
-A margin paper account advertises *intraday* buying power (commonly 4× equity for day trades) that **cannot be held overnight** (overnight is commonly 2× under US Regulation T-style rules). If you size lanes to the intraday number, orders will start being rejected for lack of buying power on heavy days. Size to **overnight capacity** (≈ 2× equity for a margin account, 1× for a cash account) and compute the overshoot explicitly. See `04` §4.7.
+### 1.2.1 Buying power and account constraints
+Buying power and margin treatment vary by jurisdiction, account type, instrument, broker, and time of day. Never infer overnight capacity from an intraday display. Read the broker's current account rules, apply the most restrictive relevant limit before sizing, and handle a rejection as a recorded outcome rather than retrying with a larger order. See `04` §4.7.
 
 ## 1.3 Compute
 
@@ -30,7 +30,7 @@ A margin paper account advertises *intraday* buying power (commonly 4× equity f
 | Containers with restart policy | easy supervision | health checks must reflect *progress* |
 | Serverless only | no machine | hard for long jobs; good for failover only |
 
-**Minimum**: 2 vCPU, 4 GB RAM, 20 GB disk for a desk of a few dozen daily/hourly sleeves. A large research cache or a ML worker can need much more: a long-lived worker with native memory grew to several GB and, together with other jobs, triggered kernel OOM kills. Budget RAM and put a **resident-size cap with recycling** on any long-lived worker.
+**Prototype sizing is workload-dependent.** A small daily/hourly paper service may start with modest compute, but measure peak memory, disk, data volume, concurrency, and recovery needs before choosing a host. A large cache or native ML worker can dominate resource use. Budget headroom and put a **resident-size cap with recycling** on long-lived workers.
 
 Software: Python 3.10+ (3.11–3.12 safest for scientific wheels), `git`, `sqlite3`, a POSIX shell, `flock`, `setsid`. Optional: Node.js for a failover worker.
 
@@ -53,7 +53,7 @@ Typical sources: equity bars (daily + intraday), a quote/last-trade, corporate-a
 
 ## 1.5 Cost
 
-A paper desk can run at **$0–$10/month** (free broker paper account, free data, free-tier cloud function, free git hosting). The real cost is **agent usage**: each agent wake-up consumes plan credits, and a weekly usage limit exhausted mid-day took three scheduled agent runs down in one incident. Plan a *usage budget*:
+Costs vary by broker, feed entitlement, compute, storage, network transfer, and agent plan; free tiers can change or impose hard quotas. Price the complete workload, including overages and backups, and plan an *agent usage budget*:
 
 * use cheap deterministic code for anything that does not need judgment (health checks, restarts, reconcile);
 * wake an LLM only when a check finds an exception;

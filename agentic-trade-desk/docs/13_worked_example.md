@@ -42,7 +42,7 @@ Real calendars/holidays, partial fills, stops, corporate actions, real data, mul
   "lanes": {
     "toy_dip": {"kind": "1d", "max_slots": 2, "budget_usd": 200, "slot_usd": 100,
                 "window": {"start": "15:20", "end": "15:50"},
-                "exits": {"time_sessions": 3, "hold_from": "fill", "disaster_stop_pct": 15},
+                "exits": {"time_sessions": 3, "hold_from": "fill", "risk_policy_id": "toy-policy-defined-for-simulation"},
                 "status": "shadow"}
   },
   "mode": "shadow",
@@ -50,6 +50,7 @@ Real calendars/holidays, partial fills, stops, corporate actions, real data, mul
 }
 ```
 Config is hot-reloaded each pass; unknown keys alert (never raise).
+The budgets, slots, and timing in this toy are simulation fixtures, not sizing recommendations. A risk policy must be defined for the instrument and strategy before any paper order path is enabled; this example intentionally does not prescribe a stop percentage.
 
 ## 13.6 A minimal regression harness skeleton
 ```python

@@ -37,11 +37,11 @@ flowchart TB
 ## 2.2 Components in detail
 
 ### 2.2.1 Data hub
-*Fetches each series once per pass and fans it out.* Without this, 400 sleeves each fetch the same bars and the pass takes minutes. Properties:
+*Fetches each series once per pass and fans it out.* Without this, many sleeves can duplicate requests for the same bars, wasting quota and delaying the pass. Properties:
 * single fetch per (symbol, timeframe, pass); bounded concurrency (e.g. ≤ 4 in flight) with one writer;
 * **Missing(reason) ≠ negative evidence.** A missing bar yields "unknown", which a sleeve must treat as "do nothing and report";
 * bar cache **keyed by file mtime/version**, one frame per symbol — an early version cached for the life of the process (new data invisible after the nightly refresh) and a later "fix" kept every version (memory grew without bound). Replace, don't accumulate;
-* every fallback (e.g. primary quote → mid → previous-day price) is **alerted**, never silent.
+* a fallback is eligible only when its source, contract, timestamp, adjustment basis, and freshness satisfy the strategy's written policy. A previous-session value may support research, but is not silently promoted to an executable current price.
 
 ### 2.2.2 Signal feed loader
 Strategy research usually produces *files* (fires with dates, validity windows, reference prices). The loader:

@@ -8,11 +8,11 @@ A trading desk that is correct but down is a failure; one that is up but silentl
 |---|---|---|
 | process crash | OOM kill of a large process | supervisor, restart-safe ids, crash tests |
 | hung process | a loop ignoring TERM | TERM → wait → KILL |
-| slow request | one HTTP call with only an idle timeout stalled a pass 66 minutes; a time exit was missed | per-request total deadline, per-pass deadline, per-job limits |
+| slow request | a call without a total deadline stalled a pass beyond a time-sensitive decision | per-request total deadline, per-pass deadline, per-job limits |
 | VM pause / snapshot-restore | wall clock +hours, monotonic unchanged; healthy loops "stale" | jump detector + grace, monotonic timeouts |
 | disk rollback / wipe | caches, venv and output folders vanished after a re-provision | off-box backup, boot hook, boot sentinel, venv freeze |
 | provider outage / block | index feed delayed; a funding data source geo-blocked | skip+alert, validated substitutes only, never circumvent |
-| rate limit / quota | free-tier KV 1,000 writes/day | throttle, change-only writes, write-probe, stand down |
+| rate limit / quota | a provider limit prevents state synchronization | use current published limits, bound writes, and stand down if required state cannot be synchronized |
 | agent unavailable | usage limit exhausted; scheduled agent runs failed | deterministic supervisor independent of agents; quiet routines; usage budget |
 | human unavailable | nobody awake at the decision window | pre-authorized repairs; failover |
 | platform surprise | sandbox idled and paused the VM when no agent turn was active | keep activity from a scheduled wake-up; design for pauses |
@@ -61,31 +61,46 @@ Requirements for the supervisor (`skeleton/ops/ensure_desk.sh`):
 |---|---|
 | alerts with a key and a dedupe window | one alert per pass |
 | severity levels; a digest for humans | page for every warn |
-| monitors that are **read-only** | monitors that halt trading |
+| read-only diagnostics; explicit deterministic gates own safety transitions | monitors with hidden order side effects |
 | record *recovery* (`RECOVERED` lines) | leave stale alert lines looking current |
 | test the alert path (a failing publish raises one alert after N consecutive failures) | assume it works |
 | a check that names a missing blocker fails | blockers named in a log row but never run |
 
-Health signals: last pass age; pass duration; heartbeat age; progress counter; orders/fills today; unreconciled count; blocked reasons by count; data freshness by feed; backup age; restore-drill age; job rc history; memory; disk (temp dirs from headless browsers once filled 8 GB).
+Health signals: last pass age; pass duration; heartbeat age; progress counter; orders/fills today; unreconciled count; blocked reasons by count; data freshness by feed; backup age; restore-drill age; job rc history; memory; disk and temporary-file growth.
+
+### 7.5.1 Safety states and stop behavior
+
+Separate alert severity from authority to change the order path. A warning can remain informational; a critical invariant failure must trigger its documented deterministic control. At minimum, define these states:
+
+| state | new entries | existing orders and positions | recovery |
+|---|---|---|---|
+| `RUNNING` | allowed only after all gates pass | normal ownership, reconciliation, and exits | normal checks |
+| `SLEEVE_DEGRADED` | blocked for the affected sleeve | preserve ownership; other sleeves continue if shared inputs and controls remain healthy | repair and revalidate that sleeve |
+| `ENTRY_PAUSED` | blocked desk-wide | reconcile orders and positions; apply the predeclared policy to unfilled entry orders; preserve exits and protective orders | clear the named blocker and require the configured approval/checks |
+| `EMERGENCY_STOP` | automated order creation blocked | apply the tested policy to queued and working orders; preserve position records and broker-native protection unless the policy explicitly directs otherwise; no blind liquidation | explicit operator-controlled recovery after reconciliation and integrity checks |
+
+Examples that should block new exposure include stale or incomplete decision data, an account-identity mismatch, corrupt or unavailable durable state, an unexplained broker/book difference, unknown order submission outcome, duplicate-order detection, risk-cap breach, or a shared broker/data outage. A local sleeve defect should not stop unrelated sleeves if their inputs, account, risk controller, and order path are demonstrably independent.
+
+An exit is not automatically safe just because it reduces nominal position size: it still needs a valid instrument, account, quantity, order identity, price policy, and broker route. If those cannot be verified, retain ownership, prevent new exposure, preserve any already-working protective order, alert, and follow the named contingency runbook. Never retry an unknown submission with a new client id before reading back the original id. Recovery must be explicit, logged, and idempotent.
 
 ## 7.6 Failover worker (standby in the cloud)
 
-Why: a primary on a pausable machine will be down at the worst time. A free-tier scheduled function can protect exits (and later entries).
+Why: a primary on a pausable machine can be unavailable during a decision window. A separate standby may support continuity, but it adds another state writer and order-capable process; prove mutual exclusion, state freshness, and recovery before granting it any order authority.
 
 Build order:
 1. **Dry** mode: reads broker (GET only), reads primary's exported book + heartbeat, computes what it *would* do, records it. Compare with the primary's decisions for several sessions.
 2. **Heartbeat lock**: the primary posts book + heartbeat every few minutes; the worker stands down while it is fresh (e.g. < 10 min). Write the heartbeat only when it is *making progress*.
 3. **Exits live** first: time/target/stop/signal exits for known lots, with the primary's cid scheme.
 4. **Entries live** only after a clean dry day and a human yes, from a **session plan** exported by the primary (windows, caps, cash, slot counts, price caps, risk blocks) with a session date the worker verifies.
-5. **Quota discipline**: count writes per day under worst case (e.g. a design that wrote every 90 s needed ~2,100 writes/day against a 1,000/day limit and would have failed mid-morning, letting the worker trade beside a live primary). Throttle (e.g. ≥ 4 min), write the book only when it changed (hash in metadata), 1 write per cron cycle, and probe a write before any live order.
-6. **CPU/subrequest limits**: measure (a 127 KB plan, 126 lots took ~6–8 ms CPU warm vs a 10 ms free limit). Know the paid fallback.
+5. **Quota discipline**: calculate worst-case reads, writes, CPU, and subrequests against the provider's current plan and leave headroom. Write state only when it changes, keep a single writer, and make the standby stand down if it cannot prove fresh state or mutual exclusion.
+6. **Resource limits**: measure the actual workload, including cold starts and worst-case state size. Know what the service does when its execution or storage budget is exhausted.
 7. **Stop handling**: record each cancelled stop and re-place for `held − sold`; ids with a foreign-stop prefix; never the prefix the primary adopts as an exit.
 8. **Adoption**: the primary absorbs the worker's fills before each pass (`absorb` job): sells become that lot's exit; buys are imported; a broker-driven import covers the case where the worker's own book write failed.
 9. **DST**: cron expressions in UTC shift by an hour twice a year; calendar-check inside the worker too.
 10. **Watchdog backstop** (e.g. a CI schedule) that kicks the worker if the market is open and the worker's own cron is stale; quiet unless a genuine error.
 
 ## 7.7 Backups (recap; details in `06`, `12`)
-Additive, off-box, retried, bounded steps, secret-scanned. A single transient 403 after a TLS reset failed a backup; the next attempt five minutes later with the same credential succeeded — hence retry with 5/15 s backoff, non-interactive, never force.
+Additive, off-box, retried with bounded backoff, and secret-scanned. Verify the resulting backup by hash and restore checks; never force an overwrite after an ambiguous failure.
 
 ## 7.8 "Why isn't it trading?" runbook (answer with data in under five minutes)
 
@@ -98,7 +113,7 @@ Additive, off-box, retried, bounded steps, secret-scanned. A single transient 40
 7. Is the **mode** `shadow` rather than `paper`?
 8. Did a **restart** leave sleeves in a "taken" state (keys already seen)?
 9. Did a **failover** buy instead (and adopt)? 
-Report the *specific* finding, not "market conditions". In one incident, three days of "no fills" were exactly: the index was up (so a fear-day-only entry rule never triggered) and the test lanes were full after a cap reduction. Both were *correct behaviours* — and one was a mistake worth reversing.
+Report the *specific* finding, not "market conditions". A run of "no fills" can be correct because no signal fired, or can reveal a misconfigured window, stale input, full capacity, or rejected order. Use per-decision reasons and provider/order receipts to distinguish them before changing a rule or limit.
 
 ## 7.9 Agent-side reliability
 

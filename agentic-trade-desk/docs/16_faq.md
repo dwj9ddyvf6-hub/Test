@@ -6,9 +6,9 @@
 
 **Shadow or paper first?** Shadow. Then paper with tiny size on one lane. Compare shadow and paper decisions for the same signals before widening.
 
-**Should a failing monitor halt trading?** No. Alert. Per-trade stops are the only automatic halts. A human can say stop.
+**Should a failing monitor halt trading?** A warning alone should not silently stop the whole desk. A sleeve-specific fault should normally block that sleeve's entries; critical shared failures (identity, data integrity, ledger, broker reconciliation, or risk limits) should pause new exposure or trigger the documented emergency stop. Define what happens to working orders, positions, and protective exits, and test recovery.
 
-**What if the data provider is down at the decision window?** Entries `wait` (retry later in the window, drop only at the deadline); exits wait and alert; never guess a price. Use the quote chain with tagged fallbacks.
+**What if the data provider is down at the decision window?** Block new entries that depend on the missing feed and show the exact blocker. An exit may proceed only if its instrument, quantity, price policy, account, and route can be verified from trusted inputs or a preapproved broker-native protection. Otherwise preserve position ownership, avoid guessing or blind liquidation, and follow the contingency runbook. Use only explicitly permitted, tagged fallback sources.
 
 **How do I know the book equals the broker?** Reconcile every pass with pending-order tolerance; replay the ledger; compare hashes in the restore drill.
 
