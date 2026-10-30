@@ -29,7 +29,7 @@ This guide distills generalized engineering lessons from iterative desk-building
 | 16 | [FAQ and decision guide](docs/16_faq.md) | quick answers |
 | 17 | [Reconciliation with the companion guide](docs/17_companion_guide_reconciliation.md) | to merge this kit with [`docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md`](../docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md) |
 
-> **Companion guide:** a shorter architectural guide lives at [`../docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md`](../docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md). Read both; [doc 17](docs/17_companion_guide_reconciliation.md) maps them. Two differences to decide consciously: this kit uses *no automatic monitor-triggered halts* (a human-invoked halt that only blocks new entries is fine) and treats live trading as out of scope.
+> **Companion guide:** a shorter architectural guide lives at [`../docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md`](../docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md). Read both; [doc 17](docs/17_companion_guide_reconciliation.md) maps them. Both guides keep live trading out of scope; this kit adds an operational paper-trading skeleton.
 
 Code: [`skeleton/`](skeleton/) (generic Python, stdlib only, tests included) · Templates: [`templates/`](templates/).
 

@@ -17,7 +17,7 @@ It distills generalized lessons from iterative desk-building work involving huma
 ## 0.2 Risk note (not optional)
 
 * **This is not financial advice.** Nothing here says any strategy makes money. Most strategies do not, and a backtest that looks good is usually wrong.
-* **Start on paper and stay on paper.** Use a simulated broker first, then a broker's *paper-trading* account. Do **not** connect real money until (a) the desk has run unattended on paper for a long period, (b) you have personally audited every order path, and (c) you accept that you can lose all of it. Even then, treat this guide as a source of ideas, not as certification.
+* **This manual is paper-only.** Begin with simulation, then use a broker's paper environment only if needed and explicitly configured. Live-money execution is intentionally out of scope and is not enabled by completing this guide; it is a separate project requiring its own legal, regulatory, security, risk, and human-authorization review.
 * **Never give an agent authority you have not bounded.** The architecture below limits what an agent can do (single order path, allow-lists, caps). Keep those limits.
 * Software here is educational reference code. It has no warranty.
 

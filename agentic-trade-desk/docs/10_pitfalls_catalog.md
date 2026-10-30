@@ -495,7 +495,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Fix:** Perimeter list; ask only for authority/material choice.
 - **Guard:** AGENTS.md review.
 
-## J. Order ids, ownership and exits (added from archive review)
+## J. Order ids, ownership and exits
 
 ### P-78 — Order ids collide with themselves after a fill plus a quantity change
 - **Symptom:** A burst of broker 422 duplicate-id rejections in one morning.
@@ -518,7 +518,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 ### P-81 — An unrelated data failure delays a healthy held-position exit
 - **Symptom:** A position's exit waited because a different instrument's feed failed.
 - **Cause:** Exit assessment shared the entry path's all-or-nothing data census.
-- **Fix:** Held-symbol exits use **their own causal data source**; only *new entries* require the complete census. Test across disable/halt/restart.
+- **Fix:** Held-symbol exits use **their own causal data source**; an unrelated feed failure should not block them when shared account identity, state integrity, risk controls, and the order route remain valid. Only *new entries* require the complete strategy data census. Test across sleeve disable, entry pause, and restart.
 - **Guard:** Break an unrelated feed ⇒ held exit still evaluates.
 
 ### P-82 — A transient failure at the admission guard becomes a permanent denial
@@ -558,12 +558,12 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Guard:** Round-trip accounting identity test.
 
 
-## K. State truth, recorders and protection (added from archive review)
+## K. State truth, recorders and protection
 
 ### P-88 — A risk number downstream of a cache trips a breaker on fiction
-- **Symptom:** An exposure circuit-breaker tripped at a phantom 177% when the real figure was ~130%.
+- **Symptom:** A risk control reacts to an exposure figure that differs materially from the broker's current positions.
 - **Cause:** The exposure ledger held a ghost position the broker did not, and missed real positions because the broker→ledger sync hadn't run; short legs were skipped entirely.
-- **Fix:** Every risk metric is computed from **broker truth** (or reconciled to it every pass); shorts and legs count; stale caches are labelled stale. Prefer 'lock the symbol and alert' over a global breaker.
+- **Fix:** Compute each risk metric from **broker truth** (or reconcile it every pass); include shorts and all supported legs; label stale inputs. Validate a discrepancy before applying a policy. If the metric is untrusted, block new exposure while reconciling; if a breach is confirmed, apply the documented entry-pause/emergency-stop policy. Do not blindly liquidate based on a phantom number.
 - **Guard:** Phantom-position test: ledger ghost + missing broker rows ⇒ metric uses broker.
 
 ### P-89 — Some writers bypass the recorder
@@ -581,7 +581,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 ### P-91 — Adopted/legacy positions owned by nobody
 - **Symptom:** Positions inherited from a retired desk were neither managed nor protected, or got managed by the wrong sleeve.
 - **Cause:** No explicit ownership baseline.
-- **Fix:** Record a baseline: either adopt (owner sleeve, exit rules, stops) or declare 'owned by no writer; never managed'. Reconcile guards that baseline.
+- **Fix:** Record a baseline. Adopt only after assigning an explicit owner and exit/risk policy. Until then, mark the position external/unassigned, preserve it in the book, block conflicting automation for its account/symbol, alert the operator, and keep existing protective orders visible. Never silently abandon it or attach it to an arbitrary sleeve.
 - **Guard:** Baseline ownership test.
 
 ### P-92 — Per-fire block reasons are not kept
@@ -609,7 +609,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Guard:** Fixture where chart metadata disagrees with the daily series.
 
 
-## L. Operations, platform and agents (added from archive review)
+## L. Operations, platform and agents
 
 ### P-96 — A bulk backup sync wipes a shared agent inbox
 - **Symptom:** A shared dead-drop file was deleted three times in one evening.
@@ -702,7 +702,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Guard:** Timing test.
 
 
-## M. Research, data and measurement (added from archive review)
+## M. Research, data and measurement
 
 ### P-111 — Survivors-only fundamentals and universes create look-ahead
 - **Symptom:** Rules based on filings could only fire on names that survived; a model learned that missing filings meant 'later delisted'.
@@ -765,7 +765,7 @@ How to use: (1) skim headings once; (2) when designing a component, read its the
 - **Guard:** Unit-basis fixture.
 
 
-## N. Observability, services and governance (added from the companion guide)
+## N. Observability, services and governance
 
 ### P-121 — One green badge for everything
 - **Symptom:** A dashboard said 'healthy' with a stale provider.
