@@ -2,13 +2,13 @@
  "about": "Every strategy on the master desk and on Midna's desk, one entry per strategy; variants and every row id inside it. Monitors and research recorders are not listed.",
  "master_desk_commit": "843ccb53ad151f7fedaa93e325c44b576bc4b482",
  "converted_books_commit": "22f3e991c22422b9f417d6ff775c77fb5f9a1dce",
- "strategies_count": 263,
+ "strategies_count": 269,
  "rows_by_status": {
   "live": 204,
   "waiting": 209,
   "blocked": 87,
   "off": 1,
-  "midna_only": 3
+  "midna_only": 23
  },
  "legend": {
   "live": "trading: holds a position or traded recently",
@@ -4963,14 +4963,65 @@
    "style": "Divergence reversal",
    "source": "David Trullas Vila's divergence method, from Midna's frozen spec",
    "status": {
-    "midna_only": 1
+    "midna_only": 11
    },
    "card": "strategies/muse/muse-trullas-divergence.md",
-   "variants": [],
+   "variants": [
+    {
+     "Parameter": "trullas_v01",
+     "Values": "S1: 5-minute bars (adapter-side only, strategy math unchanged)"
+    },
+    {
+     "Parameter": "trullas_v02",
+     "Values": "S2: pivot width 3"
+    },
+    {
+     "Parameter": "trullas_v03",
+     "Values": "S3: pivot width 8"
+    },
+    {
+     "Parameter": "trullas_v04",
+     "Values": "S4: TP2 at 66.7% instead of 61.8%"
+    },
+    {
+     "Parameter": "trullas_v05",
+     "Values": "S5: hidden divergences included (union with regular)"
+    },
+    {
+     "Parameter": "trullas_v06",
+     "Values": "S6: RSI divergence counted only when leaving an extreme zone (sizing only)"
+    },
+    {
+     "Parameter": "trullas_v07",
+     "Values": "S7: fallo de MACD admitted (union, 5-bar window)"
+    },
+    {
+     "Parameter": "trullas_v08",
+     "Values": "S8: pyramiding on strength (one add at 0.5R, stop to entry)"
+    },
+    {
+     "Parameter": "trullas_v09",
+     "Values": "S9: volume read over a centred 5-bar window around the extreme (sizing only)"
+    },
+    {
+     "Parameter": "trullas_v10",
+     "Values": "S10: all-three confirmation strictness (divergence count must equal 3)"
+    }
+   ],
    "rows": {
     "master_desk": [],
     "midna": [
-     "trullas_divergence"
+     "trullas_divergence",
+     "trullas_v01",
+     "trullas_v02",
+     "trullas_v03",
+     "trullas_v04",
+     "trullas_v05",
+     "trullas_v06",
+     "trullas_v07",
+     "trullas_v08",
+     "trullas_v09",
+     "trullas_v10"
     ]
    },
    "code": {
@@ -4979,7 +5030,8 @@
      "integration/trullas_divergence_adapter.py",
      "integration/trullas_divergence_worker.py"
     ]
-   }
+   },
+   "provenance": "muse-desk-v3 commit bc4fd4421a06268f481713283d9f07e9221e995c, config/sleeves.json (roster 333), taken 2026-10-29 for the catalog diff close of that date; the pinned master_desk_commit and converted_books_commit above are unchanged and do not cover these rows. The ten variant rows trullas_v01 to trullas_v10 (TRULLAS-VARIANTS-SPEC-2026-10-29, frozen) are folded into this entry as variants, one named joint each; each variant has its own roster row, slice and live paper record on the desk."
   },
   {
    "id": "apex-trend-har-tiers",
@@ -9561,6 +9613,195 @@
      "sleeves/span/feedlib/polymarket.py"
     ]
    }
+  },
+  {
+   "id": "muse-grok-sr-spy",
+   "name": "Grok support and resistance (SPY)",
+   "family": "muse",
+   "asset_class": "SPY shares, long and short",
+   "timeframe": "1m",
+   "universe": "SPY",
+   "style": "Support and resistance fade and breakout",
+   "source": "X post by @thiccteddy, algo by Grok, installed by owner order 2026-10-28 (GROK-SR-SPY-SPEC-2026-10-28, frozen)",
+   "status": {
+    "midna_only": 1
+   },
+   "card": "strategies/muse/muse-grok-sr-spy.md",
+   "variants": [],
+   "rows": {
+    "master_desk": [],
+    "midna": [
+     "grok_sr_spy"
+    ]
+   },
+   "code": {
+    "Midna v3": [
+     "sleeves/grok_sr_spy.py",
+     "adapters3/grok_sr_spy.py"
+    ]
+   },
+   "provenance": "muse-desk-v3 commit bc4fd4421a06268f481713283d9f07e9221e995c, config/sleeves.json (roster 333), taken 2026-10-29 for the catalog diff close of that date; the pinned master_desk_commit and converted_books_commit above are unchanged and do not cover these rows. Roster row grok_sr_spy, parked=false."
+  },
+  {
+   "id": "muse-teddy-orb-spy",
+   "name": "Teddy opening range breakout (SPY)",
+   "family": "muse",
+   "asset_class": "SPY shares, long and short",
+   "timeframe": "5m (aggregated from 1m)",
+   "universe": "SPY",
+   "style": "Opening range breakout",
+   "source": "X post by @ThiccTeddy, strategy from his posted video, installed by owner order 2026-10-28 (TEDDY-ORB-SPY-SPEC-2026-10-28, frozen)",
+   "status": {
+    "midna_only": 1
+   },
+   "card": "strategies/muse/muse-teddy-orb-spy.md",
+   "variants": [],
+   "rows": {
+    "master_desk": [],
+    "midna": [
+     "teddy_orb_spy"
+    ]
+   },
+   "code": {
+    "Midna v3": [
+     "sleeves/teddy_orb_spy.py",
+     "adapters3/teddy_orb_spy.py"
+    ]
+   },
+   "provenance": "muse-desk-v3 commit bc4fd4421a06268f481713283d9f07e9221e995c, config/sleeves.json (roster 333), taken 2026-10-29 for the catalog diff close of that date; the pinned master_desk_commit and converted_books_commit above are unchanged and do not cover these rows. Roster row teddy_orb_spy, parked=false."
+  },
+  {
+   "id": "mk-zerodte-spx",
+   "name": "Milkman 0DTE (SPX)",
+   "family": "milkman",
+   "asset_class": "SPX index options (0DTE)",
+   "timeframe": "Intraday",
+   "universe": "SPX",
+   "style": "Long premium day trading",
+   "source": "Milkman Trades' 0DTE SPX method, from his 2026-10-21 answers and the authored Femto-lean sleeve (milkman-0dte branch), installed 2026-10-27",
+   "status": {
+    "midna_only": 1
+   },
+   "card": "strategies/milkman/mk-zerodte-spx.md",
+   "variants": [
+    {
+     "Parameter": "Contract pick",
+     "Values": "today's expiry, |delta| nearest 0.40, fresh two-sided quotes at most 20% wide, bought at the ask"
+    },
+    {
+     "Parameter": "Excluded lanes",
+     "Values": "ESMON, OPX4"
+    }
+   ],
+   "rows": {
+    "master_desk": [],
+    "midna": [
+     "mk_zerodte_spx"
+    ]
+   },
+   "code": {
+    "Midna v3": [
+     "sleeves/milkman_0dte.py",
+     "desk3/milkman_0dte/"
+    ]
+   },
+   "provenance": "muse-desk-v3 commit bc4fd4421a06268f481713283d9f07e9221e995c, config/sleeves.json (roster 333), taken 2026-10-29 for the catalog diff close of that date; the pinned master_desk_commit and converted_books_commit above are unchanged and do not cover these rows. Roster row mk_zerodte_spx, parked=true at install: SPX 0DTE chain and greeks route not proven on this desk; the sleeve is inert in that state, recorded here under the midna_only bucket per this catalog's convention for Midna-only rows."
+  },
+  {
+   "id": "muse-przm-zero",
+   "name": "PRZM Zero recreation (SPY)",
+   "family": "muse",
+   "asset_class": "SPY shares (signal engine)",
+   "timeframe": "1m",
+   "universe": "SPY",
+   "style": "Options flow score",
+   "source": "PRZM (przm.space) public record: Flight Manual V201 and the public client fallback engine, recreated per PRZM-RECREATION-SPEC-2026-10-29 (frozen)",
+   "status": {
+    "midna_only": 1
+   },
+   "card": "strategies/muse/muse-przm-zero.md",
+   "variants": [],
+   "rows": {
+    "master_desk": [],
+    "midna": [
+     "przm_zero"
+    ]
+   },
+   "code": {
+    "Midna v3": [
+     "sleeves/przm_zero.py",
+     "adapters3/przm_zero.py"
+    ]
+   },
+   "provenance": "muse-desk-v3 commit bc4fd4421a06268f481713283d9f07e9221e995c, config/sleeves.json (roster 333), taken 2026-10-29 for the catalog diff close of that date; the pinned master_desk_commit and converted_books_commit above are unchanged and do not cover these rows. Roster row przm_zero, parked=true: WAITING_NO_PRINT_TAPE, no desk producer serves a signed same-day SPY options print tape; recorded under the midna_only bucket per this catalog's convention for Midna-only rows."
+  },
+  {
+   "id": "muse-przm-fade-edges",
+   "name": "PRZM Fade Edges recreation (SPY)",
+   "family": "muse",
+   "asset_class": "SPY shares, long and short",
+   "timeframe": "1m",
+   "universe": "SPY",
+   "style": "Gamma regime fade",
+   "source": "PRZM (przm.space) public record: Flight Manual V201 and the public client fallback engine, recreated per PRZM-RECREATION-SPEC-2026-10-29 (frozen)",
+   "status": {
+    "midna_only": 1
+   },
+   "card": "strategies/muse/muse-przm-fade-edges.md",
+   "variants": [],
+   "rows": {
+    "master_desk": [],
+    "midna": [
+     "przm_fade_edges"
+    ]
+   },
+   "code": {
+    "Midna v3": [
+     "sleeves/przm_fade_edges.py",
+     "adapters3/przm_fade_edges.py"
+    ]
+   },
+   "provenance": "muse-desk-v3 commit bc4fd4421a06268f481713283d9f07e9221e995c, config/sleeves.json (roster 333), taken 2026-10-29 for the catalog diff close of that date; the pinned master_desk_commit and converted_books_commit above are unchanged and do not cover these rows. Roster row przm_fade_edges, parked=true: WAITING_NO_GAMMA_LEVELS, the desk chain producer serves delta-only rows so gamma levels cannot be computed; recorded under the midna_only bucket per this catalog's convention for Midna-only rows."
+  },
+  {
+   "id": "muse-investandbefree-dmac",
+   "name": "InvestAndBeFree double MACD (SPY and QQQ options)",
+   "family": "muse",
+   "asset_class": "SPY and QQQ options (long premium)",
+   "timeframe": "4H, daily, weekly stack",
+   "universe": "SPY, QQQ",
+   "style": "Multi-timeframe MACD alignment",
+   "source": "InvestAndBeFree method, clean-room extraction from public material only (INVESTANDBEFREE-DMAC-SPEC-2026-10-29, frozen)",
+   "status": {
+    "midna_only": 5
+   },
+   "card": "strategies/muse/muse-investandbefree-dmac.md",
+   "variants": [
+    {
+     "Parameter": "Variant row",
+     "Values": "investandbefree_dmac_intraday (intraday 15m/30m/4H stack from 5-minute bars, expiry at least 5 days, flat 15:55 ET) - investandbefree_dmac_dailyonly (4H layer removed) - investandbefree_dmac_deep (strike at least 2% in the money, expiry at least 45 days) - investandbefree_dmac_premacd (premium MACD-E exits after 40 premium samples)"
+    }
+   ],
+   "rows": {
+    "master_desk": [],
+    "midna": [
+     "investandbefree_dmac",
+     "investandbefree_dmac_intraday",
+     "investandbefree_dmac_dailyonly",
+     "investandbefree_dmac_deep",
+     "investandbefree_dmac_premacd"
+    ]
+   },
+   "code": {
+    "Midna v3": [
+     "sleeves/investandbefree_dmac.py",
+     "sleeves/investandbefree_dmac_intraday.py",
+     "sleeves/investandbefree_dmac_dailyonly.py",
+     "sleeves/investandbefree_dmac_deep.py",
+     "sleeves/investandbefree_dmac_premacd.py"
+    ]
+   },
+   "provenance": "muse-desk-v3 commit bc4fd4421a06268f481713283d9f07e9221e995c, config/sleeves.json (roster 333), taken 2026-10-29 for the catalog diff close of that date; the pinned master_desk_commit and converted_books_commit above are unchanged and do not cover these rows. Roster rows investandbefree_dmac (base, installed first) and its four variant rows, all parked=false."
   }
  ],
  "merged": [
