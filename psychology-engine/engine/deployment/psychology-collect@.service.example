@@ -1,0 +1,24 @@
+# Inactive template. Installation and activation require a separately reviewed deployment.
+[Unit]
+Description=Psychology Engine research collection (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=psychology-research
+Group=psychology-research
+WorkingDirectory=/opt/psychology-engine
+StateDirectory=psychology-research
+StateDirectoryMode=0700
+UMask=0077
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/flock -n /var/lib/psychology-research/collector.lock /opt/psychology-engine/venv/bin/python -m psychology_engine --db /var/lib/psychology-research/evidence.sqlite monitor --source %i --cycles 1 --scheduled --source-config /etc/psychology-engine/reviewed-config.json
+TimeoutStartSec=180
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/psychology-research
+# Preserve proxy and CA configuration supplied by the reviewed deployment environment.
+# No restart-on-failure loop: the next reviewed timer event retries with a new outcome.

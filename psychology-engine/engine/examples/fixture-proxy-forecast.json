@@ -1,0 +1,114 @@
+{
+  "as_of": "2026-10-19T12:00:00+00:00",
+  "entity": "US_MARKET",
+  "horizon": "next_observation",
+  "input_horizon": "1d",
+  "source": "article",
+  "target": "attention",
+  "units": "article_daily_user_pageviews",
+  "method": "persistence and mean of last four first differences",
+  "predictive_validation": "not_established",
+  "orders_allowed": false,
+  "status": "research_forecast",
+  "persistence": 300.0,
+  "drift": 350.0,
+  "process_id": [
+    "test",
+    "Synthetic fixture population",
+    null,
+    "fixture-v1"
+  ],
+  "evidence_ids": [
+    "19f14f0e2111f4b6b493f8038c248dfbcf5a31a37e300bd2aa43435734c1fd9e",
+    "a62d66c989abfad1086632f60beb3af6413bdec6dd770a17fdbf45237299c8a9",
+    "e13f4ebcfa9d5e23521e62c74f920b78de5370723a5e81b62c7229a28e28a967",
+    "aa1fbb6fc039980ca81320979aaa03e9fd146bcbabf00f8d29f35840b23c6c7c",
+    "92092231e395d67ad20d992505bb9504fa91ba77fece46cc89d8b1abf4344e94"
+  ],
+  "walk_forward": {
+    "n": 5,
+    "mse": {
+      "persistence": 8000.0,
+      "drift": 9000.0
+    },
+    "metric_status": {
+      "persistence": "observed",
+      "drift": "observed"
+    },
+    "incomparable": [],
+    "origin_limit": 100,
+    "predictions": [
+      {
+        "origin": "2026-10-14T12:00:00+00:00",
+        "target_event": "2026-10-15T12:00:00+00:00",
+        "target_available_at": "2026-10-15T12:00:00+00:00",
+        "actual": 100.0,
+        "persistence": 100.0,
+        "drift": 100.0,
+        "process_id": [
+          "test",
+          "Synthetic fixture population",
+          null,
+          "fixture-v1"
+        ]
+      },
+      {
+        "origin": "2026-10-15T12:00:00+00:00",
+        "target_event": "2026-10-16T12:00:00+00:00",
+        "target_available_at": "2026-10-16T12:00:00+00:00",
+        "actual": 100.0,
+        "persistence": 100.0,
+        "drift": 100.0,
+        "process_id": [
+          "test",
+          "Synthetic fixture population",
+          null,
+          "fixture-v1"
+        ]
+      },
+      {
+        "origin": "2026-10-16T12:00:00+00:00",
+        "target_event": "2026-10-17T12:00:00+00:00",
+        "target_available_at": "2026-10-17T12:00:00+00:00",
+        "actual": 300.0,
+        "persistence": 100.0,
+        "drift": 100.0,
+        "process_id": [
+          "test",
+          "Synthetic fixture population",
+          null,
+          "fixture-v1"
+        ]
+      },
+      {
+        "origin": "2026-10-17T12:00:00+00:00",
+        "target_event": "2026-10-18T12:00:00+00:00",
+        "target_available_at": "2026-10-18T12:00:00+00:00",
+        "actual": 300.0,
+        "persistence": 300.0,
+        "drift": 350.0,
+        "process_id": [
+          "test",
+          "Synthetic fixture population",
+          null,
+          "fixture-v1"
+        ]
+      },
+      {
+        "origin": "2026-10-18T12:00:00+00:00",
+        "target_event": "2026-10-19T12:00:00+00:00",
+        "target_available_at": "2026-10-19T12:00:00+00:00",
+        "actual": 300.0,
+        "persistence": 300.0,
+        "drift": 350.0,
+        "process_id": [
+          "test",
+          "Synthetic fixture population",
+          null,
+          "fixture-v1"
+        ]
+      }
+    ],
+    "limitation": "First observed target vintages; no significance or calibration claim. Backfilled single-vintage archives produce no historical scores."
+  }
+}

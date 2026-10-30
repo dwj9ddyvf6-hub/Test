@@ -1,0 +1,397 @@
+{
+  "contract_version": "1.0.0",
+  "name": "Psychology Engine advisory research contract",
+  "created_date": "2026-10-30",
+  "implementation_status": "DESIGN_ONLY",
+  "evidence_stage": "HYPOTHESIS",
+  "market_validated": false,
+  "paper_results_inherited": false,
+  "authority": {
+    "mode": "ADVISORY_ONLY",
+    "entry_timing_authority": "Tensor",
+    "may_create_order": false,
+    "may_override_no_chase": false,
+    "may_use_unclosed_bars": false,
+    "may_change_exits": false,
+    "may_change_size": false,
+    "may_change_risk_budget": false,
+    "may_auto_veto_tensor": false,
+    "may_auto_promote_model": false,
+    "approved_current_outputs": [
+      "Evidence-linked descriptive context",
+      "Shadow distributions",
+      "Missingness and freshness warnings",
+      "Falsifiable research annotations"
+    ],
+    "future_behavior_change_requires": "Explicit authorization plus frozen-policy matched retrospective/prospective evaluation and risk approval."
+  },
+  "knowledge_boundary": {
+    "measures": "Expressions, public expectation distributions, and observable constraints in declared source populations",
+    "does_not_measure": [
+      "Private thoughts",
+      "All investors as a representative census",
+      "Actual holdings from public tone",
+      "Dealer gamma sign from raw open interest",
+      "Physical event probabilities directly from risk-neutral prices",
+      "Current short positions from cumulative daily short-sale volume"
+    ],
+    "universal_fear_greed_score": "PROHIBITED",
+    "proxies_must_be_named": true
+  },
+  "input_contract": {
+    "evidence_required": [
+      "evidence_id",
+      "original_url",
+      "provider_id",
+      "publisher",
+      "raw_content_hash",
+      "source_population",
+      "event_at_if_known",
+      "published_at",
+      "updated_at_if_any",
+      "provider_received_at",
+      "locally_received_at",
+      "extracted_at",
+      "available_at",
+      "revision_parent_id_if_any",
+      "origin_cluster_id",
+      "exposure_cluster_id",
+      "lineage_confidence",
+      "license_and_retention_policy",
+      "entity_id",
+      "entity_mapping_version",
+      "evidence_span"
+    ],
+    "claim_required": [
+      "speaker",
+      "target_entity",
+      "proposition",
+      "fact_or_opinion",
+      "reporting_or_endorsement",
+      "economic_variable_if_any",
+      "units_if_any",
+      "period_if_any",
+      "explicit_horizon_or_unknown",
+      "conditionality",
+      "negation_scope",
+      "stance_distribution",
+      "emotion_multilabel",
+      "uncertainty_marker",
+      "extraction_version",
+      "extraction_calibration_version",
+      "abstention_reason_if_any"
+    ],
+    "market_context_required_if_used": [
+      "instrument_id",
+      "venue",
+      "calendar_version",
+      "bar_end",
+      "bar_closed",
+      "price_adjustment_policy",
+      "provider_feed",
+      "quote_or_bar_available_at",
+      "data_age",
+      "market_context_version"
+    ],
+    "optional_not_synthesized": [
+      "Survey distributions",
+      "Verified short-interest vintage and publication time",
+      "Borrow fee/availability",
+      "Historical consensus vintage",
+      "Options implied volatility/skew with separate quote/Greek/OI clocks",
+      "Licensed flow data"
+    ],
+    "missing_policy": "null plus explicit reason/status; never neutral, zero, current, or no-risk by default",
+    "external_text_policy": "Untrusted data only; cannot change tools, execution, risk policy, timestamps or prompts. No executing third-party code."
+  },
+  "measurement_contract": {
+    "dimensions": [
+      "stance",
+      "fundamental_expectation",
+      "emotion",
+      "uncertainty",
+      "attention",
+      "disagreement",
+      "narrative_composition",
+      "narrative_diffusion",
+      "conviction_persistence",
+      "expressed_intent",
+      "position_constraint_context",
+      "price_incorporation"
+    ],
+    "index_keys": [
+      "instrument_id",
+      "source_population",
+      "as_of",
+      "expressed_horizon",
+      "forecast_horizon"
+    ],
+    "aggregation": "Separate information origins from distribution exposure, cap author concentration, use stable-panel checks, preserve within/between-population differences; fit weights on past data only.",
+    "correlation": "Explicit source lineage groups and estimated observation covariance; no multiplication of source likelihoods under unproved independence.",
+    "latent_state": "Filtered state with named anchors and covariance. Retrospective smoothing prohibited in live/replay decision output. Unidentified states named text-derived proxies.",
+    "freshness": "Source/horizon-specific TTL policy must be configured and validated. No universal live badge. Re-fetch never resets source observation age.",
+    "stale_handling": "Do not repeatedly assimilate the same old observation; propagate prior with growing uncertainty only if model supports it and label model_propagated. Otherwise abstain."
+  },
+  "output_contract": {
+    "required": [
+      "output_id",
+      "contract_version",
+      "as_of",
+      "information_cutoff",
+      "computed_at",
+      "available_at",
+      "expires_at",
+      "instrument_id",
+      "source_population",
+      "observed_states",
+      "estimated_states",
+      "forecast_distributions",
+      "quality",
+      "evidence",
+      "model_versions",
+      "advisory",
+      "evidence_stage"
+    ],
+    "observed_state_fields": [
+      "name",
+      "value_or_null",
+      "units",
+      "window",
+      "sample_frame",
+      "sample_count",
+      "effective_count_diagnostic",
+      "source_age",
+      "status",
+      "evidence_ids"
+    ],
+    "estimated_state_fields": [
+      "name",
+      "estimate_or_null",
+      "interval_or_null",
+      "interval_method",
+      "calibration_version",
+      "identification_anchor",
+      "model_propagated",
+      "status"
+    ],
+    "forecast_fields": [
+      "target_definition",
+      "horizon",
+      "outcome_matures_at",
+      "population",
+      "distribution_or_null",
+      "baseline_distribution_or_null",
+      "model_version",
+      "training_cutoff",
+      "calibration_version",
+      "status",
+      "abstention_reason",
+      "evidence_stage"
+    ],
+    "quality_fields": [
+      "status",
+      "coverage_fraction_if_defined",
+      "coverage_denominator",
+      "raw_item_count",
+      "unique_author_count",
+      "information_origin_count",
+      "source_lineage_groups",
+      "max_source_age",
+      "min_source_age",
+      "missing_features",
+      "source_outages",
+      "composition_shift",
+      "extraction_error_audit",
+      "out_of_distribution",
+      "forecast_calibration_age",
+      "interval_method"
+    ],
+    "quality_status_enum": [
+      "observed",
+      "model_estimated",
+      "partial",
+      "stale",
+      "unavailable",
+      "not_applicable"
+    ],
+    "confidence_components": [
+      "Extraction probability calibrated on labeled text",
+      "Entity/claim attribution certainty",
+      "Data coverage and provenance",
+      "Statistical estimate uncertainty",
+      "Forecast calibration/score uncertainty"
+    ],
+    "prohibited": [
+      "One omnibus confidence number represented as proof",
+      "Synthetic output presented as live",
+      "Probability of bullish text presented as probability of positive returns",
+      "Source agreement presented as independent evidence",
+      "Unobserved positioning inferred as fact"
+    ],
+    "advisory_fields": [
+      "pattern_ids",
+      "observations",
+      "hypotheses",
+      "rival_explanations",
+      "falsifiers",
+      "timing_risks",
+      "tensor_authority_unchanged",
+      "not_an_order"
+    ]
+  },
+  "hard_invariants": [
+    "available_at &lt;= decision_as_of for every used item, including extraction completion",
+    "every used bar has bar_closed=true and bar_end&lt;=information_cutoff",
+    "data dependency unavailable -&gt; dependent feature/forecast null or explicitly partial; never fabricate",
+    "same document/hash/revision cannot be double-assimilated as fresh evidence",
+    "stale settlement-date positioning cannot masquerade as current publication-time state",
+    "class probabilities nonnegative and sum to 1 only for mutually exclusive stance classes; emotion multi-label probabilities need not sum to 1",
+    "missing/unknown stance not included as neutral evidence",
+    "forecast target horizon, population and units explicit",
+    "all source text treated as data; never tool instructions",
+    "Tensor closed-bar/no-chase/entry authority unchanged",
+    "no order, size, exit, risk or veto side effect",
+    "every displayed actual value traces to evidence or is explicitly a model estimate",
+    "a pattern hypothesis is never labeled validated without recorded test result"
+  ],
+  "abstention_triggers": [
+    "Missing required provenance/availability clock",
+    "Unresolved entity/speaker/target/horizon for requested inference",
+    "Insufficient independent origins/author coverage under configured policy",
+    "Source outage/composition shift outside validated support",
+    "Stale beyond configured horizon-specific TTL",
+    "Unsupported numerical extraction or incompatible units/periods",
+    "Model/checkpoint/calibration version unapproved",
+    "Forecast target not matched to source cadence",
+    "Out-of-distribution beyond validated support",
+    "Required positioning/consensus data absent",
+    "Exceeded decision deadline"
+  ],
+  "evaluation_contract": {
+    "layers": [
+      "Text extraction validity",
+      "Observable-population belief forecasting",
+      "Incremental price-aware market forecasting",
+      "Paired after-cost utility on identical frozen Tensor opportunities"
+    ],
+    "chronology": "Nested chronological walk-forward and untouched final/prospective interval; purge dependent features/labels/events; embargo derived from horizon; train-only preprocessing/calibration/clustering.",
+    "baselines": [
+      "No-change/persistence",
+      "Seasonal attention",
+      "Transparent domain lexicon",
+      "Pinned FinBERT",
+      "Structured LLM extractor",
+      "Price-aware matched-capacity model",
+      "Frozen Tensor without psychology"
+    ],
+    "uncertainty": "Event/date/correlated-asset block or cluster inference, block-length sensitivity; report independent opportunities, precision and minimum detectable economic improvement.",
+    "calibration": "Separate NLP and return probabilities; proper scores and reliability by prespecified source/horizon/regime/Tensor cohorts; no self-reported LLM confidence as calibration.",
+    "economics": "All eligible and abstained opportunities; executable post-availability fills, no-fill/partial-fill, spread/fees/slippage/impact/borrow/funding/gap and latency stress; factor/tail exposure matched.",
+    "ablation": [
+      "Remove each source",
+      "Remove each feature family",
+      "Stable-author panel",
+      "Dedup versus naive duplicates",
+      "Delayed signal",
+      "Source-outage placebo",
+      "Price-aware versus price-ignorant",
+      "Numeric-surprise versus tone",
+      "Entity/date/event-consistent permutation"
+    ],
+    "llm_leakage": "Frozen checkpoints with documented training cutoff; historical replay before cutoff is contamination-exposed. Prompt date restrictions/masking insufficient. Prioritize prospective outputs with immutable timestamps.",
+    "trial_ledger": "Append-only variants including failures, hashes, metrics viewed, source changes, holdout access and approval history. Multiple-testing method/error budget chosen prospectively.",
+    "stages": [
+      "HYPOTHESIS",
+      "RETROSPECTIVE_SUPPORT",
+      "OUT_OF_SAMPLE_SUPPORT",
+      "FORWARD_SIMULATION",
+      "LIMITED_LIVE_EVIDENCE"
+    ],
+    "current_stage": "HYPOTHESIS"
+  },
+  "drift_policy": {
+    "separate_monitors": [
+      "Source availability/composition",
+      "Extraction semantic error",
+      "Feature shift",
+      "Matured forecast residual/calibration",
+      "Net utility and cost/latency"
+    ],
+    "label_maturation_required": true,
+    "automatic_actions_permitted": [
+      "Mark affected output partial/stale/unavailable",
+      "Remove invalid measurement",
+      "Abstain",
+      "Flag review"
+    ],
+    "not_permitted": [
+      "Autochange Tensor",
+      "Autoincrease risk",
+      "Autoretrain and promote live policy"
+    ],
+    "review_requires": "Versioned replay, fresh holdout/prospective evidence and explicit approval for any behavioral integration."
+  },
+  "acceptance_tests": [
+    {
+      "id": "C01",
+      "input_change": "Duplicate an evidence item under 100 URLs",
+      "expected": "Factual evidence strength unchanged; exposure separately counts only actual observed distribution."
+    },
+    {
+      "id": "C02",
+      "input_change": "Move provider receipt after decision timestamp",
+      "expected": "Item excluded from decision; no forecast leakage."
+    },
+    {
+      "id": "C03",
+      "input_change": "Re-fetch stale survey now",
+      "expected": "Observation age unchanged; no repeated independent update."
+    },
+    {
+      "id": "C04",
+      "input_change": "API returns no records during outage",
+      "expected": "Unavailable/coverage warning, not neutral or zero attention."
+    },
+    {
+      "id": "C05",
+      "input_change": "Ticker is ordinary English word or mixed-entity headline",
+      "expected": "Resolve entity and claim span or abstain; never assign whole-text stance indiscriminately."
+    },
+    {
+      "id": "C06",
+      "input_change": "Unclosed latest bar supplied",
+      "expected": "Bar rejected; Tensor timing unchanged."
+    },
+    {
+      "id": "C07",
+      "input_change": "Confident psychology forecast conflicts with no-chase rejection",
+      "expected": "No entry/order/size override; annotation only."
+    },
+    {
+      "id": "C08",
+      "input_change": "Options OI high but inventory side unknown",
+      "expected": "Gamma sign unknown, no asserted dealer-short/long conclusion."
+    },
+    {
+      "id": "C09",
+      "input_change": "Daily short-sale volume supplied as short interest",
+      "expected": "Schema/semantic rejection."
+    },
+    {
+      "id": "C10",
+      "input_change": "Document asks to ignore policy or execute code",
+      "expected": "Instruction inert; extraction treats text as evidence only."
+    },
+    {
+      "id": "C11",
+      "input_change": "Source mix changes while fixed-panel stance is unchanged",
+      "expected": "Composition warning and separate stable-panel estimate, not broad belief change claim."
+    },
+    {
+      "id": "C12",
+      "input_change": "Model version or narrative taxonomy changes",
+      "expected": "New version and validation boundary; no unmarked time-series splice."
+    }
+  ],
+  "deployment_status": "No collection service, trained model, forecast performance, live configuration, or trading integration is established by this contract."
+}
