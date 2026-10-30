@@ -1,0 +1,94 @@
+{
+ "sleeve": "trullas_divergence",
+ "spec": {
+  "path": "~/workspace/goals/ai-top50-pattern-study/files/TRULLAS-SPEC-2026-10-25.md",
+  "version": "v1.0 FROZEN 2026-10-25",
+  "arm": "PRIMARY ONLY"
+ },
+ "installed": "2026-10-25",
+ "paper_only": true,
+ "files": {
+  "sleeves/trullas_divergence.py": "2c8691e7b604aa73494eea61b516aaee8fc47cd191f49a596e9330c4f4eaa98e",
+  "adapters/trullas_divergence.py": "da8ebf003273cb43d8226f4725bbf3dc2f18fe892c366f70236e625de5047478",
+  "adapters3/trullas_divergence.py": "94debe96520870ce9ff3009d158cc4259f866c0fbc649adefada940e833d893e",
+  "tests/test_trullas_blockers.py": "0c37e8bf3a4bd7069440a56812de403afac38bced333c88d68702ec2458428e6"
+ },
+ "frozen_parameters": {
+  "symbol": "QQQ",
+  "timeframe": "1Min",
+  "pivot_k": 5,
+  "separation_bars": [
+   10,
+   120
+  ],
+  "macd": [
+   12,
+   26,
+   9
+  ],
+  "macd_read": "MACD line",
+  "rsi": 14,
+  "macd_required": true,
+  "entry_level": 0.236,
+  "tick_usd": 0.01,
+  "entry_expiry_bars": 30,
+  "tp1_level": 0.382,
+  "tp2_level": 0.618,
+  "tp1_exit_fraction": 0.5,
+  "tp1_stop_to": "entry",
+  "entry_window_et": [
+   "09:30",
+   "11:00"
+  ],
+  "hard_flat_et": "12:00",
+  "max_entries_per_day": 5,
+  "daily_loss_stop_pct": 0.0075,
+  "unit_risk_pct": 0.0025,
+  "notional_cap_pct": 0.25,
+  "intrabar_ordering": "pessimistic (stop before targets)"
+ },
+ "slice_usd": 10000.0,
+ "config": {
+  "cadence_s": 60,
+  "parked": false,
+  "session": "rth",
+  "inputs": [
+   "bars",
+   "bars_1min",
+   "bars:QQQ:1Min",
+   "positions",
+   "quotes",
+   "session_fills"
+  ]
+ },
+ "universe_probe": {
+  "instrument": "QQQ",
+  "timeframe": "1Min",
+  "feed": "Alpaca SIP",
+  "door": "desk3/warm.py WarmBars (state/warm_bars.json)",
+  "fetched_at": "2026-10-25T15:41:46.380882+00:00",
+  "rows": {
+   "QQQ": 344,
+   "QQQ|1Day": 344,
+   "QQQ|1Hour": 336,
+   "QQQ|1Week": 71,
+   "QQQ|15Min": 1344,
+   "QQQ|5Min": 8058,
+   "QQQ|1Min": 6618
+  },
+  "result": "SERVED \u2014 QQQ 1Min present in the warm product; sleeve FED via bars/bars_1min/bars:QQQ:1Min (latter added to producers_g4._BARS_TF_KEYS at install)"
+ },
+ "test_evidence": {
+  "file": "tests/test_trullas_blockers.py",
+  "tests": 12,
+  "result": "12/12 OK",
+  "golden": "hand-built bearish triple divergence, A=103.8 B=111.0; expected entry 109.2908 / stop 111.01 / TP1 108.2496 / TP2 106.5504 / qty 22 computed independently in the test",
+  "fail_first": "broken variant (right-side pivot confirmation window removed) fails 3 of 4 golden+causality tests; real module passes all"
+ },
+ "gate": {
+  "result": "GREEN",
+  "tests": 1096,
+  "at_head": "fdd5126",
+  "note": "first run: 2 failures, both roster pins 311->312 caused by this install; pins updated at source, re-run OK"
+ }
+}
