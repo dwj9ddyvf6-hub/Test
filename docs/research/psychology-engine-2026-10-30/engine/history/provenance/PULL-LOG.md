@@ -1,0 +1,209 @@
+- 2026-10-30 | michigan_umcsent_monthly | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01 | rows: 0 | span: absent | FAILED ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=60)
+- 2026-10-30 | fred_hy_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=1950-01-01 | rows: 0 | span: absent | FAILED ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=60)
+- 2026-10-30 | fred_ig_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=1950-01-01 | rows: 0 | span: absent | FAILED ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=60)
+- 2026-10-30 | baker_wurgler_monthly | route: wurgler | rows: 0 | span: absent | FAILED HTTPError: 404 Client Error: Not Found for url: https://pages.stern.nyu.edu/~jwurgler/data/Investor_Sentiment_Data_20251028_Post.xlsx
+- 2026-10-30 | aaii_weekly | route: https://www.aaii.com/files/surveys/sentiment-survey.xlsx | rows: 0 | span: absent | FAILED 404 Client Error: Not Found for url: https://www.aaii.com/files/surveys/sentiment-survey.csv
+- 2026-10-30 | naaim_weekly | route: naaim page | rows: 0 | span: absent | FAILED ValueError: no data file link found on NAAIM page
+- 2026-10-30 | cboe_vix_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv | rows: 0 | span: absent | FAILED ReadTimeout: HTTPSConnectionPool(host='cdn-api.cboe.com', port=443): Read timed out. (read timeout=60)
+- 2026-10-30 | michigan_umcsent_monthly | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 28 for https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01: 
+- 2026-10-30 | fred_hy_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=1950-01-01 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 28 for https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=1950-01-01: 
+- 2026-10-30 | fred_ig_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=1950-01-01 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 28 for https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=1950-01-01: 
+- 2026-10-30 | baker_wurgler_monthly | route: wurgler | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://pages.stern.nyu.edu/~jwurgler/data/SENTIMENT.xls: 
+- 2026-10-30 | aaii_weekly | route: https://www.aaii.com/files/surveys/sentiment-survey.xlsx | rows: 0 | span: absent | FAILED curl exit 22 for https://www.aaii.com/files/surveys/sentiment-survey.csv: 
+- 2026-10-30 | naaim_weekly | route: naaim page | rows: 0 | span: absent | FAILED ValueError: no data file link found on NAAIM page
+- 2026-10-30 | cboe_vix_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv | rows: 9305 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_skew_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/SKEW_History.csv | rows: 9259 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_vix3m_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX3M_History.csv | rows: 4306 | span: 2009-09-18 to 2026-10-30 | ok
+- 2026-10-30 | cboe_vix9d_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX9D_History.csv | rows: 3979 | span: 2011-01-04 to 2026-10-29 | ok
+- 2026-10-30 | cboe_putcall_daily | route: https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv | rows: 0 | span: absent | FAILED curl exit 22 for https://www.cboe.com/us/options/market_statistics/historical_data/totalpc.csv:  / curl exit 22 for https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv: 
+- 2026-10-30 | finra_margin_monthly | route: finra margin page | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://www.finra.org/investors/learn-to-invest/advanced-investing/margin-statistics: 
+- 2026-10-30 | cot_tff_weekly | route: cftc tff | rows: 0 | span: absent | FAILED NameError: name 'zipfile' is not defined
+- 2026-10-30 | altme_fear_greed_daily | route: https://api.alternative.me/fng/?limit=0&format=json | rows: 3190 | span: 2018-02-01 to 2026-10-30 | ok
+- 2026-10-30 | crypto_funding_btc_daily | route: binance | rows: 0 | span: absent | FAILED curl exit 22 for https://fapi.binance.com/fapi/v1/fundingRate?symbol=BTCUSDT&limit=1000&startTime=1567900800000: 
+- 2026-10-30 | crypto_funding_eth_daily | route: binance | rows: 0 | span: absent | FAILED curl exit 22 for https://fapi.binance.com/fapi/v1/fundingRate?symbol=ETHUSDT&limit=1000&startTime=1567900800000: 
+- 2026-10-30 | wikipedia_pageviews_daily | route: wikimedia api | rows: 4139 | span: 2015-07-01 to 2026-10-29 | ok
+- 2026-10-30 | gdelt_gkg_tone_daily | route: gdelt doc | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3months&format=json: 
+- 2026-10-30 | price_spy_daily.csv | route: https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=max&interval=1d | rows: 406 | span: 1993-02-01 to 2026-10-30 | ok price only
+- 2026-10-30 | price_qqq_daily.csv | route: https://query1.finance.yahoo.com/v8/finance/chart/QQQ?range=max&interval=1d | rows: 332 | span: 1999-04-01 to 2026-10-30 | ok price only
+- 2026-10-30 | price_iwm_daily.csv | route: https://query1.finance.yahoo.com/v8/finance/chart/IWM?range=max&interval=1d | rows: 318 | span: 2000-06-01 to 2026-10-30 | ok price only
+- 2026-10-30 | price_dia_daily.csv | route: https://query1.finance.yahoo.com/v8/finance/chart/DIA?range=max&interval=1d | rows: 346 | span: 1998-02-01 to 2026-10-30 | ok price only
+- 2026-10-30 | michigan_umcsent_monthly | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 28 for https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01
+- 2026-10-30 | michigan_umcsent_monthly | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01 | rows: 677 | span: 1952-11-01 to 2026-09-01 | ok
+- 2026-10-30 | fred_hy_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=1950-01-01 | rows: 786 | span: 2023-10-31 to 2026-10-29 | ok
+- 2026-10-30 | fred_ig_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=1950-01-01 | rows: 785 | span: 2023-10-31 to 2026-10-29 | ok
+- 2026-10-30 | baker_wurgler_monthly | route: wurgler | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://pages.stern.nyu.edu/~jwurgler/data/SENTIMENT.xls
+- 2026-10-30 | aaii_weekly | route: https://www.aaii.com/files/surveys/sentiment-survey.xlsx | rows: 0 | span: absent | FAILED curl exit 22 for https://www.aaii.com/files/surveys/sentiment-survey.csv
+- 2026-10-30 | naaim_weekly | route: naaim page | rows: 0 | span: absent | FAILED ValueError: no data file link found on NAAIM page
+- 2026-10-30 | cboe_vix_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv | rows: 9305 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_skew_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/SKEW_History.csv | rows: 9259 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_vix3m_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX3M_History.csv | rows: 4306 | span: 2009-09-18 to 2026-10-30 | ok
+- 2026-10-30 | cboe_vix9d_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX9D_History.csv | rows: 3979 | span: 2011-01-04 to 2026-10-29 | ok
+- 2026-10-30 | cboe_putcall_daily | route: https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv | rows: 0 | span: absent | FAILED curl exit 22 for https://www.cboe.com/us/options/market_statistics/historical_data/totalpc.csv / curl exit 22 for https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv
+- 2026-10-30 | finra_margin_monthly | route: finra margin page | rows: 0 | span: absent | FAILED ValueError: no margin rows parsed
+- 2026-10-30 | cot_tff_weekly | route: cftc fut_fin_txt | rows: 617 | span: 2015-01-06 to 2026-10-27 | ok years [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+- 2026-10-30 | altme_fear_greed_daily | route: https://api.alternative.me/fng/?limit=0&format=json | rows: 3190 | span: 2018-02-01 to 2026-10-30 | ok
+- 2026-10-30 | crypto_funding_btc_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | crypto_funding_eth_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | wikipedia_pageviews_daily | route: wikimedia api | rows: 4139 | span: 2015-07-01 to 2026-10-29 | ok
+- 2026-10-30 | gdelt_gkg_tone_daily | route: gdelt doc | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3m&format=json
+- 2026-10-30 | price_SPY | route: https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=10y&interval=1d | rows: 0 | span: absent | FAILED curl exit 22 for https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=10y&interval=1d
+- 2026-10-30 | price_QQQ | route: https://query1.finance.yahoo.com/v8/finance/chart/QQQ?range=10y&interval=1d | rows: 0 | span: absent | FAILED curl exit 22 for https://query1.finance.yahoo.com/v8/finance/chart/QQQ?range=10y&interval=1d
+- 2026-10-30 | price_IWM | route: https://query1.finance.yahoo.com/v8/finance/chart/IWM?range=10y&interval=1d | rows: 0 | span: absent | FAILED curl exit 22 for https://query1.finance.yahoo.com/v8/finance/chart/IWM?range=10y&interval=1d
+- 2026-10-30 | price_DIA | route: https://query1.finance.yahoo.com/v8/finance/chart/DIA?range=10y&interval=1d | rows: 0 | span: absent | FAILED curl exit 22 for https://query1.finance.yahoo.com/v8/finance/chart/DIA?range=10y&interval=1d
+- 2026-10-30 | breadth_daily | route: local panel | rows: 146 | span: 2014-10-01 to 2026-10-30 | ok narrow panel reconstruction
+- 2026-10-30 | cot_legacy_weekly.csv | route: absence note | rows: 0 | span: absent | v1 pull gap: Legacy deep archive not pulled in this build; TFF 2015 forward pulled. Named gap, not zero filled.
+- 2026-10-30 | ici_flows_weekly.csv | route: absence note | rows: 0 | span: absent | v1 pull gap: ICI table route not resolved in this build. Named gap.
+- 2026-10-30 | ici_flows_monthly.csv | route: absence note | rows: 0 | span: absent | v1 pull gap, see weekly.
+- 2026-10-30 | trends_fears_weekly.csv | route: absence note | rows: 0 | span: absent | v1 pull gap: Trends values are rescaled per request and pytrends is not installed; pinned pull harness is code present, first pull pending. Named gap.
+- 2026-10-30 | trends_topics_daily.csv | route: absence note | rows: 0 | span: absent | v1 pull gap, see fears basket.
+- 2026-10-30 | stocktwits_daily.csv | route: absence note | rows: 0 | span: absent | collecting from engine start; no key configured in this build. Context rank only in v1.
+- 2026-10-30 | reddit_mentions_daily.csv | route: absence note | rows: 0 | span: absent | collecting from engine start; no key configured in this build. Context rank only in v1.
+- 2026-10-30 | kalshi_daily.csv | route: absence note | rows: 0 | span: absent | graded history begins at first snapshot; see live snapshot rows in polymarket and kalshi snapshot handling in pipeline live stage.
+- 2026-10-30 | metaculus_daily.csv | route: absence note | rows: 0 | span: absent | snapshot attempted in live stage; graded history begins at first snapshot.
+- 2026-10-30 | dix_index_daily.csv | route: absence note | rows: 0 | span: absent | estate DIX record lives in the Morgue; not duplicated here. Displays as context with NO BAND until 250 sessions.
+- 2026-10-30 | morgue_map_gex_daily.csv | route: absence note | rows: 0 | span: absent | modelled estate lane; read from Morgue outputs in live stage where present, never reconstructed.
+- 2026-10-30 | cboe_vix_term_daily.csv | route: absence note | rows: 0 | span: absent | term values computed at gauge stage from cboe_vix_daily and companion files when landed.
+- 2026-10-30 | cboe_vix_futures_curve.csv | route: absence note | rows: 0 | span: absent | v1 pull gap: settlement file route not resolved in this build. Named gap.
+- 2026-10-30 | michigan_umcsent_monthly | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01 | rows: 677 | span: 1952-11-01 to 2026-09-01 | ok
+- 2026-10-30 | fred_hy_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=1950-01-01 | rows: 786 | span: 2023-10-31 to 2026-10-29 | ok chunked
+- 2026-10-30 | fred_ig_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=1950-01-01 | rows: 785 | span: 2023-10-31 to 2026-10-29 | ok chunked
+- 2026-10-30 | price_fred_sp500_daily.csv | route: fred chunked SP500 | rows: 2512 | span: 2016-10-31 to 2026-10-28 | ok
+- 2026-10-30 | price_fred_nasdaqcom_daily.csv | route: fred chunked NASDAQCOM | rows: 9276 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | price_fred_djia_daily.csv | route: fred chunked DJIA | rows: 2513 | span: 2016-10-31 to 2026-10-29 | ok
+- 2026-10-30 | price_fred_nasdaq100_daily.csv | route: fred chunked NASDAQ100 | rows: 3479 | span: 2013-01-02 to 2026-10-29 | ok
+- 2026-10-30 | baker_wurgler_monthly | route: wurgler | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://pages.stern.nyu.edu/~jwurgler/data/SENTIMENT.xls
+- 2026-10-30 | aaii_weekly | route: https://www.aaii.com/files/surveys/sentiment-survey.xlsx | rows: 0 | span: absent | FAILED curl exit 22 for https://www.aaii.com/files/surveys/sentiment-survey.csv
+- 2026-10-30 | naaim_weekly | route: naaim page | rows: 0 | span: absent | FAILED ValueError: no data file link found on NAAIM page
+- 2026-10-30 | cboe_vix_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv | rows: 9305 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_skew_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/SKEW_History.csv | rows: 9259 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_vix3m_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX3M_History.csv | rows: 4306 | span: 2009-09-18 to 2026-10-30 | ok
+- 2026-10-30 | cboe_vix9d_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX9D_History.csv | rows: 3979 | span: 2011-01-04 to 2026-10-29 | ok
+- 2026-10-30 | cboe_putcall_daily | route: https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv | rows: 0 | span: absent | FAILED curl exit 22 for https://www.cboe.com/us/options/market_statistics/historical_data/totalpc.csv / curl exit 22 for https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv
+- 2026-10-30 | finra_margin_monthly | route: https://www.finra.org/sites/default/files/2021-03/margin-statistics.xlsx | rows: 357 | span: 1997-01-01 to 2026-09-01 | ok
+- 2026-10-30 | cot_tff_weekly | route: cftc fut_fin_txt | rows: 617 | span: 2015-01-06 to 2026-10-27 | ok years [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+- 2026-10-30 | altme_fear_greed_daily | route: https://api.alternative.me/fng/?limit=0&format=json | rows: 3190 | span: 2018-02-01 to 2026-10-30 | ok
+- 2026-10-30 | crypto_funding_btc_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | crypto_funding_eth_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | wikipedia_pageviews_daily | route: wikimedia api | rows: 4139 | span: 2015-07-01 to 2026-10-29 | ok
+- 2026-10-30 | gdelt_gkg_tone_daily | route: https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3m&format=json | rows: 71 | span: 2026-08-02 to 2026-10-27 | ok (rolling window only)
+- 2026-10-30 | price_SPY | route: https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=10y&interval=1d | rows: 0 | span: absent | FAILED curl exit 22 for https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=10y&interval=1d
+- 2026-10-30 | price_QQQ | route: https://query1.finance.yahoo.com/v8/finance/chart/QQQ?range=10y&interval=1d | rows: 0 | span: absent | FAILED curl exit 22 for https://query1.finance.yahoo.com/v8/finance/chart/QQQ?range=10y&interval=1d
+- 2026-10-30 | price_IWM | route: https://query1.finance.yahoo.com/v8/finance/chart/IWM?range=10y&interval=1d | rows: 0 | span: absent | FAILED curl exit 22 for https://query1.finance.yahoo.com/v8/finance/chart/IWM?range=10y&interval=1d
+- 2026-10-30 | price_DIA | route: https://query1.finance.yahoo.com/v8/finance/chart/DIA?range=10y&interval=1d | rows: 0 | span: absent | FAILED curl exit 22 for https://query1.finance.yahoo.com/v8/finance/chart/DIA?range=10y&interval=1d
+- 2026-10-30 | breadth_daily | route: local panel | rows: 3279 | span: 2013-10-17 to 2026-10-29 | ok narrow panel reconstruction
+- 2026-10-30 | cot_legacy_weekly.csv | route: absence note | rows: 0 | span: absent | v1 pull gap: Legacy deep archive not pulled in this build; TFF 2015 forward pulled. Named gap, not zero filled.
+- 2026-10-30 | ici_flows_weekly.csv | route: absence note | rows: 0 | span: absent | v1 pull gap: ICI table route not resolved in this build. Named gap.
+- 2026-10-30 | ici_flows_monthly.csv | route: absence note | rows: 0 | span: absent | v1 pull gap, see weekly.
+- 2026-10-30 | trends_fears_weekly.csv | route: absence note | rows: 0 | span: absent | v1 pull gap: Trends values are rescaled per request and pytrends is not installed; pinned pull harness is code present, first pull pending. Named gap.
+- 2026-10-30 | trends_topics_daily.csv | route: absence note | rows: 0 | span: absent | v1 pull gap, see fears basket.
+- 2026-10-30 | stocktwits_daily.csv | route: absence note | rows: 0 | span: absent | collecting from engine start; no key configured in this build. Context rank only in v1.
+- 2026-10-30 | reddit_mentions_daily.csv | route: absence note | rows: 0 | span: absent | collecting from engine start; no key configured in this build. Context rank only in v1.
+- 2026-10-30 | kalshi_daily.csv | route: absence note | rows: 0 | span: absent | graded history begins at first snapshot; see live snapshot rows in polymarket and kalshi snapshot handling in pipeline live stage.
+- 2026-10-30 | metaculus_daily.csv | route: absence note | rows: 0 | span: absent | snapshot attempted in live stage; graded history begins at first snapshot.
+- 2026-10-30 | dix_index_daily.csv | route: absence note | rows: 0 | span: absent | estate DIX record lives in the Morgue; not duplicated here. Displays as context with NO BAND until 250 sessions.
+- 2026-10-30 | morgue_map_gex_daily.csv | route: absence note | rows: 0 | span: absent | modelled estate lane; read from Morgue outputs in live stage where present, never reconstructed.
+- 2026-10-30 | cboe_vix_term_daily.csv | route: absence note | rows: 0 | span: absent | term values computed at gauge stage from cboe_vix_daily and companion files when landed.
+- 2026-10-30 | cboe_vix_futures_curve.csv | route: absence note | rows: 0 | span: absent | v1 pull gap: settlement file route not resolved in this build. Named gap.
+- 2026-10-30 | polymarket_daily | route: https://gamma-api.polymarket.com/events?active=true&closed=false&limit=20&order=volume24hr&ascending=false | rows: 20 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | kalshi_daily | route: https://api.elections.kalshi.com/trade-api/v2/markets?limit=10&series_ticker=KXFEDDECISION | rows: 10 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | metaculus_daily | route: metaculus api2 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://www.metaculus.com/api2/questions/?limit=10&search=recession
+- 2026-10-30 | morgue_map_gex_daily | route: morgue published outputs (read only) | rows: 0 | span: absent | estate lane read: 21 output files present; GEX and DIX values stay in the Morgue record, labelled modelled, NO BAND
+- 2026-10-30 | finra_short_volume_per_name | route: https://cdn.finra.org/equity/regsho/daily/FNSQshvol20261030.txt | rows: 12266 | span: 2026-10-30 | ok, per-name store accrued
+- 2026-10-30 | altme_fear_greed_daily | route: https://api.alternative.me/fng/?limit=0&format=json | rows: 3190 | span: 2018-02-01 to 2026-10-30 | ok
+- 2026-10-30 | crypto_funding_btc_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | crypto_funding_eth_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | coinalyze_funding_snapshot | route: api.coinalyze.net/v1/future-markets (header api_key, curl) | rows: 1 | span: 2026-10-30 | curl exit 0, body starts '[{"symbol":"MNTUSDT.6","exchange":"6","s'
+- 2026-10-30 | price_*_yahoo_monthly | route: yahoo chart range=max | rows: 0 | span: removed | Yahoo range=max returned monthly bars, not daily; files removed as a failed route. Breadth spine is the FRED index panel. Named, not silently dropped.
+- 2026-10-30 | aaii_weekly | route: https://www.aaii.com/files/surveys/sentiment-survey.xlsx | rows: 0 | span: absent | FAILED curl exit 22 for https://www.aaii.com/files/surveys/sentiment-survey.csv
+- 2026-10-30 | naaim_weekly | route: naaim page | rows: 0 | span: absent | FAILED ValueError: no data file link found on NAAIM page
+- 2026-10-30 | michigan_umcsent_monthly | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01 | rows: 677 | span: 1952-11-01 to 2026-09-01 | ok
+- 2026-10-30 | aaii_weekly | route: https://www.aaii.com/files/surveys/sentiment-survey.xlsx | rows: 0 | span: absent | FAILED curl exit 22 for https://www.aaii.com/files/surveys/sentiment-survey.csv
+- 2026-10-30 | naaim_weekly | route: naaim page | rows: 0 | span: absent | FAILED ValueError: no data file link found on NAAIM page
+- 2026-10-30 | michigan_umcsent_monthly | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01 | rows: 677 | span: 1952-11-01 to 2026-09-01 | ok
+- 2026-10-30 | baker_wurgler_monthly | route: wurgler | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://pages.stern.nyu.edu/~jwurgler/data/SENTIMENT.xls
+- 2026-10-30 | baker_wurgler_monthly | route: wurgler | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://pages.stern.nyu.edu/~jwurgler/data/SENTIMENT.xls
+- 2026-10-30 | cot_tff_weekly | route: cftc fut_fin_txt | rows: 617 | span: 2015-01-06 to 2026-10-27 | ok years [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+- 2026-10-30 | finra_margin_monthly | route: https://www.finra.org/sites/default/files/2021-03/margin-statistics.xlsx | rows: 357 | span: 1997-01-01 to 2026-09-01 | ok
+- 2026-10-30 | finra_short_volume_per_name | route: https://cdn.finra.org/equity/regsho/daily/FNSQshvol20261030.txt | rows: 12266 | span: 2026-10-30 | ok, per-name store accrued
+- 2026-10-30 | cboe_vix_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv | rows: 9305 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_skew_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/SKEW_History.csv | rows: 9259 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cot_tff_weekly | route: cftc fut_fin_txt | rows: 617 | span: 2015-01-06 to 2026-10-27 | ok years [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+- 2026-10-30 | finra_margin_monthly | route: https://www.finra.org/sites/default/files/2021-03/margin-statistics.xlsx | rows: 357 | span: 1997-01-01 to 2026-09-01 | ok
+- 2026-10-30 | finra_short_volume_per_name | route: https://cdn.finra.org/equity/regsho/daily/FNSQshvol20261030.txt | rows: 12266 | span: 2026-10-30 | ok, per-name store accrued
+- 2026-10-30 | cboe_vix_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv | rows: 9305 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_skew_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/SKEW_History.csv | rows: 9259 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_putcall_daily | route: https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv | rows: 0 | span: absent | FAILED curl exit 22 for https://www.cboe.com/us/options/market_statistics/historical_data/totalpc.csv / curl exit 22 for https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv
+- 2026-10-30 | cboe_putcall_daily | route: https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv | rows: 0 | span: absent | FAILED curl exit 22 for https://www.cboe.com/us/options/market_statistics/historical_data/totalpc.csv / curl exit 22 for https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv
+- 2026-10-30 | fred_hy_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=1950-01-01 | rows: 786 | span: 2023-10-31 to 2026-10-29 | ok chunked
+- 2026-10-30 | fred_hy_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=1950-01-01 | rows: 786 | span: 2023-10-31 to 2026-10-29 | ok chunked
+- 2026-10-30 | fred_ig_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=1950-01-01 | rows: 785 | span: 2023-10-31 to 2026-10-29 | ok chunked
+- 2026-10-30 | fred_ig_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=1950-01-01 | rows: 785 | span: 2023-10-31 to 2026-10-29 | ok chunked
+- 2026-10-30 | price_fred_sp500_daily.csv | route: fred chunked SP500 | rows: 2512 | span: 2016-10-31 to 2026-10-28 | ok
+- 2026-10-30 | price_fred_sp500_daily.csv | route: fred chunked SP500 | rows: 2512 | span: 2016-10-31 to 2026-10-28 | ok
+- 2026-10-30 | price_fred_nasdaqcom_daily.csv | route: fred chunked NASDAQCOM | rows: 9276 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | price_fred_nasdaqcom_daily.csv | route: fred chunked NASDAQCOM | rows: 9276 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | price_fred_djia_daily.csv | route: fred chunked DJIA | rows: 2514 | span: 2016-10-31 to 2026-10-30 | ok
+- 2026-10-30 | price_fred_djia_daily.csv | route: fred chunked DJIA | rows: 2514 | span: 2016-10-31 to 2026-10-30 | ok
+- 2026-10-30 | price_fred_nasdaq100_daily.csv | route: fred chunked NASDAQ100 | rows: 3479 | span: 2013-01-02 to 2026-10-29 | ok
+- 2026-10-30 | price_fred_nasdaq100_daily.csv | route: fred chunked NASDAQ100 | rows: 3479 | span: 2013-01-02 to 2026-10-29 | ok
+- 2026-10-30 | breadth_daily | route: local panel | rows: 3279 | span: 2013-10-17 to 2026-10-29 | ok narrow panel reconstruction
+- 2026-10-30 | breadth_daily | route: local panel | rows: 3279 | span: 2013-10-17 to 2026-10-29 | ok narrow panel reconstruction
+- 2026-10-30 | gdelt_gkg_tone_daily | route: https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3m&format=json | rows: 71 | span: 2026-08-02 to 2026-10-27 | ok (rolling window only)
+- 2026-10-30 | wikipedia_pageviews_daily | route: wikimedia api | rows: 4139 | span: 2015-07-01 to 2026-10-29 | ok
+- 2026-10-30 | stocktwits_daily | route: stocktwits api | rows: 0 | span: absent | no key configured; collecting status recorded, not faked
+- 2026-10-30 | reddit_mentions_daily | route: reddit api | rows: 0 | span: absent | no key configured; collecting status recorded, not faked
+- 2026-10-30 | polymarket_daily | route: https://gamma-api.polymarket.com/events?active=true&closed=false&limit=20&order=volume24hr&ascending=false | rows: 20 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | kalshi_daily | route: https://api.elections.kalshi.com/trade-api/v2/markets?limit=10&series_ticker=KXFEDDECISION | rows: 10 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | gdelt_gkg_tone_daily | route: gdelt doc | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3m&format=json
+- 2026-10-30 | wikipedia_pageviews_daily | route: wikimedia api | rows: 4139 | span: 2015-07-01 to 2026-10-29 | ok
+- 2026-10-30 | stocktwits_daily | route: stocktwits api | rows: 0 | span: absent | no key configured; collecting status recorded, not faked
+- 2026-10-30 | reddit_mentions_daily | route: reddit api | rows: 0 | span: absent | no key configured; collecting status recorded, not faked
+- 2026-10-30 | metaculus_daily | route: metaculus api2 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://www.metaculus.com/api2/questions/?limit=10&search=recession
+- 2026-10-30 | polymarket_daily | route: https://gamma-api.polymarket.com/events?active=true&closed=false&limit=20&order=volume24hr&ascending=false | rows: 20 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | kalshi_daily | route: https://api.elections.kalshi.com/trade-api/v2/markets?limit=10&series_ticker=KXFEDDECISION | rows: 10 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | altme_fear_greed_daily | route: https://api.alternative.me/fng/?limit=0&format=json | rows: 3190 | span: 2018-02-01 to 2026-10-30 | ok
+- 2026-10-30 | metaculus_daily | route: metaculus api2 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://www.metaculus.com/api2/questions/?limit=10&search=recession
+- 2026-10-30 | altme_fear_greed_daily | route: https://api.alternative.me/fng/?limit=0&format=json | rows: 3190 | span: 2018-02-01 to 2026-10-30 | ok
+- 2026-10-30 | crypto_funding_btc_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | crypto_funding_btc_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | crypto_funding_eth_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | coinalyze_funding_snapshot | route: api.coinalyze.net/v1/future-markets (header api_key, curl) | rows: 1 | span: 2026-10-30 | curl exit 0, body starts '[{"symbol":"MNTUSDT.6","exchange":"6","s'
+- 2026-10-30 | morgue_map_gex_daily | route: morgue published outputs (read only) | rows: 0 | span: absent | estate lane read: 21 output files present; GEX and DIX values stay in the Morgue record, labelled modelled, NO BAND
+- 2026-10-30 | crypto_funding_eth_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | coinalyze_funding_snapshot | route: api.coinalyze.net/v1/future-markets (header api_key, curl) | rows: 1 | span: 2026-10-30 | curl exit 0, body starts '[{"symbol":"MNTUSDT.6","exchange":"6","s'
+- 2026-10-30 | morgue_map_gex_daily | route: morgue published outputs (read only) | rows: 0 | span: absent | estate lane read: 21 output files present; GEX and DIX values stay in the Morgue record, labelled modelled, NO BAND
+- 2026-10-30 | aaii_weekly | route: https://www.aaii.com/files/surveys/sentiment-survey.xlsx | rows: 0 | span: absent | FAILED curl exit 22 for https://www.aaii.com/files/surveys/sentiment-survey.csv
+- 2026-10-30 | naaim_weekly | route: naaim page | rows: 0 | span: absent | FAILED ValueError: no data file link found on NAAIM page
+- 2026-10-30 | michigan_umcsent_monthly | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=UMCSENT&cosd=1950-01-01 | rows: 677 | span: 1952-11-01 to 2026-09-01 | ok
+- 2026-10-30 | polymarket_daily | route: https://gamma-api.polymarket.com/events?active=true&closed=false&limit=20&order=volume24hr&ascending=false | rows: 20 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | kalshi_daily | route: https://api.elections.kalshi.com/trade-api/v2/markets?limit=10&series_ticker=KXFEDDECISION | rows: 10 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | baker_wurgler_monthly | route: wurgler | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://pages.stern.nyu.edu/~jwurgler/data/SENTIMENT.xls
+- 2026-10-30 | metaculus_daily | route: metaculus api2 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://www.metaculus.com/api2/questions/?limit=10&search=recession
+- 2026-10-30 | cot_tff_weekly | route: cftc fut_fin_txt | rows: 617 | span: 2015-01-06 to 2026-10-27 | ok years [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+- 2026-10-30 | finra_margin_monthly | route: https://www.finra.org/sites/default/files/2021-03/margin-statistics.xlsx | rows: 357 | span: 1997-01-01 to 2026-09-01 | ok
+- 2026-10-30 | finra_short_volume_per_name | route: https://cdn.finra.org/equity/regsho/daily/FNSQshvol20261030.txt | rows: 12266 | span: 2026-10-30 | ok, per-name store accrued
+- 2026-10-30 | cboe_vix_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv | rows: 9305 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_skew_daily.csv | route: https://cdn.cboe.com/api/global/us_indices/daily_prices/SKEW_History.csv | rows: 9259 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | cboe_putcall_daily | route: https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv | rows: 0 | span: absent | FAILED curl exit 22 for https://www.cboe.com/us/options/market_statistics/historical_data/totalpc.csv / curl exit 22 for https://cdn.cboe.com/resources/us/options/market_statistics/historical_data/totalpc.csv
+- 2026-10-30 | fred_hy_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2&cosd=1950-01-01 | rows: 786 | span: 2023-10-31 to 2026-10-29 | ok chunked
+- 2026-10-30 | fred_ig_oas_daily | route: https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM&cosd=1950-01-01 | rows: 785 | span: 2023-10-31 to 2026-10-29 | ok chunked
+- 2026-10-30 | price_fred_sp500_daily.csv | route: fred chunked SP500 | rows: 2512 | span: 2016-10-31 to 2026-10-28 | ok
+- 2026-10-30 | price_fred_nasdaqcom_daily.csv | route: fred chunked NASDAQCOM | rows: 9276 | span: 1990-01-02 to 2026-10-29 | ok
+- 2026-10-30 | price_fred_djia_daily.csv | route: fred chunked DJIA | rows: 2514 | span: 2016-10-31 to 2026-10-30 | ok
+- 2026-10-30 | price_fred_nasdaq100_daily.csv | route: fred chunked NASDAQ100 | rows: 3479 | span: 2013-01-02 to 2026-10-29 | ok
+- 2026-10-30 | breadth_daily | route: local panel | rows: 3279 | span: 2013-10-17 to 2026-10-29 | ok narrow panel reconstruction
+- 2026-10-30 | gdelt_gkg_tone_daily | route: https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3m&format=json | rows: 71 | span: 2026-08-02 to 2026-10-27 | ok (rolling window only)
+- 2026-10-30 | wikipedia_pageviews_daily | route: wikimedia api | rows: 4139 | span: 2015-07-01 to 2026-10-29 | ok
+- 2026-10-30 | stocktwits_daily | route: stocktwits api | rows: 0 | span: absent | no key configured; collecting status recorded, not faked
+- 2026-10-30 | reddit_mentions_daily | route: reddit api | rows: 0 | span: absent | no key configured; collecting status recorded, not faked
+- 2026-10-30 | polymarket_daily | route: https://gamma-api.polymarket.com/events?active=true&closed=false&limit=20&order=volume24hr&ascending=false | rows: 20 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | kalshi_daily | route: https://api.elections.kalshi.com/trade-api/v2/markets?limit=10&series_ticker=KXFEDDECISION | rows: 10 | span: 2026-10-30 | ok snapshot
+- 2026-10-30 | gdelt_gkg_tone_daily | route: https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3m&format=json | rows: 71 | span: 2026-08-02 to 2026-10-27 | ok restored from stored raw snapshot live/raw/backfill_attention/2026-10-30/gdelt_tone.json after preserve-on-failure cure; the failed re-pull had overwritten the series with an absent file
+- 2026-10-30 | metaculus_daily | route: metaculus api2 | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://www.metaculus.com/api2/questions/?limit=10&search=recession
+- 2026-10-30 | altme_fear_greed_daily | route: https://api.alternative.me/fng/?limit=0&format=json | rows: 3190 | span: 2018-02-01 to 2026-10-30 | ok
+- 2026-10-30 | crypto_funding_btc_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | gdelt_gkg_tone_daily | route: gdelt doc | rows: 0 | span: absent | FAILED RuntimeError: curl exit 22 for https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3m&format=json
+- 2026-10-30 | crypto_funding_eth_daily | route: binance fapi fundingRate | rows: 96 | span: 2026-07-27 to 2026-10-30 | ok, 286 intervals
+- 2026-10-30 | coinalyze_funding_snapshot | route: api.coinalyze.net/v1/future-markets (header api_key, curl) | rows: 1 | span: 2026-10-30 | curl exit 0, body starts '[{"symbol":"MNTUSDT.6","exchange":"6","s'
+- 2026-10-30 | morgue_map_gex_daily | route: morgue published outputs (read only) | rows: 0 | span: absent | estate lane read: 21 output files present; GEX and DIX values stay in the Morgue record, labelled modelled, NO BAND
+- 2026-10-30 | gdelt_gkg_tone_daily | route: https://api.gdeltproject.org/api/v2/doc/doc?query=%22stock%20market%22&mode=timelinetone&timespan=3m&format=json | rows: 71 | span: 2026-08-02 to 2026-10-27 | ok (rolling window only)
