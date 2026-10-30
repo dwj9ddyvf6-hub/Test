@@ -6,7 +6,7 @@ The repository also contains a shorter, independent guide: [`../../docs/AGENTIC_
 
 | Topic | Companion guide | This kit | How to reconcile |
 |---|---|---|---|
-| Halt / kill switch | A global and per-strategy halt with reason and operator identity | No *automatic*, monitor-triggered desk-wide halt; alert instead (P-88 shows a breaker tripping on a phantom number) | Both fit if: a halt is **human-invoked or pre-approved policy**, it blocks **new entries only**, it never cancels protective orders or abandons exit/reconciliation duty, and it is logged with who/why. Prefer per-symbol locks + loud alerts for data/ledger mismatches. |
+| Halt / kill switch | A global and per-strategy halt with reason and operator identity | Layered, deterministic entry-pause and emergency-stop states | Isolate sleeve-local faults; pause new exposure for validated critical account, data, ledger, broker, or risk failures. An unverified metric must not trigger blind liquidation, but a real policy breach must not be reduced to an alert. Define and test effects on queued/working orders, existing positions, protective orders, exits, reconciliation, and recovery. Log trigger, evidence, owner, and state transition. |
 | Live promotion | Describes a staged path to live trading | Out of scope: this kit is **paper-only**; live is not implemented | Treat the companion's live phase as a separate project needing human, legal and risk sign-off; nothing here authorises it. |
 | Missing data | Fail closed | Fail closed for *entries*; never let missing data erase ownership of a position | Same rule: "missing/untrusted data blocks new entries; exits and reconciliation follow a separately reviewed policy" (P-81). |
 
