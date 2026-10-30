@@ -1,5 +1,7 @@
 # BB touch plus RSI divergence — research record
 
+Provenance: Midna's desk: a TradingView indicator reconstructed from a chart screenshot, and its desk sleeve. Code: sleeves/bb_rsi_divergence.py. Doc: Author spec on file in this repo.
+
 **Status:** hypothesis / paper-enabled code; no forward paper run  
 **As of:** 2026-10-24  
 **Mode:** CREATE  
