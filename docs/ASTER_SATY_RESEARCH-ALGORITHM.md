@@ -1,5 +1,7 @@
 Algorithm derived from the sleeve code on 2026-10-29 (no author spec on file).
 
+Provenance: Aster research program (Codex/Ausar track), hosted sleeves on the desk engine. Code: adapters3/aster_saty_research.py. Doc: Derived from the sleeve code on 2026-10-29; no author spec on file.
+
 # aster_saty_research: Algorithm
 
 ## What it trades
