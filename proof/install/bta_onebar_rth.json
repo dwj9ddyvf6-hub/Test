@@ -1,0 +1,59 @@
+{
+ "config": {
+  "cadence_s": 60,
+  "inputs": [
+   "bars",
+   "bars_30min",
+   "bars:QQQ:30Min",
+   "positions",
+   "quotes",
+   "session_fills"
+  ],
+  "parked": false,
+  "session": "rth"
+ },
+ "edge_status": "UNPROVEN - live paper record is the test; no backtest claimed",
+ "fed_status": "Keys registered in code and proven in a fresh process (BarsProjection on a fixture warm map returns all needed 30Min keys). Live runner restart still required for live feeding; see BUGLOG_2026-10-30.md BTA-ONEBAR-UNFED-20261030 OPEN item.",
+ "files": {
+  "adapters/bta_onebar_basket.py": "fe27d94b4c00e5dac3c8af57646e4a3d0290494e2eb41123f20ded70a6c26262",
+  "adapters/bta_onebar_qqq.py": "6b6414e6fe01de742102e7d9e50399fda15d6b90fe2c8f168230b2dc15d557f0",
+  "adapters/bta_onebar_rth.py": "f3a727614d1141077712383a45a08f8d533af0bbd01684d28021dbed64579ed4",
+  "adapters3/bta_onebar_basket.py": "31e12eca03e0a5fb38074f7fa6d3e4cb1f2ffb2be20810252686b52bc69d9d1f",
+  "adapters3/bta_onebar_qqq.py": "230a4f2da0aaeb8ff4621de84a4bdd6ed28696d963d0f346995f4680b94a78ec",
+  "adapters3/bta_onebar_rth.py": "42415fb86a8eb360546c212b64fbdd649d14e1bdaa3451bd7035951bd04a0274",
+  "config/sleeves.json": "0a6274ae0fa528157e9709057c3c2fa94a5f9ec825b43a6feecfc338c885aaa3",
+  "desk3/producers_g4.py": "935db3b728409523d1868e18bc647af5fc6756a24b9b79c89c9b666f124e210c",
+  "desk3/warm.py": "5ec1ea4c7e76986a6319eb943490af1c9a19fabc552a2193e494cb3fdae4a917",
+  "sleeves/bta_onebar_basket.py": "872089b2bf99cff39ba2d7423e116091fd4ffc7c58c57de3c669d8da88795899",
+  "sleeves/bta_onebar_qqq.py": "87ab9cd0ceb078776ac6053b9be62ae00f0e85a9760928ad74dec84f81f1443f",
+  "sleeves/bta_onebar_rth.py": "40857ac88cc1a171cb4449daf98d9ff4ed421ea8ca3d909ac52b6076418ac22b",
+  "tests/test_bta_onebar_blockers.py": "a2ec92940d526fecd90e9a503853da98e4cb781d7550058c04a5eaf432b47682"
+ },
+ "frozen_parameters": {
+  "channel_bars": 50,
+  "exit": "open of the bar after the entry bar",
+  "feed": "Alpaca SIP via desk warm product",
+  "max_entries_per_day_per_symbol": 2,
+  "sizing": "qty = floor(slice equity / entry); $10,000 slice is the notional cap and binding constraint",
+  "stop_pct": 0.002,
+  "stop_translation": "$1,000 / $20 per NQ point = 50 points; 50 / 25,000 reference = 0.20 percent of entry",
+  "timeframe": "30Min"
+ },
+ "installed": "2026-10-30",
+ "paper_only": true,
+ "parked": false,
+ "provenance": "X post by Breakout Trading Academy (verified account, handle truncated as @onl... in the source screenshot), installed by owner order 2026-10-30; profitability and equity curve in the post are NOT verifiable from the post",
+ "session_rule": "RTH only (09:30-16:00 ET bars, 15:55 ET flat)",
+ "sleeve": "bta_onebar_rth",
+ "slice_usd": 10000.0,
+ "symbols": [
+  "QQQ"
+ ],
+ "test_evidence": {
+  "fail_first": "STOP_PCT 0.0020 -> 0.0: 2 tests FAIL (stop translation and golden long entry). CHANNEL_BARS 50 -> 10: channel-requires-50 test FAILs. Restored module hash verified and suite passes 24/24 (after clearing stale .pyc from the same-size edits). Pre-build, the test file errors at import because the sleeve modules did not exist.",
+  "file": "tests/test_bta_onebar_blockers.py",
+  "result": "24/24 OK",
+  "tests": 24
+ },
+ "warm_hash_note": "desk3/warm.py hash is the committed version (HEAD plus this family's INTRADAY_FETCHES hunk only); the working tree also carries another lane's uncommitted warm.py work, which this install did not commit."
+}
