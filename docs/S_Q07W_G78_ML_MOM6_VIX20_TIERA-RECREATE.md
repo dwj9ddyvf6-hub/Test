@@ -1,95 +1,71 @@
 # s_q07w_g78_ml_mom6_vix20_tierA: Recreation Package
+
 Status: UNRESOLVED in the ALL-SLEEVES accounting; this package holds the best evidence on file and does not claim a complete algorithm.
 
 ## Provenance
 
-- ALL-SLEEVES accounting (Test `docs/ALL-SLEEVES.json`, also `docs/ALL-SLEEVES.md`): canonical name "s_q07w_g78_ml_mom6_vix20_tierA", type trend following, family unrecorded, no description recorded. Algorithm grade FULL in the accounting, sourced solely from the lz_engine config (entry/exit/sizing quoted in the Full algorithm and Configuration sections). No Test catalog entry in the accounting (test_entries empty). Alias record: `s_q07w_g78_ml_mom6_vix20_tierA` itself, source md2_lz_engine, status live. The accounting flags this strategy UNRESOLVED: "singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description".
-- The lz_engine config row for this id IS in Test, at `packages/grokbot/rl64/lz_engine/config/sleeves.json` (row id `s_q07w_g78_ml_mom6_vix20_tierA`, label "Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)", account TEST, kind 1w, enabled true, state live, status_text "ready (md2 RL64 2026-10-24, Trader t181u)"). Its entry, exit and sizing blocks are quoted verbatim in the Full algorithm section, and its research rows are quoted in Provenance below.
-- INCOMPLETE-CODE: no code that runs this lane was found in any GitHub repo searched. Search record: fresh recursive trees of dwj9ddyvf6-hub/Test, dwj9ddyvf6-hub/Silicon, dwj9ddyvf6-hub/quant-research-backup and dwj9ddyvf6-hub/Midna were taken at batch start (b26_*_tree.txt in the run workspace) and searched by filename for this id; no sleeve, adapter or engine file named for this id exists in any of the four trees. In Test specifically: there is no `sleeves/s_q07w_g78_ml_mom6_vix20_tierA.py`, `adapters3/s_q07w_g78_ml_mom6_vix20_tierA.py`, `integration/s_q07w_g78_ml_mom6_vix20_tierA_adapter.py` or `laz_sleeves/s_q07w_g78_ml_mom6_vix20_tierA.py`; the id has no SPECS entry in `desk3/lazarus_q07.py`; and `desk3/q07_engine.py` (a different Q07 engine in Test, for the Lazarus batch-6 lanes) carries no spec for this id and does not implement the tierA filter token at all, so it is not claimed as this lane's code. The engine that consumed the rl64 lz_engine config on the original desk is not in any searched repo. Nothing was vendored.
-
-Research rows recorded on the config row in Test:
-
-- `DESK_INTEGRATION/Q07_PRICE_FAMILY_PARAMS.csv Q07-w_green-H78-midlarge-mom6+stress_vix20+tierA (CONFIRMED; K 20; exit: close of last NYSE session <= D + 546 calendar days; entry red (Q07 'red'))`
-- `CORPUS_AUDIT/out/Q07_confluence_cells.csv mom6+stress_vix20+tierA w_green H78 midlarge red band: n 44, names 41, edge +45.2 [17.6, 69.9], q_fam 0.00486, CONFIRMED; px pool 36.366 CONFIRMED`
-- `CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)`
+- ALL-SLEEVES accounting (Test `docs/ALL-SLEEVES.json`, also `docs/ALL-SLEEVES.md`): canonical name "s_q07w_g78_ml_mom6_vix20_tierA" (no separate strategy description is recorded in the consulted sources), type trend following, family unrecorded; universe, asset class, timeframe and creator "not recorded in consulted sources". Algorithm grade FULL in the accounting, sourced from a single source: the lz_engine config (entry/exit/sizing) quoted in the Full algorithm. Alias status: live (md2_lz_engine). The accounting marks the entry UNRESOLVED ("singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description"); no Test catalog entry and no sleeve module for this id exists, so this package is graded unresolved_built and holds the best evidence on file: the cell's own executable config entry in Test, below.
+- Executable record in this repo: the cell's own entry (id `s_q07w_g78_ml_mom6_vix20_tierA`) in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (164 entries; account TEST, broker_account TEST_MWJW, kind 1w, enabled true, state live, label "Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)"), installed by `packages/grokbot/rl64/tools/install_rl64.py` (md2 RL64, 2026-10-24: the Research Lab Q07 price-family cells installed as paper sleeves, 1 slot x $1k each, fires emitted by the composer via the generic sleeve_q07.cell_hits path). The md2 host that runs Lazarus config sleeves is `packages/grokbot/master-desk-md2/mdesk/engines/lazarus.py` (LazarusSleeve; its sleeve id is "lz_" + the config id; DISASTER_STOP 15.0 in that host).
+- The lz_-prefixed twin of this same config entry (the md2 Lazarus host's sleeve id is "lz_" + the config id) already has a recreation package in Test: `docs/LZ_S_Q07W_G78_ML_MOM6_VIX20_TIERA-RECREATE.md`. This package covers the unprefixed canonical id the accounting lists separately.
+- Research evidence recorded on the config entry:
+  - "DESK_INTEGRATION/Q07_PRICE_FAMILY_PARAMS.csv Q07-w_green-H78-midlarge-mom6+stress_vix20+tierA (CONFIRMED; K 20; exit: close of last NYSE session <= D + 546 calendar days; entry red (Q07 'red'))"
+  - "CORPUS_AUDIT/out/Q07_confluence_cells.csv mom6+stress_vix20+tierA w_green H78 midlarge red band: n 44, names 41, edge +45.2 [17.6, 69.9], q_fam 0.00486, CONFIRMED; px pool 36.366 CONFIRMED"
+  - "CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly (tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands)"
+  - Status text on the entry: "ready (md2 RL64 2026-10-24, Trader t181u)"; flag on the entry: "md2 RL64 2026-10-24 (Trader t181u): Research Lab Q07 price-family cell; 1 slot x $1k, outside the L-146 scale solve (existing budgets unchanged)".
+- Code search record: fresh recursive trees of dwj9ddyvf6-hub/Test, dwj9ddyvf6-hub/Silicon, dwj9ddyvf6-hub/quant-research-backup and dwj9ddyvf6-hub/Midna were taken at batch start and searched by filename for the canonical id, its aliases and its distinguishing tokens; the contents of the Test files named in this package were read from GitHub. Every fact below names the repo and path it came from (all paths are in Test unless stated). Specifically: no sleeve, adapter or integration file named for this id exists in Test (the Test tree holds s_q07w files only for other cells); the Silicon, quant-research-backup and Midna trees contain no file named for this id and no lz_engine config at all. The second lz_engine config in Test, `packages/grokbot/q07-1w-swing-lz/lz_engine/config/sleeves.json`, does not contain this id (it holds the cyan/small and other bands, not this midlarge green cell).
 
 ## What this strategy is
 
-A Research Lab Q07 weekly (1W) Tensor confluence cell: the green family, midlarge cap band, 78-week horizon, with the fire filters mom6+vix20+tierA (label: "Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)"). It consumes sleeve-feed fires and, per its config, buys one $1,000 slot on a fear day under a capped limit order, exiting on the fire plan's 15% disaster stop or at the 78-week time exit. The config's own flag row records: "Research Lab Q07 price-family cell; 1 slot x $1k, outside the L-146 scale solve (existing budgets unchanged)".
+One cell of the Research Lab Q07 weekly (1w) confluence grid: the Tensor 1W w_green (Green) signal in the midlarge cap band, restricted to fires carrying the mom6 + stress_vix20 + tierA confluence tags, bought only on a fear (red) day, held 78 weeks. It is a fire-consumer: it does not generate its own signal; the sleeve_feed composer (tracker ledger + alt-data tags) emits its fires. The accounting lists this unprefixed id as a separate unresolved singleton even though its algorithm record is FULL from the config below.
 
 ## Full algorithm
 
-Everything the record holds, from the config row in Test (`packages/grokbot/rl64/lz_engine/config/sleeves.json`). Where the record does not define a term, that is stated rather than filled in.
+Evaluation order, from the config entry in Test and the recorded family rule:
 
-Filter definitions recorded on the config row's research rows (from `CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly`, as quoted there):
-
-- mom6 = ret126 >= pre-2020 q67 (126-session return at or above the pre-2020 67th percentile)
-- vix20: recorded only as the token stress_vix20 in this lane's label and research rows; its numeric definition is not in the record for this config (a different Q07 engine in Test, desk3/q07_engine.py, reads a vix20 token as VIX >= 20, but that engine carries no spec for this id and is not claimed as this lane's code)
-- tierA = tier_noliq A / dv20 >= $100k
-
-Entry (config `entry` block, verbatim values):
-
-- policy: "fear_day"
-- max_delay_minutes: 65
-- limit_band_pct: 5.0
-- limit_buffer_pct: 1.0
-- window_sessions: 5 (the fire must be acted on within 5 sessions)
-- no_chase_mult: 1.02
-- stock_red: true
-- qqq_red: true
-- order: "capped_limit_day"
-
-The mechanics behind the fear_day policy name, the limit band/buffer and the no-chase multiplier are not in the record; only the parameter values above are. The research rows record the cell's entry side as "entry red (Q07 'red')" and the params row records "K 20" (the K parameter's role is not in the record).
-
-Exit (config `exit` block, verbatim):
-
-- rule: "the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 78 weeks (W78; calendar weeks after the fire week, desk weekly time exit))"
-- hold_from: "fill"
-- hold_unit_kind: "1w"
-- stop_pct: null; max_bars: null; rest: null; plan_overrides: []
-- The research params row records the time exit precisely as: exit at the close of the last NYSE session on or before D + 546 calendar days, where D is the fire date.
-
-Sizing (config `sizing` block, verbatim values):
-
-- budget_usd: 1000; max_slots: 1; position_usd: 1000; position_usd_by_class: {}; one_share_max_usd: null; cap_pct_of_dv20: 1.0; min_slot_fraction: 0.9; global_slot_usd: 1000; min_dv20_usd: 100000
-
-Signal source (config `source` block): producer "sleeve_feed composer (tracker ledger + alt-data tags)", file `shadow/paper_sleeve/live/sleeve_fires_v1.json`, lane `s_q07w_g78_ml_mom6_vix20_tierA`.
+1. Signal: the composer emits a fire for this lane (source file `shadow/paper_sleeve/live/sleeve_fires_v1.json`, producer "sleeve_feed composer (tracker ledger + alt-data tags)") when a Tensor 1W w_green (Green) signal in the midlarge cap band carries all of this cell's tags: mom6 + stress_vix20 + tierA. Tag definitions recorded on the config entry (CORPUS_AUDIT/code/ctx_feats.py tags() + ca_lib.load_weekly): tierA = tier_noliq A / dv20 >= $100k; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; cheap5 = px_fire < 5; PIT SEC bands; cap bands are PIT SEC bands. This cell's tags are mom6 (ret126 >= pre-2020 q67), stress_vix20 and tierA (tier_noliq A / dv20 >= $100k). stress_vix20 is the VIX >= 20 stress gate (the vix20 reading in the v3 Q07 engine in this repo, `desk3/q07_engine.py`: vix20 = VIX >= 20).
+2. Entry policy (config entry verbatim): {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}. Both the stock and QQQ must be red on the entry day.
+3. Entry window: the buy must occur within 5 sessions of the signal and at most 65 minutes after the fear-day trigger; the capped limit day order may not chase above 1.02x (no_chase_mult) and is capped by the 5.0% limit band with a 1.0% buffer.
+4. Position management: 1 slot only (max_slots 1); a second fire does not add while the slot is occupied. Sizing (config entry verbatim): {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}.
+5. Exit, per the fire's plan as recorded on the config entry: a 15% disaster stop (L-130; the md2 Lazarus host holds DISASTER_STOP = 15.0), or the time exit at hold = 78 weeks (calendar weeks after the fire week, desk weekly time exit; the price-family params record the exit as the close of the last NYSE session <= D + 546 calendar days). Config exit fields: hold_from = fill, hold_unit_kind = 1w, stop_pct null, max_bars null, plan_overrides [].
+6. Gaps in the record, marked not filled: the exact intraday mechanics of the fear_day trigger inside the original Lazarus engine are not in the record beyond the entry-policy fields above; the accounting's own description/universe/asset-class fields for this id are not in the record (the label and config entry above are the record).
 
 ## Files in this repo
 
 - This package: `docs/S_Q07W_G78_ML_MOM6_VIX20_TIERA-RECREATE.md`
 - Accounting: `docs/ALL-SLEEVES.json`, `docs/ALL-SLEEVES.md`
-- Config (already in Test): `packages/grokbot/rl64/lz_engine/config/sleeves.json`, row `s_q07w_g78_ml_mom6_vix20_tierA` (the second lz_engine config in Test, `packages/grokbot/q07-1w-swing-lz/lz_engine/config/sleeves.json`, was also checked and does not contain this id)
-- Related but NOT this lane's code: `desk3/q07_engine.py` and `desk3/lazarus_q07.py` (Q07 engines in Test for other lanes; neither carries this id)
-- Code for this lane: none found in any searched GitHub repo (see the INCOMPLETE-CODE search record in Provenance). Nothing was vendored.
+- The cell's executable config entry: `packages/grokbot/rl64/lz_engine/config/sleeves.json` (entry id `s_q07w_g78_ml_mom6_vix20_tierA`)
+- Installer that created these RL64 rows: `packages/grokbot/rl64/tools/install_rl64.py`; install evidence: `packages/grokbot/rl64/evidence/rl64_install.json`
+- Host engine for Lazarus config sleeves: `packages/grokbot/master-desk-md2/mdesk/engines/lazarus.py`
+- The same family rule implemented as v3 engines (sibling cells): `desk3/lazarus_q07.py` and `desk3/q07_engine.py`
+- Family algorithm doc for the stage-2 LZ enable: `docs/Q07-1W-SWING-LZ-ALGORITHM.md`
+- Nothing was vendored: the config entry and host were already in Test, and no code file for this cell exists in any searched repo.
 
 ## Configuration
 
-- As recorded on the config row: id `s_q07w_g78_ml_mom6_vix20_tierA`; account TEST; kind 1w; label "Q07 w_green H78 midlarge mom6+stress_vix20+tierA (test)"; enabled true; state live.
-- Entry, exit and sizing blocks: as quoted verbatim in the Full algorithm section.
-- Universe: Q07 weekly fires in the green family and the midlarge cap band passing the filters mom6+vix20+tierA; timeframe 1w fires. Asset class and cadence beyond the config: not in the record.
+- Config id `s_q07w_g78_ml_mom6_vix20_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_mom6_vix20_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: mom6 + stress_vix20 + tierA.
+- Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker_account TEST_MWJW. enabled true, state live.
+- Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ## Data inputs
 
-- The sleeve_feed composer file `shadow/paper_sleeve/live/sleeve_fires_v1.json` (tracker ledger + alt-data tags), per the config `source` block.
-- The filter inputs named in the recorded definitions: fire price, 60-session depth (c_depth60), 126-session return, the no-liquidity tier tag and 20-day dollar volume, and (for vix20 lanes) the stress_vix20 input, whose source is not in the record.
-- Positions and fills for the hold/stop management: the record names the fire's plan and the desk weekly time exit; no further input list is in the record.
+- Sleeve fires: `shadow/paper_sleeve/live/sleeve_fires_v1.json` from the sleeve_feed composer (tracker ledger + alt-data tags), lane `s_q07w_g78_ml_mom6_vix20_tierA`.
+- Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Daily bars for the entry-day red checks (the stock and QQQ) and for the 15% disaster stop and the weekly time exit.
 
 ## Install and run
 
-1. Clone the Test repo.
-2. This package is INCOMPLETE-CODE: the engine that ran this lane is not in this repo or any searched GitHub repo, so a faithful install is not possible from the record alone. Do not substitute `desk3/q07_engine.py` or `desk3/lazarus_q07.py`: neither carries this id, and the former does not implement the tierA token.
-3. What can be installed exactly is the configuration: copy the row for `s_q07w_g78_ml_mom6_vix20_tierA` from `packages/grokbot/rl64/lz_engine/config/sleeves.json` into an lz_engine-compatible desk's sleeve config unchanged.
-4. Supply the sleeve_feed composer output at `shadow/paper_sleeve/live/sleeve_fires_v1.json` with this lane's fires and alt-data tags.
-5. An lz_engine implementation honouring the entry/exit/sizing blocks quoted in the Full algorithm section (fear_day policy, capped_limit_day order, 5-session window, 15% disaster stop, 78-week time exit at the close of the last NYSE session on or before D + 546 days) is required before any run; that implementation is not in the record.
-6. Verify any candidate implementation against the Verification checklist before any live use.
+1. Clone this repository (Test).
+2. Take the entry id `s_q07w_g78_ml_mom6_vix20_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` as this cell's configuration; do not edit its entry, exit or sizing fields.
+3. Run it under the md2 Lazarus host (`packages/grokbot/master-desk-md2/mdesk/engines/lazarus.py`, LazarusSleeve), which reads the lz_engine config and the composer fires; `packages/grokbot/rl64/tools/install_rl64.py` documents how these rows were installed originally.
+4. Feed the composer fire file (lane `s_q07w_g78_ml_mom6_vix20_tierA`) and daily bars; entries follow the fear_day policy in the Full algorithm section, exits the 15% stop / 78-week time exit.
+5. Verify against the Verification section before treating the recreation as faithful.
 
 ## Verification
 
-No test file for this lane was found in the fresh Test tree. Behaviour checklist from the recorded config:
+No dedicated test file for this cell was found in Test. Behavior checklist, from the algorithm section:
 
-- Entries only under the fear_day policy with stock_red and qqq_red both true, within 5 sessions of the fire and 65 minutes maximum delay, as a capped_limit_day order with limit_band_pct 5.0, limit_buffer_pct 1.0 and no_chase_mult 1.02.
-- A fire passes only if every named filter passes under the recorded definitions: mom6+vix20+tierA.
-- Sizing is exactly one slot of $1,000 (budget_usd 1000, max_slots 1, position_usd 1000), with cap_pct_of_dv20 1.0, min_slot_fraction 0.9 and min_dv20_usd 100000 honoured.
-- Exit fires on the 15% disaster stop, or at the 78-week time exit: the close of the last NYSE session on or before D + 546 calendar days, hold counted from the fill in 1-week units.
-- Open items: the fear_day mechanics, the K 20 parameter's role, and the stress_vix20 definition are not in the record, and the lane stays UNRESOLVED in the accounting until a sleeve module docstring or catalog description for this id is found.
+- A fire missing any of this cell's tags (mom6 + stress_vix20 + tierA) produces no entry.
+- An entry is attempted only on a day when both the stock and QQQ are red, within 5 sessions of the signal and 65 minutes of the trigger, as a capped limit day order that never chases above 1.02x.
+- Exactly one position of $1,000 is opened; a second fire while the slot is occupied produces no entry.
+- A position whose price falls 15% from its fill is exited by the disaster stop; any surviving position is exited at the 78-week time exit (close of the last NYSE session <= D + 546 calendar days).
+- Open item: the ALL-SLEEVES accounting still lists this id as an unresolved singleton; this package does not change that status.
