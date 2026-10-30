@@ -2,11 +2,7 @@
 
 Every trading strategy across our desks, one card each: what it trades, its rules as the code runs them, and where the code lives.
 
-For LLMs and contributors building research or trading systems, start with the [Agentic Trade Desk Build Guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md) and the repository-wide [AGENTS.md](AGENTS.md).
-
 Monitors and research recorders are not listed.
-
-> **New: [How to build an agentic trade desk](agentic-trade-desk/README.md)** — a full guide, written for LLM agents, covering architecture, setup, order safety, reconciliation, reliability, research validation, multi-agent coordination, 77 catalogued pitfalls, checklists and generic reference code. Paper trading only; not financial advice.
 
 ## Layout
 
@@ -17,6 +13,8 @@ Monitors and research recorders are not listed.
 | `desk3/`, `integration/` | Midna's v3 desk files and adapters |
 | `pine/`, `indicator/` | the BB/RSI divergence indicator |
 | `docs/CATALOG.json` | every strategy with its variants and row ids |
+| `docs/SLEEVES.md` | every sleeve on the desk (333), one row each, with its code file in this repo |
+| `docs/SLEEVES.json` | the same every-sleeve index in machine-readable form |
 | `docs/VERIFY.md` | the code lines each card rule was read from (one page a family in `docs/verify/`), and where each copied file came from |
 
 The master desk runs these sleeves on the Femto-lean framework (branch master-desk). Not in this repo: the framework itself (trading engine, order handling, data hub) and the Tensor indicator engine.
@@ -29,18 +27,18 @@ The master desk runs these sleeves on the Femto-lean framework (branch master-de
 | [Lazarus](strategies/lazarus/) | 19 | Stocks, ETFs | 1h to 1w | 17 | 7 | 54 |  |
 | [Femto-lean](strategies/femto/) | 45 (1 Midna only) | Stocks, ETFs, Options, Crypto | 3m to 1mo | 24 | 32 | 4 |  |
 | [Midna](strategies/midna/) | 17 | Stocks, ETFs, Options, Crypto | 1h to 1mo | 13 | 11 |  |  |
-| [Muse](strategies/muse/) | 12 (2 Midna only) | Stocks, ETFs, Options | 1m to 1d |  | 11 |  |  |
+| [Muse](strategies/muse/) | 17 (7 Midna only) | Stocks, ETFs, Options | 1m to 1w |  | 11 |  |  |
 | [APEX](strategies/apex/) | 33 | ETFs, Options, Crypto | 1d to 1mo | 38 |  |  |  |
 | [Galath / GrokBot](strategies/galath/) | 10 | Stocks, ETFs | 5m to 1d | 3 | 7 |  |  |
 | [Griffith](strategies/griffith/) | 23 | Stocks, ETFs | 1m to 1mo | 15 | 6 | 3 |  |
-| [Milkman](strategies/milkman/) | 33 | Stocks, ETFs, Options, Futures | 1m to 1mo | 18 | 20 |  | 1 |
+| [Milkman](strategies/milkman/) | 34 (1 Midna only) | Stocks, ETFs, Options, Futures | 1m to 1mo | 18 | 20 |  | 1 |
 | [Quant research](strategies/quant_research/) | 18 | Stocks, ETFs | 1m to 1mo | 7 | 6 | 5 |  |
 | [Tensor research](strategies/tensor_research/) | 13 | Stocks | 1h to 1w | 8 | 6 |  |  |
 | [Killed studies](strategies/killed/) | 10 | Stocks, ETFs | 5m to 1w | 10 | 1 |  |  |
 | [Qullamaggie](strategies/qullamaggie/) | 3 | Stocks | 1m to 1d | 1 | 4 |  |  |
 | [Sable](strategies/sable/) | 2 | Stocks | 5m to 1d | 2 |  |  |  |
 | [SPAN](strategies/span/) | 1 | Prediction markets | trade prints |  | 1 |  |  |
-| **All** | **263** | | | **204** | **209** | **87** | **1** |
+| **All** | **269** | | | **204** | **209** | **87** | **1** |
 
 Status counts are master-desk rows; one card can hold several rows (its variants).
 
@@ -169,11 +167,15 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 
 </details>
 
-<details><summary><b>Muse</b> · 12</summary>
+<details><summary><b>Muse</b> · 17</summary>
 
 - [15.87 Rule (SPY 0DTE)](strategies/muse/muse-em-1587.md) · SPY options (0DTE) · 5m
 - [Band-touch RSI divergence](strategies/muse/muse-bb-rsi-divergence.md) · US ETFs and large caps · 1h
+- [Grok support and resistance (SPY)](strategies/muse/muse-grok-sr-spy.md) · SPY shares, long and short · 1m
+- [InvestAndBeFree double MACD (SPY and QQQ options)](strategies/muse/muse-investandbefree-dmac.md) · SPY and QQQ options (long premium) · 4H, daily, weekly stack
 - [PO10 extreme (QQQ)](strategies/muse/muse-po10-qqq.md) · QQQ shares, long and short · 10m
+- [PRZM Fade Edges recreation (SPY)](strategies/muse/muse-przm-fade-edges.md) · SPY shares, long and short · 1m
+- [PRZM Zero recreation (SPY)](strategies/muse/muse-przm-zero.md) · SPY shares (signal engine) · 1m
 - [Raschke PF3 momentum (SPY)](strategies/muse/muse-raschke-pf3.md) · SPY shares, long and short · 5m
 - [Raschke RRE adaptive desk (SPY)](strategies/muse/muse-raschke-rre.md) · SPY shares · 5m
 - [SATY day system (SPY 0DTE)](strategies/muse/muse-saty-day.md) · SPY options (0DTE) · 1m · 3m · 10m · 1h
@@ -182,6 +184,7 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 - [Saty research system v0.2 (SPY shares)](strategies/muse/muse-saty-gpt-v02.md) · SPY shares, long and short · 10m · 1h
 - [Shen first-touch fade (SPY 0DTE)](strategies/muse/muse-shen-fade.md) · SPY options (0DTE) · 1m
 - [Sol's Saty engine (SPY options)](strategies/muse/muse-saty-sol.md) · SPY options · 1m · 3m · 10m
+- [Teddy opening range breakout (SPY)](strategies/muse/muse-teddy-orb-spy.md) · SPY shares, long and short · 5m (aggregated from 1m)
 - [Trullas divergence (QQQ 1-minute)](strategies/muse/muse-trullas-divergence.md) · QQQ shares, long and short · 1m
 
 </details>
@@ -267,7 +270,7 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 
 </details>
 
-<details><summary><b>Milkman</b> · 33</summary>
+<details><summary><b>Milkman</b> · 34</summary>
 
 - [ATR level cascade (SPY)](strategies/milkman/mk-atrlevelcascade.md) · US ETF · 1m
 - [Big down-day response](strategies/milkman/mk-bigdowndayresponse.md) · US index ETFs and futures · 1d
@@ -285,6 +288,7 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 - [Gap fade / momentum mirror (SPY)](strategies/milkman/mk-gapfademomentummirror.md) · US ETF · 1d gap · 1m exits
 - [Gap-up pre-noon continuation (SPY)](strategies/milkman/mk-gapupprenooncontinuation.md) · US ETF · 1m
 - [Legend's Buy Day](strategies/milkman/mk-legendsbuyday.md) · US equities, index ETFs and futures · 1d
+- [Milkman 0DTE (SPX)](strategies/milkman/mk-zerodte-spx.md) · SPX index options (0DTE) · Intraday
 - [Milkman daily rules on crypto-linked stocks](strategies/milkman/mk-milkmancryptolinkedstockvariant.md) · US equities · 1d
 - [Milkman filters on Tensor lanes](strategies/milkman/mk-milkmanlaneaddonfilters.md) · US equities · 1w · 1d
 - [Multi-day Golden Gate (weekly ATR)](strategies/milkman/mk-multidaygoldengateweekly.md) · US equities, index ETFs and futures · 1d (weekly ATR levels)
