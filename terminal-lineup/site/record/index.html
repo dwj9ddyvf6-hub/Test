@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Record: every published call, graded in public</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.note{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:14px;
+           padding:18px 20px;margin:0 0 22px;font-size:16.5px}
+  .summary p{margin:0 0 8px}
+  .summary p:last-child{margin-bottom:0}
+  section.tool{margin:0 0 30px}
+  section.tool>h2{font-size:23px;margin:0 0 4px}
+  section.tool>.what{color:var(--soft);font-size:15px;margin:0 0 14px;max-width:46em}
+  .grades{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:0 0 16px}
+  .grade{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .grade .label{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .grade .big{font-size:19px;font-weight:700;margin:3px 0}
+  .grade .detail{font-size:14px;color:var(--soft);margin:0}
+  .grade.pending{background:var(--nodata-bg)}
+  .up{color:var(--up)} .down{color:var(--down)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  .group h3{margin:0 0 4px;font-size:18px}
+  .group .gline{font-size:14.5px;color:var(--soft);margin:0 0 12px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);border-top:none}
+  td.sym{font-weight:700;white-space:nowrap}
+  td .sub{display:block;font-weight:400;color:var(--faint);font-size:12.5px}
+  .tag{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);
+       border:1px solid var(--accent);border-radius:20px;padding:0 8px;margin-left:6px;white-space:nowrap}
+  .notyet{color:var(--soft)}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  @media (max-width:700px){table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Record</h1>
+    <p class="job">One job: show every call the Morning Map and the Board have ever published, and grade each one in public at 1, 5, and 21 trading days, losers included, nothing edited after the fact.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the record&hellip;</p>
+  <div id="summary" class="summary" hidden></div>
+  <main id="tools"></main>
+
+  <footer>
+    <p>How grading works: a stock call is graded on the change from the closing price on the day it was published to the close 1, 5, and 21 trading days later. It counts as "rose" only if that change is above zero; flat counts with the ones that did not rise. A map card is graded on whether the price stayed inside its walls and on the same side of its flip level during the session the card covers. Grades, once published, are never rewritten, and a call that has not reached a grading date yet says so instead of showing a placeholder number.</p>
+    <p>Grades are recorded for each publishing day as a group, so a day's result is shown with that day's calls rather than split into a separate figure for each single call.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var summaryEl = document.getElementById("summary");
+  var toolsEl = document.getElementById("tools");
+
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtPct(v){
+    var s = v > 0 ? "+" : "";
+    return s + Number(v).toFixed(2) + "%";
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function horizonCard(label, h){
+    if (h && h.state === "graded"){
+      return '<div class="grade"><div class="label">' + label + '</div>' +
+        '<div class="big"><span class="up">' + h.rose_count + ' rose</span>, ' +
+        '<span class="down">' + h.did_not_rise_count + ' did not</span></div>' +
+        '<p class="detail">Out of ' + h.graded_count + ' graded calls: average ' +
+        fmtPct(h.average_pct) + ', middle result ' + fmtPct(h.middle_pct) + '.</p></div>';
+    }
+    var when = h && h.first_grade_date
+      ? ' First grades arrive after the close on ' + fmtDateShort(h.first_grade_date) + '.'
+      : '';
+    return '<div class="grade pending"><div class="label">' + label + '</div>' +
+      '<div class="big">Not yet graded</div>' +
+      '<p class="detail">No call has reached this grading date yet.' + when + '</p></div>';
+  }
+
+  function gradeCell(h){
+    if (h && h.state === "graded"){
+      return 'Graded with this day\u2019s group: <span class="up">' + h.rose_count +
+        ' rose</span>, <span class="down">' + h.did_not_rise_count + ' did not</span>' +
+        ' (of ' + h.graded_count + ' graded)';
+    }
+    var when = h && h.first_grade_date
+      ? ' &middot; grades arrive after the ' + fmtDateShort(h.first_grade_date) + ' close' : '';
+    return '<span class="notyet">Not yet graded' + when + '</span>';
+  }
+
+  function renderSummary(t){
+    var lines = [];
+    lines.push('<p><strong>' + t.calls_published + ' calls published so far</strong>: ' +
+      t.board_calls + ' stock calls from the Board and ' + t.map_calls +
+      ' index cards from the Morning Map.</p>');
+    if (t.outcomes_so_far){
+      var o = t.outcomes_so_far;
+      lines.push('<p><strong>' + o.graded_count + ' calls graded so far</strong>, all at the ' +
+        o.horizon_days + '-day mark: ' + o.rose_count + ' rose and ' +
+        o.did_not_rise_count + ' did not. The rest are still waiting for their grading dates, and every one of them is listed below.</p>');
+    } else {
+      lines.push('<p>No call has been graded yet. Every call is listed below with the date its first grade arrives.</p>');
+    }
+    summaryEl.innerHTML = lines.join("");
+    summaryEl.hidden = false;
+  }
+
+  function renderBoard(board){
+    var h = '<section class="tool"><h2>' + esc(board.name) + '</h2>' +
+      '<p class="what">' + esc(board.what_it_publishes) + '</p>';
+    var s = board.strongest;
+    h += '<div class="grades">' +
+      horizonCard('Strongest calls &middot; after 1 day', s.horizons["1d"]) +
+      horizonCard('Strongest calls &middot; after 5 days', s.horizons["5d"]) +
+      horizonCard('Strongest calls &middot; after 21 days', s.horizons["21d"]) +
+      '</div>';
+    h += '<p class="what">The strongest calls are the ' + s.calls +
+      ' Board calls (marked below) that passed every check on their day. ' +
+      'The day-by-day record underneath covers every call, strongest or not.</p>';
+
+    board.groups.forEach(function(g){
+      h += '<div class="group"><h3>Calls published for ' + fmtDateLong(g.session) + '</h3>';
+      var bits = [];
+      ["1d","5d","21d"].forEach(function(k, i){
+        var gr = g.grades[k], days = [1,5,21][i];
+        if (gr.state === "graded"){
+          bits.push('At ' + days + (days === 1 ? ' day' : ' days') + ': ' + gr.graded_count +
+            ' of these ' + gr.graded_of_group + ' calls graded, ' + gr.rose_count + ' rose and ' +
+            gr.did_not_rise_count + ' did not (average ' + fmtPct(gr.average_pct) +
+            ', middle ' + fmtPct(gr.middle_pct) + ')');
+        } else {
+          bits.push('At ' + days + (days === 1 ? ' day' : ' days') + ': not yet graded, first grades after the ' +
+            fmtDateShort(gr.first_grade_date) + ' close');
+        }
+      });
+      h += '<p class="gline">' + bits.join('. ') + '.</p>';
+      h += '<table><thead><tr><th>Call</th><th>Published</th><th>After 1 day</th>' +
+           '<th>After 5 days</th><th>After 21 days</th></tr></thead><tbody>';
+      g.calls.forEach(function(c){
+        h += '<tr><td class="sym">' + esc(c.symbol) +
+          (c.sector ? '<span class="sub">' + esc(c.sector) + '</span>' : '') + '</td>' +
+          '<td>Close ' + fmtPrice(c.close) + '<span class="sub">Checklist score ' +
+          Number(c.score).toFixed(1) + ' of 100</span>' +
+          (c.passed_every_check ? '<span class="tag">Passed every check</span>' : '') + '</td>' +
+          '<td>' + gradeCell(g.grades["1d"]) + '</td>' +
+          '<td>' + gradeCell(g.grades["5d"]) + '</td>' +
+          '<td>' + gradeCell(g.grades["21d"]) + '</td></tr>';
+      });
+      h += '</tbody></table></div>';
+    });
+    h += '</section>';
+    return h;
+  }
+
+  function renderMap(map){
+    var h = '<section class="tool"><h2>' + esc(map.name) + '</h2>' +
+      '<p class="what">' + esc(map.what_it_publishes) + '</p>';
+    if (map.state === "not_yet_graded" || !map.cards_graded){
+      h += '<div class="grades"><div class="grade pending"><div class="label">Map grades</div>' +
+        '<div class="big">Not yet graded</div>' +
+        '<p class="detail">None of the ' + map.cards_waiting + ' published cards has been graded yet. ' +
+        'The first grades land after the close of the session each card covers, and each card below shows that date.</p></div></div>';
+    }
+    map.groups.forEach(function(g){
+      h += '<div class="group"><h3>Cards published on ' + fmtDateLong(g.session) + '</h3>' +
+        '<table><thead><tr><th>Index</th><th>Published</th><th>Price then</th>' +
+        '<th>Call wall</th><th>Put wall</th><th>Flip level</th><th>Grade</th></tr></thead><tbody>';
+      g.cards.forEach(function(c){
+        h += '<tr><td class="sym">' + esc(c.index) + '</td>' +
+          '<td>' + fmtTimestamp(c.published_at_utc) + '</td>' +
+          '<td>' + fmtPrice(c.price_then) + '</td>' +
+          '<td>' + fmtPrice(c.call_wall) + '</td>' +
+          '<td>' + fmtPrice(c.put_wall) + '</td>' +
+          '<td>' + fmtPrice(c.flip_level) + '</td>' +
+          '<td><span class="notyet">Not yet graded &middot; graded on the ' +
+          fmtDateShort(c.grading_session) + ' session, results after that close</span></td></tr>';
+      });
+      h += '</tbody></table></div>';
+    });
+    h += '</section>';
+    return h;
+  }
+
+  function fmtOutcome(kind, v){
+    if (v == null) return "";
+    if (kind === "return" || kind === "abs_return"){
+      var p = Number(v) * 100;
+      return (p > 0 ? "+" : "") + p.toFixed(2) + "%";
+    }
+    return Number(v).toLocaleString("en-US",{maximumFractionDigits:4});
+  }
+
+  function refusedCell(e, thinMin){
+    if (!e.refused) return "No attempts refused.";
+    if (e.coverage_state === "unresolvable"){
+      return "These refused outcomes cannot be checked from prices: " +
+        esc(e.coverage_reason) + ".";
+    }
+    if (!e.refused_graded){
+      return "None of the refused attempts has reached its grading date yet.";
+    }
+    var bits = [];
+    e.refused_outcomes.forEach(function(c){
+      if (c.thin_cell){
+        bits.push(c.graded + " refused " + esc(c.kind) + " outcome" +
+          (c.graded === 1 ? "" : "s") + " checked. Averages start once " +
+          thinMin + " refused outcomes are checked.");
+      } else {
+        var s = "Refused " + esc(c.kind) + " outcomes (" + c.graded +
+          " checked): average " + fmtOutcome(c.kind, c.mean) +
+          ", middle " + fmtOutcome(c.kind, c.median);
+        if (c.favourable_share != null){
+          s += ", favourable in " + Math.round(c.favourable_share * 100) +
+            "% of the " + c.favourable_graded + " with a direction";
+        }
+        bits.push(s + ".");
+      }
+    });
+    if (e.refused_not_yet_matured){
+      bits.push(e.refused_not_yet_matured + " refused attempt" +
+        (e.refused_not_yet_matured === 1 ? " has" : "s have") +
+        " not reached the grading date yet.");
+    }
+    if (e.refused_unresolvable){
+      bits.push(e.refused_unresolvable + " refused outcome" +
+        (e.refused_unresolvable === 1 ? " cannot" : "s cannot") +
+        " be checked from prices: " +
+        esc(e.refused_unresolvable_reasons.map(function(r){ return r.reason; }).join("; ")) + ".");
+    }
+    return bits.join(" ");
+  }
+
+  function renderAbstentionAudit(a){
+    if (!a) return "";
+    var h = '<section class="tool"><h2>Forecast engines: the attempts they refused</h2>' +
+      '<p class="what">Each forecast engine records an attempt even when it makes no forecast, ' +
+      'for example when the data it needs is not on record. This panel checks what prices did on ' +
+      'those refused attempts, with the same prices that grade the forecasts the engines did make, ' +
+      'and sets the result beside the attempts each engine took. Refused outcomes never change an engine\u2019s grade.</p>';
+    if (a.state !== "computed"){
+      h += '<div class="group"><p class="gline">The abstention audit is not available in this ' +
+        'update: ' + esc(a.reason || "the forecast record could not be read") + '.</p></div></section>';
+      return h;
+    }
+    h += '<div class="group"><table><thead><tr><th>Engine</th><th>Attempts taken</th>' +
+      '<th>Attempts refused</th><th>Refused outcomes checked</th>' +
+      '<th>What the refused outcomes did</th></tr></thead><tbody>';
+    a.engines.forEach(function(e){
+      h += '<tr><td class="sym">' + esc(e.name) + '</td>' +
+        '<td>' + e.taken + ' taken, ' + e.taken_graded + ' checked</td>' +
+        '<td>' + e.refused + '</td>' +
+        '<td>' + e.refused_graded + '</td>' +
+        '<td>' + refusedCell(e, a.thin_cell_min) + '</td></tr>';
+    });
+    h += '</tbody></table></div></section>';
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      meta.textContent = "Record as of " + fmtTimestamp(data.generated_at_utc) +
+        ". Source: " + data.source + ".";
+      renderSummary(data.totals);
+      toolsEl.innerHTML = renderBoard(data.board) + renderMap(data.map) +
+        renderAbstentionAudit(data.abstention_audit);
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
