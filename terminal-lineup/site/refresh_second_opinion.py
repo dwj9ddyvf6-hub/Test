@@ -705,6 +705,21 @@ def build():
 
     data = {
         "tool": "The Second Opinion",
+        # Chart counts (2026-10-31 chart cure): the family-coverage
+        # distribution recomputed above from the page's own names,
+        # copied into the top-level counts block the record producer
+        # and chart renderer draw from on sibling pages (flow-tape,
+        # state-analogue). No new numbers: every value is the
+        # coverage count assembled for this page's own coverage block.
+        "counts": {
+            "names_covered_by_six_families": counts[6],
+            "names_covered_by_five_families": counts[5],
+            "names_covered_by_four_families": counts[4],
+            "names_covered_by_three_families": counts[3],
+            "names_covered_by_two_families": counts[2],
+            "names_covered_by_one_family": counts[1],
+            "names_covered_by_no_family": counts[0],
+        },
         "state": "published",
         "session": session,
         "board_published_at_utc": board_published,
