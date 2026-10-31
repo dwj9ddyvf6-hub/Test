@@ -315,6 +315,75 @@
   },
   "source": "The scored trading day record, the daily options trading record and the morning positioning record for SPY and QQQ, plus the quarterly holdings report carried as context",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Each fund's fracture range percent, its plain benchmark range beside it.",
+      "rows": [
+        {
+          "coverage": "benchmark 4.4121 percent, multiplier 1.0, shape aligned",
+          "name": "SPY",
+          "score": 4.4121
+        },
+        {
+          "coverage": "benchmark 8.7808 percent, multiplier 1.0, shape aligned",
+          "name": "QQQ",
+          "score": 8.7808
+        }
+      ],
+      "source": "today[].fracture_range_pct",
+      "title": "The fracture picture, per fund"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "The widening multiplier per fund in each history session on record.",
+      "rows": [
+        {
+          "coverage": "shape aligned",
+          "name": "QQQ 2026-10-27",
+          "score": 1.0
+        },
+        {
+          "coverage": "shape another split",
+          "name": "SPY 2026-10-27",
+          "score": 1.2
+        },
+        {
+          "coverage": "shape aligned",
+          "name": "QQQ 2026-10-28",
+          "score": 1.0
+        },
+        {
+          "coverage": "shape aligned",
+          "name": "SPY 2026-10-28",
+          "score": 1.0
+        },
+        {
+          "coverage": "shape another split",
+          "name": "QQQ 2026-10-29",
+          "score": 1.2
+        },
+        {
+          "coverage": "shape aligned",
+          "name": "SPY 2026-10-29",
+          "score": 1.0
+        },
+        {
+          "coverage": "shape another split",
+          "name": "QQQ 2026-10-30",
+          "score": 1.2
+        },
+        {
+          "coverage": "shape another split",
+          "name": "SPY 2026-10-30",
+          "score": 1.2
+        }
+      ],
+      "source": "history.sessions[].symbols[].multiplier",
+      "title": "Fracture multipliers on record, per session"
+    },
+    "version": 1
+  },
   "thin_rule": "Below 30 graded, counts only: no percentage and no score is drawn from a handful of tests.",
   "today": [
     {
