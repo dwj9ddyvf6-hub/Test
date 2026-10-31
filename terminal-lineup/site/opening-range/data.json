@@ -76,6 +76,53 @@
   },
   "source": "Five-minute prices for SPY, QQQ and IWM over the 90 days of price history on record when the study ran, completed trading days only",
   "state": "graded",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Share of days breaking both sides of the opening range, per opening window.",
+      "rows": [
+        {
+          "name": "First 5 minutes",
+          "score": 66.67
+        },
+        {
+          "name": "First 15 minutes",
+          "score": 55.38
+        },
+        {
+          "name": "First 30 minutes",
+          "score": 39.78
+        },
+        {
+          "name": "First hour (60 minutes)",
+          "score": 19.35
+        }
+      ],
+      "source": "windows[].break_both_frequency",
+      "title": "How often the opening range broke both sides, percent"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Share of days reaching each extension step past the headline window's range, percent.",
+      "rows": [
+        {
+          "name": "Half the range or more",
+          "score": 52.25
+        },
+        {
+          "name": "A full range or more",
+          "score": 22.47
+        },
+        {
+          "name": "One and a half ranges or more",
+          "score": 11.24
+        }
+      ],
+      "source": "windows[headline].extensions[].frequency",
+      "title": "How far prices ran past the first hour's range"
+    },
+    "version": 1
+  },
   "thin_threshold": 30,
   "tool": "Opening Range Pane",
   "windows": [
