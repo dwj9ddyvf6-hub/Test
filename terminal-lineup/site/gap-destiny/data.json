@@ -49766,6 +49766,7 @@
         "record_surface",
         "source",
         "state",
+        "subject_chart",
         "thin_cell_rule",
         "tool",
         "weekday_label"
@@ -49835,6 +49836,49 @@
   },
   "source": "Daily prices for 1,833 names from the price history on record (404 trading days, 2025-03-25 to 2026-10-30), plus 504 daily fear gauge readings (2024-10-30 to 2026-10-30). The longer daily history the design names is not on record here, so every count on this page comes from that span and no other.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Index fill percent per gap-size band.",
+      "rows": [
+        {
+          "name": "Gap of 0.5% to 1%",
+          "score": 36.0
+        },
+        {
+          "name": "Gap of 1% to 2%",
+          "score": 26.5
+        },
+        {
+          "name": "Gap of Over 2%",
+          "score": 23.5
+        }
+      ],
+      "source": "history.bands[].index_fill_pct",
+      "title": "How often each size of gap filled"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Fill percent per gap band on Mondays, from the band by weekday record.",
+      "rows": [
+        {
+          "name": "Gap of 0.5% to 1%",
+          "score": 69.5
+        },
+        {
+          "name": "Gap of 1% to 2%",
+          "score": 55.1
+        },
+        {
+          "name": "Gap of Over 2%",
+          "score": 39.9
+        }
+      ],
+      "source": "history.by_band_weekday_all[].fill_pct",
+      "title": "Fill percent by band, Mondays"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any cell with fewer than 30 cases shows its count only, with no rate.",
   "tool": "Gap Destiny",
   "weekday_label": "Friday"
