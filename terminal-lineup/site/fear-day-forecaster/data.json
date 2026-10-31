@@ -1,0 +1,150 @@
+{
+  "definition": "A fear day is a day when SPY fell more than 1.5%, or the fear gauge (the VIX) rose more than 15% in a day, closed at 25 or higher, or closed at 20 or higher on a day when SPY or QQQ fell.",
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its current reading is from 2026-10-30. Its study record, the history it was built and checked on, holds 3 counted items on file. Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule.",
+    "summary": "Show what the record actually says followed fear days, and keep a forward record of each new fear day so it can be graded."
+  },
+  "feed": "filed_records",
+  "forward_record": {
+    "grade_sessions": [
+      1,
+      5,
+      21
+    ],
+    "recorded": 0,
+    "state": "empty"
+  },
+  "local_record": {
+    "events": 1,
+    "fear_gauge_from": "2024-10-30",
+    "fear_gauge_readings": 504,
+    "fear_gauge_to": "2026-10-30",
+    "follow_through": {
+      "state": "not_counted"
+    },
+    "qualifying_days": [
+      {
+        "date": "2026-10-16",
+        "fear_gauge_change_pct": 21.4,
+        "fear_gauge_close": 19.99,
+        "qqq_change_pct": -2.5,
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day"
+        ],
+        "spy_change_pct": -1.1
+      }
+    ],
+    "sessions_checked": 4,
+    "thin": true
+  },
+  "price_basis": "session_record",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "filed_records",
+    "price_basis": "session_record",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "proving_note": "Still being proven: the ranking below rests on a finished study, but this page's own forward record has not started yet, so nothing it could say about the next fear day has been graded.",
+  "proving_state": "Still being proven",
+  "published_at_utc": "2026-10-30T20:58:48.931398+00:00",
+  "receipt": {
+    "coverage": "Local record: 1 qualifying day among the 4 comparable sessions in the history on file, 504 fear-gauge readings from 2024-10-30 to 2026-10-30, follow-through not counted. Study record: deep daily price history, 2016 to 2026, 6,385 names including delisted ones; its number of fear days is not on record.",
+    "published_at_utc": "2026-10-30T20:58:48.931398+00:00",
+    "source": "The published studies record, the daily market history on file, and the deep-history study and re-test records on file"
+  },
+  "record_surface": {
+    "calibration_record": null,
+    "current_reading": {
+      "as_of": "2026-10-30T20:58:48.931398+00:00",
+      "keys_present": [
+        "definition",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "forward_record",
+        "local_record",
+        "price_basis",
+        "provenance",
+        "proving_note",
+        "proving_state",
+        "published_at_utc",
+        "receipt",
+        "record_surface",
+        "retest",
+        "source",
+        "state",
+        "studies_as_of",
+        "study",
+        "thin_threshold",
+        "tool"
+      ]
+    },
+    "feed": "filed_records",
+    "label": "Study record",
+    "live_accrual": null,
+    "missing": {
+      "what_and_when": "Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "filed_records",
+      "price_basis": "session_record",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 3,
+          "path": "/study"
+        }
+      ],
+      "total_items_counted": 3
+    },
+    "version": 1
+  },
+  "retest": {
+    "earlier_link": 0.039,
+    "held_back_link": 0.061,
+    "net_per_chance": -0.027,
+    "outcome": "did not pass as something to trade",
+    "setting": "Fear days with a high fear-gauge reading, in a full re-test run on October 27, 2026"
+  },
+  "source": "The published studies record, the daily market history on file, and the deep-history study and re-test records on file",
+  "state": "unpublished",
+  "studies_as_of": "2026-10-30",
+  "study": {
+    "dataset": "Deep daily price history, 2016 to 2026, 6,385 names including delisted ones",
+    "event_count": {
+      "state": "not_on_record"
+    },
+    "fear_day_meaning": "In that study, a fear day meant SPY fell at least 1% in a day, or SPY closed below its average of the last 50 sessions. That is not the same as the definition at the top of this page.",
+    "mechanism": "On fear days, rising-trend stocks are ranked by how deep their dip is compared with that same stock's own past dips.",
+    "results": [
+      {
+        "era": "2016 to 2022",
+        "rank_correlation": 0.026,
+        "strength": 4.3,
+        "window_sessions": 20
+      },
+      {
+        "era": "2023 onward",
+        "rank_correlation": 0.031,
+        "strength": 4.3,
+        "window_sessions": 20
+      },
+      {
+        "era": "2023 onward",
+        "rank_correlation": 0.062,
+        "strength": 9.8,
+        "window_sessions": 60
+      }
+    ],
+    "setting": "Rising-trend names on fear days, each name's move measured against the same day's average move",
+    "spread_pts_per_20_sessions": 0.81,
+    "spread_words": "top fifth against bottom fifth, 2023 onward"
+  },
+  "thin_threshold": 30,
+  "tool": "Fear-Day Forecaster"
+}
