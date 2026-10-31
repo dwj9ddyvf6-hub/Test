@@ -1,0 +1,617 @@
+{
+  "as_of": "2026-10-30",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 0,
+      "graded_forecasts": 0,
+      "recorded_on": "2026-10-31",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_26",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": null
+  },
+  "claim": {
+    "baseline_pct": 25.0,
+    "points_explained": "Beating the market is measured in points: a stock up 5 percent while the market is up 2 percent scores +3 points over 21 trading days.",
+    "top_quartile_claim_pct": 30.0,
+    "words": "When a stock's off-exchange reading is in the top fifth, its insiders show no sales at all in the record window, and its big holders grew between the two quarters on record, then over the next 21 trading days the middle stock in that group will beat the broad market, and the share of the group reaching the top quarter of all stocks will be at least 30 percent, against the 25 percent that happens by construction across all stocks."
+  },
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution, over 21 sessions, per 13F publication plus weekly DIX refresh. It is graded on a loss score on each of its stated percentile lines, where lower is better. It would be ended if after 100 cohort names, the interaction adds less than 2 points over the best single condition. It counts as proven at 100 cohort names.",
+    "summary": "Test whether stocks showing three quiet footprints of buying at once (heavy off-exchange trading, insiders not selling, and big holders building) go on to beat the market over the next 21 trading days."
+  },
+  "feed": "forecast_ledger",
+  "groups_today": {
+    "dark_only": [
+      "AMN",
+      "CATY",
+      "CCI",
+      "EGBN",
+      "ESNT",
+      "HAE",
+      "IWD",
+      "KSS",
+      "LFST",
+      "NWE",
+      "OPCH",
+      "PCRX",
+      "PDBC",
+      "PEB",
+      "RS",
+      "TRGP",
+      "UFCS",
+      "WAY",
+      "XLV"
+    ],
+    "dark_only_state": "formed",
+    "filings_only": [
+      "CATY",
+      "CON",
+      "EL",
+      "GO",
+      "LW",
+      "TENB",
+      "VRNS",
+      "WAY",
+      "WST"
+    ],
+    "insider_and_filings": [
+      "LW",
+      "VRNS"
+    ],
+    "insider_only": [
+      "ADT",
+      "COTY",
+      "DXC",
+      "EGBN",
+      "HAE",
+      "LNG",
+      "LW",
+      "MUR",
+      "NWE",
+      "OPCH",
+      "OXY",
+      "SAIC",
+      "SU",
+      "VFC",
+      "VRNS"
+    ],
+    "interaction": [],
+    "interaction_state": "no name passes all three today"
+  },
+  "idea": "Some stocks are being quietly built up in ways that leave no mark on the price chart. Trading moves off the public exchanges. The people who run the company stop selling their own shares. And between one quarterly holdings report and the next, more big holders own the stock, or the ones who own it own more of it. Any one of those can happen by accident. This page tests what happens when all three point the same way at once, and it is graded against each one on its own, so the combination has to earn its place. One of the three readings is an absence: insiders not selling is treated as a reading in its own right.",
+  "kill_criterion": "After 100 group names have been recorded and graded, if the three-way group's share reaching the top quarter adds less than 2 points over the best single condition on its own, this tool retires. Beating the plain all-stocks rate is not enough: the combination must beat its own best part.",
+  "live": {
+    "cohort_days": [],
+    "cohort_names_graded": 0,
+    "cohort_names_recorded": 0,
+    "created_this_run": 0,
+    "graded_this_run": 0,
+    "kill_margin_points": null,
+    "missed_sessions": [],
+    "pooled": {},
+    "proving_target_names": 100,
+    "records_graded": 0,
+    "records_written": 0,
+    "wait": "No group has been recorded yet. The per-stock dark record is on record (5721 names over 723 sessions, freshest 2026-10-30), so the dark leg can be judged; today no name passes all three legs at once (no name passes all three today). Groups then form at each quarterly holdings publication and at the weekly dark refresh. The verdict needs 100 recorded group names, and the other two legs are narrow today (2 names pass the insider and filings legs together), so this record will build slowly and only widens as the records behind it grow."
+  },
+  "price_basis": "close",
+  "price_history": {
+    "from": "2025-03-25",
+    "names": 1833,
+    "sessions": 404,
+    "to": "2026-10-30"
+  },
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "readings": {
+    "dark": {
+      "combined_context": {
+        "funds": [
+          {
+            "pct": 52.2,
+            "session": "2026-10-30",
+            "symbol": "SPY"
+          },
+          {
+            "pct": 50.4,
+            "session": "2026-10-30",
+            "symbol": "QQQ"
+          },
+          {
+            "pct": 55.5,
+            "session": "2026-10-30",
+            "symbol": "IWM"
+          }
+        ],
+        "history": [
+          {
+            "funds": {
+              "IWM": 52.5,
+              "QQQ": 40.0,
+              "SPY": 53.5
+            },
+            "index_pct": 43.7,
+            "index_total": 503,
+            "index_used": 501,
+            "session": "2026-10-23"
+          },
+          {
+            "funds": {
+              "IWM": 48.6,
+              "QQQ": 57.7,
+              "SPY": 45.1
+            },
+            "index_pct": 47.3,
+            "index_total": 503,
+            "index_used": 501,
+            "session": "2026-10-26"
+          },
+          {
+            "funds": {
+              "IWM": 46.6,
+              "QQQ": 31.8,
+              "SPY": 53.4
+            },
+            "index_pct": 43.9,
+            "index_total": 503,
+            "index_used": 501,
+            "session": "2026-10-27"
+          },
+          {
+            "funds": {
+              "IWM": 44.2,
+              "QQQ": 67.2,
+              "SPY": 52.7
+            },
+            "index_pct": 44.2,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-10-28"
+          },
+          {
+            "funds": {
+              "IWM": 91.9,
+              "QQQ": 60.1,
+              "SPY": 39.2
+            },
+            "index_pct": 41.6,
+            "index_total": 503,
+            "index_used": 498,
+            "session": "2026-10-29"
+          },
+          {
+            "funds": {
+              "IWM": 55.5,
+              "QQQ": 50.4,
+              "SPY": 52.2
+            },
+            "index_pct": 37.7,
+            "index_total": 503,
+            "index_used": 501,
+            "session": "2026-10-30"
+          }
+        ],
+        "name": "S&P 500 stocks combined",
+        "pct": 37.7,
+        "session": "2026-10-30",
+        "stocks_total": 503,
+        "stocks_used": 501,
+        "words": "For context only: the dark record does hold a combined reading for the whole index and the three index funds' own ratios, shown here exactly as published. Neither is a reading for any single stock, and neither is ever used in this engine's test."
+      },
+      "gap_words": null,
+      "name": "Off-exchange pressure, per stock",
+      "names_on_record": 5721,
+      "session": "2026-10-30",
+      "sessions_on_record": 723,
+      "state": "on_record",
+      "top_fifth": [
+        "ESNT",
+        "NWE",
+        "UFCS",
+        "EGBN",
+        "CATY",
+        "OPCH",
+        "IWD",
+        "RS",
+        "HAE",
+        "PEB",
+        "TRGP",
+        "PDBC",
+        "AMN",
+        "CCI",
+        "PCRX",
+        "LFST",
+        "WAY",
+        "XLV",
+        "KSS"
+      ],
+      "top_fifth_count": 19
+    },
+    "filings": {
+      "filers_current": 8857,
+      "filers_prior": 8871,
+      "name": "Big holders building",
+      "periods": [
+        "2026-06-30",
+        "2026-03-31"
+      ],
+      "resolved_both": 9,
+      "resolved_current": 18,
+      "resolved_prior": 10,
+      "rise_by_count": [
+        "CATY",
+        "CON",
+        "EL",
+        "TENB",
+        "VRNS",
+        "WAY",
+        "WST"
+      ],
+      "rise_names": [
+        "CATY",
+        "CON",
+        "EL",
+        "GO",
+        "LW",
+        "TENB",
+        "VRNS",
+        "WAY",
+        "WST"
+      ],
+      "table": [
+        {
+          "count_rose": true,
+          "holders_current": 47,
+          "holders_prior": 42,
+          "rose": true,
+          "shares_change_pct": 97.3,
+          "shares_current": 9593633.0,
+          "shares_prior": 4862645.0,
+          "shares_rose": true,
+          "symbol": "CATY"
+        },
+        {
+          "count_rose": true,
+          "holders_current": 15,
+          "holders_prior": 14,
+          "rose": true,
+          "shares_change_pct": -3.1,
+          "shares_current": 626420.0,
+          "shares_prior": 646183.0,
+          "shares_rose": false,
+          "symbol": "CON"
+        },
+        {
+          "count_rose": true,
+          "holders_current": 15,
+          "holders_prior": 13,
+          "rose": true,
+          "shares_change_pct": 69.7,
+          "shares_current": 258748.0,
+          "shares_prior": 152497.0,
+          "shares_rose": true,
+          "symbol": "EL"
+        },
+        {
+          "count_rose": false,
+          "holders_current": 35,
+          "holders_prior": 35,
+          "rose": true,
+          "shares_change_pct": 21.2,
+          "shares_current": 14521159.0,
+          "shares_prior": 11980222.0,
+          "shares_rose": true,
+          "symbol": "GO"
+        },
+        {
+          "count_rose": false,
+          "holders_current": 80,
+          "holders_prior": 85,
+          "rose": true,
+          "shares_change_pct": 28.5,
+          "shares_current": 16354328.0,
+          "shares_prior": 12730219.0,
+          "shares_rose": true,
+          "symbol": "LW"
+        },
+        {
+          "count_rose": true,
+          "holders_current": 43,
+          "holders_prior": 36,
+          "rose": true,
+          "shares_change_pct": 141.4,
+          "shares_current": 37386276.0,
+          "shares_prior": 15489522.0,
+          "shares_rose": true,
+          "symbol": "TENB"
+        },
+        {
+          "count_rose": true,
+          "holders_current": 59,
+          "holders_prior": 49,
+          "rose": true,
+          "shares_change_pct": 44.6,
+          "shares_current": 21353703.0,
+          "shares_prior": 14766901.0,
+          "shares_rose": true,
+          "symbol": "VRNS"
+        },
+        {
+          "count_rose": true,
+          "holders_current": 48,
+          "holders_prior": 47,
+          "rose": true,
+          "shares_change_pct": 26.3,
+          "shares_current": 20554444.0,
+          "shares_prior": 16276501.0,
+          "shares_rose": true,
+          "symbol": "WAY"
+        },
+        {
+          "count_rose": true,
+          "holders_current": 76,
+          "holders_prior": 72,
+          "rose": true,
+          "shares_change_pct": 469.7,
+          "shares_current": 47319065.0,
+          "shares_prior": 8306487.0,
+          "shares_rose": true,
+          "symbol": "WST"
+        }
+      ],
+      "tracked_names": 100,
+      "words": "A name passes when its holder count rose or its total reported shares rose between the two quarters. A name is judged only when it can be matched in both quarters: matching is by company name, and large widely held names often fail the strict match, so most tracked names carry no judgement at all. An unmatched name is never read as a fall."
+    },
+    "insider": {
+      "gathered": "2026-10-30",
+      "name": "Insiders not selling",
+      "names_covered": 100,
+      "names_with_summary": 89,
+      "no_summary_names": [
+        "BLFS",
+        "BUG",
+        "CRNX",
+        "EWZ",
+        "HLX",
+        "IBB",
+        "IWD",
+        "PDBC",
+        "WBD",
+        "XLE",
+        "XLV"
+      ],
+      "open_buys": 59,
+      "open_sells": 886,
+      "silent_on_all_open_trades": [
+        "ADT",
+        "COTY",
+        "DXC",
+        "EGBN",
+        "HAE",
+        "LNG",
+        "LW",
+        "MUR",
+        "NWE",
+        "SU",
+        "VRNS"
+      ],
+      "window": "Filings filed in the six months before the gathering date, up to the 20 most recent filings per name",
+      "window_start": "2026-04-30",
+      "words": "A name passes when its summary shows zero open-market sells in the window. The 7 names with no summary at all are never counted as passing: having no record is not the same as insiders not selling.",
+      "zero_sell_detail": [
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 20,
+          "open_transactions": 0,
+          "symbol": "ADT"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 0,
+          "open_transactions": 0,
+          "symbol": "COTY"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 26,
+          "open_transactions": 0,
+          "symbol": "DXC"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 7,
+          "open_transactions": 0,
+          "symbol": "EGBN"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 3,
+          "open_transactions": 0,
+          "symbol": "HAE"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 10,
+          "open_transactions": 0,
+          "symbol": "LNG"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 20,
+          "open_transactions": 0,
+          "symbol": "LW"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 0,
+          "open_transactions": 0,
+          "symbol": "MUR"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 18,
+          "open_transactions": 0,
+          "symbol": "NWE"
+        },
+        {
+          "buy_value_usd": 1875225.05,
+          "buys": 4,
+          "entries": 20,
+          "open_transactions": 4,
+          "symbol": "OPCH"
+        },
+        {
+          "buy_value_usd": 249852.6,
+          "buys": 1,
+          "entries": 22,
+          "open_transactions": 1,
+          "symbol": "OXY"
+        },
+        {
+          "buy_value_usd": 132500.0,
+          "buys": 1,
+          "entries": 19,
+          "open_transactions": 1,
+          "symbol": "SAIC"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 0,
+          "open_transactions": 0,
+          "symbol": "SU"
+        },
+        {
+          "buy_value_usd": 1302362.12,
+          "buys": 3,
+          "entries": 15,
+          "open_transactions": 3,
+          "symbol": "VFC"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 12,
+          "open_transactions": 0,
+          "symbol": "VRNS"
+        }
+      ],
+      "zero_sell_names": [
+        "ADT",
+        "COTY",
+        "DXC",
+        "EGBN",
+        "HAE",
+        "LNG",
+        "LW",
+        "MUR",
+        "NWE",
+        "OPCH",
+        "OXY",
+        "SAIC",
+        "SU",
+        "VFC",
+        "VRNS"
+      ]
+    }
+  },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 0,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_26",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of",
+        "calibration_attestation",
+        "claim",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "groups_today",
+        "idea",
+        "kill_criterion",
+        "live",
+        "price_basis",
+        "price_history",
+        "provenance",
+        "readings",
+        "record_surface",
+        "retired",
+        "self_test",
+        "source",
+        "state",
+        "thin_cell_rule",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_26",
+      "forecasts": 0,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
+  "retired": false,
+  "self_test": {
+    "feature_cases_checked": 6,
+    "ledger_arms_checked": 4,
+    "state": "passed"
+  },
+  "source": "The insider record gathered 2026-10-30 (filings filed 2026-04-30 to 2026-10-30), the published dark record, the quarterly holdings filings for the periods ended 2026-03-31 and 2026-06-30, and the daily price history on record (2025-03-25 to 2026-10-30), which is used only to grade, never as an input.",
+  "state": "proving",
+  "thin_cell_rule": "Any group with fewer than 30 graded stocks shows its count only, with no middle and no share headline.",
+  "tool": "Silent Accumulation"
+}
