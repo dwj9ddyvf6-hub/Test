@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regime Dial: what kind of market this is, in one sentence</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .reading{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:20px 22px;margin:0 0 16px}
+  .reading .label{font-size:13px;color:var(--faint);text-transform:uppercase;
+        letter-spacing:.05em;margin:0 0 6px}
+  .reading .sentence{font-size:22px;font-weight:650;margin:0;line-height:1.4}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0 0 8px}
+  .note ol{margin:0;padding-left:22px}
+  .note li{margin:0 0 6px}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  .stale{color:var(--faint)}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Regime Dial</h1>
+    <p class="job">One job: say what kind of market this is in one plain sentence, and show every check behind that sentence.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the dial&hellip;</p>
+  <div id="content"></div>
+
+  <footer>
+    <p>The checks on this page are measurements, each with its figure and its own session. The sentence at the top is the dial's reading of those checks, by the rule printed above it. The two are kept separate on purpose.</p>
+    <p>Figures come from the published figures of the other tools on this site: the breadth counts, the sector ranking, the morning index map and the expected-move record, each read exactly as published there.</p>
+    <p><a href="../">Back to all the tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.getElementById('banner');
+  var meta = document.getElementById('meta');
+  var content = document.getElementById('content');
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function fail(msg){
+    banner.textContent = msg;
+    banner.className = 'banner show missing';
+    meta.textContent = '';
+    content.innerHTML = '';
+  }
+  fetch('data.json').then(function(r){
+    if(!r.ok) throw new Error('missing');
+    return r.json();
+  }).then(function(d){
+    if(!d || !Array.isArray(d.checks) || !Array.isArray(d.rule)){
+      fail('No regime record has been published yet.');
+      return;
+    }
+    meta.textContent = d.counting_checks + ' of ' + d.checks_total +
+      ' checks are fresh enough to count. The freshest check is from the session of ' +
+      d.freshest_session + '.';
+    var h = '';
+    h += '<div class="note"><h2>The rule, in plain words</h2>' +
+      '<p>The sentence below is worked out from the checks by this fixed rule, in this order:</p><ol>';
+    d.rule.forEach(function(line){ h += '<li>' + esc(line) + '</li>'; });
+    h += '</ol></div>';
+    h += '<div class="reading"><p class="label">The dial\u2019s reading of the checks</p>';
+    if(d.reading && d.reading.sentence){
+      h += '<p class="sentence">' + esc(d.reading.sentence) + '</p>';
+    } else {
+      h += '<p class="sentence">No single reading is published for these checks.</p>' +
+        (d.no_reading_note ? '<p>' + esc(d.no_reading_note) + '</p>' : '');
+    }
+    h += '</div>';
+    h += '<div class="group"><h2>The checks behind it</h2><table>' +
+      '<tr><th>Check</th><th>Figure</th><th>Session</th><th>Which way it points</th></tr>';
+    d.checks.forEach(function(c){
+      h += '<tr' + (c.counts ? '' : ' class="stale"') + '><td>' + esc(c.name) +
+        '</td><td>' + esc(c.figure) +
+        (c.detail ? '<br><span class="stale">' + esc(c.detail) + '</span>' : '') +
+        '</td><td>' + esc(c.session) + '</td><td>' + esc(c.points) + '</td></tr>';
+    });
+    h += '</table></div>';
+    content.innerHTML = h;
+  }).catch(function(){
+    fail('The regime record is not available right now.');
+  });
+})();
+</script>
+</body>
+</html>
