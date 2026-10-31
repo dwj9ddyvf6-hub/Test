@@ -121,9 +121,10 @@ def test_curve_geometry_and_state():
 
 
 def test_dial_geometry_and_states():
-    assert "vk-dial-fill" in R["dial"] and "vk-dial-needle" in R["dial"]
-    assert ">72<" in R["dial"]
-    assert "vk-state" in R["dial_empty"] and "vk-dial-fill" not in R["dial_empty"]
+    # Cured 2026-10-31 (spec 14.2): dial delegates to the bullet.
+    assert "vk-bullet-fill" in R["dial"] and "vk-dial-needle" not in R["dial"]
+    assert "72" in R["dial"]
+    assert "vk-state" in R["dial_empty"] and "vk-bullet-fill" not in R["dial_empty"]
     assert "scale is not stated" in R["dial_noscale"]
 
 
