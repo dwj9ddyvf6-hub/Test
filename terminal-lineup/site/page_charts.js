@@ -75,10 +75,60 @@
   }
 
   /* ---- the record section, from the record_surface block ---- */
+  function subjectChartHtml(chart, session) {
+    if (!chart || !chart.kind) return null;
+    try {
+      if (chart.kind === "ranked") return VisualKit.ranked({ rows: chart.rows || [], session: session, title: chart.title, label: chart.label });
+      if (chart.kind === "curve") return VisualKit.curve({ points: chart.points || [], session: session, title: chart.title, label: chart.label });
+      if (chart.kind === "band") return VisualKit.band({ items: chart.items || [], session: session, title: chart.title, label: chart.label });
+      if (chart.kind === "distribution") return VisualKit.distribution({ buckets: chart.buckets || [], session: session, title: chart.title, label: chart.label });
+      if (chart.kind === "line") return VisualKit.line({ series: chart.series || [], session: session, title: chart.title, label: chart.label });
+      if (chart.kind === "tiles") return VisualKit.tiles({ items: chart.items || [], session: session, title: chart.title, label: chart.label });
+      if (chart.kind === "tape") return VisualKit.tape({ events: chart.events || [], session: session, title: chart.title, label: chart.label });
+    } catch (e) { return null; }
+    return null;
+  }
   function recordSection(data) {
     var rs = data.record_surface;
     if (!rs) return null;
     var session = VisualKit.sessionOf(data);
+    /* Subject record first (cure 2026-10-31): pages carrying a
+       subject_chart record it alone; the internal count parts below
+       are suppressed for those pages, never drawn beside it. A page
+       whose subject record is null draws no record chart. */
+    if (data.subject_chart) {
+      var subj = subjectChartHtml(data.subject_chart.record, session);
+      var calib2 = "";
+      if (typeof rs.calibration_record === "string" && rs.calibration_record) calib2 = '<p class="cmeans">' + esc(rs.calibration_record) + "</p>";
+      else if (rs.calibration_record && typeof rs.calibration_record === "object") {
+        var ct2 = rs.calibration_record.words || rs.calibration_record.text || rs.calibration_record.summary;
+        if (ct2) calib2 = '<p class="cmeans">' + esc(ct2) + "</p>";
+      }
+      if (!subj && !calib2) return null;
+      var html2 = '<section class="chartbox recordchart" id="recordChart"><h2>The record</h2><p class="studyword">Study record</p>' + (subj || "") + calib2 + "</section>";
+      var sec2 = document.createElement("div");
+      sec2.innerHTML = html2;
+      return sec2.firstChild;
+    }
+    /* Market-tool subject record charts (cure 2026-10-31): when the
+       producer built record_surface.subject_charts for a page, those
+       charts alone are its record visual; an empty list draws none
+       and no count part is substituted. */
+    if (Object.prototype.hasOwnProperty.call(rs, "subject_charts")) {
+      var mparts = [];
+      (rs.subject_charts || []).forEach(function (c) { var h = subjectChartHtml(c, session); if (h) mparts.push(h); });
+      var mcal = "";
+      if (typeof rs.calibration_record === "string" && rs.calibration_record) mcal = '<p class="cmeans">' + esc(rs.calibration_record) + "</p>";
+      else if (rs.calibration_record && typeof rs.calibration_record === "object") {
+        var mct = rs.calibration_record.words || rs.calibration_record.text || rs.calibration_record.summary;
+        if (mct) mcal = '<p class="cmeans">' + esc(mct) + "</p>";
+      }
+      if (!mparts.length && !mcal) return null;
+      var mhtml = '<section class="chartbox recordchart" id="recordChart"><h2>The record</h2><p class="studyword">Study record</p>' + mparts.join("") + mcal + "</section>";
+      var msec = document.createElement("div");
+      msec.innerHTML = mhtml;
+      return msec.firstChild;
+    }
     var parts = [];
     var locs = (rs.study_record && rs.study_record.locations) || [];
     var locRows = locs.filter(function (l) { return isNum(l.items) && l.items > 0; })
@@ -157,7 +207,15 @@
           if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(lead, anchor.nextSibling);
           else wrap.insertBefore(lead, wrap.firstChild);
           var html = null;
-          try { html = genericLead(data, VisualKit.sessionOf(data)); } catch (e) { html = null; }
+          try {
+            /* Subject lead first (cure 2026-10-31, modules/record
+               batch): pages carrying a subject_chart lead draw it
+               instead of the generic datedSeries/countBars pick. A
+               null lead keeps the generic path, which is the subject
+               area chart for the pages that already lead with one. */
+            if (data.subject_chart && data.subject_chart.lead) html = subjectChartHtml(data.subject_chart.lead, VisualKit.sessionOf(data));
+            if (!html) html = genericLead(data, VisualKit.sessionOf(data));
+          } catch (e) { html = null; }
           if (html) lead.innerHTML = html; else lead.remove();
         }
         var verdict = document.querySelector(".verdict");
