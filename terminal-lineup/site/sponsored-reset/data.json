@@ -1,0 +1,1607 @@
+{
+  "arms": [
+    {
+      "name": "Backed",
+      "words": "The full test: washed-out, top of the combined score, the market gate passing, and backing on record (big holders not leaving, or an insider buy). This arm must average at least +2.0 points over the market."
+    },
+    {
+      "name": "Score alone",
+      "words": "The same washed-out top scorers with no other condition. This is the parent survivor on its own, recorded so the two added conditions can be priced separately."
+    },
+    {
+      "name": "Score plus the market gate",
+      "words": "The same top scorers, only on fear days when the market gate passes, with no filings condition. The verdict compares the backed arm against this one: whatever the backed arm adds over it is what the filings are worth."
+    }
+  ],
+  "as_of": "2026-10-30",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "no graded forecasts on record yet (3 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 3,
+      "graded_forecasts": 0,
+      "recorded_on": "2026-10-31",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_25",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": null
+  },
+  "claim": {
+    "points_explained": "Points are percentage points of gain over the market: a stock up 5 percent while the market is up 2 percent scores +3 points.",
+    "stated_points": 2.0,
+    "words": "On a fear day when the wider market is above its rising 200-day average, washed-out stocks that score at the top of the combined score and show backing on record will beat the market by at least +2.0 points on average over the next 20 trading days."
+  },
+  "definitions": {
+    "combined_score": "Two readings per stock per day, combined the study's own coded way. Laggard strength: how far the stock's last 10 days trail the market's 10 days (trailing more scores higher). Down-volume capitulation: the share volume on falling days over the last 10 days against its own recent per-10-day average (running hot scores higher). Each reading is ranked across that day's washed-out stocks, the two signed ranks are averaged, and the top fifth of the day matches. Days with fewer than 10 scored stocks form no matching group.",
+    "fear_day": "A day when SPY fell more than 1.5 percent, or the fear gauge rose more than 15 percent in a day, closed at 25 or higher, or closed at 20 or higher on a day when SPY or QQQ fell. This is the Fear Day List's own settled definition, reused exactly; run over the price history here it finds 22 days, all before this page existed.",
+    "gate": "The market gate: SPY's close is above its 200-day average close, and that average is higher than it was 20 days earlier. It cannot be read at all until 220 days of market history exist, which covers the first 12 fear days on record here.",
+    "sponsorship": {
+      "any_buy_names": [
+        "ACN",
+        "CCI",
+        "CRL",
+        "CROX",
+        "DFIN",
+        "DRH",
+        "EVRG",
+        "GO",
+        "IFF",
+        "KDP",
+        "MO",
+        "NDAQ",
+        "OPCH",
+        "OXY",
+        "PEB",
+        "SAIC",
+        "UFCS",
+        "USO",
+        "VFC"
+      ],
+      "filers_current": 8857,
+      "filers_prior": 8871,
+      "insider_gathered": "2026-10-30",
+      "insider_window_start": "2026-04-30",
+      "limits": "The big-holder reading covers only 346 of the 1,832 stocks in the price history: the rest have no identifier match on record, so they can only be backed through the insider leg, which itself covers 50 tracked names. The filings are one snapshot of two quarters (periods ended March 31 and June 30, 2026, filed weeks later), so applied to a past fear day they are not what was known that day, and the history below says so. Insider summaries carry counts and dollar totals only, never who traded or on which day, so several insiders buying close together (what traders call cluster buying) cannot be identified from them: this page uses the simple any-buy reading and claims nothing finer.",
+      "panel_names_total": 1832,
+      "panel_names_with_holder_record": 346,
+      "periods": [
+        "2026-06-30",
+        "2026-03-31"
+      ],
+      "words": "Backing on record, either leg enough. Big holders: the number of filing managers holding the stock in the newer quarter is at least the number in the older quarter. Insider buy: the stock's insider summary shows at least one open-market buy. A stock with no record on either leg never counts as backed."
+    },
+    "washed_out": "The close is at or below 65 percent of the highest high of the last 252 trading days, and at or below 110 percent of the lowest low of the same stretch: at least 35 percent off the high and sitting near the low. One honest difference from this page's original written design, which said 35 to 80 percent off the high: the study's own coded rule carries no 80 percent floor, so a stock more than 80 percent off its high still counts when it sits near its low. This page follows the parent code exactly and prints the difference rather than quietly adding a floor. The stock must also be liquid: closing above 5 dollars with more than 5 million dollars a day changing hands over the last 20 days, and it needs a long enough record (at least 320 days on file, and only its days from number 260 onward count). The deep history the study ran on, thousands of names including ones that later closed, is not on record here: the price history here holds 1,833 names still trading, at most 399 days each, so no fear day before June 5, 2026 can form a pool at all. That is a limit of the record, stated, not a market fact."
+  },
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: direction, over 20 sessions, fear-day cohorts. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if after 3 fear-day cohorts, the filings condition adds less than 0.5 points of mean excess over the gated baseline. It counts as proven at 3 fear-day cohorts.",
+    "summary": "On fear days, test whether the public filings tell washed-out stocks that are still held from washed-out stocks that have been abandoned, before the next 20 trading days begin."
+  },
+  "feed": "forecast_ledger",
+  "history": {
+    "days": [
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-03-28",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -2.01,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-03-31",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.67,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-03",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -4.93,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-04",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -5.85,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-07",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.18,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-08",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.57,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-09",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 10.5,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-10",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -4.38,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-11",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 1.78,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-14",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.97,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-15",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.28,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-16",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -2.22,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-17",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.14,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-21",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -2.38,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-22",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 2.6,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-23",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 1.55,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-24",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 2.1,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-28",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.04,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-04-30",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.04,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-05-05",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.57,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-05-06",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.84,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-05-09",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.13,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-05-21",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.69,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-05-23",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.68,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-06-13",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.12,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-06-17",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.85,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-06-18",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.02,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-06-20",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.53,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-08-01",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.64,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-10-10",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -2.7,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-10-14",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.12,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-10-16",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.68,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-11-13",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.66,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-11-17",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.93,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-11-18",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.84,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2025-11-20",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.52,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-01-20",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -2.04,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-02-05",
+        "gate": null,
+        "gate_close": null,
+        "gate_mean_200": null,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.25,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-02-12",
+        "gate": true,
+        "gate_close": 681.27,
+        "gate_mean_200": 648.02,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.54,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-02-17",
+        "gate": true,
+        "gate_close": 682.85,
+        "gate_mean_200": 649.3,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.16,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-02-19",
+        "gate": true,
+        "gate_close": 684.48,
+        "gate_mean_200": 650.52,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.26,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-02-23",
+        "gate": true,
+        "gate_close": 682.39,
+        "gate_mean_200": 651.77,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.02,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-03",
+        "gate": true,
+        "gate_close": 680.33,
+        "gate_mean_200": 655.14,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.88,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-05",
+        "gate": true,
+        "gate_close": 681.31,
+        "gate_mean_200": 656.05,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.56,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-06",
+        "gate": true,
+        "gate_close": 672.38,
+        "gate_mean_200": 656.44,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.31,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-09",
+        "gate": true,
+        "gate_close": 678.27,
+        "gate_mean_200": 656.87,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.88,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-10",
+        "gate": true,
+        "gate_close": 677.18,
+        "gate_mean_200": 657.34,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.16,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-11",
+        "gate": true,
+        "gate_close": 676.33,
+        "gate_mean_200": 657.81,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.13,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-12",
+        "gate": true,
+        "gate_close": 666.06,
+        "gate_mean_200": 658.24,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.52,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-13",
+        "gate": true,
+        "gate_close": 662.29,
+        "gate_mean_200": 658.6,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.57,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-18",
+        "gate": true,
+        "gate_close": 661.43,
+        "gate_mean_200": 659.77,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.4,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-19",
+        "gate": false,
+        "gate_close": 659.8,
+        "gate_mean_200": 660.1,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.25,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-20",
+        "gate": false,
+        "gate_close": 648.57,
+        "gate_mean_200": 660.36,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.7,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-23",
+        "gate": false,
+        "gate_close": 655.38,
+        "gate_mean_200": 660.66,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 1.05,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-24",
+        "gate": false,
+        "gate_close": 653.18,
+        "gate_mean_200": 660.96,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.34,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-25",
+        "gate": false,
+        "gate_close": 656.82,
+        "gate_mean_200": 661.25,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.56,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-26",
+        "gate": false,
+        "gate_close": 645.09,
+        "gate_mean_200": 661.48,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.79,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-27",
+        "gate": false,
+        "gate_close": 634.09,
+        "gate_mean_200": 661.63,
+        "pool_count": 0,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.71,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-30",
+        "gate": false,
+        "gate_close": 631.97,
+        "gate_mean_200": 661.79,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -0.33,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-03-31",
+        "gate": false,
+        "gate_close": 650.34,
+        "gate_mean_200": 662.02,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 2.91,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 0,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [],
+        "date": "2026-04-07",
+        "gate": false,
+        "gate_close": 659.22,
+        "gate_mean_200": 663.19,
+        "pool_count": 0,
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": 0.04,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 25,
+        "composite_graded_names": 25,
+        "composite_mean_excess_points": null,
+        "composite_names": [
+          "ARQQ",
+          "BSX",
+          "CEG",
+          "CMG",
+          "COIN",
+          "CPRT",
+          "CXT",
+          "DFIN",
+          "EVTC",
+          "IBIT",
+          "INTR",
+          "KMPR",
+          "LI",
+          "LTBR",
+          "LULU",
+          "LZ",
+          "MKTX",
+          "MVIS",
+          "NOG",
+          "NU",
+          "OI",
+          "OLLI",
+          "PTC",
+          "SHAK",
+          "UHS"
+        ],
+        "date": "2026-06-05",
+        "gate": true,
+        "gate_close": 737.55,
+        "gate_mean_200": 683.93,
+        "pool_count": 123,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 1,
+        "sponsored_names": [
+          "DFIN"
+        ],
+        "spy_change_pct": -2.58,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 26,
+        "composite_graded_names": 26,
+        "composite_mean_excess_points": null,
+        "composite_names": [
+          "ACHR",
+          "CCOI",
+          "CEG",
+          "CMG",
+          "ESAB",
+          "FMC",
+          "FOUR",
+          "GDDY",
+          "GWRE",
+          "HLNE",
+          "IBIT",
+          "INSM",
+          "INTR",
+          "KRMN",
+          "LCII",
+          "LEU",
+          "LI",
+          "LTBR",
+          "LULU",
+          "MKTX",
+          "MLKN",
+          "MOS",
+          "MVIS",
+          "NU",
+          "STEP",
+          "ZBRA"
+        ],
+        "date": "2026-06-10",
+        "gate": true,
+        "gate_close": 725.43,
+        "gate_mean_200": 685.34,
+        "pool_count": 127,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 3,
+        "sponsored_names": [
+          "CCOI",
+          "KRMN",
+          "ZBRA"
+        ],
+        "spy_change_pct": -1.58,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 12,
+        "composite_graded_names": 12,
+        "composite_mean_excess_points": null,
+        "composite_names": [
+          "CPNG",
+          "ISRG",
+          "MP",
+          "OI",
+          "ROL",
+          "RUN",
+          "SMPL",
+          "SOFI",
+          "SOUN",
+          "SRPT",
+          "TEM",
+          "TSLA"
+        ],
+        "date": "2026-07-29",
+        "gate": true,
+        "gate_close": 729.46,
+        "gate_mean_200": 699.52,
+        "pool_count": 61,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "sponsored_count": 0,
+        "sponsored_names": [],
+        "spy_change_pct": -1.54,
+        "ungradeable": false
+      },
+      {
+        "composite_count": 31,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [
+          "ALK",
+          "ALMU",
+          "AMPX",
+          "AMSC",
+          "APLD",
+          "ARE",
+          "ASTE",
+          "ASTS",
+          "BRUN",
+          "CIFR",
+          "CLSK",
+          "CORZ",
+          "CRWV",
+          "FN",
+          "FUN",
+          "GRRR",
+          "INFQ",
+          "INSM",
+          "IREN",
+          "MP",
+          "PMT",
+          "QBTS",
+          "QUBT",
+          "REMX",
+          "RGTI",
+          "ROAD",
+          "THRM",
+          "TSSI",
+          "UNIT",
+          "UUUU",
+          "WGMI"
+        ],
+        "date": "2026-10-16",
+        "gate": true,
+        "gate_close": 763.25,
+        "gate_mean_200": 725.01,
+        "pool_count": 153,
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day"
+        ],
+        "sponsored_count": 4,
+        "sponsored_names": [
+          "ARE",
+          "FUN",
+          "PMT",
+          "TSSI"
+        ],
+        "spy_change_pct": -1.11,
+        "ungradeable": true
+      },
+      {
+        "composite_count": 25,
+        "composite_graded_names": 0,
+        "composite_mean_excess_points": null,
+        "composite_names": [
+          "BFAM",
+          "BRUN",
+          "CIFR",
+          "CLS",
+          "CRS",
+          "CRWV",
+          "DBD",
+          "ENPH",
+          "HWM",
+          "JBSS",
+          "KGC",
+          "NFLX",
+          "NU",
+          "PALL",
+          "RCUS",
+          "RDDT",
+          "RSI",
+          "SE",
+          "SFM",
+          "SLM",
+          "SLV",
+          "STC",
+          "VALE",
+          "VC",
+          "XYL"
+        ],
+        "date": "2026-10-30",
+        "gate": true,
+        "gate_close": 755.72,
+        "gate_mean_200": 728.85,
+        "pool_count": 122,
+        "qualified_by": [
+          "SPY fell more than 1.5% that day"
+        ],
+        "sponsored_count": 3,
+        "sponsored_names": [
+          "BFAM",
+          "SFM",
+          "STC"
+        ],
+        "spy_change_pct": -1.77,
+        "ungradeable": true
+      }
+    ],
+    "label": "History, worked in full, never recorded",
+    "totals": {
+      "composite_name_days": 119,
+      "days_with_pool": 5,
+      "max_sponsored_names": 4,
+      "pool_name_days": 586
+    },
+    "words": "Every fear day on record, worked through the full pipeline with today's filings snapshot. Because the price history here is shorter than the study's, no fear day before June 5, 2026 forms a pool. Every backed group in this history holds at most 4 stocks, far under the 30 needed before an average means anything, so history is published as counts only: it shows the shape of the wait, not a verdict. None of it is in the live record and none ever will be backfilled."
+  },
+  "idea": "Some washed-out stocks are being held through the washout by the big holders and insiders who know them best. Others have been abandoned by those same people, and their falls tend to continue. From the outside the two look identical: both are far below their highs, sitting near their lows, after a fear day. This page tests whether the public filings tell the held ones from the abandoned ones before the next 20 trading days, not after.",
+  "kill_criterion": "After 3 fear-day groups have matured, if the filings condition adds less than half a point of average gain over the market, compared with the same top scorers under the market gate alone, this tool retires. The filings are the only new idea here; if they do not earn their place, the page goes.",
+  "live": {
+    "arm_means": {},
+    "cohorts_formed": 1,
+    "cohorts_matured": 0,
+    "freshest_note": null,
+    "freshest_session": "2026-10-30",
+    "kill_margin_points": null,
+    "missed_fear_days": [],
+    "proving_target_cohorts": 3,
+    "records_graded": 0,
+    "records_written": 3,
+    "wait": "The first group started on 2026-10-30: the backed group holds BFAM, SFM, STC, written to the public record at that close, before its 20 trading days began. Later fear days on which the market gate passes and at least one washed-out top scorer shows backing on record add further groups the same way. Fear days are rare, so this record builds slowly, in quarters rather than weeks. It also needs the price record and the fear-gauge readings to keep accruing past their current ends (2026-10-30 for prices)."
+  },
+  "parent_record": {
+    "discovery": 0.053,
+    "holdout": 0.028,
+    "label": "The parent survivor's own record",
+    "words": "The combined score comes from a study of washed-out stocks on fear days. On its own fear cut (days the market fell at least 1 percent, or sat under its 50-day average) and its own way of measuring what came next, it showed a link of +0.053 in its discovery years and +0.028 in its holdout years, and the holdout confirmed it: the strongest grade this record gives a directional finding of its kind, one step below the top grade. Its rising-trend version faded in the holdout and is not used here. Those figures belong to the study, on its own definitions: they are the reason this test exists, never figures this page claims."
+  },
+  "price_basis": "close",
+  "price_history": {
+    "from": "2025-03-25",
+    "names": 1833,
+    "sessions": 404,
+    "to": "2026-10-30"
+  },
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (3 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 3,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_25",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "arms",
+        "as_of",
+        "calibration_attestation",
+        "claim",
+        "definitions",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "history",
+        "idea",
+        "kill_criterion",
+        "live",
+        "parent_record",
+        "price_basis",
+        "price_history",
+        "provenance",
+        "record_surface",
+        "retired",
+        "self_test",
+        "source",
+        "state",
+        "thin_cell_rule",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_25",
+      "forecasts": 3,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 3 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 66,
+          "path": "/history"
+        },
+        {
+          "items": 66,
+          "path": "/history/days"
+        },
+        {
+          "items": 0,
+          "path": "/history/totals"
+        }
+      ],
+      "total_items_counted": 132
+    },
+    "version": 1
+  },
+  "retired": false,
+  "self_test": {
+    "feature_cases_checked": 5,
+    "ledger_arms_checked": 3,
+    "state": "passed"
+  },
+  "source": "The daily price history on record (1,833 names, 2025-03-25 to 2026-10-30), the settled fear-day record, the big-holder filings for the periods ended 2026-03-31 and 2026-06-30, and the insider record gathered 2026-10-30.",
+  "state": "proving",
+  "thin_cell_rule": "Any group with fewer than 30 graded stocks shows its count only, with no average headline.",
+  "tool": "Sponsored Reset"
+}
