@@ -166,7 +166,7 @@ def panel_reliability_block(history, used, total):
     if len(coverages) >= 2:
         stability = 1.0 - (max(coverages) - min(coverages))
     drift_z = None
-    drift_state = "undefined: fewer than two earlier sessions"
+    drift_state = "not computed: fewer than two earlier sessions"
     if len(coverages) >= 3:
         prior = coverages[:-1]
         mean = sum(prior) / len(prior)
@@ -175,7 +175,7 @@ def panel_reliability_block(history, used, total):
             drift_z = (coverages[-1] - mean) / math.sqrt(var)
             drift_state = "recorded"
         else:
-            drift_state = ("undefined: the earlier sessions' "
+            drift_state = ("not computed: the earlier sessions' "
                            "coverages are identical, so their "
                            "variance is zero and no drift z "
                            "exists")
