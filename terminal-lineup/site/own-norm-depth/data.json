@@ -352,6 +352,7 @@
         "record_surface",
         "source",
         "state",
+        "subject_chart",
         "thin_cell_rule",
         "tool"
       ]
@@ -396,6 +397,105 @@
   },
   "source": "The curve and the out-of-sample evaluation on this page were computed from the long daily price history on record (deep_bars.json, 2015 to 2026, read through the terminal's shared panel reader). Live forecasts are still judged against the shipped daily history (1832 stocks plus the broad market fund, 2025-03-25 to 2026-10-29, at most 403 trading days for any one name), checked for this page.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Median excess points per dip-depth bin.",
+      "rows": [
+        {
+          "name": "0.0 to 10.0 percent dip",
+          "score": 0.07814726501704783
+        },
+        {
+          "name": "10.0 to 20.0 percent dip",
+          "score": 0.3431882420515564
+        },
+        {
+          "name": "20.0 to 30.0 percent dip",
+          "score": 0.40644893315862074
+        },
+        {
+          "name": "30.0 to 40.0 percent dip",
+          "score": 0.4102040236731552
+        },
+        {
+          "name": "40.0 to 50.0 percent dip",
+          "score": 0.29581164623892486
+        },
+        {
+          "name": "50.0 to 60.0 percent dip",
+          "score": 0.22793346862544084
+        },
+        {
+          "name": "60.0 to 70.0 percent dip",
+          "score": 0.02501554110127535
+        },
+        {
+          "name": "70.0 to 80.0 percent dip",
+          "score": -0.11133241645037151
+        },
+        {
+          "name": "80.0 to 90.0 percent dip",
+          "score": -0.16992328697290615
+        },
+        {
+          "name": "90.0 to 100.0 percent dip",
+          "score": -0.2673696141793913
+        }
+      ],
+      "source": "curve.bins[].median_excess_points",
+      "title": "Forward edge by dip depth"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Percent beating the market per dip-depth bin.",
+      "rows": [
+        {
+          "name": "0.0 to 10.0 percent dip",
+          "score": 50.49
+        },
+        {
+          "name": "10.0 to 20.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "20.0 to 30.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "30.0 to 40.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "40.0 to 50.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "50.0 to 60.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "60.0 to 70.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "70.0 to 80.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "80.0 to 90.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "90.0 to 100.0 percent dip",
+          "score": 51.21
+        }
+      ],
+      "source": "curve.bins[].p",
+      "title": "Share that beat the market, by dip depth"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any group with fewer than 30 graded forecasts shows its count only, with no percentage headline.",
   "tool": "Own-Norm Depth Forecaster"
 }
