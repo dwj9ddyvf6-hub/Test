@@ -1,0 +1,453 @@
+{
+ "tolerance": 0.0001,
+ "rows": [
+  {
+   "check": "Hull call vs textbook 10.450576 (ours)",
+   "ours": 10.450583572185565,
+   "his": 10.450576,
+   "rel_err": 7.245711207494205e-07,
+   "ok": true
+  },
+  {
+   "check": "Hull call vs textbook 10.450576 (his)",
+   "ours": 10.450575619322287,
+   "his": 10.450576,
+   "rel_err": 3.642648150225682e-08,
+   "ok": true
+  },
+  {
+   "check": "Hull put vs textbook 5.573518 (ours)",
+   "ours": 5.573526022256971,
+   "his": 5.573518,
+   "rel_err": 1.4393524827082105e-06,
+   "ok": true
+  },
+  {
+   "check": "Hull put vs textbook 5.573518 (his)",
+   "ours": 5.5735180693936925,
+   "his": 5.573518,
+   "rel_err": 1.2450608856017782e-08,
+   "ok": true
+  },
+  {
+   "check": "Hull call ours-vs-his",
+   "ours": 10.450583572185565,
+   "his": 10.450575619322287,
+   "rel_err": 7.609976299721434e-07,
+   "ok": true
+  },
+  {
+   "check": "Hull put ours-vs-his",
+   "ours": 5.573526022256971,
+   "his": 5.5735180693936925,
+   "rel_err": 1.4269018560863957e-06,
+   "ok": true
+  },
+  {
+   "check": "parity[0] ours residual (S100 K100 365d iv20 r5 q0)",
+   "ours": 4.877057549928594,
+   "his": 4.877057549928594,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "parity[0] his residual (S100 K100 365d iv20 r5 q0)",
+   "ours": 4.877057549928594,
+   "his": 4.877057549928594,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "parity[1] ours residual (S100 K100 180d iv35 r4.5 q2)",
+   "ours": 1.2132820980224182,
+   "his": 1.2132820980224182,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "parity[1] his residual (S100 K100 180d iv35 r4.5 q2)",
+   "ours": 1.2132820980224182,
+   "his": 1.2132820980224182,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "parity[2] ours residual (S120 K90 90d iv30 r3 q1)",
+   "ours": 30.36777119516706,
+   "his": 30.367771195167066,
+   "rel_err": 2.3397921803137823e-16,
+   "ok": true
+  },
+  {
+   "check": "parity[2] his residual (S120 K90 90d iv30 r3 q1)",
+   "ours": 30.36777119516707,
+   "his": 30.367771195167066,
+   "rel_err": 1.1698960901568912e-16,
+   "ok": true
+  },
+  {
+   "check": "parity[3] ours residual (S80 K110 30d iv45 r5 q0)",
+   "ours": -29.54887281406247,
+   "his": -29.548872814062477,
+   "rel_err": 2.404635669966906e-16,
+   "ok": true
+  },
+  {
+   "check": "parity[3] his residual (S80 K110 30d iv45 r5 q0)",
+   "ours": -29.548872814062488,
+   "his": -29.548872814062477,
+   "rel_err": 3.606953504950359e-16,
+   "ok": true
+  },
+  {
+   "check": "American put CRR200 vs ref 6.086383",
+   "ours": 6.08638274991637,
+   "his": 6.086383,
+   "rel_err": 4.1089039148642345e-08,
+   "ok": true
+  },
+  {
+   "check": "American put premium (200 steps) vs +0.513",
+   "ours": 0.5128646805226778,
+   "his": 0.513,
+   "rel_err": 0.00026378065754826494,
+   "ok": false
+  },
+  {
+   "check": "American put premium (300 steps, informational)",
+   "ours": 0.5142045449742634,
+   "his": 0.5128646805226778,
+   "rel_err": 0.0026125106728350353,
+   "ok": true
+  },
+  {
+   "check": "American no-div call premium (300 steps, must be ~<=0)",
+   "ours": -0.006654989897846519,
+   "his": 0.0,
+   "rel_err": 0.006654989897846519,
+   "ok": true
+  },
+  {
+   "check": "fixture long call: payoff max rel err over 15 prices",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture long call: stats (netDebit ours=300.0 his=300; minPnl ours=-300.0 his=-300; breakevens ours=[103.0] his=[103]; unbounded flags match=True)",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture long call: model greeks setting 1 (S100 30d vol25%), worst=value",
+   "ours": 1.0397085358597502e-06,
+   "his": 0.0,
+   "rel_err": 1.0397085358597502e-06,
+   "ok": true
+  },
+  {
+   "check": "fixture long call: model greeks setting 2 (S85 60d vol40%), worst=value",
+   "ours": 4.172262134549343e-06,
+   "his": 0.0,
+   "rel_err": 4.172262134549343e-06,
+   "ok": true
+  },
+  {
+   "check": "fixture long call: model greeks setting 3 (S120 7d vol15%), worst=",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture long put x2: payoff max rel err over 15 prices",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture long put x2: stats (netDebit ours=500.0 his=500; maxPnl ours=19500.0 his=19500; minPnl ours=-500.0 his=-500; breakevens ours=[97.5] his=[97.5]; unbounded flags match=True)",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture long put x2: model greeks setting 1 (S100 30d vol25%), worst=value",
+   "ours": 1.1833260166363376e-06,
+   "his": 0.0,
+   "rel_err": 1.1833260166363376e-06,
+   "ok": true
+  },
+  {
+   "check": "fixture long put x2: model greeks setting 2 (S85 60d vol40%), worst=value",
+   "ours": 3.594510105931246e-07,
+   "his": 0.0,
+   "rel_err": 3.594510105931246e-07,
+   "ok": true
+  },
+  {
+   "check": "fixture long put x2: model greeks setting 3 (S120 7d vol15%), worst=",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture bull call spread (sample): payoff max rel err over 15 prices",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture bull call spread (sample): stats (netDebit ours=200.0 his=200; maxPnl ours=800.0 his=800; minPnl ours=-200.0 his=-200; breakevens ours=[102.0] his=[102]; unbounded flags match=True)",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture bull call spread (sample): model greeks setting 1 (S100 30d vol25%), worst=value",
+   "ours": 1.3661101436448928e-06,
+   "his": 0.0,
+   "rel_err": 1.3661101436448928e-06,
+   "ok": true
+  },
+  {
+   "check": "fixture bull call spread (sample): model greeks setting 2 (S85 60d vol40%), worst=value",
+   "ours": 1.0594499206502969e-05,
+   "his": 0.0,
+   "rel_err": 1.0594499206502969e-05,
+   "ok": true
+  },
+  {
+   "check": "fixture bull call spread (sample): model greeks setting 3 (S120 7d vol15%), worst=delta",
+   "ours": 0.0006610017485571203,
+   "his": 0.0,
+   "rel_err": 0.0006610017485571203,
+   "ok": false
+  },
+  {
+   "check": "fixture short straddle: payoff max rel err over 15 prices",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture short straddle: stats (netDebit ours=-750.0 his=-750; maxPnl ours=750.0 his=750; breakevens ours=[92.5, 107.5] his=[92.5, 107.5]; unbounded flags match=True)",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture short straddle: model greeks setting 1 (S100 30d vol25%), worst=delta",
+   "ours": 1.8809508580064765e-06,
+   "his": 0.0,
+   "rel_err": 1.8809508580064765e-06,
+   "ok": true
+  },
+  {
+   "check": "fixture short straddle: model greeks setting 2 (S85 60d vol40%), worst=value",
+   "ours": 6.618794242021265e-07,
+   "his": 0.0,
+   "rel_err": 6.618794242021265e-07,
+   "ok": true
+  },
+  {
+   "check": "fixture short straddle: model greeks setting 3 (S120 7d vol15%), worst=",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture iron condor 4-leg: payoff max rel err over 15 prices",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture iron condor 4-leg: stats (netDebit ours=-140.0 his=-140; maxPnl ours=140.0 his=140; minPnl ours=-360.0 his=-360; breakevens ours=[93.6, 106.4] his=[93.6, 106.4]; unbounded flags match=True)",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture iron condor 4-leg: model greeks setting 1 (S100 30d vol25%), worst=delta",
+   "ours": 2.252347080335656e-06,
+   "his": 0.0,
+   "rel_err": 2.252347080335656e-06,
+   "ok": true
+  },
+  {
+   "check": "fixture iron condor 4-leg: model greeks setting 2 (S85 60d vol40%), worst=theta/day",
+   "ours": 9.84237005025467e-07,
+   "his": 0.0,
+   "rel_err": 9.84237005025467e-07,
+   "ok": true
+  },
+  {
+   "check": "fixture iron condor 4-leg: model greeks setting 3 (S120 7d vol15%), worst=delta",
+   "ours": 0.0006609844690092127,
+   "his": 0.0,
+   "rel_err": 0.0006609844690092127,
+   "ok": false
+  },
+  {
+   "check": "fixture own short put: payoff max rel err over 15 prices",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture own short put: stats (netDebit ours=-525.0 his=-525; maxPnl ours=525.0 his=525; minPnl ours=-23475.0 his=-23475; breakevens ours=[78.25] his=[78.25]; unbounded flags match=True)",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture own short put: model greeks setting 1 (S100 30d vol25%), worst=value",
+   "ours": 0.000786315951376668,
+   "his": 0.0,
+   "rel_err": 0.000786315951376668,
+   "ok": false
+  },
+  {
+   "check": "fixture own short put: model greeks setting 2 (S85 60d vol40%), worst=value",
+   "ours": 1.8695849964037739e-06,
+   "his": 0.0,
+   "rel_err": 1.8695849964037739e-06,
+   "ok": true
+  },
+  {
+   "check": "fixture own short put: model greeks setting 3 (S120 7d vol15%), worst=vega/pct",
+   "ours": 2.926047721682624e-98,
+   "his": 0.0,
+   "rel_err": 2.926047721682624e-98,
+   "ok": true
+  },
+  {
+   "check": "fixture own long straddle: payoff max rel err over 15 prices",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture own long straddle: stats (netDebit ours=800.0 his=800; minPnl ours=-800.0 his=-800; breakevens ours=[87.0, 103.0] his=[87, 103]; unbounded flags match=True)",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture own long straddle: model greeks setting 1 (S100 30d vol25%), worst=delta",
+   "ours": 2.2218830609270426e-07,
+   "his": 0.0,
+   "rel_err": 2.2218830609270426e-07,
+   "ok": true
+  },
+  {
+   "check": "fixture own long straddle: model greeks setting 2 (S85 60d vol40%), worst=value",
+   "ours": 5.662655792067625e-07,
+   "his": 0.0,
+   "rel_err": 5.662655792067625e-07,
+   "ok": true
+  },
+  {
+   "check": "fixture own long straddle: model greeks setting 3 (S120 7d vol15%), worst=theta/day",
+   "ours": 1.8974562582037158e-16,
+   "his": 0.0,
+   "rel_err": 1.8974562582037158e-16,
+   "ok": true
+  },
+  {
+   "check": "fixture own bear put spread: payoff max rel err over 15 prices",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture own bear put spread: stats (netDebit ours=700.0 his=700; maxPnl ours=2300.0 his=2300; minPnl ours=-700.0 his=-700; breakevens ours=[101.5] his=[101.5]; unbounded flags match=True)",
+   "ours": 0.0,
+   "his": 0.0,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "fixture own bear put spread: model greeks setting 1 (S100 30d vol25%), worst=value",
+   "ours": 9.295574979808294e-08,
+   "his": 0.0,
+   "rel_err": 9.295574979808294e-08,
+   "ok": true
+  },
+  {
+   "check": "fixture own bear put spread: model greeks setting 2 (S85 60d vol40%), worst=delta",
+   "ours": 6.539564836764601e-08,
+   "his": 0.0,
+   "rel_err": 6.539564836764601e-08,
+   "ok": true
+  },
+  {
+   "check": "fixture own bear put spread: model greeks setting 3 (S120 7d vol15%), worst=value",
+   "ours": 0.014942401031806968,
+   "his": 0.0,
+   "rel_err": 0.014942401031806968,
+   "ok": false
+  },
+  {
+   "check": "sensitivity base cell == model P/L (his, bull spread setting 1)",
+   "ours": 68.42351658823382,
+   "his": 68.42351658823382,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "GAMMA BLOCKER S100/K80/30d/20% r4.5: morgue bs.gamma (ours=2.479268201e-05) vs his European gamma (his=2.479268201e-05); our relative error",
+   "ours": 2.4792682013545498e-05,
+   "his": 2.4792682013545498e-05,
+   "rel_err": 0.0,
+   "ok": true
+  },
+  {
+   "check": "GAMMA ANCHOR r0: ours vs 03 independent value 3.1993e-5",
+   "ours": 3.199292610923949e-05,
+   "his": 3.1993e-05,
+   "rel_err": 2.3095914890084083e-06,
+   "ok": true
+  },
+  {
+   "check": "GAMMA ANCHOR r0: his vs 03 independent value 3.1993e-5",
+   "ours": 3.199292610923949e-05,
+   "his": 3.1993e-05,
+   "rel_err": 2.3095914890084083e-06,
+   "ok": true
+  },
+  {
+   "check": "GAMMA ANCHOR r0: ours-vs-his",
+   "ours": 3.199292610923949e-05,
+   "his": 3.199292610923949e-05,
+   "rel_err": 0.0,
+   "ok": true
+  }
+ ],
+ "disagreements": [
+  "('American put premium (200 steps) vs +0.513', 0.5128646805226778, 0.513, 0.00026378065754826494)",
+  "('fixture bull call spread (sample) greeks setting 3 (delta)', \"[('value', 999.1367591737798, 999.1367612620436), ('delta', 0.0011143165620808304, 0.0011150536144697298), ('gamma', -0.0019917414081121578, -0.001991741408112165), ('theta/day', 0.12404876427807965, 0.12404875363120005), ('vega/pct', -0.0008250720572782418, -0.0008250720572782449)]\", '', 0.0006610017485571203)",
+  "('fixture iron condor 4-leg greeks setting 3 (delta)', \"[('value', -499.5680798801785, -499.5680819684169), ('delta', -0.0011143119800181012, -0.0011150490100959587), ('gamma', 0.001991729225004371, 0.0019917292250043782), ('theta/day', -0.062458099847579884, -0.062458089201027356), ('vega/pct', 0.0008250670104675641, 0.0008250670104675672)]\", '', 0.0006609844690092127)",
+  "('fixture own short put greeks setting 1 (value)', \"[('value', -0.4044996027667641, -0.40418178817946265), ('delta', 0.20556530616062663, 0.20558453688007683), ('gamma', -0.09953330446366897, -0.09953330446366897), ('theta/day', 0.08263263365766889, 0.08263243574922788), ('vega/pct', -0.2045204886239773, -0.2045204886239773)]\", '', 0.000786315951376668)",
+  "('fixture own bear put spread greeks setting 3 (value)', \"[('value', 3.384648135296626e-09, 3.334817948147341e-09), ('delta', -9.16411391216343e-09, -9.208744877753361e-09), ('gamma', 2.4366215952758416e-08, 2.4366215952758416e-08), ('theta/day', -1.0678598520698885e-08, -1.0677944358830402e-08), ('vega/pct', 1.009362151248513e-08, 1.009362151248513e-08)]\", '', 0.014942401031806968)"
+ ]
+}
