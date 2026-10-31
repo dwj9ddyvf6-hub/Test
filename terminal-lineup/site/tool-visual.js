@@ -118,13 +118,28 @@
         label: "Open interest summed at each strike in the freshest snapshot on record, biggest 16 strikes drawn. The marker is the price the snapshot was taken at." });
     },
     "correlation-web": function (d, s) {
+      /* Form cure (spec 14.2 relationship): this page's question is
+         how names relate, so the lead is a scatter, not tiles of one
+         session. Each dot is one of the first 24 names: across the
+         window on record, its average daily move (x) against how
+         widely its daily moves spread (y), both computed here from
+         the page's own returns_bp rows. The correlation record
+         itself is charted under The record. */
       var syms = d.symbols || [], rets = d.returns_bp || [];
-      var items = [];
+      var rows = [];
       for (var i = 0; i < Math.min(24, syms.length, rets.length); i++) {
         var r = rets[i];
-        if (Array.isArray(r) && r.length && isNum(r[r.length - 1])) items.push({ label: syms[i], value: r[r.length - 1] / 100 });
+        if (!Array.isArray(r) || r.length < 10) continue;
+        var vals = r.filter(isNum);
+        if (vals.length < 10) continue;
+        var mean = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length;
+        var sd = Math.sqrt(vals.reduce(function (a, b) { return a + (b - mean) * (b - mean); }, 0) / vals.length);
+        rows.push({ label: syms[i], x: Math.round(mean) / 100, y: Math.round(sd) / 100 });
       }
-      return tiles(items, s, "The latest session, name by name", "Each tile is one name's move in the latest session on record, in percent. Colour follows the move.");
+      if (rows.length < 3) return null;
+      return VisualKit.scatter({ rows: rows, session: s, title: "Average move against how widely moves spread, name by name",
+        label: "One dot per name among the first 24 on record, over the window this page uses. Right means a higher average daily move, in percent; higher means daily moves spread more widely, in percent. Each dot prints its name and both figures.",
+        xLabel: "average daily move, percent", yLabel: "spread of daily moves, percent" });
     },
     "dark-prints": function (d, s) {
       return tiles((d.funds || []).map(function (f) { return { label: f.symbol, value: f.pct }; }),
