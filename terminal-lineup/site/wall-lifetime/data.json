@@ -1115,6 +1115,7 @@
         "record_surface",
         "source",
         "state",
+        "subject_chart",
         "thin_rule",
         "tool"
       ]
@@ -1159,6 +1160,73 @@
   },
   "source": "The published morning map cards on record and the public grading of those cards against the completed trading sessions that followed them",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Expected move in dollars per index name.",
+      "rows": [
+        {
+          "name": "SPY (the big S&P 500 fund)",
+          "score": 4.31
+        },
+        {
+          "name": "QQQ (the big Nasdaq-100 fund)",
+          "score": 9.54
+        },
+        {
+          "name": "IWM (the big small-company fund)",
+          "score": 2.17
+        }
+      ],
+      "source": "live.names[].expected_move_price",
+      "title": "Expected move per index, dollars"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Share of episodes whose level was touched in one session, per index and level.",
+      "rows": [
+        {
+          "name": "IWM call_wall",
+          "score": 60.0
+        },
+        {
+          "name": "IWM flip",
+          "score": 0.0
+        },
+        {
+          "name": "IWM put_wall",
+          "score": 0.0
+        },
+        {
+          "name": "QQQ call_wall",
+          "score": 20.0
+        },
+        {
+          "name": "QQQ flip",
+          "score": 0.0
+        },
+        {
+          "name": "QQQ put_wall",
+          "score": 20.0
+        },
+        {
+          "name": "SPY call_wall",
+          "score": 0.0
+        },
+        {
+          "name": "SPY flip",
+          "score": 0.0
+        },
+        {
+          "name": "SPY put_wall",
+          "score": 0.0
+        }
+      ],
+      "source": "history.episodes[].touched_1 share",
+      "title": "Levels touched within one session, percent"
+    },
+    "version": 1
+  },
   "thin_rule": "Below 30 graded, counts only: no percentage and no score is drawn from a handful of tests.",
   "tool": "Wall Lifetime Forecaster"
 }
