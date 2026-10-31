@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow Engine: the options flow scoring rule, explained and worked through real alerts</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .proving{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 16px;font-size:15px;color:#23405e}
+  .proving strong{color:var(--ink)}
+  .rule{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .rule h2{margin:0 0 8px;font-size:18px}
+  .rule p{margin:0 0 8px}
+  .rule ol{margin:0 0 10px;padding-left:22px}
+  .rule li{margin:0 0 6px}
+  .rule li strong{font-weight:600}
+  .grading{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 22px;font-size:15px;color:#23405e}
+  .grading strong{color:var(--ink)}
+  .example{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .example h2{margin:0 0 4px;font-size:19px}
+  .example .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .example .top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .example .when{font-weight:700;font-size:15.5px;white-space:nowrap}
+  .example .contract{font-size:16px;font-weight:600}
+  .example .code{color:var(--faint);font-size:13px}
+  .example .facts{margin-left:auto;font-size:14px;color:var(--soft);white-space:nowrap}
+  .example .facts strong{color:var(--ink)}
+  .example p{margin:4px 0;font-size:14.5px;color:var(--soft)}
+  .example p strong{color:var(--ink);font-weight:600}
+  .example p.split{margin-top:8px}
+  .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:20px;
+       padding:0 8px;white-space:nowrap}
+  .tag.golden{color:#6b4e12;border:1px solid var(--warn-line);background:var(--warn-bg)}
+  .tag.unusual{color:var(--accent);border:1px solid var(--accent)}
+  .dir-up{color:var(--up);font-weight:600}
+  .dir-down{color:var(--down);font-weight:600}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Flow Engine</h1>
+    <p class="job">One job: explain the scoring rule that flags unusual options prints, part by part in plain words, then work it through real alerts from the freshest trading day so you can see exactly what the rule saw.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest worked examples&hellip;</p>
+
+  <div id="proving" class="proving" hidden></div>
+
+  <section class="rule" id="rule" hidden>
+    <h2>The scoring rule, in plain words</h2>
+    <p id="rule-intro"></p>
+    <ol id="rule-parts"></ol>
+    <p id="rule-bands"></p>
+    <p id="rule-published"></p>
+    <p id="rule-golden"></p>
+  </section>
+
+  <div id="grading" class="grading" hidden></div>
+  <main id="examples"></main>
+
+  <footer>
+    <p>The alerts themselves, all 75 of them for the freshest day, are on the <a href="../flow-tape/">Flow Tape</a>, biggest money first. This page works through four of them.</p>
+    <p>How to read a direction: a bought call or a sold put points up, a bought put or a sold call points down. Which side of the market a print hit is judged against the latest available quote, not the quote at the exact moment of the print, so on a fast-moving contract the direction read can be wrong. Treat it as a read, not a fact.</p>
+    <p><a href="../">All the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var provingEl = document.getElementById("proving");
+  var ruleEl = document.getElementById("rule");
+  var gradingEl = document.getElementById("grading");
+  var examplesEl = document.getElementById("examples");
+
+  function fmtMoney(v){
+    return "$" + Number(v).toLocaleString("en-US",{maximumFractionDigits:0});
+  }
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function fmtTimeET(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleTimeString("en-US",{timeZone:"America/New_York",
+      hour:"numeric", minute:"2-digit", second:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function exampleHTML(a, breakdownNote){
+    var c = a.contract || {};
+    var contractWords = esc(a.underlying) + " " +
+      (c.kind === "call" ? "Call" : "Put") + ", " +
+      fmtPrice(c.strike) + " strike, expires " + fmtDateShort(c.expiry);
+    var tags = "";
+    if (a.golden_sweep) tags += ' <span class="tag golden">Golden sweep</span>';
+    if (a.unusual) tags += ' <span class="tag unusual">Unusual</span>';
+    var dirClass = a.direction === "bullish" ? "dir-up" :
+                   a.direction === "bearish" ? "dir-down" : "";
+    var h = '<section class="example"><h2>' + esc(a.pick) + '</h2>';
+    h += '<div class="top">' +
+      '<span class="when">' + esc(fmtTimeET(a.time_utc)) + '</span>' +
+      '<span class="contract">' + contractWords + '</span>' +
+      '<span class="code">' + esc(a.contract_code) + '</span>' + tags +
+      '<span class="facts">Heat score <strong>' + Number(a.heat_score).toFixed(1) +
+      '</strong> &middot; Band: <strong>' + esc(a.band) + '</strong></span></div>';
+    var dirSentence = a.direction === "neutral"
+      ? 'Its side gives <span>no clear direction</span> read.'
+      : 'Read as a bet that the index <span class="' + dirClass + '">' +
+        esc(a.direction_words) + '</span>.';
+    h += '<p><strong>' + Number(a.contracts).toLocaleString("en-US") +
+      ' contracts</strong> changed hands at ' + fmtPrice(a.price_per_contract) +
+      ' per contract, <strong>' + fmtMoney(a.premium_usd) + '</strong> in total. ' +
+      esc(a.side_words) + '. ' + dirSentence + '</p>';
+    h += '<p class="split">' + esc(breakdownNote) + '</p>';
+    h += '</section>';
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var examples = data.examples || [];
+      if (data.proving_state){
+        provingEl.innerHTML = "<strong>" + esc(data.proving_state) + ":</strong> " +
+          esc(data.proving_note) + " This page carries that state for the rule it explains.";
+        provingEl.hidden = false;
+      }
+      if (data.grading_note){
+        gradingEl.innerHTML = "<strong>Not yet graded:</strong> " + esc(data.grading_note);
+        gradingEl.hidden = false;
+      }
+      if (!data.rule || !examples.length){
+        meta.textContent = "";
+        examplesEl.innerHTML = '<div class="nodata">No worked examples have been published yet. ' +
+          'When a trading day\'s alerts are published, the rule and a small set of its real ' +
+          'alerts worked through it appear here, with the trading day named on them.</div>';
+        return;
+      }
+      document.getElementById("rule-intro").textContent = data.rule.intro;
+      document.getElementById("rule-parts").innerHTML =
+        (data.rule.components || []).map(function(c){
+          return "<li><strong>" + esc(c.name) + ":</strong> " + esc(c.words) + ".</li>";
+        }).join("");
+      document.getElementById("rule-bands").innerHTML =
+        "A print becomes an alert in one of two bands. " +
+        (data.rule.bands || []).slice(0, 2).map(function(b){
+          return "<strong>" + esc(b.name) + ":</strong> " + esc(b.words) + ".";
+        }).join(" ") + " " + esc((function(w){ return w.charAt(0).toUpperCase() + w.slice(1); })((data.rule.bands || [])[2].words)) + ".";
+      document.getElementById("rule-published").textContent = data.rule.published_words;
+      document.getElementById("rule-golden").textContent = data.golden_words || "";
+      ruleEl.hidden = false;
+      meta.textContent = "Worked examples from the trading day of " + fmtDateLong(data.session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + "." +
+        " Receipt: " + data.receipt.coverage + ".";
+      if (data.session < latestCompletedSession()){
+        showBanner("stale", "These worked examples are out of date. They come from the trading day of " +
+          fmtDateLong(data.session) + ", and a newer set has not been published yet. " +
+          "Treat them as the last published set, not today's.");
+      }
+      examplesEl.innerHTML = examples.map(function(a){
+        return exampleHTML(a, data.breakdown_note);
+      }).join("");
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The latest worked examples are not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
