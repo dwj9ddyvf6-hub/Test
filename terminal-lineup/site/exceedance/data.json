@@ -52460,6 +52460,7 @@
         "record_surface",
         "source",
         "state",
+        "subject_chart",
         "thin_cell_rule",
         "tool"
       ]
@@ -52508,6 +52509,105 @@
   },
   "source": "Daily prices for 1,833 names from the price history on record (399 trading days for the index funds, March 25, 2025 to October 23, 2026), and the expected-move bands published by the Corrected Band Engine from the same history.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Realised share per forecast, forecast beside it.",
+      "rows": [
+        {
+          "coverage": "forecast 33.5 percent",
+          "name": "EX1 on SPY",
+          "score": 35.9
+        },
+        {
+          "coverage": "forecast 9.3 percent",
+          "name": "EX2 on SPY",
+          "score": 10.1
+        },
+        {
+          "coverage": "forecast 29.9 percent",
+          "name": "DD on SPY",
+          "score": 22.0
+        },
+        {
+          "coverage": "forecast 41.3 percent",
+          "name": "EX1 on QQQ",
+          "score": 40.9
+        },
+        {
+          "coverage": "forecast 12.0 percent",
+          "name": "EX2 on QQQ",
+          "score": 16.2
+        },
+        {
+          "coverage": "forecast 28.6 percent",
+          "name": "DD on QQQ",
+          "score": 26.4
+        },
+        {
+          "coverage": "forecast 38.5 percent",
+          "name": "EX1 on IWM",
+          "score": 33.3
+        },
+        {
+          "coverage": "forecast 9.2 percent",
+          "name": "EX2 on IWM",
+          "score": 5.6
+        }
+      ],
+      "source": "history.cells[].realised_pct",
+      "title": "How often each big move actually happened"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Mean forecast percent per cell, realised beside it.",
+      "rows": [
+        {
+          "coverage": "realised 35.9 percent",
+          "name": "EX1 on SPY",
+          "score": 33.5
+        },
+        {
+          "coverage": "realised 10.1 percent",
+          "name": "EX2 on SPY",
+          "score": 9.3
+        },
+        {
+          "coverage": "realised 22.0 percent",
+          "name": "DD on SPY",
+          "score": 29.9
+        },
+        {
+          "coverage": "realised 40.9 percent",
+          "name": "EX1 on QQQ",
+          "score": 41.3
+        },
+        {
+          "coverage": "realised 16.2 percent",
+          "name": "EX2 on QQQ",
+          "score": 12.0
+        },
+        {
+          "coverage": "realised 26.4 percent",
+          "name": "DD on QQQ",
+          "score": 28.6
+        },
+        {
+          "coverage": "realised 33.3 percent",
+          "name": "EX1 on IWM",
+          "score": 38.5
+        },
+        {
+          "coverage": "realised 5.6 percent",
+          "name": "EX2 on IWM",
+          "score": 9.2
+        }
+      ],
+      "source": "history.cells[].mean_forecast_pct",
+      "title": "Forecast against realised, per cell"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any graded cell with fewer than 30 graded cases shows its count only, with no score.",
   "tool": "Exceedance Forecaster"
 }
