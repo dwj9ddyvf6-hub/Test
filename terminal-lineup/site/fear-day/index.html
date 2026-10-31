@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fear Day List: the fear days on record</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:16px;color:#23405e}
+  .def strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .group p strong{color:var(--ink);font-weight:600}
+  .big{font-size:19px;color:var(--ink)}
+  .big strong{font-size:26px}
+  table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:15px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line)}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  .thin{color:var(--faint);font-style:italic}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Fear Day List</h1>
+    <p class="job">One job: list the fear days on record, each with the fear reading that made it qualify, and what the following sessions did.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the record&hellip;</p>
+
+  <div class="def"><strong>What counts as a fear day:</strong> <span id="definition">a day when SPY fell more than 1.5%, or the fear gauge (the VIX) rose more than 15% in a day, closed at 25 or higher, or closed at 20 or higher on a day when SPY or QQQ fell.</span></div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p>How this page is built: the definition above is applied to the daily history actually on file, and a day is listed only when that history can judge it, with a session before it to compare against. What happened after a fear day is shown only when a study on the record has counted it.</p>
+    <p>Why some rows show no percentage: a count built on fewer than 30 events shows its counts only. A percentage on a handful of events reads as far more certain than it is, so it is left off until the count grows.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+  var defEl = document.getElementById("definition");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(v){ return Number(v).toLocaleString("en-US"); }
+  function signedPct(v){
+    if (v == null) return "Not on record";
+    var n = Number(v);
+    return (n > 0 ? "+" : "") + n.toLocaleString("en-US",
+      {minimumFractionDigits:1, maximumFractionDigits:1}) + "%";
+  }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function dayRowHTML(d){
+    var why = (d.qualified_by || []).join("; ");
+    return "<tr><td><strong>" + fmtDateLong(d.date) + "</strong></td>" +
+      '<td class="num">' + Number(d.fear_gauge_close).toLocaleString("en-US",
+        {minimumFractionDigits:2, maximumFractionDigits:2}) + "</td>" +
+      '<td class="num">' + signedPct(d.fear_gauge_change_pct) + "</td>" +
+      '<td class="num">' + signedPct(d.spy_change_pct) + "</td>" +
+      '<td class="num">' + signedPct(d.qqq_change_pct) + "</td>" +
+      "<td>" + esc(why.charAt(0).toUpperCase() + why.slice(1)) + "</td></tr>";
+  }
+  function daysTableHTML(days){
+    var h = "<table><thead><tr><th>Day</th>" +
+      '<th class="num">Fear gauge close</th><th class="num">Fear gauge that day</th>' +
+      '<th class="num">SPY that day</th><th class="num">QQQ that day</th>' +
+      "<th>Why it qualifies</th></tr></thead><tbody>";
+    h += days.map(dayRowHTML).join("");
+    h += "</tbody></table>";
+    return h;
+  }
+  function followThroughHTML(data){
+    var f = data.follow_through || {};
+    if (!f || f.state === "not_counted" || f.events == null && f.share == null){
+      return "<p><strong>What followed:</strong> no follow-through has been counted " +
+        "for these days by any study on the record, so none is shown. A day is " +
+        "listed here with its reading; what happened next is shown only once a " +
+        "study on the record has counted it.</p>";
+    }
+    var n = Number(f.events || 0);
+    if (data.thin || f.share == null){
+      return "<p><strong>What followed:</strong> counted on " + num(n) +
+        " fear days. Too few events for percentages: counts only.</p>";
+    }
+    return "<p><strong>What followed:</strong> on " + num(n) + " fear days, " +
+      num(f.positive || 0) + " (" +
+      (Number(f.share) * 100).toLocaleString("en-US",
+        {minimumFractionDigits:1, maximumFractionDigits:1}) +
+      "% of " + num(n) + ") ended higher after the counted stretch.</p>";
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      if (data.definition) defEl.textContent = data.definition.replace(/^A fear day is /, "");
+      var days = data.qualifying_days || data.days || [];
+      var hist = data.history || {};
+      var n = (data.events != null) ? Number(data.events) : days.length;
+
+      if (data.state === "published" && days.length){
+        meta.textContent = "Fear days on record through " +
+          fmtDateLong(days[days.length - 1].date) + ". Published " +
+          fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+        if (days[days.length - 1].date < latestCompletedSession()){
+          showBanner("stale", "This list is out of date. It runs through " +
+            fmtDateLong(days[days.length - 1].date) +
+            ", and a newer list has not been published yet. Treat it as the last published list, not today's.");
+        }
+        var h = '<section class="group"><h2>The fear days on record</h2>';
+        h += '<p class="receipt">Receipt: Published ' +
+          fmtTimestamp(data.receipt.published_at_utc) +
+          " &middot; Data behind it: " + esc(data.receipt.source) +
+          " &middot; Coverage: " + esc(data.receipt.coverage) + "</p>";
+        h += '<p class="big"><strong>' + num(n) + " fear days on record</strong></p>";
+        h += followThroughHTML(data);
+        if (data.thin){ h += '<p class="thin">Too few events for percentages: counts only.</p>'; }
+        h += daysTableHTML(days);
+        h += "</section>";
+        resultsEl.innerHTML = h;
+        return;
+      }
+
+      // Unpublished state: no fear-day study is on the record.
+      meta.textContent = data.published_at_utc
+        ? "Studies record dated " + fmtDateShort(data.studies_as_of) +
+          ", published " + fmtTimestamp(data.published_at_utc) +
+          ". Source: " + data.source + "."
+        : "";
+      var h2 = '<section class="group"><h2>No fear day list has been published yet</h2>';
+      if (data.receipt){
+        h2 += '<p class="receipt">Receipt: Published ' +
+          fmtTimestamp(data.receipt.published_at_utc) +
+          " &middot; Data behind it: " + esc(data.receipt.source) +
+          " &middot; Coverage: " + esc(data.receipt.coverage) + "</p>";
+      }
+      h2 += '<p class="big">' +
+        "The studies record on file contains no fear-day study, so there is no " +
+        "published list of fear days and no counted record of what followed them " +
+        "to show. Nothing is shown for a study that has not run.</p>";
+      if (hist.fear_gauge_readings != null){
+        h2 += "<p><strong>The history on file:</strong> " +
+          num(hist.fear_gauge_readings) + " daily readings of the fear gauge, from " +
+          fmtDateLong(hist.fear_gauge_from) + " to " + fmtDateLong(hist.fear_gauge_to) +
+          ", and " + num(hist.index_sessions) + " trading sessions for SPY and QQQ, from " +
+          fmtDateLong(hist.index_from) + " to " + fmtDateLong(hist.index_to) +
+          ". Of those sessions, " + num(hist.sessions_checked) +
+          " have a session before them in the record to compare against.</p>";
+      }
+      h2 += "</section>";
+
+      if (days.length){
+        h2 += '<section class="group"><h2>' +
+          (n === 1 ? "The one day in that history that meets the definition"
+                   : "The days in that history that meet the definition") + "</h2>";
+        h2 += '<p class="big"><strong>' + num(n) +
+          (n === 1 ? " qualifying day" : " qualifying days") +
+          "</strong> in the history on file.</p>";
+        h2 += daysTableHTML(days);
+        h2 += followThroughHTML(data);
+        h2 += '<p class="thin">Too few events for percentages: counts only.</p>';
+        h2 += "</section>";
+      } else if (hist.fear_gauge_readings != null){
+        h2 += '<section class="group"><h2>No qualifying day in that history</h2>' +
+          "<p>No day in the history on file meets the definition above.</p></section>";
+      }
+      resultsEl.innerHTML = h2;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The fear day record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
