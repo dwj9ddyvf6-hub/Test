@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vol Term Shape Forecaster: how much SPY and QQQ will move over the next week, month and three months</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Vol Term Shape Forecaster</h1>
+    <p class="job">One job: say how much SPY and QQQ are likely to move over the next week, month and three months, and which of those stretches is likely to move more.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading this week's movement bands&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  var HNAME={5:"Next 5 trading days (about a week)",21:"Next 21 trading days (about a month)",63:"Next 63 trading days (about three months)"};
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="This week's bands measured from the closing prices of "+fmtDate(data.as_of_session)+", for the trading days starting "+fmtShort(data.next_session)+". Source: "+data.source;
+    showBanner("stale","These bands are the newest ones on record. They are measured from the close of "+fmtDate(data.as_of_session)+", the last trading day in the price history on record, so treat them as the latest published weekly forecast, made before the next trading day opens.");
+    var live=data.live||{}, hist=data.history||{}, h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>This engine is new. Its live record starts this week, and it earns stronger language only from that record as it grows. It says how much prices are likely to move, never which way they will go.</p><p>How to read the numbers: movement is measured from how much the closing price actually changed, day to day, and stated as a yearly rate. A figure of 12% means prices have been moving at a pace that, kept up for a full year, would add up to about 12% of total movement. Bigger means jumpier. For each stretch, three figures are given: about 25 of every 100 stretches like this should end at or below the lower figure, about 50 at or below the middle figure, and about 75 at or below the upper figure.</p></section>';
+
+    (live.names||[]).forEach(function(n){
+      h+='<section class="card"><h2>'+esc(n.name)+'</h2><p class="sub">Measured from the close of '+fmtShort(n.close_date)+". Recent movement at a yearly rate: "+esc(n.recent_movement_pct)+"% (last 5 trading days: "+esc(n.trailing_week_pct)+"%, last 21 trading days: "+esc(n.trailing_month_pct)+"%.)</p>";
+      h+="<table><tr><th>Stretch</th><th>Lower figure (25 of 100)</th><th>Middle figure (50 of 100)</th><th>Upper figure (75 of 100)</th></tr>";
+      (n.horizons||[]).forEach(function(hz){
+        h+="<tr><td><strong>"+esc(HNAME[hz.sessions]||hz.sessions)+"</strong><br><span class='sub'>Through "+fmtShort(hz.horizon_close)+", built from "+esc(hz.training_cohorts)+" earlier weeks.</span></td><td>"+esc(hz.p25_pct)+"%</td><td><strong>"+esc(hz.p50_pct)+"%</strong></td><td>"+esc(hz.p75_pct)+"%</td></tr>";
+      });
+      h+="</table>";
+      var sh=n.shape||{};
+      h+="<h3>Which stretch moves more?</h3><p>The chance that the next 21 trading days move more, in total, than the next 5 trading days: <strong>"+esc(sh.p_pct)+"%</strong>. This week's reading rests on "+esc(sh.bucket_cohorts)+" earlier weeks in the same recent pattern (the last week "+(sh.recent_week_calmer?"was calmer than":"was at least as busy as")+" the last month), out of "+esc(sh.training_cohorts)+" earlier weeks in total, in which the month moved more "+esc(sh.overall_training_pct)+"% of the time.</p>";
+      h+="</section>";
+    });
+
+    var ip=live.implied_prior||{};
+    h+='<section class="card"><h2>One planned guide is missing, and the bands say so</h2><p>'+esc(ip.note||"")+"</p></section>";
+
+    h+='<section class="card"><h2>History, not live forecasts</h2><p>'+esc(hist.note||"")+'</p><p class="sub">History covered: '+fmtShort(hist.span_start)+" to "+fmtShort(hist.span_end)+" ("+esc(hist.sessions)+" trading days on record). For each figure, the share of past weeks whose actual movement landed at or below it is shown beside the share it promises. Below 30 graded weeks, a cell shows its count only.</p>";
+    ["SPY","QQQ"].forEach(function(sym){
+      h+="<h3>"+sym+"</h3><table><tr><th>Stretch</th><th>Figure</th><th>Promised</th><th>Actually at or below</th><th>Graded weeks</th></tr>";
+      [5,21,63].forEach(function(hor){
+        [25,50,75].forEach(function(level){
+          var cell=(hist.cells||[]).filter(function(c){return c.symbol===sym&&c.horizon===hor&&c.percentile===level;})[0];
+          if(!cell)return;
+          h+="<tr><td>"+(level===25?esc(HNAME[hor]||hor):"")+"</td><td>"+level+" of 100 figure</td><td>"+esc(cell.stated_pct)+"% of weeks</td><td>"+(cell.coverage_pct==null?esc(cell.graded)+" graded, count only":"<strong>"+esc(cell.coverage_pct)+"%</strong> ("+esc(cell.at_or_below)+" of "+esc(cell.graded)+")")+"</td><td>"+esc(cell.graded)+"</td></tr>";
+        });
+      });
+      h+="</table>";
+      var sc=(hist.shape_cells||[]).filter(function(c){return c.symbol===sym;})[0];
+      if(sc){
+        h+="<p>Shape call in history for "+sym+": graded on "+esc(sc.graded)+" past weeks. The month moved more than the week in "+(sc.event_pct==null?esc(sc.events)+" of them (count only)":esc(sc.events)+" of them ("+esc(sc.event_pct)+"%)")+". Score for how close the stated chances were: "+(sc.brier==null?"count only":esc(sc.brier))+" (0 would be perfect; a larger score means the chances were further from what happened).</p>";
+      }
+    });
+    h+="<p>"+esc(((hist.study_record||{}).note)||"")+"</p></section>";
+
+    var pn=live.per_name||{};
+    h+='<section class="card"><h2>Single stocks: still building history</h2><p>'+esc(pn.note||"")+'</p><p class="sub">Names on that record: '+esc(pn.names_on_record)+", fullest history "+esc(pn.fullest_readings)+" readings for one name, readings run from "+fmtShort(pn.oldest_date)+" to "+fmtShort(pn.freshest_date)+". Fresh readings needed per name before any single-stock band appears here: "+esc(pn.fresh_readings_needed)+". <strong>Stale record: nothing for single stocks is live.</strong></p></section>";
+
+    h+='<section class="card"><h2>The live record</h2><p class="count">'+esc(live.weekly_cohorts_recorded)+" of "+esc(live.kill_target_cohorts)+' weekly sets of forecasts</p><p>Individual forecasts recorded: '+esc(live.forecasts_recorded)+" (three movement bands and one which-stretch-moves-more call for each of SPY and QQQ, each week). Graded so far: "+esc(live.forecasts_graded)+", because none of the stretches they cover has happened yet in the price history on record.</p><p>"+esc(data.kill_criterion)+"</p><p>"+esc(data.thin_cell_rule)+"</p></section>";
+
+    main.innerHTML=h;
+  }).catch(function(){
+    meta.textContent="";
+    showBanner("missing","This week's movement bands are not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+  });
+})();
+</script>
+</body>
+</html>
