@@ -217,6 +217,7 @@
         "self_test",
         "source",
         "state",
+        "subject_chart",
         "thin_cell_rule",
         "tool"
       ]
@@ -254,6 +255,52 @@
   },
   "source": "The pin watch record checked 2026-10-30, the morning map card built 2026-10-31T06:07:55.997152+00:00 (its readings are for the session of 2026-10-30), the week ahead record assembled 2026-10-25 (coverage 2026-01-01 to 2027-12-31), the shipped daily price history (2025-03-25 to 2026-10-30) and the long daily fear-gauge file (1990-01-02 to 2026-10-01).",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Net pull in billions per 1 percent move, per fund.",
+      "rows": [
+        {
+          "coverage": "price 756.0, flip 768.82",
+          "name": "SPY",
+          "score": -3.94
+        },
+        {
+          "coverage": "price 690.71, flip 714.21",
+          "name": "QQQ",
+          "score": -2.87
+        },
+        {
+          "coverage": "price 279.75, flip 291.83",
+          "name": "IWM",
+          "score": -2.48
+        }
+      ],
+      "source": "readings.funds[].net_pull_billions",
+      "title": "Net pull per fund, billions"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Next-expiry pull in millions of dollars, per fund.",
+      "rows": [
+        {
+          "name": "SPY",
+          "score": -274.36
+        },
+        {
+          "name": "QQQ",
+          "score": -138.46
+        },
+        {
+          "name": "IWM",
+          "score": 21.08
+        }
+      ],
+      "source": "readings.funds[].next_expiry_pull_usd",
+      "title": "Pull at the next expiry, per fund"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any arm, and the plain near-pin row, with fewer than 30 graded weeks shows its count only, with no rate headline. The same holds for each fund's companion figures.",
   "tool": "Pin-or-Escape"
 }
