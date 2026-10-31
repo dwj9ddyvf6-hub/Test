@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earnings Calendar: who reports, and when</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --warn-bg:#fdf6e3; --warn-line:#e3cf8a; --warn-ink:#6b5510;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 8px;font-size:21px}
+  .group h2 .today{font-size:14px;color:var(--accent);font-weight:650}
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  td.sym{font-weight:650}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note p{margin:0}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Earnings Calendar</h1>
+    <p class="job">One job: show which companies are scheduled to report their earnings, and on what day, in date order.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the calendar&hellip;</p>
+  <div id="content"></div>
+
+  <footer>
+    <p>Only scheduled report dates are shown here. Reports that have already happened are not listed as upcoming; what companies did on their past report days is on the Earnings Drift Pane.</p>
+    <p><a href="../">Back to all the tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var banner = document.getElementById('banner');
+  var meta = document.getElementById('meta');
+  var content = document.getElementById('content');
+  var MONTHS = ['January','February','March','April','May','June','July',
+                'August','September','October','November','December'];
+  var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function parseD(s){ var p = String(s).split('-');
+    return new Date(+p[0], +p[1]-1, +p[2]); }
+  function fmtDate(s){ var d = parseD(s);
+    return DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' +
+      d.getDate() + ', ' + d.getFullYear(); }
+  function todayNY(){
+    try {
+      var parts = new Intl.DateTimeFormat('en-CA',
+        {timeZone:'America/New_York'}).formatToParts(new Date());
+      var o = {};
+      parts.forEach(function(p){ o[p.type] = p.value; });
+      return o.year + '-' + o.month + '-' + o.day;
+    } catch(e) {
+      var d = new Date();
+      function z(n){ return (n<10?'0':'')+n; }
+      return d.getFullYear() + '-' + z(d.getMonth()+1) + '-' + z(d.getDate());
+    }
+  }
+  function daysBetween(a, b){
+    return Math.round((parseD(b) - parseD(a)) / 86400000); }
+  function showBanner(kind, text){
+    banner.className = 'banner show ' + kind;
+    banner.textContent = text;
+  }
+  function fail(msg){
+    showBanner('missing', msg);
+    meta.textContent = '';
+    content.innerHTML = '';
+  }
+  function rowHTML(n){
+    var move = (n.expected_move === null || n.expected_move === undefined)
+      ? 'Not on record'
+      : esc(n.expected_move) + ' (priced by the options market)';
+    return '<tr><td class="sym">' + esc(n.symbol) + '</td><td>' +
+      move + '</td></tr>';
+  }
+  function tableHTML(list){
+    var h = '<table><tr><th>Company</th>' +
+      '<th>Priced expected move</th></tr>';
+    list.forEach(function(n){ h += rowHTML(n); });
+    return h + '</table>';
+  }
+
+  fetch('data.json').then(function(r){
+    if(!r.ok) throw new Error('missing');
+    return r.json();
+  }).then(function(d){
+    if(!d || !Array.isArray(d.names)){
+      fail('No earnings calendar has been published yet.');
+      return;
+    }
+    meta.textContent = 'Scheduled dates recorded on ' +
+      fmtDate(d.recorded_on) + ', covering ' + d.dated_names +
+      ' companies with a date on record (' + d.names_with_no_date +
+      ' more on record with no date scheduled, so they are not ' +
+      'listed). Source: ' + d.source + '.';
+    var today = todayNY();
+    var age = daysBetween(d.recorded_on, today);
+    if(age > 8){
+      showBanner('stale', 'This list is out of date. It was recorded ' +
+        'on ' + fmtDate(d.recorded_on) + ', ' + age +
+        ' days ago, and a list like this one is only fresh for 8 ' +
+        'days. The dates below are the last ones put on record; ' +
+        'some may have changed since.');
+    }
+    var h = '';
+    if(d.move_note){
+      h += '<div class="note"><p>' + esc(d.move_note) + '</p></div>';
+    }
+    var upcoming = d.names.filter(function(n){ return n.date >= today; });
+    if(!upcoming.length){
+      h += '<div class="nodata">No upcoming report dates are on ' +
+        'record. Every scheduled date in the records has already ' +
+        'passed, and no new list has been recorded yet.</div>';
+      content.innerHTML = h;
+      return;
+    }
+    var dates = [];
+    var byDate = {};
+    upcoming.forEach(function(n){
+      if(!byDate[n.date]){ byDate[n.date] = []; dates.push(n.date); }
+      byDate[n.date].push(n);
+    });
+    dates.forEach(function(dt){
+      h += '<div class="group"><h2>' + fmtDate(dt);
+      if(dt === today){ h += ' <span class="today">(today)</span>'; }
+      h += '</h2>' + tableHTML(byDate[dt]) + '</div>';
+    });
+    content.innerHTML = h;
+  }).catch(function(){
+    fail('The earnings calendar is not available right now.');
+  });
+})();
+</script>
+</body>
+</html>
