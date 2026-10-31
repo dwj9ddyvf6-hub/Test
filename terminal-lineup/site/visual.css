@@ -19,6 +19,7 @@
 .vk-pt,.vk-cur{fill:var(--accent)}
 .vk-dot{fill:var(--accent);opacity:.75}
 /* P3 Curve and P9 Line */
+.vk-note{font-size:11px;font-weight:600;fill:var(--ink)}
 .vk-line-path{fill:none;stroke:var(--accent);stroke-width:2}
 .vk-dashed{stroke-dasharray:6 4}
 .vk-bench{stroke:var(--faint);stroke-width:1.5}
@@ -69,21 +70,21 @@
 .vk-bar-down{fill:var(--down)}
 .vk-barlabel{fill:var(--ink);font-weight:600}
 .vk-fan-inner{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1}
-.vk-fan-outer{fill:#eef6f4;stroke:var(--line);stroke-width:1}
+.vk-fan-outer{fill:var(--fan-outer);stroke:var(--line);stroke-width:1}
 .vk-heat-pos{fill:var(--accent)}
 .vk-heat-neg{fill:var(--down)}
 .vk-zone{fill:none;stroke-width:13}
-.vk-zone-0{stroke:#b2595d}
-.vk-zone-1{stroke:#e0a458}
-.vk-zone-2{stroke:#098979}
-.vk-zone-3{stroke:#124f50}
+.vk-zone-0{stroke:var(--down)}
+.vk-zone-1{stroke:var(--zone-amber)}
+.vk-zone-2{stroke:var(--accent)}
+.vk-zone-3{stroke:var(--accent-deep)}
 .vk-gauge{max-width:300px}
 .vk-tl-line{stroke:var(--line);stroke-width:3}
-.vk-slice-0{fill:#098979}
-.vk-slice-1{fill:#123247}
-.vk-slice-2{fill:#5f9e96}
-.vk-slice-3{fill:#b2595d}
-.vk-slice-4{fill:#e0a458}
+.vk-slice-0{fill:var(--accent)}
+.vk-slice-1{fill:var(--navy)}
+.vk-slice-2{fill:var(--slice-teal)}
+.vk-slice-3{fill:var(--down)}
+.vk-slice-4{fill:var(--zone-amber)}
 .vk-legend{font-size:12.5px;fill:var(--ink)}
 /* Page layout (charts lead, record charted, status small, missing small) */
 .titlechip{display:inline-block;vertical-align:middle;margin-left:10px}
@@ -113,9 +114,9 @@
    Green while the page's data file is inside its cadence contract,
    amber once it is honestly past it, grey when the market is closed
    or the page is a study that only moves when it is re-run. */
-.liveind{display:inline-flex;align-items:center;gap:7px;margin-left:auto;font-size:13px;color:#cfe8e2;white-space:nowrap}
-.liveind .livedot{width:9px;height:9px;border-radius:50%;background:#2fbf71;flex:none}
-.liveind.stale{color:#f2c979}
-.liveind.stale .livedot{background:#e0a32e}
-.liveind.closed .livedot,.liveind.asof .livedot{background:#9db8b2}
+.liveind{display:inline-flex;align-items:center;gap:7px;margin-left:auto;font-size:13px;color:var(--topbar-mint);white-space:nowrap}
+.liveind .livedot{width:9px;height:9px;border-radius:50%;background:var(--live-dot);flex:none}
+.liveind.stale{color:var(--stale-ink)}
+.liveind.stale .livedot{background:var(--stale-dot)}
+.liveind.closed .livedot,.liveind.asof .livedot{background:var(--idle-dot)}
 .topbar .updated{margin-left:0}
