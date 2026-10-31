@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pin-or-Escape: whether the expiry pin holds, given the dealer's book</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Pin-or-Escape</h1>
+    <p class="job">One job: forecast whether the expiry pin holds, given the dealer's book, instead of publishing the pin level as if naming it were the forecast.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){if(!iso) return "none"; var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function card(title, inner){return '<section class="card"><h2>'+esc(title)+'</h2>'+inner+'</section>';}
+  function money(n){return "$"+Number(n).toLocaleString("en-US");}
+
+  fetch("data.json").then(function(r){if(!r.ok) throw new Error(r.status); return r.json();}).then(function(d){
+    meta.textContent="Price history checked through "+fmtDate(d.as_of)+". Source: "+d.source;
+    var out="";
+
+    out+=card("Still being proven", '<p class="sub">This tool is new and its own record is still being built. The pin level it tests has never been graded as a forecast anywhere: its honest starting expectation is untested, stated in advance, and this first year is the first test the pin claim has ever had. Its verdict needs '+esc(d.live.proving_target_weeks)+' counted weeks, with both arms filled.</p>');
+
+    // ---- The idea ----
+    out+=card("The idea", '<p>'+esc(d.idea)+'</p><p class="claim">'+esc(d.claim.words)+'</p>');
+
+    // ---- The two arms ----
+    var A=d.live.arm_a, B=d.live.arm_b, Base=d.live.baseline;
+    function rateCell(s){ return s.rate_pct==null ? esc(s.graded)+" graded (count only, too few for a rate)" : esc(s.rate_pct)+"% of "+esc(s.graded)+" graded weeks"; }
+    var arms='<table><thead><tr><th>Arm</th><th>When it forms</th><th>What it stakes</th><th>Record so far</th></tr></thead><tbody>'
+      +'<tr><td><strong>The pin holds</strong></td><td>The fund opens within 0.3% of the pin, the dealers\' net position is positive, and the premium for protection is in its cheaper half</td><td>Closes within &plusmn;0.25% of the pin in at least '+esc(d.claim.arm_a_claim_pct)+'% of weeks</td><td>'+esc(A.recorded)+' recorded, '+rateCell(A)+'</td></tr>'
+      +'<tr><td><strong>The pin fails more often</strong></td><td>The fund opens within 0.3% of the pin and the dealers\' net position is negative</td><td>Closes within &plusmn;0.25% of the pin in at most '+esc(d.claim.arm_b_claim_pct)+'% of weeks</td><td>'+esc(B.recorded)+' recorded, '+rateCell(B)+'</td></tr>'
+      +'<tr><td>Every near-pin morning, either way</td><td>The fund opens within 0.3% of the pin, whatever the dealers\' book says</td><td>The plain rate the two arms must beat or trail</td><td>'+esc(Base.recorded)+' recorded, '+rateCell(Base)+'</td></tr>'
+      +'</tbody></table><p class="sub">'+esc(d.companions.words)+'</p>';
+    out+=card("The two arms, with their stated rates", arms);
+
+    // ---- The failure score ----
+    var F=d.failure_score;
+    var partsList=Object.keys(F.parts).map(function(k){
+      return '<tr><td>'+esc(F.parts_words[k])+'</td><td>'+esc(F.parts[k])+'</td></tr>';
+    }).join("");
+    out+=card("The warning score, fixed in advance",
+      '<p class="sub">'+esc(F.words)+'</p>'
+      +'<p class="sub">For the next expiry ('+esc(fmtDate(d.readings.next_expiry))+'), only '+esc(F.parts_readable_today)+' of its 4 parts can be read today, because three of them need the pin itself. Its readable part for that day: '+(d.readings.next_expiry_events.length? esc(d.readings.next_expiry_events.map(function(e){return e.name;}).join(", ")) : 'no big scheduled event falls on that day, so that part adds no point')+'.</p>'
+      +'<table><thead><tr><th>Part of the score</th><th>Today</th></tr></thead><tbody>'+partsList+'</tbody></table>');
+
+    // ---- Today's reading ----
+    var P=d.pin_state, R=d.readings;
+    var t='<p class="sub"><strong>No pin today.</strong> '+esc(P.words)+'</p>'
+      +'<p class="sub">Pins on record: '+esc(P.pins_on_record)+'. Kept chain snapshots on record: '+esc(P.chain_snapshots_on_record)+'.</p>'
+      +'<p class="sub">What the morning map does hold, for the session of '+esc(fmtDate(d.map_session))+':</p>'
+      +'<table><thead><tr><th>Fund</th><th>Price</th><th>Dealers\' net position</th><th>Ceiling wall</th><th>Floor wall</th><th>Flip level</th></tr></thead><tbody>';
+    R.funds.forEach(function(f){
+      t+='<tr><td><strong>'+esc(f.fund)+'</strong></td><td>'+money(f.price)+'</td><td>'+esc(f.net_pull_sign)+' ('+(f.net_pull_billions<0?"&minus;":"")+'$'+esc(Math.abs(f.net_pull_billions))+'B per 1% move)</td><td>'+money(f.call_wall)+'</td><td>'+money(f.put_wall)+'</td><td>'+money(f.flip)+'</td></tr>';
+    });
+    t+='</tbody></table><p class="sub">None of those levels is a pin, and none is used as one. On every map session on record, all three funds\' net positions have been negative, so if a pin appeared today the second arm would be the one tested first.</p>';
+    var V=R.variance_premium;
+    t+='<p class="sub">'+esc(R.variance_words)+' Over the '+esc(V.sessions_computed)+' trading days where it can be worked out ('+esc(fmtDate(V.from))+' to '+esc(fmtDate(V.to))+'), its newest reading is '+esc(V.latest)+' against a middle of '+esc(V.middle_before_latest)+' for the days before it, so the newest day sits '+(V.latest_in_bottom_half? 'in' : 'outside')+' its cheaper half.</p>'
+      +'<p class="sub">Next weekly expiry on the map\'s own tables: '+esc(fmtDate(R.next_expiry))+'. '+(R.next_expiry_events.length? 'Big scheduled events that day: '+esc(R.next_expiry_events.map(function(e){return e.name+" ("+e.time_label+")";}).join(", "))+'.' : 'No big scheduled event falls on that day in the calendar on record (which covers central bank decisions, consumer prices and jobs reports).')+'</p>'
+      +'<p class="sub">Arms today: '+esc(d.arms_today.state)+'.</p>';
+    out+=card("Today's reading", t);
+
+    // ---- Live record ----
+    var L=d.live;
+    var l='<table><tbody>'
+      +'<tr><th>Weeks counted toward the verdict</th><td><span class="count">'+esc(L.weeks_counted)+'</span> of '+esc(L.proving_target_weeks)+'</td></tr>'
+      +'<tr><th>Forecasts written to the public record</th><td>'+esc(L.records_written)+'</td></tr>'
+      +'<tr><th>Forecasts graded so far</th><td>'+esc(L.records_graded)+'</td></tr>'
+      +'</tbody></table>'
+      +'<p class="sub">'+esc(L.wait)+'</p>'
+      +'<p class="sub">'+esc(d.thin_cell_rule)+'</p>';
+    out+=card("The live record", l);
+
+    out+=card("When this tool retires itself", '<p class="sub">'+esc(d.kill_criterion)+'</p>');
+
+    var T=d.self_test;
+    out+=card("The working, checked", '<p class="sub">Before anything is published, the pin reading, the closeness test, the arm assignment, the band test, the four-part warning score (including that only its calendar part can be read with no pin), the cheaper-half test, the companion figures and the comparison that decides retirement are run on hand-built cases whose answers are known in advance ('+esc(T.feature_cases_checked)+' checks, all matching), and a full expiry morning is written and counted on a throwaway copy of the public record ('+esc(T.ledger_rows_checked)+' rows there). Test records never enter the live record. Latest check: passed.</p>');
+
+    main.innerHTML=out;
+  }).catch(function(e){
+    banner.className="banner show missing";
+    banner.textContent="The latest figures could not be loaded. Nothing is shown rather than something out of date.";
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
