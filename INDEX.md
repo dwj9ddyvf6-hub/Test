@@ -4,7 +4,7 @@ Start here. This file is the map of the whole repository for a reader (human or 
 
 Total files indexed: 6266
 
-Indexed commit: `4d41c0868486085aeba63d78bc56b4f2d53d1287`. Generated at: 2026-10-31T19:10:58Z. Total size of indexed files (self entries excluded, their sizes are null): 210250663 bytes.
+Indexed commit: `a9da2dcf4e144a2c3d429fb5cadb14ed6ff03c17`. Generated at: 2026-10-31T20:17:14Z. Total size of indexed files (self entries excluded, their sizes are null): 210579541 bytes.
 
 ## What this repository is
 
@@ -25,7 +25,7 @@ A public library of trading strategies and the desk software around them: strate
 
 | Area | Files | Bytes | What it is |
 | --- | ---: | ---: | --- |
-| (root) | 9 | 237868 | Repository root: the README catalog front page, this index, the agent rules file, and the build notes for the newest sleeve families. |
+| (root) | 9 | 241157 | Repository root: the README catalog front page, this index, the agent rules file, and the build notes for the newest sleeve families. |
 | adapters | 29 | 111436 | Standalone desk adapters for recently built sleeves (one-bar, Trullas variants, Teddy ORB, PRZM and others), one file per sleeve. |
 | adapters3 | 265 | 133233 | The Aster adapter set: one adapter module per Aster sleeve variant, mirroring the sleeves they wire in. |
 | agentic-trade-desk | 55 | 280328 | The operational kit for running an agentic trade desk: a runnable skeleton, docs and templates. Paper trading only. |
@@ -44,7 +44,7 @@ A public library of trading strategies and the desk software around them: strate
 | research | 6 | 16775075 | Standalone research works. Home of the technical analysis study and practice archive (Markdown, PDF, DOCX and ZIP forms of the same work). |
 | sleeves | 569 | 5584627 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 269 | 527337 | Strategy cards: one card per catalogued strategy, grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json; they are not repeated in this prose map. |
-| terminal-lineup | 1398 | 46952273 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 1398 | 47277862 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 8 | 104508 | Repository-level regression blocker tests. |
 | tools | 1 | 0 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
@@ -101,7 +101,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`4d41c0868486085aeba63d78bc56b4f2d53d1287`) is listed in INDEX.json: 6266 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`a9da2dcf4e144a2c3d429fb5cadb14ed6ff03c17`) is listed in INDEX.json: 6266 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
