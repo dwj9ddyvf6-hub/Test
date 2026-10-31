@@ -1472,6 +1472,7 @@
         "record_surface",
         "source",
         "state",
+        "subject_chart",
         "thin_cell_rule",
         "tool",
         "window_note"
@@ -1517,6 +1518,133 @@
   },
   "source": "Daily closing prices from the price history on record (1,833 names, at most 404 trading days each, March 25, 2025 to October 30, 2026).",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Median sessions to settle, per name.",
+      "rows": [
+        {
+          "coverage": "move 82.4 percent",
+          "name": "AAON",
+          "score": 13.0
+        },
+        {
+          "coverage": "move 184.5 percent",
+          "name": "ABR",
+          "score": 15.0
+        },
+        {
+          "coverage": "move 36.8 percent",
+          "name": "ADP",
+          "score": 22.0
+        },
+        {
+          "coverage": "move 36.5 percent",
+          "name": "AME",
+          "score": 25.0
+        },
+        {
+          "coverage": "move 54.7 percent",
+          "name": "AN",
+          "score": 11.0
+        },
+        {
+          "coverage": "move 101.9 percent",
+          "name": "ASX",
+          "score": 28.0
+        },
+        {
+          "coverage": "move 234.1 percent",
+          "name": "AVEX",
+          "score": 15.0
+        },
+        {
+          "coverage": "move 107.9 percent",
+          "name": "BFAM",
+          "score": 15.0
+        },
+        {
+          "coverage": "move 58.7 percent",
+          "name": "BTSG",
+          "score": 11.0
+        },
+        {
+          "coverage": "move 116.8 percent",
+          "name": "CACC",
+          "score": 15.0
+        },
+        {
+          "coverage": "move 51.7 percent",
+          "name": "CBOE",
+          "score": 15.0
+        },
+        {
+          "coverage": "move 97.1 percent",
+          "name": "CCXI",
+          "score": 15.0
+        }
+      ],
+      "source": "live.names[].median_sessions",
+      "title": "Days for the spike to settle, per name"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Movement percent per name in the live library.",
+      "rows": [
+        {
+          "name": "AAON",
+          "score": 82.4
+        },
+        {
+          "name": "ABR",
+          "score": 184.5
+        },
+        {
+          "name": "ADP",
+          "score": 36.8
+        },
+        {
+          "name": "AME",
+          "score": 36.5
+        },
+        {
+          "name": "AN",
+          "score": 54.7
+        },
+        {
+          "name": "ASX",
+          "score": 101.9
+        },
+        {
+          "name": "AVEX",
+          "score": 234.1
+        },
+        {
+          "name": "BFAM",
+          "score": 107.9
+        },
+        {
+          "name": "BTSG",
+          "score": 58.7
+        },
+        {
+          "name": "CACC",
+          "score": 116.8
+        },
+        {
+          "name": "CBOE",
+          "score": 51.7
+        },
+        {
+          "name": "CCXI",
+          "score": 97.1
+        }
+      ],
+      "source": "live.names[].movement_pct",
+      "title": "Spike size on record, per name"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any graded group with fewer than 30 graded cases shows its count only, with no percentage and no error figure.",
   "tool": "Own-Volatility Normalisation Clock",
   "window_note": "The original design judges each stock against three years of its own past. Only about nineteen months of daily history is on record here, so this clock judges each stock against all of its own past that exists, once at least six months of its own readings exist. Stocks without six months of readings are left out and counted."
