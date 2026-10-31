@@ -99,6 +99,115 @@ MOVE_NOTE_PRICED = ("A priced expected move is shown for every name "
                     "record does not cover are marked not on record.")
 PRICED_MOVES_PATH = os.path.join(HERE, "earnings-record",
                                  "priced_moves.json")
+REALISED_PATH = os.path.join(HERE, "earnings-calendar",
+                             "realised_moves.json")
+EARNINGS_RECORD_PATH = os.path.join(HERE, "earnings-record",
+                                    "record.json")
+PANEL_PATH = os.path.expanduser(
+    "~/workspace/morgue/data_cache/deep_bars.json")
+REALISED_SOURCE_WORDS = (
+    "Realised moves computed from the price history on record in "
+    "this lane (the DEEP panel): the close of the first session on "
+    "or after the report date against the close just before it. "
+    "A name enters this record only when a calendar record this "
+    "lane holds carries its report date in the past, and, for the "
+    "seeded rows, the lane's earnings record confirms the report "
+    "with a reported figure on the same date. An expected move is "
+    "carried only where the priced move record priced that name "
+    "before it reported; otherwise none is shown.")
+
+
+def _realised_move(closes, day):
+    dates = sorted(closes)
+    sess = [d for d in dates if d >= day]
+    prior = [d for d in dates if d < day]
+    if not sess or not prior or not closes[prior[-1]]:
+        return None
+    return {"realised_move_pct": round(
+                (closes[sess[0]] / closes[prior[-1]] - 1) * 100, 4),
+            "session_date": sess[0]}
+
+
+def build_realised(names, recorded_on, priced):
+    """The realised record (cure 2026-10-31), kept in an accrual
+    store so a name's expected move, priced before it reported,
+    survives the calendar rotating forward. Rows are append-only:
+    a row once computed is never recomputed or overwritten.
+    Returns the full row list for the page, or None via fail()."""
+    candidates = {}
+    for n in names or []:
+        if n["date"] < recorded_on and n.get("expected_move"):
+            try:
+                exp = float(str(n["expected_move"]).rstrip("%"))
+            except ValueError:
+                exp = None
+            candidates[(n["symbol"], n["date"])] = exp
+    for sym, entry in (priced or {}).items():
+        day = entry.get("report_date")
+        pct = entry.get("priced_move_pct")
+        if isinstance(day, str) and day < recorded_on and \
+                isinstance(pct, (int, float)) and \
+                not isinstance(pct, bool):
+            candidates.setdefault((sym, day), float(pct))
+    # Seeded past reports: the lane's earnings record confirms the
+    # report (a reported figure on that date) and a legacy calendar
+    # record this producer already reads carries the same date.
+    try:
+        legacy = {}
+        for path in RECORD_PATHS:
+            doc, err = load_record(path)
+            if err:
+                raise ValueError(err)
+            for name, value in doc.items():
+                if name != "updated_ts" and value:
+                    legacy.setdefault(name, set()).add(value)
+        erec = load_json(EARNINGS_RECORD_PATH)
+        for sym, entry in (erec.get("names") or {}).items():
+            for rep in entry.get("reports") or []:
+                day = rep.get("report_date")
+                if isinstance(day, str) and day < recorded_on and \
+                        rep.get("eps_actual") is not None and \
+                        day in legacy.get(sym, set()):
+                    candidates.setdefault((sym, day), None)
+    except (OSError, ValueError) as exc:
+        return fail(f"the realised record's seed records could "
+                    f"not be read: {exc}")
+    store = {"source": REALISED_SOURCE_WORDS, "rows": []}
+    if os.path.exists(REALISED_PATH):
+        try:
+            store = load_json(REALISED_PATH)
+        except (OSError, ValueError) as exc:
+            return fail(f"the realised move record could not be "
+                        f"read: {exc}")
+    have = {(r["symbol"], r["report_date"]) for r in store["rows"]}
+    missing = [k for k in sorted(candidates) if k not in have]
+    if missing:
+        sys.path.insert(0, HERE)
+        from deep_panel_reader import DeepPanelReader
+        reader = DeepPanelReader(PANEL_PATH, log=False)
+        cache = {}
+        for sym, day in missing:
+            if sym not in cache:
+                cache[sym] = ({row[0]: row[4] for row in reader[sym]}
+                              if sym in reader else {})
+            got = _realised_move(cache[sym], day)
+            if got is None:
+                continue
+            store["rows"].append({
+                "symbol": sym, "report_date": day,
+                "expected_move_pct": candidates[(sym, day)],
+                **got})
+    store["rows"].sort(key=lambda r: (r["report_date"], r["symbol"]))
+    tmp = REALISED_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps(store, indent=2, sort_keys=True) + "\n")
+    os.replace(tmp, REALISED_PATH)
+    return store["rows"]
+
+
+def load_json(path):
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
 
 
 def load_priced_moves():
@@ -203,8 +312,13 @@ def build_fresh():
                     "in its window")
     priced_count = sum(1 for n in names
                        if n["expected_move"] is not None)
+    realised = build_realised(names, stamp[:10], priced)
+    if realised is None:
+        return None
     return {
         "tool": "Earnings Calendar",
+        "realised_moves": realised,
+        "realised_count": len(realised),
         "source": FRESH_SOURCE_WORDS,
         "recorded_at": stamp,
         "recorded_on": stamp[:10],
@@ -290,9 +404,14 @@ def build():
         return fail("the records carry no dated names at all")
     priced_count = sum(1 for n in names
                        if n["expected_move"] is not None)
+    realised = build_realised(names, recorded_at[:10], priced)
+    if realised is None:
+        return None
 
     return {
         "tool": "Earnings Calendar",
+        "realised_moves": realised,
+        "realised_count": len(realised),
         "source": SOURCE_WORDS,
         "recorded_at": recorded_at,
         "recorded_on": recorded_at[:10],
