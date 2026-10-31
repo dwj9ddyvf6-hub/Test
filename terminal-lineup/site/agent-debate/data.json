@@ -171,7 +171,6 @@
       "keys_present": [
         "counts",
         "execution_pricing",
-        "explanation",
         "feed",
         "funds",
         "how_counted",
@@ -181,11 +180,10 @@
         "proving_state",
         "published_at_utc",
         "receipt",
-        "record_surface",
         "session",
+        "session_history",
         "session_long",
         "source",
-        "tape_freshness",
         "tool"
       ]
     },
@@ -219,6 +217,28 @@
     "version": 1
   },
   "session": "2026-10-30",
+  "session_history": [
+    {
+      "session": "2026-10-30",
+      "values": [
+        {
+          "falling": 5,
+          "rising": 1,
+          "symbol": "SPY"
+        },
+        {
+          "falling": 6,
+          "rising": 0,
+          "symbol": "QQQ"
+        },
+        {
+          "falling": 5,
+          "rising": 1,
+          "symbol": "IWM"
+        }
+      ]
+    }
+  ],
   "session_long": "Friday, October 30, 2026",
   "source": "The Second Opinion's readings for the three index funds, the Morning Map's walls and flip levels, the Flow Board's net premium figures and the Regime Dial's published market reading, each read exactly as published",
   "subject_chart": {
@@ -245,14 +265,30 @@
       "source": "funds[].count_rising-count_falling",
       "title": "The debate, per index fund: net stance"
     },
-    "record": null,
+    "record": {
+      "kind": "ranked",
+      "label": "The same net-stance picture, labelled with the session on record. Past sessions were not kept; the record accrues from this session forward.",
+      "rows": [
+        {
+          "coverage": "1 rising, 5 falling",
+          "name": "SPY",
+          "score": -4
+        },
+        {
+          "coverage": "0 rising, 6 falling",
+          "name": "QQQ",
+          "score": -6
+        },
+        {
+          "coverage": "1 rising, 5 falling",
+          "name": "IWM",
+          "score": -4
+        }
+      ],
+      "source": "funds[].count_rising-count_falling (session record)",
+      "title": "The debate on record, this session"
+    },
     "version": 1
-  },
-  "tape_freshness": {
-    "consumer_session": "2026-10-30",
-    "note": "this consumer's headline session is the scored session it debates; its tape figures are joined at the freshest tape session and its refresh fail-closes when that join is absent",
-    "state": "current",
-    "tape_session": "2026-10-30"
   },
   "tool": "Agent Debate"
 }
