@@ -1,0 +1,303 @@
+{
+  "definition": "A pullback is a dip in a stock that is in a rising trend. This tool judges how deep the dip is by comparing it with that same stock's own past dips, not with a fixed band that is the same for every stock.",
+  "distribution": {
+    "depth_deciles_at_events": [
+      2.826,
+      3.929,
+      5.126,
+      6.305,
+      7.428,
+      8.62,
+      10.002,
+      12.651,
+      22.333
+    ],
+    "events_by_bucket": {
+      "rank_80_to_90": {
+        "censored_at_60": 3990,
+        "events": 8022,
+        "fwd20_counted": 7989,
+        "fwd20_mean_rel_pct": -1.045,
+        "fwd20_median_rel_pct": -1.288,
+        "fwd60_counted": 7918,
+        "fwd60_mean_rel_pct": -4.072,
+        "recovered_within_60": 4032,
+        "recovery_median_sessions": 13.0
+      },
+      "rank_90_to_95": {
+        "censored_at_60": 723,
+        "events": 1513,
+        "fwd20_counted": 1495,
+        "fwd20_mean_rel_pct": -3.427,
+        "fwd20_median_rel_pct": -2.358,
+        "fwd60_counted": 1471,
+        "fwd60_mean_rel_pct": -9.972,
+        "recovered_within_60": 790,
+        "recovery_median_sessions": 9.0
+      },
+      "rank_95_to_100": {
+        "censored_at_60": 877,
+        "events": 1766,
+        "fwd20_counted": 1750,
+        "fwd20_mean_rel_pct": -6.489,
+        "fwd20_median_rel_pct": -4.535,
+        "fwd60_counted": 1730,
+        "fwd60_mean_rel_pct": -11.202,
+        "recovered_within_60": 889,
+        "recovery_median_sessions": 8
+      }
+    },
+    "fwd20_counted": 11234,
+    "fwd20_mean_rel_pct": -2.21,
+    "fwd20_median_rel_pct": -1.711,
+    "fwd60_counted": 11119,
+    "fwd60_mean_rel_pct": -5.962,
+    "state": "counted"
+  },
+  "events": 11301,
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its current reading is from 2026-10-31. Its study record, the history it was built and checked on, holds 37 counted items on file. Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule.",
+    "summary": "Tell you whether a dip in a stock is deep or shallow compared with that same stock's own past dips."
+  },
+  "feed": "forecast_ledger",
+  "history": {
+    "from": "2025-03-25",
+    "names": 1833,
+    "sessions": 404,
+    "to": "2026-10-30"
+  },
+  "price_basis": "close",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "published_at_utc": "2026-10-31T06:27:45Z",
+  "receipt": {
+    "coverage": "The terminal's own pullback study counted 11301 events over 9439 names with at least 900 sessions on the deep price history (panel of 15815 names to 2026-10-30); 1 pullback signals on the panel's freshest session. No pullback study stands on the studies record dated 2026-10-31; this study is the terminal's own and is stated as such.",
+    "published_at_utc": "2026-10-31T06:27:45Z",
+    "source": "The terminal's own pullback study on the deep price history on file, beside the published studies record and the daily price history on file"
+  },
+  "record_surface": {
+    "calibration_record": null,
+    "current_reading": {
+      "as_of": "2026-10-31T06:27:45Z",
+      "keys_present": [
+        "definition",
+        "distribution",
+        "events",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "history",
+        "price_basis",
+        "provenance",
+        "published_at_utc",
+        "receipt",
+        "record_surface",
+        "recovery",
+        "research_record",
+        "signals_published",
+        "source",
+        "state",
+        "studies_as_of",
+        "study",
+        "thin",
+        "thin_threshold",
+        "tool",
+        "unproven_label"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": null,
+    "missing": {
+      "what_and_when": "Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 0,
+          "path": "/history"
+        },
+        {
+          "items": 34,
+          "path": "/study"
+        },
+        {
+          "items": 3,
+          "path": "/research_record"
+        }
+      ],
+      "total_items_counted": 37
+    },
+    "version": 1
+  },
+  "recovery": {
+    "censored_at_60": 5590,
+    "recovered_within_60": 5711,
+    "recovery_median_sessions": 12,
+    "state": "counted"
+  },
+  "research_record": {
+    "dataset": "Deep daily price history, 2016 to 2026, 6,385 names including delisted ones",
+    "results": [
+      {
+        "era": "2016 to 2022",
+        "rank_correlation": 0.026,
+        "strength": 4.3,
+        "window_sessions": 20
+      },
+      {
+        "era": "2023 onward",
+        "rank_correlation": 0.031,
+        "strength": 4.3,
+        "window_sessions": 20
+      },
+      {
+        "era": "2023 onward",
+        "rank_correlation": 0.062,
+        "strength": 9.8,
+        "window_sessions": 60
+      }
+    ],
+    "setting": "Rising-trend names on fear days, each name's move measured against the same day's average move"
+  },
+  "signals_published": 1,
+  "source": "The terminal's own pullback study on the deep price history on file, beside the published studies record and the daily price history on file",
+  "state": "published",
+  "studies_as_of": "2026-10-31",
+  "study": {
+    "engine_24_depth_leg": {
+      "bar_note": "Engine 24's +0.10R claim bar is stated in the picker replay's risk units, not in this leg's typical range units, so no bar is applied to these figures; the engine's own live grading judges its claim in its own units.",
+      "cohort_events": 400,
+      "cohort_mean_fwd20_r": -0.6834,
+      "control_mean_fwd20_r": -0.0522,
+      "control_name_days": 119954,
+      "difference_r": -0.6313,
+      "fear_days_in_gauge_era": 81,
+      "fear_days_with_cohort": 76,
+      "note": "Deepest fifth cohort against the same day rising trend control on the DEEP panel, 20 session forward returns in units of each name's own typical range percent. Fear days use the Fear Day List's own definition over the fear gauge record from 2024-10-30.",
+      "original_form_computable_events": 1755,
+      "state": "recorded"
+    },
+    "engine_29_depth_leg": {
+      "cohort_events": 402,
+      "hazard_pct_sessions_1_to_21": [
+        4.48,
+        1.04,
+        2.63,
+        1.62,
+        2.2,
+        2.25,
+        2.01,
+        1.76,
+        2.39,
+        0.92,
+        2.16,
+        0.95,
+        1.27,
+        1.29,
+        1.63,
+        1.99,
+        1.02,
+        0.34,
+        1.37,
+        2.79,
+        1.08
+      ],
+      "median_settle_sessions": 20.0,
+      "note": "First passage race for the fear day deepest fifth cohort on the DEEP panel: one expected move is each name's typical range percent times the square root of 20, settled on closes within 60 sessions.",
+      "race": {
+        "at_10": {
+          "down_first_pct": 5.72,
+          "neither_pct": 80.6,
+          "up_first_pct": 13.68
+        },
+        "at_21": {
+          "down_first_pct": 10.45,
+          "neither_pct": 68.66,
+          "up_first_pct": 20.9
+        },
+        "at_5": {
+          "down_first_pct": 4.73,
+          "neither_pct": 88.56,
+          "up_first_pct": 6.72
+        },
+        "at_60": {
+          "down_first_pct": 25.12,
+          "neither_pct": 39.8,
+          "up_first_pct": 35.07
+        }
+      },
+      "state": "recorded",
+      "unsettled_at_60": 160
+    },
+    "events_by_bucket": {
+      "rank_80_to_90": {
+        "censored_at_60": 3990,
+        "events": 8022,
+        "fwd20_counted": 7989,
+        "fwd20_mean_rel_pct": -1.045,
+        "fwd20_median_rel_pct": -1.288,
+        "fwd60_counted": 7918,
+        "fwd60_mean_rel_pct": -4.072,
+        "recovered_within_60": 4032,
+        "recovery_median_sessions": 13.0
+      },
+      "rank_90_to_95": {
+        "censored_at_60": 723,
+        "events": 1513,
+        "fwd20_counted": 1495,
+        "fwd20_mean_rel_pct": -3.427,
+        "fwd20_median_rel_pct": -2.358,
+        "fwd60_counted": 1471,
+        "fwd60_mean_rel_pct": -9.972,
+        "recovered_within_60": 790,
+        "recovery_median_sessions": 9.0
+      },
+      "rank_95_to_100": {
+        "censored_at_60": 877,
+        "events": 1766,
+        "fwd20_counted": 1750,
+        "fwd20_mean_rel_pct": -6.489,
+        "fwd20_median_rel_pct": -4.535,
+        "fwd60_counted": 1730,
+        "fwd60_mean_rel_pct": -11.202,
+        "recovered_within_60": 889,
+        "recovery_median_sessions": 8
+      }
+    },
+    "latest_session": "2026-10-30",
+    "latest_signals": [
+      {
+        "depth": 610.0,
+        "rank": 90.42,
+        "symbol": "LCFYW"
+      }
+    ],
+    "min_sessions": 900,
+    "names_too_short": 6373,
+    "original_form": {
+      "agreement_pct": 47.46,
+      "also_deepest_under_original": 833,
+      "computable_events": 1755
+    },
+    "panel_last_session": "2026-10-30",
+    "panel_names": 15815,
+    "universe_names": 9439
+  },
+  "thin": false,
+  "thin_threshold": 30,
+  "tool": "Pullback Norm",
+  "unproven_label": "New construction, still being proven: this is a new idea built by this terminal, it has not been proven yet, and no result from it is published until a study on the record has counted it."
+}
