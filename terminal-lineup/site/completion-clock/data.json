@@ -607,6 +607,7 @@
         "ship_date",
         "source",
         "state",
+        "subject_chart",
         "thin_cell_rule",
         "tool"
       ]
@@ -657,6 +658,134 @@
   "ship_date": "2026-10-29",
   "source": "the shipped daily price history (1,833 names, March 25, 2025 to October 23, 2026), the settled fear-day record, the earnings calendar on record, and the morning map card record",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "curve",
+      "label": "Share of groups completing at each step.",
+      "points": [
+        {
+          "x": "step 1",
+          "y": 0.0
+        },
+        {
+          "x": "step 2",
+          "y": 0.0
+        },
+        {
+          "x": "step 3",
+          "y": 0.0
+        },
+        {
+          "x": "step 4",
+          "y": 0.0
+        },
+        {
+          "x": "step 5",
+          "y": 0.0
+        },
+        {
+          "x": "step 6",
+          "y": 0.0
+        },
+        {
+          "x": "step 7",
+          "y": 0.0
+        },
+        {
+          "x": "step 8",
+          "y": 2.1
+        },
+        {
+          "x": "step 9",
+          "y": 4.3
+        },
+        {
+          "x": "step 10",
+          "y": 4.5
+        },
+        {
+          "x": "step 11",
+          "y": 0.0
+        },
+        {
+          "x": "step 12",
+          "y": 0.0
+        },
+        {
+          "x": "step 13",
+          "y": 0.0
+        },
+        {
+          "x": "step 14",
+          "y": 2.4
+        },
+        {
+          "x": "step 15",
+          "y": 4.9
+        },
+        {
+          "x": "step 16",
+          "y": 7.7
+        },
+        {
+          "x": "step 17",
+          "y": 2.8
+        },
+        {
+          "x": "step 18",
+          "y": 2.9
+        },
+        {
+          "x": "step 19",
+          "y": 0.0
+        },
+        {
+          "x": "step 20",
+          "y": 2.9
+        },
+        {
+          "x": "step 21",
+          "y": 6.1
+        }
+      ],
+      "source": "classes[0].hazard_pct",
+      "title": "When completions actually land"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Up-first percent at the longest race step, per class.",
+      "rows": [
+        {
+          "coverage": "down first 4.3 percent",
+          "name": "Fear day",
+          "score": 55.3
+        },
+        {
+          "coverage": "down first 3.7 percent",
+          "name": "Deep reset",
+          "score": 30.3
+        },
+        {
+          "coverage": "down first 6.5 percent",
+          "name": "Wall break",
+          "score": 27.5
+        },
+        {
+          "coverage": "down first 3.9 percent",
+          "name": "Earnings day",
+          "score": 26.1
+        },
+        {
+          "coverage": "down first 3.9 percent",
+          "name": "Big gap day",
+          "score": 20.5
+        }
+      ],
+      "source": "classes[].race[].up_first_pct",
+      "title": "Which side finished first, per class"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any picture built on fewer than 30 past groups shows its count and is labelled thin. A class with no past groups shows no picture at all.",
   "tool": "Completion Clock"
 }
