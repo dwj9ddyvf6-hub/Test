@@ -1,0 +1,122 @@
+{
+  "schema": "SHIPYARD_FE03_SOURCE_POLICY_MANIFEST_V1",
+  "policy_id": "FE03_DAILY_BREAKOUT_ACCEPTANCE_MATURED_V1",
+  "policy_sha256": "f980a2cbd47e51eea9e87b746df51b9f64df0cb4792221372a63de97d4eeedad",
+  "policy": {
+    "id": "FE03_DAILY_BREAKOUT_ACCEPTANCE_MATURED_V1",
+    "version": 1,
+    "origin": "NEW_FEATURE_POLICY",
+    "engine_id": "FE03",
+    "provider": "Alpaca Market Data",
+    "feed": "iex",
+    "adjustment": "split",
+    "timeframe": "1Day",
+    "currency": "USD",
+    "symbol_mapping": "Explicit asof=current acquisition New York date; current entity, not historical universe membership.",
+    "sessions": 505,
+    "calendar_lookback_days": 800,
+    "calendar": "Alpaca US equity official market calendar; America/New_York",
+    "completion_delay_ms": 900000,
+    "acquisition_budget_seconds": 25,
+    "per_request_timeout_seconds": 8,
+    "max_pages": 2,
+    "max_rows": 1000,
+    "max_response_bytes_per_request": 524288,
+    "episode_trigger": "For session u>=21, L[u]=max(high[u-20..u-1]); priorL=max(high[u-21..u-2]); one episode start iff close[u]>L[u] AND close[u-1]<=priorL. Episode ID is the symbol plus official session date. Trigger attempts within a five-session outcome window are distinct starts if they independently satisfy this rule; outcomes may overlap and are not independent observations.",
+    "candidate_window": "Choose the latest episode start u in the final six completed session positions [t-5..t], including an event that has matured exactly at t. A newer episode takes precedence; never fall back to an older candidate.",
+    "level": "The episode level is frozen as L[u]=max(high[u-20..u-1]) from exactly the prior20 official sessions; the candidate current close must remain >=L[u], otherwise return level_invalidated with no numeric score.",
+    "break_distance": "d[u]=ln(close[u]/L[u]). break_distance_z=(d[u]-mean(d[u-252..u-1]))/population_SD(d[u-252..u-1]); each historical d[k]=ln(close[k]/max(high[k-20..k-1])). Current and future rows are excluded from the normalizer.",
+    "volume_surprise": "volume_surprise_z=(ln(1+volume[u])-mean(ln(1+volume[u-20..u-1])))/population_SD(ln(1+volume[u-20..u-1])). Provider split-adjusted daily share volume; no percent conversion or clipping.",
+    "acceptance": "Across ALL observed post-crossing completed closes u+1..t, numerator=count(close[j]>=L[u]); denominator=t-u. Require3..5 observed post-crossing closes. Acceptance=numerator/denominator. Report denominator, any close<L[u], and whether a later close>=L[u] reclaimed after a breach. Equality is accepted.",
+    "current_setup": "A candidate is numeric only if latest completed close[t]>=L[u]. If close[t]<L[u], return level_invalidated; equality remains valid. If no episode starts in [t-5..t], return no_setup.",
+    "false_break": "A mature episode is false if any of its next5 official-session closes is < its own frozen L[u]; equality is not a failure. Denominator is every trigger episode with start u in the 479 possible date positions [21..t-5] of exactly505 rows, excluding the selected candidate by episode ID even when u=t-5 and its outcome is mature. Every denominator row has all five subsequent closes. Numerator is the exact count of such failures; rate=numerator/denominator.",
+    "minimum_mature_episodes": 20,
+    "sample_floor": "Require >=20 matured historical episode IDs after candidate exclusion. This is a provisional policy sample floor, not a precision claim, inferential minimum, calibration, statistical independence, or performance evidence. If unmet, report counts and abstain without a numeric rate or score.",
+    "dependencies": "History contains exactly505 consecutive completed official-calendar sessions. A failed/missing/duplicate/off-grid bar is not skipped, filled, or replaced. Any population SD <=1e-12 abstains; no epsilon floor.",
+    "units": "Natural-log price ratios; both *_z inputs are population z-scores (ddof=0); acceptance and false_break_rate are empirical ratios in [0,1]. OHLC prices are positive split-adjusted USD; volume is positive split-adjusted shares. No annualization, sample-ddof correction, imputation, epsilon, or feature clipping.",
+    "original_quality_contract": "The pinned catalog requires min_quality=0.2 per input. This provider adapter does not invent a quality score or rights attestation; source.quality_score and rights_attestation remain null. The scalar scorer wrapper is not the full Python FeatureObservation validator.",
+    "price_basis": "Split-adjusted, dividend-excluded provider prices; not total returns. Other corporate actions and historical revisions not independently checked.",
+    "source_age": "Report source age from latest eligible completed close separately against original catalog172800s maximum. A weekend/holiday source-age diagnostic never becomes a fresh observation; session-relative research is descriptive only. Refuse if latest returned close is older than7calendar days.",
+    "provenance": "Event clock u (price level, distance, volume surprise), acceptance window u+1..t, and latest source cutoff t are separately disclosed. False-break episodes are historical labels fully mature by t and candidate ID is explicitly excluded. Current event outcome is never part of its own false-break rate.",
+    "forecast_interpretation": "Unchanged fixed FE03 scorer on NEW conditionally accepted-breakout measurements; uncalibrated signed orientation only, not return magnitude, probability, edge, fill, trading permission, or a recommendation. Forecast horizon begins at latest source cutoff t, not event u."
+  },
+  "base_source_commit": "f45c8c8606ca86df479676baf238fa373d849aa5",
+  "feature_builder_status": "original source feature builder and native runtime were not recovered; this is a separate NEW research-only policy",
+  "original_catalog_contract": {
+    "engine_id": "FE03",
+    "name": "Breakout acceptance and survival",
+    "family": "Price/technical",
+    "target": "breakout continuation",
+    "target_unit": "forward_return_fraction",
+    "horizon": "1-5 sessions",
+    "forecast_unit": "signed_score",
+    "score_kind": "signed",
+    "score_semantics": "uncalibrated_signed_score_orientation",
+    "maturity": "CORE-RESEARCH",
+    "formula": "breakout",
+    "inputs": [
+      {
+        "name": "break_distance_z",
+        "unit": "z",
+        "max_age_seconds": 172800,
+        "min_quality": 0.2,
+        "value_range": null
+      },
+      {
+        "name": "acceptance",
+        "unit": "ratio",
+        "max_age_seconds": 172800,
+        "min_quality": 0.2,
+        "value_range": [
+          0,
+          1
+        ]
+      },
+      {
+        "name": "volume_surprise_z",
+        "unit": "z",
+        "max_age_seconds": 172800,
+        "min_quality": 0.2,
+        "value_range": null
+      },
+      {
+        "name": "false_break_rate",
+        "unit": "ratio",
+        "max_age_seconds": 172800,
+        "min_quality": 0.2,
+        "value_range": [
+          0,
+          1
+        ]
+      }
+    ],
+    "assumptions": [
+      "Break level is defined from data available before the forecast cutoff.",
+      "Output is a research estimate, not a calibrated probability or trade instruction."
+    ],
+    "kill_conditions": [
+      "No executable liquidity, unconfirmed bar, or high false-break rate.",
+      "Any point-in-time, quality, rights, or provenance failure forces abstention."
+    ],
+    "rea_trace": "REA synthesis: Price/technical / breakout family; vendor report inventory is traceability, not validation."
+  },
+  "source_policy_fingerprint": "2471ffa9a0cfcb614dc7ca317354b10fbf05bc755a8ac1878afe903c0a47b670",
+  "unchanged_scorer": {
+    "repository": "__UPSTREAM_REPOSITORY_URL__",
+    "commit": "f88c874656857841ba1d52c988b8210095949608",
+    "path": "research/forecast_engines"
+  },
+  "source_sha256": {
+    "research/forecast-features/fe03-breakout-v1.mjs": "583915b9b3f1bf1f67240c31ee8bbb56597f57f7fc6a47334ed86d4dcc43a914",
+    "research/forecast-features/fe03_breakout_v1.py": "a76d81d41df718b594327411785fc02bcb8b0f4678cbd858c55eebd6546fdd38",
+    "worker/forecast-fe03.js": "d0db965971af41c5e8ba3e8a1340a917bbb66881c5cc7e7901d72111a34c2d7b",
+    "worker/exchange-calendar.js": "765f3ed2fd250139b5d1637c3be3e7df99dfe4b3592a984746d225f4dc2c0414",
+    "dist/forecast-engines.mjs": "5d9f555d548e0e96df90bbde4b61b3daf32364ce869d3a4bef61ba58a7d6317e"
+  },
+  "hash_rules": {
+    "policy": "SHA256(UTF-8(JSON.stringify(FE03_BREAKOUT_POLICY))); declaration order",
+    "source_policy_fingerprint": "SHA256(UTF-8(JSON.stringify({policy_sha256,provider,feed,adjustment,timeframe,currency}))); declared field order",
+    "source_files": "SHA256 checked-in UTF-8/LF bytes; generated bundle digest excluded"
+  },
+  "notes": "The source policy preserves the exact original FE03 catalog input names, units, ranges, target and horizon, but constructs new measurements. The original scorer is unchanged and is not the complete Python FeatureObservation quality/rights validator. This output never asserts historical point-in-time availability, statistical independence, calibration or trading eligibility."
+}

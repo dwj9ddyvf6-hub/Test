@@ -1,0 +1,19 @@
+{
+  "schema": "SHIPYARD_FE27_FE30_PUBLIC_FEATURE_POLICY_MANIFEST_V1",
+  "policy_id": "FE27_FE30_PUBLIC_FEATURES_V1",
+  "policy_sha256": "1af3c6475a005827b28e42a5d90cdb4cec6649f7776a61d1fbc9677e296677d3",
+  "source_sha256": {
+    "research/forecast-features/fe27-30-public-v1.mjs": "d0833c1444dc5206cd7b3877e26644ab27eb611c036815c2d4177a532db9576f",
+    "worker/forecast-fe28.js": "e966cfafb727c4c6f82c71b7c2e26da796d69598c70cb44a5b185d181f05b224",
+    "research/forecast-features/xml-well-formedness-preflight-v1.mjs": "bddaa4e46155af42322800a55ce53529168abea3009c9c90e07c6abc2bc63c51"
+  },
+  "base_source_commit": "f87d90800fa10ecd6796a43e5863dca56c68e9f3",
+  "feature_builder_status": "separate NEW research-only public-source transforms; original FE27-FE30 feature builders, coefficients, and scorers unchanged",
+  "source_and_vintage_scope": "Exact source identities and clocks are retained where supplied. Current-revised BEA/BIS values are not promoted into historical point-in-time vintages. Only FE28 has a fixed no-credential public source capture route; FE27, FE29 and FE30 transforms require supplied captures and are not live-connected.",
+  "hash_rules": {
+    "policy": "SHA256(UTF-8(JSON.stringify(FE28_PUBLIC_POLICY))); declaration order",
+    "source_files": "SHA256 checked-in UTF-8/LF bytes; generated Worker bundle digest excluded"
+  },
+  "rights": "Public availability is not an independent redistribution or commercial-use rights attestation; BIS terms must be followed and other source-specific permissions remain unverified.",
+  "notes": "The FE28 source adapter, registry, catalog diagnostics, and partial diagnostic MCP tool are separately source-hashed in the generated Worker build. No added feed credential, subscription, account access, persistent write, public-feed publication, or original scorer invocation."
+}

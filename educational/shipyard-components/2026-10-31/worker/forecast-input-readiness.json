@@ -1,0 +1,281 @@
+{
+  "FE01": {
+    "existing_partial_input_readers": [
+      "shipyard_forecast_from_bars",
+      "shipyard_alpaca_daily_bars",
+      "shipyard_exchange_calendar"
+    ],
+    "data_requirements": "505 completed official session daily bars; split-adjusted IEX price only",
+    "availability_note": "Separate bounded NEW FE01_DAILY_TREND_PRIOR252_V1 source path implements prior252 normalization,21-session efficiency and daily-close RMS volatility. Original builder was not recovered; current provider success requires an actual on-demand request.",
+    "missing_transform_policy": "Canonical original feature definitions remain unavailable; separate NEW policy is explicit and versioned.",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE02": {
+    "existing_partial_input_readers": [
+      "shipyard_forecast_from_bars",
+      "shipyard_alpaca_daily_bars",
+      "shipyard_exchange_calendar"
+    ],
+    "data_requirements": "505 matched completed official sessions of requested-ticker and SPY split-adjusted IEX daily OHLCV, plus a prior-only 252-return paired regression, residual normalizers and bounded Hurst estimator",
+    "availability_note": "On-demand NEW FE02_PAIRED_BENCHMARK_RESIDUAL_SESSION_V2 builder is connected. Original builder/conventions were not recovered. Uses current prior-only beta for all reconstructed residual history; historical point-in-time availability is not established. Actual provider success requires a request. V2 session-relative research currency retains actual observation age and reports original48h age acceptability independently;7-day extended-closure uncertainty abstains.",
+    "missing_transform_policy": "Original builder unavailable; use only the separately versioned FE02_PAIRED_BENCHMARK_RESIDUAL_SESSION_V2, with all source and decision gates explicit",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE03": {
+    "existing_partial_input_readers": [
+      "shipyard_forecast_from_bars",
+      "shipyard_alpaca_daily_bars",
+      "shipyard_exchange_calendar"
+    ],
+    "data_requirements": "505 completed official-session split-adjusted IEX daily OHLCV bars; frozen prior-20 breakout levels, prior-only252 distance and20-volume normalization, all3\u20135 post-cross closes, and at least20 matured historical breakout episodes",
+    "availability_note": "On-demand NEW FE03_DAILY_BREAKOUT_ACCEPTANCE_MATURED_V1 builder is connected through bounded Alpaca IEX daily bars and the official exchange calendar. No setup, incomplete acceptance, invalidated level or an insufficient matured episode sample returns no numeric score. Actual provider success still requires a request; the original builder was not recovered. Original quality/rights attestation is unknown; this is not the full Python feature validator.",
+    "missing_transform_policy": "Original builder unavailable; only the separate versioned FE03_DAILY_BREAKOUT_ACCEPTANCE_MATURED_V1 policy is source-bound, with overlapping historical outcome windows explicitly non-independent",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE04": {
+    "existing_partial_input_readers": [
+      "shipyard_intraday_bars",
+      "shipyard_preopen_inputs",
+      "shipyard_exchange_calendar"
+    ],
+    "data_requirements": "62 IEX split-adjusted 1m sessions for SPY/QQQ/IWM; prior-only gap factor fit; first-five RTH closes; complete fixed 09:25\u201309:30 premarket windows",
+    "availability_note": "NEW FE04_GAP_FACTOR_OPEN_ACCEPTANCE_V1 source builder and bounded 19-request reader. Fair gap is prior OLS prediction (SPY uses QQQ+IWM factors, never self-zero); opening acceptance is first-five close sign share; premarket dollar volume is explicitly only an x/(x+median) proxy, not depth/liquidity; median and ratio use overflow-safe scale-normalized arithmetic. IEX single-exchange proxy; current provider success is unverified; no historical PIT or original-builder claim.",
+    "missing_transform_policy": "Original FE04 builder unrecovered; only the separately versioned NEW source policy binds to the unchanged scorer; no calibrated or decision-eligible output",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE05": {
+    "existing_partial_input_readers": [
+      "shipyard_market_context"
+    ],
+    "data_requirements": "Current date-only SPY holdings snapshot plus matched complete price history for a fixed top25 issuer cohort; historical PIT membership remains unavailable",
+    "availability_note": "Separate NEW FE05_SPY_CURRENT_TOP25_ISSUER_BREADTH_V1 source builder is registered. An actual SSGA holdings workbook (as-of 2026-10-29; first seen 2026-10-31) verified 505 positions and a 25-issuer/26-security top-weight cohort; all selected members require 505 matched IEX closes plus SPY. Source terms/redistribution rights and date-only observation time are not cleared. Raw member symbols stay private; no historical S&P 500, all-market, sector, tradability, or point-in-time claim.",
+    "missing_transform_policy": "Research-only cohort-relative breadth, prior-only advance/decline and new-high/low z-scores, and SPY 20-session trend z. The 0.0265pp source reconciliation residual is retained, not invented or normalized; cohort mass is reported as a subset. Any mapping/price gap abstains the full score with no survivor replacement. Decision eligibility stays closed.",
+    "automatic_feature_binding": true,
+    "source_policy_id": "FE05_SPY_CURRENT_TOP25_ISSUER_BREADTH_V1",
+    "source_policy_status": "new_research_only_ineligible",
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE06": {
+    "existing_partial_input_readers": [
+      "shipyard_market_context",
+      "shipyard_alpaca_daily_bars"
+    ],
+    "data_requirements": "Fixed 11 plain Select Sector SPDR proxy ETFs with common NAV/share/assets issuer sessions; sector constituents/benchmarks and observed vendor flows remain unavailable",
+    "availability_note": "A separate NEW issuer-workbook derived proxy is source-bound for FE06 through shipyard_forecast_from_sources. Bounded on-demand private research; not observed vendor flow, historical sector membership, or a full sector constituent panel. Source-use/redistribution rights and historical PIT vintages remain unverified; raw workbooks are not persisted or publicly projected.",
+    "missing_transform_policy": "FE06 issuer proxy v1 freezes 21-session split-adjusted dividend-excluded NAV momentum/rank (target fund, average ties), positive-sector breadth, prior252 daily dispersion z, and target-fund prior252 creation/redemption estimate z; volume/AUM changes never substitute",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_sources"
+  },
+  "FE07": {
+    "existing_partial_input_readers": [
+      "shipyard_alpaca_daily_bars"
+    ],
+    "data_requirements": "505 matched completed official sessions for the fixed SPY leader / QQQ follower pair; prior-only 252 lagged OLS pairs, leader-return z, four disjoint 63-pair stability blocks, and R\u00b2",
+    "availability_note": "Bounded on-demand NEW FE07_FIXED_ETF_SPY_TO_QQQ_LAG1_V1 source pipeline is registered. Fixed daily IEX split-adjusted SPY\u2192QQQ one-session lag; only existing ETF sources, no lag search or graph/universe expansion. No historical PIT, causal-lead, calibration, rights or live-success claim.",
+    "missing_transform_policy": "Original transform unavailable; fixed pair/lag, causal OLS alignment, current-return normalization and four-block sign stability are frozen in the separate NEW policy",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE08": {
+    "existing_partial_input_readers": [
+      "shipyard_intraday_bars",
+      "shipyard_exchange_calendar"
+    ],
+    "data_requirements": "Completed intraday returns for realized variance over 1/5/22 sessions plus baseline history",
+    "availability_note": "Separate NEW FE08_RV_RTH_5M_V1 source path implements completed RTH 5Min variance aggregation. Current provider success requires an actual on-demand request; original builder conventions were not recovered.",
+    "missing_transform_policy": "Define sampling frequency, overnight inclusion, annualization/unit and baseline window",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE09": {
+    "existing_partial_input_readers": [
+      "shipyard_intraday_bars",
+      "shipyard_official_events",
+      "shipyard_exchange_calendar"
+    ],
+    "data_requirements": "22 completed split-adjusted IEX 5m RTH sessions on the official 09:30 New York open grid, split-adjusted overnight gaps, exact early-close calendar, and scoped BEA/Fed/BLS event schedules for next five official session dates",
+    "availability_note": "NEW FE09_RTH5M_JUMPS_TAIL_SCOPED_EVENTS_V1 computes explicit finite-sample RV\u2212BV proxy, prior-only z-scores and date-based scoped event counts. BLS population is fixed to seven named families whether BLS primary or complete FRED fallback; missing family/month scope abstains. Official events are incomplete beyond named scopes, date precision is retained, and zero is not all-clear. Shifted/unsupported session opens abstain; bars are never retimestamped. Nested event HTTP requests are separately bounded at 11/month and 22 total; each event body \u2264512 KiB, month summaries \u22642 MiB, and direct Alpaca request/response bytes are reported separately. Current provider success remains unverified; no historical PIT or original-builder claim.",
+    "missing_transform_policy": "Original FE09 builder unrecovered; only the separately versioned NEW source policy binds to the unchanged scorer; no calibrated or decision-eligible output",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE10": {
+    "existing_partial_input_readers": [
+      "shipyard_alpaca_daily_bars"
+    ],
+    "data_requirements": "505 matched completed official sessions for fixed SPY/QQQ/IWM proxy panel; 21-session realized variance/correlation, vol-of-vol, cross-asset dispersion and prior-only 252-scalar normalizers",
+    "availability_note": "Bounded on-demand NEW FE10_FIXED_ETF_PROXY_REGIME_V1 source pipeline is registered for SPY/QQQ/IWM only. All three complete matched session histories are required; fixed panel is not all-asset or broad-market correlation. No fitted change-point probability, historical PIT, calibration, rights or live-success claim.",
+    "missing_transform_policy": "Original transform unavailable; fixed 3-ETF panel, matched covariance windows, causal normalizers and bounded disjoint-window volatility contrast are frozen in the separate NEW policy",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE11": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Licensed closing-auction imbalance/depth feed plus index-rebalance notices",
+    "availability_note": "Latest stock quotes and minute bars do not supply closing-auction imbalance/depth or rebalance-flow evidence. A genuine auction source and index-event source are needed.",
+    "missing_transform_policy": "Timestamped <=60-second auction evidence; ordinary top-of-book quote insufficient",
+    "automatic_feature_binding": false
+  },
+  "FE12": {
+    "existing_partial_input_readers": [
+      "shipyard_stock_quote",
+      "shipyard_intraday_bars",
+      "shipyard_exchange_calendar"
+    ],
+    "data_requirements": "17 matched IEX historical L1 point snapshots at the latest completed five-minute RTH bucket at actual evaluation, 16 same-elapsed-RTH prior-session baselines, and five raw 1m bars per selected bucket",
+    "availability_note": "NEW FE12_IEX_TOP_OF_BOOK_ELAPSED_RTH_BUCKET_V3 preserves V2 as immutable but supersedes its fixed-09:35 scope, which expired under the 300-second age limit. It selects one latest IEX TOPS L1 quote in the five seconds before each newest completed five-minute RTH bucket at actual evaluation, current plus 16 same-elapsed-RTH prior sessions; five raw one-minute bars per matching bucket. Prior early closes are excluded only from official calendar duration before data fetch; missing selected observations abort without backfill. A cursor only signals older rows; no sequence-coverage or window-mean claim. V1 five-minute prefix policy is blocked after the observed first 1000 quotes spanned only 2.403 seconds. IEX TOPS aggregate displayed size is shares; USD notional is one-level/one-exchange only, not Level-2/full depth. Unknown units, fallback, stale/crossed quotes, unsafe share-size integers, more than64 condition codes/4096 histogram bytes, overflow, bar page-budget overflow or missing slots abstain; conditions are never truncated. An earlier connector probe receipt is not included in this educational export; this file does not establish current provider or deployment availability. No historical PIT or original-builder claim.",
+    "missing_transform_policy": "Original FE12 builder unrecovered; only the separately versioned NEW source policy binds to the unchanged scorer; no calibrated or decision-eligible output",
+    "automatic_feature_binding": true,
+    "source_tool": "shipyard_forecast_from_bars"
+  },
+  "FE13": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Sequenced order-book/trade-condition feed with replenishment and post-fill drift history",
+    "availability_note": "No sequenced order-book/replenishment/condition-aware fill-drift source is bound. Quote snapshots and OHLCV cannot recover those fields.",
+    "missing_transform_policy": "<=30-second features; trade prints alone do not identify queue dynamics or actual fill drift",
+    "automatic_feature_binding": false
+  },
+  "FE14": {
+    "existing_partial_input_readers": [
+      "shipyard_trade_brain_scan"
+    ],
+    "data_requirements": "Timestamped multi-strike/multi-expiry option surface and underlying/rates/dividends",
+    "availability_note": "v473 Brain supports Tradier candidate selection from one expiry nearest30D within21\u201345D, or Alpaca indicative fallback when Tradier is unconnected. No full multi-expiry surface reader or FE binding exists. Verify actual Tradier connection and implement explicit surface/quality policies.",
+    "missing_transform_policy": "Define surface fitting, skew/term/tail integrals and quality; risk-neutral is not the physical distribution",
+    "automatic_feature_binding": false
+  },
+  "FE15": {
+    "existing_partial_input_readers": [
+      "shipyard_trade_brain_scan"
+    ],
+    "data_requirements": "Option Greeks/OI surface, spot changes and explicit dealer-side scenario assumptions",
+    "availability_note": "Static GEX accepts an authorized local chain CSV. v473 adds internal one-expiry Tradier candidate selection but no lab/FE chain binding; OI as-of is null. Dealer-side sign must remain an explicit scenario assumption.",
+    "missing_transform_policy": "Dealer position sign is assumed, not identified by OI; preserve scenario label",
+    "automatic_feature_binding": false
+  },
+  "FE16": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Trade-by-trade option quotes/conditions and a licensed or modeled intent classification",
+    "availability_note": "No transaction-level condition-aware options-flow source is connected. A chain alone does not identify sweeps, aggressor, opening/closing intent, or customer-signed flow.",
+    "missing_transform_policy": "Aggressor/open-close confidence must be estimated and declared, not inferred as fact from one print",
+    "automatic_feature_binding": false
+  },
+  "FE17": {
+    "existing_partial_input_readers": [
+      "shipyard_trade_brain_scan"
+    ],
+    "data_requirements": "Options implied move, historical dated earnings outcomes, analyst-estimate distribution and earnings timing",
+    "availability_note": "Selected options could inform one component only. Earnings timing/outcomes and point-in-time analyst-estimate dispersion are not bound; Tradier does not automatically establish all of them.",
+    "missing_transform_policy": "Define event-window convention and price-aware implied-move baseline",
+    "automatic_feature_binding": false
+  },
+  "FE18": {
+    "existing_partial_input_readers": [
+      "shipyard_alpaca_daily_bars"
+    ],
+    "data_requirements": "Published actual/consensus earnings vintages, analyst revisions and post-event/sector price history",
+    "availability_note": "Daily equity/sector bars are available. Published actual/consensus earnings vintages and analyst-revision breadth require additional sourced datasets and event-aware transforms.",
+    "missing_transform_policy": "Define standardized surprise, event timing, residual controls and revision breadth",
+    "automatic_feature_binding": false
+  },
+  "FE19": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Point-in-time analyst estimate/revision history and analyst identifiers",
+    "availability_note": "No point-in-time analyst estimate/revision panel or analyst identities are connected.",
+    "missing_transform_policy": "Define revision inclusion, recency and dispersion; not supplied by stock quotes",
+    "automatic_feature_binding": false
+  },
+  "FE20": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Licensed alternative-data panel with historical membership/coverage and publication vintages",
+    "availability_note": "No historical-membership alternative-data panel is connected. The required panel/target must be specified and the authorized source supplied.",
+    "missing_transform_policy": "Define panel surprise, drift/stability diagnostics and target measure",
+    "automatic_feature_binding": false
+  },
+  "FE21": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "SEC XBRL comparable filing facts with accepted/publication dates and taxonomy mappings",
+    "availability_note": "No SEC/XBRL adapter is bound in this Site. An official-public-filings integration can supply facts; taxonomy mapping, restatement vintages and transforms still need definition.",
+    "missing_transform_policy": "Define cash-conversion/FCF/receivables/deferred-revenue transforms and restatement vintages",
+    "automatic_feature_binding": false
+  },
+  "FE22": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Comparable filing/guidance text sections with filing/publication vintages",
+    "availability_note": "No filing/guidance text reader and versioned semantic-delta builder is bound. Public filings are a possible source; model/parser and comparison policies are substantive implementation work.",
+    "missing_transform_policy": "Version NLP/parser/model/normalization and novelty/relevance/confidence transforms",
+    "automatic_feature_binding": false
+  },
+  "FE23": {
+    "existing_partial_input_readers": [
+      "shipyard_alpaca_daily_bars"
+    ],
+    "data_requirements": "Form 4 transaction/10b5-1 flags and price/liquidity context",
+    "availability_note": "Insider route is disconnected. Official Form 4 transactions/plan flags plus available price history require a filing parser and reporting-lag/flow policy.",
+    "missing_transform_policy": "Define discretionary filtering, reporting-lag chronology, corporate actions and net-flow normalization",
+    "automatic_feature_binding": false
+  },
+  "FE24": {
+    "existing_partial_input_readers": [
+      "shipyard_alpaca_daily_bars"
+    ],
+    "data_requirements": "Point-in-time 13F holdings/manager identifiers plus fundamentals and liquidity",
+    "availability_note": "No point-in-time 13F manager/holdings panel is bound; current bars alone cannot establish crowding or fundamental deterioration.",
+    "missing_transform_policy": "Define crowding universe, filing staleness and source publication cutoff",
+    "automatic_feature_binding": false
+  },
+  "FE25": {
+    "existing_partial_input_readers": [
+      "shipyard_alpaca_daily_bars"
+    ],
+    "data_requirements": "Reported executed buyback volumes/float, fiscal periods and disclosed blackout context",
+    "availability_note": "No executed-buyback/float/disclosed-blackout dataset is bound. Buyback authorization news is not executed flow.",
+    "missing_transform_policy": "Authorization headline is not executed flow; define pace/confidence and liquidity transform",
+    "automatic_feature_binding": false
+  },
+  "FE26": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Index announcements, weights/free-float/AUM model and effective-date calendar",
+    "availability_note": "No index announcement/weight/free-float/AUM input binding exists; a sourced model of basket demand must be explicitly defined.",
+    "missing_transform_policy": "Freeze basket/flow/crowding estimates at observation time; corporate-action reconciliation",
+    "automatic_feature_binding": false
+  },
+  "FE27": {
+    "existing_partial_input_readers": [
+      "shipyard_official_events",
+      "shipyard_market_context"
+    ],
+    "data_requirements": "Economic actual/consensus release vintages and immediate cross-asset pricing",
+    "availability_note": "NEW release-surprise z-transform is tested with 40 prior first-print errors. Dated Philly Fed SPF current-quarter real-GDP growth is a survey proxy, not release-day consensus; RTDSM ROUTPUT has first-release growth values. No acquisition/cross-asset path; original regime model and rights/vintage quality remain unresolved.",
+    "missing_transform_policy": "Original regime reaction is unrecovered. Keep survey, first-print, event and receipt clocks separate; never substitute revised/prior actual. No licensed consensus or market-pricing adapter.",
+    "automatic_feature_binding": false
+  },
+  "FE28": {
+    "existing_partial_input_readers": [
+      "shipyard_market_context",
+      "shipyard_forecast_macro_features"
+    ],
+    "data_requirements": "Treasury curve and dated credit/macro series/vintages",
+    "availability_note": "Bounded no-key capture reads Treasury 2Y/10Y, BIS US WS_TC credit, BEA NIPA T10105-Q GDP and dataset release dates; output is diagnostic only. Treasury grid/publication and BIS/BEA row vintages unknown; rights/quality gates closed; original scorer unchanged.",
+    "missing_transform_policy": "Original transition model unrecovered. Keep scorer features empty until independent Treasury calendar and quarterly vintages/rights are proven; no \u00d74.",
+    "automatic_feature_binding": false
+  },
+  "FE29": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Dated CFTC positioning/EIA inventory, futures term structure and dated supply events",
+    "availability_note": "NEW pure transforms cover CFTC Disaggregated positions, EIA WCESTUS1 seasonality and actual settlement curves; no capture/supply-shock. CME terms bar extraction/index/AI use absent consent. Massive Futures routes exist; WTI entitlement/rights unverified.",
+    "missing_transform_policy": "Supply-shock builder unrecovered; unknown supply is missing. Preserve report/obs clocks, units/expiry; no ETF proxy. CFTC/EIA capture or licensed futures source unresolved.",
+    "automatic_feature_binding": false
+  },
+  "FE30": {
+    "existing_partial_input_readers": [],
+    "data_requirements": "Venue-specific funding/OI/depth plus licensed/public on-chain labeled flow",
+    "availability_note": "NEW Deribit funding/OI/depth transforms are tested, not connected; OI/depth need immutable history. No verified labeled on-chain source/rights; no label inference or geo-restriction bypass.",
+    "missing_transform_policy": "Original composite unrecovered; verify venue/instrument/units/clocks. Require publisher-labeled, versioned on-chain flow and rights; otherwise abstain.",
+    "automatic_feature_binding": false
+  }
+}

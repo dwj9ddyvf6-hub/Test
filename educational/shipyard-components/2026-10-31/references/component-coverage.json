@@ -1,0 +1,1856 @@
+{
+  "schema": "PUBLIC_COMPONENT_COVERAGE_V1",
+  "source_commit": "6ef9c064517f57a969fd4b44345306edd9e7956c",
+  "source_file_sha256": {
+    "worker/mcp.js": "8ca75c9cd6f7851b4e93c54ed45fb19ccf0c6faa631b0dfbc1db40dfadda76a1",
+    "worker/research-surfaces.json": "9fc6af062b1593aa1e03da4373cb7c605ac04560492891b38486ffb4a652be4b",
+    "worker/forecast-tools.js": "0e8c981a267509ef898510df19b1caec8c847b2ca1d2e5729b0c83ee9d718049"
+  },
+  "coverage_basis": "source-declared engine catalog, research-surface IDs, and MCP tools/list definitions; no operational receipt or private runtime status is copied",
+  "counts": {
+    "engines": 32,
+    "surfaces": 31,
+    "mcp_tools": 36,
+    "extracted_browser_local_labs": 8
+  },
+  "engine_ids": [
+    {
+      "id": "tradier_options_research",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/options-research.js",
+        "worker/brokers.js"
+      ]
+    },
+    {
+      "id": "trade_brain",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/market-readers.js"
+      ]
+    },
+    {
+      "id": "stock_quote_snapshot",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/alpaca.js"
+      ]
+    },
+    {
+      "id": "integrated_daily_research",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "dist/research-adapters.mjs",
+        "dist/evidence-contract.mjs"
+      ]
+    },
+    {
+      "id": "alpaca_daily",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/alpaca.js",
+        "dist/research-adapters.mjs"
+      ]
+    },
+    {
+      "id": "chartlector_context",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/public-feed-parsers.mjs",
+        "research/chartslector/adapter.mjs"
+      ]
+    },
+    {
+      "id": "aperture_on_demand",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/aperture-producer.js",
+        "research/live-aperture/"
+      ]
+    },
+    {
+      "id": "lector_on_demand",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/live-engine-tools.js",
+        "research/live-lector/"
+      ]
+    },
+    {
+      "id": "lector",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "research/live-lector/"
+      ]
+    },
+    {
+      "id": "aperture",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "research/live-aperture/"
+      ]
+    },
+    {
+      "id": "official_scheduled_events",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/official-events.js"
+      ]
+    },
+    {
+      "id": "alpaca_news",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/connected-research.js"
+      ]
+    },
+    {
+      "id": "exchange_calendar_inputs",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/exchange-calendar.js"
+      ]
+    },
+    {
+      "id": "intraday_provider_inputs",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/intraday-reader.js"
+      ]
+    },
+    {
+      "id": "morgue",
+      "coverage_status": "host_bound_or_restricted_contract_only",
+      "artifacts": [],
+      "note": "Readiness adapter is feed/source-registry coupled; snapshot metadata and feed code are withheld."
+    },
+    {
+      "id": "saty",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "deploy/python-research-service/"
+      ]
+    },
+    {
+      "id": "raschke_rre",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "deploy/python-research-service/"
+      ]
+    },
+    {
+      "id": "forecast_fe01_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe01.js",
+        "research/forecast-features/fe01-trend-v1.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe02_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe02.js",
+        "research/forecast-features/fe02-residual-v1.mjs",
+        "research/forecast-features/fe02-residual-session-v2.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe03_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe03.js",
+        "research/forecast-features/fe03-breakout-v1.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe04_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe04.js",
+        "research/forecast-features/fe04-gap-decomposition-v1.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe05_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe05.js",
+        "research/forecast-features/fe05-spy-breadth-v1.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe06_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe06.js"
+      ]
+    },
+    {
+      "id": "forecast_fe07_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe07-fe10.js",
+        "research/forecast-features/fe07-fe10-v1.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe08_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe08.js",
+        "research/forecast-features/fe08-rv-v1.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe09_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe09.js",
+        "research/forecast-features/fe09-jump-tail-v1.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe10_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe07-fe10.js",
+        "research/forecast-features/fe07-fe10-v1.mjs"
+      ]
+    },
+    {
+      "id": "forecast_fe12_source_policy",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/forecast-fe12.js",
+        "research/forecast-features/fe12-top-of-book-v2.mjs",
+        "research/forecast-features/fe12-top-of-book-v3.mjs"
+      ]
+    },
+    {
+      "id": "chartslector_archive_subset",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "research/chartslector/"
+      ]
+    },
+    {
+      "id": "forecast_numeric_calculators",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "dist/forecast-engines.mjs",
+        "dist/forecast-engine-catalog.mjs"
+      ]
+    },
+    {
+      "id": "browser_local_labs",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/static-gex.mjs",
+        "components/bullflow-activity.mjs",
+        "components/finviz-filter.mjs",
+        "components/stockrover-factors.mjs",
+        "components/confluence.mjs",
+        "components/portfolio.mjs",
+        "components/daily-change-alerts.mjs",
+        "components/strategy-sma.mjs"
+      ],
+      "note": "Eight pure analytical groups were extracted from the browser bundle; this does not include the UI or imply a live provider integration."
+    },
+    {
+      "id": "static_research_catalog",
+      "coverage_status": "host_bound_or_restricted_contract_only",
+      "artifacts": [],
+      "note": "Static catalog data and private vendor/research rows are withheld; only generic public contract documentation is included."
+    }
+  ],
+  "surface_ids": [
+    {
+      "id": "brain",
+      "title": "Trade Brain",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/market-readers.js",
+        "worker/options-research.js"
+      ]
+    },
+    {
+      "id": "enginehub",
+      "title": "Research engine suite",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "dist/forecast-engines.mjs",
+        "deploy/python-research-service/"
+      ]
+    },
+    {
+      "id": "context",
+      "title": "Market context",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/public-feed-parsers.mjs",
+        "research/chartslector/adapter.mjs"
+      ]
+    },
+    {
+      "id": "alpaca",
+      "title": "Alpaca daily bars",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/alpaca.js",
+        "dist/research-adapters.mjs"
+      ]
+    },
+    {
+      "id": "overview",
+      "title": "Market overview",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "dist/market-overview.mjs",
+        "dist/research-adapters.mjs"
+      ]
+    },
+    {
+      "id": "flow",
+      "title": "Options flow",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/options-research.js"
+      ]
+    },
+    {
+      "id": "gex",
+      "title": "GEX & Greeks",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/options-research.js"
+      ]
+    },
+    {
+      "id": "staticgex",
+      "title": "Static GEX Lab",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/static-gex.mjs"
+      ],
+      "limitations": "User-supplied CSV only; no live chain."
+    },
+    {
+      "id": "azrael",
+      "title": "15.87 Rule map",
+      "coverage_status": "host_ui_or_operational_contract_only",
+      "artifacts": []
+    },
+    {
+      "id": "optionlab",
+      "title": "Option strategy lab",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/options-research.js"
+      ]
+    },
+    {
+      "id": "bullflow",
+      "title": "Options activity profile",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/bullflow-activity.mjs"
+      ],
+      "limitations": "User-supplied prints; full-session and baseline completeness must be declared."
+    },
+    {
+      "id": "finviz",
+      "title": "Filter contract lab",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/finviz-filter.mjs"
+      ],
+      "limitations": "User-supplied cross-sectional CSV; tags are not detected."
+    },
+    {
+      "id": "stockrover",
+      "title": "Factor profile lab",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/stockrover-factors.mjs"
+      ],
+      "limitations": "User-supplied same-date metrics; desk-defined weights, not a vendor model."
+    },
+    {
+      "id": "darkpool",
+      "title": "Dark-pool prints",
+      "coverage_status": "host_ui_or_operational_contract_only",
+      "artifacts": []
+    },
+    {
+      "id": "congress",
+      "title": "Congress trades",
+      "coverage_status": "host_ui_or_operational_contract_only",
+      "artifacts": []
+    },
+    {
+      "id": "insiders",
+      "title": "Insider activity",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "research/forecast-features/sec-public-adapters-v1.mjs"
+      ]
+    },
+    {
+      "id": "screener",
+      "title": "Market screener",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/market-readers.js"
+      ]
+    },
+    {
+      "id": "calendar",
+      "title": "Event calendar",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/official-events.js",
+        "worker/exchange-calendar.js"
+      ]
+    },
+    {
+      "id": "news",
+      "title": "News flow",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/connected-research.js",
+        "worker/psychology.js"
+      ]
+    },
+    {
+      "id": "ticker",
+      "title": "Ticker detail",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "dist/research-adapters.mjs"
+      ]
+    },
+    {
+      "id": "confluence",
+      "title": "Confluence lab",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/confluence.mjs"
+      ],
+      "limitations": "Manual normalized score inputs; not an authenticated server score."
+    },
+    {
+      "id": "portfolio",
+      "title": "Sector portfolio lab",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/portfolio.mjs"
+      ],
+      "limitations": "Candidate-construction model, not account holdings or execution."
+    },
+    {
+      "id": "charts",
+      "title": "Market charts",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "research/chartslector/adapter.mjs",
+        "dist/market-overview.mjs"
+      ]
+    },
+    {
+      "id": "watchlists",
+      "title": "My watchlists",
+      "coverage_status": "host_ui_or_operational_contract_only",
+      "artifacts": []
+    },
+    {
+      "id": "alerts",
+      "title": "Alert rules",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/daily-change-alerts.mjs"
+      ],
+      "limitations": "Daily change calculation only; no polling or background alert delivery."
+    },
+    {
+      "id": "tools",
+      "title": "Options tools",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "worker/options-research.js"
+      ]
+    },
+    {
+      "id": "strategy",
+      "title": "SMA strategy replay",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "components/strategy-sma.mjs"
+      ],
+      "limitations": "Local SMA replay, one-bar delay; not the Saty/RRE engines."
+    },
+    {
+      "id": "coverage",
+      "title": "Vendor coverage",
+      "coverage_status": "host_ui_or_operational_contract_only",
+      "artifacts": [],
+      "limitations": "Private catalog rows omitted; inventory contract only."
+    },
+    {
+      "id": "convergence",
+      "title": "Convergence engine",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "dist/convergence-evidence-csv.mjs"
+      ],
+      "limitations": "Generic CSV validation extracted; vendor catalog/crosswalk omitted."
+    },
+    {
+      "id": "evidence",
+      "title": "Evidence graph",
+      "coverage_status": "component_source_included",
+      "artifacts": [
+        "dist/evidence-contract.mjs"
+      ],
+      "limitations": "Schema and provenance rules only; hashes do not prove provider authenticity."
+    },
+    {
+      "id": "api",
+      "title": "API status",
+      "coverage_status": "host_ui_or_operational_contract_only",
+      "artifacts": [],
+      "limitations": "No host status/runtime configuration included."
+    }
+  ],
+  "mcp_tools": [
+    {
+      "name": "shipyard_options_expirations",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z]{1,6}$"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded option expiration/chain data with provider/source timestamps and explicit unavailable/stale states; quotes/Greeks remain separate and are not executable prices.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_options_chain",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z]{1,6}$"
+          },
+          "expiration": {
+            "type": "string",
+            "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}$"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1999
+          },
+          "after_symbol": {
+            "type": "string",
+            "pattern": "^[A-Z]{1,6}[0-9]{6}[CP][0-9]{8}$"
+          }
+        },
+        "required": [
+          "symbol",
+          "expiration"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded option expiration/chain data with provider/source timestamps and explicit unavailable/stale states; quotes/Greeks remain separate and are not executable prices.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_python_status",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded status/job/attempt receipt or result with host/source clocks and explicit pending, blocked, stale or unavailable states; no exact output schema or remote service included.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_python_run",
+      "operation": "write_or_capture_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "engine": {
+            "type": "string",
+            "enum": [
+              "saty",
+              "rre"
+            ]
+          },
+          "symbol": {
+            "type": "string",
+            "enum": [
+              "SPY",
+              "QQQ"
+            ]
+          },
+          "attempt_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$"
+          }
+        },
+        "required": [
+          "engine",
+          "symbol"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Host-side write/capture acknowledgement and any job/capture receipt are tool-specific; the actual side effect, retry/idempotency behavior and output schema are not included. Check the host receipt before any uncertain retry.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_python_attempts",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "engine": {
+            "type": "string",
+            "enum": [
+              "saty",
+              "rre"
+            ]
+          },
+          "symbol": {
+            "type": "string",
+            "enum": [
+              "SPY",
+              "QQQ"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "before": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded status/job/attempt receipt or result with host/source clocks and explicit pending, blocked, stale or unavailable states; no exact output schema or remote service included.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_python_attempt",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "attempt_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$"
+          }
+        },
+        "required": [
+          "attempt_id"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded status/job/attempt receipt or result with host/source clocks and explicit pending, blocked, stale or unavailable states; no exact output schema or remote service included.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_python_job",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded status/job/attempt receipt or result with host/source clocks and explicit pending, blocked, stale or unavailable states; no exact output schema or remote service included.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_forecast_from_bars",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "engine_id": {
+                "type": "string",
+                "enum": [
+                  "FE05",
+                  "FE07",
+                  "FE10"
+                ]
+              }
+            },
+            "required": [
+              "engine_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "engine_id": {
+                "type": "string",
+                "enum": [
+                  "FE04",
+                  "FE09",
+                  "FE12"
+                ]
+              },
+              "symbol": {
+                "type": "string",
+                "enum": [
+                  "SPY",
+                  "QQQ",
+                  "IWM"
+                ]
+              }
+            },
+            "required": [
+              "engine_id",
+              "symbol"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "engine_id": {
+                "type": "string",
+                "enum": [
+                  "FE02"
+                ]
+              },
+              "symbol": {
+                "type": "string",
+                "pattern": "^(?![Ss][Pp][Yy]$)[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+              }
+            },
+            "required": [
+              "engine_id",
+              "symbol"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "engine_id": {
+                "type": "string",
+                "enum": [
+                  "FE01",
+                  "FE03",
+                  "FE08"
+                ]
+              },
+              "symbol": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+              }
+            },
+            "required": [
+              "engine_id",
+              "symbol"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured research calculation/features, source/input lineage and explicit missing/abstain status; no output is an order or a validated prediction. Runtime source acquisition, calibration and exact host payload schema are omitted.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_forecast_macro_features",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured research calculation/features, source/input lineage and explicit missing/abstain status; no output is an order or a validated prediction. Runtime source acquisition, calibration and exact host payload schema are omitted.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_forecast_from_sources",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "engine_id": {
+            "type": "string",
+            "enum": [
+              "FE06"
+            ]
+          },
+          "symbol": {
+            "type": "string",
+            "enum": [
+              "XLC",
+              "XLY",
+              "XLP",
+              "XLE",
+              "XLF",
+              "XLV",
+              "XLI",
+              "XLB",
+              "XLRE",
+              "XLK",
+              "XLU"
+            ]
+          }
+        },
+        "required": [
+          "engine_id",
+          "symbol"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured research calculation/features, source/input lineage and explicit missing/abstain status; no output is an order or a validated prediction. Runtime source acquisition, calibration and exact host payload schema are omitted.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_chartslector_scan",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbols": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9.-]{0,9}$"
+            }
+          }
+        },
+        "required": [
+          "symbols"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured research calculation/features, source/input lineage and explicit missing/abstain status; no output is an order or a validated prediction. Runtime source acquisition, calibration and exact host payload schema are omitted.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_forecast_catalog",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "engine_id": {
+            "type": "string",
+            "pattern": "^FE(?:0[1-9]|[12][0-9]|30)$"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "catalog_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded metadata page/summary with continuation identity where defined; private catalog rows and host/runtime projections are not included.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_forecast_evaluate",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "engine_id": {
+            "type": "string",
+            "pattern": "^FE(?:0[1-9]|[12][0-9]|30)$"
+          },
+          "features": {
+            "type": "object",
+            "maxProperties": 5,
+            "additionalProperties": {
+              "type": "number",
+              "minimum": -1000000000000000000,
+              "maximum": 1000000000000000000
+            }
+          }
+        },
+        "required": [
+          "engine_id",
+          "features"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured research calculation/features, source/input lineage and explicit missing/abstain status; no output is an order or a validated prediction. Runtime source acquisition, calibration and exact host payload schema are omitted.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_official_events",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured schedule/calendar rows with source clocks, coverage and unavailable/unknown states; no comprehensive all-clear or retrospective availability guarantee.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_news_feed",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbols": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+            },
+            "maxItems": 10,
+            "uniqueItems": true
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded article metadata with provider article timestamps and retrieval status; no sentiment/trade signal or persistence.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_psychology_headline_tone",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+          },
+          "symbols": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+            },
+            "maxItems": 10,
+            "uniqueItems": true
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Descriptive lexicon-derived tone or content-free derived receipt/history, with clocks/status; raw headline/body/URL content is not part of the safe contract.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_psychology_capture",
+      "operation": "write_or_capture_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+          },
+          "symbols": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+            },
+            "maxItems": 10,
+            "uniqueItems": true
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Host-side write/capture acknowledgement and any job/capture receipt are tool-specific; the actual side effect, retry/idempotency behavior and output schema are not included. Check the host receipt before any uncertain retry.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_psychology_history",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "as_of": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?(?:Z|[+-]\\d{2}:\\d{2})$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Descriptive lexicon-derived tone or content-free derived receipt/history, with clocks/status; raw headline/body/URL content is not part of the safe contract.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_exchange_calendar",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "end_date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured schedule/calendar rows with source clocks, coverage and unavailable/unknown states; no comprehensive all-clear or retrospective availability guarantee.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_preopen_status",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "check_inputs": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Read-only capture/readiness metadata or exact input-capture result; source clocks and unknown eligibility remain explicit. No engine output or account/order data.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_capture_preopen_inputs",
+      "operation": "write_or_capture_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "capture",
+              "diagnostic"
+            ]
+          }
+        },
+        "required": [
+          "mode"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Host-side write/capture acknowledgement and any job/capture receipt are tool-specific; the actual side effect, retry/idempotency behavior and output schema are not included. Check the host receipt before any uncertain retry.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_preopen_inputs",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "enum": [
+              "SPY",
+              "QQQ"
+            ]
+          },
+          "target_session": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "symbol",
+          "target_session"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Read-only capture/readiness metadata or exact input-capture result; source clocks and unknown eligibility remain explicit. No engine output or account/order data.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_aperture_scan",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9.-]{0,9}$"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured read/scan result with source identity, acquisition/retrieval clocks and explicit missing/stale/partial state. No complete market coverage, order route or production execution claim.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_lector_scan",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9.-]{0,9}$"
+          },
+          "section": {
+            "type": "string",
+            "enum": [
+              "summary",
+              "factors"
+            ]
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "snapshot_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured read/scan result with source identity, acquisition/retrieval clocks and explicit missing/stale/partial state. No complete market coverage, order route or production execution claim.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_intraday_bars",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+          },
+          "timeframe": {
+            "type": "string",
+            "enum": [
+              "1Min",
+              "5Min",
+              "10Min"
+            ]
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "feed": {
+            "type": "string",
+            "enum": [
+              "iex",
+              "sip"
+            ]
+          },
+          "adjustment": {
+            "type": "string",
+            "enum": [
+              "raw",
+              "all"
+            ]
+          },
+          "page_token": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "symbol",
+          "timeframe",
+          "start",
+          "end"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured read/scan result with source identity, acquisition/retrieval clocks and explicit missing/stale/partial state. No complete market coverage, order route or production execution claim.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_market_context",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured read/scan result with source identity, acquisition/retrieval clocks and explicit missing/stale/partial state. No complete market coverage, order route or production execution claim.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_alpaca_daily_bars",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+          },
+          "days": {
+            "type": "integer",
+            "enum": [
+              20,
+              60,
+              90,
+              180,
+              370
+            ]
+          },
+          "adjustment": {
+            "type": "string",
+            "enum": [
+              "raw",
+              "split",
+              "all"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured read/scan result with source identity, acquisition/retrieval clocks and explicit missing/stale/partial state. No complete market coverage, order route or production execution claim.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_trade_brain_scan",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9.-]{0,9}$"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured read/scan result with source identity, acquisition/retrieval clocks and explicit missing/stale/partial state. No complete market coverage, order route or production execution claim.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_morgue_readiness",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Metadata/source-readiness summary only; snapshot values and private source registry are excluded.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_research_capabilities",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string",
+            "enum": [
+              "summary",
+              "engines",
+              "surfaces"
+            ]
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4
+          },
+          "inventory_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded metadata page/summary with continuation identity where defined; private catalog rows and host/runtime projections are not included.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_research_capability_page",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string",
+            "enum": [
+              "engines",
+              "surfaces"
+            ]
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4
+          },
+          "inventory_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "section"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded metadata page/summary with continuation identity where defined; private catalog rows and host/runtime projections are not included.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_lector_output",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9.-]{0,9}$"
+          },
+          "observation_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "section": {
+            "type": "string",
+            "enum": [
+              "summary",
+              "factors"
+            ]
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Read-only stored research summary/output with original source/evaluation clocks and freshness status; retrieval does not perform a scan or renew evidence.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_aperture_output",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Read-only stored research summary/output with original source/evaluation clocks and freshness status; retrieval does not perform a scan or renew evidence.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_stock_quote",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured read/scan result with source identity, acquisition/retrieval clocks and explicit missing/stale/partial state. No complete market coverage, order route or production execution claim.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_research_catalog",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "catalog": {
+            "type": "string",
+            "enum": [
+              "source_registry",
+              "survivors",
+              "family_crosswalk",
+              "vendor_families",
+              "observation_schema",
+              "feature_schema"
+            ]
+          },
+          "catalog_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Bounded metadata page/summary with continuation identity where defined; private catalog rows and host/runtime projections are not included.",
+      "output_schema_included": false
+    },
+    {
+      "name": "shipyard_research_snapshot",
+      "operation": "read_or_compute_at_host",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]{0,9}$"
+          },
+          "days": {
+            "type": "integer",
+            "enum": [
+              20,
+              60,
+              90,
+              180
+            ]
+          },
+          "section": {
+            "type": "string",
+            "enum": [
+              "summary",
+              "features",
+              "observations"
+            ]
+          },
+          "snapshot_hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "implementation_status": "MCP router/runtime not included; this safe contract is source-derived and not executable. Output JSON-RPC result shape is tool-specific; source output projection remains host-bound.",
+      "validation_contract": "The input_schema below is source-derived from the advertised tools/list declaration. The host router and any additional runtime argument validator are not included; schema presence alone does not make this tool executable.",
+      "output_contract": "Structured read/scan result with source identity, acquisition/retrieval clocks and explicit missing/stale/partial state. No complete market coverage, order route or production execution claim.",
+      "output_schema_included": false
+    }
+  ],
+  "limitations": [
+    "Source presence is not deployment, live availability, or operational proof.",
+    "The terminal UI, full Worker router/orchestration, host bindings, runtime secrets, private feeds, account data, database state, and raw provider evidence are excluded.",
+    "Analytical modules requiring manual CSV inputs remain local-input labs and are not provider integrations.",
+    "MCP outputs have safe educational class/limitation summaries but no formal tool-specific output JSON Schemas; those depend on the intentionally omitted host adapters and runtime."
+  ]
+}

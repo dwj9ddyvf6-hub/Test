@@ -1,0 +1,19 @@
+"""Archived parity harness source; requires omitted engine bars, archived panel data and generator scripts. It is retained as inert text only.
+Window: the last 80 research sessions up to 2026-09-30. Names: intersection. Writes ship/proof/cl_parity.json."""
+import sys, os, json, subprocess, numpy as np, pandas as pd
+B = "__OWNER_SUPPLIED_ARCHIVE_ROOT__"; PY = "__PYTHON_INTERPRETER_PATH__"; P = f"{B}/ship/proof"; os.makedirs(P, exist_ok=True)
+gen = f"{B}/ship/sleeve_cl/chartslector/cl_live_fires.py"
+r = subprocess.run([PY, gen, "--no-sec", "--no-net", "--asof", "2026-09-30", "--today", "2026-09-30", "--max-age-sessions", "80", "--dump-cands", f"{P}/cands_live.csv",
+                    "--out", f"{P}/cl_fires_parity_run.json", "--cboe-dir", f"{P}/cboe"], capture_output=True, text=True); print(r.stdout[-400:], r.stderr[-400:])
+live = pd.read_csv(f"{P}/cands_live.csv", parse_dates=["D"])
+sys.path.insert(0, f"{B}/lib"); sys.path.insert(0, f"{B}/systems"); import lanes, study as ST, screens as SC, ind as I
+L = lanes.daily(); ctx = ST.Ctx(L)
+def newin(b): return b & ~I.lag(b.astype(np.float32), 1).astype(bool)
+qn = newin(SC.build(L, L.mc)["qullamaggie_nofloat"]); cand = qn & (ctx.ext < 4) & (L.C >= 5) & (L.dv20 >= 1e5) & ~L.etf[:, None]
+days = L.dates; w = days[(days >= live.D.min()) & (days <= pd.Timestamp("2026-09-30"))]; ti = np.searchsorted(days, w)
+eng = set(f[:-4] for f in os.listdir("__SYNTHETIC_ENGINE_BAR_ROOT__") if f.endswith(".csv")); both = np.isin(L.syms, sorted(eng))
+ii, tt = np.nonzero(cand[:, ti] & both[:, None]); res = pd.DataFrame(dict(sym=L.syms[ii], D=w[tt]))
+a = set(zip(live.sym, live.D)); b = set(zip(res.sym, res.D)); inter = a & b
+out = dict(window=[str(w[0].date()), str(w[-1].date())], live=len(a), research=len(b), both=len(inter), recall=len(inter) / max(len(b), 1), precision=len(inter) / max(len(a), 1),
+           live_only=sorted(f"{s}:{d.date()}" for s, d in a - b)[:40], research_only=sorted(f"{s}:{d.date()}" for s, d in b - a)[:40])
+json.dump(out, open(f"{P}/cl_parity.json", "w"), indent=1); print(json.dumps({k: v for k, v in out.items() if not k.endswith("only")}))

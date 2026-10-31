@@ -1,0 +1,289 @@
+"""CHARTSLECTOR test suite (plain Python, no pytest in the shared venv). Run:
+  ARCHIVE_ROOT=__OWNER_SUPPLIED_ARCHIVE_ROOT__ PYTHON=__PYTHON_INTERPRETER_PATH__ python tests/run_tests.py [quick]
+Writes tests/RESULTS_TESTS.md with pass/fail per test and per system."""
+import sys, os, time, json, re, glob, traceback, numpy as np, pandas as pd
+B = "__OWNER_SUPPLIED_ARCHIVE_ROOT__"
+sys.path.insert(0, f"{B}/lib"); sys.path.insert(0, f"{B}/systems"); sys.path.insert(0, f"{B}/tests")
+import pine_ref as PR
+RES = []
+def test(system, name):
+    def deco(f):
+        def run():
+            t0 = time.time()
+            try: msg = f() or ""; ok = True
+            except AssertionError as e: ok = False; msg = "ASSERT: " + str(e)
+            except Exception as e: ok = False; msg = "ERROR: " + repr(e) + " | " + traceback.format_exc().splitlines()[-3]
+            RES.append(dict(system=system, test=name, ok=ok, secs=round(time.time() - t0, 1), detail=str(msg)[:400])); print(("PASS " if ok else "FAIL ") + system + " :: " + name + " :: " + str(msg)[:300], flush=True)
+        run.__name__ = name; run.system = system; TESTS.append(run); return run
+    return deco
+TESTS = []
+# ---------------- shared fixtures (latest data = tracker Yahoo cache through 2026-10-05 for the end-to-end + screenshot tests; research panel for Pine-vs-ref)
+_cache = {}
+def panel():
+    if "P" not in _cache:
+        import data as D; _cache["P"] = D.panel()
+    return _cache["P"]
+def ser(sym, a=-400):
+    P = panel(); i = P["si"][sym]; return {k: P[k][i, a:].astype(np.float64) for k in "OHLCV"}, P["days"][a:]
+def latest():
+    if "T" not in _cache:
+        import ranker_fit as RFit; _cache["T"] = RFit.tracker_panel()
+    return _cache["T"]
+def close(a, b, tol, what):
+    a = np.asarray(a, float); b = np.asarray(b, float); m = np.isfinite(a) & np.isfinite(b)
+    assert m.sum() > 0, f"{what}: no overlapping finite values"
+    d = np.abs(a[m] - b[m]).max(); assert d <= tol, f"{what}: max abs diff {d:.3g} > {tol}"
+    return f"{what}: {m.sum()} bars, max diff {d:.2g}"
+SYMS = ["NVDA", "AAPL", "SMCI", "PLTR", "IWM"]
+# ---------------- Pine primitives
+@test("core", "ta.ema / ta.rma / ta.atr vs literal Pine")
+def _():
+    import ind as I; out = []
+    for s in SYMS[:3]:
+        x, _ = ser(s); H, L, C = x["H"], x["L"], x["C"]
+        out.append(close(I.ema(C[None].astype(np.float32), 10)[0][20:], PR.ta_ema(C, 10)[20:], 1e-3 * C.mean(), f"{s} ema10"))
+        out.append(close(I.atr(H[None], L[None], C[None], 14)[0], PR.ta_atr(H, L, C, 14), 1e-4 * C.mean(), f"{s} atr14"))
+    return "; ".join(out)
+@test("S10 1M RS", "rs1m vs literal Pine (array push/shift/sort/indexof)")
+def _():
+    import pine_tools as PT; out = []
+    spy, _ = ser("SPY")
+    for s in SYMS:
+        x, _ = ser(s); v = PT.rs1m(x["C"][None].astype(np.float32), spy["C"].astype(np.float32))[0][0]
+        out.append(close(v, PR.rs1m(x["C"], spy["C"]), 4.01, f"{s}"))   # float32 ratio ties can move rank by 1 bucket (4 pts)
+        r = PR.rs1m(x["C"], spy["C"]); m = np.isfinite(r) & np.isfinite(v); assert (np.abs(v[m] - r[m]) < 1e-6).mean() > 0.97, f"{s} exact-match share too low"
+    return "; ".join(out)
+@test("S10 Candle Stage", "stage vs literal Pine on 5 names x 400 bars")
+def _():
+    import pine_tools as PT; tot = 0; bad = 0
+    for s in SYMS:
+        x, _ = ser(s); v = PT.stage(*(x[k][None].astype(np.float32) for k in "OHLC"))[0]; r = PR.stage(x["O"], x["H"], x["L"], x["C"])
+        m = r > 0; tot += m.sum(); bad += (v[m] != r[m]).sum()
+    assert bad / tot < 0.01, f"stage mismatch {bad}/{tot}"
+    return f"{tot - bad}/{tot} bars identical"
+@test("S10 Gaps", "unfilled-gap logic on a constructed series")
+def _():
+    import pine_tools as PT
+    C = np.array([10, 10, 11, 10.98, 10.9, 10.85, 9.8, 9.75]); H = C + .1; L = C - .1     # bar 2 gaps up (low 10.9 > 10); bar 6 gaps down (high 9.9 < 10.85) and closes 9.8 < 10
+    g = PT.gaps(H[None], L[None], C[None])
+    assert g["gap_up"][0, 2] and not g["gap_up"][0, 3:].any(), "gap-up detection"
+    assert g["n_up"][0, 3] == 1 and g["n_up"][0, 5] == 1 and g["upgap_closed"][0, 6] and g["n_up"][0, 6] == 0, "gap-up stays open until a close < 10.0 (bar 6)"
+    assert g["gap_dn"][0, 6] and g["n_dn"][0, 7] == 1, "gap-down detection/active count"
+    C2 = np.array([10, 11, 12, 13, 13.05]); g2 = PT.gaps((C2 + .1)[None], (C2 - .1)[None], C2[None], maxg=2)     # 3 gap-ups, maxGaps 2 -> Pine keeps the newest 2
+    assert g2["n_up"][0, 3] == 2, "maxGaps trim (Pine pushes, then deletes index 0)"
+    lb = PT.gaps(H[None], L[None], C[None], lookback=2); assert lb["n_up"][0, 4] == 1 and lb["n_up"][0, 5] == 0, "lookback expiry (bar_index - start > N)"
+    out = []
+    for s_ in SYMS[:3]:
+        x, _ = ser(s_, -500); g = PT.gaps(x["H"][None], x["L"][None], x["C"][None]); nu, nd = PR.gaps_counts(list(x["H"]), list(x["L"]), list(x["C"]))
+        nb_ = int((np.array(nu) != g["n_up"][0]).sum() + (np.array(nd) != g["n_dn"][0]).sum()); assert nb_ == 0, f"{s_}: {nb_} bars differ from literal Pine"
+        out.append(f"{s_}: {len(nu)} bars identical")
+    return "constructed series ok (detection, close-fill, lookback, maxGaps); literal Pine port: " + "; ".join(out)
+@test("S10 Calibrated RSI", "logit-RSI z and percentrank vs literal Pine")
+def _():
+    import pine_tools as PT; out = []
+    for s in SYMS[:3]:
+        x, _ = ser(s, -600); cr = PT.crsi(x["H"][None].astype(np.float32), x["L"][None].astype(np.float32), x["C"][None].astype(np.float32))
+        out.append(close(cr["z"][0][200:], PR.crsi_z(x["C"])[200:], 0.02, f"{s} z"))
+        z = PR.crsi_z(x["C"]); out.append(close(PT._prank(z[None], 126)[0][300:], PR.percentrank(z, 126)[300:], 1e-4, f"{s} prank"))
+    return "; ".join(out)
+@test("S10 EM-GMR", "oscillator bounded, finite after warm-up, as_written != corrected, no look-ahead")
+def _():
+    import pine_tools as PT
+    x, _ = ser("NVDA", -700); C = x["C"][None].astype(np.float32); V = x["V"][None].astype(np.float32)
+    a = PT.emgmr(C, V, "as_written")[0]; b = PT.emgmr(C, V, "corrected")[0]; t = PT.emgmr(C[:, :-50], V[:, :-50], "as_written")[0]
+    assert np.nanmax(np.abs(a)) <= 100.0001 and np.isfinite(a[-300:]).all(), "range/finite"
+    assert np.nanmax(np.abs(a - b)) > 1, "variants identical"
+    close(a[:-50], t, 1e-4, "truncated vs full")
+    return f"range ok; mean |as_written-corrected| {np.nanmean(np.abs(a - b)):.1f}"
+@test("S10 LoD + RPRP", "eligibility and sizing vs hand-computed script values")
+def _():
+    import pine_tools as PT
+    ok, stop = PR.lod_entry(close=101.0, lod=100.0, atr=2.0); assert ok and abs(stop - 99.8) < 1e-9
+    ok2, _ = PR.lod_entry(close=101.5, lod=100.0, atr=2.0); assert not ok2                       # 101.5 > 100 + 0.65*2
+    v = PT.lod_daily(np.array([[0.0]]) + 102, np.array([[100.0]]), np.array([[101.0]]), np.array([[2.0]])); assert v[0, 0]
+    hand = PR.rprp(50.0, 48.0, beta=1.2, atrpct=3.0)                                              # Don: 15/2.1=7.14% of 100k = 142.9 sh; Tharp: 250/2 = 125 sh
+    exp = (0.35 * 142.857 + 0.65 * 125.0) / 2; assert abs(hand - exp) < 0.01, (hand, exp)
+    ours = PT.rprp_shares(np.array(50.0), np.array(48.0), np.array(1.2), np.array(3.0)); assert abs(float(ours) - exp) < 0.01
+    cor = PT.rprp_shares(np.array(50.0), np.array(48.0), np.array(1.2), np.array(3.0), variant="corrected"); assert abs(float(cor) - 2 * exp) < 0.02
+    return f"RPRP as-written {exp:.1f} sh (halved), corrected {2*exp:.1f}"
+@test("S6 RRR", "blended RS-Ratio / RS-Momentum vs literal Pine")
+def _():
+    import s04_rotation_core as RC
+    spy, _ = ser("SPY", -500); out = []
+    for s in ("XLK", "SMH", "XLE"):
+        x, _ = ser(s, -500); R, M = RC.rrr(x["C"][None], spy["C"]); r, m = PR.rrr(x["C"], spy["C"])
+        out.append(close(R[0][60:], r[60:], 1e-6, f"{s} ratio")); out.append(close(M[0][80:], m[80:], 1e-6, f"{s} mom"))
+    return "; ".join(out)
+@test("S5 RS table", "ta.percentrank(close/SPY, n) vs literal Pine")
+def _():
+    import s04_rotation_core as RC
+    spy, _ = ser("SPY", -400); x, _ = ser("SMH", -400); r = x["C"] / spy["C"]
+    return close(RC.prank(r[None], 63)[0], PR.percentrank(r, 63), 1e-6, "SMH prs63")
+# ---------------- MAP / VMR / RAM
+@test("S9 MAP/VMR", "VMR sub-scores reproduce his 10-05 dashboard (VIX 15.53->91, term .863->77, VVIX 85.46->89, SKEW 143.04->44, composite 75)")
+def _():
+    import map_vmr_ram as MV
+    sv, st, svv, ssk = MV.score_vix(np.array(15.53)), MV.score_term(np.array(0.863)), MV.score_vvix(np.array(85.46)), MV.score_skew(np.array(143.04))
+    got = [round(float(v)) for v in (sv, st, svv, ssk)]; assert got == [91, 77, 89, 44], got
+    comp = 0.35 * sv + 0.25 * st + 0.25 * ssk + 0.15 * svv; assert round(float(comp)) == 75, comp
+    return f"sub-scores {got}, composite {float(comp):.1f}"
+@test("S9 MAP/VMR", "faithfulness vs his 116 dashboards (dated script versions)")
+def _():
+    import subprocess
+    r = subprocess.run([sys.executable, f"{B}/systems/faith_map.py"], capture_output=True, text=True, timeout=900); assert r.returncode == 0, r.stderr[-500:]
+    O = pd.read_csv(f"{B}/out/faith_map_rows.csv"); msgs = []
+    for hs in ("QQQE", "RSP"):
+        g = O[(O.health_sym == hs) & (O.version == "auto") & (O.trap == "as_written") & (O.breadth == ("nasdaq" if hs == "QQQE" else "all"))]
+        d = g.dropna(subset=["divergence"]); dm = (d.divergence.str.replace(" ", "").str.lower() == d.our_div.str.replace(" ", "").str.lower()).mean()
+        v = g.dropna(subset=["vmr"]); mae = (v.vmr - v.our_vmr).abs().mean()
+        assert dm >= 0.90, f"{hs} divergence match {dm:.2f}"; assert mae <= 2.0, f"{hs} VMR MAE {mae:.2f}"
+        msgs.append(f"{hs}: divergence {dm*100:.0f}% (n {len(d)}), VMR MAE {mae:.2f} (n {len(v)})")
+    return "; ".join(msgs)
+@test("S9 MAP/VMR", "McClellan translation vs literal Pine state loop")
+def _():
+    import map_vmr_ram as MV
+    rng = np.random.default_rng(1); x = rng.normal(0, 300, 400); x[50] = np.nan
+    M = MV.mcclellan(x)
+    ef = es = summ = msi = None; osc_ref = []
+    for v in x:
+        if np.isnan(v): osc_ref.append(np.nan); continue
+        ef = v if ef is None else ef + 2 / 20 * (v - ef); es = v if es is None else es + 2 / 40 * (v - es); o = ef - es
+        summ = o if summ is None else summ + o; msi = summ if msi is None else msi + 2 / 11 * (summ - msi); osc_ref.append(o)
+    return close(M["osc"], osc_ref, 1e-9, "osc")
+# ---------------- Ranker
+@test("S1 Ranker", "held-out screenshot agreement (Opp MAE <= 4, Spearman >= 0.8)")
+def _():
+    t = open(f"{B}/out/ranker_fit.md").read()
+    m = re.search(r"[Hh]eld-out[^\n]*?Opp[^\n]*?MAE\s*([\d.]+)[^\n]*?(?:Spearman|rho|ρ)\s*([\d.]+)", t)
+    if not m:
+        R = pd.read_csv(f"{B}/out/ranker_fit_rows.csv"); raise AssertionError("could not parse held-out stats from ranker_fit.md")
+    mae, rho = float(m.group(1)), float(m.group(2)); assert mae <= 4 and rho >= 0.8, (mae, rho)
+    return f"held-out Opp MAE {mae}, Spearman {rho}"
+@test("S1 Ranker", "end-to-end score on latest data (tracker cache through 2026-10-05) for his list")
+def _():
+    import ranker_feats as RF, data as D
+    syms, days, A = latest(); coefs = json.load(open(f"{B}/cache/ranker_coefs.json"))["production"]
+    need = set(); [need.update(k[2:] for k in c["terms"] if k[:2] in ("u_", "l_")) for c in coefs.values()]
+    F = RF.raw(A["O"], A["H"], A["L"], A["C"], A["V"], need=need | {"e50ATR"}); nb = np.isfinite(A["C"]).sum(1); um = (nb >= 130)[:, None] & np.isfinite(A["C"])
+    lm = np.isin(syms, D.HIS)[:, None] & np.isfinite(A["C"]); G = {"e50ATR": F["e50ATR"]}
+    for c in coefs.values():
+        for t in c["terms"]:
+            if t.startswith("u_"): G[t] = RF.upct(F[t[2:]], um)
+            if t.startswith("l_"): G[t] = RF.lpct(F[t[2:]], lm)
+    sc = RF.score(G, coefs); opp = np.where(lm, sc["Opp"], np.nan)[:, -1]
+    n = np.isfinite(opp).sum(); assert days[-1] == pd.Timestamp("2026-10-05") and n >= 40, (days[-1], n)
+    top = syms[np.argsort(-np.nan_to_num(opp, nan=-1))[:5]]
+    return f"{days[-1].date()}: {n} his names scored; top-5 {list(top)}"
+# ---------------- Screeners / breadth / end-to-end on research panel
+@test("S2 Screeners", "exact filters on a hand-checked bar + counts on the last panel day")
+def _():
+    import lanes, screens as SC, ind as I
+    L = lanes.daily(); sc = SC.build(L, L.mc); t = -1
+    C = L.C; s50 = I.sma(C, 50); e20 = I.ema(C, 20); av60 = I.sma(L.V, 60)
+    hand = (C > s50) & (L.atrp * 100 > 3) & (av60 > 5e5) & (C > 1) & (e20 > s50)
+    assert (hand[:, t] == sc["breadth_screener"][:, t]).all(), "breadth screener mismatch"
+    cnt = {k: int(v[:, t].sum()) for k, v in sc.items()}; assert all(c > 0 for c in cnt.values()), cnt
+    assert cnt["qullamaggie_corrected"] != cnt["qullamaggie_as_posted"]
+    _cache["L"] = L
+    return f"{L.dates[t].date()} counts {cnt}"
+@test("S3/S7/S8 Breadth", "breadth tables present through the last panel day, values sane")
+def _():
+    b = pd.read_parquet(f"{B}/cache/breadth_tables.parquet"); last = b.index.max()
+    assert last >= pd.Timestamp("2026-09-30"), last
+    assert b.score_primary.between(0, 12).all() and (b.n_live > 1000).iloc[-250:].all() and b.mmtw.dropna().between(0, 100).all()
+    return f"last {last.date()}, primary {b.score_primary.iloc[-1]}, n_live {b.n_live.iloc[-1]}"
+@test("S9 MAP/VMR", "MAP states computed through the last panel day; RAM in 0-100")
+def _():
+    s = pd.read_parquet(f"{B}/cache/s9_states.parquet"); c = ("QQQE_live_as_written", "state")
+    assert s.index.max() >= pd.Timestamp("2026-09-30") and s[c].iloc[-1] in ("GREEN", "BLUE", "YELLOW", "AMBER", "PURPLE", "RED")
+    r = s[("QQQE_live_as_written", "ram")].dropna(); assert r.between(0, 100).all()
+    return f"{s.index.max().date()}: {s[c].iloc[-1]}, VMR {s[('QQQE_live_as_written','vmr')].iloc[-1]:.1f}, RAM {r.iloc[-1]:.0f}"
+@test("S4/S5/S6 Rotation", "rotation grid present and finite")
+def _():
+    J = pd.read_csv(f"{B}/out/grids/S4_S5_S6_rotation.csv", index_col=0); assert len(J) > 200 and np.isfinite(J.oos_exc_ann).all()
+    return f"{len(J)} variants"
+@test("S11 Dispersion", "dispersion grid present and finite AUCs")
+def _():
+    O = pd.read_csv(f"{B}/out/grids/S11_dispersion.csv"); assert O.auc_dd5.dropna().between(0, 1).all() and len(O) > 50
+    return f"{len(O)} rows"
+# ---------------- engine + look-ahead + output sanity
+@test("engine", "bt.run toy trade: entry next open, fixed hold, costs, control")
+def _():
+    import bt
+    T = 30; S = 3; d = pd.bdate_range("2023-01-02", periods=T)
+    C = np.tile(np.linspace(10, 13, T), (S, 1)).astype(np.float32); O = C.copy(); H = C * 1.01; L_ = C * 0.99; V = np.full((S, T), 1e6, np.float32)
+    O[0, 6] = 11.0
+    Ln = bt.Lane(O, H, L_, C, V, d, np.array(["A", "B", "C"]), np.zeros(S, bool), np.full((S, T), 1e7), np.full((S, T), 2), np.ones((S, T), bool), np.full((S, T), 1e10))
+    F = np.zeros((S, T), bool); F[0, 5] = True; df = bt.run(Ln, F, "broad", np.ones((S, T), bool), fixed_h=5)
+    r = df.iloc[0]; assert r.entry == 11.0 and r.xdate == d[10], (r.entry, r.xdate)
+    g = (C[0, 10] / 11.0 - 1) * 100; assert abs(r.gross - g) < 1e-4 and abs(r.net - (g - bt.cost_rt(np.array([11.0]))[0])) < 1e-4
+    return f"gross {r.gross:.3f} net {r.net:.3f} ctrl {r.ctrl:.3f}"
+@test("audit", "no look-ahead: every signal family identical when the last 30 sessions are removed")
+def _():
+    import lanes, screens as SC, pine_tools as PT, ind as I, bt, map_vmr_ram as MV
+    L = _cache.get("L") or lanes.daily(); rows = np.r_[np.where(np.isin(L.syms, ["NVDA", "AAPL", "SMCI", "PLTR", "TSLA", "AMD", "SPY", "QQQ", "IWM"]))[0], np.arange(0, L.C.shape[0], 40)]
+    def sub(k): return getattr(L, k)[rows]
+    def mk(cut):
+        sl = slice(None, cut)
+        Ln = bt.Lane(*(getattr(L, k)[rows][:, sl] for k in ("O", "H", "L", "C", "V")), L.dates[sl], L.syms[rows], L.etf[rows], L.dv20[rows][:, sl], L.band[rows][:, sl], L.elig[rows][:, sl], L.mc[rows][:, sl])
+        out = {f"screen:{k}": v for k, v in SC.build(Ln, Ln.mc).items()}
+        out["stage"] = PT.stage(Ln.O, Ln.H, Ln.L, Ln.C); out["crsi_long"] = PT.crsi(Ln.H, Ln.L, Ln.C)["long_re"]; out["gap_n"] = PT.gaps(Ln.H, Ln.L, Ln.C)["n_up"]
+        spy = Ln.Cf[list(Ln.syms).index("SPY")].astype(np.float32); out["rs1m"] = PT.rs1m(Ln.C, spy)[0]; out["atr"] = Ln.atr
+        return out
+    full = mk(None); cut = mk(-30); bad = []
+    for k in cut:
+        a = full[k][:, :-30]; b = cut[k]
+        if a.dtype == bool or b.dtype == bool: diff = (a != b).sum()
+        else: m = np.isfinite(a) | np.isfinite(b); diff = (~np.isclose(np.nan_to_num(a, nan=-9e9), np.nan_to_num(b, nan=-9e9), rtol=1e-5, atol=1e-6) & m).sum()
+        if diff: bad.append(f"{k}:{diff}")
+    # MAP live variant on truncated history
+    s = pd.read_parquet(f"{B}/cache/s9_states.parquet")
+    assert not bad, "look-ahead / non-causal: " + ", ".join(bad)
+    return f"{len(cut)} signal arrays causal on {len(rows)} names"
+@test("audit", "MAP/VMR/RAM causal (truncate last 30 days -> same states)")
+def _():
+    import map_vmr_ram as MV
+    syms, days, A = latest(); si = {s: i for i, s in enumerate(syms)}; i = si["QQQE"]
+    H = pd.DataFrame({"O": A["O"][i], "H": A["H"][i], "L": A["L"][i], "C": A["C"][i]}, index=days)
+    rng = np.random.default_rng(0); net = rng.normal(0, 300, len(days))
+    def cboe(s, col):
+        x = pd.read_csv(f"{B}/data/cboe/{s}_History.csv"); x["DATE"] = pd.to_datetime(x.DATE); return x.set_index("DATE")[col]
+    vol = pd.DataFrame({"vix": cboe("VIX", "CLOSE"), "vix3m": cboe("VIX3M", "CLOSE"), "vvix": cboe("VVIX", "VVIX"), "skew": cboe("SKEW", "SKEW")}).reindex(days).ffill(limit=3)
+    bad = []
+    for var in ("live", "confirmed"):
+        a = MV.compute(days, H, vol, net, variant=var); b = MV.compute(days[:-30], H.iloc[:-30], vol.iloc[:-30], net[:-30], variant=var)
+        for c in ("state", "divergence", "ram_level", "vmr_state"):
+            if (a[c].values[:-30] != b[c].values).any(): bad.append(f"{var}:{c}")
+    assert not bad, bad
+    return "live + confirmed causal"
+@test("audit", "output grids: present, finite, sane counts; best-trade files readable")
+def _():
+    fs = sorted(glob.glob(f"{B}/out/grids/S1_ranker_*.csv") + glob.glob(f"{B}/out/grids/S2_*.csv") + glob.glob(f"{B}/out/grids/S14_*.csv") + glob.glob(f"{B}/out/grids/S10_pine_*.csv"))
+    assert len(fs) >= 20, len(fs); probs = []
+    for f in fs:
+        R = pd.read_csv(f)
+        if len(R) == 0: probs.append(os.path.basename(f) + ":empty"); continue
+        for c in ("train_n", "oos_n", "oos_mean"):
+            if c not in R: probs.append(os.path.basename(f) + f":no {c}")
+        if "oos_mean" in R and not np.isfinite(R.oos_mean.dropna()).all(): probs.append(os.path.basename(f) + ":inf")
+        if "oos_mean" in R and (R.oos_mean.abs() > 200).any(): probs.append(os.path.basename(f) + ":absurd mean")
+    tr = glob.glob(f"{B}/out/trades/*_best.parquet")
+    offenders = []
+    for f in tr:
+        d = pd.read_parquet(f); bad = (~np.isfinite(d.exc)).mean()      # exc is NaN only when the fire has no vol-matched control (ATR warm-up / empty bucket)
+        if not (np.isfinite(d.net).all() and (d.hold >= 0).all() and bad <= 0.005): offenders.append((os.path.basename(f), round(float(bad), 4)))
+    assert not offenders, offenders
+    assert not probs, probs
+    return f"{len(fs)} grids, {len(tr)} best-trade files ok"
+if __name__ == "__main__":
+    quick = len(sys.argv) > 1 and sys.argv[1] == "quick"; only = sys.argv[1][5:] if len(sys.argv) > 1 and sys.argv[1].startswith("only=") else None
+    for t in TESTS:
+        if quick and ("faithfulness vs his" in t.__name__): continue
+        if only and only not in t.system and only not in t.__name__: continue
+        t()
+    if only: sys.exit(0 if all(r["ok"] for r in RES) else 1)     # subset run: do not overwrite the full results files
+    R = pd.DataFrame(RES); R.to_csv(f"{B}/tests/results_tests.csv", index=False)
+    lines = [f"# CHARTSLECTOR tests — {time.strftime('%Y-%m-%d %H:%M %Z')}", "", f"**{R.ok.sum()} / {len(R)} passed**", "", "| system | test | result | detail |", "|---|---|---|---|"]
+    lines += [f"| {r.system} | {r.test} | {'PASS' if r.ok else 'FAIL'} | {r.detail.replace('|', '/')} |" for r in R.itertuples()]
+    by = R.groupby("system").ok.agg(["sum", "count"]); lines += ["", "Per system: " + ", ".join(f"{s} {int(a)}/{int(b)}" for s, (a, b) in by.iterrows())]
+    open(f"{B}/tests/RESULTS_TESTS.md", "w").write("\n".join(lines) + "\n"); print("\n".join(lines[-1:]))
