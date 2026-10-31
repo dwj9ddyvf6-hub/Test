@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grade-A Board: the 63 forecast recipes that earned the top grade</title>
+<style>
+  :root{
+    --ink:#232a33; --soft:#55626f; --faint:#8593a1;
+    --line:#dde1e7; --bg:#f4f4f2; --card:#ffffff;
+    --accent:#0b5fa5; --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --gold-bg:#fdf6e0; --gold-line:#e3cf8a; --gold-ink:#6b5510;
+    --blue-bg:#eef4fb; --blue-line:#bcd4ee;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .headline{font-size:21px;margin:0 0 6px;max-width:46em}
+  .headline strong{font-size:26px}
+  .counts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+  .count{border-radius:10px;padding:10px 14px;font-size:15px;border:1px solid var(--line);background:var(--card)}
+  .count strong{font-size:19px}
+  .count.top{background:var(--gold-bg);border-color:var(--gold-line);color:var(--gold-ink)}
+  .prove{display:inline-block;border-radius:6px;padding:2px 11px;font-size:13.5px;
+         font-weight:600;margin:0 0 14px;background:var(--blue-bg);
+         border:1px solid var(--blue-line);color:#23405e}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:14px;
+       padding:16px 20px;margin:0 0 16px;max-width:60em}
+  .box h2{margin:0 0 6px;font-size:19px}
+  .box p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .box p strong{color:var(--ink);font-weight:600}
+  .rule{background:var(--blue-bg);border:1px solid var(--blue-line);border-radius:14px;
+        padding:16px 20px;margin:0 0 16px;font-size:15.5px;color:#23405e;max-width:60em}
+  .rule strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 6px;font-size:19px;line-height:1.35}
+  .kind{display:inline-block;border-radius:6px;padding:2px 11px;font-size:13.5px;
+        font-weight:600;margin:0 0 10px;background:var(--gold-bg);
+        border:1px solid var(--gold-line);color:var(--gold-ink)}
+  .gate{border-top:1px solid var(--line);padding:8px 0 2px;margin-top:8px;font-size:15px}
+  .gate .name{font-weight:600;color:var(--accent);font-size:13.5px;
+              text-transform:uppercase;letter-spacing:.04em;display:block}
+  .gate p{margin:2px 0 4px;color:var(--soft)}
+  table{width:100%;border-collapse:collapse;margin:12px 0 4px;font-size:14.5px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  .grade{font-weight:700;color:var(--gold-ink);white-space:nowrap}
+  .scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .scrollhint{font-size:13.5px;color:var(--faint);margin:4px 0 0}
+  .nodata{background:#eceae6;border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .tally{margin:26px 0 0}
+  .tally h2{font-size:21px;margin:0 0 6px}
+  .tally p{color:var(--soft);font-size:15px;margin:0 0 6px;max-width:46em}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Grade-A Board</h1>
+    <p class="job">One job: show the forecast recipes that earned the top grade, all 63 of them, each with its recipe in plain words and the numbers it earned them with.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the board&hellip;</p>
+  <div id="prove"></div>
+  <p id="headline" class="headline"></p>
+  <div id="counts" class="counts"></div>
+  <div id="rule"></div>
+  <main id="results"></main>
+  <section id="tallies"></section>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var proveEl = document.getElementById("prove");
+  var headlineEl = document.getElementById("headline");
+  var countsEl = document.getElementById("counts");
+  var ruleEl = document.getElementById("rule");
+  var resultsEl = document.getElementById("results");
+  var talliesEl = document.getElementById("tallies");
+  var receiptEl = document.getElementById("receipt");
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function fmt4(x){
+    if (x == null) return "Not on record";
+    return (x >= 0 ? "+" : "") + Number(x).toFixed(4);
+  }
+  function fmtT(x){
+    if (x == null) return "Not on record";
+    return "(" + (x >= 0 ? "+" : "") + Number(x).toFixed(1) + ")";
+  }
+  function fmtNet(x){
+    if (x == null) return "Not on record";
+    var v = Number(x) * 100;
+    return (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
+  }
+  function fmtDay(iso){
+    if (!iso) return null;
+    var d = new Date(String(iso).slice(0, 10) + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function gate(name, text){
+    return '<div class="gate"><span class="name">' + esc(name) + "</span><p>" + esc(text) + "</p></div>";
+  }
+  function tallyTable(title, intro, s, verdicts){
+    var h = '<div class="box tally"><h2>' + esc(title) + "</h2><p>" + esc(intro) + "</p>";
+    h += "<p><strong>" + Number(s.cells).toLocaleString("en-US") + "</strong> recipes in this search: <strong>" +
+      Number(s.tested).toLocaleString("en-US") + "</strong> tested, <strong>" +
+      Number(s.untested).toLocaleString("en-US") + "</strong> not tested (too little data), <strong>" +
+      Number(s.screen_pass).toLocaleString("en-US") + "</strong> passed the false-alarm screen. " +
+      "It covered " + Number(s.names).toLocaleString("en-US") + " stocks, " +
+      esc(s.window[0]) + " to " + esc(s.window[1]) +
+      ", split into an earlier part and a held-back later part at " + esc(s.split) + ".</p>";
+    h += "<table><tr><th>How each recipe ended</th><th class=\"num\">Recipes</th></tr>";
+    verdicts.forEach(function(v){
+      h += "<tr><td>" + esc(v[0]) + "</td><td class=\"num\">" +
+        Number(v[1]).toLocaleString("en-US") + "</td></tr>";
+    });
+    return h + "</table></div>";
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var counts = data.counts || {};
+      var groups = data.groups || [];
+      var total = groups.reduce(function(n, g){ return n + (g.cells || []).length; }, 0);
+      if (data.state !== "published" || total !== counts.grade_a || !groups.length){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">The board has not been published yet. ' +
+          "It appears only when the study record behind it is complete: the full list of " +
+          "top-grade recipes, each with its numbers. Nothing is shown for a record that is not finished.</div>";
+        return;
+      }
+      meta.textContent = "Source: " + data.source + ".";
+      proveEl.innerHTML = '<span class="prove">' + esc(data.proving_state) + "</span>";
+      headlineEl.innerHTML = "<strong>" + counts.grade_a + " of " +
+        Number(counts.promoted).toLocaleString("en-US") + "</strong> forecast recipes earned the top grade. " +
+        "The first search promoted " + Number(counts.promoted).toLocaleString("en-US") +
+        " recipes. A second search, its rule written down before it ran, tested them again on a second set of stocks. " +
+        "Only " + counts.grade_a + " passed every gate again. That count, " + counts.grade_a + " of " +
+        Number(counts.promoted).toLocaleString("en-US") + ", is the headline of this board and it does not change.";
+      countsEl.innerHTML =
+        '<span class="count top"><strong>' + counts.grade_a + '</strong> earned the top grade (grade A)</span>' +
+        '<span class="count"><strong>' + counts.confirmed + '</strong> held up, a step below the top grade</span>' +
+        '<span class="count"><strong>' + counts.flipped + '</strong> flipped (pointed the other way)</span>' +
+        '<span class="count"><strong>' + counts.not_replicated + '</strong> did not reproduce</span>' +
+        '<span class="count"><strong>' + counts.untestable + '</strong> could not be tested again</span>' +
+        '<span class="count"><strong>' + Number(counts.tested_denominator).toLocaleString("en-US") +
+          '</strong> could be tested again, and the top grade is ' + counts.a_rate_pct +
+          '% of them (' + counts.a_or_confirmed_pct + '% earned the top grade or held up)</span>';
+      ruleEl.innerHTML =
+        '<div class="rule"><strong>How a recipe earned the top grade.</strong> ' + esc(data.grading_rule) + "</div>" +
+        '<div class="box"><h2>What the 63 are</h2>' +
+        "<p><strong>" + counts.movement_cells + " of the 63</strong> forecast how much prices will move around, " +
+        "not which way. <strong>" + counts.warning_cells + " of the 63</strong> are warning flags on individual stocks, " +
+        "and every one of those says avoid: no recipe that says buy earned the top grade.</p>" +
+        "<p>The 63 are narrowings of just 7 recipes, not 63 separate ideas: the same recipe counted under " +
+        "different conditions (only calm days, only the most traded stocks, and so on) appears once per condition it passed in. " +
+        esc(data.second_search.pairs_passed) + "</p>" +
+        "<p>" + esc(data.overlap_note) + "</p></div>" +
+        '<div class="box"><h2>How to read the numbers</h2>' +
+        "<p>Each recipe below was scored in two parts of each search: an earlier part, where recipes were picked, " +
+        "and a held-back later part they had not been picked on. The averages are signed the recipe's way, so a plus " +
+        "always means the recipe pointed the way it claimed. The figure in brackets is a strength score: how many times " +
+        "larger the average is than the wobble in it. Past about 2, a pattern that size is unlikely to be a fluke of " +
+        "that stretch of data alone.</p>" +
+        "<p>The net figure is what one flagged chance gained after trading costs, in the second search. A dash means " +
+        "the record carries no net figure for that recipe: the ones that forecast how much prices move were never " +
+        "traded as positions, so there is nothing to net.</p></div>";
+
+      var h = "";
+      groups.forEach(function(g){
+        h += '<section class="group"><h2>' + esc(g.title) + "</h2>";
+        h += '<span class="kind">' + esc(g.kind) + " &middot; " + g.count +
+          (g.count === 1 ? " cell" : " cells") + " earned the top grade</span>";
+        h += gate("What it watches", g.watches);
+        h += gate("What it expects", g.expects);
+        h += '<p class="scrollhint">This table is wide: scroll sideways inside it to see every column.</p><div class="scrollx"><table><tr><th>Where this cell counts</th><th>Grade</th>' +
+          "<th class=\"num\">Second search, earlier part: average</th>" +
+          "<th class=\"num\">Second search, held-back part: average (strength)</th>" +
+          "<th class=\"num\">Net per chance, second search</th>" +
+          "<th class=\"num\">First search, held-back part: average (strength)</th></tr>";
+        (g.cells || []).forEach(function(c){
+          h += "<tr><td>" + esc(c.where) + "</td>" +
+            '<td class="grade">' + esc(c.grade) + "</td>" +
+            '<td class="num">' + fmt4(c.disc_second) + "</td>" +
+            '<td class="num">' + fmt4(c.hold_second) + " " + fmtT(c.hold_second_t) + "</td>" +
+            '<td class="num">' + fmtNet(c.net_second) + "</td>" +
+            '<td class="num">' + fmt4(c.hold_first) + " " + fmtT(c.hold_first_t) + "</td></tr>";
+        });
+        h += "</table></div></section>";
+      });
+      resultsEl.innerHTML = h;
+
+      var t = '<div class="tally"><h2>The full count, both searches</h2>' +
+        "<p>Every recipe both searches scored, and how each one ended. The recipes that did not earn the top grade " +
+        'are not hidden: the claim that all ' + Number(counts.promoted).toLocaleString("en-US") +
+        ' promoted recipes were worth trusting is kept on <a href="../graveyard/">The Graveyard</a>, ' +
+        'and every re-tested claim is on the <a href="../replication-wire/">Replication Wire</a>.</p></div>';
+      t += tallyTable("The first search", "The search that promoted the 1,217. Its promoted recipes are the only ones the second search re-graded.", data.first_search, data.first_search.verdicts);
+      t += tallyTable("The second search", "The search that handed out the top grade. Its own full count is bigger, because it scored every recipe again, not just the promoted ones; the re-grading of the 1,217 is the count at the top of this page.", data.second_search, data.second_search.verdicts);
+      talliesEl.innerHTML = t;
+
+      receiptEl.textContent = "Receipt: this page is built from " + data.source.charAt(0).toLowerCase() +
+        data.source.slice(1) + ". The first search was finished " + fmtDay(data.first_search_finished) +
+        " and the second search " + fmtDay(data.second_search_finished) +
+        ". Proving state: " + data.proving_state + ". " + data.proving_words;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Grade-A Board is not available right now. The record for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
