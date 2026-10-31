@@ -83,7 +83,13 @@ try:
 except ImportError:  # refresh stays runnable standalone
     _tc = None
 
+try:
+    import session_history as _sh
+except ImportError:  # refresh stays runnable standalone
+    _sh = None
+
 HERE = os.path.dirname(os.path.abspath(__file__))
+HISTORY_PATH = os.path.join(HERE, "agent-debate", "session-history.json")
 SO_PATH = os.path.join(HERE, "second-opinion", "data.json")
 MM_PATH = os.path.join(HERE, "morning-map", "data.json")
 FB_PATH = os.path.join(HERE, "flow-board", "data.json")
@@ -425,6 +431,19 @@ def main():
     for bad in BANNED:
         if bad in blob:
             fail("internal wording in assembled output: " + bad)
+
+    # Session keeping (2026-10-31, Wave 3 Item F): past debates were
+    # not kept, so the record chart had nothing to draw. From this
+    # run forward, each refresh appends a dated snapshot of the
+    # charted subject values (each fund's rising and falling
+    # counts) to the page's session-history store and carries the
+    # kept list on the page data. Nothing before this run is
+    # reconstructed.
+    if _sh is not None:
+        out["session_history"] = _sh.append_session(
+            HISTORY_PATH, session,
+            [{"symbol": f["symbol"], "rising": f["count_rising"],
+              "falling": f["count_falling"]} for f in funds])
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     tmp = OUT_PATH + ".tmp"
