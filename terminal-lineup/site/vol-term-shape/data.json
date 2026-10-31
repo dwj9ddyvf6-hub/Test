@@ -386,6 +386,7 @@
         "record_surface",
         "source",
         "state",
+        "subject_chart",
         "thin_cell_rule",
         "tool"
       ]
@@ -434,6 +435,85 @@
   },
   "source": "Daily closing prices for SPY and QQQ from the price history on record (404 trading days, 2025-03-25 to 2026-10-30). The volatility priced into S&P 500 options is on record for only 23 days, September 21 to October 21, 2026, and no such series for QQQ is on record, so no priced level is used in these numbers.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "curve",
+      "label": "Coverage percent per stated chance, SPY 5 day.",
+      "points": [
+        {
+          "x": "stated 25 percent",
+          "y": 14.3
+        },
+        {
+          "x": "stated 50 percent",
+          "y": 42.9
+        },
+        {
+          "x": "stated 75 percent",
+          "y": 64.3
+        }
+      ],
+      "source": "history.cells[].coverage_pct (SPY 5d)",
+      "title": "What the stated chances promised, and what happened"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Coverage percent per symbol, horizon and stated percentile.",
+      "rows": [
+        {
+          "name": "SPY 5d stated 25%",
+          "score": 14.3
+        },
+        {
+          "name": "SPY 5d stated 50%",
+          "score": 42.9
+        },
+        {
+          "name": "SPY 5d stated 75%",
+          "score": 64.3
+        },
+        {
+          "name": "SPY 21d stated 25%",
+          "score": 18.4
+        },
+        {
+          "name": "SPY 21d stated 50%",
+          "score": 38.8
+        },
+        {
+          "name": "SPY 21d stated 75%",
+          "score": 71.4
+        },
+        {
+          "name": "SPY 63d stated 25%",
+          "score": 18.8
+        },
+        {
+          "name": "SPY 63d stated 50%",
+          "score": 46.9
+        },
+        {
+          "name": "SPY 63d stated 75%",
+          "score": 68.8
+        },
+        {
+          "name": "QQQ 5d stated 25%",
+          "score": 17.9
+        },
+        {
+          "name": "QQQ 5d stated 50%",
+          "score": 44.6
+        },
+        {
+          "name": "QQQ 5d stated 75%",
+          "score": 69.6
+        }
+      ],
+      "source": "history.cells[].coverage_pct",
+      "title": "Calibration per cell, all horizons"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any graded cell with fewer than 30 graded weeks shows its count only, with no percentage and no score.",
   "tool": "Vol Term Shape Forecaster"
 }
