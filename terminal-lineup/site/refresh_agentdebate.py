@@ -387,8 +387,20 @@ def main():
             "change_words": change_words,
         })
 
+    # Chart counts (2026-10-31 chart cure): the per-fund reading
+    # counts this page already assembles, copied into the top-level
+    # counts block the record producer and chart renderer draw from
+    # on sibling pages (flow-tape, state-analogue). No new numbers:
+    # every value is a fund's own count_rising / count_falling.
+    counts = {}
+    for f in funds:
+        sym = f["symbol"].lower()
+        counts[sym + "_readings_pointing_to_rising"] = f["count_rising"]
+        counts[sym + "_readings_pointing_to_falling"] = f["count_falling"]
+
     out = {
         "tool": "Agent Debate",
+        "counts": counts,
         "session": session,
         "session_long": long_date(session),
         "published_at_utc": fb.get("published_at_utc"),
