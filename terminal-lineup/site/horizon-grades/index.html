@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Horizon Grades: the Board's calls at 1, 5 and 21 sessions</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .proving{display:inline-block;font-size:13px;font-weight:700;color:var(--accent);
+           border:1px solid var(--accent);border-radius:20px;padding:2px 10px;margin:0 0 18px}
+  .panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin:0 0 22px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .panel.pending{background:var(--nodata-bg)}
+  .panel h2{font-size:21px;margin:0 0 10px}
+  .panel .big{font-size:19px;font-weight:700;margin:3px 0 8px}
+  .panel p{font-size:15px;color:var(--soft);margin:0 0 8px}
+  .panel p strong{color:var(--ink)}
+  .up{color:var(--up)} .down{color:var(--down)}
+  .qual{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}
+  .qual .label{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+  .groups{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}
+  .groups .label{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+  .groups p{font-size:14px;margin:0 0 5px}
+  .note{font-size:15px;color:var(--soft);max-width:46em;margin:0 0 22px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Horizon Grades</h1>
+    <p class="job">One job: show how the Board's published stock calls graded at each fixed distance ahead: 1 session, 5 sessions and 21 sessions, side by side.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the grades&hellip;</p>
+  <p id="proving" class="proving" hidden></p>
+  <main id="main" hidden>
+    <div id="panels" class="panels"></div>
+    <p id="mapnote" class="note"></p>
+  </main>
+
+  <footer>
+    <p id="method"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var provingEl = document.getElementById("proving");
+  var mainEl = document.getElementById("main");
+  var panelsEl = document.getElementById("panels");
+  var mapNoteEl = document.getElementById("mapnote");
+  var methodEl = document.getElementById("method");
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function fmtPct(v){
+    var s = v > 0 ? "+" : "";
+    return s + Number(v).toFixed(2) + "%";
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function sessWord(days){ return days === 1 ? "session" : "sessions"; }
+
+  function gradedLines(prefix, b){
+    return '<p class="big"><span class="up">' + b.rose_count + ' rose</span>, ' +
+      '<span class="down">' + b.did_not_rise_count + ' did not</span></p>' +
+      '<p>' + prefix + b.graded_count + ' graded of ' + b.published_count +
+      ' published calls.</p>' +
+      '<p>Average of the ' + b.graded_count + ' graded calls: <strong>' +
+      fmtPct(b.average_pct) + '</strong>. Middle result of those ' + b.graded_count +
+      ': <strong>' + fmtPct(b.middle_pct) + '</strong>.</p>';
+  }
+  function pendingLines(b, what){
+    return '<p class="big">Not yet graded</p>' +
+      '<p>No ' + what + ' has reached this grading date yet: 0 graded of ' +
+      b.published_count + ' published calls. First grades arrive after the close on ' +
+      fmtDateShort(b.first_grade_date) + '.</p>';
+  }
+  function groupLines(groups){
+    var h = '<div class="groups"><p class="label">By publishing day</p>';
+    groups.forEach(function(g){
+      if (g.state === "graded"){
+        h += '<p>Calls for ' + fmtDateLong(g.session) + ': ' + g.graded_count +
+          ' of these ' + g.graded_of_group + ' calls graded as a group, ' +
+          g.rose_count + ' rose and ' + g.did_not_rise_count + ' did not.</p>';
+      } else {
+        h += '<p>Calls for ' + fmtDateLong(g.session) + ': not yet graded, ' +
+          'first grades after the ' + fmtDateShort(g.first_grade_date) + ' close.</p>';
+      }
+    });
+    return h + '</div>';
+  }
+  function panel(h){
+    var title = 'After ' + h.days + ' ' + sessWord(h.days);
+    var body = (h.state === "graded")
+      ? gradedLines("", h)
+      : pendingLines(h, "call");
+    var q = h.qualified;
+    var qBody = (q.state === "graded")
+      ? gradedLines("", q)
+      : pendingLines(q, "call that passed every check");
+    return '<section class="panel' + (h.state === "graded" ? "" : " pending") + '">' +
+      '<h2>' + title + '</h2>' + body +
+      '<div class="qual"><p class="label">Calls that passed every check</p>' +
+      qBody + '</div>' + groupLines(h.groups) + '</section>';
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      if (!data.horizons || !data.horizons.length) throw new Error("missing");
+      meta.textContent = "Record as of " + fmtTimestamp(data.generated_at_utc) +
+        ": " + data.totals.calls_published + " calls published in all (" +
+        data.totals.board_calls + " stock calls from the Board and " +
+        data.totals.map_calls + " index cards from the Morning Map), " +
+        data.totals.calls_graded_so_far + " graded so far. Source: " + data.source + ".";
+      provingEl.textContent = "Proving state: " + data.proving.words + ". " + data.proving.definition;
+      provingEl.hidden = false;
+      panelsEl.innerHTML = data.horizons.map(panel).join("");
+      mapNoteEl.textContent = data.map_note;
+      methodEl.textContent = "How grading works: " + data.method;
+      mainEl.hidden = false;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      banner.className = "banner show missing";
+      banner.textContent = "The grades are not available right now. The data file for this page could not be loaded, so nothing is shown rather than guessed. Please check back after the next update.";
+    });
+})();
+</script>
+</body>
+</html>
