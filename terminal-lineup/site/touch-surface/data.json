@@ -1734,6 +1734,7 @@
         "record_surface",
         "source",
         "state",
+        "subject_chart",
         "tool"
       ]
     },
@@ -1777,5 +1778,119 @@
   },
   "source": "Daily prices for SPY and QQQ from the price history on record (399 trading days, March 25, 2025 to October 23, 2026), and the expected-move bands published by the Corrected Band Engine from the same history.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Touch chance percent per level.",
+      "rows": [
+        {
+          "coverage": "benchmark 61.7 percent",
+          "name": "SPY +0.5 percent",
+          "score": 58.3
+        },
+        {
+          "coverage": "benchmark 61.7 percent",
+          "name": "SPY -0.5 percent",
+          "score": 58.3
+        },
+        {
+          "coverage": "benchmark 100.0 percent",
+          "name": "SPY either side 0.5 percent",
+          "score": 95.5
+        },
+        {
+          "coverage": "benchmark 31.7 percent",
+          "name": "SPY +1 percent",
+          "score": 37.7
+        },
+        {
+          "coverage": "benchmark 31.7 percent",
+          "name": "SPY -1 percent",
+          "score": 36.3
+        },
+        {
+          "coverage": "benchmark 63.5 percent",
+          "name": "SPY either side 1 percent",
+          "score": 72.0
+        },
+        {
+          "coverage": "benchmark 13.4 percent",
+          "name": "SPY +1.5 percent",
+          "score": 21.6
+        },
+        {
+          "coverage": "benchmark 13.4 percent",
+          "name": "SPY -1.5 percent",
+          "score": 25.1
+        },
+        {
+          "coverage": "benchmark 26.7 percent",
+          "name": "SPY either side 1.5 percent",
+          "score": 46.5
+        }
+      ],
+      "source": "live.names[0].cells[].p_pct",
+      "title": "Chances of touching each level"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Realised touch percent per history cell, forecast beside it.",
+      "rows": [
+        {
+          "coverage": "forecast 63.8 percent",
+          "name": "SPY 0.5 up 1d",
+          "score": 57.5
+        },
+        {
+          "coverage": "forecast 53.8 percent",
+          "name": "SPY 0.5 down 1d",
+          "score": 55.6
+        },
+        {
+          "coverage": "forecast 94.6 percent",
+          "name": "SPY 0.5 either 1d",
+          "score": 94.8
+        },
+        {
+          "coverage": "forecast 36.6 percent",
+          "name": "SPY 1.0 up 1d",
+          "score": 35.3
+        },
+        {
+          "coverage": "forecast 32.2 percent",
+          "name": "SPY 1.0 down 1d",
+          "score": 33.3
+        },
+        {
+          "coverage": "forecast 66.6 percent",
+          "name": "SPY 1.0 either 1d",
+          "score": 66.7
+        },
+        {
+          "coverage": "forecast 19.4 percent",
+          "name": "SPY 1.5 up 1d",
+          "score": 17.9
+        },
+        {
+          "coverage": "forecast 21.0 percent",
+          "name": "SPY 1.5 down 1d",
+          "score": 25.0
+        },
+        {
+          "coverage": "forecast 39.7 percent",
+          "name": "SPY 1.5 either 1d",
+          "score": 42.5
+        },
+        {
+          "coverage": "forecast 70.2 percent",
+          "name": "SPY 0.5 up 5d",
+          "score": 62.5
+        }
+      ],
+      "source": "history.cells[].realised_pct",
+      "title": "Touch record: realised against forecast"
+    },
+    "version": 1
+  },
   "tool": "Touch Surface"
 }
