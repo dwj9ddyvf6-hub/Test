@@ -249,11 +249,11 @@
       if (raw) return raw;
     }
     if (type === "gauge") {
+      /* Indicator cure (2026-10-31, spec 14.2): hub gauge minis are
+         bullets now, the raw bar with its exact value and zone word. */
       var comp = data.state && data.state.composite_percentile;
       if (isNum(comp)) {
-        var g = VisualKit.gaugeZones({ value: comp, low: 0, high: 100, zones: [{ to: 25, label: "Extreme fear" }, { to: 50, label: "Fearful" }, { to: 75, label: "Neutral" }, { to: 100, label: "Greed" }] });
-        var m = g.match(/<svg[\s\S]*?<\/svg>/);
-        if (m) return m[0];
+        return VisualKit.bullet({ value: comp, low: 0, high: 100, raw: true, zones: [{ to: 25, label: "Extreme fear" }, { to: 50, label: "Fearful" }, { to: 75, label: "Neutral" }, { to: 100, label: "Greed" }] });
       }
     }
     if (type === "donut") {
