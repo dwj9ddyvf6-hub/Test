@@ -507,6 +507,7 @@
         "record_surface",
         "source",
         "state",
+        "subject_chart",
         "tool"
       ]
     },
@@ -546,5 +547,96 @@
   },
   "source": "Daily closing prices for SPY and QQQ from the price history on record (399 trading days, March 25, 2025 to October 23, 2026), and the daily closes of the volatility index on record (ending 2026-10-30).",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "items": [
+        {
+          "current": 755.72,
+          "high": 761.21,
+          "label": "SPY (the big S&P 500 fund)",
+          "low": 750.23
+        },
+        {
+          "current": 755.72,
+          "high": 763.82,
+          "label": "SPY (the big S&P 500 fund)",
+          "low": 747.62
+        },
+        {
+          "current": 755.72,
+          "high": 766.39,
+          "label": "SPY (the big S&P 500 fund)",
+          "low": 745.05
+        },
+        {
+          "current": 755.72,
+          "high": 771.68,
+          "label": "SPY (the big S&P 500 fund)",
+          "low": 739.76
+        }
+      ],
+      "kind": "band",
+      "label": "Each published range for the next session.",
+      "source": "live.names[0].horizons[0].bands[].lower/upper",
+      "title": "The latest band, drawn to scale"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Coverage percent per symbol, horizon and level.",
+      "rows": [
+        {
+          "name": "SPY 1d 50%",
+          "score": 46.2
+        },
+        {
+          "name": "SPY 1d 68%",
+          "score": 61.7
+        },
+        {
+          "name": "SPY 1d 81%",
+          "score": 72.7
+        },
+        {
+          "name": "SPY 1d 95%",
+          "score": 87.9
+        },
+        {
+          "name": "SPY 5d 50%",
+          "score": 45.9
+        },
+        {
+          "name": "SPY 5d 68%",
+          "score": 63.1
+        },
+        {
+          "name": "SPY 5d 81%",
+          "score": 73.5
+        },
+        {
+          "name": "SPY 5d 95%",
+          "score": 91.0
+        },
+        {
+          "name": "SPY 21d 50%",
+          "score": 47.6
+        },
+        {
+          "name": "SPY 21d 68%",
+          "score": 64.0
+        },
+        {
+          "name": "SPY 21d 81%",
+          "score": 78.7
+        },
+        {
+          "name": "SPY 21d 95%",
+          "score": 94.2
+        }
+      ],
+      "source": "history.cells[].coverage_pct",
+      "title": "How often the bands held, per cell"
+    },
+    "version": 1
+  },
   "tool": "Corrected Band Engine"
 }
