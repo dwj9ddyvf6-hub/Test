@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrected Band Engine: price bands whose stated percentages are graded</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20;--nodata-bg:#eef1f5}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Corrected Band Engine</h1>
+    <p class="job">One job: publish a price band for SPY and QQQ whose stated percentage is a promise this page is graded against.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest bands&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function price(v){return "$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="Bands measured from the closing prices of "+fmtDate(data.as_of_session)+", for the trading days starting "+fmtShort(data.next_session)+". Source: "+data.source;
+    showBanner("stale","These bands are the newest ones on record. They are measured from the close of "+fmtDate(data.as_of_session)+", the last trading day in the price history on record, so treat them as the latest published forecast, made before the next trading day opens.");
+    var h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>This engine is new. Its live record starts today, and it earns stronger language only from that record as it grows.</p></section>';
+
+    (data.live.names||[]).forEach(function(n){
+      h+='<section class="card"><h2>'+esc(n.name)+'</h2><p class="sub">Measured from the close of '+fmtShort(n.close_date)+": <strong>"+price(n.close)+"</strong>. Expected yearly movement from recent prices: "+esc(n.recent_movement_forecast_pct)+"%.</p>";
+      (n.horizons||[]).forEach(function(hz){
+        h+="<h3>Next "+hz.sessions+(hz.sessions===1?" trading day":" trading days")+", through "+fmtShort(hz.horizon_close)+"</h3><table><tr><th>Band</th><th>Price range</th><th>What it means</th></tr>";
+        (hz.bands||[]).forEach(function(b){
+          h+="<tr><td><strong>"+b.level+" percent band</strong></td><td><strong>"+price(b.lower)+" to "+price(b.upper)+"</strong></td><td>About "+b.level+" of every 100 closes like this one should land inside this range.</td></tr>";
+        });
+        h+="</table>";
+      });
+      h+="</section>";
+    });
+
+    var reg=data.live.regime_reading||{};
+    h+='<section class="card"><h2>A second reading, kept in its place</h2><p>The volatility index closed at '+esc(reg.volatility_index_close)+" on "+fmtShort(reg.volatility_index_date)+". Scaled the measured way, that gives a one-day reading of about "+esc(reg.scaled_reading_pct)+" percent. That reading is older than the closing prices above, so it is shown as background only: "+esc(reg.effect)+" The wider bands on this page are built from how SPY and QQQ themselves have actually been moving.</p><p>"+esc((data.live.backwardation||{}).note||"")+"</p></section>";
+
+    var hist=data.history||{};
+    h+='<section class="card"><h2>History, not live forecasts</h2><p>'+esc(hist.note||"")+'</p><p class="sub">History covered: '+fmtShort(hist.span_start)+" to "+fmtShort(hist.span_end)+" ("+esc(hist.sessions)+" trading days on record). Each figure below rests on hundreds of past days, so each is shown as a percentage with its count.</p>";
+    ["SPY","QQQ"].forEach(function(sym){
+      h+="<h3>"+sym+"</h3><table><tr><th>Band</th><th>1 day later</th><th>5 days later</th><th>21 days later</th></tr>";
+      [50,68,81,95].forEach(function(level){
+        h+="<tr><td><strong>"+level+" percent band</strong></td>";
+        [1,5,21].forEach(function(hor){
+          var cell=(hist.cells||[]).filter(function(c){return c.symbol===sym&&c.horizon===hor&&c.level===level;})[0];
+          h+="<td>"+(cell?esc(cell.coverage_pct)+"% ("+esc(cell.hits)+" of "+esc(cell.graded)+")":"")+"</td>";
+        });
+        h+="</tr>";
+      });
+      h+="</table>";
+    });
+    h+="</section>";
+
+    h+='<section class="card"><h2>The live record</h2><p class="count">'+esc(data.live.issue_days)+' of '+esc(data.live.claim_target)+' live forecast days</p><p>Forecast days recorded so far: '+esc(data.live.issue_days)+' (the count toward 120 is in forecast days). Individual band forecasts recorded: '+esc(data.live.forecasts_recorded)+'. Graded so far: '+esc(data.live.forecasts_graded)+', because none of the days they cover has happened yet in the price history on record.</p><p class="claim">The promise, written down in advance: '+esc(data.live.claim)+'</p><p>'+esc(data.kill_criterion)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    meta.textContent="";
+    showBanner("missing","The latest bands are not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+  });
+})();
+</script>
+</body>
+</html>
