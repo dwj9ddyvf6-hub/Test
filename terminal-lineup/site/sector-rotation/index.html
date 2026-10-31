@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sector Rotation: which parts of the market are leading, lagging, and turning</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --good:#1d7a3a; --bad:#b03a2e;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --stale-bg:#fdf6e3; --stale-line:#e3cf8a; --stale-ink:#6b5510;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.stale{background:var(--stale-bg);border:1px solid var(--stale-line);color:var(--stale-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0 0 8px}
+  .note p:last-child{margin:0}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 8px;font-size:21px}
+  .group p.lede{font-size:15.5px;margin:0 0 12px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{text-align:right;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  th{font-size:12.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  .scroll{overflow-x:auto}
+  .up{color:var(--good);font-weight:600}
+  .down{color:var(--bad);font-weight:600}
+  .tag{font-weight:600}
+  .tag.leading{color:var(--good)} .tag.lagging{color:var(--bad)}
+  .tag.turning{color:#8a6d00} .tag.middle{color:var(--soft)}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Sector Rotation</h1>
+    <p class="job">One job: show which sectors are leading, lagging, and turning, by ranking every sector by its average price change over the last 5 and the last 21 trading sessions.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the sector ranking&hellip;</p>
+
+  <main id="main"></main>
+
+  <section class="note">
+    <h2>What each word means</h2>
+    <p id="def-average">Loading&hellip;</p>
+    <p id="def-turning"></p>
+    <p id="def-leading"></p>
+    <p id="def-thin"></p>
+    <p id="def-universe"></p>
+  </section>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">All the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var receiptEl = document.getElementById("receipt");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtNum(v){ return Number(v).toLocaleString("en-US"); }
+  function fmtChange(v){
+    var n = Number(v);
+    return (n > 0 ? "+" : "") + n.toFixed(2) + "%";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function lastCompletedSession(){
+    var now = new Date(new Date().toLocaleString("en-US",{timeZone:"America/New_York"}));
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    d.setDate(d.getDate() - 1);
+    while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1);
+    var m = String(d.getMonth() + 1), day = String(d.getDate());
+    return d.getFullYear() + "-" + (m.length < 2 ? "0" + m : m) + "-" + (day.length < 2 ? "0" + day : day);
+  }
+  function tagClass(label){
+    if (label === "Leading") return "leading";
+    if (label === "Lagging") return "lagging";
+    if (label === "Turning") return "turning";
+    return "middle";
+  }
+  function table(title, lede, rows, avgKey, otherAvgKey, rankKey, otherRankKey, avgHead, otherHead){
+    var out = '<section class="group"><h2>' + esc(title) + '</h2>' +
+      '<p class="lede">' + esc(lede) + '</p><div class="scroll">' +
+      '<table><thead><tr><th>Rank</th><th>Sector</th><th>' + esc(avgHead) + '</th>' +
+      '<th>' + esc(otherHead) + '</th><th>Stocks counted</th><th>Where it stands</th>' +
+      '</tr></thead><tbody>';
+    rows.forEach(function(s){
+      out += '<tr><td>' + esc(s[rankKey]) + '</td><td>' + esc(s.sector) + '</td>' +
+        '<td class="' + (s[avgKey] > 0 ? "up" : (s[avgKey] < 0 ? "down" : "")) + '">' +
+        esc(fmtChange(s[avgKey])) + '</td><td>' + esc(fmtChange(s[otherAvgKey])) +
+        ' (rank ' + esc(s[otherRankKey]) + ')</td><td>' + esc(fmtNum(s.names_counted)) +
+        ' of ' + esc(fmtNum(s.names_on_record)) + ' on record</td>' +
+        '<td><span class="tag ' + tagClass(s.label) + '">' + esc(s.label) +
+        '</span></td></tr>';
+    });
+    return out + '</tbody></table></div></section>';
+  }
+  function nameList(rows, label){
+    var picked = rows.filter(function(s){ return s.label === label; });
+    if (!picked.length) return "";
+    return picked.map(function(s){
+      return s.sector + " (" + fmtChange(s.avg_change_21_pct) + " over 21 sessions, " +
+        fmtNum(s.names_counted) + " stocks counted)";
+    }).join("; ");
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var defs = data.definitions || {};
+      document.getElementById("def-average").textContent = defs.average || "";
+      document.getElementById("def-turning").textContent = defs.turning || "";
+      document.getElementById("def-leading").textContent = defs.leading_lagging || "";
+      document.getElementById("def-thin").textContent = defs.thin || "";
+      document.getElementById("def-universe").textContent = defs.universe || "";
+      var sectors = data.sectors || [];
+      if (!sectors.length || !data.session || !data.windows){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No sector ranking has been ' +
+          'published yet.</div>';
+        return;
+      }
+      if (data.session < lastCompletedSession()){
+        showBanner("stale", "These figures belong to " + fmtDateLong(data.session) +
+          ", which is not the most recent completed trading session. The price " +
+          "history on record ends with that session, and the ranking is shown " +
+          "as it stands.");
+      }
+      var w = data.windows;
+      meta.textContent = "Figures belong to the trading session of " +
+        fmtDateLong(data.session) + ". The 5-session view compares closing " +
+        "prices on " + fmtDateLong(w.sessions_5.from) + " and " +
+        fmtDateLong(w.sessions_5.to) + "; the 21-session view compares " +
+        fmtDateLong(w.sessions_21.from) + " and " + fmtDateLong(w.sessions_21.to) +
+        ". Source: " + data.source + ". Price history on record: " +
+        fmtNum(data.history_sessions_on_record) + " trading sessions (" +
+        fmtDateLong(data.history_from) + " to " + fmtDateLong(data.history_to) + ").";
+      receiptEl.textContent = "Receipt: session " + fmtDateLong(data.session) +
+        ". Source: " + data.source + ". Coverage: " + data.coverage + ".";
+
+      var c = data.counts || {};
+      var out = "";
+      var lead = nameList(sectors, "Leading");
+      var lag = nameList(sectors, "Lagging");
+      var turn = nameList(sectors, "Turning");
+      var headline = "Over the 21 sessions to " + fmtDateLong(data.session) + ": ";
+      if (lead) headline += "leading: " + lead + ". ";
+      if (lag) headline += "Lagging: " + lag + ". ";
+      if (turn) headline += "Turning (the last 5 sessions point the other way): " + turn + ". ";
+      headline += fmtNum(c.names_counted) + " stocks counted across " +
+        fmtNum(c.sectors_ranked) + " sectors; " +
+        fmtNum(c.names_without_sector_on_record) + " of the " +
+        fmtNum(c.names_scored) + " scored stocks have no sector on record " +
+        "and are counted here, not dropped.";
+      out += '<section class="group"><h2>Where the sectors stand</h2>' +
+        '<p class="lede">' + esc(headline) + '</p></section>';
+
+      var by21 = sectors.slice().sort(function(a,b){ return a.rank_21 - b.rank_21; });
+      var by5 = sectors.slice().sort(function(a,b){ return a.rank_5 - b.rank_5; });
+      out += table("The 21-session view", "Ranked by the average change over the " +
+        "last 21 trading sessions, from " + fmtDateLong(w.sessions_21.from) +
+        " to " + fmtDateLong(w.sessions_21.to) + ".",
+        by21, "avg_change_21_pct", "avg_change_5_pct", "rank_21", "rank_5",
+        "Average change, 21 sessions", "Change over 5 sessions");
+      out += table("The 5-session view", "The same sectors, ranked by the average " +
+        "change over the last 5 trading sessions, from " +
+        fmtDateLong(w.sessions_5.from) + " to " + fmtDateLong(w.sessions_5.to) + ".",
+        by5, "avg_change_5_pct", "avg_change_21_pct", "rank_5", "rank_21",
+        "Average change, 5 sessions", "Change over 21 sessions");
+
+      var thin = data.thin_sectors || [];
+      if (thin.length){
+        out += '<section class="group"><h2>Too thin to rank</h2>' +
+          '<p class="lede">These sectors have a sector on record but fewer than ' +
+          '10 counted stocks, so they show their counts only, with no average ' +
+          'and no label.</p><div class="scroll"><table><thead><tr><th>Sector</th>' +
+          '<th>Stocks counted</th><th>Stocks with this sector on record</th>' +
+          '</tr></thead><tbody>';
+        thin.forEach(function(s){
+          out += '<tr><td>' + esc(s.sector) + ' (thin)</td><td>' +
+            esc(fmtNum(s.names_counted)) + '</td><td>' +
+            esc(fmtNum(s.names_on_record)) + '</td></tr>';
+        });
+        out += '</tbody></table></div></section>';
+      }
+      var unmapped = data.unmapped_names || [];
+      if (unmapped.length){
+        out += '<section class="group"><h2>Names with no sector on record</h2>' +
+          '<p class="lede">' + esc((data.stated_limit && data.stated_limit.text) || data.unmapped_note || "") + '</p>' +
+          '<p class="lede">' + unmapped.map(esc).join(", ") + '</p></section>';
+      }
+      mainEl.innerHTML = out;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      document.getElementById("def-average").textContent = "";
+      showBanner("missing", "The sector ranking is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
