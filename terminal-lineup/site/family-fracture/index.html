@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Family Fracture: how wide the next 5 days may swing, read from how the evidence disagrees</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:22px;font-weight:700}
+  .big{font-size:20px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Family Fracture</h1>
+    <p class="job">One job: forecast how wide the next 5 trading days may swing, from the pattern of how different kinds of evidence disagree with each other.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest morning's readings&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  function pct(x){return (Math.round(x*100)/100)+"%";}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    var live=data.live||{}, hist=data.history||{}, filings=data.filings_carried||{}, disp=data.dispersion||{}, cons=data.construction||{};
+    meta.textContent="Forecast for the morning of "+fmtShort(data.decision_date)+", from readings through "+fmtShort(data.readings_through)+". The 5 trading days being forecast run from "+fmtShort(data.horizon_open)+" through "+fmtShort(data.horizon_close)+". Source: "+data.source+".";
+    var h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>Plenty of tools count how many kinds of evidence agree, and treat a bigger count as a stronger signal. This page does the opposite. It looks at the shape of the disagreement itself: which kind of evidence stands apart, and in what company. A market where the different kinds of evidence pull against each other in certain shapes tends to be a market about to swing wider, so the forecast here is about the size of the coming swing, never about its direction. Nothing on this page says whether either fund will rise or fall.</p><p>Each kind of evidence gets exactly one vote, however many tools sit behind it. Four kinds can vote: price and trading history, options trading, modelled positioning, and filings and big holders. A kind with no reading casts no vote at all: an absence is shown as an absence, never counted as a middle vote. At least two kinds must be speaking before any forecast is made.</p></section>';
+
+    (data.today||[]).forEach(function(t){
+      h+='<section class="card"><h2>'+esc(t.name)+': the morning of '+fmtShort(data.decision_date)+'</h2><table><tr><th>Kind of evidence</th><th>Its reading</th><th>What it rests on</th></tr>';
+      (t.votes||[]).forEach(function(v){
+        h+='<tr><td><strong>'+esc(v.family_name)+'</strong></td><td>'+(v.state==="speaking"?esc(v.vote_word):"no reading, no vote")+'</td><td>'+esc(v.detail)+'</td></tr>';
+      });
+      h+='</table><p><strong>The shape:</strong> '+esc(t.shape_words)+' ('+esc(t.shape_label)+'). '+esc(t.families_speaking)+' of the 4 kinds of evidence are speaking.</p>'
+        +'<table><tr><th></th><th>This forecast, from the disagreement shape</th><th>The plain forecast, from recent movement alone</th></tr>'
+        +'<tr><td><strong>How wide the next 5 trading days may swing</strong> (highest high to lowest low, as a share of the price)</td><td class="big">'+pct(t.fracture_range_pct)+'</td><td class="big">'+pct(t.benchmark_range_pct)+'</td></tr>'
+        +'<tr><td><strong>Chance of a move bigger than the expected move</strong> (the expected move is '+pct(t.expected_move_pct)+' either way over 5 trading days)</td><td class="big">'+pct(t.fracture_breach_pct)+'</td><td class="big">'+pct(t.benchmark_breach_pct)+'</td></tr></table>'
+        +'<p class="sub">The disagreement shape adjusts the plain forecast by a fixed '+esc(t.multiplier)+' times this morning. Both forecasts were recorded before the 5 trading days open, and both will be graded on the same days.</p></section>';
+    });
+
+    h+='<section class="card"><h2>The filings reading, carried with its age</h2><p>'+esc(filings.words)+'</p></section>';
+
+    h+='<section class="card"><h2>How the adjustment is set</h2><p>'+esc(cons.words)+'</p><table><tr><th>Shape of the readings</th><th>Adjustment to the plain forecast</th></tr>';
+    (cons.rows||[]).forEach(function(r){h+='<tr><td>'+esc(r.shape)+'</td><td>'+esc(r.multiplier)+' times</td></tr>';});
+    h+='</table><p>'+esc(cons.base_words)+'</p><p>'+esc(disp.words)+'</p></section>';
+
+    h+='<section class="card"><h2>'+esc(hist.label||"History")+'</h2><p>'+esc(hist.outcomes_note)+'</p>';
+    (hist.sessions||[]).forEach(function(s){
+      h+='<h3>Morning of '+fmtShort(s.decision)+' (readings through '+fmtShort(s.readings_through)+'; the filings report was then '+esc(s.filings_age_days)+' days old)</h3>';
+      ["SPY","QQQ"].forEach(function(sym){
+        var e=s.symbols[sym]; if(!e)return;
+        h+='<p><strong>'+sym+':</strong> '+(e.votes||[]).map(function(v){return esc(v.family_name)+" "+esc(v.vote_word);}).join("; ")+'. Shape: '+esc(e.shape_label)+', adjustment '+esc(e.multiplier)+' times. '+esc(e.families_speaking)+' kinds of evidence speaking; the scored-day reading for those mornings was not kept, so the price kind of evidence is absent there, not rebuilt.</p>';
+      });
+    });
+    h+='<p>There are '+esc(hist.sessions_on_record)+' mornings of joint readings on record in total, today included. That is the whole history: it is short because the records behind it only began on October 26, 2026, and it is not padded with anything older.</p></section>';
+
+    h+='<section class="card"><h2>The live record</h2><p><span class="count">'+esc(live.sessions_recorded||0)+'</span> morning recorded in advance, of the <span class="count">'+esc(live.target_sessions)+'</span> mornings that will decide this tool. <span class="count">'+esc(live.forecasts_recorded||0)+'</span> forecasts are on record (this forecast and the plain forecast, for each fund), <span class="count">'+esc(live.forecasts_graded||0)+'</span> graded so far.</p><p>'+esc(data.kill_criterion)+'</p><p class="sub">'+esc(data.thin_rule)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","This page's data file could not be loaded, so no forecast is shown. Nothing here is estimated or filled in by hand.");
+    meta.textContent="The forecast data is not available right now.";
+  });
+})();
+</script>
+</div>
+</body>
+</html>
