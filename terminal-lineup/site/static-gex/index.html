@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Static GEX Cross-Check: one stated convention beside the modelled ladder</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;
+    --bg:#f5f7fa;--card:#ffffff;--accent:#0b5fa5;--pos:#1d7a4f;--neg:#b03a2e}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 18px;max-width:46em}
+  .note{background:#eef4fb;border:1px solid #bcd4ee;border-radius:10px;
+    padding:12px 14px;font-size:15px;color:#23405e;margin:0 0 14px}
+  .fund{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;margin:0 0 18px}
+  .fund h2{margin:0 0 4px;font-size:24px}
+  .levels{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .level{border:1px solid var(--line);border-radius:10px;padding:8px 12px;
+    font-size:14.5px;background:#fbfcfe}
+  .level .k{display:block;font-size:12px;text-transform:uppercase;
+    letter-spacing:.05em;color:var(--faint)}
+  .level .v{font-weight:700;font-size:16px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  .meta{font-size:13.5px;color:var(--faint)}
+  .pos{color:var(--pos)} .neg{color:var(--neg)}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Static GEX Cross-Check</h1>
+  <p class="job">The same chain snapshots the modelled ladder is built
+  from, worked under one simple stated convention: calls count
+  positive, puts count negative. Where this page and the ladder
+  disagree, both figures are printed and the difference is the fact.</p>
+</header>
+  <div class="chartbox" id="vkHost"></div>
+<div id="notes"></div>
+<div id="funds"></div>
+<p class="meta" id="meta"></p>
+</div>
+<script>
+const fmt = v => v === null || v === undefined ? "not on record"
+  : (Math.abs(v) >= 1000 ? Math.round(v).toLocaleString("en-US")
+   : (Math.round(v * 100) / 100).toLocaleString("en-US"));
+const money = v => v === null || v === undefined ? "not on record"
+  : "$" + Math.round(v).toLocaleString("en-US");
+fetch("data.json").then(r => r.json()).then(d => {
+  document.getElementById("notes").innerHTML =
+    `<div class="note">${d.convention}</div>
+     <div class="note">${d.iv_assumption}</div>
+     <div class="note">${d.cross_check}</div>`;
+  document.getElementById("meta").textContent =
+    "Freshest snapshot: " + d.freshest_snapshot + ". " + d.source + ".";
+  document.getElementById("funds").innerHTML = d.funds.map(f => {
+    if (f.state !== "ok") return `<div class="fund"><h2>${f.underlying}</h2>
+      <p>Not on record: ${f.reason || "no countable snapshot"}.</p></div>`;
+    const band = f.flip_iv_band;
+    const bandTxt = band && band.low !== null
+      ? `${fmt(band.low)} to ${fmt(band.high)}` : "no crossing in any leg";
+    const m = f.modelled_ladder || {};
+    const rows = (f.strongest || []).map(s =>
+      `<tr><td>${s.strike}</td>
+       <td class="${s.call_gex < 0 ? "neg" : "pos"}">${money(s.call_gex)}</td>
+       <td class="${s.put_gex < 0 ? "neg" : "pos"}">${money(s.put_gex)}</td>
+       <td class="${s.net_gex < 0 ? "neg" : "pos"}">${money(s.net_gex)}</td></tr>`).join("");
+    return `<div class="fund"><h2>${f.underlying}</h2>
+      <p class="meta">Snapshot day ${f.day}, recorded price ${fmt(f.spot)}.
+      Counted ${f.coverage.counted} of ${f.coverage.contracts} contracts:
+      ${f.coverage.excluded_no_oi} carry no open interest on the snapshot
+      and ${f.coverage.excluded_no_iv} carry no implied volatility, and a
+      contract needs both to count here.</p>
+      <div class="levels">
+        <div class="level"><span class="k">Total, this convention</span>
+          <span class="v">${money(f.net_gex)}</span></div>
+        <div class="level"><span class="k">Call wall</span>
+          <span class="v">${fmt(f.call_wall)}</span></div>
+        <div class="level"><span class="k">Put wall</span>
+          <span class="v">${fmt(f.put_wall)}</span></div>
+        <div class="level"><span class="k">Flip level</span>
+          <span class="v">${fmt(f.flip)}</span></div>
+        <div class="level"><span class="k">Flip range if volatility moves</span>
+          <span class="v">${bandTxt}</span></div>
+        <div class="level"><span class="k">Modelled ladder flip</span>
+          <span class="v">${fmt(m.flip)}</span></div>
+        <div class="level"><span class="k">Difference of flips</span>
+          <span class="v">${fmt(f.flip_difference)}</span></div>
+      </div>
+      <table><tr><th>Strike</th><th>Calls</th><th>Puts</th><th>Total</th></tr>
+      ${rows}</table></div>`;
+  }).join("");
+}).catch(() => {
+  document.getElementById("funds").innerHTML =
+    "<div class='fund'><p>The cross-check figures are not on record yet.</p></div>";
+});
+</script>
+</body>
+</html>
