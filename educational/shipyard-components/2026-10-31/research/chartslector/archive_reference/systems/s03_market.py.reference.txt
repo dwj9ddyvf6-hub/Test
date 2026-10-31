@@ -1,0 +1,79 @@
+"""S3 Pradeep/Zorrilla Breadth View, S7 Risk Appetite Ratios, S8 Market Breadth panel ($MMTW/$MMFI/$MMTH analogs) + breadth-screener count.
+All breadth counts from OUR universe (non-ETF names with dv20 >= $100k; ~3-4k names vs his ~4,500). Timing tests on QQQ/SPY/IWM/RSP/QQQE (decided at close t,
+applied close t -> t+1, 2 bp per unit turnover). Posture cutoffs are NOT disclosed -> swept (score >= k). Saves cache/regimes.parquet for other systems."""
+import sys, numpy as np, pandas as pd
+sys.path.insert(0, "__OWNER_SUPPLIED_ARCHIVE_ROOT__/lib"); sys.path.insert(0, "__OWNER_SUPPLIED_ARCHIVE_ROOT__/systems")
+import data as D, timing as TM, ind as I, bt, screens as SC
+B = "__OWNER_SUPPLIED_ARCHIVE_ROOT__"; P = D.panel(); days = P["days"]; C = P["C"]; si = P["si"]; T = len(days)
+live = (P["dv20"] >= 1e5) & ~P["etf"][:, None] & np.isfinite(C)
+def cnt(b): return (b & live).sum(0).astype(float)
+def ret(k): return C / I.lag(C, k) - 1
+r1 = ret(1); r21 = ret(21); r34 = ret(34); r50 = ret(50); r63 = ret(63)
+X = pd.DataFrame(index=days)
+X["up4"], X["dn4"] = cnt(r1 >= 0.04), cnt(r1 <= -0.04)
+X["up13_34"], X["dn13_34"] = cnt(r34 >= 0.13), cnt(r34 <= -0.13)
+X["up25_21"], X["dn25_21"] = cnt(r21 >= 0.25), cnt(r21 <= -0.25)
+X["up25_63"], X["dn25_63"] = cnt(r63 >= 0.25), cnt(r63 <= -0.25)
+X["up50_21"], X["dn50_21"] = cnt(r21 >= 0.50), cnt(r21 <= -0.50)
+X["up50_50"], X["dn50_50"] = cnt(r50 >= 0.50), cnt(r50 <= -0.50)
+X["n_live"] = live.sum(0)
+for a, b in (("up4", "dn4"), ("up13_34", "dn13_34"), ("up25_21", "dn25_21"), ("up25_63", "dn25_63")):
+    X[f"ratio_{a}"] = X[a] / X[b].replace(0, np.nan); X[f"r5_{a}"] = X[a].rolling(5).sum() / X[b].rolling(5).sum().replace(0, np.nan); X[f"r10_{a}"] = X[a].rolling(10).sum() / X[b].rolling(10).sum().replace(0, np.nan)
+def checks(up, dn):
+    s = 0
+    for n in (5, 10, 21): s = s + (X[up] > X[up].rolling(n).mean()).astype(int) + (X[dn] < X[dn].rolling(n).mean()).astype(int)
+    return s
+X["score_primary"] = checks("up4", "dn4") + checks("up13_34", "dn13_34")      # 0..12 (his Breadth Score)
+X["score_secondary"] = checks("up25_21", "dn25_21") + checks("up25_63", "dn25_63")
+X["up25_63_gt_ma20"] = X.up25_63 > X.up25_63.rolling(20).mean()                 # his hint (2080753417040056678)
+# S8 % above MAs
+for n, nm in ((20, "mmtw"), (50, "mmfi"), (200, "mmth")):
+    m = I.sma(C, n); X[nm] = 100 * cnt(C > m) / np.maximum(cnt(np.isfinite(m)), 1)
+# breadth screener count (S2 Sep-19 screener as a breadth gauge)
+L = type("L", (), {})(); L.O, L.H, L.L, L.C, L.V, L.dates = P["O"], P["H"], P["L"], P["C"], P["V"], days; L.atrp = I.atr(P["H"], P["L"], C) / C
+sc = SC.build(L, P["MC"]); X["screener_count"] = cnt(sc["breadth_screener"]); X["base_count"] = cnt(sc["base_screen"])
+del sc
+# S7 risk appetite ratios
+def px(sym): return pd.Series(C[si[sym]], index=days).ffill(limit=3)
+ra = {}
+for a, b in D.RISKAPP: ra[f"{a}/{b}"] = px(a) / px(b)
+ra["QQQ/QQQE(proxy NQUSLG/NQUSLV)"] = px("QQQ") / px("QQQE")
+for k, v in ra.items(): X[f"ra_{k}_gt20"] = v > v.rolling(20).mean()
+riskon_dir = {"IEF/LQD": -1}   # IEF/LQD rising = risk-off
+X["ra_count"] = sum(((ra[k] > ra[k].rolling(20).mean()) if riskon_dir.get(k, 1) > 0 else (ra[k] < ra[k].rolling(20).mean())).astype(int) for k in ra)
+X.to_parquet(f"{B}/cache/breadth_tables.parquet")
+rows = []
+insts = ("QQQ", "SPY", "IWM", "RSP", "QQQE")
+def add(name, expo, fam):
+    for inst in insts:
+        c = px(inst); rn = (c.shift(-1) / c - 1).values
+        t = TM.timing_eval(days, rn, np.asarray(expo, float), label=f"{name}|{inst}"); t["family"] = fam; t["signal"] = name; t["inst"] = inst; rows.append(t)
+ok = X.n_live > 500
+for k in range(4, 12): add(f"S3_score_primary>={k}", (X.score_primary >= k) & ok, "S3_breadth_tables")
+for k in range(4, 12): add(f"S3_score_secondary>={k}", (X.score_secondary >= k) & ok, "S3_breadth_tables")
+add("S3_ratio5_up4>1", X.r5_up4 > 1, "S3_breadth_tables"); add("S3_ratio10_up13_34>1", X.r10_up13_34 > 1, "S3_breadth_tables")
+add("S3_hint_up25_63>MA20", X.up25_63_gt_ma20, "S3_breadth_tables")
+# contrarian: 4%-down washout (dn4 >= p95 of trailing 252) -> long 10 days
+p95 = X.dn4.rolling(252, min_periods=126).quantile(0.95); wash = (X.dn4 >= p95)
+hold = pd.Series(0.0, index=days)
+for i in np.where(wash.values)[0]: hold.iloc[i:i + 10] = 1.0
+add("S3_contrarian_dn4_washout_hold10", hold.values, "S3_breadth_tables")
+for nm in ("mmtw", "mmfi", "mmth"):
+    for k in (40, 50, 60): add(f"S8_{nm}>{k}", X[nm] > k, "S8_pct_above_ma")
+    add(f"S8_{nm}_rising5", X[nm] > X[nm].shift(5), "S8_pct_above_ma")
+th = pd.Series(0.0, index=days)
+for i in np.where(((X.mmtw > 50) & (X.mmtw.rolling(10).min() < 20)).values)[0]: th.iloc[i:i + 20] = 1.0
+add("S8_mmtw_thrust_20to50_hold20", th.values, "S8_pct_above_ma")
+add("S2_screener_count>MA50", X.screener_count > X.screener_count.rolling(50).mean(), "S8_pct_above_ma")
+add("S2_screener_count>=1000scaled", X.screener_count / X.n_live >= (1000 / 4500), "S8_pct_above_ma")
+for k in range(2, 7): add(f"S7_ra_count>={k}", X.ra_count >= k, "S7_risk_appetite")
+R = pd.concat(rows); R["z"] = R.dsharpe / R.dsh_se
+from math import erf, sqrt
+R["p"] = [2 * (1 - 0.5 * (1 + erf(abs(z) / sqrt(2)))) if np.isfinite(z) else np.nan for z in R.z]
+for fam, g in R[R.split == "oos"].groupby("family"): R.loc[g.index[g.index.isin(g.index)], "q_dummy"] = 0
+o = R[R.split == "oos"].copy(); o["q"] = np.nan
+for fam, idx in o.groupby("family").groups.items(): o.loc[idx, "q"] = bt.bh(o.loc[idx, "p"].values)
+R = R.merge(o[["label", "q"]], on="label", how="left"); R.to_csv(f"{B}/out/grids/S3_S7_S8_timing.csv", index=False)
+tr = R[R.split == "train"].set_index("label"); oo = R[R.split == "oos"].set_index("label")
+J = tr[["family", "signal", "inst", "expo", "sharpe", "bh_sharpe", "dsharpe", "maxdd", "bh_maxdd"]].join(oo[["expo", "cagr", "sharpe", "bh_sharpe", "dsharpe", "dsh_lo", "dsh_hi", "maxdd", "bh_maxdd", "q"]], rsuffix="_oos")
+pd.set_option("display.width", 250); print(J.sort_values("dsharpe", ascending=False).round(2).head(30).to_string()); print(X.tail(3).T.to_string())

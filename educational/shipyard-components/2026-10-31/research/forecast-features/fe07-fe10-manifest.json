@@ -1,0 +1,49 @@
+{
+  "schema": "SHIPYARD_FE07_FE10_SOURCE_POLICY_MANIFEST_V1",
+  "generated_at": "2026-10-31",
+  "policies": {
+    "FE07": {
+      "id": "FE07_FIXED_ETF_SPY_TO_QQQ_LAG1_V1",
+      "sha256": "96057081512b070fa2e8ff5a2830816edcd0750e21d7708bbf39a495533d1185",
+      "universe": "SPY leader / QQQ follower; fixed daily one-session lag"
+    },
+    "FE10": {
+      "id": "FE10_FIXED_ETF_PROXY_REGIME_V1",
+      "sha256": "8d5ab96673f3d0ec07a16dc6f8ec2fd326d5a53cb2f043dce650a09eaaf21834",
+      "universe": [
+        "SPY",
+        "QQQ",
+        "IWM"
+      ]
+    }
+  },
+  "unchanged_scorer": {
+    "path": "dist/forecast-engines.mjs",
+    "sha256": "5d9f555d548e0e96df90bbde4b61b3daf32364ce869d3a4bef61ba58a7d6317e"
+  },
+  "unchanged_catalog": {
+    "path": "dist/forecast-engine-catalog.mjs",
+    "sha256": "045398d692d988aa6640766ff2f42924279909daf803eb92f42f9e6c9d48f200"
+  },
+  "source_sha256": {
+    "research/forecast-features/fe07-fe10-v1.mjs": "d5b154f2db2627c8165958a48cc3062a8c46039a245f50ee033dc952a3feb85c",
+    "worker/forecast-fe07-fe10.js": "99469992e04b4cfd4508fd0c646fd66036e9a155e210ad09ef9ed9e243870510",
+    "worker/forecast-tools.js": "0e8c981a267509ef898510df19b1caec8c847b2ca1d2e5729b0c83ee9d718049",
+    "worker/source-research-routes.js": "6772e94d48564fda16d1e31ba4c5c5e2a034a205677c6a8b93fc5ef64c728d9d",
+    "worker/forecast-input-readiness.json": "3edf6b335973a4bfcfc625513f2d23ed33b8457b57a71dedb06e3e9ffb934257",
+    "worker/research-outputs.js": "214051c20b83ce653c60976d8e0c2924206fc73b8bded3b0bb994cb348be5231",
+    "worker/mcp.js": "8ca75c9cd6f7851b4e93c54ed45fb19ccf0c6faa631b0dfbc1db40dfadda76a1",
+    "dist/app.js": "e0ccd8b8161d2c33d15db2f646810a6c3762ddaa693a0f880fbe6d86cce8b23a",
+    "scripts/build-source-research.mjs": "9ad628d4ade50e0c20ece46fbd59faea8e2866fa3e5a88d5e288c47751a8a236",
+    "scripts/build_worker.py": "5e6b8aec78b04835e158adbe3fc82442a001f0dc69b364bcc6a16c0c9defa9ef",
+    "worker/index.js": "2c3d586131ab41061ee61de482e6074ff2dd4bf9d69b7b242477779436ea3d09",
+    "scripts/build-xml-well-formedness-preflight.mjs": "2791667489ef0a39cec87c6584e6e15b8d5cc101425ee1efa668247de9b30777",
+    "research/forecast-features/xml-well-formedness-preflight-v1.mjs": "bddaa4e46155af42322800a55ce53529168abea3009c9c90e07c6abc2bc63c51"
+  },
+  "research_sources": [
+    "https://docs.alpaca.markets/us/reference/stockbars",
+    "https://www.ssga.com/us/en/institutional/etfs/state-street-spdr-sp-500-etf-trust-spy",
+    "https://www-2.rotman.utoronto.ca/~kan/3032/pdf/PredictabilityOfReturns_ShortHorizon/Lo_MacKinlay_RFS_1990.pdf",
+    "https://www.cs.princeton.edu/~rpa/pubs/adams2007changepoint.pdf"
+  ]
+}

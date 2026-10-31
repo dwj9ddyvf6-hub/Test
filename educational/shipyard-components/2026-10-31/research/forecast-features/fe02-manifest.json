@@ -1,0 +1,55 @@
+{
+  "schema": "SHIPYARD_FE02_SOURCE_POLICY_MANIFEST_V1",
+  "policy_id": "FE02_PAIRED_BENCHMARK_RESIDUAL_V1",
+  "policy_sha256": "a682001f9bb40947f47ead587da378ed3d49961a73f873e6e98eef57b6168eb0",
+  "policy": {
+    "id": "FE02_PAIRED_BENCHMARK_RESIDUAL_V1",
+    "version": 1,
+    "origin": "NEW_FEATURE_POLICY",
+    "engine_id": "FE02",
+    "provider": "Alpaca Market Data",
+    "feed": "iex",
+    "adjustment": "split",
+    "timeframe": "1Day",
+    "currency": "USD",
+    "benchmark": "SPY",
+    "sessions": 505,
+    "calendar_lookback_days": 800,
+    "completion_delay_ms": 900000,
+    "freshness_max_age_seconds": 172800,
+    "acquisition_budget_seconds": 25,
+    "per_request_timeout_seconds": 8,
+    "max_pages_per_series": 2,
+    "max_rows_per_series": 1000,
+    "max_response_bytes_per_request": 524288,
+    "regression": "OLS with intercept on the 252 paired daily log returns immediately before the latest completed return; current return excluded. Population covariance/variance sums; beta=cross_sum/benchmark_sum_squares; alpha=mean(symbol_return)-beta*mean(SPY_return).",
+    "residual": "For this evaluation, e_i=log(symbol_close_i/symbol_close_i-1)-alpha-beta*log(SPY_close_i/SPY_close_i-1), using the one prior-only fitted alpha/beta for all supplied residual history. Inputs are only through the latest completed close. Reconstructed past residuals are not historical point-in-time observations.",
+    "residual_z": "Sum of latest 5 residual log returns divided by prior-252 residual daily population SD times sqrt(5). Prior sigma uses the 252 returns used to fit beta; current return excluded from sigma.",
+    "trend_z": "Sum of latest 63 residual log returns divided by the same prior-252 residual daily population SD times sqrt(63).",
+    "vol_regime": "Population z-score of latest 21-residual-return RMS versus 252 preceding rolling 21-return RMS values. Current RMS excluded from baseline; RMS=sqrt(sum(e_i^2)/21).",
+    "hurst": "R/S slope from OLS of log(block size) against log(mean block R/S), sizes 8,16,32,64, using non-overlapping blocks anchored at the first of the latest 252 residual log returns. Within each block subtract its arithmetic mean, cumulatively sum centered values, R is max(cumulative)-min(cumulative), S is sample standard deviation (ddof=1), and average R/S across complete blocks. Require the resulting exponent to be in [0,1]; never clip.",
+    "windows": "All lookbacks are in official completed US-equity sessions. Returns use close-to-close natural-log price changes. The current residual return is available only after the completed-session delay.",
+    "units": "residual_z and trend_z are dimensionless z-scaled log-return sums; hurst is a dimensionless R/S exponent; vol_regime is a dimensionless z-score. No percent conversion, annualization, dividend adjustment, imputation, or feature clipping.",
+    "degeneracy": "Reject non-finite intermediates and any OLS denominator, residual population SD, R/S block SD, R/S average or volatility normalizer <=1e-12. No variance floor.",
+    "price_basis": "Split-adjusted, dividend-excluded provider prices. IEX is one exchange, not consolidated SIP; provider revisions and historical availability remain unverified.",
+    "zero_missing": "Require 505 exact paired official-session bars per symbol on the same dates. No forward fill, skipped bars, substituted ticker, or alternate benchmark.",
+    "forecast_interpretation": "Unchanged fixed FE02 scorer applied to NEW measurements; research-only uncalibrated signed score, not a residual-return magnitude, probability, edge or trade admission."
+  },
+  "base_source_commit": "a42576f99568af6ff2c1eabe519bf2f11ebec4ab",
+  "source_policy_fingerprint": "ae404ffb11523b58cb080c4fb422d9aa333f608dba1b84260c69803435a9e297",
+  "unchanged_scorer": {
+    "repository": "__UPSTREAM_REPOSITORY_URL__",
+    "commit": "f88c874656857841ba1d52c988b8210095949608",
+    "path": "research/forecast_engines"
+  },
+  "source_sha256": {
+    "research/forecast-features/fe02-residual-v1.mjs": "3b277d2d183204642ae83ad644361d99601e31cd83ed903f6c4b1270031b25c0",
+    "worker/forecast-fe02.js": "83d466c06617cedcd5e89ec8d555dce1480fb5ab008157bd2b3a563424d7a313",
+    "dist/forecast-engines.mjs": "5d9f555d548e0e96df90bbde4b61b3daf32364ce869d3a4bef61ba58a7d6317e"
+  },
+  "hash_rules": {
+    "policy": "SHA256(UTF-8(JSON.stringify(FE02_PAIRED_POLICY))); declaration order",
+    "source_policy_fingerprint": "SHA256(UTF-8(JSON.stringify({policy_sha256,provider,feed,adjustment,timeframe,currency,benchmark}))); declared field order",
+    "source_files": "SHA256 checked-in UTF-8/LF bytes; generated bundle digest excluded"
+  }
+}

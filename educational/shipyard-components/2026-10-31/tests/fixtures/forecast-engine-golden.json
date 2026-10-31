@@ -1,0 +1,555 @@
+{
+  "source": {
+    "repository": "__UPSTREAM_REPOSITORY_URL__",
+    "commit": "f88c874656857841ba1d52c988b8210095949608",
+    "path": "research/forecast_engines"
+  },
+  "engines": [
+    {
+      "engine_id": "FE01",
+      "features": {
+        "ret_21d_z": -0.6,
+        "ret_63d_z": -0.44999999999999996,
+        "ret_252d_z": -0.3,
+        "trend_efficiency": 0.5,
+        "vol_regime": 0.0
+      },
+      "expected": {
+        "value": -0.32906250000000004,
+        "model_score": -0.32906250000000004,
+        "drivers": {
+          "horizon_agreement": -0.4875,
+          "path_quality": 0.5,
+          "vol_damp": 1.0
+        }
+      }
+    },
+    {
+      "engine_id": "FE02",
+      "features": {
+        "residual_z": -0.15,
+        "hurst": 0.44999999999999996,
+        "trend_z": 0.15,
+        "vol_regime": 0.3
+      },
+      "expected": {
+        "value": 0.07090909090909091,
+        "model_score": 0.07090909090909091,
+        "drivers": {
+          "chop_gate": 0.52,
+          "trend_gate": 0.95,
+          "residual_z": -0.15
+        }
+      }
+    },
+    {
+      "engine_id": "FE03",
+      "features": {
+        "break_distance_z": 0.3,
+        "acceptance": 0.5,
+        "volume_surprise_z": 0.6,
+        "false_break_rate": 0.35
+      },
+      "expected": {
+        "value": 0.10452,
+        "model_score": 0.10452,
+        "drivers": {
+          "acceptance": 0.5,
+          "volume_confirm": 1.072,
+          "false_break_rate": 0.35
+        }
+      }
+    },
+    {
+      "engine_id": "FE04",
+      "features": {
+        "gap_z": -0.6,
+        "fair_gap_z": -0.44999999999999996,
+        "open_acceptance": 0.35,
+        "premarket_liquidity": 0.39999999999999997
+      },
+      "expected": {
+        "value": 0.02880000000000001,
+        "model_score": 0.02880000000000001,
+        "drivers": {
+          "gap_residual_z": -0.15000000000000002,
+          "open_acceptance": 0.35,
+          "acceptance_state": -0.30000000000000004,
+          "liquidity": 0.39999999999999997
+        }
+      }
+    },
+    {
+      "engine_id": "FE05",
+      "features": {
+        "breadth_delta": 0.10000000000000009,
+        "advance_decline_z": 0.0,
+        "new_high_low_z": 0.15,
+        "index_trend_z": 0.3
+      },
+      "expected": {
+        "value": 0.20250000000000012,
+        "model_score": 0.20250000000000012,
+        "drivers": {
+          "breadth_delta": 0.10000000000000009,
+          "advance_decline_z": 0.0,
+          "new_high_low_z": 0.15
+        }
+      }
+    },
+    {
+      "engine_id": "FE06",
+      "features": {
+        "sector_momentum_rank_z": 0.3,
+        "leadership_breadth": 0.39999999999999997,
+        "sector_dispersion_z": 0.6,
+        "sector_flow_z": -0.6
+      },
+      "expected": {
+        "value": -0.022321428571428572,
+        "model_score": -0.022321428571428572,
+        "drivers": {
+          "breadth": 0.39999999999999997,
+          "dispersion": 0.6,
+          "concentration_penalty": 0.8928571428571428
+        }
+      }
+    },
+    {
+      "engine_id": "FE07",
+      "features": {
+        "leader_return_z": -0.6,
+        "lag_beta": 0.7,
+        "lag_stability": 0.5,
+        "relationship_r2": 0.55
+      },
+      "expected": {
+        "value": -0.12923076923076923,
+        "model_score": -0.12923076923076923,
+        "drivers": {
+          "lag_stability": 0.5,
+          "relationship_r2": 0.55,
+          "lag_beta": 0.7
+        }
+      }
+    },
+    {
+      "engine_id": "FE08",
+      "features": {
+        "log_rv_1": 0.7,
+        "log_rv_5": 0.7,
+        "log_rv_22": 0.7,
+        "log_rv_baseline": 0.7
+      },
+      "expected": {
+        "value": 2.0137527074704766,
+        "model_score": 0.0,
+        "drivers": {
+          "log_variance_ratio": 0.0,
+          "baseline_variance": 2.0137527074704766
+        }
+      }
+    },
+    {
+      "engine_id": "FE09",
+      "features": {
+        "jump_intensity_z": 0.3,
+        "overnight_gap_z": 0.44999999999999996,
+        "left_tail_asymmetry_z": 0.6,
+        "event_density": 0.39999999999999997
+      },
+      "expected": {
+        "value": 0.6262119578350228,
+        "model_score": 0.516,
+        "drivers": {
+          "jump_intensity_z": 0.3,
+          "overnight_gap_z": 0.44999999999999996,
+          "event_density": 0.39999999999999997
+        }
+      }
+    },
+    {
+      "engine_id": "FE10",
+      "features": {
+        "change_point_score": 0.55,
+        "vol_of_vol_z": -0.44999999999999996,
+        "cross_asset_dispersion_z": -0.3,
+        "correlation_shift_z": -0.15
+      },
+      "expected": {
+        "value": 0.6130141761393355,
+        "model_score": 0.4600000000000001,
+        "drivers": {
+          "change_point_score": 0.55,
+          "vol_of_vol_z": -0.44999999999999996,
+          "correlation_shift_z": -0.15
+        }
+      }
+    },
+    {
+      "engine_id": "FE11",
+      "features": {
+        "auction_imbalance_z": -0.15,
+        "auction_imbalance_reliability": 0.39999999999999997,
+        "close_depth_z": 0.15,
+        "index_rebalance_flow_z": 0.3
+      },
+      "expected": {
+        "value": -0.03495145631067961,
+        "model_score": -0.03495145631067961,
+        "drivers": {
+          "imbalance_reliability": 0.39999999999999997,
+          "depth_damp": 0.970873786407767
+        }
+      }
+    },
+    {
+      "engine_id": "FE12",
+      "features": {
+        "spread_z": 0.3,
+        "depth_drop_z": 0.44999999999999996,
+        "realized_vol_z": 0.6,
+        "volume_concentration": 0.55
+      },
+      "expected": {
+        "value": 0.43782349911420193,
+        "model_score": -0.25,
+        "drivers": {
+          "spread_z": 0.3,
+          "depth_drop_z": 0.44999999999999996,
+          "realized_vol_z": 0.6
+        }
+      }
+    },
+    {
+      "engine_id": "FE13",
+      "features": {
+        "ofi_z": -0.6,
+        "depth_z": -0.44999999999999996,
+        "depth_replenishment_ratio": 0.55,
+        "historical_post_fill_drift_z": -0.15,
+        "trade_condition_quality": 0.39999999999999997
+      },
+      "expected": {
+        "value": -0.11372249999999999,
+        "model_score": -0.11372249999999999,
+        "drivers": {
+          "quality": 0.39999999999999997,
+          "normalized_depth": 0.0,
+          "replenishment": 0.55,
+          "replenishment_damp": 0.6425,
+          "historical_post_fill_drift_z": -0.15
+        }
+      }
+    },
+    {
+      "engine_id": "FE14",
+      "features": {
+        "put_skew_z": -0.15,
+        "term_inversion_z": 0.0,
+        "downside_var_z": 0.15,
+        "surface_quality": 0.39999999999999997
+      },
+      "expected": {
+        "value": 0.3747247960009128,
+        "model_score": -0.512,
+        "drivers": {
+          "surface_quality": 0.39999999999999997,
+          "put_skew_z": -0.15,
+          "term_inversion_z": 0.0
+        }
+      }
+    },
+    {
+      "engine_id": "FE15",
+      "features": {
+        "gamma_assumption_z": 0.3,
+        "spot_move_z": 0.44999999999999996,
+        "oi_concentration_z": 0.6,
+        "gamma_input_quality": 0.44999999999999996
+      },
+      "expected": {
+        "value": -0.06803999999999999,
+        "model_score": -0.06803999999999999,
+        "drivers": {
+          "gamma_assumption_z": 0.3,
+          "spot_move_z": 0.44999999999999996,
+          "inferred_input_quality": 0.44999999999999996
+        }
+      }
+    },
+    {
+      "engine_id": "FE16",
+      "features": {
+        "customer_signed_delta_flow_z": -0.6,
+        "sweep_quality": 0.39999999999999997,
+        "open_close_confidence": 0.44999999999999996,
+        "aggressor_side_confidence": 0.5,
+        "quote_condition_quality": 0.55
+      },
+      "expected": {
+        "value": -0.029699999999999994,
+        "model_score": -0.029699999999999994,
+        "drivers": {
+          "sweep_quality": 0.39999999999999997,
+          "open_close_confidence": 0.44999999999999996,
+          "aggressor_side_confidence": 0.5,
+          "quote_quality": 0.55
+        }
+      }
+    },
+    {
+      "engine_id": "FE17",
+      "features": {
+        "implied_move": 0.7,
+        "historical_event_move": 0.7,
+        "estimate_dispersion_z": 0.15,
+        "earnings_timing_quality": 0.55
+      },
+      "expected": {
+        "value": 0.38961999999999997,
+        "model_score": 0.01200000000000001,
+        "drivers": {
+          "implied_move": 0.7,
+          "historical_event_move": 0.7,
+          "dispersion_adjustment": 1.012
+        }
+      }
+    },
+    {
+      "engine_id": "FE18",
+      "features": {
+        "standardized_surprise_z": 0.3,
+        "revision_breadth": 0.5,
+        "post_event_drift_z": 0.6,
+        "sector_residual_z": -0.6
+      },
+      "expected": {
+        "value": 0.15749999999999997,
+        "model_score": 0.15749999999999997,
+        "drivers": {
+          "revision_breadth": 0.5,
+          "surprise_z": 0.3
+        }
+      }
+    },
+    {
+      "engine_id": "FE19",
+      "features": {
+        "revision_momentum_z": -0.6,
+        "analyst_breadth": 0.55,
+        "revision_dispersion_z": -0.3,
+        "revision_recency": 0.39999999999999997
+      },
+      "expected": {
+        "value": -0.12452830188679244,
+        "model_score": -0.12452830188679244,
+        "drivers": {
+          "breadth": 0.55,
+          "recency": 0.39999999999999997,
+          "dispersion_penalty": 0.9433962264150942
+        }
+      }
+    },
+    {
+      "engine_id": "FE20",
+      "features": {
+        "panel_surprise_z": -0.15,
+        "panel_stability": 0.35,
+        "panel_coverage": 0.39999999999999997,
+        "panel_drift_z": 0.3
+      },
+      "expected": {
+        "value": -0.01615384615384615,
+        "model_score": -0.01615384615384615,
+        "drivers": {
+          "panel_reliability": 0.10769230769230768,
+          "panel_drift_z": 0.3
+        }
+      }
+    },
+    {
+      "engine_id": "FE21",
+      "features": {
+        "cash_conversion_z": 0.3,
+        "receivables_growth_gap_z": 0.44999999999999996,
+        "deferred_revenue_change_z": 0.6,
+        "fcf_acceleration_z": -0.6
+      },
+      "expected": {
+        "value": 0.04500000000000001,
+        "model_score": 0.04500000000000001,
+        "drivers": {
+          "cash_conversion_z": 0.3,
+          "receivables_growth_gap_z": 0.44999999999999996,
+          "fcf_acceleration_z": -0.6
+        }
+      }
+    },
+    {
+      "engine_id": "FE22",
+      "features": {
+        "semantic_delta_z": -0.6,
+        "parser_confidence": 0.44999999999999996,
+        "novelty_score": 0.5,
+        "section_relevance": 0.55
+      },
+      "expected": {
+        "value": -0.07425,
+        "model_score": -0.07425,
+        "drivers": {
+          "parser_confidence": 0.44999999999999996,
+          "novelty": 0.5,
+          "relevance": 0.55
+        }
+      }
+    },
+    {
+      "engine_id": "FE23",
+      "features": {
+        "discretionary_net_flow_z": -0.15,
+        "non_10b5_1_confidence": 0.5,
+        "insider_recency": 0.55,
+        "issuer_illiquidity_z": 0.3
+      },
+      "expected": {
+        "value": -0.03891509433962264,
+        "model_score": -0.03891509433962264,
+        "drivers": {
+          "non_10b5_1_confidence": 0.5,
+          "recency": 0.55,
+          "liquidity_factor": 0.9433962264150942
+        }
+      }
+    },
+    {
+      "engine_id": "FE24",
+      "features": {
+        "ownership_crowding_z": 0.3,
+        "fundamental_deterioration_z": 0.44999999999999996,
+        "liquidity_stress_z": 0.6,
+        "filing_staleness": 0.39999999999999997
+      },
+      "expected": {
+        "value": 0.5528023854446937,
+        "model_score": 0.212,
+        "drivers": {
+          "staleness": 0.39999999999999997,
+          "crowding_freshness": 0.6000000000000001,
+          "crowding_z": 0.3,
+          "fundamental_deterioration_z": 0.44999999999999996
+        }
+      }
+    },
+    {
+      "engine_id": "FE25",
+      "features": {
+        "buyback_pace_float_z": -0.6,
+        "execution_confidence": 0.35,
+        "blackout_risk": 0.39999999999999997,
+        "liquidity_anomaly_z": -0.15
+      },
+      "expected": {
+        "value": -0.1232273838630807,
+        "model_score": -0.1232273838630807,
+        "drivers": {
+          "execution_confidence": 0.35,
+          "blackout_risk": 0.39999999999999997,
+          "liquidity_factor": 0.9779951100244499
+        }
+      }
+    },
+    {
+      "engine_id": "FE26",
+      "features": {
+        "flow_estimate_z": -0.15,
+        "flow_model_confidence": 0.39999999999999997,
+        "days_to_effective": 5.0,
+        "crowding_z": 0.3
+      },
+      "expected": {
+        "value": -0.03482472687345263,
+        "model_score": -0.03482472687345263,
+        "drivers": {
+          "flow_confidence": 0.39999999999999997,
+          "time_weight": 0.6065306597126334,
+          "crowding": 0.3,
+          "event_passed": 0.0
+        }
+      }
+    },
+    {
+      "engine_id": "FE27",
+      "features": {
+        "release_surprise_z": 0.3,
+        "cycle_reaction_sign": -0.10000000000000009,
+        "market_pricing_z": 0.6,
+        "regime_confidence": 0.55
+      },
+      "expected": {
+        "value": -0.004950000000000005,
+        "model_score": -0.004950000000000005,
+        "drivers": {
+          "unpriced_surprise": 0.09,
+          "cycle_reaction_sign": -0.10000000000000009,
+          "regime_confidence": 0.55
+        }
+      }
+    },
+    {
+      "engine_id": "FE28",
+      "features": {
+        "curve_slope_z": -0.6,
+        "curve_change_z": -0.44999999999999996,
+        "credit_impulse_z": -0.3,
+        "macro_transition_score": 0.35
+      },
+      "expected": {
+        "value": 0.4939065516941113,
+        "model_score": -0.02437499999999998,
+        "drivers": {
+          "curve_signal": 0.4875,
+          "credit_stress": 0.3,
+          "transition": 0.35
+        }
+      }
+    },
+    {
+      "engine_id": "FE29",
+      "features": {
+        "cot_positioning_z": -0.15,
+        "inventory_deviation_z": 0.0,
+        "roll_yield_z": 0.15,
+        "supply_shock_score": 0.39999999999999997
+      },
+      "expected": {
+        "value": 0.01305,
+        "model_score": 0.01305,
+        "drivers": {
+          "crowding_fade": 0.01125,
+          "inventory_carry": 0.0375,
+          "supply_shock": 0.39999999999999997
+        }
+      }
+    },
+    {
+      "engine_id": "FE30",
+      "features": {
+        "funding_z": 0.3,
+        "open_interest_change_z": 0.44999999999999996,
+        "depth_drop_z": 0.6,
+        "onchain_flow_z": -0.6
+      },
+      "expected": {
+        "value": 0.4875026035157896,
+        "model_score": -0.05000000000000002,
+        "drivers": {
+          "funding_extreme": 0.3,
+          "open_interest_change": 0.44999999999999996,
+          "depth_drop": 0.6,
+          "onchain_flow": 0.6
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,411 @@
+{
+  "notice": "SYNTHETIC TEST ONLY",
+  "source_commit": "6c11b27c11ffedee314fd608fc83853ccf2cb23a",
+  "sha256_compact_original_output": "94f0c4195451783459c33e5aa1778f7144af9029087a6a5ca3b84e632135d8a1",
+  "original": {
+    "schema": "aperture-live-view.v1",
+    "dataMode": "live",
+    "provider": "alpaca",
+    "feed": "iex",
+    "connection": "CONNECTED",
+    "freshness": "LIVE",
+    "session": "REGULAR",
+    "sessionLabel": "TEST ONLY",
+    "marketNextTransitionAt": null,
+    "generatedAt": "2026-10-29T14:30:30.000Z",
+    "inputWatermarkAt": "2026-10-29T14:30:00.000Z",
+    "barEndAt": "2026-10-29T14:30:00.000Z",
+    "validUntil": "2026-10-29T14:36:30.000Z",
+    "etag": "W/\"aperture-live-19230075af155529e773c157\"",
+    "authority": {
+      "decisionSupport": true,
+      "orderRoute": false,
+      "tensorWrite": false,
+      "galathWrite": false,
+      "folioTendWrite": false
+    },
+    "universe": {
+      "id": "signal-prism-us-413.v1",
+      "count": 413,
+      "hash": "1c4032822a21dc8a3680d92b8f1541867ce8d36d553c15000ad599d256812fe7",
+      "eligible": 2,
+      "covered": 2,
+      "unsupported": 0
+    },
+    "scan": {
+      "state": "COMPLETE",
+      "elapsedMs": 0,
+      "harvested": 2,
+      "deepCandidates": 2,
+      "decisions": 2,
+      "executable": 0,
+      "stages": [
+        {
+          "label": "Bar sealed",
+          "value": "2026-10-29T14:30:00.000Z",
+          "note": "live completed 5m",
+          "tone": "cyan"
+        },
+        {
+          "label": "Universe",
+          "value": "2 / 2",
+          "note": "100.0% eligible coverage",
+          "tone": "cyan"
+        },
+        {
+          "label": "Deep pass",
+          "value": "2",
+          "note": "location + curl + context",
+          "tone": "default"
+        },
+        {
+          "label": "Decisions",
+          "value": "2",
+          "note": "deterministic Gestalt",
+          "tone": "default"
+        },
+        {
+          "label": "Orders",
+          "value": "0",
+          "note": "no order route",
+          "tone": "amber"
+        }
+      ]
+    },
+    "summary": [
+      {
+        "label": "Buy now",
+        "value": "0",
+        "note": "fresh supported S",
+        "tone": "cyan"
+      },
+      {
+        "label": "Wait / watch",
+        "value": "0",
+        "note": "A / B / forming",
+        "tone": "default"
+      },
+      {
+        "label": "Avoid",
+        "value": "2",
+        "note": "anti-chase / hard veto",
+        "tone": "amber"
+      },
+      {
+        "label": "No view",
+        "value": "411",
+        "note": "not selected / missing current bar / unsupported",
+        "tone": "default"
+      }
+    ],
+    "backdrop": [
+      {
+        "label": "Market",
+        "value": "NEUTRAL",
+        "detail": "QQQ above EMA20",
+        "tone": "neutral"
+      },
+      {
+        "label": "Breadth",
+        "value": "0% constructive",
+        "detail": "0/2 deep candidates",
+        "tone": "warning"
+      },
+      {
+        "label": "Freshness",
+        "value": "LIVE",
+        "detail": "2026-10-29T14:30:00.000Z",
+        "tone": "positive"
+      },
+      {
+        "label": "Authority",
+        "value": "DECISION SUPPORT",
+        "detail": "no broker or system write route",
+        "tone": "neutral"
+      }
+    ],
+    "triggers": [
+      {
+        "id": "sweep-reclaim",
+        "label": "Sweep / reclaim",
+        "purpose": "Liquidity pierces declared support, then a completed bar reclaims it.",
+        "gate": "Support cluster · strong close · below chase line",
+        "ttl": "3 bars",
+        "active": 0
+      },
+      {
+        "id": "structural-hold",
+        "label": "Structural hold",
+        "purpose": "Repeated support contact survives and produces completed-bar follow-through.",
+        "gate": "Two closes · higher close · valid support",
+        "ttl": "4 bars",
+        "active": 2
+      },
+      {
+        "id": "rotation-ignition",
+        "label": "Rotation ignition",
+        "purpose": "RSI and MACD curl from support while the move remains early.",
+        "gate": "RSI curl · MACD curl · location",
+        "ttl": "6 bars",
+        "active": 0
+      }
+    ],
+    "decisions": [
+      {
+        "id": "aperture-NVDA-20261029143000000-structural-hold-v2",
+        "symbol": "NVDA",
+        "company": "NVDA",
+        "sector": "Aperture universe",
+        "tier": "AVOID",
+        "verdict": "AVOID",
+        "origin": "APERTURE ONLY",
+        "reason": "Two completed bars held $109.60; the latest close advanced. Anchor PASS; neutral context; mixed participation.",
+        "action": "Do not initiate. REWARD_RISK_BELOW_1_25",
+        "price": "$110.21",
+        "entry": "$109.36 — $110.50",
+        "invalidation": "$108.20",
+        "chaseLine": "$112.00",
+        "target": "$110.90",
+        "dataMode": "live",
+        "provider": "alpaca",
+        "barEndAt": "2026-10-29T14:30:00.000Z",
+        "generatedAt": "2026-10-29T14:30:30.000Z",
+        "freshness": "LIVE",
+        "decisionUsable": true,
+        "nonOwnerAction": "AVOID",
+        "ownerAction": "TRIM",
+        "chaseBuffer": "$1.79 · 1.62% below line",
+        "indicators": {
+          "rsi14": "77.2",
+          "rsiState": "NOT CONFIRMED",
+          "macdHistogram": "+0.00",
+          "macdState": "NOT CONFIRMED",
+          "atr14": "$2.00",
+          "vwap": "$110.09",
+          "distanceFrom60dLow": "7.1%"
+        },
+        "trigger": {
+          "family": "structural-hold",
+          "label": "Structural hold",
+          "state": "CONFIRMED",
+          "age": "30s",
+          "eventId": "aperture:NVDA:structural-hold:2026-10-29T14:30:00.000Z:v2",
+          "seedBar": "2026-10-29T14:30:00.000Z",
+          "expiresAt": "2026-10-29T14:36:30.000Z",
+          "lifecycle": [
+            "APPROACH",
+            "SEED",
+            "CONFIRMED"
+          ],
+          "evidence": "Two completed bars held $109.60; the latest close advanced."
+        },
+        "packet": {
+          "schema": "aperture-decision.v2",
+          "policy": "aperture-discovery@3.0.0",
+          "decisionAt": "2026-10-29T14:30:30.000Z",
+          "validUntil": "2026-10-29T14:36:30.000Z",
+          "shadowOnly": true,
+          "executionEligible": false,
+          "policyEligible": false,
+          "decisionUsable": true,
+          "orderExecutable": false,
+          "authority": "NONE · decision support only",
+          "reasonCodes": [
+            "HARD_VETO"
+          ],
+          "blockers": [
+            "REWARD_RISK_BELOW_1_25"
+          ],
+          "inputHash": "e8659d3690e5b1a187d95ad146a97da44efefe400f8e2af57fbcd2caeffa510a",
+          "policyHash": "650f218b5ee382abb9c47dec916559e7c5dac8bd7e05f544aa3dc938f3178554",
+          "supersedesDecisionId": null
+        },
+        "tensor": {
+          "grade": "—",
+          "family": "independent Aperture scan",
+          "age": "—",
+          "eventAt": "No Tensor dependency",
+          "receiptAt": "No Tensor dependency",
+          "eventKey": "none",
+          "freshness": "LIVE · completed 5m bar"
+        },
+        "anchor": {
+          "state": "PASS",
+          "tone": "positive",
+          "evidence": "Frozen support $109.60 from completed-session EMA/pivot candidates",
+          "support": "$109.60",
+          "distance": "0.30 ATR",
+          "extension": "0.58 ATR",
+          "run": "+0.96% / 10 sessions",
+          "rewardRisk": "0.3×"
+        },
+        "formation": {
+          "state": "ESTABLISHED",
+          "tone": "neutral",
+          "evidence": "RSI flat; MACD unconfirmed",
+          "micro": "+ completed 5m path",
+          "meso": "+0.81% / 5 sessions",
+          "macro": "+2.27% / 20 sessions"
+        },
+        "topology": {
+          "state": "NEUTRAL",
+          "tone": "neutral",
+          "evidence": "Five-session relative return versus QQQ: +0.56%",
+          "market": "QQQ above EMA20",
+          "sector": "declared universe",
+          "relative": "+0.56% vs QQQ"
+        },
+        "participation": {
+          "state": "MIXED",
+          "tone": "neutral",
+          "evidence": "Same-slot volume and completed-bar closing pressure are evaluated independently",
+          "relativeVolume": "1.00× same-slot",
+          "pressure": "+55.00% CLV",
+          "breadth": "Coverage 2/2"
+        },
+        "proof": {
+          "state": "OBSERVING",
+          "tone": "neutral",
+          "evidence": "0 non-overlapping historical analogs after 35 bps friction; holdout n=0, 0% positive, +0.00% median",
+          "sample": "n = 0",
+          "span": "100 sessions",
+          "coverage": "chronological train / holdout · historical, not prospective",
+          "version": "pullback-curl-holdout@2"
+        }
+      },
+      {
+        "id": "aperture-QQQ-20261029143000000-structural-hold-v2",
+        "symbol": "QQQ",
+        "company": "QQQ",
+        "sector": "Aperture universe",
+        "tier": "AVOID",
+        "verdict": "AVOID",
+        "origin": "APERTURE ONLY",
+        "reason": "Two completed bars held $109.60; the latest close advanced. Anchor PASS; neutral context; mixed participation.",
+        "action": "Do not initiate. REWARD_RISK_BELOW_1_25",
+        "price": "$110.21",
+        "entry": "$109.36 — $110.50",
+        "invalidation": "$108.20",
+        "chaseLine": "$112.00",
+        "target": "$110.90",
+        "dataMode": "live",
+        "provider": "alpaca",
+        "barEndAt": "2026-10-29T14:30:00.000Z",
+        "generatedAt": "2026-10-29T14:30:30.000Z",
+        "freshness": "LIVE",
+        "decisionUsable": true,
+        "nonOwnerAction": "AVOID",
+        "ownerAction": "TRIM",
+        "chaseBuffer": "$1.79 · 1.62% below line",
+        "indicators": {
+          "rsi14": "77.2",
+          "rsiState": "NOT CONFIRMED",
+          "macdHistogram": "+0.00",
+          "macdState": "NOT CONFIRMED",
+          "atr14": "$2.00",
+          "vwap": "$110.09",
+          "distanceFrom60dLow": "7.1%"
+        },
+        "trigger": {
+          "family": "structural-hold",
+          "label": "Structural hold",
+          "state": "CONFIRMED",
+          "age": "30s",
+          "eventId": "aperture:QQQ:structural-hold:2026-10-29T14:30:00.000Z:v2",
+          "seedBar": "2026-10-29T14:30:00.000Z",
+          "expiresAt": "2026-10-29T14:36:30.000Z",
+          "lifecycle": [
+            "APPROACH",
+            "SEED",
+            "CONFIRMED"
+          ],
+          "evidence": "Two completed bars held $109.60; the latest close advanced."
+        },
+        "packet": {
+          "schema": "aperture-decision.v2",
+          "policy": "aperture-discovery@3.0.0",
+          "decisionAt": "2026-10-29T14:30:30.000Z",
+          "validUntil": "2026-10-29T14:36:30.000Z",
+          "shadowOnly": true,
+          "executionEligible": false,
+          "policyEligible": false,
+          "decisionUsable": true,
+          "orderExecutable": false,
+          "authority": "NONE · decision support only",
+          "reasonCodes": [
+            "HARD_VETO"
+          ],
+          "blockers": [
+            "REWARD_RISK_BELOW_1_25"
+          ],
+          "inputHash": "e75beef4d46b8dd24bd95d4906a7887df9eb6d36984ae6a1709a242c473d390c",
+          "policyHash": "650f218b5ee382abb9c47dec916559e7c5dac8bd7e05f544aa3dc938f3178554",
+          "supersedesDecisionId": null
+        },
+        "tensor": {
+          "grade": "—",
+          "family": "independent Aperture scan",
+          "age": "—",
+          "eventAt": "No Tensor dependency",
+          "receiptAt": "No Tensor dependency",
+          "eventKey": "none",
+          "freshness": "LIVE · completed 5m bar"
+        },
+        "anchor": {
+          "state": "PASS",
+          "tone": "positive",
+          "evidence": "Frozen support $109.60 from completed-session EMA/pivot candidates",
+          "support": "$109.60",
+          "distance": "0.30 ATR",
+          "extension": "0.58 ATR",
+          "run": "+0.96% / 10 sessions",
+          "rewardRisk": "0.3×"
+        },
+        "formation": {
+          "state": "ESTABLISHED",
+          "tone": "neutral",
+          "evidence": "RSI flat; MACD unconfirmed",
+          "micro": "+ completed 5m path",
+          "meso": "+0.81% / 5 sessions",
+          "macro": "+2.27% / 20 sessions"
+        },
+        "topology": {
+          "state": "NEUTRAL",
+          "tone": "neutral",
+          "evidence": "Five-session relative return versus QQQ: +0.56%",
+          "market": "QQQ above EMA20",
+          "sector": "declared universe",
+          "relative": "+0.56% vs QQQ"
+        },
+        "participation": {
+          "state": "MIXED",
+          "tone": "neutral",
+          "evidence": "Same-slot volume and completed-bar closing pressure are evaluated independently",
+          "relativeVolume": "1.00× same-slot",
+          "pressure": "+55.00% CLV",
+          "breadth": "Coverage 2/2"
+        },
+        "proof": {
+          "state": "OBSERVING",
+          "tone": "neutral",
+          "evidence": "0 non-overlapping historical analogs after 35 bps friction; holdout n=0, 0% positive, +0.00% median",
+          "sample": "n = 0",
+          "span": "100 sessions",
+          "coverage": "chronological train / holdout · historical, not prospective",
+          "version": "pullback-curl-holdout@2"
+        }
+      }
+    ],
+    "quality": {
+      "flags": [
+        "LIVE",
+        "ELIGIBILITY_DAILY80_PRICE1_MDV5M",
+        "FULL_PROVIDER_COVERAGE",
+        "BENCHMARK_CURRENT",
+        "ORDER_ROUTE_ABSENT"
+      ],
+      "missingInputs": [],
+      "coveragePct": 100
+    }
+  }
+}

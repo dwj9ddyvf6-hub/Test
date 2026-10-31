@@ -1,0 +1,55 @@
+{
+  "schema": "SHIPYARD_FE05_SOURCE_POLICY_MANIFEST_V1",
+  "generated_at": "2026-10-31",
+  "policy": {
+    "id": "FE05_SPY_CURRENT_TOP25_ISSUER_BREADTH_V1",
+    "sha256": "09c5dbf1343cd4ff3767bdaec943474bb405d79251ad1802176c677c1629a49d"
+  },
+  "unchanged_scorer": {
+    "path": "dist/forecast-engines.mjs",
+    "sha256": "5d9f555d548e0e96df90bbde4b61b3daf32364ce869d3a4bef61ba58a7d6317e"
+  },
+  "unchanged_catalog": {
+    "path": "dist/forecast-engine-catalog.mjs",
+    "sha256": "045398d692d988aa6640766ff2f42924279909daf803eb92f42f9e6c9d48f200"
+  },
+  "source_sha256": {
+    "research/forecast-features/fe05-spy-breadth-v1.mjs": "db98355c6f983c7d4f390019632dc551a514f2fc84d28bcba99a82d569fd58a6",
+    "worker/forecast-fe05.js": "b63b321edd87656f5a034341bcd3b3e1672c7bd86cf7f08335953fda22f29889",
+    "worker/forecast-tools.js": "0e8c981a267509ef898510df19b1caec8c847b2ca1d2e5729b0c83ee9d718049",
+    "worker/source-research-routes.js": "6772e94d48564fda16d1e31ba4c5c5e2a034a205677c6a8b93fc5ef64c728d9d",
+    "worker/forecast-input-readiness.json": "3edf6b335973a4bfcfc625513f2d23ed33b8457b57a71dedb06e3e9ffb934257",
+    "worker/research-outputs.js": "214051c20b83ce653c60976d8e0c2924206fc73b8bded3b0bb994cb348be5231",
+    "worker/research-surfaces.json": "9fc6af062b1593aa1e03da4373cb7c605ac04560492891b38486ffb4a652be4b",
+    "worker/mcp.js": "8ca75c9cd6f7851b4e93c54ed45fb19ccf0c6faa631b0dfbc1db40dfadda76a1",
+    "dist/app.js": "e0ccd8b8161d2c33d15db2f646810a6c3762ddaa693a0f880fbe6d86cce8b23a",
+    "scripts/build-source-research.mjs": "9ad628d4ade50e0c20ece46fbd59faea8e2866fa3e5a88d5e288c47751a8a236",
+    "scripts/build_worker.py": "5e6b8aec78b04835e158adbe3fc82442a001f0dc69b364bcc6a16c0c9defa9ef",
+    "worker/index.js": "2c3d586131ab41061ee61de482e6074ff2dd4bf9d69b7b242477779436ea3d09",
+    "docs/FE05-SPY-CURRENT-COHORT-POLICY-2026-10-31.md": "cccf2d2f412460a04b4be0994ef952f5bd741d5f8cce0aa35511e0515626f0ff",
+    "tests/fixtures/fe05_oracle.py": "d3fc8a2cd5791e6a99642096db4a7999c320d098daac7fc7752380f8528cc5fe",
+    "tests/helpers/fe05-synthetic.mjs": "476298ab5f9f511dc4aa4d206f69bccf93da23b9e5ee71f28a10b5021b3ff26a",
+    "tests/forecast-fe05-breadth-policy.test.mjs": "e57d53a44ecb75b34d1cfbd5525fbcabcb9760cf4153acb23e707c279cf98545",
+    "tests/forecast-fe05-worker.test.mjs": "9617cbff41796f6452d0ef9128ac91938eac3a46b21bd85f45ad79bbbf4843ca",
+    "tests/forecast-public-projection.test.mjs": "6bc018110770bd7ce4cf46655a69dc53691ce080f1622e19442301045d8a53a6",
+    "tests/ui-source-research.test.mjs": "3edb16c4ae2dfb58ac73884ba33ae4f6cc41dc529469caa15b1cbfc5833d8ba3",
+    "research/forecast-features/xml-well-formedness-preflight-v1.mjs": "bddaa4e46155af42322800a55ce53529168abea3009c9c90e07c6abc2bc63c51",
+    "docs/FE05-SOURCE-AGE-GUARD-2026-10-31.md": "6751fcceb14ca20b53dbb3c0f33342db1f9990fced0c0efcc17895f01fd37c87",
+    "tests/forecast-fe05-freshness-ui.test.mjs": "006586d4486fdb564c7577128adbd321f21df83b7000fbd1363f512bc97cc8cd"
+  },
+  "research_sources": [
+    "https://www.ssga.com/library-content/products/fund-data/etfs/us/holdings-daily-us-en-spy.xlsx",
+    "https://www.sec.gov/rules/sro/dtc/2021/34-92198-ex5.pdf",
+    "https://www.us-east-1.cusip.com/identifiers.html?section=CUSIP",
+    "https://docs.alpaca.markets/us/reference/stockbars",
+    "https://www.ssga.com/us/en/footer/copyright"
+  ],
+  "freshness_guard": {
+    "id": "FE05_DATE_ONLY_ASOF_INTERVAL_V2",
+    "version": 2,
+    "max_age_seconds": 172800,
+    "source_date_timezone": "America/New_York",
+    "qualification": "Conservative date-only age interval plus structurally valid official-provider calendar response requested through the evaluation date and covering the selected 505-session grid. Provider calendar completeness is not independently verified.",
+    "unknowns": "Exact source observation/publication time and exact market-session lag remain unknown; provider-returned session rows and counts are diagnostics, not proof of calendar completeness; first-seen/received_at is not substituted."
+  }
+}

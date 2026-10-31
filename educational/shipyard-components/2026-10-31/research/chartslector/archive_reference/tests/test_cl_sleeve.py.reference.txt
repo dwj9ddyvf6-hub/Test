@@ -1,0 +1,94 @@
+"""Tests for the ChartsLector sleeve package (plain python, no pytest). Writes ship/proof/TEST_CL_SLEEVE.md.
+Archival integration-test source only. Not safe to execute without the omitted staged tree, datasets, generators and temp-path bindings; original operational paths were templated for this text reference."""
+import os, sys, json, subprocess, shutil, hashlib, time, traceback, numpy as np, pandas as pd
+PKG = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); B = "__OWNER_SUPPLIED_ARCHIVE_ROOT__"; PY = "__PYTHON_INTERPRETER_PATH__"
+P = f"{B}/ship/proof"; os.makedirs(P, exist_ok=True); STAGED = os.environ.get("CL_STAGED", "__STAGED_TREE_COPY__"); RH = "__TEMP_REHEARSAL_ROOT__"
+sys.path.insert(0, f"{PKG}/chartslector"); sys.path.insert(0, f"{B}/lib"); sys.path.insert(0, f"{B}/systems")
+import cl_core as K
+RES = []
+def test(name):
+    def deco(f):
+        if os.environ.get("CL_TEST_ONLY") and os.environ["CL_TEST_ONLY"] not in name: return f
+        t0 = time.time()
+        try: msg = f() or ""; ok = True
+        except AssertionError as e: ok, msg = False, "ASSERT " + str(e)
+        except Exception as e: ok, msg = False, "ERROR " + repr(e) + " " + traceback.format_exc().splitlines()[-2]
+        RES.append(dict(test=name, ok=ok, detail=str(msg)[:300], secs=round(time.time() - t0, 1))); print("PASS" if ok else "FAIL", name, "::", str(msg)[:250], flush=True); return f
+    return deco
+def sha(p): return hashlib.sha256(open(p, "rb").read()).hexdigest()
+@test("cl_core == research code (ind.atr/sma/ema, screens.qullamaggie_nofloat) on engine bars of 40 names")
+def _():
+    import ind as I, screens as SC, glob
+    fs = sorted(glob.glob("__SYNTHETIC_ENGINE_BAR_ROOT__/*.csv"))[::45][:40]; arr = []
+    for f in fs:
+        b = pd.read_csv(f, usecols=["open", "high", "low", "close", "volume", "barFinality"]); b = b[b.barFinality == "closed"].iloc[-400:]
+        if len(b) == 400: arr.append(b[["open", "high", "low", "close", "volume"]].values.T.astype(np.float32))
+    A = np.stack(arr, 0); O, H, L, C, V = (A[:, k] for k in range(5))
+    class Lx: pass
+    Lz = Lx(); Lz.O, Lz.H, Lz.L, Lz.C, Lz.V = O, H, L, C, V; Lz.atrp = I.atr(H, L, C) / C; Lz.dates = None
+    a1, a2 = K.atr(H, L, C), I.atr(H, L, C); assert np.nanmax(np.abs(a1 - a2)) < 1e-4 * np.nanmean(C) and (np.isnan(a1) == np.isnan(a2)).all(), "atr"
+    q1 = K.qullamaggie_nofloat(H, L, C, V); q2 = SC.build(Lz, None)["qullamaggie_nofloat"]; assert (q1 == q2).all(), f"screen differs on {(q1 != q2).sum()} cells"
+    return f"{len(arr)} names x 400 bars identical (atr max diff {np.nanmax(np.abs(a1 - a2)):.2e}; screen cells on {int(q1.sum())})"
+@test("VMR composite reproduces his 2026-10-05 dashboard (75)")
+def _():
+    v = float(K.vmr_composite([15.53], [15.53 / 0.863], [85.46], [143.04])[0]); assert abs(v - 75.4) < 0.6, v; return f"composite {v:.1f}"
+@test("budget option: v3b reproduced, sum = $181,818, every lane >= $1k, CL lanes present")
+def _():
+    r = subprocess.run([PY, f"{PKG}/build/cl_budgets.py"], capture_output=True, text=True); assert r.returncode == 0, r.stderr[-300:]
+    o = json.load(open(f"{PKG}/build/option_v3b_cl_20261006.json"))["budgets_usd"]; LB = json.load(open(f"{STAGED}/build/lane_budgets.json")); v3b = LB["options"]["v3b_replay_cos_20261006"]["budgets_usd"]   # base option (after ACTIVATE=1 the active option is v3b_cl_20261006 itself)
+    assert sum(o.values()) == 181818 and min(o.values()) >= 1000 and set(o) == set(v3b) | {"s_cl_qm_small", "s_cl_vmr_qqq"}
+    floor_kept = all(o[l] >= 1000 for l in v3b); cut = {l: v3b[l] - o[l] for l in v3b if o[l] < v3b[l]}
+    return f"CL qm ${o['s_cl_qm_small']:,} vmr ${o['s_cl_vmr_qqq']:,}; {len(cut)} lanes trimmed pro-rata (max -${max(cut.values()) if cut else 0:,}); floor kept {floor_kept}"
+@test("generator fail-closed: stale engine store -> exit 3, 0 fires")
+def _():
+    out = f"{P}/t_stale.json"; r = subprocess.run([PY, f"{PKG}/chartslector/cl_live_fires.py", "--no-sec", "--no-net", "--today", "2026-10-20", "--out", out, "--cboe-dir", f"{P}/cboe"], capture_output=True, text=True)
+    J = json.load(open(out)); assert r.returncode == 3 and J["freshness"]["stale"] and not J["fires"], (r.returncode, len(J["fires"])); return "stale -> no fires, exit 3"
+@test("generator fail-closed: Cboe unavailable -> no VMR fire; band unknown -> no QM fire")
+def _():
+    out = f"{P}/t_nocboe.json"; empty = f"{P}/cboe_empty"; os.makedirs(empty, exist_ok=True)
+    for f in os.listdir(empty): os.remove(f"{empty}/{f}")
+    r = subprocess.run([PY, f"{PKG}/chartslector/cl_live_fires.py", "--no-sec", "--no-net", "--out", out, "--cboe-dir", empty], capture_output=True, text=True)
+    J = json.load(open(out)); assert not [f for f in J["fires"] if f["lane"] == "s_cl_vmr_qqq"] and not [f for f in J["fires"] if f["lane"] == "s_cl_qm_small"], J["counts"]
+    return f"notes: {J['notes'][:2]}; counts {J['counts']}"
+@test("merge: idempotent, keys unique, drops CL fires when the CL file is not from today")
+def _():
+    src = f"{STAGED}/live/sleeve_fires_v1.json"; tf = f"{P}/t_fires.json"; shutil.copy(src, tf); base = len(json.load(open(src))["fires"])
+    cl = {"version": "cl_fires_v1", "generated": time.strftime("%Y-%m-%d %H:%M:%S"), "freshness": {"stale": False}, "notes": [], "fires": [
+        {"key": "ZZZ:s_cl_qm_small:x:2026-10-05", "sym": "ZZZ", "lane": "s_cl_qm_small"}, {"key": "QQQ:s_cl_vmr_qqq:x:2026-10-05", "sym": "QQQ", "lane": "s_cl_vmr_qqq"}]}
+    cf = f"{P}/t_cl.json"; json.dump(cl, open(cf, "w"))
+    for _ in range(2): subprocess.run([PY, f"{PKG}/chartslector/cl_merge.py", "--fires", tf, "--cl", cf], check=True, capture_output=True)
+    J = json.load(open(tf)); ks = [f["key"] for f in J["fires"]]; assert len(ks) == len(set(ks)) == base + 2, (len(ks), base)
+    cl["generated"] = "2026-01-01 00:00:00"; json.dump(cl, open(cf, "w")); subprocess.run([PY, f"{PKG}/chartslector/cl_merge.py", "--fires", tf, "--cl", cf], check=True, capture_output=True)
+    J = json.load(open(tf)); assert len(J["fires"]) == base and not J["feeds"]["chartslector"]["ok"]; return f"base {base} -> +2 (twice) -> stale file -> {len(J['fires'])}"
+@test("ship + build + rollback rehearsal on a copy of the STAGED tree (byte-identical restore)")
+def _():
+    if os.path.exists(RH): shutil.move(RH, RH + f"_old_{int(time.time())}")
+    # mirror the real layout <root>/shadow/paper_sleeve_STAGED_1.0.4: the builder reads {shadow}/plans_calibrated_v1_frozen.json and {root}/CORPUS_AUDIT, {root}/DESK_INTEGRATION (read-only -> symlinks)
+    os.makedirs(f"{RH}/shadow"); T = f"{RH}/shadow/paper_sleeve_STAGED_1.0.4"; shutil.copytree(STAGED, T, symlinks=True)
+    os.symlink("__STAGED_PLAN_FILE__", f"{RH}/shadow/plans_calibrated_v1_frozen.json")
+    for d in ("CORPUS_AUDIT", "DESK_INTEGRATION"): os.symlink(f"__OWNER_ARCHIVE_PARENT__/{d}", f"{RH}/{d}")
+    pre = ""
+    if os.path.exists(f"{T}/chartslector"):   # STAGED already has the CL package (installed 2026-10-06): roll the copy back first, then rehearse ship -> build -> rollback from that base
+        rb0 = subprocess.run(["bash", f"{PKG}/rollback_sleeve_cl.sh"], env=dict(os.environ, SLEEVE_STAGED=T, CL_NO_GLOBAL_LOG="1"), capture_output=True, text=True); assert rb0.returncode == 0, rb0.stdout[-300:] + rb0.stderr[-300:]
+        pre = "installed STAGED copy rolled back first (rollback OK); "
+    before = {rel: sha(f"{T}/{rel}") for rel in ("build/lane_budgets.json", "build/build_sleeve_playbook.py", "sleeve_scheduler.sh", "sleeve_playbook.json")}
+    env = dict(os.environ, SLEEVE_STAGED=T, ACTIVATE="1", CL_NO_GLOBAL_LOG="1")
+    r = subprocess.run(["bash", f"{PKG}/ship_sleeve_cl.sh"], env=env, capture_output=True, text=True); assert r.returncode == 0, r.stdout[-300:] + r.stderr[-300:]
+    r2 = subprocess.run(["bash", f"{PKG}/ship_sleeve_cl.sh"], env=env, capture_output=True, text=True); assert r2.returncode == 2, "second ship must refuse"
+    os.chmod(f"{T}/sleeve_playbook.json", 0o644)  # the staged playbook is frozen (444); a real rebuild goes through the staged tree's own build + freeze with a new version string
+    b = subprocess.run([PY, f"{T}/build/build_sleeve_playbook.py"], capture_output=True, text=True, cwd=T); assert b.returncode == 0, b.stderr.strip().splitlines()[-1][-300:]
+    PB = json.load(open(f"{T}/sleeve_playbook.json")); Lq, Lv = PB["lanes"]["s_cl_qm_small"], PB["lanes"]["s_cl_vmr_qqq"]
+    o = json.load(open(f"{PKG}/build/option_v3b_cl_20261006.json"))["budgets_usd"]
+    assert Lq["enabled"] and Lq["entry"]["policy"] == "next_open" and Lq["sizing"]["position_usd"] == 1000 and Lq["sizing"]["budget_usd"] == o["s_cl_qm_small"] and Lq["sizing"]["lane_max_slots"] == o["s_cl_qm_small"] // 1000
+    assert Lv["sizing"]["budget_usd"] == o["s_cl_vmr_qqq"]; sch = open(f"{T}/sleeve_scheduler.sh").read(); assert "cl_live_fires" in sch and "return $f" in sch
+    shutil.copy(f"{T}/sleeve_playbook.json", f"{P}/rehearsal_sleeve_playbook_with_cl.json")
+    rb = subprocess.run(["bash", f"{PKG}/rollback_sleeve_cl.sh"], env=env, capture_output=True, text=True); assert rb.returncode == 0, rb.stderr[-300:]
+    # the builder run rewrote sleeve_playbook.json in the copy; restore check covers the 3 shipped files; rebuilding after rollback must give the original playbook bytes back
+    b2 = subprocess.run([PY, f"{T}/build/build_sleeve_playbook.py"], capture_output=True, text=True, cwd=T); assert b2.returncode == 0
+    after = {rel: sha(f"{T}/{rel}") for rel in before}; diff = [k for k in before if before[k] != after[k]]
+    assert not [k for k in diff if k != "sleeve_playbook.json"], diff
+    PB2 = json.load(open(f"{T}/sleeve_playbook.json")); assert "s_cl_qm_small" not in PB2["lanes"] and not os.path.exists(f"{T}/chartslector")
+    return pre + f"ship OK, re-ship refused, builder -> lanes {Lq['public_name']} ${Lq['sizing']['budget_usd']:,}/{Lq['sizing']['lane_max_slots']} slots + {Lv['public_name']} ${Lv['sizing']['budget_usd']:,}; rollback restored 3 files byte-identical" + (" (playbook rebuilt identical)" if "sleeve_playbook.json" not in diff else " (playbook rebuilt after rollback = builder output without CL lanes, differs from the frozen file)")
+R = pd.DataFrame(RES); lines = [f"# ChartsLector sleeve package tests - {time.strftime('%Y-%m-%d %H:%M %Z')}", "", f"**{int(R.ok.sum())} / {len(R)} passed**", "", "| test | result | detail |", "|---|---|---|"]
+lines += [f"| {r.test} | {'PASS' if r.ok else 'FAIL'} | {r.detail.replace('|', '/')} |" for r in R.itertuples()]
+open(f"{P}/TEST_CL_SLEEVE.md" if not os.environ.get("CL_TEST_ONLY") else f"{P}/TEST_CL_SLEEVE_subset.md", "w").write("\n".join(lines) + "\n"); print(lines[2]); sys.exit(0 if R.ok.all() else 1)
