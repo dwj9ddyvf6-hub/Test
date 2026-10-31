@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Chart Read: a plain-language read of one stock's chart</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+    --prove-bg:#f3eefb; --prove-line:#c9b8ec; --prove-ink:#4a3572;
+    --up:#1d7a3a; --down:#b03a2e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .prove{background:var(--prove-bg);border:1px solid var(--prove-line);color:var(--prove-ink);
+       border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px}
+  .prove strong{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .picker{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:16px 20px;margin:0 0 16px;font-size:15.5px}
+  .picker label{font-weight:600;margin-right:8px}
+  .picker input[type=text]{font-size:16px;padding:6px 10px;border:1px solid var(--line);
+               border-radius:8px;background:#fff;color:var(--ink);width:10em;
+               text-transform:uppercase}
+  .picker button.go{font-size:15px;padding:7px 16px;border:1px solid var(--accent);
+    border-radius:8px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  .picker .note{margin:10px 0 0;font-size:14.5px;color:var(--soft)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card h2{margin:0 0 6px;font-size:22px}
+  .card p{margin:4px 0;font-size:15.5px;color:var(--soft)}
+  .card p strong{color:var(--ink)}
+  .trend{font-size:20px;font-weight:700;color:var(--ink)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:12px 0 4px}
+  .cell{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .cell .label{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .cell .big{font-size:19px;font-weight:700;margin:3px 0}
+  .cell .detail{font-size:14px;color:var(--soft);margin:0}
+  .tag{display:inline-block;background:#eef4fb;border:1px solid #bcd4ee;color:#23405e;
+       border-radius:999px;padding:1px 9px;font-size:13px;margin:1px 2px 1px 0;white-space:nowrap}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .chartbox{overflow-x:auto}
+  svg.chart{min-width:640px;width:100%;height:auto;display:block}
+  .legend{font-size:13.5px;color:var(--soft);margin:8px 0 0}
+  .legend span{margin-right:14px;white-space:nowrap}
+  .sw{display:inline-block;width:18px;height:0;border-top:3px solid #17202b;vertical-align:middle;margin-right:5px}
+  .sw.a50{border-color:#0b5fa5}.sw.a200{border-color:#8a5aa8}
+  .sw.hi{border-top-style:dashed;border-color:#1d7a3a}.sw.lo{border-top-style:dashed;border-color:#b03a2e}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>AI Chart Read</h1>
+    <p class="job">One job: pick a stock and read its chart as it stands, in plain language: its trend against its own averages, its key price levels, and its latest pattern labels, every word worked out from the prices on record.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <div id="prove" class="prove" style="display:none"></div>
+  <p id="meta" class="meta">Loading the price history&hellip;</p>
+
+  <div class="def" id="defbox" style="display:none"></div>
+
+  <div class="picker">
+    <form id="pickform">
+      <label for="sym">Stock:</label>
+      <input id="sym" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Like SPY" maxlength="12" list="names">
+      <datalist id="names"></datalist>
+      <button class="go" type="submit">Read the chart</button>
+    </form>
+    <p class="note">The read is worked out in your browser from the price history this page carries. The name you pick stays in this browser and is never sent anywhere.</p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var proveEl = document.getElementById("prove");
+  var meta = document.getElementById("meta");
+  var defEl = document.getElementById("defbox");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var form = document.getElementById("pickform");
+  var symInput = document.getElementById("sym");
+  var namesEl = document.getElementById("names");
+  var DATA = null;
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtSigned(v){
+    return (v > 0 ? "+" : v < 0 ? "-" : "") + "$" +
+      Math.abs(Number(v)).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtPct(v){
+    return (v > 0 ? "+" : "") + Number(v).toFixed(2) + "%";
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric",
+      year:"numeric", timeZone:"UTC"});
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function avgOf(arr, n){
+    if (arr.length < n) return null;
+    var s = 0;
+    for (var i = arr.length - n; i < arr.length; i++) s += arr[i];
+    return s / n;
+  }
+  function relation(close, avg){
+    if (close > avg) return "above";
+    if (close < avg) return "below";
+    return "at";
+  }
+  function extremes(dates, highs, lows, n){
+    if (highs.length < n) return null;
+    var start = highs.length - n;
+    var hi = -Infinity, hiD = null, lo = Infinity, loD = null;
+    for (var i = start; i < highs.length; i++){
+      if (highs[i] > hi){ hi = highs[i]; hiD = dates[i]; }
+      if (lows[i] < lo){ lo = lows[i]; loD = dates[i]; }
+    }
+    return {window:n, high:hi, highDate:hiD, low:lo, lowDate:loD};
+  }
+  function smaSeries(closes, n){
+    var out = [], s = 0;
+    for (var i = 0; i < closes.length; i++){
+      s += closes[i];
+      if (i >= n) s -= closes[i - n];
+      out.push(i >= n - 1 ? s / n : null);
+    }
+    return out;
+  }
+
+  // The whole read, computed from the shipped bars only. Every
+  // number the page prints comes out of this function.
+  function computeRead(data, sym){
+    var entry = data.bars[sym];
+    if (!entry) return {state:"not-on-record", symbol:sym};
+    var start = entry[0], closes = entry[1], highs = entry[2], lows = entry[3];
+    var dates = [];
+    for (var i = 0; i < closes.length; i++) dates.push(data.dates[start + i]);
+    var n = closes.length;
+    var lastClose = closes[n - 1], lastDate = dates[n - 1];
+    function avgBlock(window){
+      var v = avgOf(closes, window);
+      if (v === null) return null;
+      return {window:window, value:v, relation:relation(lastClose, v),
+              diff:lastClose - v, pct:(lastClose - v) / v * 100};
+    }
+    var a50 = avgBlock(50), a200 = avgBlock(200);
+    var trend = null;
+    if (a50 && a200){
+      if (lastClose > a50.value && lastClose > a200.value) trend = "Trending up";
+      else if (lastClose < a50.value && lastClose < a200.value) trend = "Trending down";
+      else trend = "Mixed: no clear reading";
+    }
+    return {
+      state:"ok", symbol:sym, sessions:n,
+      firstDate:dates[0], lastDate:lastDate, lastClose:lastClose,
+      avg50:a50, avg200:a200, trend:trend,
+      levels20:extremes(dates, highs, lows, 20),
+      levels126:extremes(dates, highs, lows, 126),
+      label:(data.labels && data.labels[sym]) || null,
+      closes:closes, highs:highs, lows:lows, dates:dates,
+      sma50:smaSeries(closes, 50), sma200:smaSeries(closes, 200)
+    };
+  }
+
+  function chartSvg(r){
+    var W = 960, H = 360, PL = 8, PR = 8, PT = 26, PB = 24;
+    var iw = W - PL - PR, ih = H - PT - PB;
+    var vals = [];
+    r.closes.forEach(function(v){ vals.push(v); });
+    r.sma50.forEach(function(v){ if (v !== null) vals.push(v); });
+    r.sma200.forEach(function(v){ if (v !== null) vals.push(v); });
+    if (r.levels20){ vals.push(r.levels20.high, r.levels20.low); }
+    if (r.levels126){ vals.push(r.levels126.high, r.levels126.low); }
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    var pad = (hi - lo) * 0.06 || 1; lo -= pad; hi += pad;
+    var n = r.closes.length;
+    function X(i){ return PL + (n === 1 ? iw / 2 : iw * i / (n - 1)); }
+    function Y(v){ return PT + ih * (hi - v) / (hi - lo); }
+    function path(series){
+      var d = "", started = false;
+      for (var i = 0; i < series.length; i++){
+        if (series[i] === null) continue;
+        d += (started ? " L" : "M") + X(i).toFixed(1) + " " + Y(series[i]).toFixed(1);
+        started = true;
+      }
+      return d;
+    }
+    function levelLine(lv, color, label, yOff, xRight){
+      if (!lv) return "";
+      return '<line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + Y(lv).toFixed(1) +
+        '" y2="' + Y(lv).toFixed(1) + '" stroke="' + color +
+        '" stroke-width="1.4" stroke-dasharray="6 4"/>' +
+        '<text x="' + (xRight ? (W - PR - 4) : (PL + 4)) + '"' + (xRight ? ' text-anchor="end"' : '') + ' y="' + (Y(lv) + (yOff == null ? -5 : yOff)).toFixed(1) +
+        '" font-size="12" fill="' + color + '" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px;stroke-linejoin:round">' + esc(label) + " " + esc(fmtPrice(lv)) + "</text>";
+    }
+    var s = '<svg class="chart" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Chart of daily closing prices with its two averages and key levels">';
+    s += '<text x="' + PL + '" y="16" font-size="12.5" fill="#7c8b9d">' +
+      esc(fmtPrice(hi - pad)) + " at the top, " + esc(fmtPrice(lo + pad)) + " at the bottom</text>";
+    if (r.levels126){
+      s += levelLine(r.levels126.high, "#7aa88a", "Highest in 126 sessions:");
+      s += levelLine(r.levels126.low, "#c08a80", "Lowest in 126 sessions:");
+    }
+    if (r.levels20){
+      s += levelLine(r.levels20.high, "#1d7a3a", "Highest in 20 sessions:", -5,
+        !!(r.levels126 && r.levels126.high === r.levels20.high));
+      s += levelLine(r.levels20.low, "#b03a2e", "Lowest in 20 sessions:", -5,
+        !!(r.levels126 && r.levels126.low === r.levels20.low));
+    }
+    s += '<path d="' + path(r.sma200) + '" fill="none" stroke="#8a5aa8" stroke-width="1.6"/>';
+    s += '<path d="' + path(r.sma50) + '" fill="none" stroke="#0b5fa5" stroke-width="1.6"/>';
+    s += '<path d="' + path(r.closes) + '" fill="none" stroke="#17202b" stroke-width="1.8"/>';
+    s += '<circle cx="' + X(n - 1).toFixed(1) + '" cy="' + Y(r.lastClose).toFixed(1) +
+      '" r="4" fill="#17202b"/>';
+    s += '<text x="' + PL + '" y="' + (H - 6) + '" font-size="12.5" fill="#7c8b9d">' +
+      esc(fmtDateShort(r.firstDate)) + "</text>";
+    var lastLabel = fmtDateShort(r.lastDate);
+    s += '<text x="' + (W - PR) + '" y="' + (H - 6) + '" font-size="12.5" fill="#7c8b9d" text-anchor="end">' +
+      esc(lastLabel) + "</text>";
+    s += "</svg>";
+    s += '<p class="legend"><span><span class="sw"></span>Daily close</span>' +
+      '<span><span class="sw a50"></span>50-session average</span>' +
+      '<span><span class="sw a200"></span>200-session average</span>' +
+      '<span><span class="sw hi"></span>Highest level</span>' +
+      '<span><span class="sw lo"></span>Lowest level</span></p>';
+    return s;
+  }
+
+  function avgCell(title, a, sessions){
+    if (!a){
+      return '<div class="cell"><div class="label">' + esc(title) + '</div>' +
+        '<p class="detail">Not on record for this name: the average counts ' +
+        "the last sessions of closing prices, and this name has " + num(sessions) +
+        " sessions on record.</p></div>";
+    }
+    return '<div class="cell"><div class="label">' + esc(title) + '</div>' +
+      '<div class="big">' + esc(fmtPrice(a.value)) + '</div>' +
+      '<p class="detail">The last close sits ' + esc(a.relation) + " it, by " +
+      esc(fmtSigned(a.diff)) + " (" + esc(fmtPct(a.pct)) + ").</p></div>";
+  }
+  function levelCell(lv, sessions){
+    if (!lv){
+      return '<div class="cell"><div class="label">Key levels</div>' +
+        '<p class="detail">Not shown for this window: the window counts ' +
+        "sessions of prices, and this name has " + num(sessions) +
+        " sessions on record.</p></div>";
+    }
+    return '<div class="cell"><div class="label">Last ' + lv.window + ' sessions</div>' +
+      '<div class="big">High ' + esc(fmtPrice(lv.high)) + " / Low " + esc(fmtPrice(lv.low)) + '</div>' +
+      '<p class="detail">Highest high on ' + esc(fmtDateShort(lv.highDate)) +
+      ". Lowest low on " + esc(fmtDateShort(lv.lowDate)) + ".</p></div>";
+  }
+
+  function render(sym){
+    var r = computeRead(DATA, sym);
+    if (r.state === "not-on-record"){
+      resultsEl.innerHTML = '<div class="card"><h2>' + esc(sym) + "</h2>" +
+        '<div class="nodata">' + esc(sym) + " is not on record. The price history on record carries the " +
+        num(DATA.names_on_record) + " stocks in the daily scoring run, " +
+        esc(fmtDateShort(DATA.history_from)) + " to " + esc(fmtDateShort(DATA.history_to)) +
+        ". A name outside that run has no read here.</div></div>";
+      return;
+    }
+    var h = '<div class="card"><h2>' + esc(r.symbol) + "</h2>";
+    h += "<p>Last session on record: <strong>" + esc(fmtDateLong(r.lastDate)) +
+      "</strong>. Last close: <strong>" + esc(fmtPrice(r.lastClose)) + "</strong>, on the " +
+      num(r.sessions) + " sessions of this name on record, from " +
+      esc(fmtDateShort(r.firstDate)) + ".</p>";
+    if (r.trend){
+      h += '<p class="trend">' + esc(r.trend) + "</p>";
+      h += "<p>By the fixed rule printed above: the close is " + esc(r.avg50.relation) +
+        " its 50-session average and " + esc(r.avg200.relation) +
+        " its 200-session average.</p>";
+    } else {
+      h += '<div class="nodata">No trend words for this name: the fixed rule reads the close against both averages, and this name has ' +
+        num(r.sessions) + " sessions on record, fewer than the 200 the longer average counts.</div>";
+    }
+    h += '<div class="grid">';
+    h += avgCell("50-session average", r.avg50, r.sessions);
+    h += avgCell("200-session average", r.avg200, r.sessions);
+    h += "</div></div>";
+
+    h += '<div class="card"><h2>The chart</h2><div class="chartbox">' + chartSvg(r) + "</div></div>";
+
+    h += '<div class="card"><h2>Key levels</h2><div class="grid">';
+    h += levelCell(r.levels20, r.sessions);
+    h += levelCell(r.levels126, r.sessions);
+    h += "</div></div>";
+
+    h += '<div class="card"><h2>Pattern labels</h2>';
+    if (r.label){
+      var lb = r.label;
+      h += "<p>For <strong>" + esc(fmtDateLong(DATA.labels_session)) + '</strong>, the published label for ' +
+        esc(r.symbol) + ' is <strong>' + esc(lb.label) + " (" + esc(lb.name) + ")</strong>.</p>";
+      h += "<p>" + esc(lb.meaning) + "</p>";
+      if (lb.sequence && lb.sequence.length){
+        h += "<p>Labels for the last " + lb.sequence.length + " sessions, oldest first: " +
+          lb.sequence.map(function(s){
+            return "<strong>" + esc(s.label) + "</strong> on " + esc(fmtDateShort(s.date));
+          }).join("; ") + ".</p>";
+      }
+      var tags = "";
+      if (lb.shape) tags += '<span class="tag">Shape on the day: ' + esc(lb.shape) + "</span>";
+      if (lb.failed_2) tags += '<span class="tag">Flag on the day: ' + esc(lb.failed_2) + "</span>";
+      (lb.completed || []).forEach(function(c){
+        tags += '<span class="tag">Completed pattern: ' + esc(c) + "</span>";
+      });
+      if (lb.colour) tags += '<span class="tag">The day closed ' +
+        (lb.colour === "green" ? "above" : lb.colour === "red" ? "below" : "exactly at") +
+        " its open (" + esc(lb.colour) + ")</span>";
+      if (tags) h += "<p>" + tags + "</p>";
+    } else {
+      h += '<div class="nodata">No pattern label is on record for ' + esc(r.symbol) +
+        " for " + esc(fmtDateShort(DATA.labels_session)) +
+        ": the label record covers " + num(DATA.labels_on_record) + " of the " +
+        num(DATA.names_on_record) + " names on record for that day, and this name is one of the " +
+        num(DATA.labels_not_on_record) + " it does not cover. The read above stands on the prices alone.</div>";
+    }
+    h += "</div>";
+    resultsEl.innerHTML = h;
+  }
+
+  function init(){
+    proveEl.style.display = "block";
+  function proveNote(state, note){var s = String(state || ""), n = String(note || "");
+    if (s && n.toLowerCase().indexOf(s.toLowerCase()) === 0){
+      n = n.slice(s.length).replace(/^[:\s]+/, "");
+      n = n.charAt(0).toUpperCase() + n.slice(1);}
+    return n;}
+    proveEl.innerHTML = "<strong>" + esc(DATA.proving_state) + "</strong> " + esc(proveNote(DATA.proving_state, DATA.proving_note));
+    meta.textContent = "Price history on record: " + num(DATA.history_sessions) +
+      " trading days, " + fmtDateShort(DATA.history_from) + " to " + fmtDateShort(DATA.history_to) +
+      ". Last session: " + fmtDateLong(DATA.history_to) + ". Source: " + DATA.source + ".";
+    defEl.style.display = "block";
+    defEl.innerHTML = "<p><strong>How this read is made.</strong></p>" +
+      "<p>" + esc(DATA.rule.trend) + "</p>" +
+      "<p>" + esc(DATA.rule.averages) + "</p>" +
+      "<p>" + esc(DATA.rule.levels) + "</p>" +
+      "<p>" + esc(DATA.rule.labels) + "</p>" +
+      "<p>The read describes the chart as it stands on the last session on record. It says nothing about any later session.</p>";
+    var names = Object.keys(DATA.bars).sort();
+    namesEl.innerHTML = names.map(function(s){
+      return '<option value="' + esc(s) + '"></option>';
+    }).join("");
+    receiptEl.textContent = DATA.coverage + " Source: " + DATA.source + ".";
+    symInput.value = "SPY";
+    render("SPY");
+  }
+
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var sym = symInput.value.trim().toUpperCase();
+    if (!sym || !DATA) return;
+    symInput.value = sym;
+    render(sym);
+  });
+
+  fetch("data.json").then(function(resp){
+    if (!resp.ok) throw new Error("bad response");
+    return resp.json();
+  }).then(function(data){
+    DATA = data;
+    init();
+  }).catch(function(){
+    meta.textContent = "";
+    showBanner("missing", "The price history is not available right now, so no read can be shown. Nothing has been estimated to fill the gap.");
+  });
+
+  window.AIChartRead = { computeRead: computeRead };
+})();
+</script>
+</body>
+</html>
