@@ -1,0 +1,121 @@
+/* Visual kit styles. Kit only: reuses the canonical tokens from shared.css,
+   adds no new palette, radius or font rule. Every block sits inside the
+   existing .chartbox frame. All selectors carry the vk- prefix. */
+.vk-title{margin:0 0 10px;font-size:17px}
+.vk-svg{width:100%;height:auto;display:block}
+.vk-axis{font-size:11px;fill:var(--faint)}
+.vk-state{padding:14px 16px}
+.vk-statewords{margin:0;font-size:15px}
+.vk-done{transition:opacity .3s ease}
+.vk-fade{animation:vkfade .3s ease}
+@keyframes vkfade{from{opacity:.4}to{opacity:1}}
+@media (prefers-reduced-motion: reduce){
+  .vk-done{transition:none}
+  .vk-fade{animation:none}
+}
+/* P2 Band */
+.vk-bandrect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1}
+.vk-mark{stroke:var(--ink);stroke-width:2}
+.vk-pt,.vk-cur{fill:var(--accent)}
+.vk-dot{fill:var(--accent);opacity:.75}
+/* P3 Curve and P9 Line */
+.vk-line-path{fill:none;stroke:var(--accent);stroke-width:2}
+.vk-dashed{stroke-dasharray:6 4}
+.vk-bench{stroke:var(--faint);stroke-width:1.5}
+.vk-fit{stroke:var(--faint);stroke-width:1.5}
+/* P4 Dial */
+.vk-dial{max-width:260px;margin:0 auto}
+.vk-dial-track{fill:none;stroke:var(--nodata-bg);stroke-width:12}
+.vk-dial-fill{fill:none;stroke:var(--accent);stroke-width:12}
+.vk-dial-needle{stroke:var(--ink);stroke-width:2}
+.vk-dial-value{font-size:22px;font-weight:800;fill:var(--ink)}
+/* P5 MeterBench */
+.vk-meterbench .track{overflow:visible}
+.vk-bench-mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.vk-coverage{font-size:15px;font-weight:700;margin:6px 0 0}
+/* P6 RankedBars */
+.vk-ranked .vk-rrow{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--line)}
+.vk-ranked .bar{flex:1;height:9px;background:var(--nodata-bg);border-radius:5px;position:relative;min-width:60px}
+.vk-ranked .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:5px}
+.vk-rname{font-weight:600;min-width:90px}
+.vk-rscore{font-weight:700}
+.vk-rcov{color:var(--soft);font-size:13.5px}
+/* P7 HeatStrip */
+.vk-heatstrip{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 10px}
+.vk-heat-cell{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:2px 7px;background:var(--card)}
+.vk-heat-mid{background:var(--accent-soft)}
+.vk-heat-hot{background:var(--accent);color:#fff}
+/* P10 Accrual */
+.vk-ticks{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+.vk-tick{width:10px;height:10px;border-radius:3px;background:var(--nodata-bg);border:1px solid var(--line)}
+.vk-tick.on{background:var(--accent)}
+.vk-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.vk-cal-cell{font-size:12px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:5px 0;background:var(--card)}
+.vk-cal-mid{background:var(--accent-soft)}
+.vk-cal-hot{background:var(--accent);color:#fff}
+.vk-timeline{border-left:2px solid var(--line);margin-left:6px}
+.vk-tl-row{display:flex;gap:10px;align-items:baseline;padding:5px 0 5px 12px;position:relative}
+.vk-tl-dot{position:absolute;left:-6px;top:10px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.vk-tl-date{color:var(--faint);font-size:13px;white-space:nowrap}
+.vk-tl-label{font-size:14.5px}
+
+/* Charts-IA extension (2026-10-31): INFO-MAP vocabulary + page layout.
+   FolioTend tokens only: navy ink, teal up, muted red down, mint lines. */
+.vk-grid{stroke:var(--line);stroke-width:1}
+.vk-zero{stroke:var(--faint);stroke-width:1}
+.vk-area-fill{fill:var(--accent-soft);stroke:none}
+.vk-down-stroke{stroke:var(--down)}
+.vk-bar-up{fill:var(--accent)}
+.vk-bar-down{fill:var(--down)}
+.vk-barlabel{fill:var(--ink);font-weight:600}
+.vk-fan-inner{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1}
+.vk-fan-outer{fill:#eef6f4;stroke:var(--line);stroke-width:1}
+.vk-heat-pos{fill:var(--accent)}
+.vk-heat-neg{fill:var(--down)}
+.vk-zone{fill:none;stroke-width:13}
+.vk-zone-0{stroke:#b2595d}
+.vk-zone-1{stroke:#e0a458}
+.vk-zone-2{stroke:#098979}
+.vk-zone-3{stroke:#124f50}
+.vk-gauge{max-width:300px}
+.vk-tl-line{stroke:var(--line);stroke-width:3}
+.vk-slice-0{fill:#098979}
+.vk-slice-1{fill:#123247}
+.vk-slice-2{fill:#5f9e96}
+.vk-slice-3{fill:#b2595d}
+.vk-slice-4{fill:#e0a458}
+.vk-legend{font-size:12.5px;fill:var(--ink)}
+/* Page layout (charts lead, record charted, status small, missing small) */
+.titlechip{display:inline-block;vertical-align:middle;margin-left:10px}
+.recordchart{border-top:3px solid var(--accent)}
+.recordchart h2{margin:0 0 4px;font-size:20px}
+.recordchart .studyword{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+.missingline{font-size:13px;color:var(--soft);margin:14px 0 0}
+.leadchart:empty{display:none}
+/* Collapsed explanation block: no heading or label, closed by
+   default, sits under the page title. Summary is the page's own
+   plain sentence; the fuller text shows only when opened. */
+.explblock{margin:10px 0 4px;font-size:14.5px;color:var(--soft);max-width:46em}
+.explblock summary{cursor:pointer;color:var(--ink)}
+.explblock .explbody{margin:8px 0 0}
+/* Hub visual front + card minis */
+.visualfront{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:0 0 8px}
+.vftile{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.vftile h3{margin:0 0 6px;font-size:16px}
+.vftile h3 a{color:var(--accent);text-decoration:none}
+.vftile .vfsub{font-size:13.5px;color:var(--soft);margin:6px 0 0}
+.hubcard .mini{margin:2px 0 0;min-height:30px}
+.hubcard .mini svg{width:100%;height:auto}
+.hubcard .mini .vk-ranked .vk-rrow{padding:3px 0}
+.deskcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+
+/* Live indicator (liveness phase, 2026-10-31): top-bar dot + clock.
+   Green while the page's data file is inside its cadence contract,
+   amber once it is honestly past it, grey when the market is closed
+   or the page is a study that only moves when it is re-run. */
+.liveind{display:inline-flex;align-items:center;gap:7px;margin-left:auto;font-size:13px;color:#cfe8e2;white-space:nowrap}
+.liveind .livedot{width:9px;height:9px;border-radius:50%;background:#2fbf71;flex:none}
+.liveind.stale{color:#f2c979}
+.liveind.stale .livedot{background:#e0a32e}
+.liveind.closed .livedot,.liveind.asof .livedot{background:#9db8b2}
+.topbar .updated{margin-left:0}
