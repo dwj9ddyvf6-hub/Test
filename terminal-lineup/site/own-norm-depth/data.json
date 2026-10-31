@@ -126,6 +126,10 @@
     "state": "fitted_frozen"
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: direction and distribution, over 20 sessions (secondary 60). It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 200 matured forecasts, the quintile spread's confidence interval includes zero. It counts as proven at 200 matured forecasts.",
+    "summary": "For each stock in a rising trend, judge today's dip against that stock's own past dips, and state the chance it beats the broad market over the next 20 trading days."
+  },
   "fear_day": {
     "bins": [
       {
@@ -311,8 +315,184 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 0,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_03",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "claim",
+        "curve",
+        "execution_pricing",
+        "fear_day",
+        "feed",
+        "history",
+        "kill_criterion",
+        "live",
+        "panel_reader",
+        "price_basis",
+        "provenance",
+        "source",
+        "state",
+        "thin_cell_rule",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_03",
+      "forecasts": 0,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 3,
+          "path": "/history"
+        },
+        {
+          "items": 0,
+          "path": "/history/out_of_sample"
+        },
+        {
+          "items": 3,
+          "path": "/history/study_record"
+        }
+      ],
+      "total_items_counted": 6
+    },
+    "version": 1
+  },
   "source": "The curve and the out-of-sample evaluation on this page were computed from the long daily price history on record (deep_bars.json, 2015 to 2026, read through the terminal's shared panel reader). Live forecasts are still judged against the shipped daily history (1832 stocks plus the broad market fund, 2025-03-25 to 2026-10-30, at most 404 trading days for any one name), checked for this page.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Median excess points per dip-depth bin.",
+      "rows": [
+        {
+          "name": "0.0 to 10.0 percent dip",
+          "score": 0.07814726501704783
+        },
+        {
+          "name": "10.0 to 20.0 percent dip",
+          "score": 0.3431882420515564
+        },
+        {
+          "name": "20.0 to 30.0 percent dip",
+          "score": 0.40644893315862074
+        },
+        {
+          "name": "30.0 to 40.0 percent dip",
+          "score": 0.4102040236731552
+        },
+        {
+          "name": "40.0 to 50.0 percent dip",
+          "score": 0.29581164623892486
+        },
+        {
+          "name": "50.0 to 60.0 percent dip",
+          "score": 0.22793346862544084
+        },
+        {
+          "name": "60.0 to 70.0 percent dip",
+          "score": 0.02501554110127535
+        },
+        {
+          "name": "70.0 to 80.0 percent dip",
+          "score": -0.11133241645037151
+        },
+        {
+          "name": "80.0 to 90.0 percent dip",
+          "score": -0.16992328697290615
+        },
+        {
+          "name": "90.0 to 100.0 percent dip",
+          "score": -0.2673696141793913
+        }
+      ],
+      "source": "curve.bins[].median_excess_points",
+      "title": "Forward edge by dip depth"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Percent beating the market per dip-depth bin.",
+      "rows": [
+        {
+          "name": "0.0 to 10.0 percent dip",
+          "score": 50.49
+        },
+        {
+          "name": "10.0 to 20.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "20.0 to 30.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "30.0 to 40.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "40.0 to 50.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "50.0 to 60.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "60.0 to 70.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "70.0 to 80.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "80.0 to 90.0 percent dip",
+          "score": 51.21
+        },
+        {
+          "name": "90.0 to 100.0 percent dip",
+          "score": 51.21
+        }
+      ],
+      "source": "curve.bins[].p",
+      "title": "Share that beat the market, by dip depth"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any group with fewer than 30 graded forecasts shows its count only, with no percentage headline.",
   "tool": "Own-Norm Depth Forecaster"
 }
