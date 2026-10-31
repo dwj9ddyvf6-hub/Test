@@ -6518,6 +6518,7 @@
         "self_test",
         "source",
         "state",
+        "subject_chart",
         "thin_rule",
         "tiers",
         "tool"
@@ -61507,6 +61508,93 @@
   },
   "source": "The scheduled earnings calendar gathered on October 12, 2026, the stored past report dates from 2022 to 2024, and the daily price history on record",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "The priced move percent for each coming report.",
+      "rows": [
+        {
+          "name": "AEHR",
+          "score": 18.6816
+        },
+        {
+          "name": "TSEM",
+          "score": 15.1527
+        },
+        {
+          "name": "PLTR",
+          "score": 13.853
+        },
+        {
+          "name": "TEM",
+          "score": 12.712
+        },
+        {
+          "name": "AAPL",
+          "score": 4.3493
+        }
+      ],
+      "source": "next.names[].exceedance.priced_move_pct",
+      "title": "Priced earnings moves, biggest first"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Hits as a percent of graded reports, per season.",
+      "rows": [
+        {
+          "name": "2022 Q2",
+          "score": 100.0
+        },
+        {
+          "name": "2022 Q3",
+          "score": 64.71
+        },
+        {
+          "name": "2022 Q4",
+          "score": 64.71
+        },
+        {
+          "name": "2023 Q1",
+          "score": 58.82
+        },
+        {
+          "name": "2023 Q2",
+          "score": 80.95
+        },
+        {
+          "name": "2023 Q3",
+          "score": 81.82
+        },
+        {
+          "name": "2023 Q4",
+          "score": 82.61
+        },
+        {
+          "name": "2024 Q1",
+          "score": 72.0
+        },
+        {
+          "name": "2024 Q2",
+          "score": 76.67
+        },
+        {
+          "name": "2024 Q3",
+          "score": 86.21
+        },
+        {
+          "name": "2024 Q4",
+          "score": 80.0
+        },
+        {
+          "name": "2026 Q4",
+          "score": 84.62
+        }
+      ],
+      "source": "history.seasons[].hits/graded",
+      "title": "Hit rate per season, on record"
+    },
+    "version": 1
+  },
   "thin_rule": "A part is not published from a thin pool: a company's own history counts only at 8 or more of its past reports, a group's part needs at least 30 past moves in that group, and a season's coverage share is printed only at 30 or more graded reports. Below those counts, the count itself is shown with the reason.",
   "tiers": [
     {
