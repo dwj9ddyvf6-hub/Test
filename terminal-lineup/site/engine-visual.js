@@ -133,12 +133,22 @@
         label: "For each stated chance, the share of past cases that actually landed inside. Points on the level would mean a perfect match." });
     },
     "earnings-distribution": function (d, s) {
-      var rows = (d.tiers || []).map(function (t) {
-        return { name: t.label, score: t.abs_events, coverage: t.signed_events + " with a signed move record" };
-      }).filter(function (r) { return typeof r.score === "number"; });
-      if (!rows.length) return null;
-      return VisualKit.ranked({ rows: rows, session: d.decision_as_of || s, title: "Earnings moves on record, by company size",
-        label: "How many earnings moves sit behind this page's distribution, for each size group." });
+      /* Form cure (spec 14.2 distribution): the lead draws the
+         distribution itself, not counts by company-size tier. Each
+         coming reporter contributes its own typical earnings move
+         (next.names[].abs.typical_pct, on record for all of them);
+         the bars count how many fall in each move-size bucket. The
+         tier counts stay in the page record below. */
+      var vals = ((d.next && d.next.names) || []).map(function (n) { return n && n.abs ? n.abs.typical_pct : null; })
+        .filter(function (v) { return typeof v === "number" && isFinite(v); });
+      if (vals.length < 5) return null;
+      var edges = [[0, 2, "Under 2%"], [2, 3, "2 to 3%"], [3, 4, "3 to 4%"], [4, 6, "4 to 6%"], [6, 9, "6 to 9%"], [9, Infinity, "9% and up"]];
+      var buckets = edges.map(function (e) {
+        return { label: e[2], value: vals.filter(function (v) { return v >= e[0] && v < e[1]; }).length };
+      }).filter(function (b) { return b.value > 0; });
+      if (buckets.length < 2) return null;
+      return VisualKit.distribution({ buckets: buckets, session: d.decision_as_of || s, title: "How big the coming earnings moves usually are",
+        label: "One bar per move-size range. Each of the " + vals.length + " coming reporters on record is counted once, by the size of its own typical earnings-day move, in percent." });
     },
     "exceedance": function (d, s) {
       var cells = (d.history && d.history.cells) || [];
