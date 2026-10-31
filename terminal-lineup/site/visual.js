@@ -216,6 +216,15 @@
     }
     var top = pts.reduce(function (a, p, j) { return p.y > pts[a].y ? j : a; }, 0);
     s += '<circle cx="' + X(top) + '" cy="' + Y(pts[top].y) + '" r="4" class="vk-cur"></circle>';
+    /* Point notes (2026-10-31, Wave 3 Item E): a point carrying a
+       note string gets a marker dot and the note drawn at the point,
+       alternating above and below so neighbouring notes stay
+       readable. Points without a note draw exactly as before. */
+    pts.forEach(function (p, j) {
+      if (p.note == null || p.note === "") return;
+      s += '<circle cx="' + X(j) + '" cy="' + Y(p.y) + '" r="3.5" class="vk-pt"></circle>';
+      s += '<text x="' + X(j) + '" y="' + (Y(p.y) + (j % 2 ? 16 : -8)) + '" text-anchor="middle" class="vk-note">' + esc(p.note) + "</text>";
+    });
     s += '<text x="' + pad + '" y="' + (H - 6) + '" class="vk-axis">' + esc(pts[0].x != null ? pts[0].x : "") + "</text>";
     s += '<text x="' + (W - pad - 40) + '" y="' + (H - 6) + '" class="vk-axis">' + esc(pts[pts.length - 1].x != null ? pts[pts.length - 1].x : "") + "</text>";
     s += '<text x="' + pad + '" y="14" class="vk-axis">' + fmt(yHi) + "</text></svg>";
