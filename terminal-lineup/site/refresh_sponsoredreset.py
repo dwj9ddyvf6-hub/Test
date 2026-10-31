@@ -246,7 +246,14 @@ try:
     import attestation_block as _ab
 except ImportError:  # refresh stays runnable standalone
     _ab = None
+
+try:
+    import session_history as _sh
+except ImportError:  # refresh stays runnable standalone
+    _sh = None
 LEDGER_PATH = os.path.join(LINEUP, "forecast", "ledger.jsonl")
+HISTORY_PATH = os.path.join(HERE, "sponsored-reset",
+                            "session-history.json")
 
 sys.path.insert(0, LINEUP)
 from forecast import ledger as ledger_mod  # noqa: E402
@@ -1173,6 +1180,20 @@ def build():
                            "stocks shows its count only, with no "
                            "average headline."),
     }
+    # Session keeping (2026-10-31, Wave 3 Item F): from this run
+    # forward, each refresh appends a dated snapshot of the
+    # charted subject values (the qualifying days on record and
+    # SPY's move on each) to the page's session-history store and
+    # carries the kept list on the page data, so the record's
+    # accrual is provable run by run. The history record itself
+    # is unchanged; nothing is backfilled.
+    if _sh is not None:
+        data["session_history"] = _sh.append_session(
+            HISTORY_PATH, freshest,
+            {"days": [{"date": day["date"],
+                        "spy_change_pct": day["spy_change_pct"]}
+                       for day in history]})
+
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, "w", encoding="utf-8") as fh:
         data = _ab.attach(data, ENGINE_ID) if _ab is not None else data
