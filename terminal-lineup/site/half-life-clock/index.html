@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Half-Life Clock: when each forecaster family's strength will fade to half</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.caution{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:20px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Half-Life Clock</h1>
+    <p class="job">One job: publish each forecaster family's expected fading date in advance, the date its strength is expected to fall to half of what it was at promotion, and stake a call on it.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="Families read "+fmtShort(data.as_of)+". First monthly round: "+fmtShort(data.live_record.first_issue)+". Source: "+data.source+".";
+    var h="";
+    h+='<section class="card"><h2>The idea</h2><p>'+esc(data.idea_words)+'</p></section>';
+
+    h+='<section class="card"><h2>Why fading is the expectation</h2><p>'+esc(data.base_rate_words)+'</p></section>';
+
+    showBanner("caution", data.coming_round_words);
+
+    var fc=data.family_counts||{};
+    h+='<section class="card"><h2>The families, and the coming round</h2>'
+      +'<p>The coming November round clocks <strong>0 families</strong>: '+esc(fc.not_yet_clockable)+' families and groups are listed, each as not yet clockable with its missing piece named. When a family becomes clockable, its expected fading date (give or take 10 trading days) and its yes-or-no call on fading to half within 60 trading days will appear in this table, written down on the issue day, before the window opens.</p>'
+      +'<table><tr><th>Family</th><th>Promotion, and what is on record</th><th>Strength today</th><th>Expected fading date for the coming round</th></tr>';
+    (data.families||[]).forEach(function(f){
+      h+='<tr><td><strong>'+esc(f.name_words)+'</strong><div class="sub">'+esc(f.missing_words)+'.</div></td>'
+        +'<td>'+esc(f.promotion_words)+'.<div class="sub">'+esc(f.facts_words)+'.</div></td>'
+        +'<td>'+esc(f.strength_words)+'.</td>'
+        +'<td><span class="count">'+esc(f.predicted_words)+'</span></td></tr>';
+    });
+    h+='</table><p class="sub">'+esc(data.definitions_words)+'</p></section>';
+
+    h+='<section class="card"><h2>The fading pattern, and its past accuracy</h2><p>'+esc(data.model_words)+'</p><p class="sub">'+esc(data.prior_words)+'</p>'
+      +'<table><tr><th>Forecaster and target pair</th><th>Promoted</th><th>Tested on the second look</th><th>Reached the top grade</th><th>Held direction only</th><th>Did not replicate</th><th>Could not be tested</th></tr>';
+    (data.pair_table||[]).forEach(function(p){
+      h+='<tr><td>'+esc(p.pair_words)+'</td><td>'+esc(p.promoted)+'</td><td>'+esc(p.tested)+'</td><td>'+esc(p.grade_a)+'</td><td>'+esc(p.confirmed)+'</td><td>'+esc(p.not_replicated)+'</td><td>'+esc(p.untestable)+'</td></tr>';
+    });
+    h+='</table><p class="sub">'+esc(data.rival_words)+'</p></section>';
+
+    var lr=data.live_record||{};
+    h+='<section class="card"><h2>This page\u2019s own live record</h2><p>'+esc(lr.words)+'</p>'
+      +'<table><tr><th>Measure</th><th>Count</th></tr>'
+      +'<tr><td>Monthly rounds issued</td><td>'+esc(lr.rounds_issued)+' of '+esc(lr.target)+' that decide it</td></tr>'
+      +'<tr><td>Rounds graded so far</td><td>'+esc(lr.rounds_graded)+'</td></tr>'
+      +'<tr><td>Forecasts written to the public record</td><td>'+esc(lr.forecasts_recorded)+'</td></tr></table>'
+      +'<p class="sub">'+esc(data.thin_cell_words)+'</p></section>';
+
+    h+='<section class="card"><h2>What would retire this page</h2><p>'+esc(data.kill_words)+'</p><p class="sub">'+esc(data.proving_state)+': this page earns stronger words only from its own recorded results, never from anyone else\u2019s.</p></section>';
+
+    var st=data.self_test||{};
+    h+='<section class="card"><h2>The machinery, checked</h2><p class="sub">Before this page published, its definitions were run end to end on made-up records: a made-up family whose strength halved at trading day '+esc(st.synthetic_crossing_session)+' was graded with a date error of '+esc(st.synthetic_date_error)+' trading days against a prediction of 28, its yes call scored as a hit, a family that never halved scored its no call as a hit, nothing was graded before day 60, and a full monthly issue of '+esc(st.synthetic_rows_ledgered)+' written records (one date record and one call record) was exercised on a throwaway copy of the public record, with the live record checked untouched afterwards.</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","The newest record could not be loaded. Nothing on this page is estimated or filled in: when the record is missing, the page says so.");
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
