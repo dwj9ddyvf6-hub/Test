@@ -83,19 +83,30 @@ def test_hub_sections_and_counts():
         f"{chips.get('stale', 0)} stale"), line
 
 
+DESK_WIRING = ('<link rel="stylesheet" href="../shared.css">\n'
+               '<link rel="stylesheet" href="../visual.css">\n'
+               '<script src="../shared.js" defer></script>\n')
+
+
 def test_desk_publish_copy_matches_source():
     # The desk feed is live and moves on its own cycle, so the blocker
-    # proves the producer: a fresh publish must be byte-identical.
+    # proves the producer: a fresh publish copies the feed byte for
+    # byte, and the page byte for byte apart from the shared chart
+    # wiring the producer adds to the published copy (desk subject
+    # chart cure, 2026-10-31).
     out = subprocess.run(
         ["python3", str(SITE / "publish_desk.py")],
         capture_output=True, text=True, timeout=60)
     assert out.returncode == 0, out.stdout + out.stderr
     src = WORKSPACE / "muse-desk-v3" / "terminal"
-    for name in ("index.html", "terminal_feed.json"):
-        a = hashlib.sha256((src / name).read_bytes()).hexdigest()
-        b = hashlib.sha256(
-            (SITE / "desk" / name).read_bytes()).hexdigest()
-        assert a == b, name
+    a = hashlib.sha256((src / "terminal_feed.json").read_bytes()).hexdigest()
+    b = hashlib.sha256(
+        (SITE / "desk" / "terminal_feed.json").read_bytes()).hexdigest()
+    assert a == b, "terminal_feed.json"
+    published = (SITE / "desk" / "index.html").read_text()
+    assert DESK_WIRING in published, "chart wiring missing"
+    assert published.replace(DESK_WIRING, "", 1) == \
+        (src / "index.html").read_text(), "page content changed"
 
 
 def _drawn_countbars(slug):
@@ -453,8 +464,8 @@ def test_subject_silent_accumulation_chart():
 
 def test_subject_sponsored_reset_chart():
     d = _d("sponsored-reset")
-    _check_subject("sponsored-reset",
-                   [x["spy_change_pct"] for x in d["history"]["days"]], None)
+    vals = [x["spy_change_pct"] for x in d["history"]["days"]]
+    _check_subject("sponsored-reset", vals, vals)
 
 
 def test_subject_streak_trap_chart():
@@ -633,12 +644,16 @@ def _expected_ranked(slug, d):
         return {f"{s} with {t[0]['symbol']}": t[0]["correlation"]
                 for s, t in d["twins"].items() if t}
     if slug == "earnings-calendar":
-        out = {}
-        for nm in d["names"]:
-            em = nm.get("expected_move")
-            if isinstance(em, str) and em.endswith("%"):
-                out[f"{nm['symbol']} {nm['date']}"] = float(em[:-1])
-        return out
+        # Wave 2 cure: the record chart plots realised moves for
+        # names whose report date has passed, never expected moves
+        # for names that have not reported.
+        return {f"{r['symbol']} {r['report_date']}":
+                r["realised_move_pct"]
+                for r in d.get("realised_moves") or []}
+    if slug == "earnings-drift":
+        # Wave 2 cure: per-event rows, one per earnings event.
+        return {f"{r['symbol']} {r['report_date']}": r["drift_pct"]
+                for r in d.get("event_rows") or []}
     if slug == "expiry-pin-watch":
         out = {}
         for nm in d["names"][:2]:
@@ -746,7 +761,7 @@ def _expected_ranked(slug, d):
 
 
 _RANKED_SLUGS = """13f-tracker activity-profile alert-tape breakout-scanner
-chain-explorer correlation-web earnings-calendar expiry-pin-watch fear-day
+chain-explorer correlation-web earnings-calendar earnings-drift expiry-pin-watch fear-day
 fear-day-forecaster flow-board flow-engine flow-tape gap-fill
 golden-sweep-wire grade-a-board holly-ideas horizon-grades insider-wire
 momentum-clock odds-cards portfolio-builder promoted-book pullback-norm
@@ -761,10 +776,6 @@ _TILES_SLUGS = {
         "On probation, " + d["gradings"][-1]["date"]:
             round(100 * d["gradings"][-1]["probation"]
                   / d["gradings"][-1]["total"] * 10) / 10},
-    "earnings-drift": lambda d: {
-        "Average move after reporting": round(d["mean"] * 10000) / 100,
-        "Middle move after reporting": round(d["median"] * 10000) / 100,
-        "Share of reports that rose": round(d["share_positive"] * 1000) / 10},
     "iv-weather": lambda d: {
         n["symbol"]: n["iv_percent"]
         for g in d["groups"] for n in g["names"]
@@ -914,9 +925,26 @@ def _check_page(slug):
         assert got.get(f"{data['default_name']} board score, out of 100") \
             == rec["scored"]["score"], slug
     elif slug == "morning-map":
-        assert charts == [], \
-            "morning-map: past maps are not kept; no record chart may " \
-            "be drawn and no counts may be substituted"
+        # Wave 3 cure (2026-10-31): past maps were not kept, so the
+        # record chart is the current session's own levels ladder,
+        # labelled as the session on record; values recomputed here
+        # from the page's indexes block.
+        bands = [c for c in charts if c.get("kind") == "band"]
+        assert bands, "morning-map: no levels ladder charted"
+        items = {i["label"]: i for i in bands[0].get("items") or []}
+        assert items, "morning-map: ladder carries no index items"
+        for ix in data["indexes"]:
+            it = items.get(ix["symbol"])
+            assert it is not None, \
+                f"morning-map: {ix['symbol']} missing from the ladder"
+            assert it["low"] == (ix.get("put_wall") or {}).get("value"), \
+                f"morning-map: {ix['symbol']} put wall differs"
+            assert it["high"] == (ix.get("call_wall") or {}).get("value"), \
+                f"morning-map: {ix['symbol']} call wall differs"
+            assert it["mid"] == (ix.get("flip") or {}).get("value"), \
+                f"morning-map: {ix['symbol']} flip differs"
+            assert it["current"] == ix.get("spot"), \
+                f"morning-map: {ix['symbol']} spot differs"
     else:  # pragma: no cover
         raise AssertionError(f"no blocker spec for {slug}")
 
@@ -935,6 +963,8 @@ def _render_check(slug):
         " else if (c.kind==='tiles') html+=VK.tiles({items:c.items,"
         "title:c.title,label:c.label});"
         " else if (c.kind==='line') html+=VK.line({series:c.series,"
+        "title:c.title,label:c.label});"
+        " else if (c.kind==='band') html+=VK.band({items:c.items,"
         "title:c.title,label:c.label});"
         " else if (c.kind==='tape') html+=VK.tape({events:c.events,"
         "title:c.title,label:c.label});"
@@ -1085,9 +1115,8 @@ def _check_module_subject(slug, lead_vals, record_vals):
 
 def test_subject_agent_debate_chart():
     d = _d("agent-debate")
-    _check_module_subject(
-        "agent-debate",
-        [f["count_rising"] - f["count_falling"] for f in d["funds"]], None)
+    vals = [f["count_rising"] - f["count_falling"] for f in d["funds"]]
+    _check_module_subject("agent-debate", vals, vals)
 
 
 def test_subject_echo_board_chart():
@@ -1134,8 +1163,8 @@ def test_subject_family_fracture_chart():
 
 def test_subject_gamma_ladder_chart():
     d = _d("gamma-ladder")
-    _check_module_subject(
-        "gamma-ladder", [r["pull"] for r in d["funds"][0]["rungs"]], None)
+    vals = [r["pull"] for r in d["funds"][0]["rungs"]]
+    _check_module_subject("gamma-ladder", vals, vals)
 
 
 def test_subject_ai_chart_read_chart():
@@ -1188,16 +1217,490 @@ def test_subject_market_mood_chart():
     _check_module_subject("market-mood", None, [y for _, y in pts])
 
 
-def test_no_chart_desk_greeks_payoff():
-    # No data.json is invented for these pages and no internal chart
-    # can be drawn: desk is a byte-for-byte publish copy with no chart
-    # wiring; the two sketches lead with their authored subject SVGs.
-    assert not (SITE / "desk" / "data.json").exists()
-    desk_html = (SITE / "desk" / "index.html").read_text()
-    assert "page_charts" not in desk_html and "shared.js" not in desk_html
+def test_no_chart_greeks_payoff():
+    # No data.json is invented for these two pages and no internal
+    # chart can be drawn: the two sketches lead with their authored
+    # subject SVGs. (Desk left this class in the 2026-10-31 cure: it
+    # now carries a data.json built from its own snapshot, blocked by
+    # test_subject_desk_chart below.)
     for slug in ("greeks-sketch", "payoff-sketch"):
         assert not (SITE / slug / "data.json").exists()
         html = (SITE / slug / "index.html").read_text()
         assert "<svg" in html, f"{slug}: authored subject sketch missing"
     pc = (SITE / "page_charts.js").read_text()
     assert "if (!data) return" in pc
+
+
+# --- Subject-chart cure, desk page (2026-10-31) -----------------------
+# The desk page was the one hub page with no data.json and no chart.
+# Its blocker recomputes both charts from the desk snapshot itself
+# (the source feed publish_desk.py copies), never from the chart
+# block: the lead is the open positions picture, named, aggregated
+# from the per-strategy rows; the record is the two equity readings
+# the snapshot carries (starting capital at the epoch start, equity
+# at the latest cycle). A flat desk must yield a null lead, never a
+# substitute chart, and a missing data.json must fail loudly here.
+
+def _desk_expected(feed):
+    agg = {}
+    for strat in feed.get("strategies") or []:
+        for pos in strat.get("open_positions") or []:
+            sym, qty = pos.get("symbol"), pos.get("qty")
+            if not sym or not isinstance(qty, (int, float)):
+                continue
+            agg[sym] = agg.get(sym, 0) + qty
+    if not agg:
+        for pos in feed.get("account_positions") or []:
+            sym, qty = pos.get("symbol"), pos.get("qty")
+            if not sym or not isinstance(qty, (int, float)):
+                continue
+            agg[sym] = agg.get(sym, 0) + qty
+    lead_vals = [agg[s] for s in sorted(agg, key=lambda s: -abs(agg[s]))] \
+        or None
+    packet = feed.get("evidence_packet") or {}
+    record_vals = [packet.get("starting_capital"),
+                   (feed.get("account") or {}).get("equity")]
+    return lead_vals, record_vals
+
+
+def test_subject_desk_chart():
+    feed_path = WORKSPACE / "muse-desk-v3" / "terminal" / \
+        "terminal_feed.json"
+    feed = json.loads(feed_path.read_text())
+    lead_vals, record_vals = _desk_expected(feed)
+    data_path = SITE / "desk" / "data.json"
+    assert data_path.exists(), "desk: data.json missing, charts gone"
+    data = json.loads(data_path.read_text())
+    # the carried quantities themselves recompute from the feed
+    assert [p["qty"] for p in data["positions"]] == \
+        (lead_vals or []), "desk: positions block off the feed"
+    assert data["epoch"]["starting_capital"] == record_vals[0]
+    assert data["account"]["equity"] == record_vals[1]
+    _check_subject("desk", lead_vals, record_vals)
+    html = (SITE / "desk" / "index.html").read_text()
+    assert "../shared.js" in html, "desk: shared chart wiring missing"
+    assert "subject_chart.record" in (SITE / "page_charts.js").read_text()
+
+
+def test_desk_positions_chart_from_synthetic_feed():
+    # The live desk is flat at the time of the cure, so the positions
+    # lead is also proven on a synthetic snapshot through the real
+    # producer: named rows, quantities summed across strategies,
+    # shorts kept signed, flat snapshots yielding no lead chart.
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "publish_desk", SITE / "publish_desk.py")
+    pub = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pub)
+    feed = {
+        "generated_at": "2026-10-31T20:01:37+00:00",
+        "account": {"equity": 101250.5, "cash": 900.0,
+                    "buying_power": 2000.0, "portfolio_value": 101250.5,
+                    "last_equity": 101000.0, "status": "ACTIVE"},
+        "evidence_packet": {
+            "starting_capital": 100000.0,
+            "period": {"start": "2026-10-26T20:14:30+00:00",
+                       "end": "2026-10-31T20:01:37+00:00"}},
+        "account_positions": [],
+        "strategies": [
+            {"name": "alpha", "open_positions": [
+                {"symbol": "AAA", "qty": 40},
+                {"symbol": "BBB", "qty": -15}]},
+            {"name": "beta", "open_positions": [
+                {"symbol": "AAA", "qty": 10}]},
+        ],
+    }
+    data = pub.build_data(feed)
+    lead = data["subject_chart"]["lead"]
+    assert lead and lead["kind"] == "ranked", lead
+    assert [(r["name"], r["score"]) for r in lead["rows"]] == \
+        [("AAA", 50), ("BBB", -15)], lead["rows"]
+    assert lead["rows"][0]["coverage"] == "held by alpha, beta"
+    record = data["subject_chart"]["record"]
+    assert [p["y"] for p in record["points"]] == [100000.0, 101250.5]
+    flat = pub.build_data({**feed, "strategies": []})
+    assert flat["subject_chart"]["lead"] is None
+    assert flat["subject_chart"]["record"] is not None
+
+
+# --- Wave 2 cures: earnings-drift per-event rows, earnings-calendar
+# realised moves, decay-watch movements proof (2026-10-31) --------------
+# Each blocker recomputes the charted values from the lane's own
+# kept records and the DEEP panel closes, never from the chart block.
+
+_DEEP_READER = None
+
+
+def _deep_closes(symbol):
+    global _DEEP_READER
+    import sys
+    if str(SITE) not in sys.path:
+        sys.path.insert(0, str(SITE))
+    if _DEEP_READER is None:
+        from deep_panel_reader import DeepPanelReader
+        _DEEP_READER = DeepPanelReader(
+            str(WORKSPACE / "morgue" / "data_cache" / "deep_bars.json"),
+            log=False)
+    return {row[0]: row[4] for row in _DEEP_READER[symbol]}
+
+
+def _move_on_or_after(closes, day):
+    """The terminal's earnings convention, recomputed: the close of
+    the first session on or after the report date against the close
+    just before it, in percent, rounded the producer's way."""
+    dates = sorted(closes)
+    sess = [d for d in dates if d >= day]
+    prior = [d for d in dates if d < day]
+    assert sess and prior, f"no sessions around {day}"
+    return round((closes[sess[0]] / closes[prior[-1]] - 1) * 100, 4), sess[0]
+
+
+def test_subject_earnings_drift_per_event_rows():
+    d = _d("earnings-drift")
+    rows = d.get("event_rows") or []
+    assert rows, "earnings-drift: no per-event rows carried"
+    assert len(rows) == d["events"], (len(rows), d["events"])
+    for r in rows:
+        expect, sess = _move_on_or_after(
+            _deep_closes(r["symbol"]), r["report_date"])
+        assert r["drift_pct"] == expect, r
+        assert r["session_date"] == sess, r
+    # The pooled figures the page has always carried recompute from
+    # the per-event rows (annotation, not a substitute chart).
+    vals = [r["drift_pct"] for r in rows]
+    assert abs(sum(vals) / len(vals) - d["mean"] * 100) < 0.01
+    assert sum(1 for v in vals if v > 0) == d["positive"]
+    # The record chart plots every event, named, with its own move.
+    _, charts = _charts("earnings-drift")
+    got = _rows_by_name(charts)
+    assert got == {f"{r['symbol']} {r['report_date']}": r["drift_pct"]
+                   for r in rows}, "record chart is not the per-event rows"
+    gen = (SITE / "refresh_earningsdrift.py").read_text()
+    assert "event_rows" in gen and "DeepPanelReader" in gen
+    seg = _adapter_segment((SITE / "tool-visual.js").read_text(),
+                           "earnings-drift")
+    assert "event_rows" in seg and "share_positive" in seg
+
+
+def test_subject_earnings_calendar_realised_moves():
+    d = _d("earnings-calendar")
+    rows = d.get("realised_moves") or []
+    assert rows, "earnings-calendar: no realised moves carried"
+    priced = {}
+    pp = SITE / "earnings-record" / "priced_moves.json"
+    if pp.exists():
+        priced = {k: v["priced_move_pct"] for k, v in
+                  json.loads(pp.read_text())["names"].items()}
+    for r in rows:
+        assert r["report_date"] < d["recorded_on"], r
+        expect, sess = _move_on_or_after(
+            _deep_closes(r["symbol"]), r["report_date"])
+        assert r["realised_move_pct"] == expect, r
+        assert r["session_date"] == sess, r
+        if r.get("expected_move_pct") is not None:
+            # An expected value may only be the priced record's own
+            # figure for that same name; never another name's.
+            assert priced.get(r["symbol"]) == r["expected_move_pct"], r
+    # No name that has not yet reported appears among realised rows.
+    future = {n["symbol"] for n in d["names"]
+              if n["date"] >= d["recorded_on"]}
+    assert not ({r["symbol"] for r in rows} & future
+                and any(r["report_date"] >= d["recorded_on"]
+                        for r in rows))
+    store = json.loads(
+        (SITE / "earnings-calendar" / "realised_moves.json").read_text())
+    assert store["rows"] == rows, "accrual store and page disagree"
+    _, charts = _charts("earnings-calendar")
+    got = _rows_by_name(charts)
+    assert got == {f"{r['symbol']} {r['report_date']}":
+                   r["realised_move_pct"] for r in rows}, \
+        "record chart is not the realised moves"
+    gen = (SITE / "refresh_earningscal.py").read_text()
+    assert "realised_moves" in gen and "DeepPanelReader" in gen
+
+
+def test_subject_decay_watch_movements_proof():
+    import importlib.util
+    d = _d("decay-watch")
+    # The proof the empty movements list is correct: exactly one
+    # grading exists, in the producer's own source records.
+    assert d["gradings_count"] == 1 and len(d["gradings"]) == 1
+    assert d["movements"] == []
+    assert all(v == 0 for v in d["movement_counts"].values())
+    frozen = WORKSPACE / "peer-execute-20261027" / "sources" / \
+        "a_factory" / "desk" / "forecast" / "frozen"
+    versions = sorted(p.name for p in frozen.glob("promoted-book-*.json"))
+    assert versions == ["promoted-book-1.json"], versions
+    book = json.loads((frozen / "promoted-book-1.json").read_text())
+    assert len(book["entries"]) == d["current_counts"]["total"]
+    for e in book["entries"]:
+        # No entry carries a second standing or any history field:
+        # no transition is provable from the kept record.
+        assert "history" not in e and "previous" not in e
+    # The forward recording layer: one standings snapshot, matching
+    # the book entry by entry.
+    hist = json.loads(
+        (SITE / "decay-watch" / "standings-history.json").read_text())
+    assert len(hist["snapshots"]) == 1
+    snap = hist["snapshots"][0]
+    assert snap["grading_date"] == d["gradings"][0]["date"]
+    assert snap["standings"] == {e["id"]: e["status"]
+                                 for e in book["entries"]}
+    # The producer's transition function, exercised on synthetic
+    # standings: promotion, demotion, probation entry and exit.
+    spec = importlib.util.spec_from_file_location(
+        "refresh_decaywatch", SITE / "refresh_decaywatch.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    moves = mod.compute_movements(
+        {"A": "probation", "B": "promoted", "C": "probation"},
+        {"A": "promoted", "B": "probation", "D": "probation"},
+        "2026-10-27", "2026-11-03")
+    by_name = {m["name"]: m for m in moves}
+    assert by_name["A"]["from"] == "probation"
+    assert by_name["A"]["to"] == "promoted"
+    assert by_name["B"]["to"] == "probation"
+    assert by_name["C"]["to"] == "left the book"
+    assert by_name["D"]["from"] == "not in the book"
+    assert all(m["date"] == "2026-11-03" for m in moves)
+    # The chart is labelled with the proven state, not a fallback.
+    _, charts = _charts("decay-watch")
+    text = " ".join((c.get("title") or "") + " " + (c.get("label") or "")
+                    for c in charts)
+    assert "graded once" in text and "no movement" in text
+    gen = (SITE / "refresh_decaywatch.py").read_text()
+    assert "standings-history" in gen and "compute_movements" in gen
+
+
+# --- Wave 3 cures (2026-10-31) ---------------------------------------
+# Item E: ai-chart-read and pattern-draw records carry the page's own
+# reads drawn on the closes (labels at their sessions), distinct from
+# the bare lead curve. Item F: agent-debate, gamma-ladder,
+# morning-map and sponsored-reset records chart the current session's
+# subject picture today, and each page's producer keeps a dated
+# session snapshot from this run forward (append-only store); once
+# more than one session is kept, the record plots the kept sessions.
+# ---------------------------------------------------------------------
+
+import importlib.util  # noqa: E402
+
+
+def _load_site_module(name):
+    spec = importlib.util.spec_from_file_location(
+        name, SITE / (name + ".py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _check_labelled_record(slug):
+    d = _d(slug)
+    sc = d.get("subject_chart") or {}
+    lead, record = sc.get("lead"), sc.get("record")
+    assert record and record["kind"] == "curve", \
+        f"{slug}: record is not a curve"
+    assert "labels" in (record.get("source") or ""), \
+        f"{slug}: record source does not name the labels"
+    seq = ((d.get("labels") or {}).get("SPY") or {}).get("sequence") or []
+    notes = {s["date"]: s["label"] for s in seq
+             if s.get("date") and s.get("label")}
+    assert notes, f"{slug}: no SPY label sequence on record"
+    # The lead stays the bare curve: no point carries a note.
+    assert all("note" not in p for p in lead["points"]), \
+        f"{slug}: lead carries label notes"
+    # Record points are the same closes as the lead, recomputed from
+    # bars and dates, with a note exactly at each labelled session.
+    closes = d["bars"]["SPY"][1]
+    dates = d["dates"]
+    assert [p["y"] for p in record["points"]] == \
+        [p["y"] for p in lead["points"]], \
+        f"{slug}: record closes differ from the lead closes"
+    got = {}
+    for p in record["points"]:
+        assert p["y"] == closes[dates.index(p["x"])], \
+            f"{slug}: record close at {p['x']} differs from bars"
+        if p.get("note"):
+            got[p["x"]] = p["note"]
+    assert got == notes, \
+        f"{slug}: drawn labels {got} != label sequence {notes}"
+    assert record != lead, f"{slug}: record is still the bare curve"
+    # The real VisualKit draws the label text on the record curve.
+    out = _subject_render(slug)
+    for label in set(notes.values()):
+        assert f">{label}</text>" in out["record"], \
+            f"{slug}: label {label} not drawn on the record curve"
+    for label in set(notes.values()):
+        assert f">{label}</text>" not in out["lead"], \
+            f"{slug}: label {label} drawn on the lead curve"
+
+
+def test_subject_ai_chart_read_record_labels():
+    _check_labelled_record("ai-chart-read")
+
+
+def test_subject_pattern_draw_record_labels():
+    _check_labelled_record("pattern-draw")
+
+
+def test_session_keeping_appends_not_overwrites(tmp_path):
+    sh = _load_site_module("session_history")
+    store = tmp_path / "session-history.json"
+    v1 = [{"symbol": "SPY", "rising": 1, "falling": 5}]
+    v2 = [{"symbol": "SPY", "rising": 2, "falling": 4}]
+    out1 = sh.append_session(str(store), "2026-10-30", v1)
+    assert out1 == [{"session": "2026-10-30", "values": v1}]
+    out2 = sh.append_session(str(store), "2026-11-02", v2)
+    assert len(out2) == 2, "second dated run overwrote the first"
+    assert out2[0] == {"session": "2026-10-30", "values": v1}, \
+        "the first kept session changed when the second was appended"
+    assert out2[1] == {"session": "2026-11-02", "values": v2}
+    # An identical repeat of the latest entry (a chained re-run inside
+    # one lane pass) must not duplicate the session.
+    out3 = sh.append_session(str(store), "2026-11-02", v2)
+    assert len(out3) == 2
+    on_disk = json.loads(store.read_text())
+    assert on_disk["sessions"] == out3
+
+
+def test_agent_debate_session_kept():
+    d = _d("agent-debate")
+    kept = d.get("session_history") or []
+    assert kept, "agent-debate: no session kept on the page data"
+    last = kept[-1]
+    assert last["session"] == d["session"]
+    exp = {f["symbol"]: (f["count_rising"], f["count_falling"])
+           for f in d["funds"]}
+    got = {v["symbol"]: (v["rising"], v["falling"])
+           for v in last["values"]}
+    assert got == exp, "agent-debate: kept values differ from funds"
+    store = json.loads(
+        (SITE / "agent-debate" / "session-history.json").read_text())
+    assert store["sessions"] == kept
+    gen = (SITE / "refresh_agentdebate.py").read_text()
+    assert "append_session" in gen and "session_history" in gen
+
+
+def test_gamma_ladder_session_kept():
+    d = _d("gamma-ladder")
+    kept = d.get("session_history") or []
+    assert kept, "gamma-ladder: no session kept on the page data"
+    last = kept[-1]
+    assert last["session"] == d["session"]
+    f0 = d["funds"][0]
+    assert last["values"]["symbol"] == f0["symbol"]
+    exp = [(r["strike"], r["pull"]) for r in f0["rungs"]]
+    got = [(r["strike"], r["pull"]) for r in last["values"]["rungs"]]
+    assert got == exp, "gamma-ladder: kept rungs differ from funds[0]"
+    store = json.loads(
+        (SITE / "gamma-ladder" / "session-history.json").read_text())
+    assert store["sessions"] == kept
+    gen = (SITE / "refresh_gammaladder.py").read_text()
+    assert "append_session" in gen and "session_history" in gen
+
+
+def test_morning_map_session_kept():
+    d = _d("morning-map")
+    kept = d.get("session_history") or []
+    assert kept, "morning-map: no session kept on the page data"
+    last = kept[-1]
+    assert last["session"] == d["session"]
+    exp = {ix["symbol"]: (ix.get("spot"),
+                           (ix.get("put_wall") or {}).get("value"),
+                           (ix.get("flip") or {}).get("value"),
+                           (ix.get("call_wall") or {}).get("value"))
+           for ix in d["indexes"]}
+    got = {v["symbol"]: (v["spot"], v["put_wall"], v["flip"],
+                         v["call_wall"]) for v in last["values"]}
+    assert got == exp, "morning-map: kept levels differ from indexes"
+    store = json.loads(
+        (SITE / "morning-map" / "session-history.json").read_text())
+    assert store["sessions"] == kept
+    gen = (SITE / "refresh_morning_map.py").read_text()
+    assert "append_session" in gen and "session_history" in gen
+
+
+def test_sponsored_reset_session_kept():
+    d = _d("sponsored-reset")
+    kept = d.get("session_history") or []
+    assert kept, "sponsored-reset: no session kept on the page data"
+    last = kept[-1]
+    assert last["session"] == (d["live"].get("freshest_session")
+                               or d.get("as_of"))
+    exp = [(x["date"], x["spy_change_pct"]) for x in d["history"]["days"]]
+    got = [(x["date"], x["spy_change_pct"])
+           for x in last["values"]["days"]]
+    assert got == exp, \
+        "sponsored-reset: kept days differ from history.days"
+    store = json.loads(
+        (SITE / "sponsored-reset" / "session-history.json").read_text())
+    assert store["sessions"] == kept
+    gen = (SITE / "refresh_sponsoredreset.py").read_text()
+    assert "append_session" in gen and "session_history" in gen
+
+
+def test_agent_debate_record_plots_kept_sessions():
+    rs = _load_site_module("record_surface")
+    data = {
+        "funds": [{"symbol": "SPY", "count_rising": 3,
+                   "count_falling": 1},
+                  {"symbol": "QQQ", "count_rising": 2,
+                   "count_falling": 2}],
+        "session_history": [
+            {"session": "2026-10-29",
+             "values": [{"symbol": "SPY", "rising": 0, "falling": 2},
+                        {"symbol": "QQQ", "rising": 1, "falling": 1}]},
+            {"session": "2026-10-30",
+             "values": [{"symbol": "SPY", "rising": 3, "falling": 1},
+                        {"symbol": "QQQ", "rising": 2, "falling": 2}]},
+        ],
+    }
+    sc = rs.build_subject_chart("agent-debate", data)
+    rows = {r["name"]: r["score"] for r in sc["record"]["rows"]}
+    assert rows == {"2026-10-29 SPY": -2, "2026-10-29 QQQ": 0,
+                    "2026-10-30 SPY": 2, "2026-10-30 QQQ": 0}, rows
+
+
+def test_gamma_ladder_record_plots_kept_sessions():
+    rs = _load_site_module("record_surface")
+    data = {
+        "funds": [{"symbol": "SPY",
+                   "rungs": [{"strike": 750.0, "pull": -5.0}]}],
+        "session_history": [
+            {"session": "2026-10-29",
+             "values": {"symbol": "SPY",
+                        "rungs": [{"strike": 740.0, "pull": -3.0}]}},
+            {"session": "2026-10-30",
+             "values": {"symbol": "SPY",
+                        "rungs": [{"strike": 750.0, "pull": -5.0}]}},
+        ],
+    }
+    sc = rs.build_subject_chart("gamma-ladder", data)
+    rows = {r["name"]: r["score"] for r in sc["record"]["rows"]}
+    assert rows == {"2026-10-29 strike 740.0": -3.0,
+                    "2026-10-30 strike 750.0": -5.0}, rows
+
+
+def test_morning_map_record_plots_kept_sessions():
+    rs = _load_site_module("record_surface")
+    ix = {"symbol": "SPY", "spot": 755.72,
+          "put_wall": {"value": 750.0}, "flip": {"value": 768.8},
+          "call_wall": {"value": 800.0}}
+    data = {
+        "indexes": [ix],
+        "session_history": [
+            {"session": "2026-10-29",
+             "values": [{"symbol": "SPY", "spot": 750.0,
+                         "put_wall": 745.0, "flip": 760.0,
+                         "call_wall": 790.0}]},
+            {"session": "2026-10-30",
+             "values": [{"symbol": "SPY", "spot": 755.72,
+                         "put_wall": 750.0, "flip": 768.8,
+                         "call_wall": 800.0}]},
+        ],
+    }
+    charts = rs.subject_charts_for("morning-map", data)
+    lines = [c for c in charts if c.get("kind") == "line"]
+    assert lines, "morning-map: kept sessions not plotted"
+    series = lines[0]["series"]
+    assert [(p["date"], p["value"]) for p in series] == \
+        [("2026-10-29", 760.0), ("2026-10-30", 768.8)], series
