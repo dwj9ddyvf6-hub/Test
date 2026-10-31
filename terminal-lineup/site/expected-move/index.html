@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expected Move Map: the range the market is pricing, per name</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .method{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:18px 20px;margin:0 0 22px;font-size:15.5px}
+  .method h2{margin:0 0 8px;font-size:19px}
+  .method p{margin:0 0 8px}
+  .method p:last-child{margin-bottom:0}
+  .coverage{background:var(--nodata-bg);border-radius:10px;padding:12px 16px;
+            font-size:14.5px;margin:0 0 22px}
+  .name{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .name h2{margin:0 0 4px;font-size:21px}
+  .name .sub{color:var(--soft);font-size:14.5px;margin:0 0 12px}
+  .band{display:flex;flex-wrap:wrap;gap:8px 28px;border-top:1px solid var(--line);
+        padding:12px 0 4px}
+  .band .when{font-weight:700;font-size:15.5px;min-width:11em}
+  .band .range{font-size:16.5px}
+  .band .range strong{font-size:18px}
+  .band .pct{color:var(--soft);font-size:14.5px}
+  .name .receipt{font-size:13px;color:var(--faint);margin:12px 0 0}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Expected Move Map</h1>
+    <p class="job">One job: show, for each name, the price range the market is pricing for the coming session and the coming week, measured from its last closing price.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest map&hellip;</p>
+
+  <section class="method">
+    <h2>How this range is built</h2>
+    <p>This page reproduces a published method: the 15.87 expected-move construction, published as a free brief by Azrael Options. It is reproduced faithfully here, rounding steps included; it is not our invention.</p>
+    <p>Take the name's last closing price and the last closing value of the volatility index (the VIX, which is itself built from options prices). Divide the volatility close by 15.87: that is the percent move priced for the coming session. Multiply that percent by the closing price and round to the nearest tenth of a point: that is the expected move in points. The session band is the closing price plus and minus that move. The week band widens the same rounded move by the square root of five, for the five trading days of a week, rounded the same way.</p>
+    <p>What the band means: it is where the options market prices the move, the range the market's own pricing treats as the expected reach for the session and the week. What it does not mean: it is not a forecast. Prices can close outside the band, and often travel only part of it.</p>
+    <p>Three readings from the same map are shown per name. The regime names the day's pace from the volatility close: CALM below 15, MIXED from 15 to 18.5, FAST above 18.5. The walls are the session band edges, with a half move line inside each wall. The funded curve shows how much of the session move is funded as time passes: the funded part grows with the square root of the elapsed share of the session, so half the move is funded early and the last part takes the rest of the day. Type any price into a name's checker and it is classified against that name's walls: beyond a wall, at a wall, in an outer half, or in the central zone between the half moves.</p>
+  </section>
+
+  <div id="coverage" class="coverage" hidden></div>
+  <main id="chainmap"></main>
+  <main id="map"></main>
+
+  <footer>
+    <p>Each band is shown exactly as it was drawn and filed at the time, from the closing price and the volatility close named in its receipt. Nothing is redrawn after the fact and nothing is carried forward to a newer session than the records support.</p>
+    <p>The percent is the same for every name on a given day, because it comes from the one volatility index; what differs per name is the closing price it is measured from, so the bands differ in points.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var coverageEl = document.getElementById("coverage");
+  var chainEl = document.getElementById("chainmap");
+  var mapEl = document.getElementById("map");
+
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtPct(v){
+    return Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2}) + "%";
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){ // YYYY-MM-DD in America/New_York
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5); // start from yesterday
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    var bits = [];
+    if (r.session) bits.push("Map for the trading day of " + fmtDateLong(r.session) + ".");
+    if (r.measured_from) bits.push("Measured from the close of " + fmtDateShort(r.measured_from) + ".");
+    if (r.computed_at_utc) bits.push("Drawn " + fmtTimestamp(r.computed_at_utc) + ".");
+    if (r.source) bits.push("Source: " + r.source + ".");
+    if (r.coverage) bits.push(r.coverage + ".");
+    return bits.join(" ");
+  }
+  function bandHTML(label, band){
+    return '<div class="band"><span class="when">' + esc(label) + '</span>' +
+      '<span class="range"><strong>' + fmtPrice(band.lower) + " to " + fmtPrice(band.upper) + '</strong></span>' +
+      '<span class="pct">&plusmn;' + Number(band.points).toFixed(1) + " points, &plusmn;" + fmtPct(band.pct) + "</span></div>";
+  }
+  function classifyTarget(price, close, em){
+    if (!(price > 0) || !(em > 0)) return "Type a price above zero to classify it against these walls.";
+    var up = close + em, dn = close - em, hu = close + em / 2, hd = close - em / 2;
+    if (price > up) return "Beyond the upper wall (" + fmtPrice(up) + ").";
+    if (price === up) return "At the upper wall (" + fmtPrice(up) + ").";
+    if (price > hu) return "Inside, in the upper half between the half move (" + fmtPrice(hu) + ") and the upper wall.";
+    if (price < dn) return "Beyond the lower wall (" + fmtPrice(dn) + ").";
+    if (price === dn) return "At the lower wall (" + fmtPrice(dn) + ").";
+    if (price < hd) return "Inside, in the lower half between the lower wall and the half move (" + fmtPrice(hd) + ").";
+    return "Inside, in the central zone between the half moves (" + fmtPrice(hd) + " to " + fmtPrice(hu) + ").";
+  }
+  function regimeText(r){
+    if (!r) return "";
+    var words = {CALM: "CALM (volatility close below 15)", MIXED: "MIXED (volatility close from 15 to 18.5)", FAST: "FAST (volatility close above 18.5)"};
+    return words[r.label] || r.label;
+  }
+  function nameHTML(n, idx){
+    if (n.state !== "ok"){
+      return '<section class="name"><h2>' + esc(n.name) + '</h2>' +
+        '<div class="nodata"><strong>Not enough options data.</strong> ' + esc(n.reason || "") + "</div>" +
+        '<p class="receipt">' + esc(receiptLine(n.receipt || {})) + "</p></section>";
+    }
+    var h = '<section class="name"><h2>' + esc(n.name) + "</h2>";
+    h += '<p class="sub">Measured from the close of ' + fmtDateShort(n.close_date) +
+      ": <strong>" + fmtPrice(n.close) + "</strong>. Volatility index close that day: " +
+      esc(n.vix_close) + ".</p>";
+    h += bandHTML("Coming session: " + fmtDateShort(n.receipt.session), n.session_band);
+    h += bandHTML("Coming week, through " + fmtDateShort(n.week_through), n.week_band);
+    if (n.regime){
+      h += '<p class="sub">Regime for the day: <strong>' + esc(regimeText(n.regime)) + "</strong>.</p>";
+    }
+    if (n.walls){
+      h += '<p class="sub">Walls: upper <strong>' + fmtPrice(n.walls.upper_wall) + "</strong>, lower <strong>" +
+        fmtPrice(n.walls.lower_wall) + "</strong>. Half moves: " + fmtPrice(n.walls.upper_half) +
+        " and " + fmtPrice(n.walls.lower_half) + ".</p>";
+    }
+    if (n.funded_curve && n.funded_curve.length){
+      var pts = n.funded_curve.filter(function(p){ return p.elapsed_minutes > 0; }).map(function(p){
+        return p.elapsed_minutes + " min: &plusmn;" + Number(p.funded_points).toFixed(2);
+      }).join(" &middot; ");
+      h += '<p class="sub">Funded as the session runs (square root of elapsed time): ' + pts + ".</p>";
+    }
+    h += '<p class="sub"><label>Classify a price against these walls: <input type="number" step="any" min="0" ' +
+      'data-classify="' + idx + '" placeholder="price"></label> <span data-classify-out="' + idx + '"></span></p>';
+    h += '<p class="receipt">' + esc(receiptLine(n.receipt)) + "</p></section>";
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      // Chain map: the freshest snapshot's priced move, shipped in
+      // the same data file. Rendered as its own section so the
+      // filed archive below is never mistaken for the live frame.
+      var cm = data.chain_map;
+      if (cm && cm.names && cm.names.length){
+        var ch = '<section class="method"><h2>Chain map from the freshest snapshot</h2>' +
+          '<p>Basis: ' + esc(cm.basis || "") + '.</p>';
+        cm.names.forEach(function(n){
+          if (n.state !== "ok" || !n.expected_move) return;
+          var em = n.expected_move;
+          ch += '<div class="band"><span class="when">' + esc(n.symbol) + '</span>' +
+            '<span class="range"><strong>' + fmtPrice(em.lower) + " to " + fmtPrice(em.upper) + '</strong></span>' +
+            '<span class="pct">&plusmn;' + Number(em.points).toFixed(2) + " points, &plusmn;" + fmtPct(em.pct) +
+            " to expiry " + esc(em.expiry) + " (snapshot " + esc(n.snapshot_day) + ", spot " + fmtPrice(n.spot) + ")</span></div>";
+        });
+        ch += '</section>';
+        chainEl.innerHTML = ch;
+      }
+      var names = (data.names || []);
+      if (!names.length){
+        meta.textContent = "";
+        mapEl.innerHTML = '<div class="nodata">No map has been published yet. When a map is drawn for a trading day, it appears here with its day named on it. A band is never shown without the closing price it was measured from.</div>';
+        return;
+      }
+      meta.textContent = "Newest map on record: for the trading day of " + fmtDateLong(data.session) +
+        ". Drawn " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+      if (data.session < latestCompletedSession()){
+        showBanner("stale", "The filed archive map below is out of date. The newest filed map on record is for the trading day of " +
+          fmtDateLong(data.session) + ", and no newer filed map has been filed yet. " +
+          "Treat those archive bands as the last ones on record, not today's. The chain map above is drawn from the freshest chain snapshot.");
+      }
+      if (data.coverage_note){
+        coverageEl.textContent = data.coverage_note;
+        coverageEl.hidden = false;
+      }
+      mapEl.innerHTML = names.map(function(n, i){ return nameHTML(n, i); }).join("");
+      Array.prototype.forEach.call(mapEl.querySelectorAll("[data-classify]"), function(inp){
+        inp.addEventListener("input", function(){
+          var n = names[Number(inp.getAttribute("data-classify"))];
+          var out = mapEl.querySelector('[data-classify-out="' + inp.getAttribute("data-classify") + '"]');
+          if (out && n && n.session_band) out.textContent = classifyTarget(parseFloat(inp.value), n.close, n.session_band.points);
+        });
+      });
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The latest map is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
