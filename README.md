@@ -1,12 +1,16 @@
 # Strategy catalog
 
-**651 distinct trading strategies** have been built across our desks. This repo holds three views of them:
+**651 distinct trading strategies** have been built across our desks, and this repository is the public library that holds them: the strategy cards, the code, the recreation notes that let anyone rebuild a strategy from its recorded rules, the desk software that runs the current roster, and the guides that teach an agent (or a person) how to build a desk like this. It holds **4,865 files** in total. Everything below is a map of the whole repository, not just the catalog.
 
-- [The full accounting](docs/ALL-SLEEVES.md): all **651**, deduplicated across every desk, arranged by type, each with its algorithm and every distinct variant. The by-type listing below mirrors it.
-- [The current desk](docs/SLEEVES.md): the **333** sleeves installed on the desk today, one row each with its code file.
-- [The catalog](docs/CATALOG.json): **269** strategy cards, variants folded into one card each, listed by family at the bottom of this page.
+## The three views of the strategies
+
+- [The full accounting](docs/ALL-SLEEVES.md): all **651** distinct strategies, deduplicated from **1,562 recorded ids** across every desk, arranged by type, each with its recorded algorithm and every distinct variant. The by-type listing further down this page mirrors it. Its machine-readable twin is [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json): 651 strategy entries, **104 flagged unresolved** (kept separate, never force-merged), plus 3 monitors listed apart from the strategies.
+- [The current desk](docs/SLEEVES.md): the **336** sleeves installed on the desk today, one row each with its code file in this repo. Machine-readable twin: [docs/SLEEVES.json](docs/SLEEVES.json) (336 rows, all 336 with code present in this repo). The roster it mirrors lives at [config/sleeves.json](config/sleeves.json), a byte copy of the desk roster config (336 sleeves, paper trading only).
+- [The catalog](docs/CATALOG.json): **269** strategy cards, variants folded into one card each, across **15 families** (APEX, Ausar, Femto-lean, Galath / GrokBot, Griffith, Lazarus, Midna, Milkman, Muse, Quant research, Qullamaggie, Sable, SPAN, Tensor research, and the killed studies). The cards are also listed by family at the bottom of this page, and one card per strategy lives under `strategies/<family>/` (269 card files).
 
 Monitors and research recorders are not listed as strategies in any of the three views.
+
+## Guides for agents and builders
 
 <!-- BEGIN FIXED SECTION: agent guides. The README generator should emit this block verbatim (source text: docs/README_FIXED_SECTION.md). Checked by agentic-trade-desk/skeleton/tools/check_root_readme_links.py -->
 > **Guides for LLM agents: three guides, one desk.** Start with the [three-guide reconciliation](docs/THREE-GUIDES-RECONCILIATION.md): the map between the three guides, covering what all three agree on, what only one teaches, and the differences to decide consciously.
@@ -15,23 +19,57 @@ Monitors and research recorders are not listed as strategies in any of the three
 > **Companion build guide:** [Agentic Trade Desk Build Guide](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md): architecture before code, product modes, layers and data contracts, build phases, and acceptance checklists.
 <!-- END FIXED SECTION -->
 
-## Layout
+> **Day-to-day use:** [Run this desk as your own alert system](docs/YOUR-OWN-ALERT-SYSTEM.md): how to put the terminal on a phone home screen and use this library as a working alert system and a replacement for a stack of vendor services.
 
-| Folder | What |
+## Layout: every part of the repository
+
+| Folder or file | What is there |
 |---|---|
-| `strategies/<family>/` | one card per strategy |
-| `sleeves/` | the code: Midna's sleeves, and copies of the master desk's under `sleeves/<family>/` (each listed in `docs/VERIFY.md`) |
-| `desk3/`, `integration/` | Midna's v3 desk files and adapters |
-| `pine/`, `indicator/` | the BB/RSI divergence indicator |
-| `docs/CATALOG.json` | every strategy with its variants and row ids |
-| `docs/SLEEVES.md` | every sleeve on the desk (333), one row each, with its code file in this repo |
-| `docs/SLEEVES.json` | the same every-sleeve index in machine-readable form |
-| `docs/ALL-SLEEVES.md` | the curated accounting: every strategy ever built across all desks, deduplicated, arranged by type, with its algorithm and variants |
-| `docs/ALL-SLEEVES.json` | the same curated accounting in machine-readable form |
-| `docs/THREE-GUIDES-RECONCILIATION.md` | the map between the three agent guides: shared invariants, unique lessons, and the differences to decide consciously |
-| `docs/VERIFY.md` | the code lines each card rule was read from (one page a family in `docs/verify/`), and where each copied file came from |
+| `strategies/<family>/` | One card per strategy: **269 cards** in 15 family folders (femto 45, milkman 34, apex 33, ausar 24, griffith 23, lazarus 19, quant_research 18, midna 17, muse 17, tensor_research 13, galath 10, killed 10, qullamaggie 3, sable 2, span 1). Start from a card to learn what a strategy does. |
+| `docs/` | **1,165 files.** The catalogs and indexes above, the guides, and the recreation library: **872 `-RECREATE.md` notes and 184 `-ALGORITHM.md` notes** that record a strategy's rules closely enough to rebuild it, plus `docs/research/` (62 files of research passes) and `docs/verify/` (15 pages; the index is `docs/VERIFY.md`, the code lines each card rule was read from). |
+| `sleeves/` | Strategy code: **569 Python files**, 318 at the top level and the rest under family folders (`sleeves/<family>/`, each copied file listed in `docs/VERIFY.md`). |
+| `desk3/`, `integration/` | The v3 desk: `desk3/` (50 files: the desk engine, sleeve modules and portfolio books) and `integration/` (327 adapter files wiring sleeves into the desk). |
+| `adapters/`, `adapters3/` | Earlier adapter sets: 29 files in `adapters/`, 265 in `adapters3/`. |
+| `aster_sleeves/`, `laz_sleeves/` | Two sleeve families kept as their own folders, 10 files each. |
+| `engines/` | A compact copy of the engine layer (19 files: desk3 pieces, adapters, sleeve samples, config and universe files, with a sanitization note). |
+| `config/sleeves.json` | The current desk roster of record: 336 sleeves, paper trading only. |
+| `packages/` | **1,927 files** of complete packages posted by the peer desks, kept whole rather than cherry-picked: `packages/claude/` (1,105 files: the master desk's terminal builder and public app, sleeve port library, parity tools, feed library, forecast system and more), `packages/ausar/` (791 files: the Aster desk R13 baseline and R15 execution packages, the forecast-engines lab, research terminals and rulebooks), `packages/grokbot/` (31 files: the md2 master-desk package, Q07 and RL64 Lazarus engines, small tools). |
+| `psychology-engine/` | The market-psychology engine as a self-contained package (124 files): the engine itself (67 files under `engine/`), its audit trail, research and report, plus `PUBLIC_VALIDATION.md` and a checksum file. |
+| `agentic-trade-desk/` | The operational kit behind the guides (55 files): a runnable skeleton with tests (paper trading only), operating documents and templates. Its own front page is [`agentic-trade-desk/README.md`](agentic-trade-desk/README.md). |
+| `pine/`, `indicator/` | The BB/RSI divergence indicator: the TradingView Pine script and its algorithm contract. Its research note is `docs/BB_RSI_Divergence_Research.md`. |
+| `proof/install/` | Install proof records (22 JSON files), one per installed sleeve package, recording what was installed and verified. |
+| `tests/` | Regression blocker tests (8 files) for the one-bar, PRZM, Raschke, Teddy ORB, Trullas, CCI-correlation and VIX-hedge builds. |
+| `research/` | The 2026-10-30 technical-analysis study and practice archive (README, atlas in Markdown, Word and PDF, and checksums). Older research passes live under `docs/research/`. |
+| Root build notes | `BTA-ONEBAR-BUILD.md`, `TEDDY-ORB-SPY-BUILD.md` and its spec, `TRULLAS-VARIANTS-BUILD.md` and its spec, and `AGENTS.md`: the build records for the newest sleeve families and the working rules for agents in this repo. Matching spec/build pairs for other families sit in `docs/`. |
+| `docs/CATALOG.json` | Every strategy card with its variants and row ids (269 cards). |
+| `docs/SLEEVES.md` / `docs/SLEEVES.json` | Every sleeve on the current desk (336), one row each, with its code file in this repo. |
+| `docs/ALL-SLEEVES.md` / `docs/ALL-SLEEVES.json` | The curated accounting: every strategy ever built across all desks (651), deduplicated, arranged by type, with its algorithm and variants. |
+| `docs/THREE-GUIDES-RECONCILIATION.md` | The map between the three agent guides: shared invariants, unique lessons, and the differences to decide consciously. |
+| `docs/YOUR-OWN-ALERT-SYSTEM.md` | How a reader actually uses all of this day to day: the terminal as a home-screen alert system. |
+| `docs/VERIFY.md` | The code lines each card rule was read from (one page per family in `docs/verify/`), and where each copied file came from. |
+
+## Start here, by what you came for
+
+| You want to | Go to |
+|---|---|
+| Understand one strategy | Its card under `strategies/<family>/`, then its entry in [the accounting](docs/ALL-SLEEVES.md) for the full algorithm and variants. |
+| Rebuild a strategy from its rules | The matching `-ALGORITHM.md` and `-RECREATE.md` notes in `docs/` (1,056 notes between them). |
+| See what the desk runs today | [The current desk index](docs/SLEEVES.md) (336 sleeves) and `config/sleeves.json`. |
+| Count or cross-check every strategy ever built | [The full accounting](docs/ALL-SLEEVES.md) and `docs/ALL-SLEEVES.json` (651 from 1,562 ids; 104 unresolved, kept separate). |
+| Build or run an agentic trade desk | The three guides in the fixed section below, the reconciliation first, then the kit in `agentic-trade-desk/`. |
+| Use the desk as an alert system | [Run this desk as your own alert system](docs/YOUR-OWN-ALERT-SYSTEM.md). |
+| Study the psychology engine | `psychology-engine/`, starting with its README and `PUBLIC_VALIDATION.md`. |
+| Take a whole peer-desk package | `packages/claude/`, `packages/ausar/` or `packages/grokbot/`. |
+| Check where a rule or a copied file came from | `docs/VERIFY.md` and `docs/verify/`. |
 
 The master desk runs these sleeves on the Femto-lean framework (branch master-desk). Not in this repo: the framework itself (trading engine, order handling, data hub) and the Tensor indicator engine.
+
+## How this repository is maintained
+
+- **Generated parts:** the two long listings on this page (strategies by type, and catalog cards by family) are generated from `docs/ALL-SLEEVES.json` and `docs/CATALOG.json`. The catalog and accounting files are the sources of truth; if a number on this page ever disagrees with them, the files win.
+- **Hand-written parts:** the front matter above those listings, the layout map, the guides, the recreation notes and the package folders are maintained directly.
+- **The fixed section:** the agent-guide block below is a fixed section. Its source text lives in `docs/README_FIXED_SECTION.md`, and `agentic-trade-desk/skeleton/tools/check_root_readme_links.py` checks that the guide links survive. The README generator is not in this repository, so whoever regenerates this page must emit the fixed section verbatim and keep the descriptive front matter: both have been dropped by regeneration before, which is why the fixed section exists.
+- **Copied code:** files copied from another desk keep their provenance in `docs/VERIFY.md`; nothing is silently rewritten.
 
 ## Strategies by type (651)
 
