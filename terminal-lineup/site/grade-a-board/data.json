@@ -1,0 +1,956 @@
+{
+  "counts": {
+    "a_or_confirmed_pct": 41.5,
+    "a_rate_pct": 6.5,
+    "confirmed": 337,
+    "flipped": 0,
+    "grade_a": 63,
+    "movement_cells": 57,
+    "not_replicated": 564,
+    "promoted": 1217,
+    "tested_denominator": 964,
+    "untestable": 253,
+    "warning_cells": 6
+  },
+  "execution_pricing": false,
+  "explanation": {
+    "body": "On its live record it counts 41 a or confirmed pct, 6 a rate pct, 337 confirmed, 63 grade a. No study record is on file for this page; what it shows is its current reading, updated on its normal schedule.",
+    "summary": "Show the forecast recipes that earned the top grade, all 63 of them, each with its recipe in plain words and the numbers it earned them with."
+  },
+  "feed": "forecast_ledger",
+  "first_search": {
+    "cells": 15135,
+    "names": 6385,
+    "screen_pass": 2986,
+    "split": "2023-01-01",
+    "tested": 11150,
+    "untested": 3985,
+    "verdicts": [
+      [
+        "Promoted (the 1,217 this board re-grades)",
+        1217
+      ],
+      [
+        "Nothing there overall",
+        7867
+      ],
+      [
+        "Not tested (too little data)",
+        3985
+      ],
+      [
+        "Failed on the held-back years",
+        682
+      ],
+      [
+        "Failed after trading costs",
+        590
+      ],
+      [
+        "Failed the stretch-after-stretch check",
+        455
+      ],
+      [
+        "Pointed the other way in the held-back years",
+        308
+      ],
+      [
+        "Too little held-back data to judge",
+        24
+      ],
+      [
+        "Too small to count",
+        7
+      ]
+    ],
+    "window": [
+      "2016-01-04",
+      "2026-10-19"
+    ]
+  },
+  "first_search_finished": "2026-10-27 06:06",
+  "grading_rule": "A recipe earned the top grade only if all of this held. It was one of the 1,217 recipes the first search promoted. The second search could test it again (enough days and enough stocks). It pointed the same way in the second search as in the first. And in the second search it passed every one of that search's own gates again: a screen that limits false alarms when thousands of recipes are tested at once, a check that it pointed the same way in stretch after stretch of the earlier years, a check on the held-back later years it had not been picked on, a check that it still worked after trading costs, and a check that enough money could actually trade it. Anything weaker earned a lower grade, not this one.",
+  "groups": [
+    {
+      "cells": [
+        {
+          "disc_second": -0.02756,
+          "grade": "A (top grade)",
+          "hold_first": 0.0446,
+          "hold_first_t": 11.52857,
+          "hold_second": 0.04566,
+          "hold_second_t": 5.87158,
+          "net_second": 0.0701,
+          "sign": -1,
+          "where": "Counted across every stock and every day, with no narrowing."
+        }
+      ],
+      "count": 1,
+      "expects": "Flagged stocks will do worse over the next 20 trading days than the average stock in the same state on the same day.",
+      "kind": "A warning flag (it says avoid, never buy)",
+      "title": "Beaten-down stocks that bounce: a warning flag, next 20 trading days",
+      "watches": "A warning flag on beaten-down stocks that bounce. It flags a stock whose price is at or below 60% of its highest price of the last 60 trading days and that has still bounced at least 15% in the last 5 trading days."
+    },
+    {
+      "cells": [
+        {
+          "disc_second": -0.0308,
+          "grade": "A (top grade)",
+          "hold_first": 0.0422,
+          "hold_first_t": 10.46985,
+          "hold_second": 0.04038,
+          "hold_second_t": 5.87984,
+          "net_second": 0.07002,
+          "sign": -1,
+          "where": "Counted across every stock and every day, with no narrowing."
+        },
+        {
+          "disc_second": -0.05221,
+          "grade": "A (top grade)",
+          "hold_first": 0.05622,
+          "hold_first_t": 11.64977,
+          "hold_second": 0.0609,
+          "hold_second_t": 12.71553,
+          "net_second": 0.07411,
+          "sign": -1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks in the third fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        }
+      ],
+      "count": 2,
+      "expects": "Flagged stocks will do worse over the next 20 trading days than the average stock in the same state on the same day.",
+      "kind": "A warning flag (it says avoid, never buy)",
+      "title": "Sudden pumps on heavy volume: a warning flag, next 20 trading days",
+      "watches": "A warning flag on sudden pumps. It flags a stock that is up at least 30% in the last 5 trading days on at least 3 times its usual trading volume, where usual is the middle value of the 60 trading days before."
+    },
+    {
+      "cells": [
+        {
+          "disc_second": -0.03669,
+          "grade": "A (top grade)",
+          "hold_first": 0.02724,
+          "hold_first_t": 8.67784,
+          "hold_second": 0.03796,
+          "hold_second_t": 9.58239,
+          "net_second": 0.06877,
+          "sign": -1,
+          "where": "Counted only for stocks in the second fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        }
+      ],
+      "count": 1,
+      "expects": "Flagged stocks will do worse over the next 20 trading days than the average stock in the same state on the same day.",
+      "kind": "A warning flag (it says avoid, never buy)",
+      "title": "Big opening gaps up: a warning flag, next 20 trading days",
+      "watches": "A warning flag on big opening gaps. It flags a stock that opened at least 10% above its previous day's closing price."
+    },
+    {
+      "cells": [
+        {
+          "disc_second": -0.03649,
+          "grade": "A (top grade)",
+          "hold_first": 0.02128,
+          "hold_first_t": 7.75391,
+          "hold_second": 0.03095,
+          "hold_second_t": 5.95511,
+          "net_second": 0.02692,
+          "sign": -1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks in the second fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": -0.02102,
+          "grade": "A (top grade)",
+          "hold_first": 0.02288,
+          "hold_first_t": 9.70805,
+          "hold_second": 0.02719,
+          "hold_second_t": 6.23804,
+          "net_second": 0.0301,
+          "sign": -1,
+          "where": "Counted only on fear days only (days when SPY fell 1% or more, or closed below its average price of the last 50 trading days) and only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier."
+        }
+      ],
+      "count": 2,
+      "expects": "Flagged stocks will do worse over the next 5 trading days than the average stock in the same state on the same day.",
+      "kind": "A warning flag (it says avoid, never buy)",
+      "title": "Big opening gaps up: a warning flag, next 5 trading days",
+      "watches": "A warning flag on big opening gaps. It flags a stock that opened at least 10% above its previous day's closing price."
+    },
+    {
+      "cells": [
+        {
+          "disc_second": 0.18424,
+          "grade": "A (top grade)",
+          "hold_first": 0.17548,
+          "hold_first_t": 11.24215,
+          "hold_second": 0.18474,
+          "hold_second_t": 5.12002,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only for stocks the study put in its up state that day (trending up, as opposed to its reset state)."
+        },
+        {
+          "disc_second": 0.21374,
+          "grade": "A (top grade)",
+          "hold_first": 0.19733,
+          "hold_first_t": 10.21277,
+          "hold_second": 0.20289,
+          "hold_second_t": 4.50841,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks the study put in its up state that day (trending up, as opposed to its reset state)."
+        },
+        {
+          "disc_second": 0.19638,
+          "grade": "A (top grade)",
+          "hold_first": 0.18574,
+          "hold_first_t": 10.88729,
+          "hold_second": 0.18415,
+          "hold_second_t": 4.19682,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only for stocks the study put in its up state that day (trending up, as opposed to its reset state)."
+        },
+        {
+          "disc_second": 0.18413,
+          "grade": "A (top grade)",
+          "hold_first": 0.17548,
+          "hold_first_t": 11.24153,
+          "hold_second": 0.18477,
+          "hold_second_t": 5.12157,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state)."
+        },
+        {
+          "disc_second": 0.15182,
+          "grade": "A (top grade)",
+          "hold_first": 0.18161,
+          "hold_first_t": 11.21557,
+          "hold_second": 0.19499,
+          "hold_second_t": 7.92789,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state) and only for stocks in the fourth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.14119,
+          "grade": "A (top grade)",
+          "hold_first": 0.18385,
+          "hold_first_t": 9.79598,
+          "hold_second": 0.28793,
+          "hold_second_t": 7.79261,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state) and only for stocks in the fifth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.19428,
+          "grade": "A (top grade)",
+          "hold_first": 0.18741,
+          "hold_first_t": 7.45571,
+          "hold_second": 0.19207,
+          "hold_second_t": 4.55347,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state) and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        }
+      ],
+      "count": 7,
+      "expects": "Stocks with a higher reading will in fact move around more over the next 20 trading days.",
+      "kind": "How much prices move",
+      "title": "Unusually busy trading: forecasting how much a stock moves, next 20 trading days",
+      "watches": "Where today's trading activity sits in the stock's own recent past. Activity is the stock's price times its shares traded, logged; the reading is that figure's rank within the stock's own last 252 trading days, from 0 (the quietest) to 1 (the busiest). A higher reading means an unusually busy stock."
+    },
+    {
+      "cells": [
+        {
+          "disc_second": 0.71084,
+          "grade": "A (top grade)",
+          "hold_first": 0.80366,
+          "hold_first_t": 137.93457,
+          "hold_second": 0.80762,
+          "hold_second_t": 81.5411,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history."
+        },
+        {
+          "disc_second": 0.7066,
+          "grade": "A (top grade)",
+          "hold_first": 0.80628,
+          "hold_first_t": 98.25371,
+          "hold_second": 0.80548,
+          "hold_second_t": 50.31588,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days)."
+        },
+        {
+          "disc_second": 0.69403,
+          "grade": "A (top grade)",
+          "hold_first": 0.80719,
+          "hold_first_t": 119.03799,
+          "hold_second": 0.80672,
+          "hold_second_t": 67.48305,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier."
+        },
+        {
+          "disc_second": 0.54472,
+          "grade": "A (top grade)",
+          "hold_first": 0.65188,
+          "hold_first_t": 58.36138,
+          "hold_second": 0.68112,
+          "hold_second_t": 32.61285,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only for stocks in the study's reset state that day (at least 35% below their high and near their low)."
+        },
+        {
+          "disc_second": 0.67461,
+          "grade": "A (top grade)",
+          "hold_first": 0.7932,
+          "hold_first_t": 100.92922,
+          "hold_second": 0.80054,
+          "hold_second_t": 82.87846,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only for stocks the study put in its up state that day (trending up, as opposed to its reset state)."
+        },
+        {
+          "disc_second": 0.62398,
+          "grade": "A (top grade)",
+          "hold_first": 0.6837,
+          "hold_first_t": 99.56401,
+          "hold_second": 0.66878,
+          "hold_second_t": 65.73542,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only for stocks in the first fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.69987,
+          "grade": "A (top grade)",
+          "hold_first": 0.78558,
+          "hold_first_t": 130.79876,
+          "hold_second": 0.8091,
+          "hold_second_t": 97.47456,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only for stocks in the second fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.69272,
+          "grade": "A (top grade)",
+          "hold_first": 0.78791,
+          "hold_first_t": 97.17352,
+          "hold_second": 0.77654,
+          "hold_second_t": 43.65108,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only for stocks in the third fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.70512,
+          "grade": "A (top grade)",
+          "hold_first": 0.74505,
+          "hold_first_t": 71.05323,
+          "hold_second": 0.75237,
+          "hold_second_t": 45.12334,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only for stocks in the fourth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.65542,
+          "grade": "A (top grade)",
+          "hold_first": 0.7301,
+          "hold_first_t": 75.56361,
+          "hold_second": 0.76933,
+          "hold_second_t": 97.12528,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only for stocks in the fifth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.71926,
+          "grade": "A (top grade)",
+          "hold_first": 0.80275,
+          "hold_first_t": 73.61269,
+          "hold_second": 0.8038,
+          "hold_second_t": 40.4773,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks with at least 252 trading days of history and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        },
+        {
+          "disc_second": 0.71084,
+          "grade": "A (top grade)",
+          "hold_first": 0.80366,
+          "hold_first_t": 137.93457,
+          "hold_second": 0.80762,
+          "hold_second_t": 81.5411,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted across every stock and every day, with no narrowing."
+        },
+        {
+          "disc_second": 0.7066,
+          "grade": "A (top grade)",
+          "hold_first": 0.80628,
+          "hold_first_t": 98.25371,
+          "hold_second": 0.80548,
+          "hold_second_t": 50.31588,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days)."
+        },
+        {
+          "disc_second": 0.69832,
+          "grade": "A (top grade)",
+          "hold_first": 0.80791,
+          "hold_first_t": 101.12326,
+          "hold_second": 0.80548,
+          "hold_second_t": 50.31588,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier."
+        },
+        {
+          "disc_second": 0.48592,
+          "grade": "A (top grade)",
+          "hold_first": 0.65223,
+          "hold_first_t": 42.44601,
+          "hold_second": 0.67786,
+          "hold_second_t": 18.56001,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks in the study's reset state that day (at least 35% below their high and near their low)."
+        },
+        {
+          "disc_second": 0.67758,
+          "grade": "A (top grade)",
+          "hold_first": 0.79513,
+          "hold_first_t": 70.94553,
+          "hold_second": 0.79691,
+          "hold_second_t": 43.96205,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks the study put in its up state that day (trending up, as opposed to its reset state)."
+        },
+        {
+          "disc_second": 0.6287,
+          "grade": "A (top grade)",
+          "hold_first": 0.68238,
+          "hold_first_t": 84.45187,
+          "hold_second": 0.66699,
+          "hold_second_t": 46.01941,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks in the first fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.70045,
+          "grade": "A (top grade)",
+          "hold_first": 0.78636,
+          "hold_first_t": 97.59376,
+          "hold_second": 0.80844,
+          "hold_second_t": 75.66185,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks in the second fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.68809,
+          "grade": "A (top grade)",
+          "hold_first": 0.79145,
+          "hold_first_t": 69.3872,
+          "hold_second": 0.77586,
+          "hold_second_t": 35.00297,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks in the third fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.69288,
+          "grade": "A (top grade)",
+          "hold_first": 0.74934,
+          "hold_first_t": 49.11542,
+          "hold_second": 0.75173,
+          "hold_second_t": 31.99255,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks in the fourth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.65973,
+          "grade": "A (top grade)",
+          "hold_first": 0.73127,
+          "hold_first_t": 56.07251,
+          "hold_second": 0.76406,
+          "hold_second_t": 34.37158,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only for stocks in the fifth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.71372,
+          "grade": "A (top grade)",
+          "hold_first": 0.80391,
+          "hold_first_t": 115.35413,
+          "hold_second": 0.80219,
+          "hold_second_t": 98.09276,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on calm days only (days when SPY did neither: it did not fall 1% or more and it closed at or above its average price of the last 50 trading days) and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        },
+        {
+          "disc_second": 0.69403,
+          "grade": "A (top grade)",
+          "hold_first": 0.80719,
+          "hold_first_t": 119.03799,
+          "hold_second": 0.80672,
+          "hold_second_t": 67.48305,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier."
+        },
+        {
+          "disc_second": 0.4851,
+          "grade": "A (top grade)",
+          "hold_first": 0.6546,
+          "hold_first_t": 57.80723,
+          "hold_second": 0.67852,
+          "hold_second_t": 28.1375,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only for stocks in the study's reset state that day (at least 35% below their high and near their low)."
+        },
+        {
+          "disc_second": 0.6723,
+          "grade": "A (top grade)",
+          "hold_first": 0.79805,
+          "hold_first_t": 91.10341,
+          "hold_second": 0.79894,
+          "hold_second_t": 56.05992,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only for stocks the study put in its up state that day (trending up, as opposed to its reset state)."
+        },
+        {
+          "disc_second": 0.61268,
+          "grade": "A (top grade)",
+          "hold_first": 0.68213,
+          "hold_first_t": 113.01728,
+          "hold_second": 0.66893,
+          "hold_second_t": 47.58989,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only for stocks in the first fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.69028,
+          "grade": "A (top grade)",
+          "hold_first": 0.78604,
+          "hold_first_t": 107.31624,
+          "hold_second": 0.80857,
+          "hold_second_t": 90.02022,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only for stocks in the second fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.67388,
+          "grade": "A (top grade)",
+          "hold_first": 0.79305,
+          "hold_first_t": 88.69823,
+          "hold_second": 0.7756,
+          "hold_second_t": 42.08658,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only for stocks in the third fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.67546,
+          "grade": "A (top grade)",
+          "hold_first": 0.75231,
+          "hold_first_t": 63.99045,
+          "hold_second": 0.75124,
+          "hold_second_t": 42.64102,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only for stocks in the fourth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.65072,
+          "grade": "A (top grade)",
+          "hold_first": 0.73083,
+          "hold_first_t": 67.58155,
+          "hold_second": 0.76703,
+          "hold_second_t": 62.26766,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only for stocks in the fifth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.69335,
+          "grade": "A (top grade)",
+          "hold_first": 0.80541,
+          "hold_first_t": 81.40179,
+          "hold_second": 0.8038,
+          "hold_second_t": 40.4773,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        },
+        {
+          "disc_second": 0.54472,
+          "grade": "A (top grade)",
+          "hold_first": 0.65188,
+          "hold_first_t": 58.36138,
+          "hold_second": 0.68112,
+          "hold_second_t": 32.61285,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the study's reset state that day (at least 35% below their high and near their low)."
+        },
+        {
+          "disc_second": 0.67461,
+          "grade": "A (top grade)",
+          "hold_first": 0.7932,
+          "hold_first_t": 100.92922,
+          "hold_second": 0.80054,
+          "hold_second_t": 82.87846,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state)."
+        },
+        {
+          "disc_second": 0.70077,
+          "grade": "A (top grade)",
+          "hold_first": 0.80995,
+          "hold_first_t": 110.23296,
+          "hold_second": 0.80683,
+          "hold_second_t": 100.60068,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state) and only for stocks in the second fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.65449,
+          "grade": "A (top grade)",
+          "hold_first": 0.78196,
+          "hold_first_t": 75.97124,
+          "hold_second": 0.76116,
+          "hold_second_t": 60.17989,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state) and only for stocks in the third fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.64648,
+          "grade": "A (top grade)",
+          "hold_first": 0.73103,
+          "hold_first_t": 48.31491,
+          "hold_second": 0.77779,
+          "hold_second_t": 62.79978,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state) and only for stocks in the fourth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.65105,
+          "grade": "A (top grade)",
+          "hold_first": 0.72911,
+          "hold_first_t": 43.91473,
+          "hold_second": 0.79614,
+          "hold_second_t": 44.53201,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state) and only for stocks in the fifth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.68818,
+          "grade": "A (top grade)",
+          "hold_first": 0.79388,
+          "hold_first_t": 49.47893,
+          "hold_second": 0.79542,
+          "hold_second_t": 31.05934,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks the study put in its up state that day (trending up, as opposed to its reset state) and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        },
+        {
+          "disc_second": 0.62398,
+          "grade": "A (top grade)",
+          "hold_first": 0.6837,
+          "hold_first_t": 99.56401,
+          "hold_second": 0.66878,
+          "hold_second_t": 65.73542,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the first fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.69987,
+          "grade": "A (top grade)",
+          "hold_first": 0.78558,
+          "hold_first_t": 130.79876,
+          "hold_second": 0.8091,
+          "hold_second_t": 97.47456,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the second fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.70934,
+          "grade": "A (top grade)",
+          "hold_first": 0.78701,
+          "hold_first_t": 93.67047,
+          "hold_second": 0.80559,
+          "hold_second_t": 61.47981,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the second fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded) and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        },
+        {
+          "disc_second": 0.69272,
+          "grade": "A (top grade)",
+          "hold_first": 0.78791,
+          "hold_first_t": 97.17352,
+          "hold_second": 0.77654,
+          "hold_second_t": 43.65108,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the third fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.71888,
+          "grade": "A (top grade)",
+          "hold_first": 0.79,
+          "hold_first_t": 49.70025,
+          "hold_second": 0.77348,
+          "hold_second_t": 26.91154,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the third fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded) and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        },
+        {
+          "disc_second": 0.70512,
+          "grade": "A (top grade)",
+          "hold_first": 0.74505,
+          "hold_first_t": 71.05323,
+          "hold_second": 0.75237,
+          "hold_second_t": 45.12334,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the fourth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.72664,
+          "grade": "A (top grade)",
+          "hold_first": 0.7509,
+          "hold_first_t": 30.83433,
+          "hold_second": 0.74792,
+          "hold_second_t": 23.80328,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the fourth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded) and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        },
+        {
+          "disc_second": 0.65542,
+          "grade": "A (top grade)",
+          "hold_first": 0.7301,
+          "hold_first_t": 75.56361,
+          "hold_second": 0.76933,
+          "hold_second_t": 97.12528,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the fifth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded)."
+        },
+        {
+          "disc_second": 0.6687,
+          "grade": "A (top grade)",
+          "hold_first": 0.72965,
+          "hold_first_t": 34.07679,
+          "hold_second": 0.75576,
+          "hold_second_t": 22.12948,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only for stocks in the fifth fifth of trading activity that day, ranked by the money traded over their last 20 trading days (the first fifth is the least traded, the fifth is the most traded) and only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        },
+        {
+          "disc_second": 0.71926,
+          "grade": "A (top grade)",
+          "hold_first": 0.80275,
+          "hold_first_t": 73.61269,
+          "hold_second": 0.8038,
+          "hold_second_t": 40.4773,
+          "net_second": null,
+          "sign": 1,
+          "where": "Counted only on days when the fear gauge sat in the middle third of its own last 504 trading days."
+        }
+      ],
+      "count": 48,
+      "expects": "Stocks with a higher reading will in fact move around more over the next 20 trading days.",
+      "kind": "How much prices move",
+      "title": "A jumpiness formula: forecasting how much a stock moves, next 20 trading days",
+      "watches": "A fixed formula that forecasts how much a stock's price will move around. Each day it blends three parts: 90% of yesterday's forecast, 8% of that day's squared move, and 2% of the stock's long-run average restlessness (its average over the last 252 trading days). A higher reading means the formula expects a jumpier stock."
+    },
+    {
+      "cells": [
+        {
+          "disc_second": -0.3214,
+          "grade": "A (top grade)",
+          "hold_first": 0.21099,
+          "hold_first_t": 5.13363,
+          "hold_second": 0.20686,
+          "hold_second_t": 3.4403,
+          "net_second": null,
+          "sign": -1,
+          "where": "Counted across every stock and every day, with no narrowing."
+        },
+        {
+          "disc_second": -0.23296,
+          "grade": "A (top grade)",
+          "hold_first": 0.17466,
+          "hold_first_t": 4.97273,
+          "hold_second": 0.18841,
+          "hold_second_t": 2.76537,
+          "net_second": null,
+          "sign": -1,
+          "where": "Counted only on days when SPY closed above its average price of the last 200 trading days and that average was higher than it was 20 trading days earlier."
+        }
+      ],
+      "count": 2,
+      "expects": "The lower the reading, the more SPY will move around over the next 5 trading days.",
+      "kind": "How much prices move",
+      "title": "Dealer gamma rank: forecasting how much SPY moves, next 5 trading days",
+      "watches": "Where the whole market's dealer gamma reading sits in its own recent past. The reading tracks how much dealers, as a group, would have to buy or sell as prices move; this cell uses its rank within the last 252 trading days. This recipe runs the other way from the others: a lower reading goes with a jumpier market."
+    }
+  ],
+  "overlap_note": "One limit travels with the top grade, in the second search's own words: its second set of stocks covers the same calendar years as the first search's held-back years. So the top grade means a recipe held up on a separately gathered set of stocks, a different mix of companies, and a fresh split of the same years. It does not mean the recipe has been tested in new years; only time going forward can test that.",
+  "price_basis": "close",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "proving_state": "Backed by a finished study",
+  "proving_words": "The tool's numbers are the counted result of a study that has already run on the record.",
+  "record_surface": {
+    "calibration_record": null,
+    "current_reading": {
+      "as_of": null,
+      "keys_present": [
+        "counts",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "first_search",
+        "first_search_finished",
+        "grading_rule",
+        "groups",
+        "overlap_note",
+        "price_basis",
+        "provenance",
+        "proving_state",
+        "proving_words",
+        "record_surface",
+        "second_search",
+        "second_search_finished",
+        "source",
+        "state",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "counts": {
+        "a_or_confirmed_pct": 41.5,
+        "a_rate_pct": 6.5,
+        "confirmed": 337,
+        "flipped": 0,
+        "grade_a": 63,
+        "movement_cells": 57,
+        "not_replicated": 564,
+        "promoted": 1217,
+        "tested_denominator": 964,
+        "untestable": 253,
+        "warning_cells": 6
+      },
+      "source": "this page's own counts"
+    },
+    "missing": {
+      "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
+  "second_search": {
+    "cells": 21345,
+    "names": 3337,
+    "pairs_passed": "10 of the 45 recipe-and-outcome pairs passed as a whole (at least half of their tested promoted cells earned the top grade or held up).",
+    "screen_pass": 195,
+    "split": "2025-07-01",
+    "tested": 13841,
+    "untested": 7504,
+    "verdicts": [
+      [
+        "Nothing there overall",
+        13240
+      ],
+      [
+        "Not tested (too little data)",
+        7504
+      ],
+      [
+        "Pointed the other way while being picked",
+        406
+      ],
+      [
+        "Promoted in this search too",
+        69
+      ],
+      [
+        "Failed on the held-back years",
+        43
+      ],
+      [
+        "Too little held-back data to judge",
+        41
+      ],
+      [
+        "Failed after trading costs",
+        27
+      ],
+      [
+        "Failed the stretch-after-stretch check",
+        14
+      ],
+      [
+        "Too small to count",
+        1
+      ]
+    ],
+    "window": [
+      "2018-12-10",
+      "2026-10-16"
+    ]
+  },
+  "second_search_finished": "2026-10-27 16:34",
+  "source": "Our own forecast study records: the first search over 6,385 stocks and the second search, its rule written down before it ran, over a second set of 3,337 stocks",
+  "state": "published",
+  "tool": "Grade-A Board"
+}
