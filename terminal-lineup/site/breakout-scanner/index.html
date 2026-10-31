@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breakout Scanner: stocks sitting near their highest close, tightest first</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+    --prove-bg:#f3eefb; --prove-line:#c9b8ec; --prove-ink:#4a3572;
+    --up:#1d7a3a; --down:#b03a2e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .prove{background:var(--prove-bg);border:1px solid var(--prove-line);color:var(--prove-ink);
+       border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px}
+  .prove strong{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .picker{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:16px 20px;margin:0 0 16px;font-size:15.5px}
+  .picker .label{font-weight:600;margin-right:10px}
+  .picker button.choice{font-size:15px;padding:7px 16px;border:1px solid var(--accent);
+    border-radius:8px;background:#fff;color:var(--accent);font-weight:600;cursor:pointer;margin:2px 4px 2px 0}
+  .picker button.choice.on{background:var(--accent);color:#fff}
+  .picker .note{margin:10px 0 0;font-size:14.5px;color:var(--soft)}
+  .countline{font-size:16px;font-weight:600;margin:0 0 10px}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .tablebox{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+  table{border-collapse:collapse;width:100%;min-width:720px;font-size:15px}
+  th,td{padding:9px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);background:var(--bg)}
+  th:first-child,td:first-child{text-align:left}
+  td.sym{font-weight:700}
+  td .sub{display:block;font-weight:400;font-size:12.5px;color:var(--faint);white-space:normal}
+  tr:last-child td{border-bottom:none}
+  .pos{color:var(--up)} .neg{color:var(--down)}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Breakout Scanner</h1>
+    <p class="job">One job: list the stocks whose last closing price sits near the highest close of their recent history, tightest first, with the three measures below worked out for each name from the closing prices on record.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <div id="prove" class="prove" style="display:none"></div>
+  <p id="meta" class="meta">Loading the price history&hellip;</p>
+
+  <div class="def" id="defbox" style="display:none">
+    <p><strong>Distance from the high:</strong> a name&rsquo;s high is the highest closing price over its most recent 252 trading sessions (about a trading year), ending on its own last session on record. The distance is how far its last close sits below that high, as a percent of the high. A name right at its high reads 0%.</p>
+    <p><strong>Tightness:</strong> over the name&rsquo;s last 10 sessions, the highest close minus the lowest close, as a percent of the last close. A smaller number means the last 10 closes sat in a narrower band. The list is sorted tightest first.</p>
+    <p><strong>Change over 21 sessions:</strong> the last close compared with the close 21 sessions before it, as a percent.</p>
+    <p id="defshort"></p>
+  </div>
+
+  <div class="picker" id="picker" style="display:none">
+    <span class="label">Show names within:</span>
+    <button type="button" class="choice" data-limit="2">2% of their high</button>
+    <button type="button" class="choice" data-limit="5">5% of their high</button>
+    <button type="button" class="choice" data-limit="10">10% of their high</button>
+    <p class="note">Every figure is worked out in your browser from the closing prices this page carries. Nothing you pick is sent anywhere.</p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var proveEl = document.getElementById("prove");
+  var meta = document.getElementById("meta");
+  var defEl = document.getElementById("defbox");
+  var defShort = document.getElementById("defshort");
+  var picker = document.getElementById("picker");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+  var ROWS = [];
+  var LIMIT = 5;
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function fmtDate(iso){
+    var months = ["January","February","March","April","May","June","July",
+                  "August","September","October","November","December"];
+    var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var p = String(iso).split("-");
+    var dt = new Date(Date.UTC(+p[0], +p[1]-1, +p[2]));
+    return days[dt.getUTCDay()] + ", " + months[dt.getUTCMonth()] + " " +
+           dt.getUTCDate() + ", " + dt.getUTCFullYear();
+  }
+  function money(v){
+    return "$" + Number(v).toLocaleString("en-US",
+      {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function pct(v, digits){
+    return (v > 0 ? "+" : "") + v.toFixed(digits == null ? 2 : digits) + "%";
+  }
+
+  function compute(){
+    ROWS = [];
+    var dates = DATA.dates;
+    var hw = DATA.high_window, tw = DATA.tight_window, rs = DATA.rise_steps;
+    Object.keys(DATA.bars).forEach(function(sym){
+      var entry = DATA.bars[sym];
+      var start = entry[0], closes = entry[1], n = closes.length;
+      if (n < tw || n < rs + 1 || n < 1) return;
+      var last = closes[n-1];
+      var w = Math.min(hw, n);
+      var hi = -Infinity, i, c;
+      for (i = n - w; i < n; i++){ c = closes[i]; if (c > hi) hi = c; }
+      var tHi = -Infinity, tLo = Infinity;
+      for (i = n - tw; i < n; i++){
+        c = closes[i]; if (c > tHi) tHi = c; if (c < tLo) tLo = c;
+      }
+      ROWS.push({
+        symbol: sym,
+        last: last,
+        high: hi,
+        window: w,
+        fullWindow: n >= hw,
+        distance: (hi - last) / hi * 100,
+        tightness: (tHi - tLo) / last * 100,
+        rise: (last / closes[n - 1 - rs] - 1) * 100,
+        asOf: dates[start + n - 1]
+      });
+    });
+    ROWS.sort(function(a, b){
+      if (a.tightness !== b.tightness) return a.tightness - b.tightness;
+      return a.symbol < b.symbol ? -1 : (a.symbol > b.symbol ? 1 : 0);
+    });
+  }
+
+  function render(){
+    var shown = ROWS.filter(function(r){ return r.distance <= LIMIT; });
+    var html = "";
+    if (!shown.length){
+      html = '<p class="countline">' + shown.length + ' names within ' + LIMIT +
+             '% of their high</p>' +
+             '<div class="nodata">No name on record sits within ' + LIMIT +
+             '% of its high. Widen the choice above to see more names.</div>';
+      resultsEl.innerHTML = html;
+      return;
+    }
+    html = '<p class="countline">' + shown.length + ' of ' + ROWS.length +
+           ' names on record sit within ' + LIMIT +
+           '% of their high, tightest first</p>';
+    html += '<div class="tablebox"><table><thead><tr>' +
+      '<th>Stock</th><th>Distance from high</th><th>Tightness, last 10 sessions</th>' +
+      '<th>Change over 21 sessions</th><th>Last close</th><th>High</th>' +
+      '<th>Reading as of</th></tr></thead><tbody>';
+    shown.forEach(function(r){
+      var sub = r.fullWindow ? "" :
+        '<span class="sub">High over its ' + r.window + ' sessions on record</span>';
+      html += '<tr><td class="sym">' + esc(r.symbol) + sub + '</td>' +
+        '<td>' + r.distance.toFixed(2) + '% below</td>' +
+        '<td>' + r.tightness.toFixed(2) + '%</td>' +
+        '<td class="' + (r.rise > 0 ? "pos" : (r.rise < 0 ? "neg" : "")) + '">' +
+          pct(r.rise) + '</td>' +
+        '<td>' + money(r.last) + '</td>' +
+        '<td>' + money(r.high) + '</td>' +
+        '<td>' + esc(fmtDate(r.asOf)) + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    resultsEl.innerHTML = html;
+  }
+
+  function setLimit(v){
+    LIMIT = v;
+    var btns = picker.querySelectorAll("button.choice");
+    for (var i = 0; i < btns.length; i++){
+      btns[i].classList.toggle("on", +btns[i].getAttribute("data-limit") === v);
+    }
+    if (DATA) render();
+  }
+
+  var btns = picker.querySelectorAll("button.choice");
+  for (var i = 0; i < btns.length; i++){
+    btns[i].addEventListener("click", function(){
+      setLimit(+this.getAttribute("data-limit"));
+    });
+  }
+  setLimit(LIMIT);
+
+  function showMissing(){
+    banner.textContent = "The price history is not available right now, " +
+      "so no list can be worked out. Please try again later.";
+    banner.className = "banner show missing";
+    meta.textContent = "";
+    resultsEl.innerHTML = "";
+  }
+
+  fetch("data.json").then(function(r){
+    if (!r.ok) throw new Error("fetch failed");
+    return r.json();
+  }).then(function(d){
+    if (!d || !d.bars || !d.dates || !Object.keys(d.bars).length){
+      resultsEl.innerHTML = '<div class="nodata">No price history has been ' +
+        'published yet, so no list can be worked out.</div>';
+      meta.textContent = "";
+      return;
+    }
+    DATA = d;
+  function proveNote(state, note){var s = String(state || ""), n = String(note || "");
+    if (s && n.toLowerCase().indexOf(s.toLowerCase()) === 0){
+      n = n.slice(s.length).replace(/^[:\s]+/, "");
+      n = n.charAt(0).toUpperCase() + n.slice(1);}
+    return n;}
+    proveEl.innerHTML = "<strong>" + esc(d.proving_state) + ":</strong> " +
+      esc(proveNote(d.proving_state, d.proving_note));
+    proveEl.style.display = "block";
+    meta.textContent = "Price history on record: " + d.history_sessions +
+      " trading days, " + fmtDate(d.history_from) + " to " +
+      fmtDate(d.history_to) + ". The last session in the history is " +
+      fmtDate(d.history_to) + ". Source: " + d.source + ".";
+    defShort.textContent = d.names_short_high_window + " of the " +
+      d.names_on_record.toLocaleString("en-US") + " names on record have " +
+      "fewer than 252 sessions behind them, so no 252-session high exists " +
+      "for them: their high is taken over the sessions they do have, and " +
+      "their row names that window. Every name on record has the 10 " +
+      "sessions behind the tightness measure and the 22 closes behind " +
+      "the 21-session change, so no name is left out of those two " +
+      "measures. " + d.names_ended_early + " names stopped trading " +
+      "before the history's last session; their figures are dated to " +
+      "their own last session in the list.";
+    defEl.style.display = "block";
+    picker.style.display = "block";
+    compute();
+    render();
+    receiptEl.textContent = d.coverage;
+  }).catch(showMissing);
+})();
+</script>
+</body>
+</html>
