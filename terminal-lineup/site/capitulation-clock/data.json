@@ -1,0 +1,407 @@
+{
+  "as_of_session": "2026-10-30",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "no graded forecasts on record yet (164 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 164,
+      "graded_forecasts": 0,
+      "recorded_on": "2026-10-31",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_16",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": null
+  },
+  "claims": {
+    "exhaustion_half": "In at least 60 of every 100 cases, the stock's daily trading will fall back below its own typical day within 10 trading days: the heavy selling burns itself out.",
+    "return_half": "The middle stock that prints this will beat the broad market by at least 1.0 point over the next 20 trading days.",
+    "separate_words": "The two halves are graded separately. Either half can fail on its own, and a failed half is retired on its own."
+  },
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: direction and probability, over 20 sessions (return leg); 10 sessions (exhaustion leg). It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 200 episodes, either leg's confidence interval includes its null. It counts as proven at 200 episodes.",
+    "summary": "When a stock that is already falling prints its own heaviest falling-day trading, say what tends to happen next: how it does against the market over 20 trading days, and how fast the heavy trading dies down."
+  },
+  "feed": "forecast_ledger",
+  "gate_words": "The same heavy trading on a rising stock is treated by an older finding as a warning sign, not a buying sign. So this tool only ever fires on a stock that is already in a fall of its own, and never on a stock that is rising.",
+  "history": {
+    "distinct_names": 1376,
+    "episodes": 3980,
+    "exhaustion_half": {
+      "claim_met": false,
+      "claim_pct": 60,
+      "episodes": 3980,
+      "falsified": false,
+      "graded": 3769,
+      "pending": 211,
+      "share_ci95_pct": [
+        54.7,
+        57.9
+      ],
+      "share_pct": 56.3,
+      "successes": 2121
+    },
+    "label": "History, not live forecasts",
+    "raw_triggers": 6811,
+    "return_half": {
+      "claim_met": false,
+      "claim_points": 1.0,
+      "episodes": 3980,
+      "falsified": false,
+      "graded": 3557,
+      "median_ci95_points": [
+        -0.32,
+        0.48
+      ],
+      "median_points": 0.14,
+      "pending": 423
+    },
+    "span": "2026-01-09 to 2026-10-30",
+    "suppressed_repeats": 2831,
+    "warmup_note": "Judging a day against a stock's own past needs 200 of its past trading days first, so the first judgeable day is a stock's 201st trading day on record (January 9, 2026 for stocks with a full record) and 13 stocks have too little history to be judged at all. On 204 stock-days the falling-day record was still too short (fewer than 30 past falling days), so those days were set aside and counted. Every stock in this history still trades today; stocks that stopped trading are not in it, which can flatter the numbers."
+  },
+  "kill_criterion": "After 200 graded episodes, either half retires on its own if its figures could still plausibly be nothing: for the return half, if the middle gain could still be zero; for the exhaustion half, if the share settling down could still be a coin flip.",
+  "live": {
+    "episodes_recorded": 82,
+    "forecasts_recorded": 164,
+    "graded_exhaustion_half": 0,
+    "graded_return_half": 0,
+    "note": "Episodes are written down at the close that triggers them, before the days they describe. The return half grades 20 trading days later and the exhaustion half within 10, so the first grades land only after those days pass.",
+    "target_episodes": 200
+  },
+  "price_basis": "close",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (164 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 164,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_16",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "claims",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "gate_words",
+        "history",
+        "kill_criterion",
+        "live",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "source",
+        "state",
+        "study_record",
+        "tension_words",
+        "thin_cell_rule",
+        "today",
+        "tool",
+        "trigger_words"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_16",
+      "forecasts": 164,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 164 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 4,
+          "path": "/history"
+        },
+        {
+          "items": 0,
+          "path": "/study_record"
+        },
+        {
+          "items": 2,
+          "path": "/history/exhaustion_half"
+        },
+        {
+          "items": 2,
+          "path": "/history/return_half"
+        }
+      ],
+      "total_items_counted": 8
+    },
+    "version": 1
+  },
+  "source": "The daily price and share-volume history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-10-30, 404 trading days), checked for this page. The longer daily history the parent studies ran on (2016 to 2026) is not on this computer, so the history below runs on the history that exists, which holds only stocks that still trade.",
+  "state": "proving",
+  "study_record": {
+    "f6": "In the long study (2016 to 2026), heavy trading on falling days inside a fall lined up with better days ahead in both stretches of years checked: the link measured +0.040 and +0.020, and the heaviest fifth beat the lightest fifth by 0.95 and 1.28 points.",
+    "label": "The earlier studies this tool is built from",
+    "n6": "A second study of volume-confirmed falls found the same direction: the link measured +0.016 and +0.015 in its two samples."
+  },
+  "tension_words": "One earlier study points the other way. It measured a nearby but different thing, trading drying up after a fall rather than trading surging on falling days, and it found the drying-up version predicted worse, not better, days ahead, in both stretches of years it checked. This tool follows the surging version, the one two other studies found pointed up, and prints the disagreement here rather than hiding it. The live record below is what will settle which reading is right for this exact definition.",
+  "thin_cell_rule": "Any half with fewer than 30 graded episodes shows its count only, with no middle figure and no share.",
+  "today": {
+    "gate_blocked": [
+      "ADI",
+      "ADT",
+      "AME",
+      "ARMK",
+      "BUG",
+      "CART",
+      "CHKP",
+      "CIBR",
+      "CVSA",
+      "DT",
+      "DXC",
+      "ENTG",
+      "HACK",
+      "HOPE",
+      "HPQ",
+      "IBB",
+      "IBIT",
+      "ILMN",
+      "INVX",
+      "KMB",
+      "KVUE",
+      "LITE",
+      "MMSI",
+      "NEU",
+      "NXPI",
+      "PEB",
+      "RGEN",
+      "RMD",
+      "RVTY",
+      "SXT",
+      "TROW",
+      "TWLO",
+      "TWST",
+      "ZBRA"
+    ],
+    "gate_blocked_count": 34,
+    "names_checked": 1832,
+    "names_judged": 1803,
+    "names_set_aside": 29,
+    "notes": "Names that printed both kinds of heavy trading today but are not in a fall of their own are listed as held back by the gate, and no forecast is made about them. Names in a fall that cleared only one of the two heavy-trading lines are counted too.",
+    "one_line_count": 142,
+    "suppressed_repeats_today": 34,
+    "trigger_count": 36,
+    "triggers": [
+      {
+        "activity_times_line": 1.18,
+        "down_volume_times_line": 1.08,
+        "symbol": "AAOI"
+      },
+      {
+        "activity_times_line": 1.55,
+        "down_volume_times_line": 1.33,
+        "symbol": "AMZN"
+      },
+      {
+        "activity_times_line": 1.44,
+        "down_volume_times_line": 1.27,
+        "symbol": "CACC"
+      },
+      {
+        "activity_times_line": 1.53,
+        "down_volume_times_line": 1.32,
+        "symbol": "CCJ"
+      },
+      {
+        "activity_times_line": 1.33,
+        "down_volume_times_line": 1.24,
+        "symbol": "COIN"
+      },
+      {
+        "activity_times_line": 1.86,
+        "down_volume_times_line": 1.55,
+        "symbol": "COO"
+      },
+      {
+        "activity_times_line": 1.12,
+        "down_volume_times_line": 1.03,
+        "symbol": "CRWV"
+      },
+      {
+        "activity_times_line": 1.33,
+        "down_volume_times_line": 1.14,
+        "symbol": "DLR"
+      },
+      {
+        "activity_times_line": 1.45,
+        "down_volume_times_line": 1.1,
+        "symbol": "ENOV"
+      },
+      {
+        "activity_times_line": 1.42,
+        "down_volume_times_line": 1.32,
+        "symbol": "ESAB"
+      },
+      {
+        "activity_times_line": 1.96,
+        "down_volume_times_line": 1.56,
+        "symbol": "FFIV"
+      },
+      {
+        "activity_times_line": 1.5,
+        "down_volume_times_line": 1.4,
+        "symbol": "FND"
+      },
+      {
+        "activity_times_line": 1.78,
+        "down_volume_times_line": 1.55,
+        "symbol": "FRT"
+      },
+      {
+        "activity_times_line": 1.58,
+        "down_volume_times_line": 1.28,
+        "symbol": "GTES"
+      },
+      {
+        "activity_times_line": 1.26,
+        "down_volume_times_line": 1.1,
+        "symbol": "IDXX"
+      },
+      {
+        "activity_times_line": 2.78,
+        "down_volume_times_line": 2.79,
+        "symbol": "INTC"
+      },
+      {
+        "activity_times_line": 1.39,
+        "down_volume_times_line": 1.08,
+        "symbol": "KLAC"
+      },
+      {
+        "activity_times_line": 1.85,
+        "down_volume_times_line": 1.7,
+        "symbol": "LAUR"
+      },
+      {
+        "activity_times_line": 1.15,
+        "down_volume_times_line": 1.04,
+        "symbol": "LHX"
+      },
+      {
+        "activity_times_line": 1.34,
+        "down_volume_times_line": 1.04,
+        "symbol": "MCHP"
+      },
+      {
+        "activity_times_line": 1.25,
+        "down_volume_times_line": 1.11,
+        "symbol": "MSTR"
+      },
+      {
+        "activity_times_line": 1.47,
+        "down_volume_times_line": 1.15,
+        "symbol": "MTSI"
+      },
+      {
+        "activity_times_line": 1.82,
+        "down_volume_times_line": 1.39,
+        "symbol": "PDFS"
+      },
+      {
+        "activity_times_line": 1.89,
+        "down_volume_times_line": 1.45,
+        "symbol": "PICK"
+      },
+      {
+        "activity_times_line": 1.66,
+        "down_volume_times_line": 1.26,
+        "symbol": "PIPR"
+      },
+      {
+        "activity_times_line": 1.29,
+        "down_volume_times_line": 1.07,
+        "symbol": "POWI"
+      },
+      {
+        "activity_times_line": 1.96,
+        "down_volume_times_line": 1.73,
+        "symbol": "PRLB"
+      },
+      {
+        "activity_times_line": 1.6,
+        "down_volume_times_line": 1.35,
+        "symbol": "SKYW"
+      },
+      {
+        "activity_times_line": 1.38,
+        "down_volume_times_line": 1.01,
+        "symbol": "SOXL"
+      },
+      {
+        "activity_times_line": 1.68,
+        "down_volume_times_line": 1.22,
+        "symbol": "SOXX"
+      },
+      {
+        "activity_times_line": 6.85,
+        "down_volume_times_line": 4.45,
+        "symbol": "STC"
+      },
+      {
+        "activity_times_line": 2.1,
+        "down_volume_times_line": 1.7,
+        "symbol": "SYK"
+      },
+      {
+        "activity_times_line": 1.64,
+        "down_volume_times_line": 1.35,
+        "symbol": "TER"
+      },
+      {
+        "activity_times_line": 1.29,
+        "down_volume_times_line": 1.11,
+        "symbol": "VIAV"
+      },
+      {
+        "activity_times_line": 2.15,
+        "down_volume_times_line": 1.76,
+        "symbol": "VRRM"
+      },
+      {
+        "activity_times_line": 1.36,
+        "down_volume_times_line": 1.19,
+        "symbol": "WPM"
+      }
+    ]
+  },
+  "tool": "Own Capitulation Volume Clock",
+  "trigger_words": "A stock counts as printing capitulation volume on a day when three things line up. First, it is in a fall of its own: its price sits below its own average price of the past 200 trading days. Second, on a day it fell, the shares that changed hands were heavier than on 95 of every 100 of its own past falling days. Third, its total trading that day was heavier than on 90 of every 100 of its own past days. One name can start a new episode at most once every 11 trading days, so a long heavy spell counts once, not daily."
+}
