@@ -341,8 +341,27 @@ def build():
         "built to that ruling: agreement is shown as agreement, "
         "and nothing more.")
 
+    # Chart counts (2026-10-31 chart cure): the coverage distribution
+    # this page already publishes, copied into the top-level counts
+    # block the record producer and chart renderer draw from on
+    # sibling pages (flow-tape, state-analogue). No new numbers:
+    # every value is the page's own coverage count for that many
+    # families covering a name.
+    _family_words = {0: "no", 1: "one", 2: "two", 3: "three",
+                     4: "four", 5: "five", 6: "six"}
+    chart_counts = {}
+    for k in sorted(published_counts, reverse=True):
+        if k == 0:
+            chart_counts["names_covered_by_no_family"] = \
+                published_counts[k]
+        else:
+            chart_counts[f"names_covered_by_{_family_words[k]}_"
+                         f"{'family' if k == 1 else 'families'}"] = \
+                published_counts[k]
+
     data = {
         "tool": "Echo Board",
+        "counts": chart_counts,
         "state": "published",
         "session": session,
         "session_long": long_date(session),
