@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gap Destiny: chances staked on today's gap, graded at today's close</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  input[type=search]{font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;width:100%;max-width:340px;margin:4px 0 8px}
+  .scroll{max-height:520px;overflow:auto}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Gap Destiny</h1>
+    <p class="job">One job: at the open, stake a set of chances on today's gap for every name that gaps at least half a percent, and be graded on it at today's close.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest gap chances&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  var NAMES={SPY:"SPY (the big S&P 500 fund)",QQQ:"QQQ (the big Nasdaq-100 fund)",IWM:"IWM (the big small-company fund)"};
+  function steps(s){return s?s.join(", "):"count only";}
+  function setRows(list){
+    var out="";
+    list.forEach(function(n){
+      out+="<tr><td><strong>"+esc(NAMES[n.symbol]||n.symbol)+"</strong><br><span class='sub'>Gap "+esc(n.gap_pct)+"% ("+esc(n.direction)+"), "+esc(n.band_label)+" band, "+esc(n.weekday_label)+". Opened at "+esc(n.open)+" after closing at "+esc(n.prior_close)+".</span></td><td><strong>"+esc(n.p_fill_pct)+"%</strong></td><td>"+esc(n.p_above_pct)+"%</td><td>"+esc(n.p_below_pct)+"%</td><td>"+esc(n.p_at_open_pct)+"%</td><td>"+esc(steps(n.range_deciles))+"<br><span class='sub'>Based on "+esc(n.based_on_cases)+" earlier cases ("+esc(n.based_on)+").</span></td></tr>";
+    });
+    return out;
+  }
+  function histTable(cells){
+    var out="<table><tr><th>Gap size</th><th>Weekday</th><th>Cases</th><th>Filled</th><th>Closed above the open</th><th>Closed below the open</th><th>Range steps</th></tr>";
+    cells.forEach(function(c){
+      out+="<tr><td>"+esc(c.band_label)+"</td><td>"+esc(c.weekday_label)+"</td><td>"+esc(c.n)+"</td><td>"+(c.fill_pct==null?esc(c.fills)+" fills, count only":esc(c.fills)+" ("+esc(c.fill_pct)+"%)")+"</td><td>"+(c.above_pct==null?"count only":esc(c.above_pct)+"%")+"</td><td>"+(c.below_pct==null?"count only":esc(c.below_pct)+"%")+"</td><td>"+(c.range_deciles?esc(steps(c.range_deciles)):"count only")+"</td></tr>";
+    });
+    return out+"</table>";
+  }
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="Sets staked at the open of "+fmtDate(data.as_of_session)+", graded at that day's close. Source: "+data.source;
+    showBanner("stale","These sets are the newest ones on record. They were staked for "+fmtDate(data.as_of_session)+", the last trading day in the price history on record, so treat them as the latest published forecast, made at that day's open.");
+    var live=data.live||{}, hist=data.history||{}, rec=data.live_record||{}, sh=(live.shifters||{}), h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>This engine is new. Its live record starts with the sets below, and it earns stronger language only from that record as it grows.</p><p>'+esc(data.idea)+'</p><p>A gap <strong>fills</strong> when price gets back to the previous close during the same session. The range steps say how wide the day\'s whole high-to-low range ran, as a multiple of the gap itself, at nine steps from the smallest tenth of earlier cases to the largest tenth. A close exactly at the open is neither above nor below it, and that leftover share is printed, never hidden.</p></section>';
+
+    h+='<section class="card"><h2>The index funds on the newest gap day</h2><p class="sub">'+esc(live.qualifying_gaps)+' names gapped at least half a percent on '+fmtShort(data.as_of_session)+'. Two of the three index funds were among them. QQQ gapped 0.32 percent that day, under the half-percent floor, so it carries no set.</p><table><tr><th>Name and gap</th><th>Chance the gap fills today</th><th>Closes above the open</th><th>Closes below the open</th><th>Closes at the open</th><th>Range steps (multiples of the gap)</th></tr>';
+    h+=setRows(live.indexes||[]);
+    h+="</table></section>";
+
+    h+='<section class="card"><h2>Every qualifying gap that day</h2><p class="sub">All '+esc(live.qualifying_gaps)+' sets, each written to the public record at that day\'s open. Type part of a name to find it.</p><input type="search" id="q" placeholder="Search by stock name" aria-label="Search by stock name"><div class="scroll"><table><thead><tr><th>Name and gap</th><th>Fills</th><th>Above open</th><th>Below open</th><th>At open</th><th>Range steps</th></tr></thead><tbody id="rows"></tbody></table></div><p class="sub" id="shown"></p></section>';
+
+    h+='<section class="card"><h2>The two readings that can shift a set</h2><p>Each set starts from earlier gaps of the same size band on the same weekday. Two readings, both judged on the completed session before the gap day, can then shift it, each only when at least 30 earlier cases match it:</p><p><strong>Fear state: '+(sh.fear_state?"the session before was a fear day.":"the session before was not a fear day on the part of the test that could be judged.")+'</strong> The session before this gap day was '+fmtShort(sh.prior_session)+', when the big fund moved '+(sh.prior_session_spy_change_pct==null?"":esc(sh.prior_session_spy_change_pct)+"%")+'. A fear day is a day the big fund fell more than 1.5 percent, or the fear gauge rose more than 15 percent in a day, closed at 25 or higher, or closed at 20 or higher on a day a big fund fell. '+esc(sh.fear_note)+' This reading '+(sh.fear_applied?"shifted today's sets.":"did not shift today's sets, because its matching earlier cases were too few.")+'</p><p><strong>High-volatility third: absent for this gap day.</strong> '+esc(sh.vol_note)+' This reading '+(sh.vol_applied?"shifted today's sets.":"changed nothing today.")+'</p></section>';
+
+    var wf=hist.walk_forward||{}, wfi=hist.walk_forward_index||{}, anc=hist.ancestor||{};
+    h+='<section class="card"><h2>History, not live forecasts</h2><p>'+esc(hist.note)+'</p><p class="sub">History covered: '+fmtShort(hist.span_start)+" to "+fmtShort(hist.span_end)+" ("+esc(hist.sessions)+' trading days). Across every name, '+esc((hist.totals||{}).qualifying)+' gaps of at least half a percent were counted and '+esc((hist.totals||{}).fills)+' of them filled ('+esc((hist.totals||{}).fill_pct)+'%). For the three index funds alone the picture is very different: '+esc((hist.totals||{}).index_qualifying)+' gaps, '+esc((hist.totals||{}).index_fills)+' fills ('+esc((hist.totals||{}).index_fill_pct)+'%). Both pictures are printed, because the retirement test below runs on the index funds alone. There were '+esc(hist.fear_days)+' fear days in this span.</p>';
+    h+="<h3>By gap size</h3><table><tr><th>Gap size</th><th>All names: cases</th><th>All names: filled</th><th>Index funds: cases</th><th>Index funds: filled</th><th>Range steps, all names</th></tr>";
+    (hist.bands||[]).forEach(function(b){
+      h+="<tr><td>"+esc(b.band_label)+"</td><td>"+esc(b.all_n)+"</td><td>"+esc(b.all_fills)+" ("+esc(b.all_fill_pct)+"%)</td><td>"+esc(b.index_n)+"</td><td>"+(b.index_thin?esc(b.index_n)+" cases, count only":esc(b.index_fills)+" ("+esc(b.index_fill_pct)+"%)")+"</td><td>"+esc(steps(b.range_deciles))+"</td></tr>";
+    });
+    h+="</table><h3>Every name: gap size by weekday</h3><p class='sub'>Counts stand beside every rate. "+esc(data.thin_cell_rule)+"</p>"+histTable(hist.by_band_weekday_all||[]);
+    h+="<h3>Index funds only: gap size by weekday</h3><p class='sub'>The index record is thin in the largest gap band on every weekday, and those cells show counts only.</p>"+histTable(hist.by_band_weekday_index||[]);
+    h+="<h3>How the method scored on the past</h3><p>Scoring, in plain words: a score of 0 would be perfect, and a larger score means the stated chances were further from what happened. Over "+esc(wf.graded)+" graded study gaps ("+esc(wf.skipped)+" early gaps set aside because too few earlier cases existed), the fill chance scored <strong>"+esc(wf.brier_fill)+"</strong> against <strong>"+esc(wf.brier_fill_plain_band)+"</strong> for simply using the plain rate for the gap-size band every time. The close-above chance scored "+esc(wf.brier_above)+", the close-below chance "+esc(wf.brier_below)+", and the real range fell between the lowest and highest range steps "+esc(wf.range_steps_coverage_pct)+"% of the time, where about 80% would be right on the mark. For the index funds alone, "+esc(wfi.graded)+" study gaps were graded, with the fill chance at "+esc(wfi.brier_fill)+" against the plain band rate's "+esc(wfi.brier_fill_plain_band)+".</p>";
+    h+="<p><strong>The older pane, a different method:</strong> the Gap-Fill Pane published "+esc(anc.events)+" gap events and "+esc(anc.fills)+" fills ("+esc(anc.fill_pct)+"%) as of "+fmtShort(anc.as_of)+". "+esc(anc.note)+"</p></section>";
+
+    h+='<section class="card"><h2>The live record</h2><p class="count">'+esc(rec.index_gaps_recorded)+" of "+esc(rec.index_gaps_target)+' index gaps toward the retirement test</p><p>Sets recorded so far: '+esc(rec.forecasts_recorded)+" (every qualifying name on the newest gap day). Graded so far: "+esc(rec.forecasts_graded)+", counted in blocks of 60 graded forecasts ("+esc(rec.blocks_of_60_completed)+' full blocks so far), because the shared grading step for this kind of forecast has not been extended to gap fills yet and no later price day is on record to grade against. When grading runs, fills and non-fills both count.</p><p>'+esc(rec.second_arm)+"</p><p class='claim'>"+esc(data.kill_criterion)+"</p><p>"+esc(data.thin_cell_rule)+"</p><p>"+esc(data.excluded_variant)+"</p></section>";
+
+    main.innerHTML=h;
+
+    var rowsEl=document.getElementById("rows"), shownEl=document.getElementById("shown"), qEl=document.getElementById("q");
+    var names=live.names||[];
+    function render(filter){
+      var out="", shown=0;
+      for(var i=0;i<names.length;i++){
+        var n=names[i];
+        if(filter && n.symbol.indexOf(filter)<0) continue;
+        shown++;
+        out+="<tr><td><strong>"+esc(NAMES[n.symbol]||n.symbol)+"</strong><br><span class='sub'>Gap "+esc(n.gap_pct)+"% ("+esc(n.direction)+"), "+esc(n.band_label)+".</span></td><td><strong>"+esc(n.p_fill_pct)+"%</strong></td><td>"+esc(n.p_above_pct)+"%</td><td>"+esc(n.p_below_pct)+"%</td><td>"+esc(n.p_at_open_pct)+"%</td><td>"+esc(steps(n.range_deciles))+"</td></tr>";
+      }
+      rowsEl.innerHTML=out;
+      shownEl.textContent="Showing "+shown+" of "+names.length+" names.";
+    }
+    render("");
+    qEl.addEventListener("input",function(){render(qEl.value.trim().toUpperCase());});
+  }).catch(function(){
+    meta.textContent="";
+    showBanner("missing","The latest gap chances are not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+  });
+})();
+</script>
+</body>
+</html>
