@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Short Volume Ledger: how much of each day's trading was sold short</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0}
+  .lookup{margin:0 0 18px}
+  .lookup label{font-size:15px;font-weight:600;display:block;margin:0 0 6px}
+  .lookup input{font-size:16px;padding:9px 12px;border:1px solid var(--line);
+        border-radius:10px;width:260px;max-width:100%;text-transform:uppercase}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  th,td{text-align:right;padding:6px 10px;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  th{font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  .missingday{color:var(--faint)}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  .facts{font-size:14.5px;color:var(--soft);margin:4px 0}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Short Volume Ledger</h1>
+    <p class="job">One job: show, for each stock on record, how much of each trading day's volume was sold short, day by day.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the short volume record&hellip;</p>
+
+  <section class="note">
+    <h2>Two different measures, one sentence apart</h2>
+    <p id="distinction">Loading&hellip;</p>
+  </section>
+
+  <div class="lookup" id="lookup" hidden>
+    <label for="pick">Look up a stock</label>
+    <input id="pick" type="text" placeholder="Type a ticker, for example AAPL" autocomplete="off">
+  </div>
+  <p id="lookup-result" class="facts" hidden></p>
+
+  <main id="main"></main>
+
+  <footer>
+    <p id="receipt"></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var distinctionEl = document.getElementById("distinction");
+  var receiptEl = document.getElementById("receipt");
+  var lookup = document.getElementById("lookup");
+  var pick = document.getElementById("pick");
+  var lookupResult = document.getElementById("lookup-result");
+  var allTickers = [];
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtNum(v){
+    return Number(v).toLocaleString("en-US",{maximumFractionDigits:1});
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function cardHTML(t){
+    var h = '<section class="group"><h2>' + esc(t.symbol) + '</h2>';
+    h += '<table><thead><tr><th>Trading day</th><th>Shares sold short</th>' +
+      '<th>Total shares traded</th><th>Sold short, share of the day</th></tr></thead><tbody>';
+    (t.days || []).forEach(function(d){
+      if (d.state !== "recorded"){
+        h += '<tr class="missingday"><td>' + esc(fmtDateLong(d.date)) + '</td>' +
+          '<td colspan="3">Missing: no reading for this stock on this day. ' +
+          'A missing day is shown as missing, never as zero.</td></tr>';
+      } else {
+        h += '<tr><td>' + esc(fmtDateLong(d.date)) + '</td><td>' +
+          esc(fmtNum(d.short_volume)) + '</td><td>' + esc(fmtNum(d.total_volume)) +
+          '</td><td>' + esc(d.short_share_pct) + '%</td></tr>';
+      }
+    });
+    h += '</tbody></table></section>';
+    return h;
+  }
+  function render(filter){
+    if (!filter){
+      mainEl.innerHTML = '<div class="nodata">Type a ticker above to see ' +
+        'its day-by-day ledger: the freshest stored days for that stock, ' +
+        'one row a day. The full list is not printed on one page.</div>';
+      return;
+    }
+    var list = allTickers.filter(function(t){
+      return t.symbol.indexOf(filter) === 0;
+    });
+    if (!list.length){
+      mainEl.innerHTML = '<div class="nodata">No stock on this page starts with ' +
+        esc(filter) + '. The stocks on record are listed when the box is cleared.</div>';
+      return;
+    }
+    mainEl.innerHTML = list.map(cardHTML).join("");
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      distinctionEl.textContent = data.distinction || "";
+      var r = data.receipt || {};
+      if (typeof data.days_on_record !== "number" || !data.checked){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No short volume record has been ' +
+          'published yet.</div>';
+        return;
+      }
+      meta.textContent = "Checked " + fmtDateLong(data.checked) + ". Source: " +
+        data.source + ". " + (data.delay || "");
+      receiptEl.textContent = "Receipt: checked " +
+        fmtDateLong(r.checked || data.checked) + ". Source: " +
+        (r.source || data.source) + ". Coverage: " +
+        (r.coverage || data.coverage) + ".";
+      if (!data.days_on_record || !(data.tickers || []).length){
+        mainEl.innerHTML = '<div class="nodata">Not collecting yet: ' +
+          esc(data.coverage || "no days are on record yet") + ' When the first ' +
+          'day is stored, each stock\'s day-by-day ledger appears here. Until ' +
+          'then there is no honest figure to show for any stock, so none is ' +
+          'shown.</div>';
+        return;
+      }
+      allTickers = data.tickers;
+      lookup.hidden = false;
+      render("");
+      pick.addEventListener("input", function(){
+        var q = pick.value.trim().toUpperCase();
+        lookupResult.hidden = true;
+        if (q && !allTickers.some(function(t){ return t.symbol.indexOf(q) === 0; })){
+          lookupResult.hidden = false;
+          lookupResult.textContent = q + " is not on record: it does not appear " +
+            "in any stored day, so it carries no short volume ledger here.";
+        }
+        render(q);
+      });
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The short volume record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
