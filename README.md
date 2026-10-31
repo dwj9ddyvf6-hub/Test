@@ -2,7 +2,30 @@
 
 > **Start here: [INDEX.md](INDEX.md)** is the map of this whole repository for a reader arriving cold, and [INDEX.json](INDEX.json) is its machine-readable twin listing every file in the repository. Read the index first, then this page.
 
-**651 distinct trading strategies** have been built across our desks, and this repository is the public library that holds them: the strategy cards, the code, the recreation notes that let anyone rebuild a strategy from its recorded rules, the desk software that runs the current roster, and the guides that teach an agent (or a person) how to build a desk like this. It holds **4,865 files** in total. Everything below is a map of the whole repository, not just the catalog.
+**651 distinct trading strategies** have been built across our desks, and this repository is the public library that holds them: the strategy cards, the code, the recreation notes that let anyone rebuild a strategy from its recorded rules, the desk software that runs the current roster, and the guides that teach an agent (or a person) how to build a desk like this. It holds **6,266 files** in total. Everything below is a map of the whole repository, not just the catalog.
+
+## The research engines and studies
+
+Strategies are only part of what this repository holds. It also holds the research engines and trainings the desks were built on, explained here at the front where a reader will actually find them.
+
+### Technical analysis and chart reading
+
+Three layers, from study to running code:
+
+- **The mastery study** (`docs/research/technical-analysis-mastery-20261030/`, 28 files): a full training in reading charts, built from a census of the chart-reading canon across the desks and the public literature. The internal volume teaches the working method in six sections: the eye, structure and levels, patterns, waves and Fibonacci, indicators as servants, and the reading protocol. The external volume adds the code canon (how pattern libraries detect formations mechanically), identification craft, Wyckoff and classical methods, and practitioner craft from working chartists. It closes with identification drills and a demonstration of worked reads.
+- **The study and practice atlas** (`research/technical-analysis-study-2026-10-30/`): a second, independent training (Ausar), as an illustrated atlas in Markdown, Word and PDF, plus a research and practice archive of 87 entries (lessons, source ledgers, and masked practice cases with their reveals). It covers price structure, support and resistance, candlesticks, classical patterns, breakout and retest sequences, volume, indicators, relative strength, Elliott wave, Wyckoff, market profiles, multi-timeframe analysis, trader-specific methods, and deliberate practice.
+- **The chart-reading engine** (`packages/claude/master-desk-terminal-builder/desk/terminal/read/`): the executable form of that training, 33 Python modules that read a chart the way the studies teach: geometry and pivots, structure and trendlines, pattern and candlestick recognition, divergence, Elliott waves, Wyckoff phases, indicators, levels, and composing the final read and plan. The terminal's own AI Chart Read tool, which applies a learned read to live names, is at `terminal-lineup/site/ai-chart-read/`.
+
+### The psychology engines
+
+Two independent market-psychology engines, built separately and kept whole:
+
+- **The research and reference engine** (`psychology-engine/`, 124 files, Ausar): the engine itself under `engine/`, its research and audit trail, a 38-page report, and `PUBLIC_VALIDATION.md` with checksums.
+- **The live nine-gauge engine** (`docs/research/psychology-engine-2026-10-30/`, Midna): the design, theory and measurement study for the engine that runs daily on the terminal, scoring market mood from nine gauges into one composite reading with a recorded history.
+
+### The forecast engines and market tools
+
+`terminal-lineup/` holds the terminal itself: **30 forecast engines** (code, registry and grading machinery under `terminal-lineup/forecast/`; each engine issues dated forecasts that are later settled and graded against what the market actually did) and **104 tool pages** under `terminal-lineup/site/` (market mood, regime, flow, options, breadth, screeners, calendars and the rest), each page carrying its own data, its own drawn charts, and a plain explanation of what it does and how it is graded. Start at `terminal-lineup/FORECAST-ENGINES-30.md` and `terminal-lineup/THE-70-TOOLS.md`.
 
 ## The three views of the strategies
 
@@ -49,7 +72,7 @@ Monitors and research recorders are not listed as strategies in any of the three
 | `docs/THREE-GUIDES-RECONCILIATION.md` | The map between the three agent guides: shared invariants, unique lessons, and the differences to decide consciously. |
 | `docs/YOUR-OWN-ALERT-SYSTEM.md` | How a reader actually uses all of this day to day: the terminal as a home-screen alert system. |
 | `docs/VERIFY.md` | The code lines each card rule was read from (one page per family in `docs/verify/`), and where each copied file came from. |
-| `terminal-lineup/` | The terminal lineup: **1,345 files** saved from the local terminal tree: `site/` (1,121 files, with **104 tool pages** across 105 tool folders, plus shared code and data), `forecast/` (**88 files** of forecast engine code, registry and tests for the **30 forecast engines** in `forecast/registry.json`), `specs/` (1 file), `oracle/` (4 files), `records/` (16 files), root design and build docs (10 Markdown files) and **105 workflow build scripts**. Start at `terminal-lineup/site/` for the tools and `terminal-lineup/forecast/` for the engines. |
+| `terminal-lineup/` | The terminal lineup: **1,398 files** saved from the local terminal tree: `site/` (1,156 files, with **104 tool pages** across 105 tool folders, plus shared code and data), `forecast/` (**88 files** of forecast engine code, registry and tests for the **30 forecast engines** in `forecast/registry.json`), `specs/` (4 files), `oracle/` (5 files), `records/` (16 files), root design and build docs (19 Markdown files) and **110 workflow build scripts**. Start at `terminal-lineup/site/` for the tools and `terminal-lineup/forecast/` for the engines. |
 
 ## Start here, by what you came for
 
@@ -61,7 +84,7 @@ Monitors and research recorders are not listed as strategies in any of the three
 | Count or cross-check every strategy ever built | [The full accounting](docs/ALL-SLEEVES.md) and `docs/ALL-SLEEVES.json` (651 from 1,562 ids; 104 unresolved, kept separate). |
 | Build or run an agentic trade desk | The three guides in the fixed section below, the reconciliation first, then the kit in `agentic-trade-desk/`. |
 | Use the desk as an alert system | [Run this desk as your own alert system](docs/YOUR-OWN-ALERT-SYSTEM.md). |
-| Run or study the terminal engines and tools | `terminal-lineup/` (1,345 files): the tool pages under `terminal-lineup/site/`, the forecast engine code and registry under `terminal-lineup/forecast/`, and the design docs at `terminal-lineup/THE-70-TOOLS.md` and `terminal-lineup/FORECAST-ENGINES-30.md`. |
+| Run or study the terminal engines and tools | `terminal-lineup/` (1,398 files): the tool pages under `terminal-lineup/site/`, the forecast engine code and registry under `terminal-lineup/forecast/`, and the design docs at `terminal-lineup/THE-70-TOOLS.md` and `terminal-lineup/FORECAST-ENGINES-30.md`. |
 | Study the psychology engines | Two independent builds: `psychology-engine/` (Ausar's research and reference implementation; start with its README and `PUBLIC_VALIDATION.md`) and `docs/research/psychology-engine-2026-10-30/` (Midna's live nine-gauge engine: ENGINE-DESIGN, STUDY-THEORY, STUDY-MEASUREMENT). |
 | Take a whole peer-desk package | `packages/claude/`, `packages/ausar/` or `packages/grokbot/`. |
 | Check where a rule or a copied file came from | `docs/VERIFY.md` and `docs/verify/`. |
