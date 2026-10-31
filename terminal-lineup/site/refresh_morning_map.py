@@ -25,7 +25,13 @@ try:
 except ImportError:  # refresh stays runnable standalone
     _tc = None
 
+try:
+    import session_history as _sh
+except ImportError:  # refresh stays runnable standalone
+    _sh = None
+
 HERE = os.path.dirname(os.path.abspath(__file__))
+HISTORY_PATH = os.path.join(HERE, "morning-map", "session-history.json")
 MORGUE_OUTPUT = os.path.expanduser("~/workspace/morgue/output")
 MAP_CARD_PATH = os.path.join(MORGUE_OUTPUT, "map_card.json")
 FEED_PATH = os.path.join(MORGUE_OUTPUT, "morgue-feed.json")
@@ -441,6 +447,22 @@ def build():
         "contract": build_contract(card_doc, feed_doc, session, built_utc,
                                    indexes),
     }
+
+    # Session keeping (2026-10-31, Wave 3 Item F): past maps were
+    # not kept, so the record chart had nothing to draw. From this
+    # run forward, each refresh appends a dated snapshot of the
+    # charted subject values (each index's spot, put wall, flip
+    # and call wall) to the page's session-history store and
+    # carries the kept list on the page data. Nothing before this
+    # run is reconstructed.
+    if _sh is not None:
+        data["session_history"] = _sh.append_session(
+            HISTORY_PATH, session,
+            [{"symbol": ix.get("symbol"), "spot": ix.get("spot"),
+              "put_wall": (ix.get("put_wall") or {}).get("value"),
+              "flip": (ix.get("flip") or {}).get("value"),
+              "call_wall": (ix.get("call_wall") or {}).get("value")}
+             for ix in indexes])
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, "w", encoding="utf-8") as fh:
