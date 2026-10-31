@@ -149,6 +149,7 @@
         "source",
         "stage_1_bar_pct",
         "state",
+        "subject_chart",
         "thin_cell_rule",
         "tool"
       ]
@@ -210,6 +211,45 @@
   "source": "The daily price history on record (1,833 names including the broad market fund, March 25, 2025 to October 23, 2026, 399 trading days), checked for this page.",
   "stage_1_bar_pct": 50,
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Stage 1 and stage 2 reversal rates from the history run.",
+      "rows": [
+        {
+          "name": "Stage 1 rate",
+          "score": 50.5
+        },
+        {
+          "name": "Stage 2 rate",
+          "score": 35.5
+        }
+      ],
+      "source": "history.stage_1/stage_2.rate_pct",
+      "title": "Reversal rates by stage, percent"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Median move percent at 1, 3 and 5 sessions.",
+      "rows": [
+        {
+          "name": "After 1 session(s)",
+          "score": 0.216
+        },
+        {
+          "name": "After 3 session(s)",
+          "score": 0.509
+        },
+        {
+          "name": "After 5 session(s)",
+          "score": 0.537
+        }
+      ],
+      "source": "history.stage_3_medians_pct",
+      "title": "Stage 3 median moves, percent"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any stage with fewer than 30 graded forecasts shows its count only, with no percentage headline.",
   "tool": "Stress-Reversal Staging"
 }
