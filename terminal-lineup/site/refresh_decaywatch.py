@@ -72,6 +72,48 @@ RUN2_MD = os.path.join(RECORD_DIR, "forecast-search-rerun-2026-10-27.md")
 PROMOTED_PATH = os.path.join(HERE, "promoted-book", "data.json")
 PROVING_PATH = os.path.join(HERE, "proving-ground", "data.json")
 OUT_PATH = os.path.join(HERE, "decay-watch", "data.json")
+HISTORY_PATH = os.path.join(HERE, "decay-watch",
+                            "standings-history.json")
+
+
+def compute_movements(prev, new, from_date, to_date):
+    """Standing transitions between two recorded standings maps
+    (entry id to standing). An entry present in only one map is
+    recorded as entering or leaving the book. Pure: the caller
+    supplies both maps and both grading dates from the records."""
+    moves = []
+    for entry_id in sorted(set(prev) | set(new)):
+        before = prev.get(entry_id)
+        after = new.get(entry_id)
+        if before == after:
+            continue
+        moves.append({
+            "name": entry_id,
+            "from": before if before is not None
+                    else "not in the book",
+            "to": after if after is not None else "left the book",
+            "date": to_date,
+            "from_date": from_date,
+        })
+    return moves
+
+
+def movement_counts_for(moves):
+    counts = {"total": len(moves), "promotions": 0, "demotions": 0,
+              "probation_entries": 0, "probation_exits": 0,
+              "entries_regraded": 0}
+    for m in moves:
+        if m["from"] == "probation" and m["to"] == "promoted":
+            counts["promotions"] += 1
+        elif m["from"] == "promoted" and m["to"] == "probation":
+            counts["demotions"] += 1
+        elif m["from"] == "not in the book" and m["to"] == "probation":
+            counts["probation_entries"] += 1
+        elif m["from"] == "probation" and m["to"] == "left the book":
+            counts["probation_exits"] += 1
+    counts["entries_regraded"] = (counts["promotions"]
+                                  + counts["demotions"])
+    return counts
 
 SOURCE_WORDS = ("Our own forecast program's book of promoted entries, "
                 "frozen as the program recorded it, and the two search "
@@ -192,12 +234,38 @@ def build():
     if not measuring or not measuring.get("words"):
         fail("the proving ground's measuring-state words are missing")
 
-    # Movements the record itself carries: none. No entry carries a
-    # standing at more than one time (the book is one snapshot and
-    # holds no date, age or history field per entry, checked above),
-    # and no later book version or dated standing-change event is on
-    # record (checked above). Every movement count is therefore 0,
-    # published as a count only.
+    # Movements the record itself carries: none yet, and that is
+    # now proven on every run rather than assumed. No entry carries
+    # a standing at more than one time (the book is one snapshot
+    # and holds no date, age or history field per entry, checked
+    # above), and no later book version or dated standing-change
+    # event is on record (checked above). From this run forward
+    # (cure 2026-10-31) the producer also keeps a standings
+    # snapshot on every run: when a later grading changes any
+    # entry's standing in the records this page reads, the
+    # transition is computed from the two snapshots and published
+    # here, labelled with both grading dates. Today the history
+    # holds the one grading's snapshot, so the movements list is
+    # empty and every movement count is 0, published as counts.
+    standings = {e["id"]: e["status"] for e in entries}
+    history = {"snapshots": []}
+    if os.path.exists(HISTORY_PATH):
+        with open(HISTORY_PATH, encoding="utf-8") as f:
+            history = json.load(f)
+    snapshots = history.get("snapshots") or []
+    if not snapshots or snapshots[-1].get("standings") != standings:
+        snapshots.append({"grading_date": "2026-10-27",
+                          "standings": standings})
+        history = {"snapshots": snapshots}
+        with open(HISTORY_PATH, "w", encoding="utf-8") as f:
+            json.dump(history, f, indent=1, sort_keys=True)
+            f.write("\n")
+    movements = []
+    for prev_snap, next_snap in zip(snapshots, snapshots[1:]):
+        movements.extend(compute_movements(
+            prev_snap["standings"], next_snap["standings"],
+            prev_snap["grading_date"], next_snap["grading_date"]))
+    live_counts = movement_counts_for(movements)
     out = {
         "tool": "Decay Watch",
         "source": SOURCE_WORDS,
@@ -232,15 +300,8 @@ def build():
             "promoted": counts["promoted"],
             "probation": counts["probation"],
         },
-        "movements": [],
-        "movement_counts": {
-            "total": 0,
-            "promotions": 0,
-            "demotions": 0,
-            "probation_entries": 0,
-            "probation_exits": 0,
-            "entries_regraded": 0,
-        },
+        "movements": movements,
+        "movement_counts": live_counts,
         "movements_note": (
             "No entry has been re-graded yet. The book has been graded "
             "once, so no entry has a standing recorded at two "
