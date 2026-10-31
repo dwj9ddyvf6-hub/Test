@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Golden Sweep Wire: every golden sweep on SPY, QQQ and IWM, and the count toward a verdict</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .rule{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .rule h2{margin:0 0 8px;font-size:18px}
+  .rule p{margin:0 0 8px}
+  .rule p:last-child{margin-bottom:0}
+  .counter{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .counter h2{margin:0 0 6px;font-size:18px;color:var(--ink)}
+  .counter p{margin:0 0 6px}
+  .counter p:last-child{margin-bottom:0}
+  .counter strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .print{border-top:1px solid var(--line);padding:12px 0 6px}
+  .print .top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .print .when{font-weight:700;font-size:15.5px;white-space:nowrap}
+  .print .contract{font-size:16px;font-weight:600}
+  .print .code{color:var(--faint);font-size:13px}
+  .print .facts{margin-left:auto;font-size:14px;color:var(--soft);white-space:nowrap}
+  .print .facts strong{color:var(--ink)}
+  .print p{margin:4px 0;font-size:14.5px;color:var(--soft)}
+  .print p strong{color:var(--ink);font-weight:600}
+  .print .receipt{font-size:13px;color:var(--faint)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:20px;
+       padding:0 8px;white-space:nowrap;color:#6b4e12;
+       border:1px solid var(--warn-line);background:var(--warn-bg)}
+  .dir-up{color:var(--up);font-weight:600}
+  .dir-down{color:var(--down);font-weight:600}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  .session{border-top:1px solid var(--line);padding:10px 0 4px}
+  .session:first-of-type{border-top:none}
+  .session .receipt{font-size:13px;color:var(--faint);margin:2px 0 0}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Golden Sweep Wire</h1>
+    <p class="job">One job: list every golden sweep that prints on SPY, QQQ and IWM, and keep the count of recorded trading days until there are enough to judge whether these rare prints mean anything.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the wire&hellip;</p>
+
+  <section class="rule">
+    <h2>The golden sweep rule, in plain words</h2>
+    <p>A print is a <strong>golden sweep</strong> when all three of these hold at once: it is a <strong>sweep</strong>, an order split across exchanges to fill at once; its <strong>size is at least the contract's whole open interest</strong>, the number of contracts of that kind already open, so this one print is as big as every open position in the contract combined; and the <strong>money in it is at least $1 million</strong> in premium.</p>
+    <p>That is a deliberately hard bar. Most trading days have no golden sweep at all, and long runs with none are normal. This wire lists only prints that clear the full bar, exactly as they were recorded, and never fills the space with lesser prints.</p>
+  </section>
+
+  <div id="counter" class="counter" hidden></div>
+  <main id="wire"></main>
+  <section id="sessions" class="group" hidden></section>
+
+  <footer>
+    <p>How to read a direction: a bought call or a sold put points up, a bought put or a sold call points down. Which side of the market a print hit is judged against the latest available quote, not the quote at the exact moment of the print, so on a fast-moving contract the direction read can be wrong. Treat it as a read, not a fact.</p>
+    <p>A golden sweep means a print was extraordinary by the rule above. It does not mean the buyer knew something. Big prints can be hedges, spreads, or positions being closed as easily as new bets.</p>
+    <p>Every golden print on this wire is kept on the public record and graded in public once the verdict date arrives: see <a href="../record/">The Record</a>. The full day's tape, golden or not, is on the <a href="../flow-tape/">Flow Tape</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var counterEl = document.getElementById("counter");
+  var wireEl = document.getElementById("wire");
+  var sessionsEl = document.getElementById("sessions");
+
+  function fmtMoney(v){
+    return "$" + Number(v).toLocaleString("en-US",{maximumFractionDigits:0});
+  }
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function fmtTimeET(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleTimeString("en-US",{timeZone:"America/New_York",
+      hour:"numeric", minute:"2-digit", second:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){ // YYYY-MM-DD in America/New_York
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5); // start from yesterday
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.session) bits.push("Trading day: " + fmtDateLong(r.session));
+    if (r.published_at_utc) bits.push("Published " + fmtTimestamp(r.published_at_utc));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+
+  function printHTML(p){
+    var c = p.contract || {};
+    var contractWords = esc(p.underlying) + " " +
+      (c.kind === "call" ? "call" : "put") + ", " +
+      fmtPrice(c.strike) + " strike, expires " + fmtDateShort(c.expiry);
+    var dirClass = p.direction === "bullish" ? "dir-up" :
+                   p.direction === "bearish" ? "dir-down" : "";
+    var dirSentence = p.direction === "neutral"
+      ? 'Its side gives <span>no clear direction</span> read.'
+      : 'Read as a bet that the index <span class="' + dirClass + '">' +
+        esc(p.direction_words) + '</span>.';
+    var h = '<div class="print"><div class="top">' +
+      '<span class="when">' + esc(fmtDateShort(p.session)) + ', ' +
+      esc(fmtTimeET(p.time_utc)) + '</span>' +
+      '<span class="contract">' + contractWords + '</span>' +
+      '<span class="code">' + esc(p.contract_code) + '</span>' +
+      ' <span class="tag">Golden sweep</span>' +
+      '<span class="facts">Premium <strong>' + fmtMoney(p.premium_usd) +
+      '</strong></span></div>';
+    h += '<p><strong>' + Number(p.contracts).toLocaleString("en-US") +
+      ' contracts</strong> changed hands at ' + fmtPrice(p.price_per_contract) +
+      ' per contract, <strong>' + fmtMoney(p.premium_usd) + '</strong> in total. ' +
+      esc(p.side_words) + '. ' + dirSentence + '</p>';
+    h += '<p class="receipt">Receipt: ' + receiptLine(p.receipt) + '</p>';
+    h += '</div>';
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var counts = data.counts || {};
+      var prints = data.prints || [];
+      var sessions = data.sessions || [];
+      var decision = data.decision || {};
+      if (!sessions.length){
+        meta.textContent = "";
+        wireEl.innerHTML = '<div class="nodata">No trading day has been recorded yet. ' +
+          'When a day\'s tape is published, it is counted here, and any golden sweep ' +
+          'on it is listed with its receipt. The wire is never shown without the ' +
+          'trading days it rests on.</div>';
+        return;
+      }
+      meta.textContent = "Freshest recorded trading day: " + fmtDateLong(data.freshest_session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+
+      var needed = counts.sessions_needed;
+      var recorded = counts.sessions_recorded;
+      var remaining = counts.sessions_remaining;
+      var golden = counts.golden_prints;
+      var decisionWords = decision.decision_date
+        ? fmtDateLong(decision.decision_date) : "the date set for it";
+      counterEl.innerHTML = "<h2>The count toward a verdict</h2>" +
+        "<p><strong>" + recorded + " of the " + needed + " trading days</strong> needed " +
+        "are on record so far, <strong>" + remaining + " to go</strong>. " +
+        "Golden prints found so far: <strong>" + golden + "</strong>.</p>" +
+        "<p>The wire earns its verdict on <strong>" + decisionWords + "</strong>, or when " +
+        "all " + needed + " recorded trading days are complete, whichever the record reaches. " +
+        "Until then the wire keeps the count and lists every print that clears the bar.</p>";
+      counterEl.hidden = false;
+
+      if (data.freshest_session < latestCompletedSession()){
+        showBanner("stale", "This wire is out of date. Its freshest recorded trading day is " +
+          fmtDateLong(data.freshest_session) + ", and a newer day has not been recorded yet. " +
+          "Treat it as the last recorded wire, not today's.");
+      }
+
+      if (!prints.length){
+        wireEl.innerHTML = '<section class="group"><h2>Golden prints on record</h2>' +
+          '<div class="nodata">No golden sweeps are on record yet: in the ' + recorded +
+          ' trading days recorded so far, no print on SPY, QQQ or IWM has cleared the full ' +
+          'golden sweep bar at once. Zero is a real and common state for this print type: ' +
+          'the bar asks for a single sweep as large as a contract\'s whole open interest ' +
+          'with at least $1 million in it, and most days nothing comes close. An empty wire ' +
+          'is the honest default for this tool, and it stays empty until a print truly ' +
+          'clears the bar.</div></section>';
+      } else {
+        wireEl.innerHTML = '<section class="group"><h2>Golden prints on record</h2>' +
+          '<p class="receipt">' + prints.length + (prints.length === 1
+            ? ' golden print' : ' golden prints') +
+          ' on record, biggest money first within each day.</p>' +
+          prints.map(printHTML).join("") + '</section>';
+      }
+
+      var sh = "<h2>Recorded trading days</h2>" +
+        "<p>Every trading day the tape has run counts once toward the " + needed +
+        ", however many times it ran that day. The freshest run of each day is the one kept.</p>";
+      sh += sessions.map(function(s){
+        return '<div class="session"><strong>' + fmtDateLong(s.session) + '</strong>: ' +
+          Number(s.prints_looked_at).toLocaleString("en-US") + ' prints looked at, ' +
+          s.golden_prints + (s.golden_prints === 1 ? ' golden sweep' : ' golden sweeps') +
+          ' found.<p class="receipt">Receipt: ' + receiptLine(s.receipt) + '</p></div>';
+      }).join("");
+      sessionsEl.innerHTML = sh;
+      sessionsEl.hidden = false;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The wire is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
