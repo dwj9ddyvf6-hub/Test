@@ -1,0 +1,973 @@
+{
+  "as_of": "2026-10-30",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 0,
+      "graded_forecasts": 0,
+      "recorded_on": "2026-10-31",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_24",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": null
+  },
+  "checks": [
+    {
+      "name": "A deep dip, by the stock's own measure",
+      "words": "Today's pullback, measured from the highest close of the last 63 trading days in units of the stock's own typical daily range, sits in the deepest fifth of that stock's own earlier pullbacks."
+    },
+    {
+      "name": "A gap that fills much of the day's range",
+      "words": "The size of the fear day's opening jump from the previous close, as a share of the day's whole high-to-low range, sits in the top third of that day's rising-trend stocks."
+    },
+    {
+      "name": "No insider selling on record",
+      "words": "The stock's insider summary shows zero open-market sells. A stock with no summary at all does not pass: no record is not the same as no selling."
+    }
+  ],
+  "claim": {
+    "control_stated_r": 0.29,
+    "margin_r": 0.1,
+    "r_explained": "R measures a result in units of what was risked: a trade that risks 2 points to make 3 scores +1.5R, and one that loses its full risk scores -1R.",
+    "triple_stated_r": 0.39,
+    "words": "On a fear day, rising-trend stocks that pass all three checks will beat the random-entry comparison by at least +0.10R on average over the next 20 trading days, using the same entry and exit rules as the earlier replay."
+  },
+  "control_history": {
+    "label": "The earlier replay: picked against random on fear days",
+    "note": "That replay used a wider fear cut (days SPY fell at least 1%) than this engine's fear-day definition, and its own years (2019 to 2026, 3,446 names, 296,093 cases). Its picked groups averaged between +0.25R and +0.36R while random entries in the same names averaged between +0.34R and +0.38R: picking carefully did not beat picking at random, which is the result this engine is testing whether three checks can overturn.",
+    "picked_range_r": [
+      0.247,
+      0.356
+    ],
+    "random_range_r": [
+      0.339,
+      0.384
+    ],
+    "rows": [
+      {
+        "cases": 5998,
+        "group": "A0",
+        "picked_mean_r": 0.285,
+        "random_mean_r": 0.384
+      },
+      {
+        "cases": 5264,
+        "group": "A1",
+        "picked_mean_r": 0.276,
+        "random_mean_r": 0.339
+      },
+      {
+        "cases": 6574,
+        "group": "A2",
+        "picked_mean_r": 0.247,
+        "random_mean_r": 0.36
+      },
+      {
+        "cases": 7930,
+        "group": "A3",
+        "picked_mean_r": 0.356,
+        "random_mean_r": 0.357
+      }
+    ]
+  },
+  "definitions": {
+    "depth_narrowing": "The original study judged each dip against about three years of the stock's own past dips. The price history here holds at most 399 trading days per stock, so this engine judges each dip against the stock's own earlier dips on this record, at most about a year and a half of them, with the typical range taken over the last 126 days and at least 126 earlier dips required. The line for the deepest fifth is noisier that way, and the study's figures belong to the long-history version, not to this one.",
+    "exits": "Bought at the next open after the fear day. Sold when a close falls under the fear day's low by more than a quarter of the stock's typical daily range (sold at the next open), or when price reaches the nearest earlier high that stands at least three quarters of a typical range above the entry, or after 20 trading days, whichever comes first. If one day both reaches the high and closes under the stop, the stop wins. Two pieces are this engine's fixed readings, printed here: the stop level is the fear day's low, and the typical range is the average of the last 14 days' ranges.",
+    "fear_day": "A fear day is a day when SPY fell more than 1.5%, or the fear gauge (the VIX) rose more than 15% in a day, closed at 25 or higher, or closed at 20 or higher on a day when SPY or QQQ fell.",
+    "fear_day_arms": [
+      "SPY fell more than 1.5% in a day",
+      "the fear gauge rose more than 15% in a day",
+      "the fear gauge closed at 25 or higher",
+      "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+    ],
+    "gap_share": "The gap study's exact formula is not on record here, so this engine uses its own, printed in the checks above, and says so. Its top-third cut is worked out across each fear day's rising-trend stocks on the day.",
+    "insider": {
+      "gathered": "2026-10-30",
+      "names_not_on_record": 11,
+      "names_tracked": 100,
+      "names_with_summary": 89,
+      "open_buys": 59,
+      "open_sells": 886,
+      "window": "Filings filed in the six months before the gathering date, up to the 20 most recent filings per name",
+      "window_start": "2026-04-30",
+      "words": "Insider readings are summaries only: counts and dollar totals from the filings in the six months before the gathering date, up to the 20 most recent per name. Only the 50 tracked names carry one, against 1,832 stocks in the price history, so most stocks can never pass or fail this check. The gathering date above is the record's age: a group formed later reads the newest gathering then on file and prints its date.",
+      "zero_sell_names": [
+        "ADT",
+        "COTY",
+        "DXC",
+        "EGBN",
+        "HAE",
+        "LNG",
+        "LW",
+        "MUR",
+        "NWE",
+        "OPCH",
+        "OXY",
+        "SAIC",
+        "SU",
+        "VFC",
+        "VRNS"
+      ]
+    },
+    "random_draw": "The comparison group is drawn by a fixed rule, never by hand: the day's rising-trend stocks in alphabetical order, the deep-dip group removed, and a draw seeded with the fear day's date picking exactly as many names as the deep-dip group holds.",
+    "rising_trend": "The close is above both its 21 day and 50 day average closes, and the 50 day average is higher than it was 5 days earlier. The earlier replay states its rising-trend rule only as a short phrase; this is the fixed reading of that phrase, printed here so it can be checked."
+  },
+  "depth_leg_deep_panel": {
+    "bar_note": "Engine 24's +0.10R claim bar is stated in the picker replay's risk units, not in this leg's typical range units, so no bar is applied to these figures; the engine's own live grading judges its claim in its own units.",
+    "cohort_events": 400,
+    "cohort_mean_fwd20_r": -0.6834,
+    "control_mean_fwd20_r": -0.0522,
+    "control_name_days": 119954,
+    "difference_r": -0.6313,
+    "fear_days_in_gauge_era": 81,
+    "fear_days_with_cohort": 76,
+    "note": "Deepest fifth cohort against the same day rising trend control on the DEEP panel, 20 session forward returns in units of each name's own typical range percent. Fear days use the Fear Day List's own definition over the fear gauge record from 2024-10-30.",
+    "original_form_computable_events": 1755,
+    "state": "recorded"
+  },
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: direction, over 20 sessions, fear-day cohorts. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if , pre-registered as the engine's own verdict: if the triple conjunction does not beat the single best component (F3 alone) once three cohorts mature, triangulation adds nothing and the engine retires itself. It counts as proven at three matured fear-day cohorts.",
+    "summary": "On fear days, test whether stocks that pass three different checks beat stocks picked at random, and retire itself if they do not."
+  },
+  "family_discount": "The three checks are not three independent confirmations. The dip and the gap are both read from the same price history, so together they count as about one family of evidence; the insider check is a second kind. All three together count as at most one and a half families, never three.",
+  "fear_days_in_record": {
+    "count": 66,
+    "days": [
+      {
+        "date": "2025-03-28",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -2.01,
+        "vix_change_pct": 15.8,
+        "vix_close": 21.649999618530273
+      },
+      {
+        "date": "2025-03-31",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": 0.67,
+        "vix_change_pct": 2.9,
+        "vix_close": 22.280000686645508
+      },
+      {
+        "date": "2025-04-03",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -4.93,
+        "vix_change_pct": 39.6,
+        "vix_close": 30.020000457763672
+      },
+      {
+        "date": "2025-04-04",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -5.85,
+        "vix_change_pct": 50.9,
+        "vix_close": 45.310001373291016
+      },
+      {
+        "date": "2025-04-07",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.18,
+        "vix_change_pct": 3.7,
+        "vix_close": 46.97999954223633
+      },
+      {
+        "date": "2025-04-08",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.57,
+        "vix_change_pct": 11.4,
+        "vix_close": 52.33000183105469
+      },
+      {
+        "date": "2025-04-09",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 10.5,
+        "vix_change_pct": -35.8,
+        "vix_close": 33.619998931884766
+      },
+      {
+        "date": "2025-04-10",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -4.38,
+        "vix_change_pct": 21.1,
+        "vix_close": 40.720001220703125
+      },
+      {
+        "date": "2025-04-11",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 1.78,
+        "vix_change_pct": -7.8,
+        "vix_close": 37.560001373291016
+      },
+      {
+        "date": "2025-04-14",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 0.97,
+        "vix_change_pct": -17.8,
+        "vix_close": 30.889999389648438
+      },
+      {
+        "date": "2025-04-15",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.28,
+        "vix_change_pct": -2.5,
+        "vix_close": 30.1200008392334
+      },
+      {
+        "date": "2025-04-16",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -2.22,
+        "vix_change_pct": 8.4,
+        "vix_close": 32.63999938964844
+      },
+      {
+        "date": "2025-04-17",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": 0.14,
+        "vix_change_pct": -9.2,
+        "vix_close": 29.649999618530273
+      },
+      {
+        "date": "2025-04-21",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -2.38,
+        "vix_change_pct": 14.1,
+        "vix_close": 33.81999969482422
+      },
+      {
+        "date": "2025-04-22",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 2.6,
+        "vix_change_pct": -9.6,
+        "vix_close": 30.56999969482422
+      },
+      {
+        "date": "2025-04-23",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 1.55,
+        "vix_change_pct": -6.9,
+        "vix_close": 28.450000762939453
+      },
+      {
+        "date": "2025-04-24",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 2.1,
+        "vix_change_pct": -7.0,
+        "vix_close": 26.469999313354492
+      },
+      {
+        "date": "2025-04-28",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": 0.04,
+        "vix_change_pct": 1.2,
+        "vix_close": 25.149999618530273
+      },
+      {
+        "date": "2025-04-30",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": 0.04,
+        "vix_change_pct": 2.2,
+        "vix_close": 24.700000762939453
+      },
+      {
+        "date": "2025-05-05",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.57,
+        "vix_change_pct": 4.2,
+        "vix_close": 23.639999389648438
+      },
+      {
+        "date": "2025-05-06",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.84,
+        "vix_change_pct": 4.7,
+        "vix_close": 24.760000228881836
+      },
+      {
+        "date": "2025-05-09",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.13,
+        "vix_change_pct": -2.6,
+        "vix_close": 21.899999618530273
+      },
+      {
+        "date": "2025-05-21",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.69,
+        "vix_change_pct": 15.4,
+        "vix_close": 20.8700008392334
+      },
+      {
+        "date": "2025-05-23",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.68,
+        "vix_change_pct": 9.9,
+        "vix_close": 22.290000915527344
+      },
+      {
+        "date": "2025-06-13",
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.12,
+        "vix_change_pct": 15.5,
+        "vix_close": 20.81999969482422
+      },
+      {
+        "date": "2025-06-17",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.85,
+        "vix_change_pct": 13.0,
+        "vix_close": 21.600000381469727
+      },
+      {
+        "date": "2025-06-18",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.02,
+        "vix_change_pct": -6.8,
+        "vix_close": 20.139999389648438
+      },
+      {
+        "date": "2025-06-20",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.53,
+        "vix_change_pct": 2.4,
+        "vix_close": 20.6200008392334
+      },
+      {
+        "date": "2025-08-01",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.64,
+        "vix_change_pct": 21.9,
+        "vix_close": 20.3799991607666
+      },
+      {
+        "date": "2025-10-10",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -2.7,
+        "vix_change_pct": 31.8,
+        "vix_close": 21.65999984741211
+      },
+      {
+        "date": "2025-10-14",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.12,
+        "vix_change_pct": 9.4,
+        "vix_close": 20.809999465942383
+      },
+      {
+        "date": "2025-10-16",
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.68,
+        "vix_change_pct": 22.6,
+        "vix_close": 25.309999465942383
+      },
+      {
+        "date": "2025-11-13",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.66,
+        "vix_change_pct": 14.2,
+        "vix_close": 20.0
+      },
+      {
+        "date": "2025-11-17",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.93,
+        "vix_change_pct": 12.9,
+        "vix_close": 22.3799991607666
+      },
+      {
+        "date": "2025-11-18",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.84,
+        "vix_change_pct": 10.3,
+        "vix_close": 24.690000534057617
+      },
+      {
+        "date": "2025-11-20",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.52,
+        "vix_change_pct": 11.7,
+        "vix_close": 26.420000076293945
+      },
+      {
+        "date": "2026-01-20",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -2.04,
+        "vix_change_pct": 26.7,
+        "vix_close": 20.09000015258789
+      },
+      {
+        "date": "2026-02-05",
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.25,
+        "vix_change_pct": 16.8,
+        "vix_close": 21.770000457763672
+      },
+      {
+        "date": "2026-02-12",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.54,
+        "vix_change_pct": 18.0,
+        "vix_close": 20.81999969482422
+      },
+      {
+        "date": "2026-02-17",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": 0.16,
+        "vix_change_pct": -1.5,
+        "vix_close": 20.290000915527344
+      },
+      {
+        "date": "2026-02-19",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.26,
+        "vix_change_pct": 3.1,
+        "vix_close": 20.229999542236328
+      },
+      {
+        "date": "2026-02-23",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.02,
+        "vix_change_pct": 10.1,
+        "vix_close": 21.010000228881836
+      },
+      {
+        "date": "2026-03-03",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.88,
+        "vix_change_pct": 9.9,
+        "vix_close": 23.56999969482422
+      },
+      {
+        "date": "2026-03-05",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.56,
+        "vix_change_pct": 12.3,
+        "vix_close": 23.75
+      },
+      {
+        "date": "2026-03-06",
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.31,
+        "vix_change_pct": 24.2,
+        "vix_close": 29.489999771118164
+      },
+      {
+        "date": "2026-03-09",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 0.88,
+        "vix_change_pct": -13.5,
+        "vix_close": 25.5
+      },
+      {
+        "date": "2026-03-10",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.16,
+        "vix_change_pct": -2.2,
+        "vix_close": 24.93000030517578
+      },
+      {
+        "date": "2026-03-11",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.13,
+        "vix_change_pct": -2.8,
+        "vix_close": 24.229999542236328
+      },
+      {
+        "date": "2026-03-12",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.52,
+        "vix_change_pct": 12.6,
+        "vix_close": 27.290000915527344
+      },
+      {
+        "date": "2026-03-13",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.57,
+        "vix_change_pct": -0.4,
+        "vix_close": 27.190000534057617
+      },
+      {
+        "date": "2026-03-18",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.4,
+        "vix_change_pct": 12.2,
+        "vix_close": 25.09000015258789
+      },
+      {
+        "date": "2026-03-19",
+        "qualified_by": [
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.25,
+        "vix_change_pct": -4.1,
+        "vix_close": 24.059999465942383
+      },
+      {
+        "date": "2026-03-20",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.7,
+        "vix_change_pct": 11.3,
+        "vix_close": 26.780000686645508
+      },
+      {
+        "date": "2026-03-23",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 1.05,
+        "vix_change_pct": -2.4,
+        "vix_close": 26.149999618530273
+      },
+      {
+        "date": "2026-03-24",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.34,
+        "vix_change_pct": 3.1,
+        "vix_close": 26.950000762939453
+      },
+      {
+        "date": "2026-03-25",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 0.56,
+        "vix_change_pct": -6.0,
+        "vix_close": 25.329999923706055
+      },
+      {
+        "date": "2026-03-26",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.79,
+        "vix_change_pct": 8.3,
+        "vix_close": 27.440000534057617
+      },
+      {
+        "date": "2026-03-27",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.71,
+        "vix_change_pct": 13.2,
+        "vix_close": 31.049999237060547
+      },
+      {
+        "date": "2026-03-30",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -0.33,
+        "vix_change_pct": -1.4,
+        "vix_close": 30.610000610351562
+      },
+      {
+        "date": "2026-03-31",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 2.91,
+        "vix_change_pct": -17.5,
+        "vix_close": 25.25
+      },
+      {
+        "date": "2026-04-07",
+        "qualified_by": [
+          "the fear gauge closed at 25 or higher"
+        ],
+        "spy_change_pct": 0.04,
+        "vix_change_pct": 6.7,
+        "vix_close": 25.780000686645508
+      },
+      {
+        "date": "2026-06-05",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge rose more than 15% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -2.58,
+        "vix_change_pct": 39.7,
+        "vix_close": 21.510000228881836
+      },
+      {
+        "date": "2026-06-10",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.58,
+        "vix_change_pct": 11.8,
+        "vix_close": 22.219999313354492
+      },
+      {
+        "date": "2026-07-29",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day",
+          "the fear gauge closed at 20 or higher on a day SPY or QQQ fell"
+        ],
+        "spy_change_pct": -1.54,
+        "vix_change_pct": 13.5,
+        "vix_close": 20.65999984741211
+      },
+      {
+        "date": "2026-10-16",
+        "qualified_by": [
+          "the fear gauge rose more than 15% that day"
+        ],
+        "spy_change_pct": -1.11,
+        "vix_change_pct": 21.4,
+        "vix_close": 19.989999771118164
+      },
+      {
+        "date": "2026-10-30",
+        "qualified_by": [
+          "SPY fell more than 1.5% that day"
+        ],
+        "spy_change_pct": -1.77,
+        "vix_change_pct": 12.9,
+        "vix_close": 19.420000076293945
+      }
+    ],
+    "tool_record": {
+      "days": [
+        {
+          "date": "2026-10-16",
+          "fear_gauge_change_pct": 21.4,
+          "fear_gauge_close": 19.99,
+          "qqq_change_pct": -2.5,
+          "qualified_by": [
+            "the fear gauge rose more than 15% that day"
+          ],
+          "spy_change_pct": -1.1
+        }
+      ],
+      "qualifying": 1,
+      "sessions_checked": 4
+    },
+    "words": "The Fear Day List's own published record covers a short recent window and holds 1 qualifying day. Run over the fuller price history here, the same definition finds 66 fear days, every one of them before this engine existed. All are history: none is in the live record, and none ever will be backfilled. The fear gauge arms can only be judged inside the gauge record's window (2024-10-30 to 2026-10-30); outside it, only a fall of more than 1.5% in SPY can make a day a fear day in this record."
+  },
+  "fear_gauge": {
+    "from": "2024-10-30",
+    "readings": 504,
+    "to": "2026-10-30"
+  },
+  "feed": "forecast_ledger",
+  "history_day": {
+    "date": "2026-10-16",
+    "depth_only": [
+      {
+        "depth_percentile": 87.2,
+        "gap_share": 0.0519,
+        "symbol": "BTSG"
+      }
+    ],
+    "depth_too_short_count": 0,
+    "gap_top_third_cut": 0.2789,
+    "label": "History, worked in full, never recorded",
+    "pool_count": 325,
+    "qualified_by": [
+      "the fear gauge rose more than 15% that day"
+    ],
+    "random_draw": [
+      "CRC"
+    ],
+    "spy_change_pct": -1.11,
+    "triple": [],
+    "vix_change_pct": 21.4,
+    "vix_close": 19.989999771118164,
+    "words": "On the one fear day in the Fear Day List's own record, 325 stocks were in a rising trend. Exactly one sat in the deepest fifth of its own past dips, and it carried no insider record at all, so the group passing all three checks was empty and no group could have started. Six of the seven zero-selling names were in the rising-trend pool; none was in the deepest fifth. This day can never be graded: the price history ends 10 trading days after its entry, not 20, and the insider record was gathered after it. It is shown as history only.",
+    "zero_sell_names_in_pool": [
+      "COTY",
+      "DXC",
+      "EGBN",
+      "HAE",
+      "LNG",
+      "MUR",
+      "NWE",
+      "OPCH",
+      "OXY",
+      "SAIC",
+      "SU",
+      "VFC",
+      "VRNS"
+    ]
+  },
+  "idea": "A fear day lifts almost everything: in the earlier replay, stocks picked carefully on fear days did no better than entries picked at random in the same names. So the real question is not whether fear days are good days to buy. It is whether picking carefully on those days, using three different kinds of check, beats picking at random. This page runs that test in public, one fear day at a time, and retires itself if the answer is no.",
+  "kill_criterion": "This engine retires itself if, once three fear-day groups have matured, the group passing all three checks does not beat the group passing the deep-dip check alone. Its separate claim, to beat the random group by at least +0.10R, is graded on the same groups.",
+  "live": {
+    "arm_means": {},
+    "cohorts_formed": 0,
+    "cohorts_matured": 0,
+    "freshest_note": "The freshest session was a fear day, but no stock passed all three checks, so no group started and nothing was recorded.",
+    "freshest_session": "2026-10-30",
+    "missed_fear_days": [],
+    "proving_target_cohorts": 3,
+    "records_graded": 0,
+    "records_written": 0,
+    "wait": "No group has started yet. The live record begins with the first fear day after 2026-10-29 on which at least one rising-trend stock passes all three checks: that day, the all-three group, the deep-dip-only group and the fixed-rule random group are all written to the public record at the close, before the 20 trading days begin. Fear days are rare, so this record builds slowly, in quarters rather than weeks."
+  },
+  "price_basis": "close",
+  "price_history": {
+    "from": "2025-03-25",
+    "names": 1833,
+    "sessions": 404,
+    "to": "2026-10-30"
+  },
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 0,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_24",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of",
+        "calibration_attestation",
+        "checks",
+        "claim",
+        "control_history",
+        "definitions",
+        "depth_leg_deep_panel",
+        "execution_pricing",
+        "explanation",
+        "family_discount",
+        "fear_days_in_record",
+        "fear_gauge",
+        "feed",
+        "history_day",
+        "idea",
+        "kill_criterion",
+        "live",
+        "price_basis",
+        "price_history",
+        "provenance",
+        "record_surface",
+        "retired",
+        "self_test",
+        "source",
+        "state",
+        "thin_cell_rule",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_24",
+      "forecasts": 0,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 8,
+          "path": "/control_history"
+        }
+      ],
+      "total_items_counted": 8
+    },
+    "version": 1
+  },
+  "retired": false,
+  "self_test": {
+    "exit_cases_checked": 4,
+    "ledger_arms_checked": 3,
+    "state": "passed"
+  },
+  "source": "The daily price history on record (1,833 names, 2025-03-25 to 2026-10-30), the fear gauge's daily readings (2024-10-30 to 2026-10-30), the insider record gathered 2026-10-30, and the earlier replay of picked against random entries.",
+  "state": "proving",
+  "thin_cell_rule": "Any group with fewer than 30 graded stocks shows its count only, with no average R headline.",
+  "tool": "Fear-Day Triangulation"
+}
