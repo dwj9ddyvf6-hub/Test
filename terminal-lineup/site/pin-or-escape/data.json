@@ -1,0 +1,259 @@
+{
+  "arms_today": {
+    "morning": null,
+    "recorded_today": 0,
+    "state": "formed from the recorded morning"
+  },
+  "as_of": "2026-10-30",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "2 graded forecasts of 4 recorded on the ledger (mean scores: abs_error 0.0133, brier 0.1132, log_loss 0.4101, signed_error -0.0133); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 4,
+      "graded_forecasts": 2,
+      "recorded_on": "2026-10-31",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_27",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": null
+  },
+  "claim": {
+    "arm_a_claim_pct": 40.0,
+    "arm_b_claim_pct": 20.0,
+    "band_pct": 0.25,
+    "proximity_pct": 0.3,
+    "words": "Into a weekly expiry, when the fund opens within 0.3 percent of the pin and the dealers' net position is positive and the premium for protection is in its cheaper half: the fund closes within plus or minus 0.25 percent of the pin in at least 40 percent of weeks. In the same closeness to the pin with the dealers' net position negative: it closes inside that band in at most 20 percent of weeks."
+  },
+  "companions": {
+    "expected_moves": {
+      "IWM": {
+        "as_of": "2026-10-30",
+        "daily_pct": 1.2634,
+        "em_pct": 1.0991
+      },
+      "QQQ": {
+        "as_of": "2026-10-30",
+        "daily_pct": 2.4519,
+        "em_pct": 2.1331
+      },
+      "SPY": {
+        "as_of": "2026-10-30",
+        "daily_pct": 1.232,
+        "em_pct": 1.0718
+      }
+    },
+    "words": "On the same mornings, for each of the three index funds, two more forecasts are written down: the chance the close lands more than half an expected move away from the pin, and the predicted distance from the close to the pin, in percent. An expected move is the typical one-day move the first forecast engine on this site works out for each fund."
+  },
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution and probability, over weekly expiry session. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 52 weeks, the two arms' in-band rates are statistically indistinguishable. It counts as proven at 52 weeks.",
+    "summary": "Forecast whether the expiry pin holds, given the dealer's book, instead of publishing the pin level as if naming it were the forecast."
+  },
+  "failure_score": {
+    "parts": {
+      "event_in_session": "no",
+      "gap_beyond_neighbourhood": "not readable",
+      "negative_pull_at_pin": "not readable",
+      "weak_pin": "not readable"
+    },
+    "parts_readable_today": 1,
+    "parts_words": {
+      "event_in_session": "a big scheduled event falls inside the expiry day",
+      "gap_beyond_neighbourhood": "the day opens beyond the pin strike's neighbourhood",
+      "negative_pull_at_pin": "dealers' position at the pin strike is negative",
+      "weak_pin": "the pin strike holds fewer open contracts than its neighbours' middle"
+    },
+    "score_today": 0,
+    "words": "One warning score, fixed in advance and never adjusted week by week: one point each when the dealers' position at the pin strike itself is negative, when a big scheduled event falls inside the expiry day, when the day opens with a gap beyond the pin strike's own neighbourhood (one strike step either side of it), and when the pin strike holds fewer open contracts than the middle of its nearest neighbours, which makes it a weak pin. The higher the score, the more ways the pin has to fail that week."
+  },
+  "feed": "tastytrade_chain_snapshot",
+  "idea": "On the day a week's options run out, the price of the big S&P 500 fund often ends the day very close to one strike price, the level where the most contracts are still open. That level is called the pin. Most pin products simply publish the level, as if naming it were the forecast. It is not. Whether the pin holds depends on the position of the dealers on the other side of those contracts: when their book makes them buy as price falls and sell as it rises, price gets pulled back toward the pin; when their book works the other way, moves get pushed away from it. This page forecasts whether the pin holds, given the dealer's book, and grades both answers in public.",
+  "kill_criterion": "After 52 weeks have been counted, if the two arms' rates for closing inside the band cannot be told apart, this tool retires. Both arms have to be filled for that test to run at all.",
+  "live": {
+    "arm_a": {
+      "graded": 0,
+      "hits": 0,
+      "rate_pct": null,
+      "recorded": 0,
+      "thin": true
+    },
+    "arm_b": {
+      "graded": 0,
+      "hits": 0,
+      "rate_pct": null,
+      "recorded": 0,
+      "thin": true
+    },
+    "arms_gap_z": null,
+    "baseline": {
+      "graded": 0,
+      "hits": 0,
+      "rate_pct": null,
+      "recorded": 0,
+      "thin": true
+    },
+    "proving_target_weeks": 52,
+    "records_graded": 2,
+    "records_written": 4,
+    "wait": "The first expiry morning is on record: 4 companion forecast(s) written and 2 graded. The two arms themselves fill only on weekly expiry mornings when a fund opens near its pin, so their counts can still read zero while the companions grade. From then on, each weekly expiry morning the fund opens near its pin, this page writes down its two arms, its plain near-pin row and its two companion forecasts for each of the three index funds (about three index forecasts a week), before that day's close, and grades them at the close against the plain near-pin rate. One caution is printed in advance: on every map session on record the dealers' net position has been negative for all three funds, so the positive arm may fill slowly, and the 52-week verdict needs both arms filled.",
+    "weeks": [
+      "2026-10-29"
+    ],
+    "weeks_counted": 1
+  },
+  "map_built": "2026-10-31T06:07:55.997152+00:00",
+  "map_session": "2026-10-30",
+  "pin_state": {
+    "chain_snapshots_on_record": 6,
+    "pins_on_record": 3,
+    "state": "pins_on_record",
+    "words": "Pins are on record: 3 pin(s) from 6 kept chain snapshot(s) carrying the dated count of contracts still open at each strike. A pin is read from that kept count only: no wall, no strongest strike and no flip level is ever shown or used as a pin."
+  },
+  "price_basis": "snapshot",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "tastytrade_chain_snapshot",
+    "price_basis": "snapshot",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "readings": {
+    "funds": [
+      {
+        "call_wall": 800.0,
+        "flip": 768.82,
+        "fund": "SPY",
+        "net_pull_billions": -3.94,
+        "net_pull_sign": "negative",
+        "net_pull_usd_per_1pct": -3939211633,
+        "next_expiry_pull_usd": -274362028,
+        "price": 756.0,
+        "put_wall": 750.0
+      },
+      {
+        "call_wall": 725.0,
+        "flip": 714.21,
+        "fund": "QQQ",
+        "net_pull_billions": -2.87,
+        "net_pull_sign": "negative",
+        "net_pull_usd_per_1pct": -2866452469,
+        "next_expiry_pull_usd": -138460297,
+        "price": 690.71,
+        "put_wall": 680.0
+      },
+      {
+        "call_wall": 290.0,
+        "flip": 291.83,
+        "fund": "IWM",
+        "net_pull_billions": -2.48,
+        "net_pull_sign": "negative",
+        "net_pull_usd_per_1pct": -2484461005,
+        "next_expiry_pull_usd": 21076890,
+        "price": 279.75,
+        "put_wall": 270.0
+      }
+    ],
+    "next_expiry": "2026-11-02",
+    "next_expiry_events": [],
+    "variance_premium": {
+      "from": "2025-04-25",
+      "gauge_from": "1990-01-02",
+      "gauge_rows": 9257,
+      "gauge_to": "2026-10-01",
+      "latest": 0.0162,
+      "latest_in_bottom_half": false,
+      "middle_before_latest": 0.0153,
+      "sessions_computed": 362,
+      "spy_history_from": "2025-03-25",
+      "spy_history_to": "2026-10-30",
+      "spy_sessions": 404,
+      "to": "2026-10-02"
+    },
+    "variance_words": "The premium for protection is worked out here because no such series is kept anywhere: for each trading day, the fear gauge's implied swing for the month ahead minus the swing the fund actually made over the prior 21 trading days. It is computable only where the fund's shipped history (399 trading days, from March 25, 2025) meets the gauge file, and only through the gauge file's last day, October 1, 2026: that overlap, not any longer span, is what is printed."
+  },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "2 graded forecasts of 4 recorded on the ledger (mean scores: abs_error 0.0133, brier 0.1132, log_loss 0.4101, signed_error -0.0133); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 4,
+        "graded_forecasts": 2,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_27",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "arms_today",
+        "as_of",
+        "calibration_attestation",
+        "claim",
+        "companions",
+        "execution_pricing",
+        "explanation",
+        "failure_score",
+        "feed",
+        "idea",
+        "kill_criterion",
+        "live",
+        "map_built",
+        "map_session",
+        "pin_state",
+        "price_basis",
+        "provenance",
+        "readings",
+        "record_surface",
+        "retired",
+        "self_test",
+        "source",
+        "state",
+        "thin_cell_rule",
+        "tool"
+      ]
+    },
+    "feed": "tastytrade_chain_snapshot",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_27",
+      "forecasts": 4,
+      "grades": 2,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 4 forecasts are on record and 2 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "tastytrade_chain_snapshot",
+      "price_basis": "snapshot",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
+  "retired": false,
+  "self_test": {
+    "feature_cases_checked": 9,
+    "ledger_rows_checked": 4,
+    "state": "passed"
+  },
+  "source": "The pin watch record checked 2026-10-30, the morning map card built 2026-10-31T06:07:55.997152+00:00 (its readings are for the session of 2026-10-30), the week ahead record assembled 2026-10-25 (coverage 2026-01-01 to 2027-12-31), the shipped daily price history (2025-03-25 to 2026-10-30) and the long daily fear-gauge file (1990-01-02 to 2026-10-01).",
+  "state": "proving",
+  "thin_cell_rule": "Any arm, and the plain near-pin row, with fewer than 30 graded weeks shows its count only, with no rate headline. The same holds for each fund's companion figures.",
+  "tool": "Pin-or-Escape"
+}
