@@ -83,9 +83,15 @@ try:
     import terminal_common as _tc
 except ImportError:  # refresh stays runnable standalone
     _tc = None
+
+try:
+    import session_history as _sh
+except ImportError:  # refresh stays runnable standalone
+    _sh = None
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+HISTORY_PATH = os.path.join(HERE, "gamma-ladder", "session-history.json")
 WORKSPACE = os.path.dirname(os.path.dirname(HERE))
 MAP_DATA_PATH = os.path.join(HERE, "morning-map", "data.json")
 PINWATCH_PATH = os.path.join(HERE, "expiry-pin-watch", "data.json")
@@ -399,6 +405,22 @@ def build():
                 return fail(f"assembled data carries internal "
                             f"wording ({bad!r}); refusing to "
                             "publish.")
+
+    # Session keeping (2026-10-31, Wave 3 Item F): past ladders
+    # were not kept, so the record chart had nothing to draw. From
+    # this run forward, each refresh appends a dated snapshot of
+    # the charted subject values (the first fund's strike ladder)
+    # to the page's session-history store and carries the kept
+    # list on the page data. Nothing before this run is
+    # reconstructed.
+    if _sh is not None and funds:
+        f0 = funds[0]
+        data["session_history"] = _sh.append_session(
+            HISTORY_PATH, session,
+            {"symbol": f0["symbol"],
+             "rungs": [{"strike": r.get("strike"),
+                        "pull": r.get("pull")}
+                       for r in f0.get("rungs") or []]})
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     tmp = OUT_PATH + ".tmp"
