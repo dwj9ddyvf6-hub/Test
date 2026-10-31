@@ -35,11 +35,14 @@ first trading day on or after the filing, against the close just
 before it), not a multi-day drift window.
 
 Scope: this page states what the counted stocks did on their
-report days in the history on record. The individual report dates
-and the individual moves are not in the record the study left
-behind (only its pooled summary is), so neither is shown and
-neither is invented. Tonight's and last night's reporting names are
-not in the record either, so no such list is shown.
+report days in the history on record. The record the study left
+behind carries only its pooled summary, but every event it
+counted is recomputable from the same public filings the study
+used and the price history on record in this lane (the DEEP
+panel): the refresh recomputes the per-event rows and publishes
+them only when they reproduce the study's pooled figures exactly
+(cure 2026-10-31). Tonight's and last night's reporting names are
+not in the record, so no such list is shown.
 
 Fail-closed rules: if the studies card, the published feed's
 summary of the same study, and the permanent log's freshest graded
@@ -69,7 +72,8 @@ import math
 import os
 import re
 import sys
-from datetime import datetime
+import urllib.request
+from datetime import datetime, timedelta
 
 try:
     import terminal_common as _tc
@@ -93,9 +97,88 @@ SOURCE_WORDS = ("Report dates from the three companies' public "
                 "study ran, completed trading days only")
 
 
+EDGAR_CACHE = os.path.expanduser(
+    "~/workspace/morgue/data_cache/edgar/company_tickers.json")
+PANEL_PATH = os.path.expanduser(
+    "~/workspace/morgue/data_cache/deep_bars.json")
+EDGAR_UA = {"User-Agent": "Morgue Engine (research)"}
+
+
 def load_json(path):
     with open(path, "r", encoding="utf-8") as fh:
         return json.load(fh)
+
+
+def _get_json(url):
+    req = urllib.request.Request(url, headers=EDGAR_UA)
+    with urllib.request.urlopen(req, timeout=60) as fh:
+        return json.loads(fh.read().decode())
+
+
+def fetch_event_dates(symbol):
+    """Report dates from the company's public filings, the study's
+    own source: EDGAR submissions, 8-K Item 2.02 filing dates,
+    parsed with the study engine's own rule (replicated here so
+    this refresh stays standalone)."""
+    tickers = load_json(EDGAR_CACHE)
+    cik = None
+    for row in tickers.values():
+        if row.get("ticker") == symbol:
+            cik = int(row["cik_str"])
+            break
+    if cik is None:
+        raise LookupError(f"no CIK match for {symbol}")
+    subs = _get_json(f"https://data.sec.gov/submissions/"
+                     f"CIK{cik:010d}.json")
+    recent = (subs.get("filings") or {}).get("recent") or {}
+    forms = recent.get("form") or []
+    dates = recent.get("filingDate") or []
+    items = recent.get("items") or []
+    out = []
+    for i, form in enumerate(forms):
+        if form == "8-K" and i < len(dates) and \
+                (not items or "2.02" in
+                 (items[i] if i < len(items) else "")):
+            out.append(dates[i])
+    return sorted(set(out))
+
+
+def recompute_event_rows(names, cap, as_of, lookback_days):
+    """Per-event post-report moves, recomputed from the lane's own
+    price history (the DEEP panel) under the study's own convention:
+    for each name's most recent reports (up to the per-name cap),
+    the close of the first session on or after the filing date
+    against the close just before it, over the lookback window of
+    completed sessions ending the day before the study ran.
+    Returns (rows, moves) or (None, error)."""
+    sys.path.insert(0, HERE)
+    from deep_panel_reader import DeepPanelReader
+    reader = DeepPanelReader(PANEL_PATH, log=False)
+    start = (as_of - timedelta(days=lookback_days)).isoformat()
+    rows, moves = [], []
+    for sym in names:
+        try:
+            event_dates = fetch_event_dates(sym)
+        except Exception as exc:
+            return None, f"report dates for {sym} could not be " \
+                         f"re-read from the filings: {exc}"
+        closes = {row[0]: row[4] for row in reader[sym]
+                  if start <= row[0] < as_of.isoformat()}
+        dates = sorted(closes)
+        for ev in sorted(event_dates)[-cap:]:
+            prior = [d for d in dates if d < ev]
+            sess = [d for d in dates if d >= ev]
+            if prior and sess and closes[prior[-1]]:
+                move = closes[sess[0]] / closes[prior[-1]] - 1.0
+                moves.append(move)
+                rows.append({
+                    "symbol": sym,
+                    "report_date": ev,
+                    "session_date": sess[0],
+                    "drift_pct": round(move * 100, 4),
+                })
+    rows.sort(key=lambda r: (r["report_date"], r["symbol"]))
+    return (rows, moves), None
 
 
 def fail(message):
@@ -213,6 +296,40 @@ def build():
                     "recompute from its own average and spread; "
                     "refusing to publish.")
 
+    # --- Per-event rows (cure 2026-10-31): the study left only its
+    # pooled summary, but every event it counted is recomputable
+    # from the filings it used and the price history on record.
+    # The recomputation must reproduce the study's pooled figures
+    # exactly, or the rows are not the study's events and the
+    # refresh stops rather than chart a different study. ---
+    try:
+        as_of_date = datetime.fromisoformat(card["as_of"]).date()
+    except (KeyError, TypeError, ValueError):
+        return fail("the study card carries no readable run date; "
+                    "refusing to publish.")
+    got, rerr = recompute_event_rows(names, cap, as_of_date,
+                                     lookback_days)
+    if rerr:
+        return fail(rerr)
+    event_rows, moves = got
+    if len(moves) != n:
+        return fail(f"the recomputed events number {len(moves)}, "
+                    f"not the study's {n}; refusing to publish "
+                    "rows that are not the study's events.")
+    import statistics as _stats
+    recomputed = {
+        "mean": _stats.fmean(moves),
+        "median": _stats.median(moves),
+        "std": _stats.stdev(moves),
+        "share_positive": sum(1 for mv in moves if mv > 0) / len(moves),
+    }
+    for key, val in recomputed.items():
+        if abs(val - earn[key]) > 1e-12:
+            return fail(f"the recomputed per-event moves give a "
+                        f"{key} of {val}, not the study's "
+                        f"{earn[key]}; refusing to publish rows "
+                        "that are not the study's events.")
+
     thin = n < MIN_EVENTS_FOR_PERCENT
     data = {
         "tool": "Earnings Drift Pane",
@@ -226,6 +343,7 @@ def build():
         "max_events_per_name": cap,
         "max_events": len(names) * cap,
         "events": n,
+        "event_rows": event_rows,
         "positive": positive,
         "not_positive": n - positive,
         "thin": thin,
