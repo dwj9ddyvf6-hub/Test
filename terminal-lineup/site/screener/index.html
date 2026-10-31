@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Screener: filter the latest scored stocks by plain conditions</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card p{margin:0 0 8px;font-size:16px}
+  .card p:last-child{margin-bottom:0}
+  .card .small{font-size:14.5px;color:var(--soft)}
+  .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 18px}
+  .filters label{display:block;font-size:13.5px;font-weight:600;color:var(--soft);margin:0 0 4px}
+  .filters select,.filters input[type="number"]{width:100%;font-size:15px;padding:8px 10px;
+    border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .pair{display:flex;gap:8px}
+  .checkline{display:flex;align-items:center;gap:8px;font-size:15px}
+  .checkline input{width:18px;height:18px}
+  .checkline label{font-size:15px;font-weight:600;color:var(--ink);margin:0}
+  button{font-size:15px;font-weight:600;color:#fff;background:var(--accent);
+    border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+  button.plain{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+  .countline{font-size:17px;font-weight:700;margin:20px 0 6px}
+  .name{border-top:1px solid var(--line);padding:10px 0 4px}
+  .name .top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .name .sym{font-size:16.5px;font-weight:700}
+  .name .sector{color:var(--soft);font-size:14px}
+  .name .facts{margin-left:auto;font-size:14px;color:var(--soft);white-space:nowrap}
+  .name .facts strong{color:var(--ink)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;color:var(--up);
+       border:1px solid var(--up);border-radius:20px;padding:0 8px;white-space:nowrap}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  .nodata p{margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+  @media (max-width:640px){.name .facts{white-space:normal;margin-left:0}}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Screener</h1>
+    <p class="job">One job: take every stock from the most recent scored trading day and show only the ones that match the plain conditions you pick.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy. The filtering happens in your browser; nothing you pick is sent anywhere.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest scored day&hellip;</p>
+
+  <div id="about" class="card" hidden>
+    <p>This screen covers <strong id="aboutSession"></strong>: every stock that was scored that day, <span id="aboutCounts"></span></p>
+    <p class="small">The filters below are a published subset, not the full commercial filter catalog: the commercial screener this style of filtering comes from publishes roughly 82 controls, and this page offers the ones the scored day's data can honestly feed. Matching these conditions says a stock fits the shape you asked for.</p>
+    <p class="small" id="aboutSector"></p>
+  </div>
+
+  <div id="controls" class="card" hidden>
+    <div class="filters">
+      <div>
+        <label for="fSector">Sector</label>
+        <select id="fSector"><option value="">Any sector</option></select>
+      </div>
+      <div>
+        <label for="fIndex">Index the stock belongs to</label>
+        <select id="fIndex"><option value="">Any index</option></select>
+      </div>
+      <div>
+        <label for="fScoreMin">Score at least (of 100)</label>
+        <input type="number" id="fScoreMin" min="0" max="100" step="1" placeholder="No minimum">
+      </div>
+      <div>
+        <label>Closing price between ($)</label>
+        <div class="pair">
+          <input type="number" id="fPriceMin" min="0" step="1" placeholder="Lowest" aria-label="Lowest closing price">
+          <input type="number" id="fPriceMax" min="0" step="1" placeholder="Highest" aria-label="Highest closing price">
+        </div>
+      </div>
+      <div>
+        <label for="fChecksMin">Checks in favor at least (of 8)</label>
+        <input type="number" id="fChecksMin" min="0" max="8" step="1" placeholder="No minimum">
+      </div>
+      <div class="checkline">
+        <input type="checkbox" id="fPassed">
+        <label for="fPassed">Passed every check only</label>
+      </div>
+    </div>
+    <p style="margin-top:14px"><button type="button" class="plain" id="clearTop">Clear all filters</button></p>
+  </div>
+
+  <p id="countLine" class="countline" hidden></p>
+  <main id="results"></main>
+
+  <footer>
+    <p>What the score means: each name is run through the same eight checks, and the score blends the checks into one number from 0 to 100. Higher means more of the evidence lined up in the name's favor on that day. The score is a summary of the checks, not a forecast, and it does not rank which stock will gain the most.</p>
+    <p>What passing every check takes: the name trades more than 500,000 shares and more than $5 million a day on average, its typical daily move is at least 2%, its price is not sitting more than 2% below its 50-day or 200-day average line, its trend is in an early stage (stage 1 or 2), at least 5 of the 8 checks line up in its favor, its combined score reaches 65, and at least 70% of the measures behind its score had real data behind them. The full day's board, with each check shown name by name, is on the <a href="../board/">Qualified Board</a>, and every published call is graded in public on <a href="../record/">The Record</a>.</p>
+    <p>Results are always listed highest score first. When two names share a score, they keep the order the scored day gave them.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var aboutEl = document.getElementById("about");
+  var controlsEl = document.getElementById("controls");
+  var countEl = document.getElementById("countLine");
+  var resultsEl = document.getElementById("results");
+  var NAMES = [];
+
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function num(id){
+    var v = document.getElementById(id).value;
+    if (v === "" || v == null) return null;
+    var n = Number(v);
+    return isNaN(n) ? null : n;
+  }
+  function currentFilters(){
+    return {
+      sector: document.getElementById("fSector").value,
+      index: document.getElementById("fIndex").value,
+      scoreMin: num("fScoreMin"),
+      priceMin: num("fPriceMin"),
+      priceMax: num("fPriceMax"),
+      checksMin: num("fChecksMin"),
+      passedOnly: document.getElementById("fPassed").checked
+    };
+  }
+  function matches(n, f){
+    if (f.sector && n.sector !== f.sector) return false;
+    if (f.index && n.index !== f.index) return false;
+    if (f.scoreMin != null && !(n.score >= f.scoreMin)) return false;
+    if (f.priceMin != null && !(n.close >= f.priceMin)) return false;
+    if (f.priceMax != null && !(n.close <= f.priceMax)) return false;
+    if (f.checksMin != null && !(n.checks_in_favor >= f.checksMin)) return false;
+    if (f.passedOnly && !n.passed_every_check) return false;
+    return true;
+  }
+  function nameHTML(n){
+    return '<div class="name"><div class="top">' +
+      '<span class="sym">' + esc(n.symbol) + '</span>' +
+      '<span class="sector">' + esc(n.sector ? n.sector : "Sector not on record") +
+      (n.index ? ' &middot; ' + esc(n.index) : '') + '</span>' +
+      (n.passed_every_check ? '<span class="tag">Passed every check</span>' : '') +
+      '<span class="facts">Score <strong>' + Number(n.score).toFixed(1) +
+      ' of 100</strong> &middot; Closed at ' + fmtPrice(n.close) +
+      ' &middot; ' + n.checks_in_favor + ' of ' + n.checks_total +
+      ' checks in favor</span></div></div>';
+  }
+  function applyFilters(){
+    var f = currentFilters();
+    var kept = NAMES.filter(function(n){ return matches(n, f); });
+    countEl.hidden = false;
+    countEl.textContent = kept.length.toLocaleString("en-US") + " names match";
+    if (!kept.length){
+      resultsEl.innerHTML = '<div class="nodata"><p>No names match those filters. ' +
+        'Loosen one of the conditions above, or clear them all and start again.</p>' +
+        '<button type="button" id="clearEmpty">Clear all filters</button></div>';
+      document.getElementById("clearEmpty").addEventListener("click", clearFilters);
+      return;
+    }
+    resultsEl.innerHTML = '<section class="card">' +
+      kept.map(nameHTML).join("") + '</section>';
+  }
+  function clearFilters(){
+    document.getElementById("fSector").value = "";
+    document.getElementById("fIndex").value = "";
+    ["fScoreMin","fPriceMin","fPriceMax","fChecksMin"].forEach(function(id){
+      document.getElementById(id).value = "";
+    });
+    document.getElementById("fPassed").checked = false;
+    applyFilters();
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      NAMES = (data.names || []).slice().sort(function(a, b){
+        return b.score - a.score;
+      });
+      if (!NAMES.length){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No scored day has been published yet. ' +
+          'When a day is scored, its names appear here ready to filter. A screen is ' +
+          'never shown without the trading day it belongs to.</div>';
+        return;
+      }
+      meta.textContent = "Scored trading day: " + fmtDateLong(data.session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+      if (data.session < latestCompletedSession()){
+        showBanner("stale", "This screen is out of date. It covers the trading day of " +
+          fmtDateLong(data.session) + ", the most recent scored day, and a newer " +
+          "scored day has not been published yet. Treat it as the last scored day, not today's.");
+      }
+      document.getElementById("aboutSession").textContent =
+        "the trading day of " + fmtDateLong(data.session);
+      document.getElementById("aboutCounts").textContent =
+        data.counts.names_scored.toLocaleString("en-US") + " in all. " +
+        data.counts.not_enough_data + " more names were checked that day but had " +
+        "too little data to score, so they are not in this list. " +
+        data.counts.passed_every_check_all + " of the scored names passed every check.";
+      document.getElementById("aboutSector").textContent =
+        "A sector is on record for " +
+        data.counts.names_with_sector_on_record.toLocaleString("en-US") + " of the " +
+        data.counts.names_scored.toLocaleString("en-US") + " names. The rest show " +
+        "\u201cSector not on record\u201d and are left out only when you pick a sector.";
+      var sel = document.getElementById("fSector");
+      (data.sectors || []).forEach(function(s){
+        var o = document.createElement("option");
+        o.value = s; o.textContent = s; sel.appendChild(o);
+      });
+      var isel = document.getElementById("fIndex");
+      (data.indexes || []).forEach(function(s){
+        var o = document.createElement("option");
+        o.value = s; o.textContent = s; isel.appendChild(o);
+      });
+      aboutEl.hidden = false;
+      controlsEl.hidden = false;
+      ["fSector","fIndex","fScoreMin","fPriceMin","fPriceMax","fChecksMin","fPassed"]
+        .forEach(function(id){
+          document.getElementById(id).addEventListener("input", applyFilters);
+          document.getElementById(id).addEventListener("change", applyFilters);
+        });
+      document.getElementById("clearTop").addEventListener("click", clearFilters);
+      applyFilters();
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The latest scored day is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
