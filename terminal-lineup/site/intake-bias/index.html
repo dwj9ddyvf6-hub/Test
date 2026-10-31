@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intake-Bias Reversal: when a flow score's bullishness is manufactured by what it leaves out</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Intake-Bias Reversal</h1>
+    <p class="job">One job: warn when a popular flow score looks bullish only because of the trades it leaves out, and short selling is heavy at the same time.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest tape session's groups&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  function names(list, bySym){return list.length?list.map(function(s){return esc(bySym[s]||s);}).join(", "):"none: the two conditions picked different names, so no combined group formed";}
+  function shareTable(rows){
+    var h='<table><tr><th>Fund</th><th>Score counting only buying-side prints</th><th>Score counting every print</th><th>The gap (buying-side minus every print)</th><th>Short share of the day\'s volume</th></tr>';
+    rows.forEach(function(n){h+='<tr><td><strong>'+esc(n.symbol)+'</strong></td><td>'+esc(n.buys_only)+'</td><td>'+esc(n.all_prints)+'</td><td>'+(n.gap>0?"+":"")+esc(n.gap)+'</td><td>'+Math.round(n.short_share*1000)/10+'%</td></tr>';});
+    return h+'</table>';
+  }
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    var today=data.today||{}, live=data.live||{}, hist=data.history||{}, fc=data.forecast||{}, uni=data.universe||{};
+    var bySym={}; (today.names||[]).forEach(function(n){bySym[n.symbol]=n.name;});
+    meta.textContent="Newest tape session: "+fmtShort(today.session)+". Short-sale figures are from the daily file dated "+fmtShort(today.short_share_date)+", the newest one in hand when that session's prints were complete. Source: "+data.source+".";
+    if(!today.fired){showBanner("stale","No warning fired on the newest session: the name with the biggest score gap and the name with the heaviest short selling were different names, so the combined group was empty. An empty group is a quiet day, never filled in with a substitute name.");}
+    var h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>A widely sold flow score is built from buying-side options trades only. The trades it leaves out would lower the score, so the printed number can look bullish by construction. This page rebuilds that score two ways for every name it covers: once the vendor\'s way, buying-side prints only, and once honestly, counting every print. The gap between the two is how much of the bullishness is manufactured. When the biggest gap and the heaviest short selling land on the same name, that name is flagged as a group of one, and the forecast below is recorded before the next 5 trading days begin.</p><p>'+esc(fc.never_a_short_book)+'</p></section>';
+
+    h+='<section class="card"><h2>The newest session: '+fmtShort(today.session)+'</h2><p class="sub">Only '+esc(uni.size)+' names carry both scores today: '+esc((uni.names||[]).join("; "))+'. '+esc(uni.note)+'</p>'+shareTable(today.names||[])
+      +'<p><strong>The combined group (biggest gap and heaviest short selling together):</strong> '+names(today.interaction||[], bySym)+'.</p>'
+      +'<p><strong>The gap-only group:</strong> '+names(today.bias_only||[], bySym)+'.</p>'
+      +'<p><strong>The short-only group:</strong> '+names(today.short_only||[], bySym)+'.</p>'
+      +'<p class="sub">One honest wrinkle: when SPY itself is a group\'s only name, that group\'s gain against SPY is zero by construction, because SPY is the yardstick every group is measured against.</p></section>';
+
+    h+='<section class="card"><h2>The forecast on record</h2><p>'+esc(fc.mean_claim)+' '+esc(fc.predicted_median_words)+'</p><p>'+esc(fc.companion_claim)+'</p><p>Two rival groups are recorded on the same days and graded the same way: the gap-only group and the short-only group. The combined warning has to do worse than both of them, or it has added nothing. The groups above were recorded for the 5 trading days from '+fmtShort(today.horizon_open)+' through '+fmtShort(today.horizon_close)+'.</p></section>';
+
+    h+='<section class="card"><h2>'+esc(hist.label||"History")+'</h2><p>'+esc(hist.outcomes_note)+'</p>';
+    (hist.sessions||[]).forEach(function(s){
+      var b={}; (s.names||[]).forEach(function(n){b[n.symbol]=n.name;});
+      h+='<h3>Session of '+fmtShort(s.session)+' (short figures from the file dated '+fmtShort(s.short_share_date)+')</h3>'+shareTable(s.names||[])
+        +'<p>Combined group: '+names(s.interaction||[], b)+'. Gap-only group: '+names(s.bias_only||[], b)+'. Short-only group: '+names(s.short_only||[], b)+'.</p>';
+    });
+    h+='<p>Across the '+esc(hist.sessions_on_record)+' sessions on record, the combined group would have formed on '+esc(hist.would_have_fired)+' of them. Those past groups were not recorded in advance, so they count for nothing in the live record; they are shown so the size of this warning, usually one name or none, is plain.</p></section>';
+
+    var route=data.short_volume_route||{};
+    h+='<section class="card"><h2>Where the short figures come from</h2><p>'+esc(route.used)+'</p>'+(route.not_used||[]).map(function(s){return '<p class="sub">Not used: '+esc(s)+'</p>';}).join("")+'</section>';
+
+    h+='<section class="card"><h2>The live record</h2><p><span class="count">'+esc(live.forecasts_recorded||0)+'</span> forecasts recorded before their 5 trading days open, <span class="count">'+esc(live.forecasts_graded||0)+'</span> graded so far. The combined group has formed on <span class="count">'+esc(live.interaction_fires||0)+'</span> of the <span class="count">'+esc(live.target_fires)+'</span> fire days that will decide this tool.</p><p>'+esc(data.kill_criterion)+'</p><p class="sub">'+esc(data.thin_rule)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","This page's data file could not be loaded, so no groups are shown. Nothing here is estimated or filled in by hand.");
+    meta.textContent="The forecast data is not available right now.";
+  });
+})();
+</script>
+</div>
+</body>
+</html>
