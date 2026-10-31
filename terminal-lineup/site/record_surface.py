@@ -269,6 +269,19 @@ def _band(title, label, items, source):
             "source": source, "items": items}
 
 
+def _kept_sessions(data):
+    """Sessions kept by a page's producer (the session_history list
+    in data.json, appended per lane run by session_history.py from
+    2026-10-31, Wave 3 Item F), deduped by session date with the
+    latest entry winning, oldest first. Sessions before keeping
+    began do not exist and are never reconstructed."""
+    by_session = {}
+    for entry in data.get("session_history") or []:
+        if isinstance(entry, dict) and entry.get("session"):
+            by_session[str(entry["session"])] = entry
+    return [by_session[k] for k in sorted(by_session)]
+
+
 def build_subject_chart(slug, data):
     """Subject charts for the forecast-engine pages (cure 2026-10-31,
     terminal-state-the-information). Each chart plots the market
@@ -276,7 +289,43 @@ def build_subject_chart(slug, data):
     names. A page with no subject numeric on record gets None for
     that slot: no count chart is substituted."""
     lead = record = None
-    if slug == "board":
+    if slug == "desk":
+        # The desk page pictures the desk itself (cure 2026-10-31):
+        # its open positions, named, from the snapshot aggregation
+        # publish_desk.py carries in data.json, and the equity record
+        # the snapshot itself carries (starting capital at the capital
+        # epoch start, equity at the latest cycle). Two readings only:
+        # nothing between them is on record in the snapshot, and no
+        # history is invented. A flat desk gets no lead chart rather
+        # than a substitute count chart.
+        pos = sorted(data.get("positions") or [],
+                     key=lambda p: -abs(p.get("qty") or 0))
+        rows = []
+        for p in pos:
+            row = {"name": p.get("symbol"), "score": p.get("qty")}
+            if p.get("strategies"):
+                row["coverage"] = ("held by "
+                                   + ", ".join(p["strategies"]))
+            rows.append(row)
+        lead = _ranked(
+            "Open positions, by shares held",
+            "Each open position in the current session snapshot, "
+            "named, biggest holding first.",
+            rows, "positions[].qty (strategies[].open_positions)")
+        epoch = data.get("epoch") or {}
+        account = data.get("account") or {}
+        start = str(epoch.get("start") or "")[:10]
+        end = str(epoch.get("end") or data.get("session") or "")[:10]
+        record = _curve(
+            "Equity, from the capital epoch to the latest snapshot",
+            "The two equity readings the snapshot itself carries: "
+            "the starting capital at the epoch start and the equity "
+            "at the latest cycle. Nothing between them is on record "
+            "in the snapshot.",
+            [{"x": start, "y": epoch.get("starting_capital")},
+             {"x": end, "y": account.get("equity")}],
+            "epoch.starting_capital / account.equity")
+    elif slug == "board":
         names = ((data.get("groups") or [{}])[0].get("names") or [])
         lead = _ranked("Today's board, scored",
                        "Each name's board score, biggest first.",
@@ -588,7 +637,21 @@ def build_subject_chart(slug, data):
                       "SPY change percent per qualifying day in the history record.",
                       [{"x": d.get("date"), "y": d.get("spy_change_pct")} for d in days],
                       "history.days[].spy_change_pct")
-        record = None  # composite_mean_excess_points is null on every day
+        # Record (Wave 3 cure, Item F): the qualifying-days picture
+        # is the record this study keeps, drawn as the record from
+        # history.days. The composite excess series stays uncharted
+        # (it is null on every day); from 2026-10-31 the producer
+        # also keeps a dated snapshot of this picture at every
+        # refresh (session_history), so the accrual is provable.
+        record = _curve("SPY on the qualifying days, the record",
+                        "The record this study keeps: SPY change "
+                        "percent on each qualifying day, from the "
+                        "history record. A dated snapshot of this "
+                        "picture is kept at every refresh from "
+                        "2026-10-31 forward.",
+                        [{"x": d.get("date"), "y": d.get("spy_change_pct")}
+                         for d in days],
+                        "history.days[].spy_change_pct (study record)")
     elif slug == "streak-trap":
         trig = data.get("triggers") or []
         lead = _ranked("Each streak reading, as a chance",
@@ -679,17 +742,49 @@ def build_subject_chart(slug, data):
                          "history.episodes[].touched_1 share")
     elif slug == "agent-debate":
         funds = data.get("funds") or []
+        rows = [{"name": f.get("symbol"),
+                 "score": (f.get("count_rising") or 0)
+                 - (f.get("count_falling") or 0),
+                 "coverage": f"{f.get('count_rising')} rising, "
+                 f"{f.get('count_falling')} falling"}
+                for f in funds]
         lead = _ranked("The debate, per index fund: net stance",
                        "Readings pointing to rising minus readings pointing "
                        "to falling, per fund. A negative bar leans to falling.",
-                       [{"name": f.get("symbol"),
-                         "score": (f.get("count_rising") or 0)
-                         - (f.get("count_falling") or 0),
-                         "coverage": f"{f.get('count_rising')} rising, "
-                         f"{f.get('count_falling')} falling"}
-                        for f in funds],
+                       rows,
                        "funds[].count_rising-count_falling")
-        record = None  # past debates are not kept; counts not substituted
+        # Record (Wave 3 cure, Item F): past debates were not kept.
+        # Today the record is the current session's own net-stance
+        # picture, labelled as the session on record (the echo-board
+        # and second-opinion convention); the producer keeps a dated
+        # snapshot per run from now on, and once more than one
+        # session is kept the record plots the kept sessions.
+        kept = _kept_sessions(data)
+        if len(kept) > 1:
+            krows = []
+            for e in kept[-8:]:
+                for v in e.get("values") or []:
+                    krows.append({
+                        "name": f"{e['session']} {v.get('symbol')}",
+                        "score": (v.get("rising") or 0)
+                        - (v.get("falling") or 0),
+                        "coverage": f"{v.get('rising')} rising, "
+                        f"{v.get('falling')} falling"})
+            record = _ranked(
+                "Net stance on record, per kept session",
+                "Each kept session's net stance per fund, oldest "
+                "first. Sessions are kept from 2026-10-31 forward; "
+                "earlier debates were not kept and are not "
+                "reconstructed.",
+                krows, "session_history[].values (kept sessions)")
+        else:
+            record = _ranked(
+                "The debate on record, this session",
+                "The same net-stance picture, labelled with the "
+                "session on record. Past sessions were not kept; "
+                "the record accrues from this session forward.",
+                list(rows),
+                "funds[].count_rising-count_falling (session record)")
     elif slug == "echo-board":
         names = data.get("names") or []
         rows = [{"name": n.get("symbol"), "score": n.get("families_speaking"),
@@ -793,15 +888,48 @@ def build_subject_chart(slug, data):
         funds = data.get("funds") or []
         if funds:
             f0 = funds[0]
+            rows = [{"name": f"Strike {r.get('strike')}",
+                     "score": r.get("pull")}
+                    for r in f0.get("rungs") or []]
             lead = _ranked(f"Strike ladder, {f0.get('symbol')}: pull per strike",
                            "Modelled pull in dollars per 1 percent move, "
                            "per strike. Flip, call wall and put wall in "
                            "the notes beside the page's own ladder.",
-                           [{"name": f"Strike {r.get('strike')}",
-                             "score": r.get("pull")}
-                            for r in f0.get("rungs") or []],
-                           "funds[0].rungs[].pull")
-        record = None  # single session only; no history kept, none invented
+                           rows, "funds[0].rungs[].pull")
+            # Record (Wave 3 cure, Item F): past ladders were not
+            # kept. Today the record is the current session's own
+            # strike ladder, labelled as the session on record; the
+            # producer keeps a dated snapshot per run from now on,
+            # and once more than one session is kept the record
+            # plots the kept sessions.
+            kept = _kept_sessions(data)
+            if len(kept) > 1:
+                krows = []
+                for e in kept[-4:]:
+                    vals = e.get("values") or {}
+                    for r in vals.get("rungs") or []:
+                        krows.append({
+                            "name": f"{e['session']} strike "
+                                    f"{r.get('strike')}",
+                            "score": r.get("pull")})
+                record = _ranked(
+                    f"Strike ladder on record, {f0.get('symbol')}, "
+                    "per kept session",
+                    "Each kept session's strike ladder for the "
+                    "first fund, oldest first. Sessions are kept "
+                    "from 2026-10-31 forward; earlier ladders were "
+                    "not kept and are not reconstructed.",
+                    krows,
+                    "session_history[].values.rungs (kept sessions)")
+            else:
+                record = _ranked(
+                    f"Strike ladder on record, {f0.get('symbol')}: "
+                    "this session",
+                    "The same strike ladder, labelled with the "
+                    "session on record. Past sessions were not kept; "
+                    "the record accrues from this session forward.",
+                    list(rows),
+                    "funds[0].rungs[].pull (session record)")
     elif slug in ("ai-chart-read", "pattern-draw"):
         bars = data.get("bars") or {}
         dates = data.get("dates") or []
@@ -814,11 +942,49 @@ def build_subject_chart(slug, data):
                       "record, the page's own authored chart data.",
                       [{"x": x, "y": y} for x, y in zip(xs, tail)],
                       "bars.SPY closes")
-        record = _curve("Study record: SPY closes on record",
-                        "The scored run's SPY closes, drawn as the study "
-                        "record. No graded record exists for this page.",
-                        [{"x": x, "y": y} for x, y in zip(xs, tail)],
-                        "bars.SPY closes (study record)")
+        # Record (Wave 3 cure, Item E): the same closes with the
+        # page's own reads for SPY drawn at their sessions, from
+        # labels.SPY.sequence. The reads carry no graded outcomes
+        # anywhere in the page data, so none are plotted: the
+        # record shows what was read, and where. The window widens
+        # past 60 sessions if a labelled session would fall outside
+        # it, so every recorded read is drawn.
+        seq = ((data.get("labels") or {}).get("SPY") or {}).get(
+            "sequence") or []
+        notes = {}
+        for s in seq:
+            if isinstance(s, dict) and s.get("date") and s.get("label"):
+                notes[str(s["date"])] = str(s["label"])
+        pairs = list(zip(dates, closes)) if dates else [
+            (str(i), y) for i, y in enumerate(closes)]
+        start = max(0, len(pairs) - 60)
+        labelled = [i for i, pair in enumerate(pairs)
+                    if pair[0] in notes]
+        if labelled:
+            start = min(start, min(labelled))
+        pts = []
+        for x, y in pairs[start:]:
+            point = {"x": x, "y": y}
+            if x in notes:
+                point["note"] = notes[x]
+            pts.append(point)
+        drawn = [(p["x"], p["note"]) for p in pts if "note" in p]
+        meanings = data.get("label_meanings") or {}
+        named = []
+        for code in dict.fromkeys(n for _, n in drawn):
+            nm = (meanings.get(code) or {}).get("name")
+            if nm:
+                named.append(f"{code} means {nm[0].lower()}{nm[1:]}")
+        record = _curve(
+            "Study record: the closes with the reads drawn on",
+            "The same SPY closes, with the read this page recorded "
+            "for SPY marked at each session it was read: "
+            + ", ".join(f"{n} on {x}" for x, n in drawn)
+            + "."
+            + ((" " + "; ".join(named) + ".") if named else "")
+            + " No graded outcome is on record for these reads, so "
+            "the record shows the reads themselves.",
+            pts, "bars.SPY closes with labels.SPY.sequence")
     elif slug == "breadth-meter":
         hist = data.get("history") or []
         record = _curve("Breadth on record: share above the 200-day average",
@@ -1171,35 +1337,85 @@ def _subj_decay_watch(d):
     total = _mnum(g.get("total")) or 0
     if not total:
         return []
+    charts = []
+    moves = d.get("movements") or []
+    if moves:
+        rows = [{"name": m.get("name"),
+                 "status": f"{m.get('from')} to {m.get('to')}",
+                 "coverage": f"{m.get('from_date')} to {m.get('date')}"}
+                for m in moves]
+        grid = _mgrid("How entries moved between gradings",
+                      "Each entry whose standing changed, from its "
+                      "old standing to its new one, with the two "
+                      "grading dates.", rows)
+        if grid:
+            charts.append(grid)
     items = [{"label": f"Promoted, {g.get('date')}",
               "value": round(100 * g["promoted"] / total * 10) / 10},
              {"label": f"On probation, {g.get('date')}",
               "value": round(100 * g["probation"] / total * 10) / 10}]
-    return [_mtiles("The book's standing at its last grading",
-                   "The share of the promoted book standing promoted and "
-                   "on probation at the grading on record, in percent.",
-                   items)]
+    if moves:
+        title = "The book's standing at its last grading"
+        label = ("The share of the promoted book standing promoted "
+                 "and on probation at the grading on record, "
+                 "in percent.")
+    else:
+        title = "The book's standing at its only grading"
+        label = ("The share of the promoted book standing promoted "
+                 "and on probation at the grading on record, in "
+                 "percent. The book has been graded once, so no "
+                 "movement between standings is on record yet.")
+    tiles = _mtiles(title, label, items)
+    if tiles:
+        charts.append(tiles)
+    return charts
 
 
 def _subj_earnings_calendar(d):
+    # Cure 2026-10-31: the record chart plots what reporting names
+    # actually did, against the expected move that was on record
+    # for them. Names that have not yet reported stay off it: their
+    # expected moves are the lead chart's subject, not the record's.
     rows = []
-    for n in d.get("names") or []:
-        em = n.get("expected_move")
-        if isinstance(em, str) and em.endswith("%"):
-            try:
-                v = float(em[:-1])
-            except ValueError:
-                continue
-            rows.append({"name": f"{n.get('symbol')} {n.get('date')}",
-                         "score": v})
-    rows.sort(key=lambda r: -r["score"])
-    return [_mranked("The biggest expected moves on the calendar",
-                    "The expected move priced for each reporting name on "
-                    "record, in percent, biggest first.",
-                    rows)]
+    for r in d.get("realised_moves") or []:
+        if _mnum(r.get("realised_move_pct")) is None:
+            continue
+        exp = r.get("expected_move_pct")
+        rows.append({
+            "name": f"{r.get('symbol')} {r.get('report_date')}",
+            "score": r["realised_move_pct"],
+            "coverage": (f"expected {exp} percent"
+                         if _mnum(exp) is not None else
+                         "no expected move was on record for "
+                         "this report")})
+    rows.sort(key=lambda r: -abs(r["score"]))
+    chart = _mranked(
+        "What reporting names actually did, against what was expected",
+        "The realised move for each name whose report date has "
+        "passed, in percent: the close of the first session on or "
+        "after the report against the close just before it. The "
+        "expected move priced for the name before it reported is "
+        "printed beside each bar, where one was on record.",
+        rows, limit=40)
+    return [chart] if chart else []
 
 
 def _subj_earnings_drift(d):
+    charts = []
+    rows = [{"name": f"{r.get('symbol')} {r.get('report_date')}",
+             "score": _mnum(r.get("drift_pct"))}
+            for r in d.get("event_rows") or []
+            if _mnum(r.get("drift_pct")) is not None]
+    rows.sort(key=lambda r: -r["score"])
+    ranked = _mranked(
+        "Each report, and what the name did on it",
+        "Every earnings event in the study, named and dated, with "
+        "its own post-report move in percent: the close of the "
+        "first session on or after the report against the close "
+        "just before it.",
+        rows, limit=40)
+    if ranked:
+        charts.append(ranked)
     items = []
     if _mnum(d.get("mean")) is not None:
         items.append({"label": "Average move after reporting",
@@ -1210,11 +1426,14 @@ def _subj_earnings_drift(d):
     if _mnum(d.get("share_positive")) is not None:
         items.append({"label": "Share of reports that rose",
                       "value": round(d["share_positive"] * 1000) / 10})
-    return [_mtiles("What the names did after reporting, on record",
-                   "Across the earnings events on record for the three "
-                   "names this page follows: the average and middle "
-                   "post-report move, and the share that rose, in percent.",
-                   items)]
+    tiles = _mtiles("What the names did after reporting, on record",
+                    "Across the earnings events on record for the three "
+                    "names this page follows: the average and middle "
+                    "post-report move, and the share that rose, in percent.",
+                    items)
+    if tiles:
+        charts.append(tiles)
+    return charts
 
 
 def _subj_echo_lens(d):
@@ -1487,9 +1706,48 @@ def _subj_momentum_clock(d):
 
 
 def _subj_morning_map(d):
-    # Past maps are not kept in data.json (single session). The census
-    # ruling: no record chart until snapshots are kept; never counts.
-    return []
+    # Past maps were not kept before 2026-10-31 (single session in
+    # data.json). Wave 3 cure (Item F): the record chart is the
+    # current session's own levels ladder, labelled as the session
+    # on record, never counts; the producer now keeps a dated
+    # snapshot per run (session_history), and once more than one
+    # session is kept, SPY's flip level per kept session is plotted
+    # as well. Nothing from before keeping began is reconstructed.
+    items = []
+    for ix in d.get("indexes") or []:
+        put_wall = (ix.get("put_wall") or {}).get("value")
+        call_wall = (ix.get("call_wall") or {}).get("value")
+        if _mnum(put_wall) is None or _mnum(call_wall) is None:
+            continue
+        items.append({"label": ix.get("symbol"), "low": put_wall,
+                      "high": call_wall,
+                      "mid": (ix.get("flip") or {}).get("value"),
+                      "current": ix.get("spot")})
+    charts = []
+    if items:
+        charts.append({
+            "kind": "band",
+            "title": "The morning levels on record, this session",
+            "label": "Each index's put wall to call wall for the "
+                     "session on record, the flip level ticked and "
+                     "the spot dotted. Past maps were not kept; "
+                     "the record accrues from this session forward.",
+            "items": items})
+    kept = _kept_sessions(d)
+    if len(kept) > 1:
+        series = []
+        for e in kept:
+            for v in e.get("values") or []:
+                if v.get("symbol") == "SPY" \
+                        and _mnum(v.get("flip")) is not None:
+                    series.append({"date": e["session"],
+                                   "value": v["flip"]})
+        line = _mline("SPY's flip level, per session on record",
+                      "The flip level from each kept session's map, "
+                      "oldest first.", series)
+        if line:
+            charts.append(line)
+    return charts
 
 
 def _subj_odds_cards(d):
