@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insider-Flow Divergence: when company insiders and options traders disagree</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Insider-Flow Divergence</h1>
+    <p class="job">One job: forecast what happens when company insiders and options traders disagree about the same stock.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the coverage counts&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    var cov=data.coverage||{}, ins=cov.insider||{}, heat=cov.heat||{}, fc=data.forecast||{}, today=data.today||{}, hist=data.history||{}, legs=data.insider_legs||{}, live=data.live||{}, st=data.self_test||{}, pnt=data.pername_today||null;
+    meta.textContent="Insider records gathered "+fmtShort(ins.as_of)+". Newest options session on record: "+fmtShort(today.session)+". Source: "+data.source+".";
+    if(pnt&&(pnt.overlap||[]).length){showBanner("ok","First testable names are on record: "+(pnt.overlap||[]).length+" names carry both readings on the per-name tape store for "+fmtShort(pnt.session)+", and their forecasts are written in the ledger below.");}
+    else{showBanner("stale","Waiting for its first testable name: no stock carries both readings yet, so nothing has fired. The counts below show exactly what exists and what is missing.");}
+
+    var h="";
+    h+='<section class="card"><h2>State: still being proven, and waiting for overlap</h2><p>Two groups know more about a stock than most: the company\'s own officers and directors, whose buys and sells are filed in public, and options traders, whose trades show how much heat is behind a name. Most tools only check whether one group agrees with itself. This one waits for the two to disagree, and stakes a forecast on the disagreement. When they disagree, one of them is wrong in a specific way: insiders selling into hot options trading looks like stock being unloaded onto excitement, and an insider buying while options trading is cold looks like quiet confidence before anyone else notices.</p><p>'+(pnt?('On the index cards the test still cannot run on a single name: the index funds are not among the names with insider records. On the per-name tape store the second reading now exists stock by stock, and the section below shows the first session where the tests ran on real names, with every forecast written down before its 21 trading days begin.'):('Today the test cannot run on a single name, and this page says so with the counts rather than filling the gap. Stock-by-stock options heat is not carded yet, only index-wide heat is, and the index funds are not among the names with insider records. The moment a name carries both readings, the tests below run on it and any forecast is written down before its 21 trading days begin.'))+'</p></section>';
+
+    h+='<section class="card"><h2>The forecasts on record</h2><p>'+esc(fc.arm_a)+'</p><p>'+esc(fc.arm_b)+'</p><p>'+esc(fc.control)+'</p><p class="sub">'+esc(fc.heat_states)+'</p></section>';
+
+    h+='<section class="card"><h2>Coverage: what exists, counted</h2>'
+      +'<p><span class="count">'+esc(ins.with_summary)+'</span> of '+esc(ins.tracked)+' tracked names carry an insider record, gathered '+fmtShort(ins.as_of)+' from '+esc(ins.window.toLowerCase())+'. Across those records there are <strong>'+esc(ins.total_buys)+' insider buys against '+esc(ins.total_sells)+' insider sells</strong>: selling dominates the record, and any forecast here has to beat that lopsided starting point. The '+esc((ins.not_on_record||[]).length)+' names with no record ('+esc((ins.not_on_record||[]).join(", "))+') could not be matched to a company record.</p>'
+      +'<p class="sub">'+esc(ins.note)+'</p>'
+      +'<p><span class="count">'+esc((heat.names||[]).length)+'</span> names carry an options heat reading: '+esc((heat.names||[]).join(", "))+', the big index funds, over '+esc(heat.sessions_on_record)+' trading sessions on record.</p>'
+      +'<p class="sub">'+esc(heat.note)+'</p>'
+      +'<p><span class="count">'+esc(cov.both)+'</span> names carry <strong>both</strong> readings. '+esc(cov.both_note)+'</p></section>';
+
+    h+='<section class="card"><h2>The insider side is ready</h2>'
+      +'<p><span class="count">'+esc(legs.arm_a_count)+'</span> names already meet Arm A\'s selling test (sales at least 10 times buys across the record): '+esc((legs.arm_a_eligible||[]).join(", "))+'. If any of them also had a heat reading at its hottest, Arm A would fire on it.</p>'
+      +'<p><span class="count">'+esc(legs.arm_b_count)+'</span> names have an insider buy on record and meet Arm B\'s buying test: '+(legs.arm_b_eligible||[]).map(function(n){return esc(n.symbol)+" ("+esc(n.buys)+(n.buys===1?" buy":" buys")+", "+esc(n.sells)+(n.sells===1?" sale":" sales")+")";}).join(", ")+'. If any of them also had a cold heat reading, Arm B would fire on it.</p>'
+      +'<p class="sub">'+esc(legs.neither_count)+' further names carry a record with no buys and no sells at all. '+esc(legs.neither_note)+'</p></section>';
+
+    h+='<section class="card"><h2>Today: '+fmtShort(today.session)+'</h2><p>Insider records from '+fmtShort(today.insider_as_of)+' were tested against the heat readings of '+fmtShort(today.session)+'. Names carrying both readings: <strong>'+esc((today.overlap||[]).length)+'</strong>. Arm A fires: <strong>'+esc((today.arm_a||[]).length)+'</strong>. Arm B fires: <strong>'+esc((today.arm_b||[]).length)+'</strong>. Comparison-group cases: <strong>'+esc((today.control||[]).length)+'</strong>.</p><p>'+esc(today.reason)+'</p></section>';
+
+    if(pnt){h+='<section class="card"><h2>Per-name tape store: '+fmtShort(pnt.session)+'</h2><p>Insider records from '+fmtShort(pnt.insider_as_of)+' were tested against each stock\'s own heat reading from the per-name tape store. Names carrying both readings: <strong>'+esc((pnt.overlap||[]).length)+'</strong>'+((pnt.overlap||[]).length?' ('+esc(pnt.overlap.join(", "))+')':'')+'. Arm A fires: <strong>'+esc((pnt.arm_a||[]).length)+'</strong>'+((pnt.arm_a||[]).length?' ('+esc(pnt.arm_a.join(", "))+')':'')+'. Arm B fires: <strong>'+esc((pnt.arm_b||[]).length)+'</strong>'+((pnt.arm_b||[]).length?' ('+esc(pnt.arm_b.join(", "))+')':'')+'. Comparison-group cases: <strong>'+esc((pnt.control||[]).length)+'</strong>'+((pnt.control||[]).length?' ('+esc(pnt.control.join(", "))+')':'')+'.</p><p>'+esc(pnt.reason)+'</p></section>';}
+
+    var wh=hist.would_have||{};
+    h+='<section class="card"><h2>'+esc(hist.label||"History")+'</h2>'
+      +'<table><tr><th>Session</th><th>Names with both readings</th><th>Arm A would have fired</th><th>Arm B would have fired</th><th>Comparison group</th></tr>'
+      +(hist.sessions||[]).map(function(s){return '<tr><td>'+fmtShort(s.session)+(s.source?' ('+esc(s.source)+')':'')+'</td><td>'+esc((s.overlap||[]).length)+'</td><td>'+esc((s.arm_a||[]).length)+'</td><td>'+esc((s.arm_b||[]).length)+'</td><td>'+esc((s.control||[]).length)+'</td></tr>';}).join("")
+      +'</table><p>Across all '+esc(wh.sessions_on_record)+' sessions on record: Arm A '+esc(wh.arm_a)+', Arm B '+esc(wh.arm_b)+', comparison group '+esc(wh.control)+'.</p><p>'+esc(hist.note)+'</p>'
+      +'<p class="sub">'+esc(st.note)+' ('+esc(st.passed)+' of '+esc(st.cases)+' cases.)</p></section>';
+
+    h+='<section class="card"><h2>The live record</h2><p><span class="count">'+esc(live.forecasts_recorded||0)+'</span> forecasts recorded before their 21 trading days open, <span class="count">'+esc(live.forecasts_graded||0)+'</span> graded so far. Arm A fires: <span class="count">'+esc(live.arm_a_fires||0)+'</span> of '+esc(live.target_per_arm)+'. Arm B fires: <span class="count">'+esc(live.arm_b_fires||0)+'</span> of '+esc(live.target_per_arm)+'. Comparison-group cases recorded: '+esc(live.control_recorded||0)+'.</p><p>'+esc(data.kill_criterion)+'</p><p class="sub">'+esc(data.thin_rule)+'</p><p class="sub">'+esc(data.grading_note)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","This page's data file could not be loaded, so no counts are shown. Nothing here is estimated or filled in by hand.");
+    meta.textContent="The forecast data is not available right now.";
+  });
+})();
+</script>
+</div>
+</body>
+</html>
