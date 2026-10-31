@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pullback Norm: is this dip big for this stock?</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .label{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;
+         background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:16px;color:#23405e}
+  .def strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .group p strong{color:var(--ink);font-weight:600}
+  .big{font-size:19px;color:var(--ink)}
+  .big strong{font-size:26px}
+  table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:15px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line)}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  .thin{color:var(--faint);font-style:italic}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Pullback Norm</h1>
+    <p class="job">One job: tell you whether a dip in a stock is deep or shallow compared with that same stock's own past dips.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div class="label" id="unproven"><strong>New construction, still being proven:</strong> this is a new idea built by this terminal, it has not been proven yet, and no result from it is published until a study on the record has counted it.</div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the record&hellip;</p>
+
+  <div class="def"><strong>What counts as a pullback here:</strong> <span id="definition">a dip in a stock that is in a rising trend, judged by comparing its depth with that same stock's own past dips, not with a fixed band that is the same for every stock.</span></div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p>How this page works: a depth distribution, recovery times, and any list of names appear here only when a study on the record has counted them from the price history on file. Until then the page shows the record as it stands.</p>
+    <p>Why some counts show no percentage: a count built on fewer than 30 events shows its counts only. A percentage on a handful of events reads as far more certain than it is, so it is left off until the count grows.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+  var defEl = document.getElementById("definition");
+  var labelEl = document.getElementById("unproven");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(v){ return Number(v).toLocaleString("en-US"); }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function corr(v){
+    var n = Number(v);
+    return (n > 0 ? "+" : "") + n.toFixed(3);
+  }
+  function distributionHTML(data){
+    var d = data.distribution || {};
+    if (!d || d.state === "not_counted" || data.events == null){
+      return "<p><strong>Depth and recovery:</strong> no pullback study on the " +
+        "record has counted how deep pullbacks ran or how long they took to " +
+        "recover, so no distribution and no recovery times are shown. Nothing " +
+        "is shown for a study that has not run.</p>";
+    }
+    var n = Number(data.events || 0);
+    if (data.thin || d.share == null){
+      return "<p><strong>Depth and recovery:</strong> counted on " + num(n) +
+        " pullback events. Too few events for percentages: counts only.</p>";
+    }
+    return "<p><strong>Depth and recovery:</strong> counted on " + num(n) +
+      " pullback events.</p>";
+  }
+  function researchHTML(data){
+    var r = data.research_record;
+    if (!r || !r.results) return "";
+    var h = '<section class="group"><h2>The research record behind the idea</h2>';
+    h += "<p>Another study, on a different dataset, tested this idea and " +
+      "recorded a small link between a pullback's depth against the stock's " +
+      "own norm and what the stock did next. Its figures are that study's, " +
+      "not this tool's results.</p>";
+    h += "<p><strong>Its dataset:</strong> " + esc(r.dataset) + ".</p>";
+    h += "<p><strong>Its setting:</strong> " + esc(r.setting) + ".</p>";
+    h += "<table><thead><tr><th>What followed over</th><th>Years</th>" +
+      '<th class="num">Link recorded</th><th class="num">Strength of the count</th></tr></thead><tbody>';
+    r.results.forEach(function(row){
+      h += "<tr><td>" + num(row.window_sessions) + " trading sessions</td><td>" +
+        esc(row.era) + '</td><td class="num">' + corr(row.rank_correlation) +
+        '</td><td class="num">' + Number(row.strength).toFixed(1) + "</td></tr>";
+    });
+    h += "</tbody></table>";
+    h += "<p>The link is a rank correlation: a small positive number means " +
+      "deeper-than-usual pullbacks were followed, a little more often than " +
+      "not, by stronger moves than the same day's average. It is a research " +
+      "record to test here, not a result this page has earned.</p>";
+    h += "</section>";
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      if (data.definition) defEl.textContent = data.definition.replace(/^A pullback is /, "");
+      if (data.unproven_label){
+        labelEl.innerHTML = "<strong>New construction, still being proven:</strong> " +
+          esc(data.unproven_label.replace(/^New construction, still being proven: /, ""));
+      }
+      var hist = data.history || {};
+      var n = (data.events != null) ? Number(data.events) : 0;
+
+      if (data.state === "published"){
+        meta.textContent = "Pullback record published " +
+          fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+        var hp = '<section class="group"><h2>The pullback record</h2>';
+        if (data.receipt){
+          hp += '<p class="receipt">Receipt: Published ' +
+            fmtTimestamp(data.receipt.published_at_utc) +
+            " &middot; Data behind it: " + esc(data.receipt.source) +
+            " &middot; Coverage: " + esc(data.receipt.coverage) + "</p>";
+        }
+        hp += '<p class="big"><strong>' + num(n) + " pullback events counted</strong></p>";
+        hp += distributionHTML(data);
+        if (data.thin){ hp += '<p class="thin">Too few events for percentages: counts only.</p>'; }
+        hp += "</section>";
+        resultsEl.innerHTML = hp + researchHTML(data);
+        return;
+      }
+
+      // Unpublished state: no pullback study is on the record.
+      meta.textContent = data.published_at_utc
+        ? "Studies record dated " + fmtDateShort(data.studies_as_of) +
+          ", published " + fmtTimestamp(data.published_at_utc) +
+          ". Source: " + data.source + "."
+        : "";
+      var h = '<section class="group"><h2>No pullback study has been published yet</h2>';
+      if (data.receipt){
+        h += '<p class="receipt">Receipt: Published ' +
+          fmtTimestamp(data.receipt.published_at_utc) +
+          " &middot; Data behind it: " + esc(data.receipt.source) +
+          " &middot; Coverage: " + esc(data.receipt.coverage) + "</p>";
+      }
+      h += '<p class="big">' +
+        "The studies record on file contains no pullback study, so there is no " +
+        "depth distribution, no recovery times, and no list of names to show. " +
+        "This tool has published 0 signals so far.</p>";
+      h += distributionHTML(data);
+      if (hist.names != null){
+        h += "<p><strong>The history on file:</strong> daily prices for " +
+          num(hist.names) + " names, over " + num(hist.sessions) +
+          " trading sessions, from " + fmtDateLong(hist.from) + " to " +
+          fmtDateLong(hist.to) + ". No pullback study here has run on it yet.</p>";
+      }
+      h += "</section>";
+      h += researchHTML(data);
+      resultsEl.innerHTML = h;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The pullback record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
