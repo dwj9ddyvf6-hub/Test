@@ -17,6 +17,10 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: probability, over 1, 5 and 21 sessions. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 100 sessions per index cell, it does not beat the dead model's Brier score, or its reliability error exceeds 10 points. It counts as proven at 100 sessions per index cell.",
+    "summary": "State the chance that SPY and QQQ actually reach a price level, as a number this page is graded against."
+  },
   "feed": "forecast_ledger",
   "history": {
     "cells": [
@@ -1696,7 +1700,194 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "18 graded forecasts of 108 recorded on the ledger (mean scores: brier 0.2252, log_loss 0.6317); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 108,
+        "graded_forecasts": 18,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_02",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "execution_pricing",
+        "feed",
+        "history",
+        "kill_criterion",
+        "live",
+        "next_session",
+        "price_basis",
+        "provenance",
+        "source",
+        "state",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_02",
+      "forecasts": 162,
+      "grades": 18,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 162 forecasts are on record and 18 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 54,
+          "path": "/history"
+        },
+        {
+          "items": 54,
+          "path": "/history/cells"
+        },
+        {
+          "items": 0,
+          "path": "/history/pooled"
+        }
+      ],
+      "total_items_counted": 108
+    },
+    "version": 1
+  },
   "source": "Daily prices for SPY and QQQ from the price history on record (399 trading days, March 25, 2025 to October 23, 2026), and the expected-move bands published by the Corrected Band Engine from the same history.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Touch chance percent per level.",
+      "rows": [
+        {
+          "coverage": "benchmark 61.7 percent",
+          "name": "SPY +0.5 percent",
+          "score": 65.2
+        },
+        {
+          "coverage": "benchmark 61.7 percent",
+          "name": "SPY -0.5 percent",
+          "score": 51.4
+        },
+        {
+          "coverage": "benchmark 100.0 percent",
+          "name": "SPY either side 0.5 percent",
+          "score": 94.2
+        },
+        {
+          "coverage": "benchmark 31.7 percent",
+          "name": "SPY +1 percent",
+          "score": 35.8
+        },
+        {
+          "coverage": "benchmark 31.7 percent",
+          "name": "SPY -1 percent",
+          "score": 27.3
+        },
+        {
+          "coverage": "benchmark 63.5 percent",
+          "name": "SPY either side 1 percent",
+          "score": 60.9
+        },
+        {
+          "coverage": "benchmark 13.4 percent",
+          "name": "SPY +1.5 percent",
+          "score": 16.6
+        },
+        {
+          "coverage": "benchmark 13.4 percent",
+          "name": "SPY -1.5 percent",
+          "score": 16.6
+        },
+        {
+          "coverage": "benchmark 26.7 percent",
+          "name": "SPY either side 1.5 percent",
+          "score": 32.6
+        }
+      ],
+      "source": "live.names[0].cells[].p_pct",
+      "title": "Chances of touching each level"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Realised touch percent per history cell, forecast beside it.",
+      "rows": [
+        {
+          "coverage": "forecast 63.7 percent",
+          "name": "SPY 0.5 up 1d",
+          "score": 57.3
+        },
+        {
+          "coverage": "forecast 53.8 percent",
+          "name": "SPY 0.5 down 1d",
+          "score": 55.7
+        },
+        {
+          "coverage": "forecast 94.6 percent",
+          "name": "SPY 0.5 either 1d",
+          "score": 94.9
+        },
+        {
+          "coverage": "forecast 36.6 percent",
+          "name": "SPY 1.0 up 1d",
+          "score": 35.2
+        },
+        {
+          "coverage": "forecast 32.2 percent",
+          "name": "SPY 1.0 down 1d",
+          "score": 33.6
+        },
+        {
+          "coverage": "forecast 66.6 percent",
+          "name": "SPY 1.0 either 1d",
+          "score": 66.8
+        },
+        {
+          "coverage": "forecast 19.4 percent",
+          "name": "SPY 1.5 up 1d",
+          "score": 17.8
+        },
+        {
+          "coverage": "forecast 21.0 percent",
+          "name": "SPY 1.5 down 1d",
+          "score": 25.3
+        },
+        {
+          "coverage": "forecast 39.7 percent",
+          "name": "SPY 1.5 either 1d",
+          "score": 42.7
+        },
+        {
+          "coverage": "forecast 70.2 percent",
+          "name": "SPY 0.5 up 5d",
+          "score": 62.7
+        }
+      ],
+      "source": "history.cells[].realised_pct",
+      "title": "Touch record: realised against forecast"
+    },
+    "version": 1
+  },
   "tool": "Touch Surface"
 }
