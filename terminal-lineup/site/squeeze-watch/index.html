@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Squeeze Watch: the names carrying the most short interest on record</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5; --tag-bg:#fdeeda; --tag-ink:#7a4a08; --tag-line:#eec27f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .def strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .group p strong{color:var(--ink);font-weight:600}
+  .big{font-size:19px;color:var(--ink)}
+  .big strong{font-size:26px}
+  table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:15px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  td.sym{font-weight:700;white-space:nowrap}
+  .when{color:var(--faint);font-size:13px;white-space:nowrap}
+  .tag{display:inline-block;background:var(--tag-bg);border:1px solid var(--tag-line);
+       color:var(--tag-ink);border-radius:999px;padding:1px 9px;font-size:13px;font-weight:600;white-space:nowrap}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .nodata strong{color:var(--ink)}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Squeeze Watch</h1>
+    <p class="job">One job: list the names carrying a short interest reading on record, with the numbers that mark each one and the date those numbers are from.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the watch list&hellip;</p>
+
+  <div class="def">
+    <p><strong>Short interest share:</strong> the shares sold short in a company, as a percentage of the company's shares outstanding. It comes from the twice-monthly short interest readings published by Nasdaq out of the market-wide short interest collection; the shares outstanding come from each company's own public filings.</p>
+    <p><strong>Days to cover:</strong> how many days of that stock's usual trading volume it would take for every short seller to buy back what they borrowed, as reported alongside the same readings.</p>
+    <p><strong>Change in shares sold short:</strong> how the count of shares sold short moved between the two settlements on record, shown only for names that carry a reading at both.</p>
+    <p><strong>The 15% bar:</strong> the published squeeze formula this watch is built from only admits names whose short interest reaches 15% of the shares outstanding. Names at or above that bar are flagged; the flag marks that one bar and nothing more.</p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p>How the readings work: short interest is counted on settlement dates twice a month and published days later, so every figure on this page carries the settlement date it belongs to. The freshest settlement on record is the one listed; a newer settlement is added when its reading is published.</p>
+    <p>Why there is no ranked score: the published squeeze score ranks each name against the others inside the group that passes the full set of gates, using each name's recent price swings and trading volume. That full group is not assembled on record, and only 2 names clear the 15% short interest bar, so a ranking built from them would be two names compared with each other and nothing more. This page shows the readings themselves instead.</p>
+    <p>Why the headline shows counts only: a count with fewer than 30 names behind it shows its counts and no percentage. A percentage built on a handful of names reads as far more certain than it is, so it is left off until the count grows.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function pctVal(v, digits){
+    return Number(v).toLocaleString("en-US",{minimumFractionDigits:digits, maximumFractionDigits:digits}) + "%";
+  }
+  function pctSigned(f){
+    var v = Number(f) * 100;
+    return (v > 0 ? "+" : "") + v.toLocaleString("en-US",{minimumFractionDigits:1, maximumFractionDigits:1}) + "%";
+  }
+  function todayKey(){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(new Date());
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function daysBetween(a, b){
+    return Math.round((new Date(b + "T12:00:00Z") - new Date(a + "T12:00:00Z")) / 864e5);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.settlement_date) bits.push("Settlement: " + fmtDateLong(r.settlement_date));
+    if (r.published_date) bits.push("Readings published " + fmtDateLong(r.published_date));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var names = data.names || [];
+      if (!names.length || data.state !== "watching"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No short interest reading has been published yet. ' +
+          "When a reading is published, this page will list every name it covers with its short " +
+          "interest share, its days to cover, and the settlement date behind both. Nothing is " +
+          "shown for a reading that has not been made.</div>";
+        return;
+      }
+      var cov = data.coverage || {};
+      meta.textContent = "Settlement: " + fmtDateLong(data.settlement_date) +
+        ". Readings published " + fmtDateLong(data.published_date) + ". Source: " + data.source + ".";
+
+      var staleAfter = Number(data.stale_after_days || 40);
+      var age = daysBetween(data.settlement_date, todayKey());
+      if (age > staleAfter){
+        showBanner("stale", "These readings are out of date. The freshest settlement on record is " +
+          fmtDateLong(data.settlement_date) + ", more than the " + num(staleAfter) +
+          " days these readings stay current for, and a newer settlement has not been published yet. " +
+          "Treat the list below as the last published readings, not today's.");
+      }
+
+      var above = names.filter(function(n){ return n.above_si_bar; });
+      var h = '<section class="group"><h2>The watch list</h2>';
+      h += '<p class="receipt">Receipt: ' + receiptLine(data.receipt) + "</p>";
+      h += '<p class="big"><strong>' + num(names.length) + " names</strong> carry a short interest " +
+        "reading for the settlement of " + fmtDateLong(data.settlement_date) + ", and <strong>" +
+        num(above.length) + " of them</strong> are at or above the " +
+        num(data.si_bar_pct) + "% bar" +
+        (above.length ? ": " + above.map(function(n){ return esc(n.symbol); }).join(" and ") : "") +
+        ".</p>";
+      h += "<p>Coverage: the gathering behind these readings covered " + num(cov.names_gathered) +
+        " names. " + num(cov.names_covered) + " of them carry a short interest reading; " +
+        num(cov.names_not_covered) + " do not, so no marker is shown for those " +
+        num(cov.names_not_covered) + ". Two settlements are on record (" +
+        (data.settlements_on_record || []).map(fmtDateShort).join(" and ") + "); " +
+        num(cov.with_prior_reading) + " names carry a reading at both, and only those names " +
+        "show a change.</p>";
+      h += "<table><thead><tr><th>Name</th>" +
+        '<th class="num">Short interest</th>' +
+        '<th class="num">Days to cover</th>' +
+        '<th class="num">Change in shares sold short</th>' +
+        "<th></th></tr></thead><tbody>";
+      names.forEach(function(n){
+        h += "<tr><td class=\"sym\">" + esc(n.symbol) + "</td>" +
+          '<td class="num"><strong>' + pctVal(n.si_pct_of_float, 2) + "</strong> of shares out<br>" +
+          '<span class="when">' + num(n.si_shares) + " shares, settlement " +
+          fmtDateShort(n.settlement_date) + "</span></td>" +
+          '<td class="num"><strong>' + Number(n.days_to_cover).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2}) +
+          ' days</strong><br><span class="when">settlement ' + fmtDateShort(n.settlement_date) + "</span></td>" +
+          '<td class="num">' + (n.si_change == null
+            ? '<span class="when">Not on record for the earlier settlement</span>'
+            : "<strong>" + pctSigned(n.si_change) + '</strong><br><span class="when">since settlement ' +
+              fmtDateShort(n.prior_settlement_date) + "</span>") + "</td>" +
+          "<td>" + (n.above_si_bar ? '<span class="tag">Above the 15% bar</span>' : "") + "</td></tr>";
+      });
+      h += "</tbody></table></section>";
+
+      var na = data.not_available || [];
+      if (na.length){
+        h += '<section class="group"><h2>Markers not on record</h2>';
+        na.forEach(function(m){
+          h += '<div class="nodata"><strong>' + esc(m.marker) + ": not available yet.</strong> " +
+            esc(m.reason) + "</div>";
+        });
+        h += "</section>";
+      }
+
+      var vc = data.vendor_calibration;
+      if (vc){
+        h += '<section class="group"><h2>' + esc(vc.label) + "</h2>" +
+          "<p>These figures are the vendor's, from its own testing of its full ranked list, " +
+          "printed here as the vendor published them. They describe the vendor's list, not the " +
+          num(names.length) + " names above.</p>" +
+          "<table><thead><tr><th>Over the 5 trading days after ranking</th>" +
+          '<th class="num">Vendor\'s top 10 names</th><th class="num">All names</th>' +
+          "</tr></thead><tbody>" +
+          "<tr><td>Rose 20% or more</td>" +
+          '<td class="num"><strong>' + pctVal(Number(vc.top10_plus20_in_5_sessions) * 100, 1) + "</strong> of the time</td>" +
+          '<td class="num">' + pctVal(Number(vc.base_plus20) * 100, 1) + " of the time</td></tr>" +
+          "<tr><td>Fell 20% or more</td>" +
+          '<td class="num"><strong>' + pctVal(Number(vc.top10_minus20_in_5_sessions) * 100, 1) + "</strong> of the time</td>" +
+          '<td class="num">' + pctVal(Number(vc.base_minus20) * 100, 1) + " of the time</td></tr>" +
+          "<tr><td>Middle move of the top 10 names</td>" +
+          '<td class="num"><strong>' + pctSigned(vc.top10_median_5d_return) + "</strong></td>" +
+          '<td class="num"></td></tr>' +
+          "</tbody></table></section>";
+      }
+      resultsEl.innerHTML = h;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The watch list is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
