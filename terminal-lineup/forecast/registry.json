@@ -1,0 +1,1766 @@
+{
+  "schema": "forecast-family-registry/v1",
+  "source_design": "~/workspace/terminal-lineup/FORECAST-ENGINES-30.md (2026-10-28)",
+  "families": [
+    {
+      "id": "price",
+      "name": "price",
+      "description": "Daily/intraday OHLCV-derived evidence: returns, depth, gaps, breadth from bars."
+    },
+    {
+      "id": "options_prints",
+      "name": "options prints",
+      "description": "Observed options prints, flow tallies, side estimates, DIX/dark prints from prints."
+    },
+    {
+      "id": "modelled_inventory",
+      "name": "modelled inventory",
+      "description": "Modelled chain inventory: GEX, walls, flip, open interest under a stated sign convention. Modelled, never observed dealer holdings."
+    },
+    {
+      "id": "filings_positioning",
+      "name": "filings/positioning",
+      "description": "Filings and positioning: 13F, insider transactions, short volume/interest, with their publication delays."
+    },
+    {
+      "id": "events_calendar",
+      "name": "events/calendar",
+      "description": "Scheduled events and calendar: earnings dates, macro calendar, expiry calendar, promotion/rerun events."
+    },
+    {
+      "id": "distributional_volatility",
+      "name": "distributional/volatility",
+      "description": "Distributional and volatility constructions: HAR/GARCH, implied vol, bands, calibration curves, grading-series statistics."
+    }
+  ],
+  "grading_rules": [
+    {
+      "id": "coverage",
+      "scorer": "coverage",
+      "description": "Band/interval hit rate against stated coverage, with width."
+    },
+    {
+      "id": "brier",
+      "scorer": "brier",
+      "description": "Brier score and log loss for probabilities."
+    },
+    {
+      "id": "pinball",
+      "scorer": "pinball",
+      "description": "Pinball loss per quantile; CRPS approximated from the quantile set (CRPS-ready hook)."
+    },
+    {
+      "id": "abs_error",
+      "scorer": "abs_error",
+      "description": "Absolute and signed error for point/cohort-median forecasts."
+    },
+    {
+      "id": "ranked_probability_score",
+      "scorer": "ranked_probability_score",
+      "description": "Ranked probability score for forecasts distributed over ordered bins/terciles."
+    },
+    {
+      "id": "survival_brier",
+      "scorer": "survival_brier",
+      "description": "Timing forecasts: Brier on resolved-by-horizon at each stated horizon, censored cases kept in the denominator."
+    }
+  ],
+  "defect_sources": [
+    {
+      "id": "femto_fear_ok_from_product",
+      "name": "fear_ok_from_product (Femto capitulation FEAR+ gate)",
+      "conflict": "C14",
+      "tags": [
+        "defect",
+        "fail-open"
+      ],
+      "defect": "Accepts score -1 and -inf as passing (fail-open hole found by the contributor audit probe of HEAD, per analysis/03-CONFLICTS-AND-NOVELTY.md C14).",
+      "effect": "Abstentions or no-data states caused by this function are tagged defect-abstentions (absence_state=defect_abstention), not market states, until cured at the source. Load-bearing for Engine 30."
+    },
+    {
+      "id": "femto_qullamaggie_accept",
+      "name": "Qullamaggie accept() (Femto)",
+      "conflict": "C14",
+      "tags": [
+        "defect",
+        "fail-open"
+      ],
+      "defect": "Admits NaN and +inf stops; a NaN entry poisons the budget total (per C14).",
+      "effect": "Abstentions or no-data states caused by this function are tagged defect-abstentions, not market states, until cured at the source."
+    },
+    {
+      "id": "femto_pattern_calibration_validate_product",
+      "name": "pattern_calibration.validate_product (Femto)",
+      "conflict": "C14",
+      "tags": [
+        "defect",
+        "fail-open"
+      ],
+      "defect": "Passes four mutations (as_of 2099, negative counts, 9999% cell, duplicate cell) because it checks headers, not content (per C14).",
+      "effect": "Abstentions or no-data states caused by this function are tagged defect-abstentions, not market states, until cured at the source."
+    }
+  ],
+  "engines": [
+    {
+      "id": "engine_01",
+      "number": 1,
+      "name": "Corrected Band Engine",
+      "forecast_form": "distribution",
+      "horizons": "1, 5 and 21 sessions; bands 50/68/81/95%",
+      "grading_rule_id": "pinball",
+      "kill_criterion": "the 68 percent band's coverage at any horizon sits outside its binomial interval after 120 graded forecasts, or a plain HAR band beats it on pinball at equal width.",
+      "proving_threshold": "120 live forecasts (68% band claim graded at 120)",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "2 graded forecasts of 30 recorded on the ledger (mean scores: crps_approx 2.4433, pinball@0.025 0.4241, pinball@0.095 1.2854, pinball@0.16 1.8976, pinball@0.25 2.5425, pinball@0.75 2.2725, pinball@0.84 1.1256, pinball@0.905 0.1314, pinball@0.975 0.0941); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 2,
+        "forecasts_recorded": 30,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "HAR realised-vol series",
+          "family": "distributional_volatility"
+        },
+        {
+          "name": "VIX/VXN/VIX9D/HV30 series",
+          "family": "distributional_volatility"
+        },
+        {
+          "name": "SPY/QQQ daily bars",
+          "family": "price"
+        }
+      ],
+      "notes": "FE12 session quality guard (DEEP-PASS 3.2 item 10): one sided liquidity deterioration flag in site/engine_adaptations.py, consumed in refresh_correctedband.py as a band widener (bands_for guard factor) and abstention raiser; his intercept and weights were not imported. The corrected band routes are daily bars only, so no intraday spread, depth, volume concentration or intraday realised vol reading is on record and the guard publishes not_recorded, widening nothing. FE08 HAR control (3.2 item 14): this engine is graded against the fixed weight HAR control on QLIKE in forecast/grading.py har_control_report, beside its pinball and coverage grades.",
+      "edge_card": {
+        "payer": "Hypothesized payer: sellers of index volatility and users of the vendor expected move band, whose uncorrected band misprices the move this engine sizes.",
+        "bad_state": "A vol regime break (VIX backwardation beyond the registered widening, or a realised vol jump the HAR spine cannot follow) makes every band too narrow at once.",
+        "holdability_and_co_losses": "Bands are holdable as a sizing input at 1, 5 and 21 sessions with no carry cost of their own; when bands fail they fail together across SPY and QQQ, so co losses are index wide, not name specific.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Any strategy sizing off these bands pays its own spread and slippage outside this record.",
+        "price_aware_baseline": "The vendor expected move band and a plain HAR band at equal width, graded on pinball loss and coverage per band per horizon."
+      }
+    },
+    {
+      "id": "engine_02",
+      "number": 2,
+      "name": "Touch Surface",
+      "forecast_form": "probability",
+      "horizons": "1, 5 and 21 sessions",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 100 sessions per index cell, it does not beat the dead model's Brier score, or its reliability error exceeds 10 points.",
+      "proving_threshold": "100 sessions per index cell",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "18 graded forecasts of 108 recorded on the ledger (mean scores: brier 0.2252, log_loss 0.6317); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 18,
+        "forecasts_recorded": 108,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "daily OHLC bars (DEEP panel)",
+          "family": "price"
+        },
+        {
+          "name": "Engine 1 expected-move bands",
+          "family": "distributional_volatility"
+        },
+        {
+          "name": "net GEX sign",
+          "family": "modelled_inventory"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: buyers of touch and barrier style payoffs priced off the vendor reflection formula, which overstates touch odds by a measured 13 to 30 points.",
+        "bad_state": "A one way trend day or an overnight gap jumps clean over a level, so daily high and low bars record a touch that intraday holders could not act on, and quiet regimes make every cell stale at once.",
+        "holdability_and_co_losses": "Probabilities are holdable as inputs across 1, 5 and 21 sessions; the plus and minus cells for one name are mechanically linked, so a grading miss on one side raises the chance of a miss on the other.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Acting on a touch probability pays the underlying spread and any option spread outside this record.",
+        "price_aware_baseline": "The driftless barrier estimate and the vendor reflection formula 2N(.) with its measured overstatement haircut, per distance and horizon cell."
+      }
+    },
+    {
+      "id": "engine_03",
+      "number": 3,
+      "name": "Own-Norm Depth Forecaster",
+      "forecast_form": "direction and distribution",
+      "horizons": "20 sessions (secondary 60)",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 200 matured forecasts, the quintile spread's confidence interval includes zero.",
+      "proving_threshold": "200 matured forecasts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 0,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP daily bars 2016-2026",
+          "family": "price"
+        },
+        {
+          "name": "shipped daily history",
+          "family": "price"
+        },
+        {
+          "name": "SPY daily bars",
+          "family": "price"
+        }
+      ],
+      "notes": "FE02 Hurst gate (DEEP-PASS 3.2 item 15): admitted as a conditioner candidate only, recorded in registry research_questions (fe02_hurst_gate); not wired, because no Hurst estimator exists in our stack, and this engine's scores do not change until one is built and frozen.",
+      "edge_card": {
+        "payer": "Hypothesized payer: dip buyers who buy every pullback at the index norm rather than the name's own norm, and momentum holders who exit shallow pullbacks in strong names.",
+        "bad_state": "A name whose character changes (a broken business, a regime shift in its own volatility) makes its trailing 750 session depth distribution the wrong norm, so depth percentiles stop meaning what they meant.",
+        "holdability_and_co_losses": "The 20 session horizon is holdable for a paper position; pullback cohorts cluster by market stress, so many names enter together and their outcomes are correlated, not independent.",
+        "execution_net": "A forecast, not a trade: the grade is on excess return against SPY before costs. A paper position realising it would pay spread and slippage outside this record.",
+        "price_aware_baseline": "The same name's unconditional 20 session excess return rate and the index norm pullback rule, at the same depth percentiles."
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_03_excess_sign_v1",
+        "benchmark": "SPY",
+        "issued_value_scale": "probability p that the 20 session excess return against SPY is positive, plus a median excess estimate in points",
+        "realised_scale": "fraction excess against SPY with its sign as the binary outcome: the shared resolver kind excess_sign",
+        "resolver_kind": "excess_sign",
+        "legacy_kind_map": {
+          "return": "excess_sign"
+        },
+        "note": "The registered grading rule is the probability score, so the realised value the grade needs is the sign of the excess, which the old own return fraction resolver could not produce. No live rows stood on the ledger at the effective date (the live branch was blocked on the missing session calendar, cured the same day in forecast/session_calendar.py); new live rows carry kind excess_sign with benchmark SPY.",
+        "affected_outstanding": {
+          "count": 0,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    },
+    {
+      "id": "engine_04",
+      "number": 4,
+      "name": "Stress-Reversal Staging",
+      "forecast_form": "timing and distribution",
+      "horizons": "+1, +3 and +5 sessions, episodic (stress tercile only)",
+      "grading_rule_id": "survival_brier",
+      "kill_criterion": "stage 1 fails its pre-registered bar in the first 3 forward episodes, and the script retires as a whole.",
+      "proving_threshold": "first 3 forward episodes (stage 1)",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "1209 graded forecasts of 1815 recorded on the ledger (mean scores: brier@1 0.2544, brier@3 0.4147); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 1209,
+        "forecasts_recorded": 1815,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "daily bars",
+          "family": "price"
+        },
+        {
+          "name": "SPY drawdown tercile from SPY history",
+          "family": "price"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: forced and panicked sellers in the deepest SPY drawdown tercile, whose indiscriminate selling overshoots the loser cohort's peer gap.",
+        "bad_state": "A drawdown that keeps deepening (the reversal script's stage one simply never fires) or a cohort whose losers are losers for permanent reasons, so the peer gap is information, not overshoot.",
+        "holdability_and_co_losses": "Staged at plus 1, plus 3 and plus 5 sessions, so each stage is separately holdable and separately falsifiable; the whole cohort shares one market condition, so stage failures arrive together.",
+        "execution_net": "A forecast, not a trade: grades are on cohort returns before costs. Entering a stressed cohort pays wide spreads and gap risk outside this record, which is why staging, not sizing, is the claim.",
+        "price_aware_baseline": "The unstaged T2 reversal effect on the same cohort and condition, and the cohort's own unconditional return after deep drawdown days."
+      }
+    },
+    {
+      "id": "engine_05",
+      "number": 5,
+      "name": "Honest POP Engine",
+      "forecast_form": "probability",
+      "horizons": "to weekly expiry, graded at expiry close",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 26 weekly expiries, its Brier is no better than the uncorrected IV POP's.",
+      "proving_threshold": "26 weekly expiries",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (431 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 431,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "chain snapshots",
+          "family": "modelled_inventory"
+        },
+        {
+          "name": "HV30 series",
+          "family": "distributional_volatility"
+        }
+      ],
+      "notes": "Options candidate gate (DEEP-PASS 3.1 item 3, 2026-10-29): Greeks older than 75 minutes or future dated refuse where a Greek timestamp exists, undated labelling where none does, IV ceiling 500 percent; shared module site/options_gate.py.",
+      "edge_card": {
+        "payer": "Hypothesized payer: options buyers and sellers pricing finish above strike odds off the raw chain, including strikes whose quotes are stale, undated or too wide to be a real price.",
+        "bad_state": "An expiry week with a macro print or a pin that drags the final close, where the whole surface is wrong in the same direction at once; contracts failing the Greek freshness gate leave holes in the surface rather than graded claims.",
+        "holdability_and_co_losses": "Each day's surface is ledgered separately to expiry, so it is holdable as a record; strikes on one expiry share one final close, so their grades are one event, not independent trials.",
+        "execution_net": "A forecast, not a trade: POP is graded against the final close, not against a fill. Trading a strike pays its spread, which on the gated out contracts is exactly why they were gated out.",
+        "price_aware_baseline": "The chain's own implied finish above probability read straight off prices, per strike, with no calibration correction."
+      }
+    },
+    {
+      "id": "engine_06",
+      "number": 6,
+      "name": "Exceedance Forecaster",
+      "forecast_form": "probability",
+      "horizons": "5 and 21 sessions",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 120 index forecasts, no Brier improvement over the base rate.",
+      "proving_threshold": "120 index forecasts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (10803 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 10803,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP daily bars and trade counts",
+          "family": "price"
+        },
+        {
+          "name": "overnight gap size",
+          "family": "price"
+        },
+        {
+          "name": "HAR/backwardation vol state",
+          "family": "distributional_volatility"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: buyers of tail protection and sellers of the priced expected move, whoever is mispricing how often the absolute move beats 1 and 2 EM.",
+        "bad_state": "A vol compression regime where exceedances cluster into a few weeks and vanish for months, so the graded sample is a handful of shared events wearing many tickers.",
+        "holdability_and_co_losses": "Probabilities cover 5 session and 21 session windows and are holdable as risk inputs; exceedances across SPY, QQQ and IWM on the same shock are the same event, so co losses are systemic.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Tail trades that use it pay option spreads and theta outside this record.",
+        "price_aware_baseline": "The priced expected move itself: the exceedance rate implied by 1 and 2 EM under a normal move distribution, and the name's own trailing exceedance rate."
+      }
+    },
+    {
+      "id": "engine_07",
+      "number": 7,
+      "name": "Realised-Vol Term Shape Forecaster",
+      "forecast_form": "distribution and probability",
+      "horizons": "5, 21 and 63 sessions, weekly",
+      "grading_rule_id": "pinball",
+      "kill_criterion": "after 52 weekly cohorts, quantile coverage misses its stated rates by more than 10 points at two or more horizons.",
+      "proving_threshold": "52 weekly cohorts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (24 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 24,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "HAR components from index daily bars",
+          "family": "distributional_volatility"
+        },
+        {
+          "name": "implied vol level",
+          "family": "distributional_volatility"
+        },
+        {
+          "name": "SPY/QQQ daily bars",
+          "family": "price"
+        }
+      ],
+      "notes": "FE08 HAR control (DEEP-PASS 3.2 item 14): this engine is graded against the fixed weight HAR control (0.50 log rv 1, 0.30 log rv 5, 0.20 log rv 22) on QLIKE in forecast/grading.py har_control_report; the engine variance equivalent is its median realised vol quantile squared, stated in the grading module.",
+      "edge_card": {
+        "payer": "Hypothesized payer: vol traders pricing one horizon off another (calendar and term structure positioning) when the realised term shape is about to differ from the implied one.",
+        "bad_state": "A single shock week dominates all three horizons at once, flattening the shape the engine claims to separate, and 63 session windows overlap so heavily that graded samples are far fewer than they look.",
+        "holdability_and_co_losses": "Weekly issuance with 5, 21 and 63 session horizons is holdable as a vol input; the three horizon grades from one issuance share the same realised path and cannot be counted as independent.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Realising a term shape view pays vol product spreads and roll outside this record.",
+        "price_aware_baseline": "The implied vol term shape read off the chain and the flat forecast that future realised vol equals its trailing level at every horizon."
+      }
+    },
+    {
+      "id": "engine_08",
+      "number": 8,
+      "name": "Wall Lifetime and Break Forecaster",
+      "forecast_form": "probability and timing",
+      "horizons": "1, 3, 5 and 10 sessions; same-session",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 60 cards per index, its 5-session touch calibration error exceeds 10 points or its break Brier is no better than the unconditional break rate.",
+      "proving_threshold": "60 cards per index",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "36 graded forecasts of 189 recorded on the ledger (mean scores: brier 0.1029, log_loss 0.3038, ranked_probability_score 2.3842); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 36,
+        "forecasts_recorded": 189,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "Morning Map cards (walls, flip, GEX)",
+          "family": "modelled_inventory"
+        },
+        {
+          "name": "chain snapshots",
+          "family": "modelled_inventory"
+        },
+        {
+          "name": "expected-move units",
+          "family": "distributional_volatility"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: traders who treat a published wall or flip level as durable support or resistance for its whole life, including after the inventory that built it has moved.",
+        "bad_state": "A fast repricing day where walls are run through in sequence, or a map built on a stale chain, makes lifetimes collapse together across SPY, QQQ and IWM.",
+        "holdability_and_co_losses": "Levels are graded at 1, 3, 5 and 10 sessions, so a level view is holdable only inside its stated window; call wall, put wall and flip grades for one map share one price path.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Trading into a wall pays the spread and risks the break itself, outside this record.",
+        "price_aware_baseline": "The naive durability assumption that a wall survives its window, and a distance only model that prices break odds from how far spot sits from the level with no lifetime record."
+      }
+    },
+    {
+      "id": "engine_09",
+      "number": 9,
+      "name": "Intake-Bias Reversal",
+      "forecast_form": "direction (cohort)",
+      "horizons": "5 sessions",
+      "grading_rule_id": "abs_error",
+      "kill_criterion": "after 80 fires, the interaction mean is zero or positive, or no better than short volume alone. This is a cohort fade forecast, never a short book: A16 killed shorting picked names after borrow costs.",
+      "proving_threshold": "80 fires",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (10 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 10,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "Flow Tape dual-population Algo Scores",
+          "family": "options_prints"
+        },
+        {
+          "name": "FINRA short volume",
+          "family": "filings_positioning"
+        }
+      ],
+      "notes": "FE02 Hurst gate (DEEP-PASS 3.2 item 15): admitted as a conditioner candidate only, recorded in registry research_questions (fe02_hurst_gate); not wired, because no Hurst estimator exists in our stack, and this engine's scores do not change until one is built and frozen.",
+      "edge_card": {
+        "payer": "Hypothesized payer: buyers chasing a vendor flow score whose bullishness is manufactured by buys only intake, paying up for flow that the all prints record does not confirm.",
+        "bad_state": "A tape regime where short volume data lags or the intake gap is wide for mechanical reasons (a print classification change), so the manufactured bullishness reading is an artifact of the feed, not of positioning.",
+        "holdability_and_co_losses": "The claim is a cohort mean over 5 sessions and is holdable only as a cohort, never as a single name call; cohort members share the flow regime that selected them, so outcomes correlate.",
+        "execution_net": "A forecast, not a trade: the grade is the cohort's mean excess return before costs. Fading a crowded flow cohort pays borrow and spread outside this record.",
+        "price_aware_baseline": "The buys only Algo Score taken at face value on the same cohort, and the all prints score with no short volume condition."
+      }
+    },
+    {
+      "id": "engine_10",
+      "number": 10,
+      "name": "Insider-Flow Divergence",
+      "forecast_form": "direction",
+      "horizons": "21 sessions",
+      "grading_rule_id": "abs_error",
+      "kill_criterion": "after 60 fires per arm, either arm's mean sign is wrong.",
+      "proving_threshold": "60 fires per arm",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (146 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 146,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "insider summaries",
+          "family": "filings_positioning"
+        },
+        {
+          "name": "options Heat (tape cards)",
+          "family": "options_prints"
+        }
+      ],
+      "notes": "FE23 plan adjusted insider flow (DEEP-PASS 3.2 item 7): Form 4 footnote plan status classifier in site/engine_adaptations.py, precision tracked against a labelled set under a registered kill floor of 0.90 on at least 20 labelled footnotes. The insider record is summary grain with no footnotes, so no name is classified and no leg is adjusted today; state published in the page's plan_adjustment block.",
+      "edge_card": {
+        "payer": "Hypothesized payer: whichever of the two best informed families is wrong at a divergence: insider sellers who know less than the options flow, or options buyers positioned against what insiders are doing.",
+        "bad_state": "Divergences driven by hedging rather than information (insider sales under plans, options flow that is a hedge leg) make the disagreement meaningless, and heavy net selling clusters in falling names whose underperformance is momentum, not information.",
+        "holdability_and_co_losses": "The 21 session horizon is holdable for a paper position; divergence names cluster by sector and event calendar, so the cohort's outcomes are not independent draws.",
+        "execution_net": "A forecast, not a trade: the grade is mean excess return against SPY before costs. Acting on it pays spread and, on the short side, borrow, outside this record.",
+        "price_aware_baseline": "Each family alone on the same names: insider net selling by itself and top bucket options Heat by itself, over the same 21 sessions."
+      }
+    },
+    {
+      "id": "engine_11",
+      "number": 11,
+      "name": "Gamma-Pressure Earnings Trap",
+      "forecast_form": "distribution",
+      "horizons": "the earnings session (events within 5 sessions)",
+      "grading_rule_id": "coverage",
+      "kill_criterion": "after 60 events, the exceedance confidence interval includes 50 percent or the median ratio is below 1.0.",
+      "proving_threshold": "60 events",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (89 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 89,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "index net GEX (Map cards)",
+          "family": "modelled_inventory"
+        },
+        {
+          "name": "earnings calendar with priced expected move",
+          "family": "events_calendar"
+        },
+        {
+          "name": "chain snapshots",
+          "family": "modelled_inventory"
+        }
+      ],
+      "notes": "Options candidate gate (DEEP-PASS 3.1 item 3, 2026-10-29): Greeks older than 75 minutes or future dated refuse where a Greek timestamp exists, undated labelling where none does, IV ceiling 500 percent; shared module site/options_gate.py.",
+      "edge_card": {
+        "payer": "Hypothesized payer: sellers of earnings premium who price the expected move off the chain while dealer gamma is positioned to amplify whichever way the print jumps.",
+        "bad_state": "Negative index GEX that flips before the report, or an earnings move driven by guidance in the call rather than the print, so the amplification the trap counts on is absent or mistimed; direction is never claimed, so a huge move the wrong way still pays the claim and that asymmetry is the claim.",
+        "holdability_and_co_losses": "Names reporting inside 5 sessions under one index GEX reading share that reading, so a wrong regime call fails the whole season's cohort together.",
+        "execution_net": "A forecast, not a trade: the grade compares realised to chain priced move before costs. Harvesting it with options pays the earnings spread and crush, outside this record.",
+        "price_aware_baseline": "The chain priced expected move itself (realised equals priced, ratio 1.0) and the same test run without the negative GEX condition."
+      }
+    },
+    {
+      "id": "engine_12",
+      "number": 12,
+      "name": "Earnings Move Distribution Engine",
+      "forecast_form": "distribution and probability",
+      "horizons": "earnings session; signed 5-session post-report",
+      "grading_rule_id": "pinball",
+      "kill_criterion": "after two full seasons, the 80 percent band's coverage sits outside 70 to 90 percent, or exceedance Brier is no better than quoting the priced move's implied rate.",
+      "proving_threshold": "two full seasons",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "8 graded forecasts of 290 recorded on the ledger (mean scores: coverage_hit 0.0000, crps_approx 2.1797, pinball@0.1 0.3293, pinball@0.2 0.7429, pinball@0.3 0.9610, pinball@0.4 1.2495, pinball@0.5 1.4050, pinball@0.6 1.5215, pinball@0.7 1.4588, pinball@0.8 1.2411, pinball@0.9 0.8996); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 8,
+        "forecasts_recorded": 290,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "earnings calendar",
+          "family": "events_calendar"
+        },
+        {
+          "name": "chain-priced expected move",
+          "family": "modelled_inventory"
+        },
+        {
+          "name": "DEEP report-day history",
+          "family": "price"
+        }
+      ],
+      "notes": "FE17 blend registered as this engine's centre (takes over the middle step per name when its implied move, dispersion and timing inputs exist; the priced move and timing inputs landed 2026-10-30, and the dispersion input is the forecast error dispersion on record under the amendment in this entry's fe17_centre block, so the centre is recorded per name where all inputs exist). FE18 ledgered as a sub forecast under its own quantity, issued only after the 5 session drift window it consumes closes and graded over the next 5 sessions; standardized surprise and revision breadth have no source on disk (open remainder, DEEP-PASS 3.2 item 6). FE04 fair gap residual conditioner for Engine 28 waits on a fair gap model neither side has (open).",
+      "fe17_centre": {
+        "blend": "centre = (0.60 * implied move + 0.40 * historical event move) * (1 + 0.08 * clip(dispersion_z, -2, 2)) * timing_quality",
+        "inputs": [
+          {
+            "name": "implied_move",
+            "definition": "the name's chain priced expected move, from the per name priced move record",
+            "source": "site/earnings-record/priced_moves.json"
+          },
+          {
+            "name": "historical_event_move",
+            "definition": "the typical (middle) past move of the name's own historical earnings move distribution",
+            "source": "this engine's distribution, built from the DEEP report-day history"
+          },
+          {
+            "name": "dispersion",
+            "definition": "forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names. Not cross analyst estimate dispersion.",
+            "source": "site/earnings-record/record.json, per name forecast_error_dispersion"
+          },
+          {
+            "name": "timing_quality",
+            "definition": "report timing quality from the earnings record lane's report time classes",
+            "source": "site/earnings-record/record.json, per name timing_quality"
+          }
+        ],
+        "amendment": {
+          "date": "2026-10-30",
+          "authority": "the owner's decision on the terminal ruling items, delegated to Midna on 2026-10-30 (leave it to Midna as long as it works as intended)",
+          "adopted_input": "forecast_error_dispersion",
+          "superseded_input": "estimate_dispersion_z_cross_analyst",
+          "change": "the centre's registered dispersion input is defined as the forecast error dispersion on record, under its own true name and definition",
+          "reason": "the originally registered input, cross analyst estimate dispersion, is carried by no free source, because no free source carries individual analyst estimates, so the centre could never take over; the forecast error dispersion the earnings record carries is a different quantity, and it is adopted as itself. It is never renamed into analyst estimate dispersion, and the lane's refusal to rename it stands as correct.",
+          "record": "remainder RC-07; rulings record at research_notes/remainders-fix-20261030/RULINGS-2026-10-30.md"
+        }
+      },
+      "edge_card": {
+        "payer": "Hypothesized payer: the options market pricing an earnings move distribution that is systematically narrower or wider than the distribution that actually arrives, season after season.",
+        "bad_state": "A season where macro news swamps every print, so all names move together and the per name distributions grade as one event; a thin calendar season also leaves too few reports to grade the season as a season.",
+        "holdability_and_co_losses": "Each report is graded on its earnings day move and its signed 5 session drift; names reporting the same day share the market leg of both windows.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Trading an earnings distribution pays the widest spreads of the year, outside this record.",
+        "price_aware_baseline": "The chain priced expected move as a one number distribution, and the name's own historical earnings move distribution with no chain input."
+      }
+    },
+    {
+      "id": "engine_13",
+      "number": 13,
+      "name": "Idiosyncratic-or-Liquidity Splitter",
+      "forecast_form": "direction",
+      "horizons": "20 sessions",
+      "grading_rule_id": "abs_error",
+      "kill_criterion": "a leg is retired independently if its median confidence interval includes zero after 150 episodes.",
+      "proving_threshold": "150 episodes per leg",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 0,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP daily bars",
+          "family": "price"
+        },
+        {
+          "name": "SPY daily bars",
+          "family": "price"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: sellers (and buyers) who treat every sharp decline the same: panic sellers of liquidity driven drops that reverse, and dip buyers of idiosyncratic drops that persist.",
+        "bad_state": "A market wide break where the SPY flat condition misclassifies (the market falls the next day instead), or idiosyncratic news that is fully resolved in a day, so persistence and reversal swap sides.",
+        "holdability_and_co_losses": "The 20 session excess horizon is holdable for a paper position; liquidity driven cases arrive in market clusters, so that arm's outcomes are one regime bet, not many.",
+        "execution_net": "A forecast, not a trade: grades are excess returns before costs. Buying a falling name pays spread and gap through risk outside this record.",
+        "price_aware_baseline": "The undifferentiated rule that every drop of 2 own residual vol units behaves the same, and a market only split with no own norm sizing."
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_13_excess_points_v1",
+        "benchmark": "SPY",
+        "issued_value_scale": "point estimate in points of 20 session excess return against SPY",
+        "realised_scale": "points: the shared resolver kind excess_return_points returns (own return minus SPY return) times 100",
+        "resolver_kind": "excess_return_points",
+        "legacy_kind_map": {
+          "return": "excess_return_points"
+        },
+        "note": "Before this convention the outcome spec carried only the name's own return as a fraction, so the point estimate in points of excess had no matching realised value. Issued rows are not edited; the legacy map resolves their excess against SPY, the benchmark their issuing record names. New rows carry kind excess_return_points with benchmark SPY. No ungraded present rows of this kind stood on the ledger at the effective date; the convention binds the next issuance.",
+        "affected_outstanding": {
+          "count": 0,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    },
+    {
+      "id": "engine_14",
+      "number": 14,
+      "name": "Own-Volatility Normalisation Clock",
+      "forecast_form": "timing and distribution",
+      "horizons": "normalisation within up to 63 sessions (censor)",
+      "grading_rule_id": "pinball",
+      "kill_criterion": "after 200 matured forecasts, coverage error exceeds 10 points or MAE does not beat the baseline.",
+      "proving_threshold": "200 matured forecasts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (153 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 153,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP daily bars",
+          "family": "price"
+        },
+        {
+          "name": "per-name realised-vol history",
+          "family": "distributional_volatility"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: anyone pricing a spiked name's future vol off a market wide clock (a fixed number of sessions) instead of the name's own history of coming home.",
+        "bad_state": "A spike that is a regime change rather than an episode: vol steps up and stays, the clock runs past its band, and every name spiked by the same shock shares the failure.",
+        "holdability_and_co_losses": "A timing distribution, holdable as an expectation, not a date; names spiked by one market event have synchronised clocks, so their grades correlate.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Short vol harvested against the clock pays margin and gap risk outside this record.",
+        "price_aware_baseline": "The market wide median normalisation time applied to every name, and the name's own unconditional median time above its median vol."
+      }
+    },
+    {
+      "id": "engine_15",
+      "number": 15,
+      "name": "Per-Name Self-Analogue",
+      "forecast_form": "distribution",
+      "horizons": "21 sessions",
+      "grading_rule_id": "pinball",
+      "kill_criterion": "pooled coverage error over 10 points after 200 forecasts.",
+      "proving_threshold": "200 forecasts (pooled); per-name suspension at 100 forecasts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (27258 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 27258,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP daily bars (own history)",
+          "family": "price"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: cross sectional models that price a name off other names like it, when the name's own past in the same state carries the better distribution.",
+        "bad_state": "A name whose own history is short, reconstituted or regime broken, so its nearest past states are few or belong to a different company in effect; analogue windows overlap, shrinking the honest sample.",
+        "holdability_and_co_losses": "The plus 21 session distribution is holdable for a paper position; analogue sets drawn from one era share that era's market path in the grading window.",
+        "execution_net": "A forecast, not a trade: the grade is coverage of the realised return inside the published band, before costs.",
+        "price_aware_baseline": "The cross sectional peer distribution for the same state, and the name's own unconditional plus 21 session return distribution."
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_15_percent_quantiles_v1",
+        "issued_value_scale": "quantiles in percent (own 21 session return, percent)",
+        "realised_scale": "percent: the shared resolver kind return_percent returns the own return times 100",
+        "resolver_kind": "return_percent",
+        "legacy_kind_map": {
+          "return": "return_percent"
+        },
+        "note": "Before this convention the shared resolver returned a fraction for kind return, so a percent quantile would have been graded against a fraction (a factor of 100 too small) at the first maturities from 2026-11-26. Issued rows are not edited; grade_forecast rewrites a copy of their outcome spec through this legacy map. New rows are issued with kind return_percent.",
+        "affected_outstanding": {
+          "count": 10521,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    },
+    {
+      "id": "engine_16",
+      "number": 16,
+      "name": "Own Capitulation Volume Clock",
+      "forecast_form": "direction and probability",
+      "horizons": "20 sessions (return leg); 10 sessions (exhaustion leg)",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 200 episodes, either leg's confidence interval includes its null.",
+      "proving_threshold": "200 episodes",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (164 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 164,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP daily bars incl. volume",
+          "family": "price"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: late sellers capitulating at the volume climax and momentum shorts pressing a beaten down name exactly when its own down volume says exhaustion.",
+        "bad_state": "Capitulation that is the start of a collapse rather than its end (fraud, solvency), where the volume climax repeats; the 95th percentile trigger also fires rarely, so the record accrues slowly and clusters in crashes.",
+        "holdability_and_co_losses": "The 20 session excess claim is holdable for a paper position; triggers cluster on market fear days, so positions taken together share one market rebound or failure.",
+        "execution_net": "A forecast, not a trade: grades are excess returns before costs. Catching a capitulating name pays wide spreads and intraday gaps outside this record.",
+        "price_aware_baseline": "The same drawdown cohort without the volume condition, and a market fear day entry with no per name volume trigger."
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_16_excess_points_v1",
+        "benchmark": "SPY",
+        "issued_value_scale": "point estimate in points of 20 session excess return against SPY (return half)",
+        "realised_scale": "points: the shared resolver kind excess_return_points returns (own return minus SPY return) times 100",
+        "resolver_kind": "excess_return_points",
+        "legacy_kind_map": {
+          "return": "excess_return_points"
+        },
+        "note": "Same construction as Engine 13, for this engine's return half only; its exhaustion half kind volume_below_frozen_median is unchanged. Issued rows are not edited; new return half rows carry kind excess_return_points with benchmark SPY.",
+        "affected_outstanding": {
+          "count": 46,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    },
+    {
+      "id": "engine_17",
+      "number": 17,
+      "name": "Family Fracture",
+      "forecast_form": "distribution and probability",
+      "horizons": "5 sessions",
+      "grading_rule_id": "abs_error",
+      "kill_criterion": "after 100 sessions, fracture does not beat HAR alone on range error. That comparison is the falsifier, stated in advance.",
+      "proving_threshold": "100 sessions",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (32 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 32,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "family readings from Map, Tape, Board and vol bench",
+          "family": "price"
+        },
+        {
+          "name": "modelled inventory family reading",
+          "family": "modelled_inventory"
+        },
+        {
+          "name": "options prints family reading",
+          "family": "options_prints"
+        },
+        {
+          "name": "filings family last reading (13F)",
+          "family": "filings_positioning"
+        }
+      ],
+      "notes": "FE06 sector diffusion damper (DEEP-PASS 3.2 item 15): admitted as a conditioner candidate only, recorded in registry research_questions (fe06_sector_diffusion); not wired, because contemporaneous sector membership and rank normalisation are unspecified, and this engine's readings do not change until they are specified and frozen.",
+      "edge_card": {
+        "payer": "Hypothesized payer: participants pricing tomorrow's range off any single evidence family, when disagreement between families is itself the range signal; no direction is ever claimed.",
+        "bad_state": "Days when families disagree because one family's data is stale or defective rather than because the market is fracturing, so fracture reads plumbing, not positioning; defect tagged sources are excluded for exactly this reason.",
+        "holdability_and_co_losses": "A 5 session range claim, holdable as a risk input; SPY and QQQ versions share most families and the same realised week, so their grades are near duplicates.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. A range view realised through options pays spread and theta outside this record.",
+        "price_aware_baseline": "Engine 1's band width for the same 5 sessions (agreement based) and the trailing realised range, against the fracture only prediction."
+      }
+    },
+    {
+      "id": "engine_18",
+      "number": 18,
+      "name": "The Living Router",
+      "forecast_form": "distribution",
+      "horizons": "21 sessions",
+      "grading_rule_id": "ranked_probability_score",
+      "kill_criterion": "after 126 graded name-windows, it does not beat the equal-weight control; weights then freeze and it publishes the equal-weight distribution labelled as such.",
+      "proving_threshold": "126 graded name-windows",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 0,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "tracked forecasters' ledgered forecasts",
+          "family": "price"
+        },
+        {
+          "name": "forecaster forward scores from the ledger",
+          "family": "distributional_volatility"
+        }
+      ],
+      "notes": "FE06 sector diffusion damper (DEEP-PASS 3.2 item 15): admitted as a conditioner candidate only, recorded in registry research_questions (fe06_sector_diffusion); not wired, because contemporaneous sector membership and rank normalisation are unspecified, and this engine's readings do not change until they are specified and frozen.",
+      "edge_card": {
+        "payer": "Hypothesized payer: any single forecaster's following: capital that takes one model's verdict at full weight when a graded weighted blend prices the tercile better.",
+        "bad_state": "A regime where every tracked forecaster is wrong the same way (their errors correlate), so averaging manufactures confidence in a shared miss; weights trained on a window that has ended chase the last regime.",
+        "holdability_and_co_losses": "The 21 session tercile distribution is holdable as an input; by construction its losses are the weighted losses of its members, so a member's bad window is inherited, not diversified away, when members correlate.",
+        "execution_net": "A forecast, not a trade: graded by ranked probability score before costs. Any portfolio built on the blend pays its own costs outside this record.",
+        "price_aware_baseline": "Equal weights over the same forecasters, and the single best member forecaster's own distribution, over the same windows."
+      }
+    },
+    {
+      "id": "engine_19",
+      "number": 19,
+      "name": "In-Regime Oracle",
+      "forecast_form": "probability",
+      "horizons": "next 21 sessions, weekly (Monday)",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 12 windows, pooled Brier is no better than climatology (each forecaster's trailing rate, unchanged), and the engine is demoted to the Graveyard with its record intact.",
+      "proving_threshold": "12 windows",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities. Counting basis: the engine's own weekly window forecasts only (outcome kind next_window_hit_rate_exceeds_trailing); the Aperture proof-gate provisional rows hosted under this engine id (outcome kind provisional_proof_forward_check) are counted in the page proof_gate block, not in this engine's forecast record.",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 0,
+        "recorded_on": "2026-10-31",
+        "counting_basis": "the engine's own weekly window forecasts only (outcome kind next_window_hit_rate_exceeds_trailing); the Aperture proof-gate provisional rows hosted under this engine id (outcome kind provisional_proof_forward_check) are counted in the page proof_gate block, not in this engine's forecast record"
+      },
+      "inputs": [
+        {
+          "name": "append-only ledger grading series",
+          "family": "distributional_volatility"
+        },
+        {
+          "name": "published Board rows",
+          "family": "price"
+        },
+        {
+          "name": "Record grades",
+          "family": "price"
+        },
+        {
+          "name": "per name daily history (DEEP panel) for the Aperture proof gate",
+          "family": "price"
+        }
+      ],
+      "notes": " Aperture proof gate (DEEP-PASS 3.2 item 2): this engine carries the frozen proof_gate_rule (aperture_episode_rule_v1) and is the ledger engine for the forward records: every scanned name's provisional proof state is ledgered under this engine in forecast/proof_gate.py record_forward_records and later graded from what the name actually did over the next 10 sessions. States are provisional only, BH corrected across the scanned universe before any name may print SUPPORTED.",
+      "edge_card": {
+        "payer": "Hypothesized payer: users of a forecaster who stake the same size in its bad windows as its good ones, because nothing told them its skill is regime conditional.",
+        "bad_state": "Regimes that turn inside the 21 session grading window, so a forecaster is graded against a regime it was not forecast in; populations with thin graded histories produce oracle claims on noise.",
+        "holdability_and_co_losses": "Weekly issuance, holdable as a staking input; oracle calls across populations share the same market window, so a regime surprise fails many of them together.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Sizing changes made from it pay their own turnover outside this record.",
+        "price_aware_baseline": "The forecaster's own trailing 126 session hit rate extrapolated flat (skill is constant), which is the assumption this engine exists to beat."
+      },
+      "proof_gate_rule": {
+        "id": "aperture_episode_rule_v1",
+        "state_language": "provisional",
+        "entry_condition": {
+          "rsi_period": 14,
+          "rsi_max": 58.0,
+          "rsi_curl": true,
+          "macd": "12_26_9_histogram_curl",
+          "ema_period": 20,
+          "near_ema_pct": 0.02
+        },
+        "episode": {
+          "forward_sessions": 10,
+          "min_separation_sessions": 10,
+          "friction": 0.0035,
+          "non_overlapping": true
+        },
+        "split": {
+          "train_fraction": 0.67,
+          "chronological": true
+        },
+        "thresholds": {
+          "supported_min_episodes": 10,
+          "train_hit_rate_min": 0.55,
+          "train_median_min": 0.0075,
+          "holdout_hit_rate_min": 0.6,
+          "holdout_median_min": 0.01,
+          "mixed_min_episodes": 6
+        },
+        "multiple_testing": {
+          "method": "benjamini_hochberg",
+          "alpha": 0.05,
+          "scope": "scanned_universe",
+          "test": "one_sided_binomial_hit_rate_vs_0.5"
+        },
+        "forward_check": {
+          "horizon_sessions": 10,
+          "ledger_engine_id": "engine_19",
+          "quantity": "provisional_proof_state_forward_return_10s"
+        }
+      }
+    },
+    {
+      "id": "engine_20",
+      "number": 20,
+      "name": "Calibration League",
+      "forecast_form": "distribution",
+      "horizons": "next 60 graded forecasts per entrant, monthly",
+      "grading_rule_id": "coverage",
+      "kill_criterion": "after 12 monthly rounds, its interval hit rate is no better than a no-change forecast of each entrant's trailing error.",
+      "proving_threshold": "12 monthly rounds",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (8 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 8,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "append-only ledger reliability curves",
+          "family": "distributional_volatility"
+        },
+        {
+          "name": "site Record receipts",
+          "family": "price"
+        },
+        {
+          "name": "provisional proof states from the Aperture proof gate",
+          "family": "price"
+        }
+      ],
+      "notes": " Aperture proof gate (DEEP-PASS 3.2 item 2): this engine carries the same frozen proof_gate_rule (aperture_episode_rule_v1) and consumes the provisional proof states published by site/refresh_proofgate.py into site/proof-gate/data.json; the forward records themselves are ledgered once, under Engine 19 as the rule's ledger engine, never duplicated here.",
+      "edge_card": {
+        "payer": "Hypothesized payer: every forecaster in the league whose stated confidence is taken at face value, including the vendor band and vendor POP constructions entered as contestants.",
+        "bad_state": "A quiet grading window where all entrants look calibrated because nothing happened, followed by one shock that regrades everyone at once; entrants sharing inputs fail together.",
+        "holdability_and_co_losses": "Monthly intervals over the next 60 graded forecasts per entrant, holdable as a trust input; the league's own forecast inherits every entrant's co losses by design.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. It prices other forecasts' error, and acting on that pricing pays the underlying strategies' costs, outside this record.",
+        "price_aware_baseline": "Each entrant's stated coverage taken as its own forecast (a vendor 68 percent band will cover 68 percent), with no league correction."
+      },
+      "proof_gate_rule": {
+        "id": "aperture_episode_rule_v1",
+        "state_language": "provisional",
+        "entry_condition": {
+          "rsi_period": 14,
+          "rsi_max": 58.0,
+          "rsi_curl": true,
+          "macd": "12_26_9_histogram_curl",
+          "ema_period": 20,
+          "near_ema_pct": 0.02
+        },
+        "episode": {
+          "forward_sessions": 10,
+          "min_separation_sessions": 10,
+          "friction": 0.0035,
+          "non_overlapping": true
+        },
+        "split": {
+          "train_fraction": 0.67,
+          "chronological": true
+        },
+        "thresholds": {
+          "supported_min_episodes": 10,
+          "train_hit_rate_min": 0.55,
+          "train_median_min": 0.0075,
+          "holdout_hit_rate_min": 0.6,
+          "holdout_median_min": 0.01,
+          "mixed_min_episodes": 6
+        },
+        "multiple_testing": {
+          "method": "benjamini_hochberg",
+          "alpha": 0.05,
+          "scope": "scanned_universe",
+          "test": "one_sided_binomial_hit_rate_vs_0.5"
+        },
+        "forward_check": {
+          "horizon_sessions": 10,
+          "ledger_engine_id": "engine_19",
+          "quantity": "provisional_proof_state_forward_return_10s"
+        }
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_20_league_record_v1",
+        "issued_value_scale": "interval in points of signed calibration error (league_interval) and a predicted ranking order (league_ranking)",
+        "realised_scale": "the entrant's realised signed calibration error in points, computed by the shared machinery from the ledger's own grades for the entrant's first 60 graded forecasts of the round; the ranking's realised value is the entrants ordered by that error's size",
+        "resolver_kind": "league_interval / league_ranking",
+        "note": "These kinds are not price resolvable and had no shared grading path; only the league refresher's divergent self grade could grade them, in a schema without the shared realised and binary_outcome fields. The shared machinery now computes both realised values from the ledger record and grades them in the shared schema (the interval grade also keeps the interval_hit score name the league page reads). A stated_coverage stated as a fraction is read as points times 100 in the shared computation, the scale the quantity's own words (in points) require.",
+        "affected_outstanding": {
+          "count": 8,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    },
+    {
+      "id": "engine_21",
+      "number": 21,
+      "name": "Streak Trap",
+      "forecast_form": "probability and distribution",
+      "horizons": "next 30 outcomes for the displayed figure",
+      "grading_rule_id": "coverage",
+      "kill_criterion": "over the first 10 matured triggers, shrinkage forecasts are not better calibrated than a no-change forecast.",
+      "proving_threshold": "first 10 matured triggers",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "4 graded forecasts of 16 recorded on the ledger (mean scores: centre_abs_error 0.1353, coverage_hit 0.0000, move_brier 0.4651, rival_centre_abs_error 0.1516, rival_move_brier 1.0000, width 0.1923); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 4,
+        "forecasts_recorded": 16,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "published terminal figures with matured counts",
+          "family": "price"
+        },
+        {
+          "name": "family long-run base rates",
+          "family": "distributional_volatility"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: anyone quoting a young headline hit rate at face value, including this terminal's own surfaces, before the next 30 outcomes mature.",
+        "bad_state": "A figure whose next 30 outcomes are not a fair next sample (the surface changes what it displays, or the window is all one regime), so the move toward the family rate is delayed past the graded window.",
+        "holdability_and_co_losses": "The forecast is about a number, holdable as a quoting discipline; streak traps on figures from the same family share outcomes, so their grades overlap.",
+        "execution_net": "A forecast, not a trade: no execution cost exists for the grade. Its product is a corrected quote, and the cost it prevents is reputational, outside this record.",
+        "price_aware_baseline": "The young figure itself extrapolated flat (it will stay where it is), against the family base rate it is predicted to move toward."
+      }
+    },
+    {
+      "id": "engine_22",
+      "number": 22,
+      "name": "Half-Life Clock",
+      "forecast_form": "timing and probability",
+      "horizons": "60 sessions, monthly cohorts",
+      "grading_rule_id": "survival_brier",
+      "kill_criterion": "after 24 monthly cohorts, its date error is no better than predicting the family's median historical half-life for every family.",
+      "proving_threshold": "24 monthly cohorts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 0,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "Record forecaster-family grade series",
+          "family": "price"
+        },
+        {
+          "name": "Grade-A Board ledgers",
+          "family": "filings_positioning"
+        },
+        {
+          "name": "Factory rerun record",
+          "family": "events_calendar"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: followers of a live signal who keep staking it at promoted strength months after its information coefficient has decayed.",
+        "bad_state": "A signal that revives (a regime returns) after being declared half dead, or decay driven by crowding that reverses when the crowd leaves; monthly calls on overlapping 21 session IC windows grade slowly.",
+        "holdability_and_co_losses": "A timing forecast, holdable as a retirement schedule; families promoted in the same era tend to decay on the same regime change, so obituaries cluster.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Retiring a signal early costs the return it would have made, which the grading window records as the miss.",
+        "price_aware_baseline": "No decay (the promoted IC persists) and a fixed lifetime for every family regardless of its own grading curve."
+      }
+    },
+    {
+      "id": "engine_23",
+      "number": 23,
+      "name": "Promoted-Book Mortality Curve",
+      "forecast_form": "probability and distribution",
+      "horizons": "event-bound: at promotion events and quarterly until next rerun",
+      "grading_rule_id": "brier",
+      "kill_criterion": "Backcast verdict published first. Forward and quarterly lists ledgered before any rerun data for that cycle is touched; graded by the rerun's own published rule, all cells in the denominator, scored by rank correlation of predicted against realised failure order, Brier per cell, and count error per cohort.",
+      "proving_threshold": "next pre-registered rerun / promotion event (event-bound; backcast gate first)",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (64 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 64,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "Factory run 1 and rerun records",
+          "family": "events_calendar"
+        },
+        {
+          "name": "EV registry cross-family corroboration",
+          "family": "filings_positioning"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: anyone capitalising a Factory style promotion headline at announcement, before the pre registered rerun that most promoted cells historically fail.",
+        "bad_state": "A promotion cohort drawn from one study family, so mortality is one study's fate, not a book wide rate; event driven issuance means the forward arm can sit empty for long stretches, which is recorded as no claim, not filled in.",
+        "holdability_and_co_losses": "The forward arm is holdable as a discount on promotion headlines; every cell in one promotion event shares the rerun, so their outcomes are a single verdict split many ways.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. The rerun's own compute and data costs sit with the study programme, outside this record.",
+        "price_aware_baseline": "The promotion headline itself (promoted cells replicate), and the historical base mortality rate of past promoted books with no per cell adjustment."
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_23_recheck_record_v1",
+        "issued_value_scale": "probability p that the combination fails the next pre-registered recheck",
+        "realised_scale": "the recheck record's failed bit for the combination (1 for failed, where could not be tested counts as failed under the engine's own rule), supplied to the shared grading pass as a record outcome",
+        "resolver_kind": "recheck_replication",
+        "note": "This kind is not price resolvable and had no shared grading path. The shared machinery now grades it through grade_forecast or run_grading when the grading pass supplies the recheck record (record_outcomes keyed by forecast row id, each carrying the failed bit); without that record the resolver refuses with the record named, so an ungraded row is a named skip, never a silent one. No recheck has occurred yet; the first grading event is the next pre-registered recheck.",
+        "affected_outstanding": {
+          "count": 64,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    },
+    {
+      "id": "engine_24",
+      "number": 24,
+      "name": "Fear-Day Triangulation",
+      "forecast_form": "direction",
+      "horizons": "20 sessions, fear-day cohorts",
+      "grading_rule_id": "abs_error",
+      "kill_criterion": ", pre-registered as the engine's own verdict: if the triple conjunction does not beat the single best component (F3 alone) once three cohorts mature, triangulation adds nothing and the engine retires itself.",
+      "proving_threshold": "three matured fear-day cohorts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 0,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP bars and shipped daily history",
+          "family": "price"
+        },
+        {
+          "name": "gap share",
+          "family": "price"
+        },
+        {
+          "name": "insider summaries (zero sells)",
+          "family": "filings_positioning"
+        }
+      ],
+      "notes": "FE27 reaction sign form (DEEP-PASS 3.2 item 15): cohort definitions may carry a caller supplied cycle_reaction_sign in [-1, 1] and regime_confidence in [0, 1], declared at issuance and frozen with the forecast, per registry research_questions (fe27_reaction_sign_form). FE27 itself is not adopted; its horizon contradiction is its author's to resolve.",
+      "edge_card": {
+        "payer": "Hypothesized payer: fear day sellers, if three independent families really can carve selection out of what is otherwise a pure market timing effect.",
+        "bad_state": "Fear days so rare or so clustered that the three family cohort is a handful of names on a handful of days, and the random entry control wins by luck inside any honest window; that thinness is the engine's own stated risk.",
+        "holdability_and_co_losses": "The claim is a cohort against a control on the same fear days, holdable only as that comparison; every selected name shares the fear day, so the cohort is one market bet with selection on top.",
+        "execution_net": "A forecast, not a trade: grades are cohort versus control returns before costs. Entering on a fear day pays the widest spreads of the month, outside this record and identical for the control.",
+        "price_aware_baseline": "The fear day random entry control itself (T1: any uptrend name on the same day), which is the price aware null this engine must beat, not zero."
+      }
+    },
+    {
+      "id": "engine_25",
+      "number": 25,
+      "name": "Sponsored Reset",
+      "forecast_form": "direction",
+      "horizons": "20 sessions, fear-day cohorts",
+      "grading_rule_id": "abs_error",
+      "kill_criterion": "after 3 fear-day cohorts, the filings condition adds less than 0.5 points of mean excess over the gated baseline.",
+      "proving_threshold": "3 fear-day cohorts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (3 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 3,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP bars (RESET composite)",
+          "family": "price"
+        },
+        {
+          "name": "13F holder counts",
+          "family": "filings_positioning"
+        },
+        {
+          "name": "insider buys on record",
+          "family": "filings_positioning"
+        },
+        {
+          "name": "SPY 200-day average gate",
+          "family": "price"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: sellers of washed out names who do not distinguish held from abandoned: sponsorship (13F holders not falling, or an insider buy) is the difference being priced.",
+        "bad_state": "Sponsorship data that is stale by a quarter (13F lag) calling a name held after its holders left, and the T4 market gate (SPY above its rising 200 day average) switching off for long bear stretches, leaving no live sample.",
+        "holdability_and_co_losses": "The 20 session excess claim is holdable for a paper position; sponsored reset names share the fear day and the market gate, so the cohort rises and fails together.",
+        "execution_net": "A forecast, not a trade: grades are excess returns before costs. Deep reset names are illiquid, and their spreads are the real price of the idea, paid outside this record.",
+        "price_aware_baseline": "The unsharpened RESET composite on the same days (washed out with no sponsorship split), and deep reset names with falling holder counts."
+      }
+    },
+    {
+      "id": "engine_26",
+      "number": 26,
+      "name": "Silent Accumulation",
+      "forecast_form": "distribution",
+      "horizons": "21 sessions, per 13F publication plus weekly DIX refresh",
+      "grading_rule_id": "pinball",
+      "kill_criterion": "after 100 cohort names, the interaction adds less than 2 points over the best single condition.",
+      "proving_threshold": "100 cohort names",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 0,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "constituent DIX / dark pressure",
+          "family": "options_prints"
+        },
+        {
+          "name": "insider summaries (zero sells)",
+          "family": "filings_positioning"
+        },
+        {
+          "name": "13F holder count / aggregate position",
+          "family": "filings_positioning"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: price only watchers: accumulation that leaves no price trace (dark pressure, zero insider sells, rising 13F sponsorship) is invisible to them, so the distribution shift is unpriced until it prints.",
+        "bad_state": "An absence that is only a data gap (a missing insider record read as zero sells, a 13F quarter not yet filed) manufactures the signal from plumbing; the record's absence states exist to keep that case out, and any leak of it is this engine's worst state.",
+        "holdability_and_co_losses": "The 21 session excess distribution is holdable for a paper position; the three footprints share quarterly 13F timing, so cohorts form in filing season clusters.",
+        "execution_net": "A forecast, not a trade: grades are the excess return distribution before costs. Quiet names are thin, and entering them moves the price the signal said was not moving, outside this record.",
+        "price_aware_baseline": "The same names' unconditional 21 session excess distribution, and a price only accumulation screen (rising price on rising volume) on the same universe."
+      }
+    },
+    {
+      "id": "engine_27",
+      "number": 27,
+      "name": "Pin-or-Escape",
+      "forecast_form": "distribution and probability",
+      "horizons": "weekly expiry session",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 52 weeks, the two arms' in-band rates are statistically indistinguishable.",
+      "proving_threshold": "52 weeks",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "2 graded forecasts of 4 recorded on the ledger (mean scores: abs_error 0.0133, brier 0.1132, log_loss 0.4101, signed_error -0.0133); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 2,
+        "forecasts_recorded": 4,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "chain snapshots and Map cards (pin, GEX by strike)",
+          "family": "modelled_inventory"
+        },
+        {
+          "name": "variance risk premium (SPY/VIX series)",
+          "family": "distributional_volatility"
+        },
+        {
+          "name": "macro calendar (Week Ahead)",
+          "family": "events_calendar"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: pin believers who treat the open interest gravitation level as unconditional, and pin sellers in the escape state (negative GEX, high variance risk premium) where the pin historically fails.",
+        "bad_state": "An expiry where a macro print overwhelms dealer positioning entirely, or the pin level migrates intraday as open interest is revised, so the open print condition grades against a level that moved.",
+        "holdability_and_co_losses": "A one expiry claim, holdable only into that expiry; pin and escape arms are graded on the same weeks' closes under opposite conditions, so a positioning misread fails both arms in mirror image. Scored zero rows record weeks where the event passed unrecorded, keeping coverage honest.",
+        "execution_net": "A forecast, not a trade: graded against the expiry close before costs. Trading the pin pays the expiry day spread and gamma risk outside this record.",
+        "price_aware_baseline": "The unconditional pin rate (spot opens near the pin, spot closes near the pin, no GEX or variance risk premium condition)."
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_27_shared_pin_schema_v1",
+        "issued_value_scale": "breach probability (pin_breach_half_em), distance estimate in percent (pin_abs_distance_pct), and arm claim rows (pin_in_band)",
+        "realised_scale": "the close's absolute distance from the pin in percent, with the breach bit on half the stated expected move and the band bit on plus or minus 0.25 percent",
+        "resolver_kind": "pin_breach_half_em / pin_abs_distance_pct / pin_in_band",
+        "note": "The pin resolvers already lived in the shared machinery, but the engine graded itself beside them in a divergent grade schema (a rule text instead of the rule id, no realised, binary_outcome or price_source fields, and a kind, pin_in_band, the shared resolver did not know). From this convention the engine's refresher grades through the shared grade_forecast, whose grade carries the shared fields plus the arm and in_band fields its page reads. The two rows graded before this date keep their original grade rows (append only); no ungraded rows of these kinds stood on the ledger at the effective date.",
+        "affected_outstanding": {
+          "count": 0,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    },
+    {
+      "id": "engine_28",
+      "number": 28,
+      "name": "Gap Destiny",
+      "forecast_form": "probability and distribution",
+      "horizons": "same session, graded at that close",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 120 index gaps, fill-probability Brier is no better than the unconditional per-band base rate.",
+      "proving_threshold": "120 index gaps",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "4456 graded forecasts of 7164 recorded on the ledger (mean scores: brier 0.2639, log_loss 0.6817, sign_correct 0.7070); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 4456,
+        "forecasts_recorded": 7164,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "DEEP and shipped daily OHLC",
+          "family": "price"
+        },
+        {
+          "name": "fear state",
+          "family": "distributional_volatility"
+        }
+      ],
+      "notes": "Sub claim (DEEP-PASS 3.1 item 8, 2026-10-29): FE04 failed gap sign flip ledgered separately under its own quantity, graded on close vs prior close; acceptance proxy is the daily closing location, stated as a proxy until a first minutes record is wired.",
+      "edge_card": {
+        "payer": "Hypothesized payer: open range traders who treat every gap the same, and, in the failed gap sub claim, traders who assume an unaccepted gap continues in its own direction.",
+        "bad_state": "A gap caused by index level news rather than the name itself, where fill and sign behaviour follows the market all day; gaps under 0.5 percent are out of scope by design, so the record says nothing about small gaps.",
+        "holdability_and_co_losses": "A single session claim, issued at the open and dead by the close; all names gapping on one market morning share the session, so that day's grades are one event in many tickers.",
+        "execution_net": "A forecast, not a trade: graded on the session's own bars before costs. Trading the open pays the opening spread, the worst of the day, outside this record.",
+        "price_aware_baseline": "The built Gap tool's historical base rates for gaps like it (unconditioned by today's acceptance), and, for the sub claim, the gap's own direction as the predicted close sign."
+      },
+      "fe04_news_leg": {
+        "method": "Per article signed direction from the frozen headline lexicon in morgue/news_direction.py (headline_lexicon_v1): unambiguous positive and negative market event words frozen in that module, direction is the sign of the matched sum, 0 when none or cancelling. The news lane stores direction, direction_hits and direction_method on every article it collects from 2026-10-30 forward; earlier stored days are not backfilled.",
+        "estimation": "site/estimate_news_leg.py pairs directed articles published inside a session overnight window (20:00 UTC prior day to 13:30 UTC) with that name market and sector residual gap from gap-destiny/fair_gap_record.json; per name variable is the mean direction; coefficient is the pooled slope, registered only at 100 or more paired names and absolute t at least 2.0. Estimation record: gap-destiny/news_leg_estimation.json.",
+        "lookahead_boundary": "Direction uses headline text and publication timestamp only, both known at publication. The overnight gap is the estimation outcome, never an input to direction. Live use may only use articles published before the session open.",
+        "start_date": "2026-10-30",
+        "state": "accruing: no fair gap session at or after the start date is on record yet, so no pair can be formed and no coefficient is registered; the first estimation runs on the first such session, expected with the 2026-11-02 session fair gap record in the daily cycle of 2026-11-02 to 2026-11-03"
+      }
+    },
+    {
+      "id": "engine_29",
+      "number": 29,
+      "name": "Completion Clock",
+      "forecast_form": "timing and distribution",
+      "horizons": "5, 10, 21 and 60 sessions (cap 60)",
+      "grading_rule_id": "survival_brier",
+      "kill_criterion": "after 30 matured cohorts, its timing Brier is no better than the unconditional hazard.",
+      "proving_threshold": "30 matured cohorts",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (4 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 4,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "picker replay corpus (296,093 cases)",
+          "family": "price"
+        },
+        {
+          "name": "DEEP daily bars",
+          "family": "price"
+        },
+        {
+          "name": "Map cards (wall-break event class)",
+          "family": "modelled_inventory"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: holders of an in flight move who price its resolution by average payoff, when the live question is which barrier arrives first and how long it takes.",
+        "bad_state": "Cohort events that overlap (a fear day inside a reset move), so one path grades two clocks; barriers at plus and minus 1 EM go stale when vol jumps mid flight, making the race a different race than the one issued.",
+        "holdability_and_co_losses": "A timing density, holdable as an expectation over the cohort's median name; every name in one cohort event shares the path regime, so first barrier outcomes correlate.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Holding through a move pays the drawdown path itself, which is what the clock measures, outside this record's scoring.",
+        "price_aware_baseline": "A symmetric race (plus 1 EM and minus 1 EM equally likely, resolved at the unconditional median time) with no cohort conditioning."
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_29_cohort_race_record_v1",
+        "issued_value_scale": "resolved_by probabilities at 5, 10, 21 and 60 sessions plus the barrier race shares, for a cohort of names",
+        "realised_scale": "the cohort race record's sessions_to_resolution for the cohort median race, supplied to the shared grading pass as a record outcome and scored by the shared survival Brier rule (a cohort unresolved at the 60 session cap records a value above 60, the censor marker the scorer reads)",
+        "resolver_kind": "cohort_barrier_race",
+        "note": "This kind is not price resolvable (its outcome spec carries no symbol or barrier levels) and had no shared grading path. The shared machinery now grades it through grade_forecast or run_grading when the grading pass supplies the cohort race record (record_outcomes keyed by forecast row id); without that record the resolver refuses with the record named.",
+        "affected_outstanding": {
+          "count": 1,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    },
+    {
+      "id": "engine_30",
+      "number": 30,
+      "name": "Abstention Signal",
+      "forecast_form": "probability",
+      "horizons": "21 sessions (secondary 5)",
+      "grading_rule_id": "brier",
+      "kill_criterion": "after 80 graded days, its probability adds no Brier improvement over the VIX-only control.",
+      "proving_threshold": "80 graded days",
+      "state": "proving",
+      "calibration_attestation": {
+        "status": "not_attested",
+        "basis": "no graded forecasts on record yet (6 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "graded_forecasts": 0,
+        "forecasts_recorded": 6,
+        "recorded_on": "2026-10-31"
+      },
+      "inputs": [
+        {
+          "name": "daily no-data/abstention states across Map, Board, Tape, Studies",
+          "family": "events_calendar"
+        },
+        {
+          "name": "VIX level (control)",
+          "family": "distributional_volatility"
+        }
+      ],
+      "notes": "",
+      "edge_card": {
+        "payer": "Hypothesized payer: no counterparty in the usual sense; the claim prices the information in other forecasters going quiet, so the payer is anyone who treats an abstention as no information and trades the calm at face value.",
+        "bad_state": "Abstentions caused by the desk's own defects rather than the market (the C14 contamination: three uncured fail open functions), which is why defect tagged abstentions are excluded and, until that tagging is fully live, the contamination is disclosed on the card rather than hidden.",
+        "holdability_and_co_losses": "A daily 21 session vol claim, holdable as a risk input; abstention spikes are themselves clustered, so consecutive daily issuances grade on nearly the same window and are not independent evidence.",
+        "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Hedging on the signal pays option spreads outside this record.",
+        "price_aware_baseline": "The VIX level alone as the trivial predictor of SPY's 21 session realised vol, which is the control this engine's kill rule names."
+      },
+      "grading_convention": {
+        "effective_date": "2026-10-30",
+        "id": "engine_30_binary_event_vol_threshold_v1",
+        "issued_value_scale": "probability p that SPY realised vol over the horizon exceeds its trailing 63 window median",
+        "realised_scale": "binary bit recomputed from the price source under the threshold_rule the row itself carries (median of the 63 trailing same horizon realised vols ending on or before the issue session)",
+        "resolver_kind": "binary_event",
+        "note": "Issued binary_event rows carry no realised field, so the old shared resolver refused them outright; only the issuing refresher's divergent self grade could grade them. The shared resolver now recomputes the bit under the row's own threshold_rule (first maturities 2026-11-04 and 2026-11-05 for the 5 session rows), and the shared grade carries the control Brier scores and threshold readings the self grade used to stamp. Issued rows are not edited and no realised field is written back onto them.",
+        "affected_outstanding": {
+          "count": 4,
+          "named_in": "forecast/grading_conventions_20261030.json"
+        }
+      }
+    }
+  ],
+  "registry_notes": "Kill criteria transcribed from each engine's Grading protocol in FORECAST-ENGINES-30.md. Proving thresholds are the forecast/event counts named in those same protocols as the kill-decision sample sizes; where the design names the threshold only inside the kill sentence, it is recorded here from that sentence and the kill_criterion field carries the full text. Input lists are transcribed from each engine's Data route and Mechanism; each input is assigned to exactly one family per N3. Ambiguity: the design does not publish a separate per-engine input inventory, so inputs are the load-bearing inputs named in the design text, no more.",
+  "research_questions": [
+    {
+      "id": "fe01",
+      "source_fe": "FE01",
+      "kind": "research_question",
+      "name": "Multi-horizon trend persistence (trend control)",
+      "statement": "Does horizon agreement across 5 to 20 session trend readings (21, 63 and 252 session returns, attenuated by path quality and volatility regime) forecast trend continuation in our index and name universe, graded as a control column beside our price engines rather than as a fitted engine?",
+      "data_routes": [
+        {
+          "name": "SPY/QQQ and name daily bars on the DEEP panel",
+          "family": "price",
+          "status": "existing"
+        },
+        {
+          "name": "breadth and volatility regime series",
+          "family": "price",
+          "status": "partial"
+        }
+      ],
+      "decision_rule": "Promote from research question to a ledgered control only if a pre-registered scoring of the stated form on the DEEP panel beats a flat continuation baseline out of sample; the source coefficients are starter transforms and are not imported as fitted parameters.",
+      "state": "research_question"
+    },
+    {
+      "id": "fe05",
+      "source_fe": "FE05",
+      "kind": "research_question",
+      "name": "Breadth participation impulse",
+      "statement": "Does a change in breadth participation (breadth delta dominating level readings from advance-decline and new high-low series) forecast the index direction over the following sessions?",
+      "data_routes": [
+        {
+          "name": "terminal breadth series from the daily board record (advance-decline, new highs and lows)",
+          "family": "price",
+          "status": "partial"
+        },
+        {
+          "name": "index daily bars on the DEEP panel",
+          "family": "price",
+          "status": "existing"
+        }
+      ],
+      "decision_rule": "Promote only with a point in time constituent tape on record; a breadth series reconstructed after the fact does not count, per the source gate discipline.",
+      "state": "research_question"
+    },
+    {
+      "id": "fe21",
+      "source_fe": "FE21",
+      "kind": "research_question",
+      "name": "XBRL cash conversion inflection",
+      "statement": "Does a filing quality inflection (cash conversion, free cash flow acceleration, deferred revenue, receivables growth gap, from XBRL filings with acceptance timestamps) forecast a change in filing quality, as a filing claim rather than a return claim?",
+      "data_routes": [
+        {
+          "name": "EDGAR filings route feeding the filings family",
+          "family": "filings_positioning",
+          "status": "partial"
+        },
+        {
+          "name": "XBRL company facts with acceptance timestamps, accession ids and restatement handling",
+          "family": "filings_positioning",
+          "status": "partial"
+        }
+      ],
+      "decision_rule": "Promote only when XBRL acceptance timestamps and restatement handling are on record; tag heterogeneity across filers is the named practical risk and must be measured before any scoring.",
+      "state": "research_question",
+      "route_evidence": {
+        "builder": "terminal-lineup/site/build_xbrl_route.py",
+        "record": "terminal-lineup/site/filings-wire/xbrl_record.json",
+        "filers": 43,
+        "facts": 81143,
+        "carries": "per fact filed date; restatement handling recorded (latest filed wins); from 2026-10-30, intraday acceptance timestamps with accession numbers per recent 10-K and 10-Q filing from the EDGAR submissions fetch, carried per filer in acceptance_filings (filing level)",
+        "missing": "per fact accession linkage (the flattened facts store carries no accession id on any fact), and the receivables and deferred revenue concepts (absent from the store)",
+        "recorded_on": "2026-10-30",
+        "acceptance_landed_on": "2026-10-30"
+      }
+    },
+    {
+      "id": "fe25",
+      "source_fe": "FE25",
+      "kind": "research_question",
+      "name": "Executed buyback support",
+      "statement": "Does the executed repurchase pace in 10-Q and 10-K repurchase tables (announcements explicitly excluded), discounted by execution confidence, blackout risk and liquidity, forecast price support?",
+      "data_routes": [
+        {
+          "name": "EDGAR 10-Q and 10-K repurchase tables",
+          "family": "filings_positioning",
+          "status": "partial"
+        },
+        {
+          "name": "float and liquidity series from daily bars",
+          "family": "price",
+          "status": "existing"
+        }
+      ],
+      "decision_rule": "Promote only on executed pace extracted from the repurchase tables themselves; any series built from announcements is disqualified by the source design.",
+      "state": "research_question"
+    },
+    {
+      "id": "fe19",
+      "source_fe": "FE19",
+      "kind": "research_question",
+      "name": "Consensus revision diffusion",
+      "statement": "Does estimate revision momentum, gated by analyst breadth and recency and damped by dispersion, forecast returns as revisions diffuse?",
+      "data_routes": [
+        {
+          "name": "point in time analyst estimate vintages with analyst level arrival times",
+          "family": "filings_positioning",
+          "status": "partial"
+        },
+        {
+          "name": "daily bars on the DEEP panel for outcome grading",
+          "family": "price",
+          "status": "existing"
+        }
+      ],
+      "decision_rule": "Blocked on data, not merit: a backfilled estimates database invalidates this question outright per the source kill conditions, so promotion requires a vintage preserving estimates route that does not exist in our stack today.",
+      "state": "research_question",
+      "route_evidence": {
+        "record": "terminal-lineup/site/earnings-record/snapshots (one dated file per earnings calendar day, fetched_at stamped) and earnings-record/record.json",
+        "carries": "consensus EPS point snapshots preserved per report date from 2026-10-30 forward; the registered cross series revision breadth analogue accrues from these snapshots",
+        "missing": "analyst level arrival times (no source carries them) and any vintage depth before 2026-10-30: a backfilled estimates database stays disqualified by the decision rule, so the route exists only forward from its first snapshot",
+        "recorded_on": "2026-10-30",
+        "wired": {
+          "lane": "daily consensus snapshots in earnings-record/snapshots, first snapshot 2026-10-30, preserved forward by the earnings record lane on its daily cadence",
+          "state": "wired_accrual: the vintage route exists only forward from its first snapshot; nothing before 2026-10-30 can be added without backfill, which the decision rule disqualifies",
+          "proof": "snapshot files accumulate one per earnings calendar day from 2026-10-30; the revision breadth analogue that FE18 also consumes accrues from the same snapshots"
+        }
+      }
+    },
+    {
+      "id": "fe07",
+      "source_fe": "FE07",
+      "kind": "research_question",
+      "name": "Cross-asset lead-lag graph",
+      "statement": "Does a leader move forecast a follower name through a single estimated edge (lag beta times stability times an R2 soft threshold that zeroes weak edges)?",
+      "data_routes": [
+        {
+          "name": "cross-asset daily and intraday bars (indices, sectors, futures proxies)",
+          "family": "price",
+          "status": "existing"
+        },
+        {
+          "name": "pair selection, beta, stability and R2 estimation with clock alignment",
+          "family": "price",
+          "status": "existing"
+        }
+      ],
+      "decision_rule": "Promote only when the edge estimation (pair selection, beta, stability, R2, clock alignment) is built and frozen per pair in advance; the source package contains none of it, so the formula alone is not adoptable.",
+      "state": "research_question",
+      "estimation_frozen": {
+        "module": "forecast/leadlag.py",
+        "record": "terminal-lineup/site/leadlag-record.json",
+        "form": "edge = lag_beta * stability * clip((r2 - 0.005) / (0.03 - 0.005), 0, 1), lag one shared session, trailing 500 aligned sessions, minimum 250",
+        "pairs_estimated": 600,
+        "pairs_selected": 93,
+        "frozen_on": "2026-10-30",
+        "wiring_state": "not wired: the estimation the decision rule requires is built and frozen per pair in the run record; no engine consumes an edge yet, and no engine score changes because of this entry"
+      }
+    },
+    {
+      "id": "fe02_hurst_gate",
+      "source_fe": "FE02",
+      "kind": "conditioner",
+      "name": "Hurst chop gate (conditioner only)",
+      "statement": "FE02 is admitted only as a conditioner: its Hurst chop gate, clip((0.58 - hurst) / 0.25, 0, 1), may shrink reversion scores toward zero in choppy regimes on the named engines. Its headline residual fade score is not adopted, because the code read showed the gate contributes more than the headline term, and neither the Hurst estimator nor the residual model exists in the source package or in our stack.",
+      "data_routes": [
+        {
+          "name": "daily bars on the DEEP panel (the gate's only raw input once a Hurst estimator is built)",
+          "family": "price",
+          "status": "existing"
+        },
+        {
+          "name": "Hurst estimator, frozen window and method",
+          "family": "price",
+          "status": "existing"
+        }
+      ],
+      "estimator_frozen": {
+        "module": "forecast/hurst.py",
+        "method": "detrended fluctuation analysis (DFA) on log returns",
+        "window_returns": 1000,
+        "min_returns": 250,
+        "scales": [
+          10,
+          20,
+          40,
+          80,
+          160
+        ],
+        "measured_accuracy": "synthetic fractional Gaussian noise with known exponents recovered within about 0.10 to 0.15 (blocker: forecast/tests/test_hurst_estimator_20261030.py); rescaled range was built first and rejected on measured bias (white noise read 0.70 at a 250 return window)",
+        "frozen_on": "2026-10-30",
+        "wiring_state": "not wired: the estimator exists and is frozen, so the decision rule's precondition is met; wiring the gate into engine_03 and engine_09 scores is a separate step that has not been taken, and no engine score changes because of this entry"
+      },
+      "decision_rule": "Wire as a conditioner only after a Hurst estimator is built and frozen in the registry; until then the gate is recorded, not applied, and no engine's score changes because of it.",
+      "state": "conditioner_candidate",
+      "target_engine_ids": [
+        "engine_03",
+        "engine_09"
+      ]
+    },
+    {
+      "id": "fe06_sector_diffusion",
+      "source_fe": "FE06",
+      "kind": "conditioner",
+      "name": "Sector diffusion damper (conditioner only)",
+      "statement": "FE06 is admitted only as a conditioner: its dispersion damper, 1 / (1 + 0.20 * clip(dispersion_z, 0, 3)), may damp family and rotation readings when cross-sector dispersion is high on the named engines. Its headline sector leadership score is not adopted, because the code read showed the damper is the load-bearing term and contemporaneous sector membership and rank normalisation are unspecified in the source package.",
+      "data_routes": [
+        {
+          "name": "sector membership and sector daily bars",
+          "family": "price",
+          "status": "partial"
+        },
+        {
+          "name": "sector breadth and flow series",
+          "family": "price",
+          "status": "partial"
+        }
+      ],
+      "decision_rule": "Wire as a conditioner only after contemporaneous sector membership and rank normalisation are specified and frozen; until then the damper is recorded, not applied.",
+      "state": "conditioner_candidate",
+      "target_engine_ids": [
+        "engine_17",
+        "engine_18"
+      ],
+      "waiting_on": "Sector membership completion in the terminal's own sector record (sector-rotation counts 335 of 1,833 scored names without a sector on record at 2026-10-30; that map is stream B work in the remainders program). Rank normalisation is specified with the membership, not before it: the damper consumes cross-sector dispersion of the same membership, so freezing a normalisation against a partial map would freeze the wrong population. State recorded 2026-10-30 by fix stream C; the damper stays recorded, not applied.",
+      "route_evidence": {
+        "disposition": "follows RC-12, closed with it as a stated limit on 2026-10-30: sector membership for 335 of 1,833 scored names exists on no in-bounds record (four routes scanned and evidenced in sector-rotation/sector_scan_20261030.json, limit published on the Sector Rotation page with all 335 names). The rank normalisation half is specified in this entry and applies to the 1,498 names with membership on record; the diffusion question can only be evaluated for those names until a membership source for the remaining 335 exists.",
+        "recorded_on": "2026-10-30"
+      }
+    },
+    {
+      "id": "fe27_reaction_sign_form",
+      "source_fe": "FE27",
+      "kind": "input_form",
+      "name": "Caller supplied macro reaction sign (input form for Engine 24)",
+      "statement": "FE27's reaction sign is adopted as a FORM only: Engine 24's cohort definitions may carry a caller supplied cycle_reaction_sign in [-1, 1] (read as a signed confidence in the reaction direction, not a binary sign) and a regime_confidence in [0, 1], both declared at issuance and frozen with the forecast. FE27 itself is not adopted: its horizon contradiction (30 minutes post release in its README against intraday to 5 sessions in its catalog) must be resolved by its author before the engine can be graded, and no Engine 24 cohort is required to carry the form until a macro cohort uses it.",
+      "data_routes": [
+        {
+          "name": "macro release calendar and surprise series (events family)",
+          "family": "events_calendar",
+          "status": "partial"
+        },
+        {
+          "name": "caller declaration at issuance, frozen in the ledger row",
+          "family": "events_calendar",
+          "status": "existing"
+        }
+      ],
+      "decision_rule": "The form is available to Engine 24 cohort definitions from this entry onward; adopting FE27 as an engine is a separate decision that stays closed until its author resolves the horizon contradiction.",
+      "state": "form_adopted",
+      "applies_to_engine_id": "engine_24",
+      "form_fields": [
+        {
+          "name": "cycle_reaction_sign",
+          "range": "[-1, 1], caller supplied, clipped by the consumer, declared at issuance"
+        },
+        {
+          "name": "regime_confidence",
+          "range": "[0, 1], caller supplied, declared at issuance"
+        }
+      ]
+    }
+  ]
+}
