@@ -1,0 +1,206 @@
+{
+  "as_of": "2026-10-30",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 0,
+      "graded_forecasts": 0,
+      "recorded_on": "2026-10-31",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_18",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": null
+  },
+  "census": {
+    "board_names": 77,
+    "capitulation_names": 82,
+    "names_clearing_floor": 0,
+    "names_contested": 0,
+    "names_flat": 0,
+    "names_with_any_forecaster": 159,
+    "names_with_one_forecaster": 159,
+    "names_with_two_agreeing": 0,
+    "overlap_names": 0,
+    "words": "The board speaks on 77 stocks and the capitulation clock on 82 stocks, and the two lists share no stock at all. So 159 stocks carry exactly one forecaster each and none carries two: there is no disagreement to average today, and this page publishes no chances rather than inventing some. The 159 single-forecaster stocks are counted here, not quietly dropped."
+  },
+  "contested_names": [],
+  "controls": {
+    "best_single_selectable": false,
+    "best_single_words": "The best single forecaster, picked using only its past graded record. It cannot be picked today: no forecaster has any graded 21-day record to pick by, so it records nothing until one exists. Picking the best-looking forecaster after the fact flatters it; this control exists to keep that honest.",
+    "equal_weight_words": "The plain average: the same forecasters' chances averaged with no weights at all, recorded on the same stocks on the same days and graded the same way. Today it is also what the shrinkage produces, which is exactly why it is the rival to beat."
+  },
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution, over 21 sessions. It is graded on a score that rewards putting the most weight on the band of outcomes that actually happens. It would be ended if after 126 graded name-windows, it does not beat the equal-weight control; weights then freeze and it publishes the equal-weight distribution labelled as such. It counts as proven at 126 graded name-windows.",
+    "summary": "When the tracked forecasters disagree about a stock, publish a weighted spread of three chances for its next 21 trading days instead of one verdict, with the weights themselves on the record."
+  },
+  "family_cap_note": "Both eligible forecasters rest on the same kind of evidence (price), so the half-the-total cap on one kind of evidence cannot bite yet: there is no second kind holding weight to protect.",
+  "feed": "forecast_ledger",
+  "forecasters": [
+    {
+      "conversion_words": "Each call says the stock will rise; a rising call becomes fixed chances of 20% bottom third, 30% middle third, 50% top third, written down in advance and never adjusted to fit past results",
+      "eligible": true,
+      "family_words": "price evidence",
+      "name": "The daily board of top-scoring stocks, as published in The Record",
+      "track_record_words": "150 dated calls on 77 stocks over 6 sessions (2026-10-23, 2026-10-26, 2026-10-27, 2026-10-28, 2026-10-29, 2026-10-30); 110 graded so far, all at 1 trading day; 0 graded at 21 trading days (the first arrive November 23, 2026)",
+      "weight": 0.5
+    },
+    {
+      "conversion_words": "The claimed gain is positive, so each call converts the same way as a rising call: 20% bottom third, 30% middle third, 50% top third",
+      "eligible": true,
+      "family_words": "price evidence",
+      "name": "The capitulation volume clock's return calls, recorded in the shared forecast ledger",
+      "track_record_words": "82 stocks carry a return call (a claimed middle gain of 1.0 points against the broad market), made at the close of October 23, 2026; 0 graded so far at any stretch",
+      "weight": 0.5
+    },
+    {
+      "conversion_words": "Weight zero: its cards give levels for index funds only and make no call about any stock, so there is nothing to convert. It enters the day it publishes a dated per-stock call",
+      "eligible": false,
+      "family_words": "modelled positioning evidence",
+      "name": "The morning map's published cards",
+      "track_record_words": "18 cards on the 3 big index funds; 0 graded",
+      "weight": 0.0
+    },
+    {
+      "conversion_words": "Weight zero: its alerts point both ways on each fund and name no stock, so there is no single call to convert",
+      "eligible": false,
+      "family_words": "options trading evidence",
+      "name": "The flow tape's published alerts",
+      "track_record_words": "75 alerts on 2026-10-30 over the same 3 index funds; none graded",
+      "weight": 0.0
+    },
+    {
+      "conversion_words": "Weight zero: no dated per-stock call exists to convert. A study grade pooled over thousands of past cases is not a call on today's stock",
+      "eligible": false,
+      "family_words": "price evidence",
+      "name": "The top-grade book of tested patterns",
+      "track_record_words": "63 top-grade patterns: 57 describe movement with no direction, and 6 warning patterns carry pooled study grades rather than dated calls on stocks",
+      "weight": 0.0
+    },
+    {
+      "conversion_words": "Weight zero: the labels describe the shape of past bars and claim no direction, so there is no call to convert",
+      "eligible": false,
+      "family_words": "price evidence",
+      "name": "The Strat bar labels",
+      "track_record_words": "1,817 stocks labelled for one session, October 23, 2026; nothing has graded what follows a label",
+      "weight": 0.0
+    }
+  ],
+  "grade_rows_in_shared_ledger": 10070,
+  "idea_words": "Instead of one verdict on a stock, this page publishes a spread of three chances for what the stock does against the broad market over the next 21 trading days: the chance it lands in the bottom third of stocks, the middle third, or the top third. The chances are built by averaging the tracked forecasters who disagree about that stock, weighted by each forecaster's own graded track record. The weights are published here and graded in public, like the forecasts themselves.",
+  "kill_words": "After 126 graded name-windows, if the weighted chances have not scored better than the plain average's chances on the same stocks, the weights freeze and this page publishes the plain average instead, labelled as such.",
+  "ledger_rows_created_this_run": 0,
+  "live_record": {
+    "distributions_recorded": 0,
+    "graded": 0,
+    "graded_name_windows": 0,
+    "independent_windows": 0,
+    "target": 126,
+    "words": "0 distributions recorded, 0 graded so far, of the 126 graded name-windows that decide this page. Because 21-day windows overlap, the graded windows are also counted a stricter way: 0 independent windows so far."
+  },
+  "price_basis": "close",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "proving_state": "Still being proven",
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 0,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_18",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of",
+        "calibration_attestation",
+        "census",
+        "contested_names",
+        "controls",
+        "execution_pricing",
+        "explanation",
+        "family_cap_note",
+        "feed",
+        "forecasters",
+        "grade_rows_in_shared_ledger",
+        "idea_words",
+        "kill_words",
+        "ledger_rows_created_this_run",
+        "live_record",
+        "price_basis",
+        "provenance",
+        "proving_state",
+        "record_surface",
+        "self_test",
+        "source",
+        "thin_cell_words",
+        "tool",
+        "weights_words",
+        "zero_forecast_state"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_18",
+      "forecasts": 0,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
+  "self_test": {
+    "equal_weight_control": [
+      0.35,
+      0.3,
+      0.35
+    ],
+    "rows_written_to_scratch": 2,
+    "words": "The averaging machinery itself is exercised on every refresh with made-up forecasters in a throwaway record: two forecasters disagreeing on one stock, with no graded record behind either, publish flat chances (a third each) because their earned weight is under the floor, beside the plain average's chances, and writing the same chances twice records them once."
+  },
+  "source": "The Record's published calls, the shared forecast ledger, the top-grade book, the flow tape and the Strat label record, all read directly",
+  "thin_cell_words": "Small counts prove little: a day needs at least 9 published stocks before its outcomes can be graded into thirds at all, and every count on this page is printed beside the rate it feeds.",
+  "tool": "The Living Router",
+  "weights_words": "A forecaster's weight grows only with its own graded record at 21 trading days: recent grades count more than old ones (a grade's pull halves every 63 trading days), a young record is pulled toward equal weights, and no single kind of evidence may hold more than half the total weight when more than one kind is speaking. Today no forecaster anywhere has a graded 21-day record yet, so nothing has been earned: the two eligible forecasters below hold exactly equal weights, and every stock's earned weight is zero, under the floor of 0.25 written down in advance. Any contested stock today would therefore publish flat chances (a third, a third, a third) and be graded on them.",
+  "zero_forecast_state": {
+    "first_possible": "2026-11-23",
+    "first_possible_words": "The first graded 21-session board records arrive November 23, 2026.",
+    "forecasts_recorded": 0,
+    "reason": "The two eligible forecasters share no stock on the freshest census, so no name carries two forecasters to route, and no forecaster has a graded 21-session record to pick weights by.",
+    "trigger": "A name carrying both forecasters, once a forecaster has a graded 21-session record."
+  }
+}
