@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your trading desk</title>
+<style>
+ :root{--navy:#123247;--header:#0e3e52;--mint:#edf6f5;--ink:#0d2e41;--teal:#098979;--red:#b2595d;--amber:#b06000}
+ *{box-sizing:border-box} body{font-family:system-ui,sans-serif;margin:0;background:var(--mint);color:var(--ink)}
+ header{background:var(--header);color:#fff;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center}
+ header h1{font-size:1.4rem;margin:0;color:#fff;font-weight:800} .dot{width:10px;height:10px;border-radius:50%;background:var(--teal);display:inline-block;margin-right:.5rem}
+ main{max-width:76rem;margin:0 auto;padding:1rem}
+ .card{background:#fff;border:1px solid #d7e6e3;border-radius:20px;padding:1rem 1.2rem;margin:0 0 1rem}
+ .kicker{color:var(--teal);text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;font-weight:700}
+ h2{color:var(--navy);font-weight:800;margin:.3rem 0 .6rem} .muted{color:#5b7180}
+ .census{display:flex;gap:1.2rem;flex-wrap:wrap;font-size:1.05rem} .census b{color:var(--navy);font-size:1.5rem}
+ .row{display:flex;gap:.7rem;align-items:flex-start;border-top:1px solid #e3efed;padding:.55rem 0}
+ .ind{width:12px;height:12px;border-radius:50%;margin-top:.3rem;flex:none}
+ .fed{background:var(--teal)} .wait{background:#e0a100} .parked{background:#9aa7ad} .bad{background:var(--red)}
+ .name{font-weight:700;color:var(--navy)} .meta{color:#5b7180;font-size:.88rem}
+ .status-fed{color:var(--teal);font-weight:700}.status-wait{color:var(--amber);font-weight:700}.status-parked{color:#667}.status-bad{color:var(--red);font-weight:700}
+</style>
+</head>
+<body>
+<header><h1><span class="dot"></span>Your trading desk</h1><span id="updated">Loading the latest update…</span></header>
+<main>
+<div class="card"><div class="kicker">All strategies</div><h2 id="headline">Loading…</h2><div id="summary" class="census"></div><p class="muted">Groups below are sorted by the first part of each strategy name. That grouping is derived from the name, not a separate book the desk declares.</p></div>
+<div id="groups"></div>
+</main>
+<script>
+const ind = {"Ready":"fed","Waiting for data":"wait","Paused":"parked","Needs attention":"bad"};
+const sc = {"Ready":"status-fed","Waiting for data":"status-wait","Paused":"status-parked","Needs attention":"status-bad"};
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+async function refresh(){
+  try{
+    const r = await fetch("terminal_feed.json", {cache:"no-store"});
+    const f = await r.json();
+    document.getElementById("updated").textContent = "Updated " + new Date(f.generated_at).toLocaleString();
+    document.getElementById("headline").textContent = f.headline;
+    const s = f.summary;
+    document.getElementById("summary").innerHTML =
+      "<span><b>"+s.strategies_total+"</b> total</span><span><b>"+s.ready+"</b> ready</span><span><b>"+s.waiting_for_data+"</b> waiting for data</span><span><b>"+s.paused+"</b> paused</span>" +
+      "<span>"+s.orders_placed+" orders on the last check</span><span>$"+s.money_assigned_total.toLocaleString()+" assigned</span>";
+    const by = {};
+    (f.strategies||[]).forEach(x=>{(by[x.family||"other"]=by[x.family||"other"]||[]).push(x)});
+    document.getElementById("groups").innerHTML = Object.keys(by).sort().map(g=>{
+      const rows = by[g].map(x=>{
+        const bits=[];
+        if(x.cadence_label) bits.push(esc(x.cadence_label));
+        if(x.session) bits.push(esc(x.session==="rth"?"regular hours":x.session));
+        if(x.instrument) bits.push(esc(x.instrument));
+        if(x.declared_family) bits.push(esc(x.declared_family));
+        if(x.inputs&&x.inputs.length) bits.push("needs: "+esc(x.inputs.join(", ")));
+        if(x.missing&&x.missing.length) bits.push("missing: "+esc(x.missing.join(", ")));
+        const pos = x.open_positions&&x.open_positions.length ? x.open_positions.map(p=>esc(p.symbol)+" × "+esc(p.qty)).join(", ") : "no open positions";
+        return '<div class="row"><span class="ind '+(ind[x.status]||"parked")+'"></span><div><span class="name">'+esc(x.name)+'</span> · <span class="'+(sc[x.status]||"")+'">'+esc(x.status)+'</span><div class="meta">$'+Number(x.money_assigned).toLocaleString()+' assigned · '+pos+' · '+esc(x.last_action)+(bits.length?' · '+bits.join(" · "):"")+'</div></div></div>';
+      }).join("");
+      return '<section class="card"><div class="kicker">Group</div><h2>'+esc(g)+' ('+by[g].length+')</h2>'+rows+'</section>';
+    }).join("");
+  }catch(e){
+    document.getElementById("updated").textContent = "Could not load the latest update — trying again shortly.";
+  }
+}
+refresh();
+setInterval(refresh, 30000);
+</script>
+</body>
+</html>
