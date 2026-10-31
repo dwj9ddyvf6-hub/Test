@@ -1,0 +1,894 @@
+{
+  "as_of": "2026-10-30",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "no graded forecasts on record yet (431 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 431,
+      "graded_forecasts": 0,
+      "recorded_on": "2026-10-31",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_05",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": null
+  },
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: probability, over to weekly expiry, graded at expiry close. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 26 weekly expiries, its Brier is no better than the uncorrected IV POP's. It counts as proven at 26 weekly expiries.",
+    "summary": "For SPY and QQQ, attach an honest chance of finishing above each strike to this week's expiry, and grade every strike when the week ends."
+  },
+  "feed": "tastytrade_chain_snapshot",
+  "kill_criterion": "This tool is retired if, after 26 weekly expiries have been graded, its score for how close its chances were is no better than the score of the market's own uncorrected chances recorded beside them.",
+  "live": {
+    "expiries_graded": 0,
+    "proving_target_expiries": 26,
+    "records_graded": 0,
+    "records_written": 431,
+    "state_note": "Surfaces are being recorded from stored chain snapshots and graded at each weekly expiry close."
+  },
+  "method": {
+    "study_record": {
+      "label": "The earlier study this engine is built from",
+      "note": "On SPY in that study, the realised-movement chance landed within a point of what happened, and the priced-volatility chance understated wins by 12 to 15 points. Those are the study's figures, from its own history. They are the reason this engine exists; they are not this engine's results.",
+      "rows": [
+        {
+          "construction": "Realised movement (30 days)",
+          "predicted_pct": 82.4,
+          "realised_pct": 83.0,
+          "window": "1 trading day"
+        },
+        {
+          "construction": "Market's priced volatility",
+          "predicted_pct": 75.7,
+          "realised_pct": "87.6 to 90.3",
+          "window": "1 trading day"
+        }
+      ]
+    },
+    "summary": "Each chance is half of a movement-based calculation (the last 30 trading days' realised movement, no drift assumed) and half of the index's own past finishes over the same number of days. The comparison chance beside it is the market's own priced volatility put through the same calculation with no correction."
+  },
+  "price_basis": "snapshot",
+  "price_history_as_of": "2026-10-29",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "tastytrade_chain_snapshot",
+    "price_basis": "snapshot",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (431 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 431,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_05",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of",
+        "calibration_attestation",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "kill_criterion",
+        "live",
+        "method",
+        "price_basis",
+        "price_history_as_of",
+        "provenance",
+        "record_surface",
+        "scope_line",
+        "self_test",
+        "source",
+        "state",
+        "surfaces",
+        "thin_cell_rule",
+        "tool",
+        "waiting",
+        "what_exists"
+      ]
+    },
+    "feed": "tastytrade_chain_snapshot",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_05",
+      "forecasts": 431,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 431 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "tastytrade_chain_snapshot",
+      "price_basis": "snapshot",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 2,
+          "path": "/method"
+        }
+      ],
+      "total_items_counted": 2
+    },
+    "version": 1
+  },
+  "scope_line": "A win rate is not an edge. This page states the chance of finishing above a strike; it says nothing about how much a trade would win or lose, or whether any trade pays.",
+  "self_test": {
+    "oracle_cases": 8,
+    "oracle_max_difference": 6e-08,
+    "state": "passed",
+    "synthetic_records_written_to_a_throwaway_copy": 18,
+    "synthetic_strikes": 9
+  },
+  "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-10-29).",
+  "state": "proving",
+  "surfaces": [
+    {
+      "contracts_on_record": 12318,
+      "days_remaining": 7,
+      "expected_move": 10.52,
+      "expiry": "2026-11-06",
+      "hv30_pct": 10.03,
+      "options_gate": {
+        "admitted": 12318,
+        "greek_max_age_seconds": 4500,
+        "greek_states": {
+          "fresh": 0,
+          "future": 0,
+          "stale": 0,
+          "undated": 12318
+        },
+        "iv_ceiling": 5.0,
+        "iv_states": {
+          "absent": 7361,
+          "invalid": 0,
+          "ok": 4957,
+          "over_ceiling": 0
+        },
+        "note": "Candidate gate applied to this snapshot: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent are refused; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted.",
+        "refused": 0,
+        "total": 12318
+      },
+      "rows": [
+        {
+          "benchmark_p": 0.8214,
+          "benchmark_p_pct": 82.1,
+          "p": 0.9706,
+          "p_pct": 97.1,
+          "strike": 737.0
+        },
+        {
+          "benchmark_p": 0.8196,
+          "benchmark_p_pct": 82.0,
+          "p": 0.9664,
+          "p_pct": 96.6,
+          "strike": 738.0
+        },
+        {
+          "benchmark_p": 0.8037,
+          "benchmark_p_pct": 80.4,
+          "p": 0.9552,
+          "p_pct": 95.5,
+          "strike": 739.0
+        },
+        {
+          "benchmark_p": 0.793,
+          "benchmark_p_pct": 79.3,
+          "p": 0.9434,
+          "p_pct": 94.3,
+          "strike": 740.0
+        },
+        {
+          "benchmark_p": 0.7843,
+          "benchmark_p_pct": 78.4,
+          "p": 0.9283,
+          "p_pct": 92.8,
+          "strike": 741.0
+        },
+        {
+          "benchmark_p": 0.7707,
+          "benchmark_p_pct": 77.1,
+          "p": 0.9212,
+          "p_pct": 92.1,
+          "strike": 742.0
+        },
+        {
+          "benchmark_p": 0.7539,
+          "benchmark_p_pct": 75.4,
+          "p": 0.9094,
+          "p_pct": 90.9,
+          "strike": 743.0
+        },
+        {
+          "benchmark_p": 0.7468,
+          "benchmark_p_pct": 74.7,
+          "p": 0.8991,
+          "p_pct": 89.9,
+          "strike": 744.0
+        },
+        {
+          "benchmark_p": 0.7302,
+          "benchmark_p_pct": 73.0,
+          "p": 0.8891,
+          "p_pct": 88.9,
+          "strike": 745.0
+        },
+        {
+          "benchmark_p": 0.7143,
+          "benchmark_p_pct": 71.4,
+          "p": 0.8717,
+          "p_pct": 87.2,
+          "strike": 746.0
+        },
+        {
+          "benchmark_p": 0.6987,
+          "benchmark_p_pct": 69.9,
+          "p": 0.8557,
+          "p_pct": 85.6,
+          "strike": 747.0
+        },
+        {
+          "benchmark_p": 0.6853,
+          "benchmark_p_pct": 68.5,
+          "p": 0.8349,
+          "p_pct": 83.5,
+          "strike": 748.0
+        },
+        {
+          "benchmark_p": 0.6688,
+          "benchmark_p_pct": 66.9,
+          "p": 0.8066,
+          "p_pct": 80.7,
+          "strike": 749.0
+        },
+        {
+          "benchmark_p": 0.6507,
+          "benchmark_p_pct": 65.1,
+          "p": 0.7811,
+          "p_pct": 78.1,
+          "strike": 750.0
+        },
+        {
+          "benchmark_p": 0.6316,
+          "benchmark_p_pct": 63.2,
+          "p": 0.7533,
+          "p_pct": 75.3,
+          "strike": 751.0
+        },
+        {
+          "benchmark_p": 0.6118,
+          "benchmark_p_pct": 61.2,
+          "p": 0.7309,
+          "p_pct": 73.1,
+          "strike": 752.0
+        },
+        {
+          "benchmark_p": 0.5932,
+          "benchmark_p_pct": 59.3,
+          "p": 0.7051,
+          "p_pct": 70.5,
+          "strike": 753.0
+        },
+        {
+          "benchmark_p": 0.5743,
+          "benchmark_p_pct": 57.4,
+          "p": 0.6799,
+          "p_pct": 68.0,
+          "strike": 754.0
+        },
+        {
+          "benchmark_p": 0.5524,
+          "benchmark_p_pct": 55.2,
+          "p": 0.6378,
+          "p_pct": 63.8,
+          "strike": 755.0
+        },
+        {
+          "benchmark_p": 0.5322,
+          "benchmark_p_pct": 53.2,
+          "p": 0.6016,
+          "p_pct": 60.2,
+          "strike": 756.0
+        },
+        {
+          "benchmark_p": 0.51,
+          "benchmark_p_pct": 51.0,
+          "p": 0.5626,
+          "p_pct": 56.3,
+          "strike": 757.0
+        },
+        {
+          "benchmark_p": 0.4876,
+          "benchmark_p_pct": 48.8,
+          "p": 0.5374,
+          "p_pct": 53.7,
+          "strike": 758.0
+        },
+        {
+          "benchmark_p": 0.4644,
+          "benchmark_p_pct": 46.4,
+          "p": 0.5085,
+          "p_pct": 50.8,
+          "strike": 759.0
+        },
+        {
+          "benchmark_p": 0.4412,
+          "benchmark_p_pct": 44.1,
+          "p": 0.4786,
+          "p_pct": 47.9,
+          "strike": 760.0
+        },
+        {
+          "benchmark_p": 0.4179,
+          "benchmark_p_pct": 41.8,
+          "p": 0.4378,
+          "p_pct": 43.8,
+          "strike": 761.0
+        },
+        {
+          "benchmark_p": 0.3925,
+          "benchmark_p_pct": 39.2,
+          "p": 0.3976,
+          "p_pct": 39.8,
+          "strike": 762.0
+        },
+        {
+          "benchmark_p": 0.3688,
+          "benchmark_p_pct": 36.9,
+          "p": 0.3606,
+          "p_pct": 36.1,
+          "strike": 763.0
+        },
+        {
+          "benchmark_p": 0.3449,
+          "benchmark_p_pct": 34.5,
+          "p": 0.3344,
+          "p_pct": 33.4,
+          "strike": 764.0
+        },
+        {
+          "benchmark_p": 0.3221,
+          "benchmark_p_pct": 32.2,
+          "p": 0.3042,
+          "p_pct": 30.4,
+          "strike": 765.0
+        },
+        {
+          "benchmark_p": 0.2961,
+          "benchmark_p_pct": 29.6,
+          "p": 0.2737,
+          "p_pct": 27.4,
+          "strike": 766.0
+        },
+        {
+          "benchmark_p": 0.2769,
+          "benchmark_p_pct": 27.7,
+          "p": 0.2367,
+          "p_pct": 23.7,
+          "strike": 767.0
+        },
+        {
+          "benchmark_p": 0.2445,
+          "benchmark_p_pct": 24.5,
+          "p": 0.2108,
+          "p_pct": 21.1,
+          "strike": 768.0
+        },
+        {
+          "benchmark_p": 0.231,
+          "benchmark_p_pct": 23.1,
+          "p": 0.1897,
+          "p_pct": 19.0,
+          "strike": 769.0
+        },
+        {
+          "benchmark_p": 0.201,
+          "benchmark_p_pct": 20.1,
+          "p": 0.1697,
+          "p_pct": 17.0,
+          "strike": 770.0
+        },
+        {
+          "benchmark_p": 0.1863,
+          "benchmark_p_pct": 18.6,
+          "p": 0.1495,
+          "p_pct": 15.0,
+          "strike": 771.0
+        },
+        {
+          "benchmark_p": 0.1592,
+          "benchmark_p_pct": 15.9,
+          "p": 0.1303,
+          "p_pct": 13.0,
+          "strike": 772.0
+        },
+        {
+          "benchmark_p": 0.1477,
+          "benchmark_p_pct": 14.8,
+          "p": 0.1146,
+          "p_pct": 11.5,
+          "strike": 773.0
+        },
+        {
+          "benchmark_p": 0.1396,
+          "benchmark_p_pct": 14.0,
+          "p": 0.0972,
+          "p_pct": 9.7,
+          "strike": 774.0
+        },
+        {
+          "benchmark_p": 0.1142,
+          "benchmark_p_pct": 11.4,
+          "p": 0.0857,
+          "p_pct": 8.6,
+          "strike": 775.0
+        },
+        {
+          "benchmark_p": 0.0924,
+          "benchmark_p_pct": 9.2,
+          "p": 0.0737,
+          "p_pct": 7.4,
+          "strike": 776.0
+        },
+        {
+          "benchmark_p": 0.0952,
+          "benchmark_p_pct": 9.5,
+          "p": 0.0674,
+          "p_pct": 6.7,
+          "strike": 777.0
+        },
+        {
+          "benchmark_p": 0.0794,
+          "benchmark_p_pct": 7.9,
+          "p": 0.0616,
+          "p_pct": 6.2,
+          "strike": 778.0
+        }
+      ],
+      "snapshot_day": "2026-10-30",
+      "spot": 757.66,
+      "symbol": "SPY"
+    },
+    {
+      "contracts_on_record": 9930,
+      "days_remaining": 7,
+      "expected_move": 18.15,
+      "expiry": "2026-11-06",
+      "hv30_pct": 19.12,
+      "options_gate": {
+        "admitted": 9930,
+        "greek_max_age_seconds": 4500,
+        "greek_states": {
+          "fresh": 0,
+          "future": 0,
+          "stale": 0,
+          "undated": 9930
+        },
+        "iv_ceiling": 5.0,
+        "iv_states": {
+          "absent": 5577,
+          "invalid": 0,
+          "ok": 4353,
+          "over_ceiling": 0
+        },
+        "note": "Candidate gate applied to this snapshot: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent are refused; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted.",
+        "refused": 0,
+        "total": 9930
+      },
+      "rows": [
+        {
+          "benchmark_p": 0.8349,
+          "benchmark_p_pct": 83.5,
+          "p": 0.9795,
+          "p_pct": 98.0,
+          "strike": 650.0
+        },
+        {
+          "benchmark_p": 0.7928,
+          "benchmark_p_pct": 79.3,
+          "p": 0.9589,
+          "p_pct": 95.9,
+          "strike": 655.0
+        },
+        {
+          "benchmark_p": 0.7573,
+          "benchmark_p_pct": 75.7,
+          "p": 0.9304,
+          "p_pct": 93.0,
+          "strike": 660.0
+        },
+        {
+          "benchmark_p": 0.7161,
+          "benchmark_p_pct": 71.6,
+          "p": 0.8874,
+          "p_pct": 88.7,
+          "strike": 665.0
+        },
+        {
+          "benchmark_p": 0.6659,
+          "benchmark_p_pct": 66.6,
+          "p": 0.8363,
+          "p_pct": 83.6,
+          "strike": 670.0
+        },
+        {
+          "benchmark_p": 0.6113,
+          "benchmark_p_pct": 61.1,
+          "p": 0.7537,
+          "p_pct": 75.4,
+          "strike": 675.0
+        },
+        {
+          "benchmark_p": 0.6045,
+          "benchmark_p_pct": 60.4,
+          "p": 0.7403,
+          "p_pct": 74.0,
+          "strike": 676.0
+        },
+        {
+          "benchmark_p": 0.59,
+          "benchmark_p_pct": 59.0,
+          "p": 0.7203,
+          "p_pct": 72.0,
+          "strike": 677.0
+        },
+        {
+          "benchmark_p": 0.5797,
+          "benchmark_p_pct": 58.0,
+          "p": 0.7026,
+          "p_pct": 70.3,
+          "strike": 678.0
+        },
+        {
+          "benchmark_p": 0.5686,
+          "benchmark_p_pct": 56.9,
+          "p": 0.6772,
+          "p_pct": 67.7,
+          "strike": 679.0
+        },
+        {
+          "benchmark_p": 0.5568,
+          "benchmark_p_pct": 55.7,
+          "p": 0.6566,
+          "p_pct": 65.7,
+          "strike": 680.0
+        },
+        {
+          "benchmark_p": 0.544,
+          "benchmark_p_pct": 54.4,
+          "p": 0.6321,
+          "p_pct": 63.2,
+          "strike": 681.0
+        },
+        {
+          "benchmark_p": 0.5326,
+          "benchmark_p_pct": 53.3,
+          "p": 0.6112,
+          "p_pct": 61.1,
+          "strike": 682.0
+        },
+        {
+          "benchmark_p": 0.5202,
+          "benchmark_p_pct": 52.0,
+          "p": 0.5915,
+          "p_pct": 59.1,
+          "strike": 683.0
+        },
+        {
+          "benchmark_p": 0.5083,
+          "benchmark_p_pct": 50.8,
+          "p": 0.5704,
+          "p_pct": 57.0,
+          "strike": 684.0
+        },
+        {
+          "benchmark_p": 0.4956,
+          "benchmark_p_pct": 49.6,
+          "p": 0.5469,
+          "p_pct": 54.7,
+          "strike": 685.0
+        },
+        {
+          "benchmark_p": 0.4831,
+          "benchmark_p_pct": 48.3,
+          "p": 0.5296,
+          "p_pct": 53.0,
+          "strike": 686.0
+        },
+        {
+          "benchmark_p": 0.4705,
+          "benchmark_p_pct": 47.1,
+          "p": 0.5074,
+          "p_pct": 50.7,
+          "strike": 687.0
+        },
+        {
+          "benchmark_p": 0.4577,
+          "benchmark_p_pct": 45.8,
+          "p": 0.4902,
+          "p_pct": 49.0,
+          "strike": 688.0
+        },
+        {
+          "benchmark_p": 0.4452,
+          "benchmark_p_pct": 44.5,
+          "p": 0.4707,
+          "p_pct": 47.1,
+          "strike": 689.0
+        },
+        {
+          "benchmark_p": 0.4317,
+          "benchmark_p_pct": 43.2,
+          "p": 0.4487,
+          "p_pct": 44.9,
+          "strike": 690.0
+        },
+        {
+          "benchmark_p": 0.4198,
+          "benchmark_p_pct": 42.0,
+          "p": 0.4182,
+          "p_pct": 41.8,
+          "strike": 691.0
+        },
+        {
+          "benchmark_p": 0.407,
+          "benchmark_p_pct": 40.7,
+          "p": 0.3954,
+          "p_pct": 39.5,
+          "strike": 692.0
+        },
+        {
+          "benchmark_p": 0.3937,
+          "benchmark_p_pct": 39.4,
+          "p": 0.374,
+          "p_pct": 37.4,
+          "strike": 693.0
+        },
+        {
+          "benchmark_p": 0.3804,
+          "benchmark_p_pct": 38.0,
+          "p": 0.3454,
+          "p_pct": 34.5,
+          "strike": 694.0
+        },
+        {
+          "benchmark_p": 0.367,
+          "benchmark_p_pct": 36.7,
+          "p": 0.3233,
+          "p_pct": 32.3,
+          "strike": 695.0
+        },
+        {
+          "benchmark_p": 0.3554,
+          "benchmark_p_pct": 35.5,
+          "p": 0.2978,
+          "p_pct": 29.8,
+          "strike": 696.0
+        },
+        {
+          "benchmark_p": 0.3415,
+          "benchmark_p_pct": 34.1,
+          "p": 0.2801,
+          "p_pct": 28.0,
+          "strike": 697.0
+        },
+        {
+          "benchmark_p": 0.3273,
+          "benchmark_p_pct": 32.7,
+          "p": 0.2614,
+          "p_pct": 26.1,
+          "strike": 698.0
+        },
+        {
+          "benchmark_p": 0.319,
+          "benchmark_p_pct": 31.9,
+          "p": 0.2443,
+          "p_pct": 24.4,
+          "strike": 699.0
+        },
+        {
+          "benchmark_p": 0.3058,
+          "benchmark_p_pct": 30.6,
+          "p": 0.2289,
+          "p_pct": 22.9,
+          "strike": 700.0
+        },
+        {
+          "benchmark_p": 0.2931,
+          "benchmark_p_pct": 29.3,
+          "p": 0.2138,
+          "p_pct": 21.4,
+          "strike": 701.0
+        },
+        {
+          "benchmark_p": 0.2821,
+          "benchmark_p_pct": 28.2,
+          "p": 0.1965,
+          "p_pct": 19.6,
+          "strike": 702.0
+        },
+        {
+          "benchmark_p": 0.2722,
+          "benchmark_p_pct": 27.2,
+          "p": 0.1796,
+          "p_pct": 18.0,
+          "strike": 703.0
+        },
+        {
+          "benchmark_p": 0.2537,
+          "benchmark_p_pct": 25.4,
+          "p": 0.1668,
+          "p_pct": 16.7,
+          "strike": 704.0
+        },
+        {
+          "benchmark_p": 0.2464,
+          "benchmark_p_pct": 24.6,
+          "p": 0.1531,
+          "p_pct": 15.3,
+          "strike": 705.0
+        },
+        {
+          "benchmark_p": 0.2375,
+          "benchmark_p_pct": 23.7,
+          "p": 0.1435,
+          "p_pct": 14.4,
+          "strike": 706.0
+        },
+        {
+          "benchmark_p": 0.2204,
+          "benchmark_p_pct": 22.0,
+          "p": 0.1343,
+          "p_pct": 13.4,
+          "strike": 707.0
+        },
+        {
+          "benchmark_p": 0.2072,
+          "benchmark_p_pct": 20.7,
+          "p": 0.1242,
+          "p_pct": 12.4,
+          "strike": 708.0
+        },
+        {
+          "benchmark_p": 0.2053,
+          "benchmark_p_pct": 20.5,
+          "p": 0.1156,
+          "p_pct": 11.6,
+          "strike": 709.0
+        },
+        {
+          "benchmark_p": 0.1877,
+          "benchmark_p_pct": 18.8,
+          "p": 0.1049,
+          "p_pct": 10.5,
+          "strike": 710.0
+        },
+        {
+          "benchmark_p": 0.1754,
+          "benchmark_p_pct": 17.5,
+          "p": 0.0983,
+          "p_pct": 9.8,
+          "strike": 711.0
+        },
+        {
+          "benchmark_p": 0.1718,
+          "benchmark_p_pct": 17.2,
+          "p": 0.0907,
+          "p_pct": 9.1,
+          "strike": 712.0
+        },
+        {
+          "benchmark_p": 0.162,
+          "benchmark_p_pct": 16.2,
+          "p": 0.0833,
+          "p_pct": 8.3,
+          "strike": 713.0
+        },
+        {
+          "benchmark_p": 0.1463,
+          "benchmark_p_pct": 14.6,
+          "p": 0.0763,
+          "p_pct": 7.6,
+          "strike": 714.0
+        },
+        {
+          "benchmark_p": 0.1376,
+          "benchmark_p_pct": 13.8,
+          "p": 0.0733,
+          "p_pct": 7.3,
+          "strike": 715.0
+        },
+        {
+          "benchmark_p": 0.1359,
+          "benchmark_p_pct": 13.6,
+          "p": 0.068,
+          "p_pct": 6.8,
+          "strike": 716.0
+        },
+        {
+          "benchmark_p": 0.1298,
+          "benchmark_p_pct": 13.0,
+          "p": 0.058,
+          "p_pct": 5.8,
+          "strike": 717.0
+        },
+        {
+          "benchmark_p": 0.1244,
+          "benchmark_p_pct": 12.4,
+          "p": 0.0557,
+          "p_pct": 5.6,
+          "strike": 718.0
+        },
+        {
+          "benchmark_p": 0.1195,
+          "benchmark_p_pct": 12.0,
+          "p": 0.0523,
+          "p_pct": 5.2,
+          "strike": 719.0
+        },
+        {
+          "benchmark_p": 0.1148,
+          "benchmark_p_pct": 11.5,
+          "p": 0.0454,
+          "p_pct": 4.5,
+          "strike": 720.0
+        },
+        {
+          "benchmark_p": 0.1096,
+          "benchmark_p_pct": 11.0,
+          "p": 0.0386,
+          "p_pct": 3.9,
+          "strike": 721.0
+        }
+      ],
+      "snapshot_day": "2026-10-30",
+      "spot": 685.39,
+      "symbol": "QQQ"
+    }
+  ],
+  "thin_cell_rule": "Any group with fewer than 30 graded strikes shows its count only, with no score headline.",
+  "tool": "Honest POP Engine",
+  "waiting": false,
+  "what_exists": {
+    "archive_by_index": {
+      "IWM": 2,
+      "QQQ": 2,
+      "SPY": 2
+    },
+    "archive_snapshots_total": 6,
+    "archive_state_words": {
+      "IWM": null,
+      "QQQ": null,
+      "SPY": null
+    },
+    "morning_map_reading": {
+      "contracts_counted": 7140,
+      "contracts_total": 8500,
+      "expiries_with_totals": 29,
+      "session": "2026-10-29",
+      "spot": 761.17,
+      "strikes_kept": 8
+    },
+    "note": "The chain archive this engine reads holds no snapshot yet. Each morning's market map does read a live chain and keeps totals from it (for SPY's latest session: the price level, the two walls, the flip level, one total per expiry and the 8 busiest strikes), but it keeps no full strike list and no per-strike volatility reading, so it cannot supply this forecast. Nothing has been filled in from it."
+  }
+}
