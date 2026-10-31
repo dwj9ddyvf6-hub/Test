@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Own Capitulation Volume Clock: what happens after a beaten-down stock's heaviest falling day?</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.warn{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:16.5px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Own Capitulation Volume Clock</h1>
+    <p class="job">One job: when a stock that is already falling prints its own heaviest falling-day trading, say what tends to happen next: how it does against the market over 20 trading days, and how fast the heavy trading dies down.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest reading&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function pts(v){return (v>0?"+":"")+Number(v).toFixed(2)+" points";}
+  function card(title, inner){return '<section class="card"><h2>'+esc(title)+'</h2>'+inner+'</section>';}
+  function halfTable(rows){var h='<table><tbody>';rows.forEach(function(r){h+='<tr><th>'+esc(r[0])+'</th><td>'+r[1]+'</td></tr>';});return h+'</tbody></table>';}
+
+  fetch("data.json").then(function(r){if(!r.ok) throw new Error(r.status); return r.json();}).then(function(d){
+    meta.textContent="Measured from the close of "+fmtDate(d.as_of_session)+". Prices and share counts from: "+d.source;
+    var out="";
+
+    out+=card("Still being proven", '<p class="sub">This tool is new and its own record is still being built. It earns stronger words only from forecasts it has published and had graded, never from the history below.</p>');
+
+    // ---- The trigger and the two forecast halves ----
+    var chtml='<p class="sub">'+esc(d.trigger_words)+'</p>'
+      +'<p class="claim">First half, what the price does: '+esc(d.claims.return_half)+'</p>'
+      +'<p class="claim">Second half, how fast the storm passes: '+esc(d.claims.exhaustion_half)+'</p>'
+      +'<p class="sub">'+esc(d.claims.separate_words)+'</p>'
+      +'<p class="sub">'+esc(d.gate_words)+'</p>';
+    out+=card("The trigger, and the two forecasts it makes", chtml);
+
+    // ---- Today ----
+    var T=d.today, thtml="";
+    thtml+=halfTable([
+      ["Stocks checked", esc(T.names_checked)],
+      ["Stocks with enough of their own past, and a trading day today, to judge", esc(T.names_judged)],
+      ["Stocks set aside today (not enough of their own past yet, or no trading day today)", esc(T.names_set_aside)],
+      ["Stocks that printed capitulation volume today", '<span class="count">'+esc(T.trigger_count)+'</span>']
+    ]);
+    if(T.triggers.length){
+      thtml+='<table><thead><tr><th>Stock</th><th>Falling-day trading, against its own line</th><th>Total trading, against its own line</th></tr></thead><tbody>';
+      T.triggers.forEach(function(t){
+        thtml+='<tr><td>'+esc(t.symbol)+'</td><td>'+esc(t.down_volume_times_line)+' times the line its heaviest 5 in 100 falling days clear</td><td>'+esc(t.activity_times_line)+' times the line its heaviest 1 in 10 days clear</td></tr>';
+      });
+      thtml+='</tbody></table>'
+        +'<p class="sub">Each of these names now carries both forecasts above, written down today: the price half grades 20 trading days from now, the storm half within 10.</p>';
+    } else {
+      thtml+='<p class="sub">No stock printed capitulation volume today, so no new forecast was written down.</p>';
+    }
+    if(T.suppressed_repeats_today>0){
+      thtml+='<p class="sub">'+esc(T.suppressed_repeats_today)+' repeat print(s) today fell inside the 11-day spacing after an episode that already started, so they were counted but started no new forecast.</p>';
+    }
+    if(T.gate_blocked.length){
+      thtml+='<h3>Held back today</h3><p class="sub">These stocks printed both kinds of heavy trading today but are not in a fall of their own, so this tool made no forecast about them: '+esc(T.gate_blocked.join(", "))+'. ('+esc(T.gate_blocked_count)+' names.)</p>';
+    }
+    thtml+='<p class="sub">'+esc(T.one_line_count)+' stocks in a fall of their own cleared only one of the two heavy-trading lines today. Clearing one is not enough, and no forecast was made about them either.</p>';
+    thtml+='<p class="sub">'+esc(T.notes)+'</p>';
+    out+=card("Today", thtml);
+
+    // ---- The standing tension ----
+    out+=card("One earlier study points the other way", '<p class="sub">'+esc(d.tension_words)+'</p>');
+
+    // ---- History ----
+    var H=d.history, R=H.return_half, E=H.exhaustion_half, hhtml="";
+    hhtml+='<p class="sub">'+esc(H.warmup_note)+'</p>';
+    hhtml+=halfTable([
+      ["Days that cleared every line, before spacing", esc(H.raw_triggers)],
+      ["Repeat prints set aside by the 11-day spacing", esc(H.suppressed_repeats)],
+      ["Episodes (each one a separate test of both halves)", esc(H.episodes)+" across "+esc(H.distinct_names)+" stocks"]
+    ]);
+    hhtml+='<h3>First half: what the price did over the next 20 trading days</h3>';
+    var rrows=[["Episodes old enough to grade", esc(R.graded)],["Episodes still waiting for their 20 days", esc(R.pending)]];
+    if(R.graded>=30 && R.median_points!=null){
+      rrows.push(["Middle outcome, against the broad market", pts(R.median_points)]);
+      rrows.push(["Range the middle outcome plausibly sits in", pts(R.median_ci95_points[0])+" to "+pts(R.median_ci95_points[1])]);
+      rrows.push(["The forecast being tested", "Middle outcome of "+pts(R.claim_points)+" or higher"]);
+      rrows.push(["Met in this history?", R.claim_met?"Yes":"No"]);
+      rrows.push(["Proven wrong in this history (middle below zero)?", R.falsified?"Yes":"No"]);
+    } else {
+      rrows.push(["Middle outcome", esc(R.graded)+" graded, too few for a middle figure"]);
+    }
+    hhtml+=halfTable(rrows);
+    hhtml+='<h3>Second half: how fast the heavy trading died down</h3>';
+    var erows=[["Episodes old enough to grade", esc(E.graded)],["Episodes whose 10 days have not fully passed yet", esc(E.pending)],["Episodes where trading fell back below the stock's own typical day within 10 days", esc(E.successes)]];
+    if(E.graded>=30 && E.share_pct!=null){
+      erows.push(["Share that settled down in time", esc(E.share_pct)+"%"]);
+      erows.push(["Range that share plausibly sits in", esc(E.share_ci95_pct[0])+"% to "+esc(E.share_ci95_pct[1])+"%"]);
+      erows.push(["The forecast being tested", "At least "+esc(E.claim_pct)+" of every 100 settle down in time"]);
+      erows.push(["Met in this history?", E.claim_met?"Yes":"No"]);
+      erows.push(["Proven wrong in this history (worse than a coin flip)?", E.falsified?"Yes":"No"]);
+    } else {
+      erows.push(["Share that settled down in time", esc(E.graded)+" graded, too few for a share"]);
+    }
+    hhtml+=halfTable(erows);
+    if(R.graded>=30 && E.graded>=30){
+      hhtml+='<p class="sub">Read plainly: in this history the price half '+(R.claim_met?'met':'did not meet')+' its forecast and the settling-down half '+(E.claim_met?'met':'did not meet')+' its forecast. Both are shown beside their promises exactly as they came out.</p>';
+    }
+    out+=card("History, not live forecasts ("+H.span+")", hhtml);
+
+    // ---- Study record ----
+    out+=card(d.study_record.label, '<p class="sub">'+esc(d.study_record.f6)+'</p><p class="sub">'+esc(d.study_record.n6)+'</p>');
+
+    // ---- Live record ----
+    var L=d.live;
+    out+=card("The live record", halfTable([
+      ["Episodes written down so far", esc(L.episodes_recorded)],
+      ["Forecasts on record (two per episode, one per half)", esc(L.forecasts_recorded)],
+      ["Return-half forecasts graded so far", esc(L.graded_return_half)],
+      ["Settling-down-half forecasts graded so far", esc(L.graded_exhaustion_half)],
+      ["Graded episodes on the way to the retirement test below", esc(L.target_episodes)]
+    ])+'<p class="sub">'+esc(L.note)+'</p><p class="sub">'+esc(d.thin_cell_rule)+'</p>');
+
+    out+=card("When a half of this tool retires", '<p class="sub">'+esc(d.kill_criterion)+'</p>');
+
+    main.innerHTML=out;
+  }).catch(function(e){
+    banner.className="banner show missing";
+    banner.textContent="The latest figures could not be loaded. Nothing is shown rather than something out of date.";
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
