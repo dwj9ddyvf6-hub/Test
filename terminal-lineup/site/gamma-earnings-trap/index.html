@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gamma-Pressure Earnings Trap: how big earnings-day moves get when positioning amplifies them</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Gamma-Pressure Earnings Trap</h1>
+    <p class="job">One job: forecast how big an earnings-day move will be when market positioning is set to amplify it, and never which way it will go.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the report window&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function fmtDay(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  function billions(v){var b=v/1e9;return (b<0?"\u2212$":"$")+Math.abs(b).toFixed(2)+" billion";}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    var fc=data.forecast||{}, miss=data.missing_input||{}, cal=data.calendar||{}, pos=data.positioning||{}, mem=data.membership||{}, win=data.window||{}, hist=data.history||{}, ex=data.worked_example||{}, live=data.live||{};
+    meta.textContent="Newest positioning session on record: "+fmtShort(pos.freshest_session)+". Earnings calendar gathered "+fmtShort(cal.recorded_on)+". Source: "+data.source+".";
+    showBanner("stale","Waiting for one missing input: no record carries a priced expected move for any coming report, so no forecast has been recorded yet. The window below shows every report that is ready in every other way.");
+
+    var h="";
+    h+='<section class="card"><h2>State: still being proven, and waiting for the priced move</h2><p>An earnings report is the biggest scheduled shock a single stock gets. What happens to the size of that shock depends partly on how the firms that make options markets are positioned for the whole index. When their overall positioning reading is negative, balancing their books means trading along with a move rather than against it, so a shock can travel further than the options market priced in. When the reading is positive, the same balancing works the other way and tends to absorb a shock.</p><p>This engine crosses those two things, the earnings calendar and the positioning record, and stakes a forecast on the crossing. Today every report in the window has its date, its index membership and its positioning state on record. What none of them has is the priced expected move the forecast is measured against, because no record on file carries one. Rather than inventing that number, this page names it as missing and waits.</p></section>';
+
+    h+='<section class="card"><h2>The forecast</h2><p>'+esc(fc.claim)+'</p><p><strong>'+esc(fc.size_only)+'</strong></p><p>'+esc(fc.control)+'</p><p class="sub">'+esc(fc.positioning_level)+'</p></section>';
+
+    h+='<section class="card"><h2>What is missing: '+esc(miss.name)+'</h2><p>'+esc(miss.detail)+'</p></section>';
+
+    var ev=win.events||[];
+    h+='<section class="card"><h2>Reports in the next 5 trading days</h2><p>The 5 trading days after '+fmtShort(win.after_session)+' run from '+fmtDay((win.sessions||[])[0])+' to '+fmtDay((win.sessions||[])[(win.sessions||[]).length-1])+'. <span class="count">'+esc(win.count)+'</span> reports are scheduled in that window, '+esc(win.sp500_count)+' of them from S&amp;P 500 companies. Positioning for the whole index (SPY) on '+fmtShort(pos.freshest_session)+' reads <strong>negative</strong>, so every one of these reports sits in the main group, none in the comparison group. Their priced moves are all missing, for the reason above.</p>'
+      +'<table><tr><th>Company</th><th>Report date</th><th>Index membership</th><th>Positioning (index-wide, SPY)</th><th>Priced expected move</th></tr>'
+      +ev.map(function(e){return '<tr><td><strong>'+esc(e.symbol)+'</strong></td><td>'+fmtShort(e.date)+'</td><td>'+(e.in_sp500?"S&amp;P 500: its own index, SPY":"Not on the S&amp;P 500 list: carried under SPY as the stated fallback")+'</td><td>Negative on '+fmtShort(e.positioning_session)+'</td><td>Not on record</td></tr>';}).join("")
+      +'</table><p>'+esc(win.reason_none)+'</p><p class="sub">'+esc(cal.timing_note)+'</p><p class="sub">'+esc(cal.stale_note)+'</p></section>';
+
+    h+='<section class="card"><h2>The positioning record</h2><p>The reading is a modelled estimate of dealer positioning for the whole index, worked out from the options chain under a stated set of rules. It is a model, not a look inside anyone\'s books. <span class="count">'+esc(pos.sessions_on_record)+'</span> sessions are on record, and on every one of them the reading for each index fund is negative, so the comparison group (reports landing while positioning is positive) has <strong>0</strong> possible events so far.</p>'
+      +'<table><tr><th>Session</th><th>SPY</th><th>QQQ</th><th>IWM</th></tr>'
+      +(pos.sessions||[]).map(function(s){function cell(sym){var f=s.funds[sym];return esc(f.sign)+" ("+esc(billions(f.value_usd_per_1pct))+" per 1% move)";}return '<tr><td>'+fmtShort(s.session)+'</td><td>'+cell("SPY")+'</td><td>'+cell("QQQ")+'</td><td>'+cell("IWM")+'</td></tr>';}).join("")
+      +'</table><p class="sub">'+esc(mem.note)+'</p></section>';
+
+    h+='<section class="card"><h2>'+esc(hist.label)+'</h2><p><span class="count">'+esc(hist.qualifying_events)+'</span> past reports carry every input the grading needs (report date, actual move, priced move, and that day\'s positioning reading). Graded in the main group: <strong>'+esc(hist.main_arm_graded)+'</strong>. Graded in the comparison group: <strong>'+esc(hist.control_arm_graded)+'</strong>.</p><p>'+esc(hist.detail)+'</p></section>';
+
+    var xs=ex.summary||{};
+    h+='<section class="card"><h2>'+esc(ex.label)+'</h2>'
+      +'<table><tr><th>Invented report</th><th>Close before</th><th>Close on the day</th><th>Actual move</th><th>Priced move</th><th>Ratio</th><th>Bigger than priced?</th></tr>'
+      +(ex.events||[]).map(function(e,i){return '<tr><td>Example '+(i+1)+'</td><td>'+esc(e.prev_close.toFixed(2))+'</td><td>'+esc(e.earnings_close.toFixed(2))+'</td><td>'+esc(e.actual_move_pct.toFixed(2))+'%</td><td>'+esc(e.priced_move_pct.toFixed(1))+'%</td><td>'+esc(e.ratio.toFixed(2))+'</td><td>'+(e.exceeded?"Yes":"No")+'</td></tr>';}).join("")
+      +'</table><p>Across the four invented reports: <strong>'+esc(xs.exceedances)+' of '+esc(xs.events)+'</strong> moved more than their priced move (a '+esc(Math.round((xs.share||0)*100))+' percent share), and the middle ratio is <strong>'+esc((xs.median_ratio||0).toFixed(2))+'</strong>. Both figures are worked out by the same code that will grade real reports.</p><p class="sub">'+esc(ex.note)+'</p></section>';
+
+    h+='<section class="card"><h2>The live record</h2><p><span class="count">'+esc(live.forecasts_recorded||0)+'</span> forecasts recorded before their earnings day opens, <span class="count">'+esc(live.forecasts_graded||0)+'</span> graded so far. Main group recorded: '+esc(live.main_recorded||0)+'. Comparison group recorded: '+esc(live.control_recorded||0)+'. The proving target is '+esc(live.target_events)+' graded events.</p><p>'+esc(data.kill_criterion)+'</p><p class="sub">'+esc(data.thin_rule)+'</p><p class="sub">'+esc(data.grading_note)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","This page's data file could not be loaded, so no counts are shown. Nothing here is estimated or filled in by hand.");
+    meta.textContent="The forecast data is not available right now.";
+  });
+})();
+</script>
+</div>
+</body>
+</html>
