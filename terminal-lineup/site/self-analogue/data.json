@@ -72809,6 +72809,7 @@
         "self_test",
         "source",
         "state",
+        "subject_chart",
         "suspension_rule",
         "thin_cell_rule",
         "tool",
@@ -72856,6 +72857,133 @@
   },
   "source": "The daily price history this programme reads from: 15815 names, 2015-01-02 to 2026-10-29, at most 2974 trading days for any one name, checked for this page. Source file: deep_bars.json.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Middle forecast percent per name.",
+      "rows": [
+        {
+          "coverage": "range -93.97 to -86.69 percent",
+          "name": "HUBC",
+          "score": -92.51
+        },
+        {
+          "coverage": "range -92.01 to 14.67 percent",
+          "name": "SMX",
+          "score": -79.19
+        },
+        {
+          "coverage": "range -89.87 to -53.53 percent",
+          "name": "VCIG",
+          "score": -75.73
+        },
+        {
+          "coverage": "range -95.81 to -41.38 percent",
+          "name": "CDT",
+          "score": -64.38
+        },
+        {
+          "coverage": "range -72.84 to -29.81 percent",
+          "name": "XXII",
+          "score": -59.48
+        },
+        {
+          "coverage": "range -69.59 to 7.77 percent",
+          "name": "IPW",
+          "score": -54.12
+        },
+        {
+          "coverage": "range -52.99 to -52.99 percent",
+          "name": "OILX",
+          "score": -52.99
+        },
+        {
+          "coverage": "range -65.33 to 2.16 percent",
+          "name": "LGHL",
+          "score": -50.12
+        },
+        {
+          "coverage": "range -98.59 to 13.62 percent",
+          "name": "CTNT",
+          "score": -49.16
+        },
+        {
+          "coverage": "range 19.15 to 83.63 percent",
+          "name": "BCOM",
+          "score": 47.35
+        },
+        {
+          "coverage": "range -75.8 to -19.81 percent",
+          "name": "GMEX",
+          "score": -46.44
+        },
+        {
+          "coverage": "range -82.31 to 228.28 percent",
+          "name": "ELPW",
+          "score": -46.36
+        }
+      ],
+      "source": "live.forecasts[].middle_percent",
+      "title": "Forecast middle percent, biggest moves first"
+    },
+    "record": {
+      "items": [
+        {
+          "high": -86.69,
+          "label": "HUBC",
+          "low": -93.97,
+          "mid": -92.51
+        },
+        {
+          "high": 14.67,
+          "label": "SMX",
+          "low": -92.01,
+          "mid": -79.19
+        },
+        {
+          "high": -53.53,
+          "label": "VCIG",
+          "low": -89.87,
+          "mid": -75.73
+        },
+        {
+          "high": -41.38,
+          "label": "CDT",
+          "low": -95.81,
+          "mid": -64.38
+        },
+        {
+          "high": -29.81,
+          "label": "XXII",
+          "low": -72.84,
+          "mid": -59.48
+        },
+        {
+          "high": 7.77,
+          "label": "IPW",
+          "low": -69.59,
+          "mid": -54.12
+        },
+        {
+          "high": -52.99,
+          "label": "OILX",
+          "low": -52.99,
+          "mid": -52.99
+        },
+        {
+          "high": 2.16,
+          "label": "LGHL",
+          "low": -65.33,
+          "mid": -50.12
+        }
+      ],
+      "kind": "band",
+      "label": "Low to high forecast percent per name.",
+      "source": "live.forecasts[].low/high_percent",
+      "title": "Forecast ranges on record"
+    },
+    "version": 1
+  },
   "suspension_rule": "If one stock's real returns land inside its published range at a rate more than 15 points away from the stated 80 percent across 100 of that stock's own graded forecasts, that stock is suspended: it stops receiving forecasts, and the suspension is published here, never done quietly.",
   "thin_cell_rule": "Any group with fewer than 30 graded forecasts shows its count only, with no percentage headline.",
   "tool": "Per-Name Self-Analogue",
