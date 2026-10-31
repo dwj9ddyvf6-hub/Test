@@ -47,6 +47,7 @@ Monitors and research recorders are not listed as strategies in any of the three
 | `docs/THREE-GUIDES-RECONCILIATION.md` | The map between the three agent guides: shared invariants, unique lessons, and the differences to decide consciously. |
 | `docs/YOUR-OWN-ALERT-SYSTEM.md` | How a reader actually uses all of this day to day: the terminal as a home-screen alert system. |
 | `docs/VERIFY.md` | The code lines each card rule was read from (one page per family in `docs/verify/`), and where each copied file came from. |
+| `terminal-lineup/` | The terminal lineup: **1,345 files** saved from the local terminal tree: `site/` (1,121 files, with **104 tool pages** across 105 tool folders, plus shared code and data), `forecast/` (**88 files** of forecast engine code, registry and tests for the **30 forecast engines** in `forecast/registry.json`), `specs/` (1 file), `oracle/` (4 files), `records/` (16 files), root design and build docs (10 Markdown files) and **105 workflow build scripts**. Start at `terminal-lineup/site/` for the tools and `terminal-lineup/forecast/` for the engines. |
 
 ## Start here, by what you came for
 
@@ -58,6 +59,7 @@ Monitors and research recorders are not listed as strategies in any of the three
 | Count or cross-check every strategy ever built | [The full accounting](docs/ALL-SLEEVES.md) and `docs/ALL-SLEEVES.json` (651 from 1,562 ids; 104 unresolved, kept separate). |
 | Build or run an agentic trade desk | The three guides in the fixed section below, the reconciliation first, then the kit in `agentic-trade-desk/`. |
 | Use the desk as an alert system | [Run this desk as your own alert system](docs/YOUR-OWN-ALERT-SYSTEM.md). |
+| Run or study the terminal engines and tools | `terminal-lineup/` (1,345 files): the tool pages under `terminal-lineup/site/`, the forecast engine code and registry under `terminal-lineup/forecast/`, and the design docs at `terminal-lineup/THE-70-TOOLS.md` and `terminal-lineup/FORECAST-ENGINES-30.md`. |
 | Study the psychology engines | Two independent builds: `psychology-engine/` (Ausar's research and reference implementation; start with its README and `PUBLIC_VALIDATION.md`) and `docs/research/psychology-engine-2026-10-30/` (Midna's live nine-gauge engine: ENGINE-DESIGN, STUDY-THEORY, STUDY-MEASUREMENT). |
 | Take a whole peer-desk package | `packages/claude/`, `packages/ausar/` or `packages/grokbot/`. |
 | Check where a rule or a copied file came from | `docs/VERIFY.md` and `docs/verify/`. |
