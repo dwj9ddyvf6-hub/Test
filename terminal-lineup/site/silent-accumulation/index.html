@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Silent Accumulation: three quiet footprints of buying, graded together</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Silent Accumulation</h1>
+    <p class="job">One job: test whether stocks showing three quiet footprints of buying at once (heavy off-exchange trading, insiders not selling, and big holders building) go on to beat the market over the next 21 trading days.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function card(title, inner){return '<section class="card"><h2>'+esc(title)+'</h2>'+inner+'</section>';}
+  function names(list){return list && list.length? esc(list.join(", ")) : "none";}
+
+  fetch("data.json").then(function(r){if(!r.ok) throw new Error(r.status); return r.json();}).then(function(d){
+    meta.textContent="Price history checked through "+fmtDate(d.as_of)+", and used only for grading. Source: "+d.source;
+    var out="";
+
+    out+=card("Still being proven", '<p class="sub">This tool is new and its own record is still being built. None of the three readings behind it has ever been graded as a forecast before, so the honest starting expectation is weak, and the page says so. It earns stronger words only from groups it has written down in advance and had graded. Its verdict needs '+esc(d.live.proving_target_names)+' recorded group names.</p>');
+
+    // ---- The idea ----
+    out+=card("The idea", '<p>'+esc(d.idea)+'</p>'
+      +'<p class="claim">'+esc(d.claim.words)+'</p>'
+      +'<p class="sub">'+esc(d.claim.points_explained)+'</p>');
+
+    // ---- Today's three readings ----
+    var R=d.readings, Dk=R.dark, In=R.insider, Fi=R.filings;
+    var r="";
+    // Dark leg
+    r+='<h3 style="margin:14px 0 4px;font-size:17px">1. '+esc(Dk.name)+'</h3>';
+    if(Dk.state==="not_on_record"){
+      r+='<p class="sub"><strong>Not on record, and this is the gap that stops the test today.</strong> '+esc(Dk.gap_words)+' So the top fifth cannot be taken: there are no stored per-stock readings to rank. Nothing else is substituted: the combined index reading and the index funds\' own ratios below are different measures, and neither is ever assigned to a stock.</p>';
+      var C=Dk.combined_context;
+      if(C && C.pct!=null){
+        r+='<p class="sub">Context, exactly as the dark record publishes it: the combined reading for '+esc(C.name)+' was '+esc(C.pct)+'% for the session of '+esc(fmtDate(C.session))+', built from '+esc(C.stocks_used)+' of '+esc(C.stocks_total)+' index stocks.';
+        if(C.funds && C.funds.length){
+          r+=' The index funds\' own ratios that session: '+C.funds.map(function(f){return esc(f.symbol)+" "+esc(f.pct)+"%";}).join(", ")+'.';
+        }
+        r+=' '+esc(C.words)+'</p>';
+      }
+    } else {
+      r+='<p class="sub">Freshest stored session: '+esc(fmtDate(Dk.session))+'. Top fifth among the tracked names with a reading: '+names(Dk.top_fifth)+'.</p>';
+    }
+    // Insider leg
+    r+='<h3 style="margin:14px 0 4px;font-size:17px">2. '+esc(In.name)+'</h3>'
+      +'<p class="sub">Gathered '+esc(fmtDate(In.gathered))+' from filings filed since '+esc(fmtDate(In.window_start))+': '+esc(In.names_with_summary)+' of the '+esc(In.names_covered)+' tracked names carry a summary ('+esc(In.open_buys)+' open-market buys against '+esc(In.open_sells)+' sells across the whole record). '+esc(In.words)+'</p>'
+      +'<p class="sub">Passing today, '+esc(In.zero_sell_names.length)+' names: '+names(In.zero_sell_names)+'. The honest narrowing: '+esc(In.silent_on_all_open_trades.length)+' of those '+esc(In.zero_sell_names.length)+' also show zero open-market buys in the window, so for them the reading is complete open-market silence rather than buying. Only a name that pairs zero sells with an actual buy is showing the stronger form, and the table below shows each name\'s buys so the difference is visible.</p>'
+      +'<table><thead><tr><th>Passing name</th><th>Open-market sells</th><th>Open-market buys</th></tr></thead><tbody>';
+    In.zero_sell_detail.forEach(function(n){
+      r+='<tr><td><strong>'+esc(n.symbol)+'</strong></td><td>0</td><td>'+esc(n.buys)+(n.buys? ' ($'+esc(Number(n.buy_value_usd).toLocaleString("en-US"))+')' : '')+'</td></tr>';
+    });
+    r+='</tbody></table><p class="sub">Names with no summary at all, never counted as passing: '+names(In.no_summary_names)+'.</p>';
+    // Filings leg
+    r+='<h3 style="margin:14px 0 4px;font-size:17px">3. '+esc(Fi.name)+'</h3>'
+      +'<p class="sub">Two quarters are on record: the period ended '+esc(fmtDate(Fi.periods[1]))+' ('+esc(Number(Fi.filers_prior).toLocaleString("en-US"))+' holders filed) and the period ended '+esc(fmtDate(Fi.periods[0]))+' ('+esc(Number(Fi.filers_current).toLocaleString("en-US"))+' filed). Exactly one comparison per name exists today; the reading sharpens only as more quarters arrive. Of the '+esc(Fi.tracked_names)+' tracked names, '+esc(Fi.resolved_current)+' could be matched in the newer quarter, '+esc(Fi.resolved_prior)+' in the older, and only '+esc(Fi.resolved_both)+' in both, so only those '+esc(Fi.resolved_both)+' can be judged. '+esc(Fi.words)+'</p>'
+      +'<table><thead><tr><th>Judged name</th><th>Holders, older &rarr; newer</th><th>Total shares reported, older &rarr; newer</th><th>Reading</th></tr></thead><tbody>';
+    Fi.table.forEach(function(n){
+      var parts=[];
+      if(n.count_rose) parts.push("holder count rose");
+      if(n.shares_rose) parts.push("total shares rose ("+(n.shares_change_pct>0?"+":"")+esc(n.shares_change_pct)+"%)");
+      r+='<tr><td><strong>'+esc(n.symbol)+'</strong></td><td>'+esc(n.holders_prior)+' &rarr; '+esc(n.holders_current)+'</td><td>'+esc(Number(n.shares_prior).toLocaleString("en-US"))+' &rarr; '+esc(Number(n.shares_current).toLocaleString("en-US"))+'</td><td>'+(n.rose? esc(parts.join(" and ")) : "neither rose")+'</td></tr>';
+    });
+    r+='</tbody></table><p class="sub">Passing today: '+names(Fi.rise_names)+'. Passing on holder count alone: '+names(Fi.rise_by_count)+'.</p>';
+    out+=card("Today's three readings, with their coverage", r);
+
+    // ---- The groups, side by side ----
+    var G=d.groups_today;
+    var g='<table><thead><tr><th>Group</th><th>Names today</th></tr></thead><tbody>'
+      +'<tr><td><strong>All three together</strong></td><td>'+(G.dark_only===null? esc(G.interaction_state)+'.' : names(G.interaction))+'</td></tr>'
+      +'<tr><td>Passing the other two, waiting on the dark reading</td><td>'+names(G.insider_and_filings)+'</td></tr>'
+      +'<tr><td>Off-exchange reading alone</td><td>'+(G.dark_only===null? esc(G.dark_only_state) : names(G.dark_only))+'</td></tr>'
+      +'<tr><td>Insiders not selling alone</td><td>'+names(G.insider_only)+'</td></tr>'
+      +'<tr><td>Big holders building alone</td><td>'+names(G.filings_only)+'</td></tr>'
+      +'</tbody></table><p class="sub">When a group day comes, every group in this table is written to the public record on the same day and on the same terms, so the three-way group is always graded against each single condition formed the same day, never against a comparison chosen afterwards.</p>';
+    out+=card("The meeting set and each single condition, side by side", g);
+
+    // ---- The forecast ----
+    out+=card("The forecast under test", '<p class="claim">'+esc(d.claim.words)+'</p><p class="sub">Price is used only to grade this, never as an input: nothing in the three readings looks at what a stock costs or how it has moved.</p>');
+
+    // ---- Live record ----
+    var L=d.live;
+    var l='<table><tbody>'
+      +'<tr><th>Group names recorded toward the verdict</th><td><span class="count">'+esc(L.cohort_names_recorded)+'</span> of '+esc(L.proving_target_names)+'</td></tr>'
+      +'<tr><th>Group names graded so far</th><td>'+esc(L.cohort_names_graded)+'</td></tr>'
+      +'<tr><th>Group days recorded</th><td>'+esc(L.cohort_days.length)+'</td></tr>'
+      +'<tr><th>Forecasts written to the public record</th><td>'+esc(L.records_written)+'</td></tr>'
+      +'<tr><th>Forecasts graded so far</th><td>'+esc(L.records_graded)+'</td></tr>'
+      +'</tbody></table>';
+    if(L.missed_sessions && L.missed_sessions.length){ l+='<p class="sub">Dark sessions that passed unrecorded and will never be backfilled: '+esc(L.missed_sessions.join(", "))+'. They stay out of every figure.</p>'; }
+    l+='<p class="sub">'+esc(L.wait)+'</p>'
+      +'<p class="sub">'+esc(d.thin_cell_rule)+'</p>';
+    out+=card("The live record", l);
+
+    out+=card("When this tool retires itself", '<p class="sub">'+esc(d.kill_criterion)+'</p>');
+
+    // ---- The working, checked ----
+    var T=d.self_test;
+    out+=card("The working, checked", '<p class="sub">Before anything is published, the top-fifth cut, the zero-sell reading (including that a name with no summary never passes), the big-holder rise reading, the group formation and the distribution grading are run on hand-built cases whose answers are known in advance ('+esc(T.feature_cases_checked)+' checks, all matching), the insider record is checked against its own published totals, the big-holder filer counts are recomputed from the filing sets and checked against the published tracker record, the per-name readings are recomputed name by name from those same filing sets, and the group recording is run end to end on a throwaway copy of the public record ('+esc(T.ledger_arms_checked)+' groups recorded there). Test records never enter the live record. Latest check: passed.</p>');
+
+    main.innerHTML=out;
+  }).catch(function(e){
+    banner.className="banner show missing";
+    banner.textContent="The latest figures could not be loaded. Nothing is shown rather than something out of date.";
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
