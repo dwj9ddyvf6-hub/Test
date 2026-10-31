@@ -3,7 +3,7 @@
    existing .chartbox frame. All selectors carry the vk- prefix. */
 .vk-title{margin:0 0 10px;font-size:17px}
 .vk-svg{width:100%;height:auto;display:block}
-.vk-axis{font-size:11px;fill:var(--faint)}
+.vk-axis{font-size:16px;fill:var(--faint)}
 .vk-state{padding:14px 16px}
 .vk-statewords{margin:0;font-size:15px}
 .vk-done{transition:opacity .3s ease}
@@ -19,7 +19,7 @@
 .vk-pt,.vk-cur{fill:var(--accent)}
 .vk-dot{fill:var(--accent);opacity:.75}
 /* P3 Curve and P9 Line */
-.vk-note{font-size:11px;font-weight:600;fill:var(--ink)}
+.vk-note{font-size:16px;font-weight:600;fill:var(--ink)}
 .vk-line-path{fill:none;stroke:var(--accent);stroke-width:2}
 .vk-dashed{stroke-dasharray:6 4}
 .vk-bench{stroke:var(--faint);stroke-width:1.5}
@@ -43,7 +43,7 @@
 .vk-rcov{color:var(--soft);font-size:13.5px}
 /* P7 HeatStrip */
 .vk-heatstrip{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 10px}
-.vk-heat-cell{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:2px 7px;background:var(--card)}
+.vk-heat-cell{font-size:14px;border:1px solid var(--line);border-radius:6px;padding:2px 7px;background:var(--card)}
 .vk-heat-mid{background:var(--accent-soft)}
 .vk-heat-hot{background:var(--accent);color:#fff}
 /* P10 Accrual */
@@ -51,7 +51,7 @@
 .vk-tick{width:10px;height:10px;border-radius:3px;background:var(--nodata-bg);border:1px solid var(--line)}
 .vk-tick.on{background:var(--accent)}
 .vk-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.vk-cal-cell{font-size:12px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:5px 0;background:var(--card)}
+.vk-cal-cell{font-size:14px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:5px 0;background:var(--card)}
 .vk-cal-mid{background:var(--accent-soft)}
 .vk-cal-hot{background:var(--accent);color:#fff}
 .vk-timeline{border-left:2px solid var(--line);margin-left:6px}
@@ -85,7 +85,7 @@
 .vk-slice-2{fill:var(--slice-teal)}
 .vk-slice-3{fill:var(--down)}
 .vk-slice-4{fill:var(--zone-amber)}
-.vk-legend{font-size:12.5px;fill:var(--ink)}
+.vk-legend{font-size:16px;fill:var(--ink)}
 /* Page layout (charts lead, record charted, status small, missing small) */
 .titlechip{display:inline-block;vertical-align:middle;margin-left:10px}
 .recordchart{border-top:3px solid var(--accent)}
@@ -120,3 +120,21 @@
 .liveind.stale .livedot{background:var(--stale-dot)}
 .liveind.closed .livedot,.liveind.asof .livedot{background:var(--idle-dot)}
 .topbar .updated{margin-left:0}
+
+/* Bullet (2026-10-31, spec 14.2/14.5): the shared current-state
+   component. Zone bands sit behind a length bar on one track; the
+   exact value and zone word print under it; a sparkline rides beside
+   the scale row when history exists. Existing tokens only. */
+.vk-bullet{margin:6px 0 2px}
+.vk-bullet-track{position:relative;height:18px;background:var(--nodata-bg);border-radius:6px;overflow:visible}
+.vk-bullet-seg{position:absolute;top:0;bottom:0;opacity:.38}
+.vk-zone-bg-0{background:var(--down)}
+.vk-zone-bg-1{background:var(--zone-amber)}
+.vk-zone-bg-2{background:var(--accent)}
+.vk-zone-bg-3{background:var(--accent-deep)}
+.vk-bullet-fill{position:absolute;left:0;top:4px;height:10px;background:var(--accent);border-radius:5px}
+.vk-bullet-track .vk-bench-mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.vk-bullet-scale{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;color:var(--soft);margin-top:6px;flex-wrap:wrap}
+.vk-bullet-value{font-size:20px;font-weight:800;color:var(--ink)}
+.vk-bullet-spark{display:block;margin-top:4px}
+.vk-bullet-spark svg{width:220px;max-width:100%;height:auto}
