@@ -1,0 +1,71 @@
+{
+  "account": {
+    "buying_power": 3603419.35,
+    "cash": 1077380.75,
+    "equity": 1077380.75,
+    "last_equity": 1077853.05,
+    "portfolio_value": 1077380.75,
+    "status": "ACTIVE"
+  },
+  "epoch": {
+    "end": "2026-10-31T20:35:14.446413+00:00",
+    "start": "2026-10-26T20:14:30.681985+00:00",
+    "starting_capital": 1000000.0
+  },
+  "positions": [],
+  "positions_source": "strategies[].open_positions (symbol, qty), aggregated by symbol",
+  "published_at_utc": "2026-10-31T20:35:14.446413+00:00",
+  "record_surface": {
+    "calibration_record": null,
+    "current_reading": {
+      "as_of": "2026-10-31T20:35:14.446413+00:00",
+      "keys_present": [
+        "account",
+        "epoch",
+        "positions",
+        "positions_source",
+        "published_at_utc",
+        "session",
+        "source",
+        "subject_chart",
+        "tool"
+      ]
+    },
+    "feed": null,
+    "label": "Study record",
+    "live_accrual": null,
+    "missing": {
+      "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
+    },
+    "provenance": "desk snapshot terminal_feed.json, copied read-only by publish_desk.py from muse-desk-v3/terminal/",
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
+  "session": "2026-10-31",
+  "source": "desk snapshot terminal_feed.json, copied read-only by publish_desk.py from muse-desk-v3/terminal/",
+  "subject_chart": {
+    "lead": null,
+    "record": {
+      "kind": "curve",
+      "label": "The two equity readings the snapshot itself carries: the starting capital at the epoch start and the equity at the latest cycle. Nothing between them is on record in the snapshot.",
+      "points": [
+        {
+          "x": "2026-10-26",
+          "y": 1000000.0
+        },
+        {
+          "x": "2026-10-31",
+          "y": 1077380.75
+        }
+      ],
+      "source": "epoch.starting_capital / account.equity",
+      "title": "Equity, from the capital epoch to the latest snapshot"
+    },
+    "version": 1
+  },
+  "tool": "desk"
+}
