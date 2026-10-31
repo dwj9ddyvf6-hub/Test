@@ -33,7 +33,8 @@ def test_visualkit_vocabulary_and_scale():
         "throw new Error('missing '+n);"
         "const g=VK.gaugeZones({value:50,low:0,high:100,"
         "zones:[{to:100,label:'x'}]});"
-        "if (!g.includes('<svg')) throw new Error('gauge no svg');"
+        "if (!g.includes('vk-bullet-fill')) throw new Error('gauge not bullet');"
+        "if (g.includes('vk-dial-needle')) throw new Error('gauge still radial');"
         "const d=VK.distribution({buckets:[{label:'a',value:0},"
         "{label:'b',value:10}]});"
         "if (!d.includes('<svg')) throw new Error('dist no svg');"
@@ -203,7 +204,7 @@ def test_market_mood_gauge_dials_values_unchanged():
     html = (SITE / "market-mood" / "index.html").read_text()
     data = json.loads((SITE / "market-mood" / "data.json").read_text())
     comp = data["state"]["composite_percentile"]
-    assert html.count("Gauge reading") >= 5
+    assert html.count("gauge-marker") >= 5
     assert f'<p class="bignum">{comp}</p>' in html
     pipe = (WORKSPACE / "terminal-lineup" / "psychology-engine"
             / "pipeline.py").read_text()
