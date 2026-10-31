@@ -1,12 +1,13 @@
 # Every-sleeve index
 
-This repo is the strategy catalog: every trading strategy across the desks, one card each, with the code that runs it. This page is the every-sleeve index. It lists all 333 sleeves on the roster of record, one row per sleeve, with each sleeve's module, its code path in this repo, its parked flag, and a link to its catalog card where one exists.
+This repo is the strategy catalog: every trading strategy across the desks, one card each, with the code that runs it. This page is the every-sleeve index. It lists all 336 sleeves on the roster of record, one row per sleeve, with each sleeve's module, its code path in this repo, its parked flag, and a link to its catalog card where one exists.
 
-Machine-readable version: [`docs/SLEEVES.json`](SLEEVES.json), the same 333 rows. Roster copy: [`config/sleeves.json`](../config/sleeves.json). Catalog: [`docs/CATALOG.json`](CATALOG.json).
+Machine-readable version: [`docs/SLEEVES.json`](SLEEVES.json), the same 336 rows. Roster copy: [`config/sleeves.json`](../config/sleeves.json). Catalog: [`docs/CATALOG.json`](CATALOG.json).
 
 Notes:
 
-- All 333 of the 333 code paths are present in this repo. The last to land was `s_mn_hourly` (`laz_sleeves/s_mn_hourly.py`) on 2026-10-30: its upload had been blocked by the public-repo PII gate (pattern class 'codename'), and it landed via the contents route under a one-file gate exception for that file only (ruling 2026-10-30), read back byte-identical.
+- All 336 of the 336 code paths are present in this repo. The last to land was `s_mn_hourly` (`laz_sleeves/s_mn_hourly.py`) on 2026-10-30: its upload had been blocked by the public-repo PII gate (pattern class 'codename'), and it landed via the contents route under a one-file gate exception for that file only (ruling 2026-10-30), read back byte-identical.
+- The BTA one-bar family (`bta_onebar_qqq`, `bta_onebar_basket`, `bta_onebar_rth`) landed on 2026-10-30, taking the roster from 333 to 336; each sleeve's module, adapter, strategy and install-proof files are in this repo. One companion file is a named remainder: `sleeves/bta_onebar_qqq.py` is present in a copy whose provenance sentence omits the owner's first name, because the desk wording trips the public-repo PII gate (pattern class 'first_name') and no gate exception covers that file; its bytes differ from the desk file by that one word, and the current desk bytes are held for an owner ruling or a desk-side wording change.
 - `aster_saty_research` is a monitor-only research shell. It is not catalogued in `docs/CATALOG.json`, so it has no catalog card. Its code is present in this repo at `adapters3/aster_saty_research.py`.
 - One catalog card is not linked directly: for `t_cci_corr`, the catalog entry id and card path are not spelled on this page because spelling them would trip the public-repo PII gate (codename pattern), whose one-file exception covers only `docs/CATALOG.json`. Its entry is in `docs/CATALOG.json` under that sleeve id, linked from its row below.
 - `raschke_rre` and `saty_day` were already in this repo at `sleeves/raschke_rre.py` and `sleeves/saty_day.py`; those copies predate the current desk source, so their bytes differ from the desk files.
@@ -27,7 +28,7 @@ Notes:
 | `s_mn_vwap` | `adapters.s_mn_vwap` | [`adapters/s_mn_vwap.py`](../adapters/s_mn_vwap.py) | no | [strategies/midna/mn-ema4-vwap.md](../strategies/midna/mn-ema4-vwap.md) |
 | `vix_hedge` | `adapters.vix_hedge` | [`adapters/vix_hedge.py`](../adapters/vix_hedge.py) | no | [strategies/femto/femto-vix-hedge.md](../strategies/femto/femto-vix-hedge.md) |
 
-## `adapters3/` (262)
+## `adapters3/` (265)
 
 | Sleeve | Module | Code in this repo | Parked | Catalog card |
 |---|---|---|---|---|
@@ -186,6 +187,9 @@ Notes:
 | `bb_rsi_divergence` | `adapters3.bb_rsi_divergence` | [`adapters3/bb_rsi_divergence.py`](../adapters3/bb_rsi_divergence.py) | no | [strategies/muse/muse-bb-rsi-divergence.md](../strategies/muse/muse-bb-rsi-divergence.md) |
 | `beatendown` | `adapters3.beatendown` | [`adapters3/beatendown.py`](../adapters3/beatendown.py) | no | [strategies/femto/femto-beatendown.md](../strategies/femto/femto-beatendown.md) |
 | `bilbo_options` | `adapters3.bilbo_options` | [`adapters3/bilbo_options.py`](../adapters3/bilbo_options.py) | no | [strategies/femto/femto-bilbo-options.md](../strategies/femto/femto-bilbo-options.md) |
+| `bta_onebar_basket` | `adapters3.bta_onebar_basket` | [`adapters3/bta_onebar_basket.py`](../adapters3/bta_onebar_basket.py) | no | — |
+| `bta_onebar_qqq` | `adapters3.bta_onebar_qqq` | [`adapters3/bta_onebar_qqq.py`](../adapters3/bta_onebar_qqq.py) | no | — |
+| `bta_onebar_rth` | `adapters3.bta_onebar_rth` | [`adapters3/bta_onebar_rth.py`](../adapters3/bta_onebar_rth.py) | no | — |
 | `capitulation` | `adapters3.capitulation` | [`adapters3/capitulation.py`](../adapters3/capitulation.py) | no | [strategies/femto/femto-capitulation.md](../strategies/femto/femto-capitulation.md) |
 | `capitulation_options` | `adapters3.capitulation_options` | [`adapters3/capitulation_options.py`](../adapters3/capitulation_options.py) | no | [strategies/femto/femto-capitulation-options.md](../strategies/femto/femto-capitulation-options.md) |
 | `confluence` | `adapters3.confluence` | [`adapters3/confluence.py`](../adapters3/confluence.py) | no | [strategies/femto/femto-confluence.md](../strategies/femto/femto-confluence.md) |
