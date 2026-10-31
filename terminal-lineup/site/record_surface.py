@@ -1044,16 +1044,25 @@ def build_subject_chart(slug, data):
 
 def build_record_surface(slug, data):
     as_of = None
-    for key in AS_OF_KEYS:
-        val = data.get(key)
-        if isinstance(val, str) and val:
-            as_of = val
-            break
-        if isinstance(val, dict):
-            inner = val.get("session") or val.get("date")
-            if inner:
-                as_of = inner
+    try:
+        import freshness as _fresh
+        raw = {k: v for k, v in data.items() if k != "record_surface"}
+        _d = _fresh.reading_date(raw)
+        if _d is not None:
+            as_of = _d.isoformat()
+    except Exception:
+        as_of = None
+    if as_of is None:
+        for key in AS_OF_KEYS:
+            val = data.get(key)
+            if isinstance(val, str) and val:
+                as_of = val
                 break
+            if isinstance(val, dict):
+                inner = val.get("session") or val.get("date")
+                if inner:
+                    as_of = inner
+                    break
     study = study_locations(data)
     eng = engine_for_slug(slug, data)
     accrual = None
@@ -1106,8 +1115,12 @@ def enrich_file(path):
     subject = build_subject_chart(slug, data)
     if subject is not None:
         data["subject_chart"] = subject
+    text = json.dumps(data, indent=2, sort_keys=True) + "\n"
+    if path.read_text() == text:
+        return False  # unchanged: do not touch the file (freshness cure:
+        # hourly enrich must not re-stamp every data file's mtime)
     tmp = path.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+    tmp.write_text(text)
     os.replace(tmp, path)
     return True
 
