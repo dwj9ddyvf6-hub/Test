@@ -244,6 +244,7 @@
         "short_volume_route",
         "source",
         "state",
+        "subject_chart",
         "thin_rule",
         "today",
         "tool",
@@ -294,6 +295,52 @@
   },
   "source": "The daily options-print tape summaries for the three big index funds, and the short-sale share of each day's volume from the FINRA off-exchange daily file as republished in the morning map record",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Score gap (buys only against all prints) per fund, short share beside it.",
+      "rows": [
+        {
+          "coverage": "short share 0.3919",
+          "name": "SPY",
+          "score": -0.5811
+        },
+        {
+          "coverage": "short share 0.6012",
+          "name": "QQQ",
+          "score": -0.1505
+        },
+        {
+          "coverage": "short share 0.9191",
+          "name": "IWM",
+          "score": -0.628
+        }
+      ],
+      "source": "today.names[].gap",
+      "title": "The intake bias itself, per fund"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Score gap per fund in the latest history session.",
+      "rows": [
+        {
+          "name": "SPY",
+          "score": 0.4773
+        },
+        {
+          "name": "QQQ",
+          "score": 0.7119
+        },
+        {
+          "name": "IWM",
+          "score": -0.4342
+        }
+      ],
+      "source": "history.sessions[].names[].gap",
+      "title": "The bias on 2026-10-29"
+    },
+    "version": 1
+  },
   "thin_rule": "Below 30 graded, counts only: no percentage and no score is drawn from a handful of tests.",
   "today": {
     "bias_only": [
