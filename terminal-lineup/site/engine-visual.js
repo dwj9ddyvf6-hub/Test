@@ -206,6 +206,14 @@
         label: (live.weeks_counted || 0) + " week counted so far, " + (live.records_graded || 0) + " records graded." });
     }
   };
+  function renderSubjectChart(chart, session) {
+    if (!chart || !chart.kind) return null;
+    if (chart.kind === "ranked") return VisualKit.ranked({ rows: chart.rows || [], session: session, title: chart.title, label: chart.label });
+    if (chart.kind === "curve") return VisualKit.curve({ points: chart.points || [], session: session, title: chart.title, label: chart.label });
+    if (chart.kind === "band") return VisualKit.band({ items: chart.items || [], session: session, title: chart.title, label: chart.label });
+    if (chart.kind === "distribution") return VisualKit.distribution({ buckets: chart.buckets || [], session: session, title: chart.title, label: chart.label });
+    return null;
+  }
   function pairTable(d, s) {
     var rows = (d.pair_table || []).slice().sort(function (a, b) { return (b.promoted || 0) - (a.promoted || 0); }).slice(0, 10).map(function (p) {
       return { name: p.pair_words, score: p.promoted, coverage: (p.confirmed || 0) + " confirmed, " + (p.not_replicated || 0) + " did not replicate" };
@@ -225,8 +233,20 @@
       if (!d) return;
       var session = VisualKit.sessionOf(d);
       var html = null;
-      try { html = ADAPTERS[slug] ? ADAPTERS[slug](d, session) : null; } catch (e) { html = null; }
-      if (!html) html = generic(d, session);
+      /* Subject chart first (cure 2026-10-31): the producer's
+         subject_chart.lead plots the page's own subject values.
+         Pages carrying one never fall through to the count generic. */
+      if (d.subject_chart) {
+        try { html = renderSubjectChart(d.subject_chart.lead, session); } catch (e) { html = null; }
+        if (!html) {
+          html = VisualKit.accrual({ have: null, need: null, session: session,
+            words: "No subject reading is on record for this page yet, so no chart is drawn. The reading appears here when its own data lands." });
+        }
+      }
+      if (!html && !d.subject_chart) {
+        try { html = ADAPTERS[slug] ? ADAPTERS[slug](d, session) : null; } catch (e) { html = null; }
+        if (!html) html = generic(d, session);
+      }
       host.innerHTML = html;
     }).catch(function () { /* The page's own content stays as it is. */ });
   });
