@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Promoted Book: all 388 forecast entries the program keeps, with their standings</title>
+<style>
+  :root{
+    --ink:#232a33; --soft:#55626f; --faint:#8593a1;
+    --line:#dde1e7; --bg:#f4f4f2; --card:#ffffff;
+    --accent:#0b5fa5; --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --gold-bg:#fdf6e0; --gold-line:#e3cf8a; --gold-ink:#6b5510;
+    --blue-bg:#eef4fb; --blue-line:#bcd4ee;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .headline{font-size:21px;margin:0 0 6px;max-width:46em}
+  .headline strong{font-size:26px}
+  .counts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+  .count{border-radius:10px;padding:10px 14px;font-size:15px;border:1px solid var(--line);background:var(--card)}
+  .count strong{font-size:19px}
+  .count.top{background:var(--gold-bg);border-color:var(--gold-line);color:var(--gold-ink)}
+  .prove{display:inline-block;border-radius:6px;padding:2px 11px;font-size:13.5px;
+         font-weight:600;margin:0 0 14px;background:var(--blue-bg);
+         border:1px solid var(--blue-line);color:#23405e}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:14px;
+       padding:16px 20px;margin:0 0 16px;max-width:60em}
+  .box h2{margin:0 0 6px;font-size:19px}
+  .box p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .box p strong{color:var(--ink);font-weight:600}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+  .filters button{border:1px solid var(--line);background:var(--card);border-radius:8px;
+                  padding:7px 14px;font-size:14.5px;cursor:pointer;color:var(--ink)}
+  .filters button.on{border-color:var(--accent);color:var(--accent);font-weight:600}
+  .standing h2{font-size:22px;margin:22px 0 4px}
+  .standing .meaning{color:var(--soft);font-size:15px;margin:0 0 12px;max-width:46em}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h3{margin:0 0 6px;font-size:18px;line-height:1.35}
+  .kind{display:inline-block;border-radius:6px;padding:2px 11px;font-size:13.5px;
+        font-weight:600;margin:0 0 10px;background:var(--gold-bg);
+        border:1px solid var(--gold-line);color:var(--gold-ink)}
+  .gate{border-top:1px solid var(--line);padding:8px 0 2px;margin-top:8px;font-size:15px}
+  .gate .name{font-weight:600;color:var(--accent);font-size:13.5px;
+              text-transform:uppercase;letter-spacing:.04em;display:block}
+  .gate p{margin:2px 0 4px;color:var(--soft)}
+  table{width:100%;border-collapse:collapse;margin:12px 0 4px;font-size:14.5px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  .grade{font-weight:700;color:var(--gold-ink);white-space:nowrap}
+  .nodata{background:#eceae6;border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Promoted Book</h1>
+    <p class="job">One job: show the whole book of forecast entries the program keeps, all 388 of them, each with its recipe in plain words, its standing, and its record numbers.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the book&hellip;</p>
+  <div id="prove"></div>
+  <p id="headline" class="headline"></p>
+  <div id="counts" class="counts"></div>
+  <div id="difference"></div>
+  <div id="filters" class="filters"></div>
+  <main id="results"></main>
+  <div id="notes"></div>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var proveEl = document.getElementById("prove");
+  var headlineEl = document.getElementById("headline");
+  var countsEl = document.getElementById("counts");
+  var differenceEl = document.getElementById("difference");
+  var filtersEl = document.getElementById("filters");
+  var resultsEl = document.getElementById("results");
+  var notesEl = document.getElementById("notes");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+  var FILTER = "all";
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function pct(x){
+    return (x >= 0 ? "" : "") + Number(x).toFixed(1) + "%";
+  }
+  function pts(x){
+    return (x >= 0 ? "+" : "") + Number(x).toFixed(1) + " points";
+  }
+  function commas(x){
+    return Number(x).toLocaleString("en-US");
+  }
+
+  function entryRows(entries){
+    var html = "<table><thead><tr>"
+      + "<th>Where it counts</th><th>Grade</th>"
+      + "<th>Window</th>"
+      + "<th class=\"num\">Flagged stocks that beat the average</th>"
+      + "<th class=\"num\">All stocks</th>"
+      + "<th class=\"num\">Gap</th>"
+      + "<th class=\"num\">Times flagged</th>"
+      + "</tr></thead><tbody>";
+    entries.forEach(function(e){
+      if (!e.windows.length){
+        html += "<tr><td>" + esc(e.where) + "</td>"
+          + "<td class=\"grade\">" + esc(e.grade) + "</td>"
+          + "<td colspan=\"5\">No per-window numbers in the book for this entry.</td></tr>";
+        return;
+      }
+      e.windows.forEach(function(w, i){
+        html += "<tr>";
+        if (i === 0){
+          html += "<td rowspan=\"" + e.windows.length + "\">" + esc(e.where) + "</td>"
+            + "<td class=\"grade\" rowspan=\"" + e.windows.length + "\">" + esc(e.grade) + "</td>";
+        }
+        html += "<td>" + esc(w.label) + "</td>"
+          + "<td class=\"num\">" + pct(w.flagged_share_pct) + "</td>"
+          + "<td class=\"num\">" + pct(w.all_share_pct) + "</td>"
+          + "<td class=\"num\">" + pts(w.gap_points) + "</td>"
+          + "<td class=\"num\">" + commas(w.times_flagged) + "</td></tr>";
+      });
+    });
+    return html + "</tbody></table>";
+  }
+
+  function render(){
+    var html = "";
+    DATA.standings.forEach(function(s){
+      if (FILTER !== "all" && FILTER !== s.key) return;
+      html += "<section class=\"standing\"><h2>" + esc(s.words) + ": "
+        + s.count + " entries</h2><p class=\"meaning\">" + esc(s.meaning) + "</p>";
+      s.groups.forEach(function(g){
+        html += "<div class=\"group\"><h3>" + esc(g.title) + "</h3>"
+          + "<span class=\"kind\">" + esc(g.kind) + "</span>"
+          + "<div class=\"gate\"><span class=\"name\">What it watches</span><p>"
+          + esc(g.watches) + "</p></div>"
+          + "<div class=\"gate\"><span class=\"name\">What it expects</span><p>"
+          + esc(g.expects) + "</p></div>"
+          + entryRows(g.entries)
+          + "</div>";
+      });
+      html += "</section>";
+    });
+    resultsEl.innerHTML = html;
+  }
+
+  function renderFilters(){
+    var opts = [["all", "All 388 entries"]];
+    DATA.standings.forEach(function(s){ opts.push([s.key, s.words + " (" + s.count + ")"]); });
+    filtersEl.innerHTML = "";
+    opts.forEach(function(o){
+      var b = document.createElement("button");
+      b.textContent = o[1];
+      if (FILTER === o[0]) b.className = "on";
+      b.addEventListener("click", function(){ FILTER = o[0]; renderFilters(); render(); });
+      filtersEl.appendChild(b);
+    });
+  }
+
+  fetch("data.json").then(function(r){
+    if (!r.ok) throw new Error("missing");
+    return r.json();
+  }).then(function(d){
+    DATA = d;
+    var c = d.counts;
+    meta.textContent = "Source: " + d.source + ".";
+    proveEl.innerHTML = "<span class=\"prove\">" + esc(d.proving_state) + "</span>"
+      + "<p style=\"font-size:14.5px;color:var(--soft);margin:0 0 14px;max-width:46em\">"
+      + esc(d.proving_words) + "</p>";
+    headlineEl.innerHTML = "The book holds <strong>" + c.total + " entries</strong>: "
+      + c.promoted + " at the top grade and " + c.probation + " on probation. "
+      + "Of the 388, " + c.movement + " forecast how much prices move and "
+      + c.stock_direction + " point at stocks themselves.";
+    countsEl.innerHTML =
+      "<span class=\"count top\"><strong>" + c.promoted + "</strong> promoted, grade A (top grade)</span>"
+      + "<span class=\"count\"><strong>" + c.probation + "</strong> on probation, grade B</span>"
+      + "<span class=\"count\"><strong>" + c.total + "</strong> entries in the book</span>";
+    differenceEl.innerHTML = "<div class=\"box\"><h2>Not the Grade-A Board</h2><p>"
+      + esc(d.difference_note) + "</p></div>";
+    notesEl.innerHTML = "<div class=\"box\"><h2>How to read the numbers</h2><p>"
+      + esc(d.numbers_note) + "</p><p>" + esc(d.age_note) + "</p></div>";
+    receiptEl.textContent = "Every entry, standing and number on this page is read from the program's own book of promoted entries, exactly as recorded.";
+    renderFilters();
+    render();
+  }).catch(function(){
+    banner.className = "banner show missing";
+    banner.textContent = "The book's record could not be loaded, so nothing is shown rather than guessed.";
+    meta.textContent = "";
+  });
+})();
+</script>
+</body>
+</html>
