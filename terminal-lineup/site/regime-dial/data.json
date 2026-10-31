@@ -1,0 +1,159 @@
+{
+  "checks": [
+    {
+      "counts": true,
+      "detail": "890 of 1,804 stocks counted",
+      "figure": "49.3% of stocks above their 200-session average",
+      "id": "long_trend",
+      "name": "Long trend",
+      "points": "below half",
+      "session": "2026-10-30",
+      "sessions_behind": 0,
+      "value": 49.3
+    },
+    {
+      "counts": true,
+      "detail": "884 of 1,816 stocks counted",
+      "figure": "48.7% of stocks above their 50-session average",
+      "id": "short_trend",
+      "name": "Short trend",
+      "points": "below half",
+      "session": "2026-10-30",
+      "sessions_behind": 0,
+      "value": 48.7
+    },
+    {
+      "counts": true,
+      "detail": "33.4% of the 1,816 stocks that traded rose",
+      "figure": "607 stocks rose, 1,201 fell, 8 unchanged",
+      "id": "day_direction",
+      "name": "Day direction",
+      "points": "more fell than rose",
+      "session": "2026-10-30",
+      "sessions_behind": 0,
+      "value": 33.4
+    },
+    {
+      "counts": true,
+      "detail": "Ranked by their average price change over 21 sessions",
+      "figure": "Top three sectors over 21 sessions: Consumer Staples +8.69%, Utilities +8.30%, Energy +7.72%",
+      "id": "leadership",
+      "name": "Leadership",
+      "points": "defensive-led",
+      "session": "2026-10-30",
+      "sessions_behind": 0,
+      "value": "defensive-led"
+    },
+    {
+      "counts": true,
+      "detail": "1.73% below the flip level",
+      "figure": "The S&P 500 fund closed at 755.72 against a flip level of 768.82",
+      "id": "position",
+      "name": "Position",
+      "points": "below its flip level",
+      "session": "2026-10-30",
+      "sessions_behind": 0,
+      "value": "below"
+    },
+    {
+      "counts": true,
+      "detail": "The gauge close the expected-move record was measured from",
+      "figure": "Fear gauge closed at 17.20",
+      "id": "fear",
+      "name": "Fear",
+      "points": "calm (under 20)",
+      "session": "2026-10-29",
+      "sessions_behind": 1,
+      "value": 17.2
+    }
+  ],
+  "checks_total": 6,
+  "counting_checks": 6,
+  "execution_pricing": false,
+  "explanation": {
+    "body": "Its current reading is from 2026-10-30. Earlier daily readings were not kept before today, so the reading history starts today and adds one entry each trading day from now on.",
+    "summary": "Say what kind of market this is in one plain sentence, and show every check behind that sentence."
+  },
+  "feed": "filed_records",
+  "freshest_session": "2026-10-30",
+  "no_reading_note": null,
+  "price_basis": "session_record",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "filed_records",
+    "price_basis": "session_record",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "reading": {
+    "kind": "Trending down",
+    "sentence": "Trending down: most stocks sit below both of their averages, and the S&P 500 fund sits below its flip level."
+  },
+  "reading_history": [
+    {
+      "checks_total": 6,
+      "counting_checks": 6,
+      "kind": "Trending down",
+      "sentence": "Trending down: most stocks sit below both of their averages, and the S&P 500 fund sits below its flip level.",
+      "session": "2026-10-30"
+    }
+  ],
+  "record_surface": {
+    "calibration_record": null,
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "checks",
+        "checks_total",
+        "counting_checks",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "freshest_session",
+        "no_reading_note",
+        "price_basis",
+        "provenance",
+        "reading",
+        "reading_history",
+        "record_surface",
+        "rule",
+        "source",
+        "tool"
+      ]
+    },
+    "feed": "filed_records",
+    "label": "Study record",
+    "live_accrual": null,
+    "missing": {
+      "what_and_when": "Earlier daily readings were not kept before today, so the reading history starts today and adds one entry each trading day from now on."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "filed_records",
+      "price_basis": "session_record",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "surfaced_from_other_files": {
+      "reading_history": {
+        "label": "Study record",
+        "sessions_on_record": 1,
+        "source": "regime-dial/reading-history.json (one entry is added by this producer each day a new reading is published; earlier days are not filled in)"
+      }
+    },
+    "version": 1
+  },
+  "rule": [
+    "A check more than 2 trading sessions behind the freshest check is shown with its figure but does not count toward the reading. If fewer than 4 of the 6 checks count, no single reading is published.",
+    "Stressed: a counting fear check at 25 or more, whatever the rest say.",
+    "Trending up: both trend checks above half, and the S&P 500 fund above its flip level, with all three checks counting.",
+    "Trending down: both trend checks below half, and the S&P 500 fund below its flip level, with all three checks counting.",
+    "Range-bound: a counting fear check under 20, neither trending reading met, and the day's moves not strongly one-sided (more than two thirds of stocks moving the same way would be strongly one-sided).",
+    "Anything else reads as mixed: no clear reading."
+  ],
+  "source": "The published figures of the other tools on this site: the breadth counts, the sector ranking, the morning index map and the expected-move record, each read exactly as published there",
+  "tool": "Regime Dial"
+}
