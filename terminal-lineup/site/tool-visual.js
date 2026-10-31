@@ -139,7 +139,7 @@
       if (!isNum(g.total) || !g.total) return null;
       return tiles([{ label: "Promoted at the last grading", value: Math.round(100 * g.promoted / g.total * 10) / 10 },
         { label: "On probation at the last grading", value: Math.round(100 * g.probation / g.total * 10) / 10 }],
-        s, "The book's standing at its last grading", "The share of the book standing promoted and on probation at the grading on record (" + (g.date || "") + "), in percent. Movements between standings are listed below when they are on record.");
+        s, "The book's standing at its only grading", "The share of the book standing promoted and on probation at the grading on record (" + (g.date || "") + "), in percent. The book has been graded once, so no movement between standings is on record yet.");
     },
     "earnings-calendar": function (d, s) {
       var rows = [];
@@ -156,6 +156,11 @@
       return tapeOf(ev, s, "Who reports, and when", "The reporting names on record placed on their own dates.");
     },
     "earnings-drift": function (d, s) {
+      var rows = (d.event_rows || []).filter(function (r) { return isNum(r.drift_pct); }).map(function (r) {
+        return { name: (r.symbol || "") + " " + (r.report_date || ""), score: r.drift_pct };
+      });
+      rows.sort(function (a, b) { return b.score - a.score; });
+      if (rows.length >= 2) return ranked(rows.slice(0, 14), s, "Each report, and what the name did on it", "Every earnings event in the study, named and dated, with its own post-report move in percent. Across all " + (d.events || rows.length) + " events the average move was " + (isNum(d.mean) ? Math.round(d.mean * 10000) / 100 : "?") + " percent, the middle move " + (isNum(d.median) ? Math.round(d.median * 10000) / 100 : "?") + " percent, and the share of reports that rose (share_positive) was " + (isNum(d.share_positive) ? Math.round(d.share_positive * 1000) / 10 : "?") + " percent.");
       var items = [];
       if (isNum(d.mean)) items.push({ label: "Average move after reporting", value: Math.round(d.mean * 10000) / 100 });
       if (isNum(d.median)) items.push({ label: "Middle move after reporting", value: Math.round(d.median * 10000) / 100 });
