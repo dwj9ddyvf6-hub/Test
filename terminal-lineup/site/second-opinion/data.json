@@ -1,5 +1,14 @@
 {
   "board_published_at_utc": "2026-10-31T05:59:22.369682+00:00",
+  "counts": {
+    "names_covered_by_five_families": 23,
+    "names_covered_by_four_families": 22,
+    "names_covered_by_no_family": 5,
+    "names_covered_by_one_family": 1731,
+    "names_covered_by_six_families": 0,
+    "names_covered_by_three_families": 4,
+    "names_covered_by_two_families": 53
+  },
   "coverage": {
     "facts_names_on_file": 43,
     "filings_names_on_file": 50,
@@ -21,7 +30,7 @@
   "default_name": "SPY",
   "execution_pricing": false,
   "explanation": {
-    "body": "Its current reading is from 2026-10-30. No study record is on file for this page; what it shows is its current reading, updated on its normal schedule.",
+    "body": "Its current reading is from 2026-10-30. On its live record it counts 23 names covered by five families, 22 names covered by four families, 5 names covered by no family, 1731 names covered by one family. No study record is on file for this page; what it shows is its current reading, updated on its normal schedule.",
     "summary": "For one name, show how many separate kinds of evidence actually speak for it, what each kind says, and where they agree or disagree."
   },
   "families": [
@@ -44522,6 +44531,7 @@
       "as_of": "2026-10-30",
       "keys_present": [
         "board_published_at_utc",
+        "counts",
         "coverage",
         "default_name",
         "execution_pricing",
@@ -44548,7 +44558,18 @@
     },
     "feed": "forecast_ledger",
     "label": "Study record",
-    "live_accrual": null,
+    "live_accrual": {
+      "counts": {
+        "names_covered_by_five_families": 23,
+        "names_covered_by_four_families": 22,
+        "names_covered_by_no_family": 5,
+        "names_covered_by_one_family": 1731,
+        "names_covered_by_six_families": 0,
+        "names_covered_by_three_families": 4,
+        "names_covered_by_two_families": 53
+      },
+      "source": "this page's own counts"
+    },
     "missing": {
       "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
     },
@@ -44572,6 +44593,100 @@
   },
   "source": "The scored trading day record, the options prints and positioning records, and the filings and positioning records on file",
   "state": "published",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "How many families speak for each name, the name's own price score beside it.",
+      "rows": [
+        {
+          "coverage": "price score 68.8, stance mixed",
+          "name": "ACN",
+          "score": 5
+        },
+        {
+          "coverage": "price score 65.1, stance mixed",
+          "name": "ANF",
+          "score": 5
+        },
+        {
+          "coverage": "price score 69.9, stance mixed",
+          "name": "APA",
+          "score": 5
+        },
+        {
+          "coverage": "price score 66.5, stance mixed",
+          "name": "CART",
+          "score": 5
+        },
+        {
+          "coverage": "price score 73.7, stance positive",
+          "name": "CBOE",
+          "score": 5
+        },
+        {
+          "coverage": "price score 65.9, stance mixed",
+          "name": "CCI",
+          "score": 5
+        },
+        {
+          "coverage": "price score 70.6, stance positive",
+          "name": "EL",
+          "score": 5
+        },
+        {
+          "coverage": "price score 59.7, stance cautious",
+          "name": "FTRE",
+          "score": 5
+        },
+        {
+          "coverage": "price score 69.9, stance mixed",
+          "name": "GKOS",
+          "score": 5
+        },
+        {
+          "coverage": "price score 68.5, stance positive",
+          "name": "GO",
+          "score": 5
+        },
+        {
+          "coverage": "price score 64.0, stance mixed",
+          "name": "HAS",
+          "score": 5
+        },
+        {
+          "coverage": "price score 52.7, stance cautious",
+          "name": "MAT",
+          "score": 5
+        }
+      ],
+      "source": "names[].families_speaking",
+      "title": "Per-name agreement, strongest first"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Families speaking for each index fund, its price score beside it.",
+      "rows": [
+        {
+          "coverage": "price score 47.0",
+          "name": "IWM",
+          "score": 4
+        },
+        {
+          "coverage": "price score 43.6",
+          "name": "QQQ",
+          "score": 4
+        },
+        {
+          "coverage": "price score 47.1",
+          "name": "SPY",
+          "score": 4
+        }
+      ],
+      "source": "names[index_funds].families_speaking",
+      "title": "The index funds' own agreement, on record"
+    },
+    "version": 1
+  },
   "thin_threshold": 30,
   "tool": "The Second Opinion",
   "why_families": "Many products read the same underlying records, so ten products agreeing can be one fact repeated; this page counts the separate records, called families, instead."
