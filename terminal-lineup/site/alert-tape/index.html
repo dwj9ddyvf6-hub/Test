@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alert Tape: the searchable archive of flow alerts on record</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card h2{margin:0 0 8px;font-size:18px}
+  .card p{margin:0 0 8px;font-size:15.5px}
+  .card p:last-child{margin-bottom:0}
+  .proving{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 16px;font-size:15px;color:#23405e}
+  .grading{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 22px;font-size:15px;color:#23405e}
+  .controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:end;margin:0 0 14px}
+  .controls label{font-size:13.5px;color:var(--soft);display:block;margin-bottom:4px}
+  .controls input,.controls select{font-size:15px;padding:8px 10px;border:1px solid var(--line);
+    border-radius:8px;background:#fff;color:var(--ink)}
+  .controls input{min-width:220px}
+  .countline{font-size:14.5px;color:var(--soft);margin:0 0 10px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;color:var(--soft);font-size:12.5px;text-transform:uppercase;
+     letter-spacing:.04em;padding:8px 8px;border-bottom:2px solid var(--line);white-space:nowrap}
+  td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  td.num{text-align:right;white-space:nowrap}
+  th.num{text-align:right}
+  .contract{font-weight:600}
+  .code{color:var(--faint);font-size:12.5px;display:block}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:20px;
+       padding:0 8px;white-space:nowrap}
+  .tag.golden{color:#6b4e12;border:1px solid var(--warn-line);background:var(--warn-bg)}
+  .tag.unusual{color:var(--accent);border:1px solid var(--accent)}
+  .grade{color:var(--soft);white-space:nowrap}
+  .dir-up{color:var(--up);font-weight:600}
+  .dir-down{color:var(--down);font-weight:600}
+  .receipt{font-size:13px;color:var(--faint)}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+  .scroll{overflow-x:auto}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Alert Tape</h1>
+    <p class="job">One job: keep every flow alert on record in one searchable archive, so you can look up what fired, for which fund, and in which session.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the alert archive&hellip;</p>
+
+  <div id="proving" class="proving" hidden></div>
+
+  <section class="card" id="scopeCard" hidden>
+    <h2>What this archive holds, exactly</h2>
+    <p id="scope"></p>
+    <p id="coverageLine" class="receipt"></p>
+  </section>
+
+  <div id="grading" class="grading" hidden></div>
+
+  <section class="card">
+    <h2>Search the archive</h2>
+    <div class="controls">
+      <div>
+        <label for="search">Search by name</label>
+        <input id="search" type="search" placeholder="Fund name, for example SPY" autocomplete="off">
+      </div>
+      <div>
+        <label for="sessionFilter">Session</label>
+        <select id="sessionFilter"></select>
+      </div>
+    </div>
+    <p id="countLine" class="countline"></p>
+    <div class="scroll">
+      <table id="alertTable">
+        <thead><tr>
+          <th>Session</th><th>Time</th><th>Fund</th><th>Contract</th>
+          <th class="num">Contracts</th><th class="num">Premium</th>
+          <th class="num">Heat</th><th>Band</th><th>Grading</th>
+        </tr></thead>
+        <tbody id="alertBody"></tbody>
+      </table>
+    </div>
+    <div id="emptyState" class="nodata" hidden></div>
+  </section>
+
+  <section class="card" id="completenessCard" hidden>
+    <h2>How complete each recorded session is</h2>
+    <div id="completeness"></div>
+  </section>
+
+  <footer>
+    <p>How to read a direction: a bought call or a sold put points up, a bought put or a sold call points down. Which side of the market a print hit is judged against the latest available quote, not the quote at the exact moment of the print, so on a fast-moving contract the direction read can be wrong. Treat it as a read, not a fact.</p>
+    <p>The live stream these alerts came from is the <a href="../flow-tape/">Flow Tape</a>; the count of recorded sessions toward a verdict on the rarest prints is on the <a href="../golden-sweep-wire/">Golden Sweep Wire</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var provingEl = document.getElementById("proving");
+  var scopeCard = document.getElementById("scopeCard");
+  var scopeEl = document.getElementById("scope");
+  var coverageLine = document.getElementById("coverageLine");
+  var gradingEl = document.getElementById("grading");
+  var searchEl = document.getElementById("search");
+  var sessionEl = document.getElementById("sessionFilter");
+  var countLine = document.getElementById("countLine");
+  var bodyEl = document.getElementById("alertBody");
+  var emptyEl = document.getElementById("emptyState");
+  var completenessCard = document.getElementById("completenessCard");
+  var completenessEl = document.getElementById("completeness");
+  var ARCHIVE = [];
+
+  function fmtMoney(v){
+    return "$" + Number(v).toLocaleString("en-US",{maximumFractionDigits:0});
+  }
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function fmtTimeET(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleTimeString("en-US",{timeZone:"America/New_York",
+      hour:"numeric", minute:"2-digit", second:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function matches(a, q, session){
+    if (session && a.session !== session) return false;
+    if (!q) return true;
+    var hay = (a.underlying + " " + a.contract_code + " " +
+      (a.contract ? (a.contract.kind + " " + a.contract.strike + " " + a.contract.expiry) : "")
+      ).toLowerCase();
+    return hay.indexOf(q.toLowerCase()) !== -1;
+  }
+
+  function rowHTML(a){
+    var c = a.contract || {};
+    var contractWords = esc(a.underlying) + " " +
+      (c.kind === "call" ? "Call" : "Put") + ", " + fmtPrice(c.strike) +
+      " strike, expires " + fmtDateShort(c.expiry);
+    var tags = "";
+    if (a.golden_sweep) tags += ' <span class="tag golden">Golden sweep</span>';
+    if (a.unusual) tags += ' <span class="tag unusual">Unusual</span>';
+    var dirClass = a.direction === "bullish" ? "dir-up" :
+                   a.direction === "bearish" ? "dir-down" : "";
+    var dir = a.direction === "neutral" ? "no clear direction" :
+      '<span class="' + dirClass + '">' + esc(a.direction_words) + '</span>';
+    return '<tr>' +
+      '<td>' + esc(fmtDateShort(a.session)) + '</td>' +
+      '<td>' + esc(fmtTimeET(a.time_utc)) + '</td>' +
+      '<td><strong>' + esc(a.underlying) + '</strong></td>' +
+      '<td><span class="contract">' + contractWords + '</span>' +
+      '<span class="code">' + esc(a.contract_code) + '</span>' +
+      '<br>' + esc(a.side_words) + '; read as ' + dir + '.</td>' +
+      '<td class="num">' + Number(a.contracts).toLocaleString("en-US") + '</td>' +
+      '<td class="num">' + fmtMoney(a.premium_usd) + '<br>' +
+        '<span class="code">' + fmtPrice(a.price_per_contract) + ' each</span></td>' +
+      '<td class="num">' + Number(a.heat_score).toFixed(1) + '</td>' +
+      '<td>' + esc(a.band) + tags + '</td>' +
+      '<td class="grade">' + esc(a.grading_words || "Not yet graded") + '</td>' +
+      '</tr>';
+  }
+
+  function render(){
+    var q = searchEl.value.trim();
+    var session = sessionEl.value;
+    var rows = ARCHIVE.filter(function(a){ return matches(a, q, session); });
+    countLine.textContent = rows.length + " of " + ARCHIVE.length +
+      " alerts in the archive match.";
+    bodyEl.innerHTML = rows.map(rowHTML).join("");
+    if (!rows.length){
+      emptyEl.hidden = false;
+      emptyEl.textContent = ARCHIVE.length
+        ? "No alert in the archive matches that search. Try a fund name such as SPY, QQQ or IWM, or clear the session filter."
+        : "No alert has been kept in the archive yet. When a session's alerts are published, they are kept here with the session named on them.";
+    } else {
+      emptyEl.hidden = true;
+    }
+  }
+
+  searchEl.addEventListener("input", render);
+  sessionEl.addEventListener("change", render);
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      ARCHIVE = data.alerts || [];
+      var counts = data.counts || {};
+      if (data.proving_state){
+        provingEl.innerHTML = "<strong>" + esc(data.proving_state) + ".</strong> " +
+          esc(data.proving_note || "");
+        provingEl.hidden = false;
+      }
+      if (data.scope_words){
+        scopeEl.textContent = data.scope_words;
+        var cov = (data.coverage || []).map(function(s){
+          return fmtDateShort(s.session) + ": " +
+            Number(s.prints_looked_at).toLocaleString("en-US") +
+            " prints looked at, " +
+            (s.alert_list_kept ? s.alerts_kept + " alerts kept"
+                               : "no alert list kept");
+        });
+        coverageLine.textContent = "Recorded sessions: " + cov.join(" · ") + ".";
+        scopeCard.hidden = false;
+      }
+      if (data.grading_note){
+        gradingEl.innerHTML = "<strong>Not yet graded:</strong> " + esc(data.grading_note);
+        gradingEl.hidden = false;
+      }
+      // Session filter: every session with kept alert records, plus all.
+      var sessions = [];
+      ARCHIVE.forEach(function(a){
+        if (sessions.indexOf(a.session) === -1) sessions.push(a.session);
+      });
+      sessions.sort();
+      sessionEl.innerHTML = '<option value="">All sessions with alerts kept</option>' +
+        sessions.map(function(s){
+          return '<option value="' + esc(s) + '">' + esc(fmtDateLong(s)) + '</option>';
+        }).join("");
+      meta.textContent = "Archive as published " + fmtTimestamp(data.published_at_utc) +
+        ". Freshest session with alerts kept: " + fmtDateLong(data.freshest_session) +
+        ". Source: " + data.source + ".";
+      if (data.freshest_session < latestCompletedSession()){
+        showBanner("stale", "This archive is out of date. Its freshest session with alerts kept is " +
+          fmtDateLong(data.freshest_session) + ", and a newer session's alerts have not been published yet. " +
+          "Treat it as the last published archive, not today's.");
+      }
+      if (data.coverage && data.coverage.length){
+        completenessEl.innerHTML = data.coverage.map(function(s){
+          var comp = s.completeness || {};
+          return '<p><strong>' + esc(fmtDateLong(s.session)) + ':</strong> ' +
+            esc(comp.state_words || "Completeness not declared for this session.") +
+            ' Receipt: ' + esc(s.coverage || "") + '</p>';
+        }).join("");
+        completenessCard.hidden = false;
+      }
+      render();
+    })
+    .catch(function(){
+      meta.textContent = "";
+      countLine.textContent = "";
+      showBanner("missing", "The alert archive is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
