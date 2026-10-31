@@ -17,17 +17,13 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: probability, over to weekly expiry, graded at expiry close. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 26 weekly expiries, its Brier is no better than the uncorrected IV POP's. It counts as proven at 26 weekly expiries.",
-    "summary": "For SPY and QQQ, attach an honest chance of finishing above each strike to this week's expiry, and grade every strike when the week ends."
-  },
   "feed": "tastytrade_chain_snapshot",
   "kill_criterion": "This tool is retired if, after 26 weekly expiries have been graded, its score for how close its chances were is no better than the score of the market's own uncorrected chances recorded beside them.",
   "live": {
     "expiries_graded": 0,
     "proving_target_expiries": 26,
     "records_graded": 0,
-    "records_written": 431,
+    "records_written": 549,
     "state_note": "Surfaces are being recorded from stored chain snapshots and graded at each weekly expiry close."
   },
   "method": {
@@ -52,86 +48,12 @@
     "summary": "Each chance is half of a movement-based calculation (the last 30 trading days' realised movement, no drift assumed) and half of the index's own past finishes over the same number of days. The comparison chance beside it is the market's own priced volatility put through the same calculation with no correction."
   },
   "price_basis": "snapshot",
-  "price_history_as_of": "2026-10-29",
+  "price_history_as_of": "2026-10-30",
   "provenance": {
     "execution_pricing": false,
     "feed": "tastytrade_chain_snapshot",
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
-  },
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "no graded forecasts on record yet (431 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 431,
-        "graded_forecasts": 0,
-        "recorded_on": "2026-10-31",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_05",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-10-30",
-      "keys_present": [
-        "as_of",
-        "calibration_attestation",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "kill_criterion",
-        "live",
-        "method",
-        "price_basis",
-        "price_history_as_of",
-        "provenance",
-        "record_surface",
-        "scope_line",
-        "self_test",
-        "source",
-        "state",
-        "subject_chart",
-        "surfaces",
-        "thin_cell_rule",
-        "tool",
-        "waiting",
-        "what_exists"
-      ]
-    },
-    "feed": "tastytrade_chain_snapshot",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_05",
-      "forecasts": 431,
-      "grades": 0,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "Live grades are still building: 431 forecasts are on record and none are graded yet. Grades arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "tastytrade_chain_snapshot",
-      "price_basis": "snapshot",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 2,
-          "path": "/method"
-        }
-      ],
-      "total_items_counted": 2
-    },
-    "version": 1
   },
   "scope_line": "A win rate is not an edge. This page states the chance of finishing above a strike; it says nothing about how much a trade would win or lose, or whether any trade pays.",
   "self_test": {
@@ -141,410 +63,15 @@
     "synthetic_records_written_to_a_throwaway_copy": 18,
     "synthetic_strikes": 9
   },
-  "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-10-29).",
+  "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-10-30).",
   "state": "proving",
-  "subject_chart": {
-    "lead": {
-      "kind": "curve",
-      "label": "Honest chance percent by strike.",
-      "points": [
-        {
-          "x": "737.0",
-          "y": 97.1
-        },
-        {
-          "x": "738.0",
-          "y": 96.6
-        },
-        {
-          "x": "739.0",
-          "y": 95.5
-        },
-        {
-          "x": "740.0",
-          "y": 94.3
-        },
-        {
-          "x": "741.0",
-          "y": 92.8
-        },
-        {
-          "x": "742.0",
-          "y": 92.1
-        },
-        {
-          "x": "743.0",
-          "y": 90.9
-        },
-        {
-          "x": "744.0",
-          "y": 89.9
-        },
-        {
-          "x": "745.0",
-          "y": 88.9
-        },
-        {
-          "x": "746.0",
-          "y": 87.2
-        },
-        {
-          "x": "747.0",
-          "y": 85.6
-        },
-        {
-          "x": "748.0",
-          "y": 83.5
-        },
-        {
-          "x": "749.0",
-          "y": 80.7
-        },
-        {
-          "x": "750.0",
-          "y": 78.1
-        },
-        {
-          "x": "751.0",
-          "y": 75.3
-        },
-        {
-          "x": "752.0",
-          "y": 73.1
-        },
-        {
-          "x": "753.0",
-          "y": 70.5
-        },
-        {
-          "x": "754.0",
-          "y": 68.0
-        },
-        {
-          "x": "755.0",
-          "y": 63.8
-        },
-        {
-          "x": "756.0",
-          "y": 60.2
-        },
-        {
-          "x": "757.0",
-          "y": 56.3
-        },
-        {
-          "x": "758.0",
-          "y": 53.7
-        },
-        {
-          "x": "759.0",
-          "y": 50.8
-        },
-        {
-          "x": "760.0",
-          "y": 47.9
-        },
-        {
-          "x": "761.0",
-          "y": 43.8
-        },
-        {
-          "x": "762.0",
-          "y": 39.8
-        },
-        {
-          "x": "763.0",
-          "y": 36.1
-        },
-        {
-          "x": "764.0",
-          "y": 33.4
-        },
-        {
-          "x": "765.0",
-          "y": 30.4
-        },
-        {
-          "x": "766.0",
-          "y": 27.4
-        },
-        {
-          "x": "767.0",
-          "y": 23.7
-        },
-        {
-          "x": "768.0",
-          "y": 21.1
-        },
-        {
-          "x": "769.0",
-          "y": 19.0
-        },
-        {
-          "x": "770.0",
-          "y": 17.0
-        },
-        {
-          "x": "771.0",
-          "y": 15.0
-        },
-        {
-          "x": "772.0",
-          "y": 13.0
-        },
-        {
-          "x": "773.0",
-          "y": 11.5
-        },
-        {
-          "x": "774.0",
-          "y": 9.7
-        },
-        {
-          "x": "775.0",
-          "y": 8.6
-        },
-        {
-          "x": "776.0",
-          "y": 7.4
-        },
-        {
-          "x": "777.0",
-          "y": 6.7
-        },
-        {
-          "x": "778.0",
-          "y": 6.2
-        }
-      ],
-      "source": "surfaces[0].rows[].p_pct",
-      "title": "Chance of finishing above each strike, SPY"
-    },
-    "record": {
-      "kind": "curve",
-      "label": "The second surface on record, chance percent by strike.",
-      "points": [
-        {
-          "x": "650.0",
-          "y": 98.0
-        },
-        {
-          "x": "655.0",
-          "y": 95.9
-        },
-        {
-          "x": "660.0",
-          "y": 93.0
-        },
-        {
-          "x": "665.0",
-          "y": 88.7
-        },
-        {
-          "x": "670.0",
-          "y": 83.6
-        },
-        {
-          "x": "675.0",
-          "y": 75.4
-        },
-        {
-          "x": "676.0",
-          "y": 74.0
-        },
-        {
-          "x": "677.0",
-          "y": 72.0
-        },
-        {
-          "x": "678.0",
-          "y": 70.3
-        },
-        {
-          "x": "679.0",
-          "y": 67.7
-        },
-        {
-          "x": "680.0",
-          "y": 65.7
-        },
-        {
-          "x": "681.0",
-          "y": 63.2
-        },
-        {
-          "x": "682.0",
-          "y": 61.1
-        },
-        {
-          "x": "683.0",
-          "y": 59.1
-        },
-        {
-          "x": "684.0",
-          "y": 57.0
-        },
-        {
-          "x": "685.0",
-          "y": 54.7
-        },
-        {
-          "x": "686.0",
-          "y": 53.0
-        },
-        {
-          "x": "687.0",
-          "y": 50.7
-        },
-        {
-          "x": "688.0",
-          "y": 49.0
-        },
-        {
-          "x": "689.0",
-          "y": 47.1
-        },
-        {
-          "x": "690.0",
-          "y": 44.9
-        },
-        {
-          "x": "691.0",
-          "y": 41.8
-        },
-        {
-          "x": "692.0",
-          "y": 39.5
-        },
-        {
-          "x": "693.0",
-          "y": 37.4
-        },
-        {
-          "x": "694.0",
-          "y": 34.5
-        },
-        {
-          "x": "695.0",
-          "y": 32.3
-        },
-        {
-          "x": "696.0",
-          "y": 29.8
-        },
-        {
-          "x": "697.0",
-          "y": 28.0
-        },
-        {
-          "x": "698.0",
-          "y": 26.1
-        },
-        {
-          "x": "699.0",
-          "y": 24.4
-        },
-        {
-          "x": "700.0",
-          "y": 22.9
-        },
-        {
-          "x": "701.0",
-          "y": 21.4
-        },
-        {
-          "x": "702.0",
-          "y": 19.6
-        },
-        {
-          "x": "703.0",
-          "y": 18.0
-        },
-        {
-          "x": "704.0",
-          "y": 16.7
-        },
-        {
-          "x": "705.0",
-          "y": 15.3
-        },
-        {
-          "x": "706.0",
-          "y": 14.4
-        },
-        {
-          "x": "707.0",
-          "y": 13.4
-        },
-        {
-          "x": "708.0",
-          "y": 12.4
-        },
-        {
-          "x": "709.0",
-          "y": 11.6
-        },
-        {
-          "x": "710.0",
-          "y": 10.5
-        },
-        {
-          "x": "711.0",
-          "y": 9.8
-        },
-        {
-          "x": "712.0",
-          "y": 9.1
-        },
-        {
-          "x": "713.0",
-          "y": 8.3
-        },
-        {
-          "x": "714.0",
-          "y": 7.6
-        },
-        {
-          "x": "715.0",
-          "y": 7.3
-        },
-        {
-          "x": "716.0",
-          "y": 6.8
-        },
-        {
-          "x": "717.0",
-          "y": 5.8
-        },
-        {
-          "x": "718.0",
-          "y": 5.6
-        },
-        {
-          "x": "719.0",
-          "y": 5.2
-        },
-        {
-          "x": "720.0",
-          "y": 4.5
-        },
-        {
-          "x": "721.0",
-          "y": 3.9
-        }
-      ],
-      "source": "surfaces[1].rows[].p_pct",
-      "title": "Chance of finishing above each strike, QQQ"
-    },
-    "version": 1
-  },
   "surfaces": [
     {
       "contracts_on_record": 12318,
       "days_remaining": 7,
-      "expected_move": 10.52,
+      "expected_move": 11.88,
       "expiry": "2026-11-06",
-      "hv30_pct": 10.03,
+      "hv30_pct": 11.32,
       "options_gate": {
         "admitted": 12318,
         "greek_max_age_seconds": 4500,
@@ -567,298 +94,340 @@
       },
       "rows": [
         {
+          "benchmark_p": 0.8433,
+          "benchmark_p_pct": 84.3,
+          "p": 0.9777,
+          "p_pct": 97.8,
+          "strike": 734.0
+        },
+        {
+          "benchmark_p": 0.8377,
+          "benchmark_p_pct": 83.8,
+          "p": 0.974,
+          "p_pct": 97.4,
+          "strike": 735.0
+        },
+        {
+          "benchmark_p": 0.8319,
+          "benchmark_p_pct": 83.2,
+          "p": 0.9686,
+          "p_pct": 96.9,
+          "strike": 736.0
+        },
+        {
           "benchmark_p": 0.8214,
           "benchmark_p_pct": 82.1,
-          "p": 0.9706,
-          "p_pct": 97.1,
+          "p": 0.9626,
+          "p_pct": 96.3,
           "strike": 737.0
         },
         {
           "benchmark_p": 0.8196,
           "benchmark_p_pct": 82.0,
-          "p": 0.9664,
-          "p_pct": 96.6,
+          "p": 0.9574,
+          "p_pct": 95.7,
           "strike": 738.0
         },
         {
           "benchmark_p": 0.8037,
           "benchmark_p_pct": 80.4,
-          "p": 0.9552,
-          "p_pct": 95.5,
+          "p": 0.9453,
+          "p_pct": 94.5,
           "strike": 739.0
         },
         {
           "benchmark_p": 0.793,
           "benchmark_p_pct": 79.3,
-          "p": 0.9434,
-          "p_pct": 94.3,
+          "p": 0.9325,
+          "p_pct": 93.3,
           "strike": 740.0
         },
         {
           "benchmark_p": 0.7843,
           "benchmark_p_pct": 78.4,
-          "p": 0.9283,
-          "p_pct": 92.8,
+          "p": 0.9165,
+          "p_pct": 91.6,
           "strike": 741.0
         },
         {
           "benchmark_p": 0.7707,
           "benchmark_p_pct": 77.1,
-          "p": 0.9212,
-          "p_pct": 92.1,
+          "p": 0.9085,
+          "p_pct": 90.9,
           "strike": 742.0
         },
         {
           "benchmark_p": 0.7539,
           "benchmark_p_pct": 75.4,
-          "p": 0.9094,
-          "p_pct": 90.9,
+          "p": 0.8959,
+          "p_pct": 89.6,
           "strike": 743.0
         },
         {
           "benchmark_p": 0.7468,
           "benchmark_p_pct": 74.7,
-          "p": 0.8991,
-          "p_pct": 89.9,
+          "p": 0.8851,
+          "p_pct": 88.5,
           "strike": 744.0
         },
         {
           "benchmark_p": 0.7302,
           "benchmark_p_pct": 73.0,
-          "p": 0.8891,
-          "p_pct": 88.9,
+          "p": 0.8746,
+          "p_pct": 87.5,
           "strike": 745.0
         },
         {
           "benchmark_p": 0.7143,
           "benchmark_p_pct": 71.4,
-          "p": 0.8717,
-          "p_pct": 87.2,
+          "p": 0.857,
+          "p_pct": 85.7,
           "strike": 746.0
         },
         {
           "benchmark_p": 0.6987,
           "benchmark_p_pct": 69.9,
-          "p": 0.8557,
-          "p_pct": 85.6,
+          "p": 0.841,
+          "p_pct": 84.1,
           "strike": 747.0
         },
         {
           "benchmark_p": 0.6853,
           "benchmark_p_pct": 68.5,
-          "p": 0.8349,
-          "p_pct": 83.5,
+          "p": 0.8204,
+          "p_pct": 82.0,
           "strike": 748.0
         },
         {
           "benchmark_p": 0.6688,
           "benchmark_p_pct": 66.9,
-          "p": 0.8066,
-          "p_pct": 80.7,
+          "p": 0.7927,
+          "p_pct": 79.3,
           "strike": 749.0
         },
         {
           "benchmark_p": 0.6507,
           "benchmark_p_pct": 65.1,
-          "p": 0.7811,
-          "p_pct": 78.1,
+          "p": 0.768,
+          "p_pct": 76.8,
           "strike": 750.0
         },
         {
           "benchmark_p": 0.6316,
           "benchmark_p_pct": 63.2,
-          "p": 0.7533,
-          "p_pct": 75.3,
+          "p": 0.7413,
+          "p_pct": 74.1,
           "strike": 751.0
         },
         {
           "benchmark_p": 0.6118,
           "benchmark_p_pct": 61.2,
-          "p": 0.7309,
-          "p_pct": 73.1,
+          "p": 0.7202,
+          "p_pct": 72.0,
           "strike": 752.0
         },
         {
           "benchmark_p": 0.5932,
           "benchmark_p_pct": 59.3,
-          "p": 0.7051,
-          "p_pct": 70.5,
+          "p": 0.696,
+          "p_pct": 69.6,
           "strike": 753.0
         },
         {
           "benchmark_p": 0.5743,
           "benchmark_p_pct": 57.4,
-          "p": 0.6799,
-          "p_pct": 68.0,
+          "p": 0.6713,
+          "p_pct": 67.1,
           "strike": 754.0
         },
         {
           "benchmark_p": 0.5524,
           "benchmark_p_pct": 55.2,
-          "p": 0.6378,
-          "p_pct": 63.8,
+          "p": 0.6312,
+          "p_pct": 63.1,
           "strike": 755.0
         },
         {
           "benchmark_p": 0.5322,
           "benchmark_p_pct": 53.2,
-          "p": 0.6016,
-          "p_pct": 60.2,
+          "p": 0.5971,
+          "p_pct": 59.7,
           "strike": 756.0
         },
         {
           "benchmark_p": 0.51,
           "benchmark_p_pct": 51.0,
-          "p": 0.5626,
-          "p_pct": 56.3,
+          "p": 0.5603,
+          "p_pct": 56.0,
           "strike": 757.0
         },
         {
           "benchmark_p": 0.4876,
           "benchmark_p_pct": 48.8,
-          "p": 0.5374,
+          "p": 0.5372,
           "p_pct": 53.7,
           "strike": 758.0
         },
         {
           "benchmark_p": 0.4644,
           "benchmark_p_pct": 46.4,
-          "p": 0.5085,
-          "p_pct": 50.8,
+          "p": 0.5105,
+          "p_pct": 51.0,
           "strike": 759.0
         },
         {
           "benchmark_p": 0.4412,
           "benchmark_p_pct": 44.1,
-          "p": 0.4786,
-          "p_pct": 47.9,
+          "p": 0.4827,
+          "p_pct": 48.3,
           "strike": 760.0
         },
         {
           "benchmark_p": 0.4179,
           "benchmark_p_pct": 41.8,
-          "p": 0.4378,
-          "p_pct": 43.8,
+          "p": 0.4439,
+          "p_pct": 44.4,
           "strike": 761.0
         },
         {
           "benchmark_p": 0.3925,
           "benchmark_p_pct": 39.2,
-          "p": 0.3976,
-          "p_pct": 39.8,
+          "p": 0.4055,
+          "p_pct": 40.6,
           "strike": 762.0
         },
         {
           "benchmark_p": 0.3688,
           "benchmark_p_pct": 36.9,
-          "p": 0.3606,
-          "p_pct": 36.1,
+          "p": 0.3702,
+          "p_pct": 37.0,
           "strike": 763.0
         },
         {
           "benchmark_p": 0.3449,
           "benchmark_p_pct": 34.5,
-          "p": 0.3344,
-          "p_pct": 33.4,
+          "p": 0.3454,
+          "p_pct": 34.5,
           "strike": 764.0
         },
         {
           "benchmark_p": 0.3221,
           "benchmark_p_pct": 32.2,
-          "p": 0.3042,
-          "p_pct": 30.4,
+          "p": 0.3163,
+          "p_pct": 31.6,
           "strike": 765.0
         },
         {
           "benchmark_p": 0.2961,
           "benchmark_p_pct": 29.6,
-          "p": 0.2737,
-          "p_pct": 27.4,
+          "p": 0.2867,
+          "p_pct": 28.7,
           "strike": 766.0
         },
         {
           "benchmark_p": 0.2769,
           "benchmark_p_pct": 27.7,
-          "p": 0.2367,
-          "p_pct": 23.7,
+          "p": 0.2504,
+          "p_pct": 25.0,
           "strike": 767.0
         },
         {
           "benchmark_p": 0.2445,
           "benchmark_p_pct": 24.5,
-          "p": 0.2108,
-          "p_pct": 21.1,
+          "p": 0.2249,
+          "p_pct": 22.5,
           "strike": 768.0
         },
         {
           "benchmark_p": 0.231,
           "benchmark_p_pct": 23.1,
-          "p": 0.1897,
-          "p_pct": 19.0,
+          "p": 0.2039,
+          "p_pct": 20.4,
           "strike": 769.0
         },
         {
           "benchmark_p": 0.201,
           "benchmark_p_pct": 20.1,
-          "p": 0.1697,
-          "p_pct": 17.0,
+          "p": 0.1838,
+          "p_pct": 18.4,
           "strike": 770.0
         },
         {
           "benchmark_p": 0.1863,
           "benchmark_p_pct": 18.6,
-          "p": 0.1495,
-          "p_pct": 15.0,
+          "p": 0.1633,
+          "p_pct": 16.3,
           "strike": 771.0
         },
         {
           "benchmark_p": 0.1592,
           "benchmark_p_pct": 15.9,
-          "p": 0.1303,
-          "p_pct": 13.0,
+          "p": 0.1437,
+          "p_pct": 14.4,
           "strike": 772.0
         },
         {
           "benchmark_p": 0.1477,
           "benchmark_p_pct": 14.8,
-          "p": 0.1146,
-          "p_pct": 11.5,
+          "p": 0.1273,
+          "p_pct": 12.7,
           "strike": 773.0
         },
         {
           "benchmark_p": 0.1396,
           "benchmark_p_pct": 14.0,
-          "p": 0.0972,
-          "p_pct": 9.7,
+          "p": 0.1092,
+          "p_pct": 10.9,
           "strike": 774.0
         },
         {
           "benchmark_p": 0.1142,
           "benchmark_p_pct": 11.4,
-          "p": 0.0857,
-          "p_pct": 8.6,
+          "p": 0.0969,
+          "p_pct": 9.7,
           "strike": 775.0
         },
         {
           "benchmark_p": 0.0924,
           "benchmark_p_pct": 9.2,
-          "p": 0.0737,
-          "p_pct": 7.4,
+          "p": 0.084,
+          "p_pct": 8.4,
           "strike": 776.0
         },
         {
           "benchmark_p": 0.0952,
           "benchmark_p_pct": 9.5,
-          "p": 0.0674,
-          "p_pct": 6.7,
+          "p": 0.0767,
+          "p_pct": 7.7,
           "strike": 777.0
         },
         {
           "benchmark_p": 0.0794,
           "benchmark_p_pct": 7.9,
-          "p": 0.0616,
-          "p_pct": 6.2,
+          "p": 0.07,
+          "p_pct": 7.0,
           "strike": 778.0
+        },
+        {
+          "benchmark_p": 0.0628,
+          "benchmark_p_pct": 6.3,
+          "p": 0.0664,
+          "p_pct": 6.6,
+          "strike": 779.0
+        },
+        {
+          "benchmark_p": 0.0571,
+          "benchmark_p_pct": 5.7,
+          "p": 0.0596,
+          "p_pct": 6.0,
+          "strike": 780.0
+        },
+        {
+          "benchmark_p": 0.0588,
+          "benchmark_p_pct": 5.9,
+          "p": 0.0531,
+          "p_pct": 5.3,
+          "strike": 781.0
         }
       ],
       "snapshot_day": "2026-10-30",
@@ -868,9 +437,9 @@
     {
       "contracts_on_record": 9930,
       "days_remaining": 7,
-      "expected_move": 18.15,
+      "expected_move": 20.47,
       "expiry": "2026-11-06",
-      "hv30_pct": 19.12,
+      "hv30_pct": 21.57,
       "options_gate": {
         "admitted": 9930,
         "greek_max_age_seconds": 4500,
@@ -893,368 +462,410 @@
       },
       "rows": [
         {
+          "benchmark_p": 0.8437,
+          "benchmark_p_pct": 84.4,
+          "p": 0.9816,
+          "p_pct": 98.2,
+          "strike": 645.0
+        },
+        {
           "benchmark_p": 0.8349,
           "benchmark_p_pct": 83.5,
-          "p": 0.9795,
-          "p_pct": 98.0,
+          "p": 0.9716,
+          "p_pct": 97.2,
           "strike": 650.0
         },
         {
           "benchmark_p": 0.7928,
           "benchmark_p_pct": 79.3,
-          "p": 0.9589,
-          "p_pct": 95.9,
+          "p": 0.948,
+          "p_pct": 94.8,
           "strike": 655.0
         },
         {
           "benchmark_p": 0.7573,
           "benchmark_p_pct": 75.7,
-          "p": 0.9304,
-          "p_pct": 93.0,
+          "p": 0.917,
+          "p_pct": 91.7,
           "strike": 660.0
         },
         {
           "benchmark_p": 0.7161,
           "benchmark_p_pct": 71.6,
-          "p": 0.8874,
-          "p_pct": 88.7,
+          "p": 0.8726,
+          "p_pct": 87.3,
           "strike": 665.0
         },
         {
           "benchmark_p": 0.6659,
           "benchmark_p_pct": 66.6,
-          "p": 0.8363,
-          "p_pct": 83.6,
+          "p": 0.8221,
+          "p_pct": 82.2,
           "strike": 670.0
         },
         {
           "benchmark_p": 0.6113,
           "benchmark_p_pct": 61.1,
-          "p": 0.7537,
-          "p_pct": 75.4,
+          "p": 0.7411,
+          "p_pct": 74.1,
           "strike": 675.0
         },
         {
           "benchmark_p": 0.6045,
           "benchmark_p_pct": 60.4,
-          "p": 0.7403,
-          "p_pct": 74.0,
+          "p": 0.7285,
+          "p_pct": 72.9,
           "strike": 676.0
         },
         {
           "benchmark_p": 0.59,
           "benchmark_p_pct": 59.0,
-          "p": 0.7203,
-          "p_pct": 72.0,
+          "p": 0.7094,
+          "p_pct": 70.9,
           "strike": 677.0
         },
         {
           "benchmark_p": 0.5797,
           "benchmark_p_pct": 58.0,
-          "p": 0.7026,
-          "p_pct": 70.3,
+          "p": 0.6927,
+          "p_pct": 69.3,
           "strike": 678.0
         },
         {
           "benchmark_p": 0.5686,
           "benchmark_p_pct": 56.9,
-          "p": 0.6772,
-          "p_pct": 67.7,
+          "p": 0.6684,
+          "p_pct": 66.8,
           "strike": 679.0
         },
         {
           "benchmark_p": 0.5568,
           "benchmark_p_pct": 55.7,
-          "p": 0.6566,
-          "p_pct": 65.7,
+          "p": 0.6489,
+          "p_pct": 64.9,
           "strike": 680.0
         },
         {
           "benchmark_p": 0.544,
           "benchmark_p_pct": 54.4,
-          "p": 0.6321,
-          "p_pct": 63.2,
+          "p": 0.6255,
+          "p_pct": 62.6,
           "strike": 681.0
         },
         {
           "benchmark_p": 0.5326,
           "benchmark_p_pct": 53.3,
-          "p": 0.6112,
-          "p_pct": 61.1,
+          "p": 0.6058,
+          "p_pct": 60.6,
           "strike": 682.0
         },
         {
           "benchmark_p": 0.5202,
           "benchmark_p_pct": 52.0,
-          "p": 0.5915,
-          "p_pct": 59.1,
+          "p": 0.5874,
+          "p_pct": 58.7,
           "strike": 683.0
         },
         {
           "benchmark_p": 0.5083,
           "benchmark_p_pct": 50.8,
-          "p": 0.5704,
-          "p_pct": 57.0,
+          "p": 0.5676,
+          "p_pct": 56.8,
           "strike": 684.0
         },
         {
           "benchmark_p": 0.4956,
           "benchmark_p_pct": 49.6,
-          "p": 0.5469,
-          "p_pct": 54.7,
+          "p": 0.5453,
+          "p_pct": 54.5,
           "strike": 685.0
         },
         {
           "benchmark_p": 0.4831,
           "benchmark_p_pct": 48.3,
-          "p": 0.5296,
-          "p_pct": 53.0,
+          "p": 0.5293,
+          "p_pct": 52.9,
           "strike": 686.0
         },
         {
           "benchmark_p": 0.4705,
           "benchmark_p_pct": 47.1,
-          "p": 0.5074,
-          "p_pct": 50.7,
+          "p": 0.5083,
+          "p_pct": 50.8,
           "strike": 687.0
         },
         {
           "benchmark_p": 0.4577,
           "benchmark_p_pct": 45.8,
-          "p": 0.4902,
-          "p_pct": 49.0,
+          "p": 0.4924,
+          "p_pct": 49.2,
           "strike": 688.0
         },
         {
           "benchmark_p": 0.4452,
           "benchmark_p_pct": 44.5,
-          "p": 0.4707,
-          "p_pct": 47.1,
+          "p": 0.4741,
+          "p_pct": 47.4,
           "strike": 689.0
         },
         {
           "benchmark_p": 0.4317,
           "benchmark_p_pct": 43.2,
-          "p": 0.4487,
-          "p_pct": 44.9,
+          "p": 0.4533,
+          "p_pct": 45.3,
           "strike": 690.0
         },
         {
           "benchmark_p": 0.4198,
           "benchmark_p_pct": 42.0,
-          "p": 0.4182,
-          "p_pct": 41.8,
+          "p": 0.4239,
+          "p_pct": 42.4,
           "strike": 691.0
         },
         {
           "benchmark_p": 0.407,
           "benchmark_p_pct": 40.7,
-          "p": 0.3954,
-          "p_pct": 39.5,
+          "p": 0.4022,
+          "p_pct": 40.2,
           "strike": 692.0
         },
         {
           "benchmark_p": 0.3937,
           "benchmark_p_pct": 39.4,
-          "p": 0.374,
-          "p_pct": 37.4,
+          "p": 0.3819,
+          "p_pct": 38.2,
           "strike": 693.0
         },
         {
           "benchmark_p": 0.3804,
           "benchmark_p_pct": 38.0,
-          "p": 0.3454,
-          "p_pct": 34.5,
+          "p": 0.3542,
+          "p_pct": 35.4,
           "strike": 694.0
         },
         {
           "benchmark_p": 0.367,
           "benchmark_p_pct": 36.7,
-          "p": 0.3233,
-          "p_pct": 32.3,
+          "p": 0.333,
+          "p_pct": 33.3,
           "strike": 695.0
         },
         {
           "benchmark_p": 0.3554,
           "benchmark_p_pct": 35.5,
-          "p": 0.2978,
-          "p_pct": 29.8,
+          "p": 0.3083,
+          "p_pct": 30.8,
           "strike": 696.0
         },
         {
           "benchmark_p": 0.3415,
           "benchmark_p_pct": 34.1,
-          "p": 0.2801,
-          "p_pct": 28.0,
+          "p": 0.2913,
+          "p_pct": 29.1,
           "strike": 697.0
         },
         {
           "benchmark_p": 0.3273,
           "benchmark_p_pct": 32.7,
-          "p": 0.2614,
-          "p_pct": 26.1,
+          "p": 0.2733,
+          "p_pct": 27.3,
           "strike": 698.0
         },
         {
           "benchmark_p": 0.319,
           "benchmark_p_pct": 31.9,
-          "p": 0.2443,
-          "p_pct": 24.4,
+          "p": 0.2568,
+          "p_pct": 25.7,
           "strike": 699.0
         },
         {
           "benchmark_p": 0.3058,
           "benchmark_p_pct": 30.6,
-          "p": 0.2289,
-          "p_pct": 22.9,
+          "p": 0.2418,
+          "p_pct": 24.2,
           "strike": 700.0
         },
         {
           "benchmark_p": 0.2931,
           "benchmark_p_pct": 29.3,
-          "p": 0.2138,
-          "p_pct": 21.4,
+          "p": 0.227,
+          "p_pct": 22.7,
           "strike": 701.0
         },
         {
           "benchmark_p": 0.2821,
           "benchmark_p_pct": 28.2,
-          "p": 0.1965,
-          "p_pct": 19.6,
+          "p": 0.21,
+          "p_pct": 21.0,
           "strike": 702.0
         },
         {
           "benchmark_p": 0.2722,
           "benchmark_p_pct": 27.2,
-          "p": 0.1796,
-          "p_pct": 18.0,
+          "p": 0.1933,
+          "p_pct": 19.3,
           "strike": 703.0
         },
         {
           "benchmark_p": 0.2537,
           "benchmark_p_pct": 25.4,
-          "p": 0.1668,
-          "p_pct": 16.7,
+          "p": 0.1807,
+          "p_pct": 18.1,
           "strike": 704.0
         },
         {
           "benchmark_p": 0.2464,
           "benchmark_p_pct": 24.6,
-          "p": 0.1531,
-          "p_pct": 15.3,
+          "p": 0.167,
+          "p_pct": 16.7,
           "strike": 705.0
         },
         {
           "benchmark_p": 0.2375,
           "benchmark_p_pct": 23.7,
-          "p": 0.1435,
-          "p_pct": 14.4,
+          "p": 0.1574,
+          "p_pct": 15.7,
           "strike": 706.0
         },
         {
           "benchmark_p": 0.2204,
           "benchmark_p_pct": 22.0,
-          "p": 0.1343,
-          "p_pct": 13.4,
+          "p": 0.1481,
+          "p_pct": 14.8,
           "strike": 707.0
         },
         {
           "benchmark_p": 0.2072,
           "benchmark_p_pct": 20.7,
-          "p": 0.1242,
-          "p_pct": 12.4,
+          "p": 0.1378,
+          "p_pct": 13.8,
           "strike": 708.0
         },
         {
           "benchmark_p": 0.2053,
           "benchmark_p_pct": 20.5,
-          "p": 0.1156,
-          "p_pct": 11.6,
+          "p": 0.1291,
+          "p_pct": 12.9,
           "strike": 709.0
         },
         {
           "benchmark_p": 0.1877,
           "benchmark_p_pct": 18.8,
-          "p": 0.1049,
-          "p_pct": 10.5,
+          "p": 0.1181,
+          "p_pct": 11.8,
           "strike": 710.0
         },
         {
           "benchmark_p": 0.1754,
           "benchmark_p_pct": 17.5,
-          "p": 0.0983,
-          "p_pct": 9.8,
+          "p": 0.1111,
+          "p_pct": 11.1,
           "strike": 711.0
         },
         {
           "benchmark_p": 0.1718,
           "benchmark_p_pct": 17.2,
-          "p": 0.0907,
-          "p_pct": 9.1,
+          "p": 0.1031,
+          "p_pct": 10.3,
           "strike": 712.0
         },
         {
           "benchmark_p": 0.162,
           "benchmark_p_pct": 16.2,
-          "p": 0.0833,
-          "p_pct": 8.3,
+          "p": 0.0954,
+          "p_pct": 9.5,
           "strike": 713.0
         },
         {
           "benchmark_p": 0.1463,
           "benchmark_p_pct": 14.6,
-          "p": 0.0763,
-          "p_pct": 7.6,
+          "p": 0.0879,
+          "p_pct": 8.8,
           "strike": 714.0
         },
         {
           "benchmark_p": 0.1376,
           "benchmark_p_pct": 13.8,
-          "p": 0.0733,
-          "p_pct": 7.3,
+          "p": 0.0845,
+          "p_pct": 8.4,
           "strike": 715.0
         },
         {
           "benchmark_p": 0.1359,
           "benchmark_p_pct": 13.6,
-          "p": 0.068,
-          "p_pct": 6.8,
+          "p": 0.0787,
+          "p_pct": 7.9,
           "strike": 716.0
         },
         {
           "benchmark_p": 0.1298,
           "benchmark_p_pct": 13.0,
-          "p": 0.058,
-          "p_pct": 5.8,
+          "p": 0.0682,
+          "p_pct": 6.8,
           "strike": 717.0
         },
         {
           "benchmark_p": 0.1244,
           "benchmark_p_pct": 12.4,
-          "p": 0.0557,
-          "p_pct": 5.6,
+          "p": 0.0654,
+          "p_pct": 6.5,
           "strike": 718.0
         },
         {
           "benchmark_p": 0.1195,
           "benchmark_p_pct": 12.0,
-          "p": 0.0523,
-          "p_pct": 5.2,
+          "p": 0.0615,
+          "p_pct": 6.2,
           "strike": 719.0
         },
         {
           "benchmark_p": 0.1148,
           "benchmark_p_pct": 11.5,
-          "p": 0.0454,
-          "p_pct": 4.5,
+          "p": 0.0541,
+          "p_pct": 5.4,
           "strike": 720.0
         },
         {
           "benchmark_p": 0.1096,
           "benchmark_p_pct": 11.0,
-          "p": 0.0386,
-          "p_pct": 3.9,
+          "p": 0.0468,
+          "p_pct": 4.7,
           "strike": 721.0
+        },
+        {
+          "benchmark_p": 0.0861,
+          "benchmark_p_pct": 8.6,
+          "p": 0.0435,
+          "p_pct": 4.4,
+          "strike": 722.0
+        },
+        {
+          "benchmark_p": 0.0689,
+          "benchmark_p_pct": 6.9,
+          "p": 0.0404,
+          "p_pct": 4.0,
+          "strike": 723.0
+        },
+        {
+          "benchmark_p": 0.07,
+          "benchmark_p_pct": 7.0,
+          "p": 0.0374,
+          "p_pct": 3.7,
+          "strike": 724.0
+        },
+        {
+          "benchmark_p": 0.0705,
+          "benchmark_p_pct": 7.0,
+          "p": 0.0345,
+          "p_pct": 3.5,
+          "strike": 725.0
+        },
+        {
+          "benchmark_p": 0.0717,
+          "benchmark_p_pct": 7.2,
+          "p": 0.0331,
+          "p_pct": 3.3,
+          "strike": 726.0
         }
       ],
       "snapshot_day": "2026-10-30",
@@ -1278,11 +889,11 @@
       "SPY": null
     },
     "morning_map_reading": {
-      "contracts_counted": 7140,
-      "contracts_total": 8500,
-      "expiries_with_totals": 29,
-      "session": "2026-10-29",
-      "spot": 761.17,
+      "contracts_counted": 6277,
+      "contracts_total": 8152,
+      "expiries_with_totals": 31,
+      "session": "2026-10-30",
+      "spot": 756.0,
       "strikes_kept": 8
     },
     "note": "The chain archive this engine reads holds no snapshot yet. Each morning's market map does read a live chain and keeps totals from it (for SPY's latest session: the price level, the two walls, the flip level, one total per expiry and the 8 busiest strikes), but it keeps no full strike list and no per-strike volatility reading, so it cannot supply this forecast. Nothing has been filled in from it."
