@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honest POP Engine: the chance of finishing above each strike, graded</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Honest POP Engine</h1>
+    <p class="job">One job: for SPY and QQQ, attach an honest chance of finishing above each strike to this week's expiry, and grade every strike when the week ends.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest surface&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function card(title, inner){return '<section class="card"><h2>'+esc(title)+'</h2>'+inner+'</section>';}
+
+  fetch("data.json").then(function(r){if(!r.ok) throw new Error(r.status); return r.json();}).then(function(d){
+    meta.textContent="Checked "+fmtDate(d.as_of)+". Source: "+d.source;
+    var out="";
+
+    out+=card("Still being proven", '<p class="sub">This tool is new and its own record is still being built. It earns stronger words only from surfaces it has published and had graded at expiry, never from the older study behind it.</p>');
+
+    out+=card("What this page does and does not say", '<p class="claim">'+esc(d.scope_line)+'</p>');
+
+    // ---- Today's surface, or the waiting state ----
+    if(d.waiting){
+      var W=d.what_exists, M=W.morning_map_reading;
+      var w='<p><span class="count">0</span> <span class="sub">stored chain snapshots on record, so no surface can be published yet.</span></p>';
+      w+='<table><tbody>'
+        +'<tr><th>Stored snapshots, SPY</th><td>'+esc(W.archive_by_index.SPY)+'</td></tr>'
+        +'<tr><th>Stored snapshots, QQQ</th><td>'+esc(W.archive_by_index.QQQ)+'</td></tr>'
+        +'<tr><th>Stored snapshots, IWM</th><td>'+esc(W.archive_by_index.IWM)+'</td></tr>'
+        +'</tbody></table>';
+      w+='<p class="sub">'+esc(W.note)+'</p>';
+      if(M){
+        w+='<table><tbody>'
+          +'<tr><th>Latest morning map session</th><td>'+esc(fmtDate(M.session))+'</td></tr>'
+          +'<tr><th>SPY contracts counted that morning</th><td>'+esc(M.contracts_counted)+' of '+esc(M.contracts_total)+'</td></tr>'
+          +'<tr><th>Strikes kept from that read</th><td>'+esc(M.strikes_kept)+' (the busiest few, with no volatility reading kept for any strike)</td></tr>'
+          +'</tbody></table>';
+      }
+      w+='<p class="sub">'+esc(d.live.state_note)+'</p>';
+      out+=card("Waiting for the first stored chain", w);
+    } else {
+      d.surfaces.forEach(function(S){
+        var s='<p class="sub">Expiry '+esc(fmtDate(S.expiry))+', '+esc(S.days_remaining)+' days remaining. Price at the snapshot close: '+esc(S.spot)+'. Expected move to expiry: '+esc(S.expected_move)+'. Only strikes within two expected moves are shown.</p>';
+        s+='<table><thead><tr><th>Strike</th><th>Chance of finishing above it</th><th>The market\'s own chance, uncorrected</th></tr></thead><tbody>';
+        S.rows.forEach(function(r){
+          s+='<tr><td>'+esc(r.strike)+'</td><td>'+esc(r.p_pct)+'%</td><td>'+(r.benchmark_p_pct==null?"not recorded":esc(r.benchmark_p_pct)+"%")+'</td></tr>';
+        });
+        s+='</tbody></table>';
+        out+=card(S.symbol+": this week's surface", s);
+      });
+    }
+
+    // ---- How the chance is built ----
+    var H=d.method, st="";
+    st+='<p class="sub">'+esc(H.summary)+'</p>';
+    st+='<p class="sub"><strong>'+esc(H.study_record.label)+'.</strong></p>';
+    st+='<table><thead><tr><th>How the chance was built</th><th>Chances stated</th><th>What actually happened</th><th>Window</th></tr></thead><tbody>';
+    H.study_record.rows.forEach(function(r){
+      st+='<tr><td>'+esc(r.construction)+'</td><td>'+esc(r.predicted_pct)+'%</td><td>'+esc(r.realised_pct)+'%</td><td>'+esc(r.window)+'</td></tr>';
+    });
+    st+='</tbody></table><p class="sub">'+esc(H.study_record.note)+'</p>';
+    out+=card("How each chance is built", st);
+
+    // ---- Proving the maths ----
+    var T=d.self_test;
+    out+=card("The maths, checked", '<p class="sub">Before any surface is published, this page\'s calculation is checked against an independent option-pricing model kept on this site, and run end to end on a made-up chain. Latest check: passed, across '+esc(T.oracle_cases)+' test cases the two calculations never differed by more than '+esc(T.oracle_max_difference)+' , and a made-up chain produced '+esc(T.synthetic_strikes)+' strikes and '+esc(T.synthetic_records_written_to_a_throwaway_copy)+' test records on a throwaway copy of the record. Test records never enter the live record.</p>');
+
+    // ---- Live record ----
+    var L=d.live;
+    out+=card("The live record", '<table><tbody>'
+      +'<tr><th>Chances written to the public record</th><td>'+esc(L.records_written)+'</td></tr>'
+      +'<tr><th>Chances graded so far</th><td>'+esc(L.records_graded)+'</td></tr>'
+      +'<tr><th>Weekly expiries graded so far</th><td>'+esc(L.expiries_graded)+' of '+esc(L.proving_target_expiries)+' needed for the retirement test below</td></tr>'
+      +'</tbody></table>'
+      +'<p class="sub">'+esc(d.thin_cell_rule)+'</p>');
+
+    out+=card("When this tool retires", '<p class="sub">'+esc(d.kill_criterion)+'</p>');
+
+    main.innerHTML=out;
+  }).catch(function(e){
+    banner.className="banner show missing";
+    banner.textContent="The latest figures could not be loaded. Nothing is shown rather than something out of date.";
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
