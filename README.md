@@ -1,5 +1,7 @@
 # Strategy catalog
 
+> **Start here: [INDEX.md](INDEX.md)** is the map of this whole repository for a reader arriving cold, and [INDEX.json](INDEX.json) is its machine-readable twin listing every file in the repository. Read the index first, then this page.
+
 **651 distinct trading strategies** have been built across our desks, and this repository is the public library that holds them: the strategy cards, the code, the recreation notes that let anyone rebuild a strategy from its recorded rules, the desk software that runs the current roster, and the guides that teach an agent (or a person) how to build a desk like this. It holds **4,865 files** in total. Everything below is a map of the whole repository, not just the catalog.
 
 ## The three views of the strategies
