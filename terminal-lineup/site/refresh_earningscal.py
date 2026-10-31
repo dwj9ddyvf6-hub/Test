@@ -323,6 +323,21 @@ def main():
           f"{doc['shared_names_checked']} names checked in both "
           f"records, {doc.get('priced_moves_on_record', 0)} priced "
           f"moves published, recorded {doc['recorded_at']})")
+    # Self-enrich tail (cure 2026-10-31, same pattern as the tails in
+    # refresh_regime.py and refresh_flowengine.py, in enrich_all.py's
+    # order: record surface first, explanation second, because the
+    # explanation body reads the record surface). This page has a
+    # standalone recheck path that runs this refresher bare, with no
+    # lane close after it; without this tail a bare run strips both
+    # blocks and the page publishes with no explanation. A failure is
+    # printed and named, never silent.
+    try:
+        import explanation as _ex
+        import record_surface as _rs
+        _rs.enrich_slug("earnings-calendar")
+        _ex.enrich_slug("earnings-calendar")
+    except Exception as _exc:
+        print(f"self-enrich failed: {_exc}")
     return 0
 
 
