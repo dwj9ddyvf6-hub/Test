@@ -37,7 +37,11 @@
   .dial{flex:1 1 240px;text-align:center;padding:6px 4px}
   .dial h3{font-size:15.5px;margin:0 0 2px}
   .dial svg{width:190px;max-width:100%;height:auto}
-  .dial .big{font-size:34px;font-weight:700;letter-spacing:-.01em;margin:-34px 0 0}
+  .dial .big{font-size:34px;font-weight:700;letter-spacing:-.01em;margin:6px 0 0}
+  .dial .btrack{position:relative;height:18px;background:var(--nodata-bg);border-radius:6px;margin:10px 0 4px}
+  .dial .bfill{position:absolute;left:0;top:4px;height:10px;border-radius:5px}
+  .dial .btick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+  .dial .bscale{display:flex;justify-content:space-between;font-size:16px;color:var(--soft)}
   .dial .facts{font-size:14px;color:var(--soft);margin:4px 0 0}
   .versus{font-size:15.5px;margin:10px 0 0;text-align:center}
   .versus b.up{color:var(--good)} .versus b.down{color:var(--bad)}
@@ -113,17 +117,23 @@
     var m = String(d.getMonth() + 1), day = String(d.getDate());
     return d.getFullYear() + "-" + (m.length < 2 ? "0" + m : m) + "-" + (day.length < 2 ? "0" + day : day);
   }
-  // One semicircle dial: a grey track arc and a coloured arc whose
-  // length is the share, with the share printed under the arc.
-  function dial(title, pctValue, facts, color){
-    var r = 80, len = Math.PI * r;
-    var fill = Math.max(0, Math.min(100, Number(pctValue))) / 100 * len;
+  // Indicator cure (2026-10-31, spec 14.2): a linear bullet, not a
+  // semicircle dial. The share rides bar length on a 0 to 100 scale,
+  // the halfway point is ticked, and the exact share prints under it.
+  function sparkSvg(series){
+    var vals = (series || []).filter(function(v){ return typeof v === "number" && isFinite(v); });
+    if (vals.length < 2) return "";
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals); if (hi === lo) hi = lo + 1;
+    var pts = vals.map(function(v, i){ return (3 + i / (vals.length - 1) * 214).toFixed(1) + "," + (37 - (v - lo) / (hi - lo) * 34).toFixed(1); }).join(" ");
+    return '<svg viewBox="0 0 220 40" role="img" aria-label="Recent sessions trend" style="width:220px;max-width:100%;height:auto;display:block;margin:4px auto 0"><polyline points="' + pts + '" fill="none" stroke="#0b5fa5" stroke-width="2"/></svg>';
+  }
+  function dial(title, pctValue, facts, color, series){
+    var pct = Math.max(0, Math.min(100, Number(pctValue)));
     return '<div class="dial"><h3>' + esc(title) + '</h3>' +
-      '<svg viewBox="0 0 200 108" aria-hidden="true">' +
-      '<path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#dde4ec" stroke-width="16" stroke-linecap="round"/>' +
-      '<path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="' + color + '" stroke-width="16" stroke-linecap="round" stroke-dasharray="' + fill.toFixed(1) + ' ' + len.toFixed(1) + '"/>' +
-      '</svg>' +
-      '<p class="big">' + esc(fmtPct(pctValue)) + '%</p>' +
+      '<div class="btrack"><span class="bfill" style="width:' + pct.toFixed(1) + '%;background:' + color + '"></span>' +
+      '<span class="btick" style="left:50%"></span></div>' +
+      '<div class="bscale"><span>0%</span><span>50%</span><span>100%</span></div>' +
+      '<p class="big">' + esc(fmtPct(pctValue)) + '%</p>' + sparkSvg(series) +
       '<p class="facts">' + facts + '</p></div>';
   }
 
@@ -167,13 +177,16 @@
         esc(u.words || "") + '.</p><div class="dials">';
       out += dial("Above their 50-session average", h.above_50_pct,
         esc(fmtNum(h.above_50)) + " of the " + esc(fmtNum(h.counted_50)) +
-        " counted stocks closed above it", "#0b5fa5");
+        " counted stocks closed above it", "#0b5fa5",
+        (data.history || []).map(function(x){ return x.above_50_pct; }).concat([h.above_50_pct]));
       out += dial("Above their 200-session average", h.above_200_pct,
         esc(fmtNum(h.above_200)) + " of the " + esc(fmtNum(h.counted_200)) +
-        " counted stocks closed above it", "#5b4a9e");
+        " counted stocks closed above it", "#5b4a9e",
+        (data.history || []).map(function(x){ return x.above_200_pct; }).concat([h.above_200_pct]));
       out += dial("Rose on the day", h.advancers_pct,
         esc(fmtNum(h.advancers)) + " of the " + esc(fmtNum(h.traded)) +
-        " stocks that traded rose", "#1d7a3a");
+        " stocks that traded rose", "#1d7a3a",
+        (data.history || []).map(function(x){ return x.advancers_pct; }).concat([h.advancers_pct]));
       out += '</div><p class="versus"><b class="up">' +
         esc(fmtNum(h.advancers)) + ' rose</b> against <b class="down">' +
         esc(fmtNum(h.decliners)) + ' fell</b>, with ' +
