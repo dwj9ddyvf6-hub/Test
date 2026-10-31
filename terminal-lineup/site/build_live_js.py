@@ -26,7 +26,9 @@ TEMPLATE = r"""/* Live layer: polite auto-refresh by cadence class.
    A page polls only its own data file, cache-free, on the cadence its
    own inputs arrive at. When the file changes, the page re-renders in
    place and its top bar clock advances. Nothing here invents data:
-   the clock reads the served file's own Last-Modified stamp. */
+   freshness is the page's own READING DATE resolved from inside its
+   data (freshness cure 2026-10-31), never the file's Last-Modified
+   stamp, which the hourly enrich rewrites without new readings. */
 (function () {
   "use strict";
   var CADENCE = __CADENCE__;
@@ -79,11 +81,57 @@ TEMPLATE = r"""/* Live layer: polite auto-refresh by cadence class.
     }
     return ind;
   }
+  var readingDate = null; // YYYY-MM-DD of the page's own reading
+  function parseDay(v) {
+    if (typeof v !== "string") return null;
+    var m = v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    return m ? m[1] + "-" + m[2] + "-" + m[3] : null;
+  }
+  function readingDateOf(text) {
+    var data; try { data = JSON.parse(text); } catch (e) { return null; }
+    if (!data || typeof data !== "object") return null;
+    var rs = data.record_surface && data.record_surface.current_reading;
+    var d = rs ? parseDay(rs.as_of) : null; if (d) return d;
+    var gen = parseDay(data.generated_at) || parseDay(data.generated_at_utc) || parseDay(data.published_at_utc);
+    var keys = ["as_of_session", "session", "as_of", "freshest_session", "freshest_date", "modelled_freshest_date", "precomputed_freshest_date", "scored_run_session", "assembled_on", "replay_date", "grading_run_at", "date", "panel_last_session", "readings_through", "newest_source_time", "published_date", "generated_at", "generated_at_utc", "published_at_utc", "recorded_on"];
+    for (var i = 0; i < keys.length; i++) {
+      d = parseDay(data[keys[i]]);
+      if (d && !(gen && (Date.parse(gen) - Date.parse(d)) > 370 * 86400000)) return d;
+    }
+    var blocks = [data.state, data.wire];
+    for (var b = 0; b < blocks.length; b++) {
+      if (!blocks[b]) continue;
+      var bk = ["date", "as_of", "grading_run_at"];
+      for (var j = 0; j < bk.length; j++) { d = parseDay(blocks[b][bk[j]]); if (d) return d; }
+    }
+    return null;
+  }
+  function latestCompletedSession() {
+    // Most recent finished trading day in ET: today counts only after
+    // the 16:00 close; weekends step back to Friday.
+    var now = new Date();
+    var et = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+    var d = new Date(et.getFullYear(), et.getMonth(), et.getDate());
+    if (!(et.getDay() >= 1 && et.getDay() <= 5 && et.getHours() >= 16)) {
+      do { d.setDate(d.getDate() - 1); } while (d.getDay() === 0 || d.getDay() === 6);
+    }
+    return d;
+  }
   function render() {
     var ind = indicator(); if (!ind || !updatedAt) return;
-    var age = Date.now() - updatedAt.getTime();
-    var stale = isFinite(STALE_MS[cadence]) && age > STALE_MS[cadence];
-    var label = "Updated " + fmtClock(updatedAt);
+    var stale = false, label;
+    if (readingDate) {
+      label = "Reading as of " + readingDate;
+      var latest = latestCompletedSession();
+      var rd = new Date(readingDate + "T12:00:00");
+      if (cadence === "weekly") stale = (latest - rd) > 9 * 86400000;
+      else if (slug === "squeeze-watch") stale = (latest - rd) > 21 * 86400000;
+      else if (cadence !== "static-study") stale = rd < new Date(latest.getFullYear(), latest.getMonth(), latest.getDate(), 12);
+    } else if (onHub || NODATA[slug]) {
+      label = "Updated " + fmtClock(updatedAt);
+    } else {
+      label = "No reading date on record";
+    }
     ind.classList.remove("stale", "closed", "asof");
     if (cadence === "static-study") {
       ind.classList.add("asof"); label += " · Study, as of its last run";
@@ -107,7 +155,8 @@ TEMPLATE = r"""/* Live layer: polite auto-refresh by cadence class.
       if (!r.ok) return null;
       var lm = r.headers.get("Last-Modified");
       return r.text().then(function (text) {
-        return { fp: (lm || "") + "|" + hash(text),
+        if (!onHub && !NODATA[slug]) readingDate = readingDateOf(text);
+        return { fp: hash(text),
                  at: lm ? new Date(lm) : null, text: text };
       });
     }).catch(function () { return null; }).then(function (res) {
