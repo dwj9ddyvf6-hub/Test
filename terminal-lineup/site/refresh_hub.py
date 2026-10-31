@@ -84,7 +84,12 @@ def parse_date(value):
 
 
 def headline_date(slug: str):
-    """The page's own headline session from its data file, or None."""
+    """The page's canonical reading date (freshness.py), or None.
+
+    Freshness cure 2026-10-31: the hub, live.js and the kit now all
+    resolve ONE reading date per page from the page's own data, never
+    from file timestamps, and the chip and the printed date below are
+    derived from this same value."""
     path = HERE / slug / "data.json"
     if not path.exists():
         return None
@@ -92,11 +97,34 @@ def headline_date(slug: str):
         data = json.load(fh)
     if not isinstance(data, dict):
         return None
+    try:
+        import freshness as _fresh
+        return _fresh.reading_date(data)
+    except Exception:
+        pass
     for field in DATE_FIELDS:
         d = parse_date(data.get(field))
         if d is not None:
             return d
     return None
+
+
+WEEKLY = {"insider-wire", "insider-divergence", "filings-wire",
+          "smart-money-tracker"}
+STATIC_STUDY = {"graveyard", "proving-ground", "replication-wire"}
+
+
+def is_stale(slug: str, d: date, latest: date) -> bool:
+    """Cadence-aware staleness from the reading date alone."""
+    if slug in QUARTERLY or slug in STATIC_STUDY:
+        return False
+    if slug in WEEKLY:
+        return (latest - d).days > 9
+    if slug == "squeeze-watch":
+        # FINRA short-interest settles twice a month and publishes
+        # about a week later; 21 days is its honest window.
+        return (latest - d).days > 21
+    return d < latest
 
 
 def latest_completed_session(today: date) -> date:
@@ -305,7 +333,7 @@ def main() -> int:
                 cur = re.search(r'class="chip ([a-z]+)"', new_card)
                 if cur and cur.group(1) != "stale":
                     saved_chips[slug] = cur.group(1)
-                if slug not in QUARTERLY and d < latest:
+                if is_stale(slug, d, latest):
                     stale_slugs.append(slug)
                     new_card = re.sub(
                         r'<span class="chip [a-z]+">[^<]*</span>',
@@ -318,10 +346,30 @@ def main() -> int:
                         f'<span class="chip {back}">'
                         f'{CHIP_WORDS[back]}</span>',
                         new_card, count=1)
-                new_card = re.sub(
+                new_card, _n = re.subn(
                     r'(<span class="updated">As of )[^<]*(</span>)',
                     lambda mm: mm.group(1) + plain_date(d) + mm.group(2),
                     new_card, count=1)
+                if not _n:
+                    # Freshness cure: a card with no date span gets one
+                    # inserted beside its chip; a date is never left
+                    # only in the page's data file.
+                    new_card = re.sub(
+                        r'(<span class="chip [a-z]+">[^<]*</span>)',
+                        lambda mm: mm.group(1) +
+                        '<span class="updated">As of ' +
+                        plain_date(d) + '</span>',
+                        new_card, count=1)
+            else:
+                # No reading date exists in the page's own data: say
+                # so on the card instead of leaving the chip dateless.
+                if 'class="updated"' not in new_card:
+                    new_card = re.sub(
+                        r'(<span class="chip [a-z]+">[^<]*</span>)',
+                        lambda mm: mm.group(1) +
+                        '<span class="updated">No reading date '
+                        'on record</span>',
+                        new_card, count=1)
         chip = re.search(r'class="chip ([a-z]+)"', new_card)
         if chip and chip.group(1) in counts:
             counts[chip.group(1)] += 1
