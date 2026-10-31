@@ -31,6 +31,10 @@
     "threshold_pct": -1.57
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: timing and distribution, over +1, +3 and +5 sessions, episodic (stress tercile only). It is graded on whether its timing calls resolve by each stated horizon, with unresolved cases still counted. It would be ended if stage 1 fails its pre-registered bar in the first 3 forward episodes, and the script retires as a whole. It counts as proven at first 3 forward episodes (stage 1).",
+    "summary": "When the broad market is in the deepest third of its fall, state whether yesterday's biggest losers turn around in a set order, stage by stage, and grade each stage on its own."
+  },
   "feed": "forecast_ledger",
   "history": {
     "cohort_name_events": 73963,
@@ -2536,9 +2540,142 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "reconstruction_note": "The original study did not write down exactly how it measured the market's fall, which losers counted, or what counted as the lag behind other stocks closing. This tool fills those gaps with stated stand-ins, fixed in advance: the fall is measured from the highest close in the record on hand; the deepest third is judged against earlier days only; the group is the bottom third of yesterday's returns; other stocks means the typical (middle) stock in the same list; and the lag is over the past 5 trading days. On this short, mostly calm record, the deepest third begins at about 1.57 percent below the highest close, much shallower than a real market fall.",
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "1209 graded forecasts of 1815 recorded on the ledger (mean scores: brier@1 0.2544, brier@3 0.4147); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 1815,
+        "graded_forecasts": 1209,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_04",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "caveats",
+        "claim",
+        "condition",
+        "execution_pricing",
+        "feed",
+        "history",
+        "kill_criterion",
+        "live",
+        "price_basis",
+        "provenance",
+        "reconstruction_note",
+        "source",
+        "stage_1_bar_pct",
+        "state",
+        "thin_cell_rule",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_04",
+      "forecasts": 3630,
+      "grades": 1209,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 3630 forecasts are on record and 1209 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 3,
+          "path": "/history"
+        },
+        {
+          "items": 0,
+          "path": "/history/missing_future_close"
+        },
+        {
+          "items": 0,
+          "path": "/history/stage_1"
+        },
+        {
+          "items": 0,
+          "path": "/history/stage_2"
+        },
+        {
+          "items": 0,
+          "path": "/history/stage_3_counts"
+        },
+        {
+          "items": 0,
+          "path": "/history/stage_3_medians_pct"
+        },
+        {
+          "items": 3,
+          "path": "/history/study_record"
+        }
+      ],
+      "total_items_counted": 6
+    },
+    "version": 1
+  },
   "source": "The daily price history on record (1,833 names including the broad market fund, March 25, 2025 to October 23, 2026, 399 trading days), checked for this page.",
   "stage_1_bar_pct": 50,
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Stage 1 and stage 2 reversal rates from the history run.",
+      "rows": [
+        {
+          "name": "Stage 1 rate",
+          "score": 50.5
+        },
+        {
+          "name": "Stage 2 rate",
+          "score": 35.7
+        }
+      ],
+      "source": "history.stage_1/stage_2.rate_pct",
+      "title": "Reversal rates by stage, percent"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Median move percent at 1, 3 and 5 sessions.",
+      "rows": [
+        {
+          "name": "After 1 session(s)",
+          "score": 0.225
+        },
+        {
+          "name": "After 3 session(s)",
+          "score": 0.534
+        },
+        {
+          "name": "After 5 session(s)",
+          "score": 0.537
+        }
+      ],
+      "source": "history.stage_3_medians_pct",
+      "title": "Stage 3 median moves, percent"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any stage with fewer than 30 graded forecasts shows its count only, with no percentage headline.",
   "tool": "Stress-Reversal Staging"
 }
