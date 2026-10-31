@@ -22,9 +22,20 @@
     return String(Math.round(n * 100) / 100);
   }
   function sessionOf(data) {
+    // Canonical reading date (freshness cure 2026-10-31): mirrors
+    // freshness.py exactly, so the kit stamp, live.js and the hub
+    // can never again print different dates for the same page.
     if (!data || typeof data !== "object") return null;
-    var keys = ["as_of_session", "session", "as_of", "recorded_on", "published_at_utc", "generated_at_utc"];
+    var rs = data.record_surface && data.record_surface.current_reading;
+    if (rs && rs.as_of) return String(rs.as_of);
+    var keys = ["as_of_session", "session", "as_of", "freshest_session", "freshest_date", "modelled_freshest_date", "precomputed_freshest_date", "scored_run_session", "assembled_on", "replay_date", "grading_run_at", "date", "panel_last_session", "readings_through", "newest_source_time", "published_date", "generated_at", "generated_at_utc", "published_at_utc", "recorded_on"];
     for (var i = 0; i < keys.length; i++) if (data[keys[i]]) return String(data[keys[i]]);
+    var blocks = [data.state, data.wire];
+    for (var b = 0; b < blocks.length; b++) {
+      if (!blocks[b]) continue;
+      var bk = ["date", "as_of", "grading_run_at"];
+      for (var j = 0; j < bk.length; j++) if (blocks[b][bk[j]]) return String(blocks[b][bk[j]]);
+    }
     return null;
   }
   function receipt(session, drawn, unit, extra) {
@@ -48,7 +59,53 @@
     return h;
   }
   function svgOpen(w, h, label) {
-    return '<svg class="vk-svg" viewBox="0 0 ' + w + " " + h + '" role="img" aria-label="' + esc(label || "chart") + '" preserveAspectRatio="none">';
+    /* Encoding cure (spec 14.1.6): never stretch a chart to the
+       container. preserveAspectRatio="none" distorted every slope
+       and arc after the fact; meet keeps the drawn geometry true. */
+    return '<svg class="vk-svg" viewBox="0 0 ' + w + " " + h + '" role="img" aria-label="' + esc(label || "chart") + '" preserveAspectRatio="xMidYMid meet">';
+  }
+
+  /* Bullet (2026-10-31, spec 14.2 current-state row + 14.5.1/14.5.2):
+     the shared current-state-vs-range component. One linear track:
+     named zone bands along a common scale, the value as a length bar,
+     an optional benchmark/target tick, the exact value printed as
+     digits, the zone named in words (colour is never the only code),
+     and a sparkline of the reading's own history when the caller
+     hands one in (analog shape + digital value, redundant). Fails
+     closed to the state card when value or scale is not on record. */
+  function bullet(input) {
+    input = input || {};
+    var v = num(input.value), lo = num(input.low), hi = num(input.high);
+    if (v == null || lo == null || hi == null || hi <= lo) {
+      if (input.have != null && input.need != null) return accrual(input);
+      if (v != null) return stateCard("A reading is on record (" + fmt(v) + ") but its scale is not stated, so no bullet can be drawn honestly.", input.session, 1, "reading");
+      return stateCard(input.words || "No reading with a stated scale is on record yet.", input.session, 0, "readings");
+    }
+    var zones = (Array.isArray(input.zones) && input.zones.length) ? input.zones : [{ to: hi, label: "" }];
+    var frac = Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
+    var segs = "", prev = lo, zoneName = "";
+    zones.forEach(function (z, i) {
+      var to = Math.min(z.to, hi);
+      if (to > prev) segs += '<span class="vk-bullet-seg vk-zone-bg-' + (i % 4) + '" style="left:' + (100 * (prev - lo) / (hi - lo)) + "%;width:" + (100 * (to - prev) / (hi - lo)) + '%"></span>';
+      if (v >= prev && v <= to && !zoneName) zoneName = z.label || "";
+      prev = to;
+    });
+    var bench = num(input.benchmark != null ? input.benchmark : input.target);
+    var tick = bench != null && bench >= lo && bench <= hi
+      ? '<span class="vk-bench-mark" style="left:' + (100 * (bench - lo) / (hi - lo)) + '%"></span>' : "";
+    var hist = Array.isArray(input.history) ? input.history.filter(function (h) { return num(h && (h.value != null ? h.value : h.y)) != null; }) : [];
+    var spark = "";
+    if (hist.length >= 2) {
+      spark = '<span class="vk-bullet-spark">' + sparkline({ series: hist.map(function (h) { return { date: h.date || "", value: h.value != null ? h.value : h.y }; }), raw: true, width: 220, height: 40 }) + "</span>";
+    }
+    var inner = '<div class="vk-bullet"><div class="vk-bullet-track">' + segs +
+      '<span class="vk-bullet-fill" style="width:' + (Math.round(10000 * frac) / 100) + '%"></span>' + tick + "</div>" +
+      '<div class="vk-bullet-scale"><span>' + esc(zones[0].label || "") + " " + fmt(lo) + '</span>' +
+      '<span class="vk-bullet-value">' + fmt(v) + (zoneName ? " · " + esc(zoneName) : "") + "</span>" +
+      "<span>" + fmt(hi) + " " + esc(zones[zones.length - 1].label || "") + "</span></div>" + spark + "</div>";
+    if (input.raw) return inner;
+    return frame(input.title || null, input.label || "The bar shows where the reading sits in its range. The exact value and its zone are printed under the bar.",
+      inner, input.session, 1, "reading");
   }
 
   /* P10 Accrual: the honest state visual, also used standalone. */
@@ -86,10 +143,12 @@
     var cells = real.map(function (d) {
       var c = num(d.count) || 0;
       var cls = c > 0 ? (c >= max * 0.66 ? " vk-cal-hot" : " vk-cal-mid") : "";
-      return '<span class="vk-cal-cell' + cls + '" title="' + esc(d.date) + '">' + esc(String(d.date).slice(8, 10)) + "</span>";
+      /* Encoding cure (14.1.7/14.5.10): the count itself is printed
+         in the cell, not carried by tint or a hover title. */
+      return '<span class="vk-cal-cell' + cls + '" title="' + esc(d.date) + '">' + esc(String(d.date).slice(8, 10)) + " · " + fmt(c) + "</span>";
     }).join("");
     var body = '<div class="vk-cal">' + cells + "</div>";
-    return frame(input.title || null, input.label || "One cell per day in the window on record. Darker means more on that day.",
+    return frame(input.title || null, input.label || "One cell per day in the window on record. Each cell prints its day and its count; tint only repeats the count.",
       body, input.session, real.length, "days");
   }
   function accrualTimeline(input) {
@@ -214,6 +273,10 @@
         s += '<path d="' + bd + '" class="vk-line-path vk-bench"></path>';
       }
     }
+    /* Encoding cure (14.1.3/14.1.7): both ends of the value scale
+       are printed, and a scale that does not include zero says so. */
+    s = gridH(s, W, pad, yLo, yHi, Y);
+    if (yLo > 0 || yHi < 0) s += '<text x="' + pad + '" y="' + (H - 18) + '" class="vk-axis">Scale runs ' + fmt(yLo) + " to " + fmt(yHi) + "; zero is outside it.</text>";
     var top = pts.reduce(function (a, p, j) { return p.y > pts[a].y ? j : a; }, 0);
     s += '<circle cx="' + X(top) + '" cy="' + Y(pts[top].y) + '" r="4" class="vk-cur"></circle>';
     /* Point notes (2026-10-31, Wave 3 Item E): a point carrying a
@@ -233,33 +296,19 @@
       s, input.session, pts.length, "points");
   }
 
-  /* P4 Dial: SVG arc so the geometry is inspectable in the DOM. */
+  /* P4 Dial (cured 2026-10-31, spec 14.2): the name is kept for
+     existing callers; the form is now the bullet, not a radial arc.
+     Value rides length on a common scale, exact digits printed, and
+     a history passed in draws as the bullet's sparkline. */
   function dial(input) {
     input = input || {};
-    var v = num(input.value), lo = num(input.low), hi = num(input.high);
-    if (v == null) {
+    if (num(input.value) == null) {
       if (input.have != null && input.need != null) return accrual(input);
       return stateCard(input.words || "No reading is on record yet.", input.session, 0, "readings");
     }
-    if (lo == null || hi == null || hi <= lo) {
-      return stateCard("A reading is on record (" + fmt(v) + ") but its scale is not stated, so no dial can be drawn honestly.", input.session, 1, "reading");
-    }
-    var frac = Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
-    var cx = 110, cy = 105, r = 84;
-    function polar(f) { var a = Math.PI * (1 - f); return [cx + r * Math.cos(a), cy - r * Math.sin(a)]; }
-    var p0 = polar(0), p1 = polar(frac), pn = polar(frac);
-    var s = svgOpen(220, 128, "reading dial");
-    s += '<path d="M' + p0[0] + " " + p0[1] + " A" + r + " " + r + " 0 0 1 " + polar(1)[0] + " " + polar(1)[1] + '" class="vk-dial-track"></path>';
-    if (frac > 0) s += '<path d="M' + p0[0] + " " + p0[1] + " A" + r + " " + r + " 0 0 1 " + p1[0] + " " + p1[1] + '" class="vk-dial-fill"></path>';
-    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + pn[0] + '" y2="' + pn[1] + '" class="vk-dial-needle"></line>';
-    s += '<text x="' + cx + '" y="' + (cy + 20) + '" text-anchor="middle" class="vk-dial-value">' + fmt(v) + "</text></svg>";
-    var hist = Array.isArray(input.history) ? input.history.filter(function (h) { return num(h && (h.value != null ? h.value : h.y)) != null; }) : [];
-    var extra = "";
-    if (hist.length >= 2) {
-      extra = line({ series: hist.map(function (h) { return { date: h.date || "", value: h.value != null ? h.value : h.y }; }), spark: true, session: input.session });
-    }
-    return frame(input.title || null, (input.label || "The headline reading") + ", on a scale of " + fmt(lo) + " to " + fmt(hi) + ".",
-      '<div class="vk-dial">' + s + "</div>" + extra, input.session, 1, "reading");
+    return bullet({ value: input.value, low: input.low, high: input.high, zones: input.zones,
+      benchmark: input.benchmark, history: input.history, session: input.session,
+      title: input.title, label: input.label || "The headline reading, drawn as a bar on its stated scale." });
   }
 
   /* P5 MeterBench */
@@ -299,7 +348,10 @@
       var s = num(r.score);
       html += '<div class="vk-rrow"><span class="vk-rname">' + esc(r.name) + "</span>";
       if (s != null && max > 0) {
-        html += '<span class="bar"><i style="width:' + Math.max(2, Math.round(100 * Math.abs(s) / max)) + '%"></i></span><span class="vk-rscore">' + fmt(s) + "</span>";
+        /* Encoding cure (14.2 comparison): a negative score draws in
+           the down colour, so sign rides the bar itself, not only the
+           printed number. Width still runs from zero by length. */
+        html += '<span class="bar"><i style="width:' + Math.max(2, Math.round(100 * Math.abs(s) / max)) + '%' + (s < 0 ? ";background:var(--down)" : "") + '"></i></span><span class="vk-rscore">' + fmt(s) + "</span>";
         drawn++;
       } else {
         html += '<span class="bar"></span><span class="vk-rscore">no score on record</span>';
@@ -327,7 +379,12 @@
       var v = num(t.value);
       if (v == null) { html += '<div class="tile nodata"><span class="sym">' + esc(t.label) + "</span><br>no data on record</div>"; return; }
       var cls = v > 0 ? "up" : (v < 0 ? "down" : "nodata");
+      /* Encoding cure (14.1.1/14.5.1): every tile also carries a
+         length bar from zero on the page's common scale, so the
+         quantity rides length, not tint alone. */
+      var barPct = max > 0 ? Math.max(2, Math.round(100 * Math.abs(v) / max)) : 0;
       html += '<div class="tile ' + cls + '"><span class="sym">' + esc(t.label) + '</span><br><span class="vk-tval">' + fmt(v) + "</span>" +
+        '<span class="bar" style="display:block;height:6px;background:var(--nodata-bg);border-radius:3px;margin-top:5px;position:relative"><i style="position:absolute;left:0;top:0;bottom:0;width:' + barPct + "%;background:" + (v < 0 ? "var(--down)" : "var(--accent)") + ';border-radius:3px"></i></span>' +
         (t.word ? "<br>" + esc(t.word) : "") + "</div>";
     });
     html += "</div>";
@@ -383,6 +440,14 @@
     function X(i) { return pad + i / (series.length - 1) * (W - pad * 2); }
     function Y(v) { return H - pad - (v - lo) / (hi - lo) * (H - pad * 2); }
     var s = svgOpen(W, H, "history line");
+    /* Encoding cure (14.1.3/14.1.7): a full line chart carries a
+       labelled value axis (grid + tick values), a zero line when
+       zero is in range, and a printed note when the scale is
+       truncated. Spark variants stay axis-free by design. */
+    if (!input.spark) {
+      s = gridH(s, W, pad, lo, hi, Y);
+      if (lo <= 0 && hi >= 0) s += '<line x1="' + pad + '" y1="' + Y(0) + '" x2="' + (W - pad) + '" y2="' + Y(0) + '" class="vk-zero"></line>';
+    }
     var seg = [];
     function flush() { if (seg.length > 1) s += '<path d="' + seg.map(function (p, j) { return (j ? "L" : "M") + p[0] + " " + p[1]; }).join(" ") + '" class="vk-line-path"></path>'; seg = []; }
     series.forEach(function (p, i) {
@@ -399,7 +464,9 @@
       s += '<text x="' + (W - pad - 90) + '" y="' + (H - 6) + '" class="vk-axis">' + esc(series[lastIdx].date || "") + " " + fmt(series[lastIdx].value) + "</text>";
     }
     s += "</svg>";
-    return frame(input.spark ? null : (input.title || null), input.spark ? null : (input.label || "How the headline figure moved, from the dated values on record. A gap means a missing session."),
+    var lineLabel = input.label || "How the headline figure moved, from the dated values on record. A gap means a missing session.";
+    if (!input.spark && (lo > 0 || hi < 0)) lineLabel += " The scale runs " + fmt(lo) + " to " + fmt(hi) + "; zero is outside it, so heights compare positions, not amounts from zero.";
+    return frame(input.spark ? null : (input.title || null), input.spark ? null : lineLabel,
       s, input.session, valid.length, "dated values");
   }
 
@@ -426,7 +493,13 @@
     if (Array.isArray(input.fitLine) && input.fitLine.length === 2) {
       s += '<line x1="' + X(input.fitLine[0][0]) + '" y1="' + Y(input.fitLine[0][1]) + '" x2="' + X(input.fitLine[1][0]) + '" y2="' + Y(input.fitLine[1][1]) + '" class="vk-fit"></line>';
     }
-    pairs.forEach(function (p) { s += '<circle cx="' + X(p.x) + '" cy="' + Y(p.y) + '" r="4" class="vk-dot"></circle>'; });
+    /* Encoding cure (14.1.7): points are directly labelled with
+       their name and both exact values, not left unlabelled. */
+    pairs.forEach(function (p) {
+      s += '<circle cx="' + X(p.x) + '" cy="' + Y(p.y) + '" r="4" class="vk-dot"></circle>';
+      var lbl = p.label || p.name || "";
+      if (lbl) s += '<text x="' + (X(p.x) + 6) + '" y="' + (Y(p.y) + 3) + '" class="vk-axis">' + esc(String(lbl).slice(0, 14)) + " " + fmt(p.x) + ", " + fmt(p.y) + "</text>";
+    });
     s += '<text x="' + pad + '" y="' + (H - 8) + '" class="vk-axis">' + esc(input.xLabel || "first figure") + ": " + fmt(xLo) + " to " + fmt(xHi) + "</text>";
     s += '<text x="' + pad + '" y="14" class="vk-axis">' + esc(input.yLabel || "second figure") + ": " + fmt(yLo) + " to " + fmt(yHi) + "</text></svg>";
     var lacking = rows.length - pairs.length;
@@ -475,8 +548,14 @@
     s += '<path d="' + lineD + '" class="vk-line-path"></path>';
     s += '<circle cx="' + xy.X(lastI) + '" cy="' + xy.Y(series[lastI].value) + '" r="4" class="vk-cur"></circle>';
     s += '<text x="' + pad + '" y="' + (H - 6) + '" class="vk-axis">' + esc(series[firstI].date || "") + "</text>";
+    if (xy.lo <= 0 && xy.hi >= 0) s += '<line x1="' + pad + '" y1="' + xy.Y(0) + '" x2="' + (W - pad) + '" y2="' + xy.Y(0) + '" class="vk-zero"></line>';
     s += '<text x="' + (W - pad) + '" y="' + (H - 6) + '" text-anchor="end" class="vk-axis">' + esc(series[lastI].date || "") + " " + fmt(series[lastI].value) + "</text></svg>";
-    return frame(input.title || null, input.label || "The dated values on record, with the space under the line filled so the size of the move is easy to see.", s, input.session, valid.length, "dated values");
+    /* Encoding cure (14.1.1/14.1.3): the line's position carries the
+       value; the fill is shading only and is never captioned as the
+       size of the move. A truncated scale says so in the label. */
+    var areaLabel = input.label || "The dated values on record. The line's height carries each value; the shading under it is decoration only.";
+    if (xy.lo > 0 || xy.hi < 0) areaLabel += " The scale runs " + fmt(xy.lo) + " to " + fmt(xy.hi) + "; zero is outside it.";
+    return frame(input.title || null, areaLabel, s, input.session, valid.length, "dated values");
   }
   /* Sparkline: the same dated line, small, for cards and strips. */
   function sparkline(input) {
@@ -512,8 +591,14 @@
       var bot = steps.slice().reverse().map(function (st, j) { var i = steps.length - 1 - j; return "L" + X(i) + " " + Y(st[lk]); }).join(" ");
       return '<path d="' + top + " " + bot + ' Z" class="' + cls + '"></path>';
     }
-    if (steps.some(function (st) { return st.low2 != null && st.high2 != null; })) s += bandPath("low2", "high2", "vk-fan-outer");
+    var hasOuter = steps.some(function (st) { return st.low2 != null && st.high2 != null; });
+    if (hasOuter) s += bandPath("low2", "high2", "vk-fan-outer");
     s += bandPath("low", "high", "vk-fan-inner");
+    /* Encoding cure (14.2 uncertainty): the bands are named on the
+       chart itself. No probability is invented: the kit only knows
+       a narrower and a wider published range, and says exactly that. */
+    s += '<text x="' + padL + '" y="' + (padT + 10) + '" class="vk-axis">Inner band: the narrower published range</text>';
+    if (hasOuter) s += '<text x="' + padL + '" y="' + (padT + 24) + '" class="vk-axis">Outer band: the wider published range</text>';
     if (steps.some(function (st) { return num(st.mid) != null; })) {
       s += '<path d="' + steps.map(function (st, i) { return (i ? "L" : "M") + X(i) + " " + Y(num(st.mid) != null ? st.mid : (st.low + st.high) / 2); }).join(" ") + '" class="vk-line-path"></path>';
     }
@@ -578,41 +663,22 @@
       (row || []).forEach(function (v, ci) {
         var n = num(v); if (n == null) return;
         var cls = n < 0 ? "vk-heat-neg" : "vk-heat-pos";
-        var op = (0.15 + 0.85 * Math.abs(n) / maxAbs).toFixed(2);
-        s += '<rect x="' + (padL + ci * cellW + 1) + '" y="' + (padT + ri * cellH + 1) + '" width="' + (cellW - 2) + '" height="' + (cellH - 2) + '" rx="3" class="' + cls + '" opacity="' + op + '"><title>' + esc(((input.rowLabels || [])[ri] || "") + " " + ((input.colLabels || [])[ci] || "") + ": " + fmt(n)) + "</title></rect>";
+        /* Encoding cure (14.1.4/14.1.7/14.5.10): magnitude no longer
+           rides opacity/saturation (the last-ranked channel, and
+           hover-only). Hue marks sign only; the exact value is
+           printed in the cell, readable on touch. */
+        s += '<rect x="' + (padL + ci * cellW + 1) + '" y="' + (padT + ri * cellH + 1) + '" width="' + (cellW - 2) + '" height="' + (cellH - 2) + '" rx="3" class="' + cls + '"></rect>';
+        s += '<text x="' + (padL + ci * cellW + cellW / 2) + '" y="' + (padT + ri * cellH + cellH / 2 + 4) + '" text-anchor="middle" class="vk-axis">' + fmt(n) + "</text>";
       });
     });
     (input.colLabels || []).forEach(function (c, ci) { s += '<text x="' + (padL + ci * cellW + cellW / 2) + '" y="' + (H - 6) + '" text-anchor="middle" class="vk-axis">' + esc(String(c).slice(0, 8)) + "</text>"; });
     s += "</svg>";
-    return frame(input.title || null, input.label || "One cell per pair on record. Darker teal means a bigger value; red means below zero.", s, input.session, flat.length, "cells");
+    return frame(input.title || null, input.label || "One cell per pair on record. Each cell prints its exact value; teal means at or above zero and red means below zero.", s, input.session, flat.length, "cells");
   }
-  /* GaugeZones: a half-round dial whose rim is split into named zones. */
-  function gaugeZones(input) {
-    input = input || {};
-    var v = num(input.value), lo = num(input.low), hi = num(input.high);
-    if (v == null || lo == null || hi == null || hi <= lo) {
-      if (input.have != null && input.need != null) return accrual(input);
-      return stateCard(input.words || "No reading with a stated scale is on record yet.", input.session, 0, "readings");
-    }
-    var zones = (Array.isArray(input.zones) && input.zones.length) ? input.zones : [{ to: hi, label: "" }];
-    var cx = 130, cy = 118, r = 96;
-    function polar(f) { var a = Math.PI * (1 - Math.max(0, Math.min(1, f))); return [cx + r * Math.cos(a), cy - r * Math.sin(a)]; }
-    function arc(f0, f1) { var a = polar(f0), b = polar(f1); return "M" + a[0].toFixed(1) + " " + a[1].toFixed(1) + " A" + r + " " + r + " 0 0 1 " + b[0].toFixed(1) + " " + b[1].toFixed(1); }
-    var s = svgOpen(260, 140, "gauge");
-    var prev = lo;
-    zones.forEach(function (z, i) {
-      var f0 = (prev - lo) / (hi - lo), f1 = (Math.min(z.to, hi) - lo) / (hi - lo);
-      if (f1 > f0) s += '<path d="' + arc(f0, f1) + '" class="vk-zone vk-zone-' + (i % 4) + '"></path>';
-      prev = z.to;
-    });
-    var frac = (v - lo) / (hi - lo), np = polar(frac);
-    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + np[0].toFixed(1) + '" y2="' + np[1].toFixed(1) + '" class="vk-dial-needle"></line>';
-    s += '<circle cx="' + cx + '" cy="' + cy + '" r="5" class="vk-cur"></circle>';
-    s += '<text x="' + cx + '" y="' + (cy + 22) + '" text-anchor="middle" class="vk-dial-value">' + fmt(v) + "</text>";
-    s += '<text x="8" y="' + (cy + 12) + '" class="vk-axis">' + esc(zones[0].label || fmt(lo)) + "</text>";
-    s += '<text x="252" y="' + (cy + 12) + '" text-anchor="end" class="vk-axis">' + esc(zones[zones.length - 1].label || fmt(hi)) + "</text></svg>";
-    return frame(input.title || null, input.label || "The needle sits in the zone the reading falls in. The zones are the ones this page itself names.", '<div class="vk-dial vk-gauge">' + s + "</div>", input.session, 1, "reading");
-  }
+  /* GaugeZones (cured 2026-10-31, spec 14.2): the name is kept for
+     existing callers and hub minis; the form is now the bullet with
+     the page's own named zones as bands, not a half-round dial. */
+  function gaugeZones(input) { return bullet(input || {}); }
   /* Timeline: dated events on one line, oldest first. */
   function timeline(input) {
     input = input || {};
@@ -633,39 +699,41 @@
     var last = events[events.length - 1];
     return frame(input.title || null, input.label || ("One dot per dated event on record, oldest first. The latest: " + last.date + (last.label ? " " + last.label : "") + "."), s, input.session, events.length, "events");
   }
-  /* Donut: shares of a whole, slices to scale. */
-  function donut(input) {
+  /* StackedBar: shares of a whole as lengths on one axis
+     (spec 14.2 composition: stacked bar, not pie/donut). */
+  function stackedBar(input) {
     input = input || {};
     var slices = (Array.isArray(input.slices) ? input.slices : []).filter(function (sl) { return sl && num(sl.value) != null && sl.value > 0; });
     var total = slices.reduce(function (a, sl) { return a + sl.value; }, 0);
     if (!slices.length || total <= 0) return stateCard(input.words || "No shares are on record yet.", input.session, 0, "shares");
-    var cx = 80, cy = 80, r = 62, ir = 36;
-    function pt(f, rad) { var a = Math.PI * 2 * f - Math.PI / 2; return [cx + rad * Math.cos(a), cy + rad * Math.sin(a)]; }
-    var s = svgOpen(340, 160, "shares");
-    var f = 0;
+    var W = 640, padL = 8, padR = 8, barY = 18, barH = 26;
+    var H = barY + barH + 14 + slices.length * 19 + 8;
+    var s = svgOpen(W, H, "shares as a stacked bar");
+    var x = padL, usable = W - padL - padR;
     slices.forEach(function (sl, i) {
-      var f1 = f + sl.value / total, large = (f1 - f) > 0.5 ? 1 : 0;
-      var a = pt(f, r), b = pt(f1, r), c = pt(f1, ir), dpt = pt(f, ir);
-      s += '<path d="M' + a[0].toFixed(1) + " " + a[1].toFixed(1) + " A" + r + " " + r + " 0 " + large + " 1 " + b[0].toFixed(1) + " " + b[1].toFixed(1) + " L" + c[0].toFixed(1) + " " + c[1].toFixed(1) + " A" + ir + " " + ir + " 0 " + large + " 0 " + dpt[0].toFixed(1) + " " + dpt[1].toFixed(1) + ' Z" class="vk-slice vk-slice-' + (i % 5) + '"><title>' + esc(sl.label + ": " + fmt(sl.value)) + "</title></path>";
-      f = f1;
+      var w = usable * sl.value / total;
+      s += '<rect x="' + x.toFixed(1) + '" y="' + barY + '" width="' + Math.max(1, w - 1).toFixed(1) + '" height="' + barH + '" class="vk-slice vk-slice-' + (i % 5) + '"></rect>';
+      x += w;
     });
-    var lx = 165;
     slices.forEach(function (sl, i) {
-      var y = 24 + i * 19;
-      s += '<rect x="' + lx + '" y="' + (y - 10) + '" width="10" height="10" class="vk-slice vk-slice-' + (i % 5) + '"></rect>';
-      s += '<text x="' + (lx + 16) + '" y="' + y + '" class="vk-axis vk-legend">' + esc(String(sl.label).slice(0, 20)) + " " + fmt(sl.value) + " (" + Math.round(100 * sl.value / total) + "%)</text>";
+      var y = barY + barH + 26 + i * 19;
+      s += '<rect x="' + padL + '" y="' + (y - 10) + '" width="10" height="10" class="vk-slice vk-slice-' + (i % 5) + '"></rect>';
+      s += '<text x="' + (padL + 16) + '" y="' + y + '" class="vk-axis vk-legend">' + esc(String(sl.label).slice(0, 34)) + " " + fmt(sl.value) + " (" + Math.round(100 * sl.value / total) + "%)</text>";
     });
     s += "</svg>";
-    return frame(input.title || null, input.label || "Each slice is one share of the whole on record, sized by its value.", s, input.session, slices.length, "shares");
+    return frame(input.title || null, input.label || "Each part is one share of the whole on record, drawn as a length on one bar. Longer means a bigger share; every share also prints its value and percent.", s, input.session, slices.length, "shares");
   }
+  /* Donut kept as a name only: it now draws the stacked bar above.
+     Encoding cure (14.1.1/14.2): shares no longer ride angle/area. */
+  function donut(input) { return stackedBar(input); }
 
   var VK = {
     ladder: ladder, band: band, curve: curve, dial: dial, meterBench: meterBench,
     ranked: ranked, tiles: tiles, heatStrip: heatStrip, tape: tape, line: line,
     accrual: accrual, scatter: scatter, sessionOf: sessionOf, _esc: esc,
     area: area, sparkline: sparkline, fan: fan, distribution: distribution,
-    heatmap: heatmap, gaugeZones: gaugeZones, timeline: timeline,
-    countBars: countBars, donut: donut
+    heatmap: heatmap, gaugeZones: gaugeZones, bullet: bullet, timeline: timeline,
+    countBars: countBars, donut: donut, stackedBar: stackedBar
   };
   root.VisualKit = VK;
   if (typeof module !== "undefined" && module.exports) module.exports = VK;
@@ -693,7 +761,8 @@
         case "ladder": return { levels: src, current: a.vkCurrent ? getPath(data, a.vkCurrent) : data.current, session: session };
         case "band": return { items: src, session: session };
         case "curve": return { points: (src || []).map(function (r, i) { return { x: r[a.vkX || "label"] != null ? r[a.vkX || "label"] : i, y: r[a.vkY || "value"] }; }), step: host.hasAttribute("data-vk-step"), session: session };
-        case "dial": return { value: src && src.value != null ? src.value : src, low: src && src.low, high: src && src.high, session: session };
+        case "dial": return { value: src && src.value != null ? src.value : src, low: src && src.low, high: src && src.high, zones: src && src.zones, history: src && src.history, session: session };
+        case "bullet": return { value: src && src.value != null ? src.value : src, low: src && src.low, high: src && src.high, zones: src && src.zones, benchmark: src && (src.benchmark != null ? src.benchmark : src.target), history: src && src.history, session: session };
         case "meterbench": return { value: src && src.value, benchmark: src && src.benchmark, graded: src && src.graded, needed: src && src.needed, session: session };
         case "ranked": return { rows: src, session: session };
         case "tiles": return { items: src, session: session };
@@ -706,10 +775,11 @@
         case "fan": return { steps: src, session: session };
         case "distribution": return { buckets: (src || []).map(function (r) { return { label: r.label || r.name || "", value: r[a.vkY || "value"] }; }), session: session };
         case "heatmap": return { cells: src, session: session };
-        case "gaugezones": return { value: src && src.value != null ? src.value : src, low: src && src.low, high: src && src.high, zones: src && src.zones, session: session };
+        case "gaugezones": return { value: src && src.value != null ? src.value : src, low: src && src.low, high: src && src.high, zones: src && src.zones, history: src && src.history, session: session };
         case "timeline": return { events: src, session: session };
         case "countbars": return { rows: src, session: session };
         case "donut": return { slices: (src || []).map(function (r) { return { label: r.label || r.name || "", value: r[a.vkY || "value"] }; }), session: session };
+        case "stackedbar": return { slices: (src || []).map(function (r) { return { label: r.label || r.name || "", value: r[a.vkY || "value"] }; }), session: session };
         default: return { session: session };
       }
     }
@@ -717,7 +787,7 @@
       var hosts = document.querySelectorAll("[data-vk]");
       hosts.forEach(function (host) {
         var prim = host.getAttribute("data-vk");
-        var fn = VK[prim === "meterbench" ? "meterBench" : (prim === "gaugezones" ? "gaugeZones" : (prim === "countbars" ? "countBars" : prim))];
+        var fn = VK[prim === "meterbench" ? "meterBench" : (prim === "gaugezones" ? "gaugeZones" : (prim === "countbars" ? "countBars" : (prim === "stackedbar" ? "stackedBar" : prim)))];
         if (!fn) return;
         host.innerHTML = fn(bindSpec(host, data));
         host.classList.add("vk-done");
