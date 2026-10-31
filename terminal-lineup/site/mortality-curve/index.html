@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Promoted-Book Mortality Curve: how many promoted claims survive the next check</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.caution{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:20px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Promoted-Book Mortality Curve</h1>
+    <p class="job">One job: never let a promotion headline travel alone again; every promoted claim carries its predicted survival, and today's top-grade claims are ranked by how likely they are to fall at the next check.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="Record read "+fmtShort(data.as_of)+". Source: "+data.source+".";
+    var h="";
+    h+='<section class="card"><h2>The idea</h2><p>'+esc(data.idea_words)+'</p><p>'+esc(data.cycle_words)+'</p></section>';
+
+    if(data.gate_passed){ showBanner("caution","Still being proven, in part unmet: the first check below is passed, and the forward record waits on the next check or the next promotion, both events rather than dates."); }
+    else { showBanner("missing","Rejected at its first check: the method below failed the test it had to pass before any forward use, so no forecast list is issued from it. The missed numbers are printed in full."); }
+
+    h+='<section class="card"><h2>The first check: the method pointed backwards</h2><p>'+esc(data.gate_words)+'</p>'
+      +'<table><tr><th>Outcome</th><th>Predicted</th><th>90 percent range</th><th>What really happened</th><th>Range held it?</th></tr>';
+    (data.other_counts||[]).forEach(function(c){
+      h+='<tr><td>'+esc(c.label)+'</td><td>'+esc(c.predicted)+'</td><td>'+esc(c.low)+' to '+esc(c.high)+'</td><td>'+esc(c.realised)+'</td><td>'+(c.covers?"Yes":"No")+'</td></tr>';
+    });
+    h+='</table><p class="sub">'+esc(data.feature_words)+'</p></section>';
+
+    var ea=data.event_arm||{};
+    h+='<section class="card"><h2>Today\u2019s 63 top-grade combinations, ranked by chance of falling</h2><p>'+esc(ea.words)+'</p>';
+    if(ea.active){
+      h+='<p>Expected to fail: <span class="count">'+esc(ea.predicted_failures)+' of 63</span> <span class="sub">(90 percent range '+esc(ea.low)+' to '+esc(ea.high)+')</span></p>'
+        +'<table><tr><th>Rank</th><th>Combination</th><th>Chance of failing the next check</th><th>How comfortably it passed at promotion</th><th>Steadiness at promotion</th><th>Near duplicates promoted beside it</th></tr>';
+      (ea.ranked||[]).forEach(function(r){
+        h+='<tr><td>'+esc(r.rank)+'</td><td><strong>'+esc(r.forecaster)+'</strong> &middot; '+esc(r.target)+'<div class="sub">'+esc(r.cell)+' &middot; looks ahead '+esc(r.horizon)+' trading days &middot; wider study support: '+(r.support?"yes":"no")+'</div></td><td><span class="count">'+esc(r.fail_chance_pct)+'%</span></td><td>'+esc(r.margin)+'</td><td>'+esc(r.consistency)+' of its stretches agreed</td><td>'+esc(r.redundancy)+'</td></tr>';
+      });
+      h+='</table>';
+    }
+    h+='<p class="sub">'+esc(data.thin_cell_words)+'</p></section>';
+
+    h+='<section class="card"><h2>The next promotion, priced in advance</h2><p>'+esc(data.forward_arm_words)+'</p></section>';
+
+    h+='<section class="card"><h2>Every family in the first cycle</h2>'
+      +'<table><tr><th>Family (search grouping and what it watches)</th><th>Promoted</th><th>Reached the top grade</th><th>Held direction only</th><th>Did not replicate</th><th>Could not be tested</th><th>Top-grade chance this method gives the next one</th></tr>';
+    (data.pair_table||[]).forEach(function(p){
+      h+='<tr><td>'+esc(p.pair_words)+'</td><td>'+esc(p.promoted)+'</td><td>'+esc(p.grade_a)+'</td><td>'+esc(p.confirmed)+'</td><td>'+esc(p.not_replicated)+'</td><td>'+esc(p.untestable)+'</td><td>'+esc(p.top_grade_chance_pct)+'%</td></tr>';
+    });
+    h+='</table></section>';
+
+    var lr=data.live_record||{};
+    h+='<section class="card"><h2>This page\u2019s own live record</h2><p>'+esc(lr.words)+'</p>'
+      +'<table><tr><th>Measure</th><th>Count</th></tr>'
+      +'<tr><td>Forecasts written to the public record</td><td>'+esc(lr.forecasts_recorded)+'</td></tr>'
+      +'<tr><td>Graded so far</td><td>'+esc(lr.graded)+'</td></tr></table>'
+      +'<p class="sub">'+esc(data.proving_state)+': this page earns stronger words only from its own recorded results, never from anyone else\u2019s.</p></section>';
+
+    h+='<section class="card"><h2>How this gets graded, and what would retire it</h2><p>'+esc(data.grading_words)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","The newest record could not be loaded. Nothing on this page is estimated or filled in: when the record is missing, the page says so.");
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
