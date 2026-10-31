@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Odds Cards: what happened the last times these setups appeared</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --yet-bg:#eef1f5; --yet-line:#c3cedb; --yet-ink:#43536a;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .counts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+  .count{border-radius:10px;padding:10px 14px;font-size:15px;border:1px solid var(--line);background:var(--card)}
+  .count strong{font-size:19px}
+  .count.didnot{background:var(--bad-bg);border-color:var(--bad-line);color:var(--bad-ink)}
+  .count.study{background:var(--yet-bg);border-color:var(--yet-line);color:var(--yet-ink)}
+  .how{font-size:14.5px;color:var(--soft);max-width:46em;margin:0 0 20px}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:19px;line-height:1.35}
+  .group .setup{color:var(--soft);margin:0 0 10px;font-size:15px}
+  .verdict{display:inline-block;border-radius:999px;padding:2px 11px;font-size:13.5px;
+           font-weight:600;margin:0 0 10px;border:1px solid;
+           background:var(--bad-bg);border-color:var(--bad-line);color:var(--bad-ink)}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 6px}
+  .stat{border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:14.5px}
+  .stat strong{display:block;font-size:17px}
+  .stat span{color:var(--faint);font-size:13px}
+  .gate{border-top:1px solid var(--line);padding:8px 0 2px;margin-top:8px;font-size:15px}
+  .gate .name{font-weight:600;color:var(--accent);font-size:13.5px;
+              text-transform:uppercase;letter-spacing:.04em;display:block}
+  .gate p{margin:2px 0 4px;color:var(--soft)}
+  .gate p strong{color:var(--ink);font-weight:600}
+  table{border-collapse:collapse;width:100%;font-size:14px;margin:4px 0 10px}
+  th,td{text-align:right;padding:4px 8px;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--faint);font-weight:600}
+  .sub{font-weight:600;color:var(--accent);font-size:13.5px;
+       text-transform:uppercase;letter-spacing:.04em;margin:12px 0 2px}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Odds Cards</h1>
+    <p class="job">One job: for each named stock setup, show what actually happened the last times it appeared, counted case by case.</p>
+    <p class="free">Free to read: no paywall, no sign-up, no login, nothing for sale.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="missing" class="banner missing">The odds cards are not available right now. Please check back later.</div>
+
+  <p class="meta" id="meta"></p>
+  <div class="counts" id="counts"></div>
+  <p class="how" id="best"></p>
+  <p class="how" id="how"></p>
+  <div id="cards"></div>
+  <div id="empty"></div>
+
+  <footer>
+    <p id="source"></p>
+    <p><a href="../">Back to all the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function num(n){return n.toLocaleString("en-US");}
+function r3(x){return (x>0?"+":"")+x.toFixed(3);}
+function pct(x){return x.toFixed(1)+"%";}
+function rateCell(s){return s.rate===null||s.rate===undefined ? "too few cases for a rate" : pct(s.rate);}
+
+function sliceTable(title, rows, cols){
+  var h='<p class="sub">'+esc(title)+'</p><table><tr>';
+  cols.forEach(function(c){h+="<th>"+esc(c)+"</th>";});
+  h+="</tr>";
+  rows.forEach(function(s){
+    h+="<tr><td>"+esc(s.label||s.band)+"</td><td>"+num(s.n)+"</td><td>"+rateCell(s)+"</td><td>"+r3(s.mean_r)+"</td>";
+    if(cols.length>4){h+="<td>"+r3(s.base_r)+"</td>";}
+    h+="</tr>";
+  });
+  return h+"</table>";
+}
+
+function render(d){
+  document.getElementById("meta").textContent =
+    "Replay run " + d.replay_date + ", covering " + d.window_words + ", across " +
+    num(d.headline.names) + " stocks. Source: " + d.source;
+  var c = document.getElementById("counts");
+  c.innerHTML =
+    '<div class="count"><strong>'+num(d.headline.total_cases)+'</strong> cases replayed</div>' +
+    '<div class="count"><strong>'+d.headline.families+'</strong> setup families tested</div>' +
+    '<div class="count didnot"><strong>'+d.headline.passed+'</strong> of '+d.headline.families+' families passed the go-live bar</div>' +
+    '<div class="count study">'+esc(d.proving_state)+'</div>';
+  document.getElementById("best").textContent = d.best_words +
+    " The families overlap: the narrower ones are narrower versions of the wider ones, so their case counts add to " +
+    num(d.headline.family_rows_sum) + ", not to the total.";
+  document.getElementById("how").textContent = d.how_words;
+  document.getElementById("source").textContent = d.proving_words;
+
+  var host = document.getElementById("cards");
+  if(!d.families || !d.families.length){
+    document.getElementById("empty").innerHTML =
+      '<div class="nodata">No odds card has been published yet.</div>';
+    return;
+  }
+  host.innerHTML = d.families.map(function(f){
+    var h = '<section class="group"><h2>'+esc(f.name)+'</h2>' +
+      '<p class="setup">'+esc(f.setup)+'</p>' +
+      '<span class="verdict">'+esc(f.verdict)+'</span>' +
+      '<div class="stats">' +
+      '<div class="stat"><strong>'+num(f.n)+'</strong><span>cases replayed</span></div>' +
+      '<div class="stat"><strong>'+(f.rate===null?"too few cases for a rate":pct(f.rate))+'</strong><span>reached the target ('+num(f.hits)+' cases; range '+pct(f.rate_lo)+' to '+pct(f.rate_hi)+')</span></div>' +
+      '<div class="stat"><strong>'+r3(f.mean_r)+'</strong><span>average outcome, in risk units</span></div>' +
+      '<div class="stat"><strong>'+r3(f.base_r)+'</strong><span>random entries in the same stocks</span></div>' +
+      '<div class="stat"><strong>'+r3(f.edge_r)+'</strong><span>edge over random entries (range '+r3(f.edge_lo)+' to '+r3(f.edge_hi)+')</span></div>' +
+      '</div>' +
+      '<div class="gate"><span class="name">The go-live bar</span><p>'+esc(f.bar_words)+'</p>' +
+      '<p><strong>'+esc(f.verdict)+'.</strong> '+esc(f.reached_words)+'</p>' +
+      '<p>'+esc(f.model_words)+'</p></div>';
+    h += sliceTable("By the kind of market", f.regimes, ["Market","Cases","Reached target","Average outcome"]);
+    h += sliceTable("By the kind of day", f.days, ["Day","Cases","Reached target","Average outcome","Random entries"]);
+    h += sliceTable("By how much was on offer against the risk", f.rr_bands.map(function(b){return {label:"Reward "+b.band+" times the risk", n:b.n, rate:b.rate, mean_r:b.mean_r, base_r:b.base_r};}),
+                    ["On offer","Cases","Reached target","Average outcome","Random entries"]);
+    if(f.conditions){
+      h += '<p class="sub">With and without one extra condition</p><table><tr><th>Condition</th><th>Cases with it</th><th>Reached target with / without</th><th>Average outcome with / without</th></tr>';
+      f.conditions.forEach(function(s){
+        h += "<tr><td>"+esc(s.label)+"</td><td>"+num(s.n_with)+"</td><td>"+
+          (s.rate_with===null?"too few cases for a rate":pct(s.rate_with))+" / "+pct(s.rate_without)+"</td><td>"+
+          r3(s.r_with)+" / "+r3(s.r_without)+"</td></tr>";
+      });
+      h += "</table>";
+    }
+    return h + "</section>";
+  }).join("");
+}
+
+fetch("data.json").then(function(r){ if(!r.ok) throw new Error("bad"); return r.json(); })
+  .then(render)
+  .catch(function(){ document.getElementById("missing").classList.add("show"); });
+</script>
+</body>
+</html>
