@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premium Meter: how the day's options premium split between calls and puts</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --put:#8a4b0f; --put-bg:#f3e2cf;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --old-bg:#fdf6e3; --old-line:#e3cf8a; --old-ink:#6b5510;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.old{background:var(--old-bg);border:1px solid var(--old-line);color:var(--old-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0 0 8px}
+  .note p:last-child{margin-bottom:0}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;overflow-x:auto}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .move{font-size:15px;color:var(--soft);margin:0 0 10px}
+  table{border-collapse:collapse;width:100%;font-size:14px;white-space:nowrap}
+  th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  td.num,th.num{text-align:right}
+  tr:last-child td{border-bottom:none}
+  .meter{min-width:170px}
+  .track{background:#e8edf3;border-radius:6px;height:14px;position:relative;margin-bottom:3px}
+  .fill{background:var(--put);border-radius:6px;height:14px}
+  .share{font-weight:700}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 16px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Premium Meter</h1>
+    <p class="job">One job: for each recorded trading day, show how much premium changed hands in SPY, QQQ and IWM options, how it split between calls and puts, and what share of it sat on the put side.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the premium record&hellip;</p>
+
+  <section class="note" id="how" hidden>
+    <h2>How a figure on this page is worked out</h2>
+    <p id="construction"></p>
+    <p>The prints-examined count stands beside every figure: each total is the sum over exactly that many prints. A name with no recorded day shows no meter, never a zero.</p>
+  </section>
+
+  <main id="main"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to all the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var howEl = document.getElementById("how");
+  var constructionEl = document.getElementById("construction");
+  var receiptEl = document.getElementById("receipt");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtInt(v){
+    return Number(v).toLocaleString("en-US");
+  }
+  function fmtMoney(v){
+    if (v == null) return "Not on record";
+    var sign = v < 0 ? "-$" : "$";
+    return sign + fmtInt(Math.abs(Math.round(v)));
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function lastCompletedSession(){
+    var d = new Date();
+    d.setDate(d.getDate() - 1);
+    while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1);
+    return d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var names = data.names || [];
+      if (!data.freshest_session || !names.length){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No trading day has ' +
+          'been recorded yet. When the first recorded day is kept, ' +
+          'each name will show its premium here, split into calls ' +
+          'and puts, with the put share as the meter.</div>';
+        return;
+      }
+      meta.textContent = "Newest recorded day: " +
+        fmtDateLong(data.freshest_session) + ". " +
+        data.sessions_recorded + " trading days are on record (" +
+        data.session_dates.map(fmtDateShort).join(" and ") +
+        "). Source: " + data.source + ".";
+      if (data.freshest_session < lastCompletedSession()){
+        showBanner("old", "This record is not current: the newest " +
+          "recorded day is " + fmtDateLong(data.freshest_session) +
+          ", and no newer day has been recorded since.");
+      }
+      constructionEl.textContent = data.how || "";
+      howEl.hidden = false;
+
+      var h = "";
+      names.forEach(function(n){
+        h += '<section class="group"><h2>' + esc(n.underlying) + "</h2>";
+        h += '<p class="move">' + esc(n.movement.words) + ".</p>";
+        h += "<table><thead><tr>" +
+          "<th>Trading day</th>" +
+          '<th class="num">Prints examined</th>' +
+          '<th class="num">Total premium</th>' +
+          '<th class="num">Net premium in calls</th>' +
+          '<th class="num">Net premium in puts</th>' +
+          "<th>Put share of net premium</th>" +
+          "</tr></thead><tbody>";
+        n.sessions.forEach(function(s){
+          h += "<tr>" +
+            "<td>" + esc(fmtDateShort(s.session)) + "</td>" +
+            '<td class="num">' + esc(fmtInt(s.prints_examined)) + "</td>" +
+            '<td class="num">' + esc(fmtMoney(s.total_premium_usd)) + "</td>" +
+            '<td class="num">' + esc(fmtMoney(s.call_net_premium_usd)) + "</td>" +
+            '<td class="num">' + esc(fmtMoney(s.put_net_premium_usd)) + "</td>";
+          if (s.put_share_percent == null){
+            h += "<td>No meter: both sides are not on record for " +
+              "this day</td>";
+          } else {
+            h += '<td class="meter"><div class="track">' +
+              '<div class="fill" style="width:' +
+              esc(s.put_share_percent) + '%"></div></div>' +
+              '<span class="share">' +
+              esc(Number(s.put_share_percent).toFixed(1)) +
+              "% in puts</span></td>";
+          }
+          h += "</tr>";
+        });
+        h += "</tbody></table>";
+        var last = n.sessions[n.sessions.length - 1];
+        if (last && last.receipt){
+          h += '<p class="meta">Receipt for the newest day: ' +
+            esc(last.receipt.coverage) + ".</p>";
+        }
+        h += "</section>";
+      });
+      mainEl.innerHTML = h;
+
+      var parts = (data.sessions || []).map(function(s){
+        return fmtDateShort(s.session) + ": " +
+          fmtInt(s.prints_examined) + " prints examined, " +
+          fmtMoney(s.total_premium_usd) + " of premium";
+      });
+      receiptEl.textContent = "Receipt: " + data.sessions_recorded +
+        " recorded trading days. " + parts.join("; ") +
+        ". Source: " + data.source + ".";
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The premium record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
