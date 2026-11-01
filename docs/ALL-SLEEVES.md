@@ -947,7 +947,7 @@
 - Created by / source: Ausar R14/R15 Coinbase research
 - Description (from source records): Coinbase SMA200 crypto trend
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/ASTER_NATIVE_BTC_ETH_SMA200-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -960,6 +960,11 @@
   - [fwd_coinbase_sma200] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [fwd_coinbase_sma200] data: WARMUP_BARS={"1Day": 200}
+- Parameters:
+  - Universe / weights: (("BTC-USD", 0.5), ("ETH-USD", 0.5)) (crypto spot, Coinbase symbols as written in the engine SPECS).
+  - Timeframe: 1d; SMA period 200 sessions.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 (desk config/sleeves.json row); targets are the weights above applied to post-fee NAV.
+  - Cadence: cadence_s 86400. Session: 24h. bp_buffer_frac 0.02. flat_by_close false; flatten_time_et null. params: {}.
 - Variant axes (catalog): [{"Book": "ETH_SMA200", "Rows": "`ausar_eth_sma200_coinbase`; Midna v3 `aster_native_eth_sma200`", "Holds": "ETH", "Gate and exit": "close vs the 200-day SMA"}, {"Book": "BTC_ETH_SMA200", "Rows": "`ausar_btc_eth_sma200_coinbase`; Midna v3 `aster_native_btc_eth_sma200`", "Holds": "BTC and ETH, half each", "Gate and exit": "close vs the 200-day SMA"}, {"Book": "Aurelia forward FWD_COINBASE_SMA200_V1", "Rows": "`femto_fwd_coinbase_sma200`; Midna v3 `fwd_coinbase_sma200`", "Holds": "0.01 BTC a day", "Gate and exit": "master desk: none; Midna v3: in above, out below the SMA200"}, {"Book": "ETH_SMA200", "Rows": "`ausar_eth_sma200_coinbase`; Midna v3 `aster_native_eth_sma200`", "Holds": "ETH", "Gate and exit": "close vs the 200-day SMA"}, {"Book": "BTC_ETH_SMA200", "Rows": "`ausar_btc_eth_sma200_coinbase`; Midna v3 `aster_native_btc_eth_sma200`", "Holds": "BTC and ETH, half each", "Gate and exit": "close vs the 200-day SMA"}, {"Book": "Aurelia forward FWD_COINBASE_SMA200_V1", "Rows": "`femto_fwd_coinbase_sma200`; Midna v3 `fwd_coinbase_sma200`", "Holds": "0.01 BTC a day", "Gate and exit": "master desk: none; Midna v3: in above, out below the SMA200"}, {"Book": "ETH_SMA200", "Rows": "`ausa
 
 ### Variants (2)
@@ -1116,7 +1121,7 @@ Merge evidence (tiers A): [A] ausar_btc_eth_sma200_coinbase ~ ausar_eth_sma200_c
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk; also the Griffith R4 parallel strategy lab (ETF_SMA10_MONTHLY); Mebane Faber's 10-month rule
 - Description (from source records): Faber ETF trend (10-month average)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_FABER-RECREATE.md (Configuration section), Test docs/S_MN_FABER-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -1127,7 +1132,12 @@ Merge evidence (tiers A): [A] ausar_btc_eth_sma200_coinbase ~ ausar_eth_sma200_c
   - [s_mn_faber] v3 slice: {"capital_usd": 3000.0, "cash_usd": 3000.0} parked=False
   - [s_mn_faber] lz_engine sizing: {"budget_usd": 3000, "max_slots": 3, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_faber] 1. Bars: the symbol needs at least 210 daily bars; otherwise it is skipped. ma = the simple mean of the last 210 closes; px = the last close.
+  - [s_mn_faber] 3. Entry: otherwise, if the ETF is not held and px > ma, and the ENH19 stale-bar gate does not refuse, qty = floor(600.0 / px); if qty > 0 emit a buy_to_open entry, price_hint = px, reason naming the close and the average. A close exactly equal to the average produces neither an entry nor an exit.
+- Parameters:
+  - Universe: SPY, EFA, EEM, VNQ, AGG. Asset: US ETFs. Timeframe: 1d (daily closes against a 210-session average).
+  - Sizing / slice: capital_usd 3000.0, cash_usd 3000.0 in the roster row; $600 per ETF in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
 - Variant axes (catalog): [{"Book": "Midna (the master desk's port)", "Basket": "SPY, EFA, BND, VNQ, GSG", "Decision": "daily, against the ten month-ends before the month", "Sizing": "a fifth of equity each", "Rows": "`midna_faber`"}, {"Book": "Midna v3", "Basket": "SPY, EFA, EEM, VNQ, AGG", "Decision": "daily, against a 210-session average", "Sizing": "$600 each of a $3,000 budget", "Rows": "`s_mn_faber`"}, {"Book": "Griffith R4 lab", "Basket": "13 ETFs", "Decision": "month end, the last 10 month-ends", "Sizing": "equal weight over the ETFs held", "Rows": "`griffith_etf_sma10m`"}, {"Book": "Midna (the master desk's port)", "Basket": "SPY, EFA, BND, VNQ, GSG", "Decision": "daily, against the ten month-ends before the month", "Sizing": "a fifth of equity each", "Rows": "`midna_faber`"}, {"Book": "Midna v3", "Basket": "SPY, EFA, EEM, VNQ, AGG", "Decision": "daily, against a 210-session average", "Sizing": "$600 each of a $3,000 budget", "Rows": "`s_mn_faber`"}, {"Book": "Griffith R4 lab", "Basket": "13 ETFs", "Decision": "month end, the last 10 month-ends", "Sizing": "equal weight over the ETFs held", "Rows": "`griffith_etf_sma10m`"}, {"Book": "Midna (the master desk's port)", "Basket": "SPY, EFA, BND, VNQ, G
 
 ### Variants (1)
@@ -2202,7 +2212,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_SM_CHEAP5_MOM6_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_SM_CHEAP5_MOM6_VIX20-RECREATE.md, Test docs/S_Q07W_C52_SM_CHEAP5_MOM6_VIX20-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2212,7 +2222,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_c52_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_sm_cheap5_mom6_vix20] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c52_sm_cheap5_mom6_vix20` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band small. Horizon 52 weeks. Tags: cheap5 + mom6 + stress_vix20.
+  - Sizing (config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper). enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2231,7 +2245,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_MI_CHEAP5_DEEP70_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_MI_CHEAP5_DEEP70_VIX20-RECREATE.md, Test docs/S_Q07W_G78_MI_CHEAP5_DEEP70_VIX20-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2241,7 +2255,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_g78_mi_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_mi_cheap5_deep70_vix20] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_g78_mi_cheap5_deep70_vix20` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_green (Green). Cap band micro. Horizon 78 weeks. Tags: cheap5 + deep70 + stress_vix20.
+  - Sizing (config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper). enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2260,7 +2278,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_SM_MOM6_VIX20_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_SM_MOM6_VIX20_TIERA-RECREATE.md, Test docs/S_Q07W_G78_SM_MOM6_VIX20_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2270,7 +2288,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_g78_sm_mom6_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_sm_mom6_vix20_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_g78_sm_mom6_vix20_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_green (Green). Cap band small. Horizon 78 weeks. Tags: mom6 + stress_vix20 + tierA.
+  - Sizing (config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper). enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2289,7 +2311,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_SM_VIX20_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_SM_VIX20_TIERA-RECREATE.md, Test docs/S_Q07W_G78_SM_VIX20_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2299,7 +2321,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_g78_sm_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_sm_vix20_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_g78_sm_vix20_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_green (Green). Cap band small. Horizon 78 weeks. Tags: stress_vix20 + tierA.
+  - Sizing (config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper). enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2318,7 +2344,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70_VIX20-RECREATE.md, Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70_VIX20-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2328,7 +2354,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s52_mi_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_mi_cheap5_deep70_vix20] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_s52_mi_cheap5_deep70_vix20` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_swing (Swing). Cap band micro. Horizon 52 weeks. Tags: cheap5 + deep70 + stress_vix20.
+  - Sizing (config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper). enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2347,7 +2377,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_MI_CHEAP5_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_MI_CHEAP5_VIX20-RECREATE.md, Test docs/S_Q07W_S52_MI_CHEAP5_VIX20-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2357,7 +2387,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s52_mi_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_mi_cheap5_vix20] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_s52_mi_cheap5_vix20` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_swing (Swing). Cap band micro. Horizon 52 weeks. Tags: cheap5 + stress_vix20.
+  - Sizing (config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper). enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2376,7 +2410,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_SM_CHEAP5_DEEP70_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_SM_CHEAP5_DEEP70_VIX20-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2386,7 +2420,9 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s52_sm_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_sm_cheap5_deep70_vix20] deep70: last close at or below 70% of the maximum high over the trailing 252 sessions (at least 20 daily bars in the family reading).
+- Parameters:
+  - Band: small (market cap $300,000,000 to $2,000,000,000). Holding period: 52 weeks. Timeframe: weekly (1w) per the exit config's hold unit kind.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2405,7 +2441,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_SM_CHEAP5_MOM6_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_SM_CHEAP5_MOM6_VIX20-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2415,7 +2451,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s52_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_sm_cheap5_mom6_vix20] cheap5: last close < $5.00.
+  - [s_q07w_s52_sm_cheap5_mom6_vix20] mom6: close above the close 126 sessions ago (6-month momentum).
+  - [s_q07w_s52_sm_cheap5_mom6_vix20] vix20: VIX >= 20.0; a missing VIX value fails closed in the family reading.
+- Parameters:
+  - Band: small (market cap $300,000,000 to $2,000,000,000). Holding period: 52 weeks. Timeframe: weekly (1w) per the exit config's hold unit kind.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2434,7 +2474,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_SM_CHEAP5_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_SM_CHEAP5_VIX20-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2444,7 +2484,10 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s52_sm_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_sm_cheap5_vix20] cheap5: last close < $5.00.
+  - [s_q07w_s52_sm_cheap5_vix20] vix20: VIX >= 20.0; a missing VIX value fails closed in the family reading.
+- Parameters:
+  - Band: small (market cap $300,000,000 to $2,000,000,000). Holding period: 52 weeks. Timeframe: weekly (1w) per the exit config's hold unit kind.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2463,7 +2506,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_MI_CHEAP5_MOM6_VIX20-RECREATE.md, Test docs/S_Q07W_S78_MI_CHEAP5_MOM6_VIX20-RECREATE.md (Full algorithm section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2473,7 +2516,12 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s78_mi_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_mi_cheap5_mom6_vix20] cheap5: last close < $5.00.
+  - [s_q07w_s78_mi_cheap5_mom6_vix20] mom6: close above the close 126 sessions ago (6-month momentum).
+  - [s_q07w_s78_mi_cheap5_mom6_vix20] vix20: VIX >= 20.0; a missing VIX value fails closed in the family reading.
+- Parameters:
+  - 3. Entry policy (recorded verbatim in the accounting, lz_engine entry config): {"policy": "fear_day", "max_delay_minutes": 65, "limit_band_pct": 5.0, "limit_buffer_pct": 1.0, "window_sessions": 5, "no_chase_mult": 1.02, "stock_red": true, "qqq_red": true, "order": "capped_limit_day"}. That is: buy only on a fear day (stock red and QQQ red), within 5 sessions of the signal and 65 minutes' delay, as a capped limit day order with a 5.0% limit band, 1.0% buffer and a 1.02 no-chase multiplier.
+  - 5. Sizing (recorded verbatim, lz_engine sizing): {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2492,7 +2540,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_SM_CHEAP5_DEEP70_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S78_SM_CHEAP5_DEEP70_VIX20-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2502,7 +2550,9 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s78_sm_cheap5_deep70_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_sm_cheap5_deep70_vix20] deep70: last close at or below 70% of the maximum high over the trailing 252 sessions (at least 20 daily bars in the family reading).
+- Parameters:
+  - Band: small (market cap $300,000,000 to $2,000,000,000). Holding period: 78 weeks. Timeframe: weekly (1w) per the exit config's hold unit kind.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2521,7 +2571,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_SM_CHEAP5_MOM6_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S78_SM_CHEAP5_MOM6_VIX20-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2531,7 +2581,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s78_sm_cheap5_mom6_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_sm_cheap5_mom6_vix20] cheap5: last close < $5.00.
+  - [s_q07w_s78_sm_cheap5_mom6_vix20] mom6: close above the close 126 sessions ago (6-month momentum).
+  - [s_q07w_s78_sm_cheap5_mom6_vix20] vix20: VIX >= 20.0; a missing VIX value fails closed in the family reading.
+- Parameters:
+  - Band: small (market cap $300,000,000 to $2,000,000,000). Holding period: 78 weeks. Timeframe: weekly (1w) per the exit config's hold unit kind.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2550,7 +2604,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_SM_CHEAP5_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S78_SM_CHEAP5_VIX20-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2560,7 +2614,10 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Sizing:
   - [s_q07w_s78_sm_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_sm_cheap5_vix20] cheap5: last close < $5.00.
+  - [s_q07w_s78_sm_cheap5_vix20] vix20: VIX >= 20.0; a missing VIX value fails closed in the family reading.
+- Parameters:
+  - Band: small (market cap $300,000,000 to $2,000,000,000). Holding period: 78 weeks. Timeframe: weekly (1w) per the exit config's hold unit kind.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2579,7 +2636,7 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Created by / source: Galath research lab (Q07 confluence cells), run by Lazarus
 - Description (from source records): Q07 Tensor alt-data confluence cells
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/S_1WSW_STRESS-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2620,6 +2677,11 @@ Merge evidence (tiers A): [A] ausar_pb7 ~ ETH_SMA200 (full evidence in MERGES.md
 - Filters / data:
   - [lz_s_q07_ins2] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
   - [lz_s_q07_wiki] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+- Parameters:
+  - slots=1, capital=1335.0, cadence_s=3600, session="rth",
+  - max_age_min=11520 (60*24*8), stop_pct=0.15,
+  - horizon_sessions=252, family="swing", tf="1W",
+  - max_price=5.0, deep=True, min_vix=20.0.
 - Variant axes (catalog): [{"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}, {"Dimension": "Band", "Values": "micro (`mi`) \u00b7 small (`sm`) \u00b7 mid/large (`ml`)"}, {"Dimension": "Tags", "Values": "tierA, deep70, cheap5, mom6, vix20, wcov, wlow, wspike2, ins2, ats_z1, glow"}, {"Dimension": "Also", "Values": "`lz_1wsw_stress`: w_swing cheap5 + deep70 + VIX \u2265 20, all bands, 52 weeks"}, {"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}, {"Dimension": "Band", "Values": "micro (`mi`) \u00b7 small (`sm`) \u00b7 mid/large (`ml`)"}, {"Dimension": "Tags", "Values": "tierA, deep70, cheap5, mom6, vix20, wcov, wlow, wspike2, ins2, ats_z1, glow"}, {"Dimension": "Also", "Values": "`lz_1wsw_stress`: w_swing cheap5 + deep70 + VIX \u2265 20, all bands, 52 weeks"}, {"Dimension": "Lane", "Values": "w_cyan (`c`) \u00b7 w_green (`g`) \u00b7 w_swing (`s`)"}, {"Dimension": "Hold", "Values": "52 \u00b7 78 weeks"}]
 
 ### Variants (2)
@@ -2745,7 +2807,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_ML_CHEAP5-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_ML_CHEAP5-RECREATE.md, Test docs/S_Q07W_G52_ML_CHEAP5-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2755,7 +2817,12 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_g52_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_ml_cheap5] Config id `s_q07w_g52_ml_cheap5`; the md2 host's sleeve id is `lz_s_q07w_g52_ml_cheap5`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 52 weeks. Filters: cheap5.
+  - [s_q07w_g52_ml_cheap5] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Config id `s_q07w_g52_ml_cheap5`; the md2 host's sleeve id is `lz_s_q07w_g52_ml_cheap5`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 52 weeks. Filters: cheap5.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker_account TEST_MWJW. enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2774,7 +2841,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_ML_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_ML_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_G52_ML_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2784,7 +2851,12 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_g52_ml_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_ml_mom6_tierA] Config id `s_q07w_g52_ml_mom6_tierA`; the md2 host's sleeve id is `lz_s_q07w_g52_ml_mom6_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 52 weeks. Filters: mom6 + tierA.
+  - [s_q07w_g52_ml_mom6_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Config id `s_q07w_g52_ml_mom6_tierA`; the md2 host's sleeve id is `lz_s_q07w_g52_ml_mom6_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 52 weeks. Filters: mom6 + tierA.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker_account TEST_MWJW. enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2803,7 +2875,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_ML_VIX20_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_ML_VIX20_TIERA-RECREATE.md, Test docs/S_Q07W_G52_ML_VIX20_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2813,7 +2885,12 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_g52_ml_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_ml_vix20_tierA] Config id `s_q07w_g52_ml_vix20_tierA`; the md2 host's sleeve id is `lz_s_q07w_g52_ml_vix20_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 52 weeks. Filters: stress_vix20 + tierA.
+  - [s_q07w_g52_ml_vix20_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Config id `s_q07w_g52_ml_vix20_tierA`; the md2 host's sleeve id is `lz_s_q07w_g52_ml_vix20_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 52 weeks. Filters: stress_vix20 + tierA.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker_account TEST_MWJW. enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2832,7 +2909,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_ML_DEEP70_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_ML_DEEP70_TIERA-RECREATE.md, Test docs/S_Q07W_G78_ML_DEEP70_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2842,7 +2919,12 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_g78_ml_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_ml_deep70_tierA] Config id `s_q07w_g78_ml_deep70_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_deep70_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: deep70 + tierA.
+  - [s_q07w_g78_ml_deep70_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Config id `s_q07w_g78_ml_deep70_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_deep70_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: deep70 + tierA.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker_account TEST_MWJW. enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2861,7 +2943,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_ML_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_ML_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_G78_ML_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2871,7 +2953,12 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_g78_ml_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_ml_mom6_tierA] Config id `s_q07w_g78_ml_mom6_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_mom6_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: mom6 + tierA.
+  - [s_q07w_g78_ml_mom6_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Config id `s_q07w_g78_ml_mom6_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_mom6_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: mom6 + tierA.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker_account TEST_MWJW. enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2890,7 +2977,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_ML_MOM6_VIX20_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_ML_MOM6_VIX20_TIERA-RECREATE.md, Test docs/S_Q07W_G78_ML_MOM6_VIX20_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2900,7 +2987,12 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_g78_ml_mom6_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_ml_mom6_vix20_tierA] Config id `s_q07w_g78_ml_mom6_vix20_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_mom6_vix20_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: mom6 + stress_vix20 + tierA.
+  - [s_q07w_g78_ml_mom6_vix20_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Config id `s_q07w_g78_ml_mom6_vix20_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_mom6_vix20_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: mom6 + stress_vix20 + tierA.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker_account TEST_MWJW. enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2919,7 +3011,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_ML_VIX20_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_ML_VIX20_TIERA-RECREATE.md, Test docs/S_Q07W_G78_ML_VIX20_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2929,7 +3021,12 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_g78_ml_vix20_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_ml_vix20_tierA] Config id `s_q07w_g78_ml_vix20_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_vix20_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: stress_vix20 + tierA.
+  - [s_q07w_g78_ml_vix20_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, VIX, as required by this cell's tags.
+- Parameters:
+  - Config id `s_q07w_g78_ml_vix20_tierA`; the md2 host's sleeve id is `lz_s_q07w_g78_ml_vix20_tierA`. Kind 1w (weekly). Family green (w_green). Cap band midlarge. Horizon 78 weeks. Filters: stress_vix20 + tierA.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker_account TEST_MWJW. enabled true, state live.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2948,7 +3045,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_ML_CHEAP5-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_ML_CHEAP5-RECREATE.md, Test docs/S_Q07W_S52_ML_CHEAP5-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2958,7 +3055,11 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_s52_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_ml_cheap5] Config id `s_q07w_s52_ml_cheap5`; kind 1w (weekly). Family w_swing (swing). Cap band midlarge. Horizon 52 weeks. Filters: cheap5.
+- Parameters:
+  - Config id `s_q07w_s52_ml_cheap5`; kind 1w (weekly). Family w_swing (swing). Cap band midlarge. Horizon 52 weeks. Filters: cheap5.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker TEST_MWJW. enabled true, state live.
+  - Status text: "ready (md2 RL64 2026-10-24, Trader t181u)".
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -2977,7 +3078,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_ML_CHEAP5_VIX20-RECREATE.md, Test docs/S_Q07W_S52_ML_CHEAP5_VIX20-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -2987,7 +3088,11 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_s52_ml_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_ml_cheap5_vix20] Vendored Lazarus gate: `sleeves/lazarus/vendor/lazarus/gate.py`
+  - [s_q07w_s52_ml_cheap5_vix20] Canonical id `s_q07w_s52_ml_cheap5_vix20`; config id the same; the md2 host form is lz_s_q07w_s52_ml_cheap5_vix20. Kind 1w, family w_swing, horizon 52 weeks, cap band midlarge (ml), filters cheap5 + stress_vix20.
+- Parameters:
+  - 2. Entry policy (config): fear_day; max_delay_minutes 65; window_sessions 5; order capped_limit_day with limit_band_pct 5.0 and limit_buffer_pct 1.0; no_chase_mult 1.02; stock_red true; qqq_red true.
+  - Canonical id `s_q07w_s52_ml_cheap5_vix20`; config id the same; the md2 host form is lz_s_q07w_s52_ml_cheap5_vix20. Kind 1w, family w_swing, horizon 52 weeks, cap band midlarge (ml), filters cheap5 + stress_vix20.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -3006,7 +3111,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_ML_CHEAP5-RECREATE.md, Test docs/S_Q07W_S78_ML_CHEAP5-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -3016,7 +3121,9 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_s78_ml_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_ml_cheap5] Name-encoded cell (from the canonical name, the config label and the Q07 cell grammar): family w_swing (swing), hold 78 weeks, cap band midlarge, filter cheap5.
+- Parameters:
+  - Sizing (lz_engine config, verbatim): budget_usd 1000, max_slots 1, position_usd 1000, position_usd_by_class {}, one_share_max_usd null, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, global_slot_usd 1000, min_dv20_usd 100000.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -3035,7 +3142,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_ML_CHEAP5_MOM6-RECREATE.md, Test docs/S_Q07W_S78_ML_CHEAP5_MOM6-RECREATE.md (Full algorithm section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -3045,7 +3152,11 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_s78_ml_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_ml_cheap5_mom6] 4. A recreation can only be built as a new implementation from the config record in the Full algorithm section, and it must be labelled as such.
+  - [s_q07w_s78_ml_cheap5_mom6] Behaviour checklist derived only from the config record: (a) with no qualifying fire, no entry; (b) an entry, if built as a labelled reconstruction, uses the fear_day capped-limit config and the $1,000 single-slot sizing exactly; (c) a held position exits on the 15% disaster stop or at 78 weeks from fill.
+- Parameters:
+  - Entry (accounting, verbatim config): policy fear_day, max_delay_minutes 65, limit_band_pct 5.0, limit_buffer_pct 1.0, window_sessions 5, no_chase_mult 1.02, stock_red true, qqq_red true, order capped_limit_day.
+  - Sizing (accounting, verbatim): budget_usd 1000, max_slots 1, position_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, global_slot_usd 1000, min_dv20_usd 100000.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -3064,7 +3175,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_ML_CHEAP5_VIX20-RECREATE.md (Configuration section), Test docs/S_Q07W_S78_ML_CHEAP5_VIX20-RECREATE.md, Test docs/S_Q07W_S78_ML_CHEAP5_VIX20-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -3074,7 +3185,11 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Sizing:
   - [s_q07w_s78_ml_cheap5_vix20] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_ml_cheap5_vix20] Config id `s_q07w_s78_ml_cheap5_vix20`; kind 1w (weekly). Family w_swing (swing). Cap band midlarge. Horizon 78 weeks. Filters: cheap5 + stress_vix20.
+- Parameters:
+  - Config id `s_q07w_s78_ml_cheap5_vix20`; kind 1w (weekly). Family w_swing (swing). Cap band midlarge. Horizon 78 weeks. Filters: cheap5 + stress_vix20.
+  - Sizing (rl64 config entry): budget_usd 1000, max_slots 1, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000. Account TEST (paper), broker TEST_MWJW. enabled true, state live.
+  - Status text: "ready (md2 RL64 2026-10-24, Trader t181u)".
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5061,7 +5176,7 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
 - Created by / source: Saty Mahajan's system (ATR Levels, Pivot Ribbon Pro, Phase Oscillator, Volume Stack), from his posts
 - Description (from source records): Saty Magnum (SPY shares)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/saty_magnum.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5072,6 +5187,11 @@ Merge evidence (tiers A, C): [A] lz_1wsw_stress ~ lz_q07_ins2; [A] lz_1wsw_stres
   - [saty_magnum] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [saty_magnum] data: WARMUP_BARS={"5Min": 300, "1Min": 390}
+- Parameters:
+  - F_TRIGGER = 0.236
+  - F_TARGET = 0.618
+  - F_RUNNER = 0.786
+  - F_SQUEEZE = 2.000
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5126,7 +5246,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07_INS2-RECREATE.md (Configuration section), Test docs/S_Q07_INS2-RECREATE.md, Test docs/S_Q07_INS2-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5136,7 +5256,14 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07_ins2] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07_ins2] Host code (already in Test): `desk3/lazarus_q07.py` (shared Q07 fire-consumer engine for the s_q07w_* cell lanes) and `desk3/q07_engine.py` (the consolidated Q07 engine: filter readings, QQQ-down gate, 15% stop, horizon exit).
+  - [s_q07_ins2] Source producer and file are named in the config row's `source` block (see Configuration).
+  - [s_q07_ins2] Bars / positions / fires in the shape the host code named in Files consumes; a missing fire or missing filter evidence fails closed in the host family rule.
+- Parameters:
+  - Full lz_engine config row for `s_q07_ins2` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07_ins2",
+  - "label": "Q07 insider2 confluence cells (index)",
+  - "status_text": "INDEX (1.0.3): the cells trade as s_q07w_*ins2* lanes",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5155,7 +5282,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07_WIKI-RECREATE.md (Configuration section), Test docs/S_Q07_WIKI-RECREATE.md, Test docs/S_Q07_WIKI-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5165,7 +5292,14 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07_wiki] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07_wiki] Host code (already in Test): `desk3/lazarus_q07.py` (shared Q07 fire-consumer engine for the s_q07w_* cell lanes) and `desk3/q07_engine.py` (the consolidated Q07 engine: filter readings, QQQ-down gate, 15% stop, horizon exit).
+  - [s_q07_wiki] Source producer and file are named in the config row's `source` block (see Configuration).
+  - [s_q07_wiki] Bars / positions / fires in the shape the host code named in Files consumes; a missing fire or missing filter evidence fails closed in the host family rule.
+- Parameters:
+  - Full lz_engine config row for `s_q07_wiki` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07_wiki",
+  - "label": "Q07 Wikipedia confluence cells (index)",
+  - "status_text": "INDEX (1.0.2): the cells trade as s_q07w_* lanes",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5184,7 +5318,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_MI_CHEAP5_DEEP70_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_MI_CHEAP5_DEEP70_TIERA-RECREATE.md, Test docs/S_Q07W_C52_MI_CHEAP5_DEEP70_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5194,7 +5328,13 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c52_mi_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_mi_cheap5_deep70_tierA] 4. Filters for this cell: cheap5+deep70+tierA. Tag readings: cheap5 = px_fire < 5; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; tierA = tier_noliq A / dv20 >= $100k (per the config research lines).
+  - [s_q07w_c52_mi_cheap5_deep70_tierA] Source producer and file are named in the config row's `source` block (see Configuration).
+- Parameters:
+  - Full lz_engine config row for `s_q07w_c52_mi_cheap5_deep70_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_c52_mi_cheap5_deep70_tierA",
+  - "label": "Q07 w_cyan H52 micro cheap5+deep70+tierA (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5213,7 +5353,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_MI_CHEAP5_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_MI_CHEAP5_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_C52_MI_CHEAP5_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5223,7 +5363,13 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c52_mi_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_mi_cheap5_mom6_tierA] 4. Filters for this cell: cheap5+mom6+tierA. Tag readings: cheap5 = px_fire < 5; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; tierA = tier_noliq A / dv20 >= $100k (per the config research lines).
+  - [s_q07w_c52_mi_cheap5_mom6_tierA] Source producer and file are named in the config row's `source` block (see Configuration).
+- Parameters:
+  - Full lz_engine config row for `s_q07w_c52_mi_cheap5_mom6_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_c52_mi_cheap5_mom6_tierA",
+  - "label": "Q07 w_cyan H52 micro cheap5+mom6+tierA (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5242,7 +5388,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_MI_CHEAP5_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_MI_CHEAP5_TIERA-RECREATE.md, Test docs/S_Q07W_C52_MI_CHEAP5_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5252,7 +5398,13 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c52_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_mi_cheap5_tierA] 4. Filters for this cell: cheap5+tierA. Tag readings: cheap5 = px_fire < 5; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; tierA = tier_noliq A / dv20 >= $100k (per the config research lines).
+  - [s_q07w_c52_mi_cheap5_tierA] Source producer and file are named in the config row's `source` block (see Configuration).
+- Parameters:
+  - Full lz_engine config row for `s_q07w_c52_mi_cheap5_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_c52_mi_cheap5_tierA",
+  - "label": "Q07 w_cyan H52 micro cheap5+tierA (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5271,7 +5423,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_MI_DEEP70_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_MI_DEEP70_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_C52_MI_DEEP70_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5281,7 +5433,13 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c52_mi_deep70_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_mi_deep70_mom6_tierA] 4. Filters for this cell: deep70+mom6+tierA. Tag readings: cheap5 = px_fire < 5; deep70 = c_depth60 >= 70; mom6 = ret126 >= pre-2020 q67; tierA = tier_noliq A / dv20 >= $100k (per the config research lines).
+  - [s_q07w_c52_mi_deep70_mom6_tierA] Source producer and file are named in the config row's `source` block (see Configuration).
+- Parameters:
+  - Full lz_engine config row for `s_q07w_c52_mi_deep70_mom6_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_c52_mi_deep70_mom6_tierA",
+  - "label": "Q07 w_cyan H52 micro deep70+mom6+tierA (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5300,7 +5458,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_MI_DEEP70_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_MI_DEEP70_TIERA-RECREATE.md, Test docs/S_Q07W_C52_MI_DEEP70_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5310,7 +5468,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c52_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_mi_deep70_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c52_mi_deep70_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band micro. Horizon 52 weeks. Tags: deep70 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5329,7 +5491,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_MI_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_MI_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_C52_MI_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5339,7 +5501,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c52_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_mi_mom6_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c52_mi_mom6_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band micro. Horizon 52 weeks. Tags: mom6 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5358,7 +5524,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_SM_CHEAP5_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_SM_CHEAP5_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_C52_SM_CHEAP5_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5368,7 +5534,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c52_sm_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_sm_cheap5_mom6_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c52_sm_cheap5_mom6_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band small. Horizon 52 weeks. Tags: cheap5 + mom6 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5387,7 +5557,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C52_SM_CHEAP5_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C52_SM_CHEAP5_TIERA-RECREATE.md, Test docs/S_Q07W_C52_SM_CHEAP5_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5397,7 +5567,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c52_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c52_sm_cheap5_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c52_sm_cheap5_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band small. Horizon 52 weeks. Tags: cheap5 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5416,7 +5590,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_MI_CHEAP5_DEEP70_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_MI_CHEAP5_DEEP70_TIERA-RECREATE.md, Test docs/S_Q07W_C78_MI_CHEAP5_DEEP70_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5426,7 +5600,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_mi_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_mi_cheap5_deep70_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c78_mi_cheap5_deep70_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band micro. Horizon 78 weeks. Tags: cheap5 + deep70 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5445,7 +5623,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_MI_CHEAP5_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_MI_CHEAP5_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_C78_MI_CHEAP5_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5455,7 +5633,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_mi_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_mi_cheap5_mom6_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c78_mi_cheap5_mom6_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band micro. Horizon 78 weeks. Tags: cheap5 + mom6 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5474,7 +5656,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_MI_CHEAP5_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_MI_CHEAP5_TIERA-RECREATE.md, Test docs/S_Q07W_C78_MI_CHEAP5_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5484,7 +5666,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_mi_cheap5_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c78_mi_cheap5_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band micro. Horizon 78 weeks. Tags: cheap5 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5503,7 +5689,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_MI_DEEP70_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_MI_DEEP70_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_C78_MI_DEEP70_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5513,7 +5699,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_mi_deep70_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_mi_deep70_mom6_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c78_mi_deep70_mom6_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band micro. Horizon 78 weeks. Tags: deep70 + mom6 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5532,7 +5722,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_MI_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_MI_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_C78_MI_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5542,7 +5732,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_mi_mom6_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c78_mi_mom6_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band micro. Horizon 78 weeks. Tags: mom6 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5561,7 +5755,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_MI_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_MI_TIERA-RECREATE.md, Test docs/S_Q07W_C78_MI_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5571,7 +5765,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_mi_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c78_mi_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band micro. Horizon 78 weeks. Tags: tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5590,7 +5788,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_SM_CHEAP5_DEEP70_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_SM_CHEAP5_DEEP70_TIERA-RECREATE.md, Test docs/S_Q07W_C78_SM_CHEAP5_DEEP70_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5600,7 +5798,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_sm_cheap5_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_sm_cheap5_deep70_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Canonical id `s_q07w_c78_sm_cheap5_deep70_tierA` (config id; the md2 host's sleeve id is "lz_" + this id). Kind 1w (weekly). Family w_cyan (Cyan). Cap band small. Horizon 78 weeks. Tags: cheap5 + deep70 + tierA.
+  - Entry/exit/sizing: exactly the values in the Full algorithm section (steps 2, 5 and 7), taken verbatim from this cell's config entry in `packages/grokbot/rl64/lz_engine/config/sleeves.json`.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5619,7 +5821,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_SM_CHEAP5_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_SM_CHEAP5_MOM6_TIERA-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5629,7 +5831,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_sm_cheap5_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_sm_cheap5_mom6_tierA] 7. Census algorithm record for the `lz_s_q07w_c78_sm_cheap5_mom6_tierA` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_c78_sm_cheap5_mom6_tierA] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_c78_sm_cheap5_mom6_tierA` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_c78_sm_cheap5_mom6_tierA` alias). Kind 1w (weekly). Family w_cyan (Cyan). Cap band small. Horizon 78 weeks. Filters: cheap5, mom6, tierA.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5648,7 +5854,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_C78_SM_CHEAP5_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_C78_SM_CHEAP5_TIERA-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5658,7 +5864,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_c78_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_c78_sm_cheap5_tierA] 7. Census algorithm record for the `lz_s_q07w_c78_sm_cheap5_tierA` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_c78_sm_cheap5_tierA] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_c78_sm_cheap5_tierA` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_c78_sm_cheap5_tierA` alias). Kind 1w (weekly). Family w_cyan (Cyan). Cap band small. Horizon 78 weeks. Filters: cheap5, tierA.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5677,7 +5887,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_MI_CHEAP5_DEEP70-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_MI_CHEAP5_DEEP70-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5687,7 +5897,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_mi_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_mi_cheap5_deep70] 7. Census algorithm record for the `lz_s_q07w_g52_mi_cheap5_deep70` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_mi_cheap5_deep70] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_g52_mi_cheap5_deep70` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_g52_mi_cheap5_deep70` alias). Kind 1w (weekly). Family w_green (Green). Cap band micro. Horizon 52 weeks. Filters: cheap5, deep70.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5706,7 +5920,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_MI_CHEAP5_DEEP70_MOM6-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_MI_CHEAP5_DEEP70_MOM6-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5716,7 +5930,10 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_mi_cheap5_deep70_mom6] 7. Census algorithm record for the `lz_s_q07w_g52_mi_cheap5_deep70_mom6` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_mi_cheap5_deep70_mom6] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5735,7 +5952,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_MI_CHEAP5_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_MI_CHEAP5_TIERA-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5745,7 +5962,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_mi_cheap5_tierA] 7. Census algorithm record for the `lz_s_q07w_g52_mi_cheap5_tierA` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_mi_cheap5_tierA] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_g52_mi_cheap5_tierA` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_g52_mi_cheap5_tierA` alias). Kind 1w (weekly). Family w_green (Green). Cap band micro. Horizon 52 weeks. Filters: cheap5, tierA.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5764,7 +5985,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_MI_DEEP70_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_MI_DEEP70_TIERA-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5774,7 +5995,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_mi_deep70_tierA] 7. Census algorithm record for the `lz_s_q07w_g52_mi_deep70_tierA` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_mi_deep70_tierA] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_g52_mi_deep70_tierA` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_g52_mi_deep70_tierA` alias). Kind 1w (weekly). Family w_green (Green). Cap band micro. Horizon 52 weeks. Filters: deep70, tierA.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5793,7 +6018,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_MI_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_MI_MOM6_TIERA-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5803,7 +6028,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_mi_mom6_tierA] 7. Census algorithm record for the `lz_s_q07w_g52_mi_mom6_tierA` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_mi_mom6_tierA] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_g52_mi_mom6_tierA` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_g52_mi_mom6_tierA` alias). Kind 1w (weekly). Family w_green (Green). Cap band micro. Horizon 52 weeks. Filters: mom6, tierA.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5822,7 +6051,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_MI_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_MI_TIERA-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5832,7 +6061,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_mi_tierA] 7. Census algorithm record for the `lz_s_q07w_g52_mi_tierA` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_mi_tierA] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_g52_mi_tierA` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_g52_mi_tierA` alias). Kind 1w (weekly). Family w_green (Green). Cap band micro. Horizon 52 weeks. Filters: tierA.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5851,7 +6084,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_SM_CHEAP5_DEEP70_MOM6-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_SM_CHEAP5_DEEP70_MOM6-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5861,7 +6094,10 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_sm_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_sm_cheap5_deep70_mom6] 7. Census algorithm record for the `lz_s_q07w_g52_sm_cheap5_deep70_mom6` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_sm_cheap5_deep70_mom6] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5880,7 +6116,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_SM_CHEAP5_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_SM_CHEAP5_TIERA-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5890,7 +6126,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_sm_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_sm_cheap5_tierA] 7. Census algorithm record for the `lz_s_q07w_g52_sm_cheap5_tierA` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_sm_cheap5_tierA] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_g52_sm_cheap5_tierA` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_g52_sm_cheap5_tierA` alias). Kind 1w (weekly). Family w_green (Green). Cap band small. Horizon 52 weeks. Filters: cheap5, tierA.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5909,7 +6149,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G52_SM_DEEP70_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G52_SM_DEEP70_TIERA-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5919,7 +6159,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g52_sm_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g52_sm_deep70_tierA] 7. Census algorithm record for the `lz_s_q07w_g52_sm_deep70_tierA` alias entry (verbatim from the accounting; entry/exit/filter text, parameters empty in the record): {
+  - [s_q07w_g52_sm_deep70_tierA] Vendored Lazarus signal/gate/calendar functions the host relies on: `sleeves/lazarus/vendor/lazarus/signals.py`, `sleeves/lazarus/vendor/lazarus/gate.py`, `sleeves/lazarus/vendor/lazarus/cal.py`, `sleeves/lazarus/vendor/lazarus/data.py`
+- Parameters:
+  - Canonical id `s_q07w_g52_sm_deep70_tierA` = the rl64 config id itself (the md2 host's sleeve id for a config row is "lz_" + the config id, which is the accounting's `lz_s_q07w_g52_sm_deep70_tierA` alias). Kind 1w (weekly). Family w_green (Green). Cap band small. Horizon 52 weeks. Filters: deep70, tierA.
+  - Cadence/state: weekly signal cadence (kind 1w); state is the single open slot and its fill (hold is counted from the fill).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5938,7 +6182,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_MI_CHEAP5_DEEP70_MOM6-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_MI_CHEAP5_DEEP70_MOM6-RECREATE.md, Test docs/S_Q07W_G78_MI_CHEAP5_DEEP70_MOM6-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5948,7 +6192,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g78_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_mi_cheap5_deep70_mom6] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_g78_mi_cheap5_deep70_mom6` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_g78_mi_cheap5_deep70_mom6",
+  - "label": "Q07 w_green H78 micro cheap5+deep70+mom6 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5967,7 +6216,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_MI_CHEAP5_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_MI_CHEAP5_TIERA-RECREATE.md, Test docs/S_Q07W_G78_MI_CHEAP5_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -5977,7 +6226,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g78_mi_cheap5_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_mi_cheap5_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_g78_mi_cheap5_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_g78_mi_cheap5_tierA",
+  - "label": "Q07 w_green H78 micro cheap5+tierA (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -5996,7 +6250,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_MI_DEEP70_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_MI_DEEP70_TIERA-RECREATE.md, Test docs/S_Q07W_G78_MI_DEEP70_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6006,7 +6260,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g78_mi_deep70_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_mi_deep70_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_g78_mi_deep70_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_g78_mi_deep70_tierA",
+  - "label": "Q07 w_green H78 micro deep70+tierA (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6025,7 +6284,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_MI_MOM6_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_MI_MOM6_TIERA-RECREATE.md, Test docs/S_Q07W_G78_MI_MOM6_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6035,7 +6294,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g78_mi_mom6_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_mi_mom6_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_g78_mi_mom6_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_g78_mi_mom6_tierA",
+  - "label": "Q07 w_green H78 micro mom6+tierA (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6054,7 +6318,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_MI_TIERA-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_MI_TIERA-RECREATE.md, Test docs/S_Q07W_G78_MI_TIERA-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6064,7 +6328,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g78_mi_tierA] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_mi_tierA] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_g78_mi_tierA` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_g78_mi_tierA",
+  - "label": "Q07 w_green H78 micro tierA (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6083,7 +6352,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_SM_CHEAP5_DEEP70-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_SM_CHEAP5_DEEP70-RECREATE.md, Test docs/S_Q07W_G78_SM_CHEAP5_DEEP70-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6093,7 +6362,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g78_sm_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_sm_cheap5_deep70] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_g78_sm_cheap5_deep70` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_g78_sm_cheap5_deep70",
+  - "label": "Q07 w_green H78 small cheap5+deep70 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6112,7 +6386,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_G78_SM_CHEAP5_DEEP70_MOM6-RECREATE.md (Configuration section), Test docs/S_Q07W_G78_SM_CHEAP5_DEEP70_MOM6-RECREATE.md, Test docs/S_Q07W_G78_SM_CHEAP5_DEEP70_MOM6-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6122,7 +6396,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_g78_sm_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_g78_sm_cheap5_deep70_mom6] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_g78_sm_cheap5_deep70_mom6` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_g78_sm_cheap5_deep70_mom6",
+  - "label": "Q07 w_green H78 small cheap5+deep70+mom6 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6141,7 +6420,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_MI_CHEAP5-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_MI_CHEAP5-RECREATE.md, Test docs/S_Q07W_S52_MI_CHEAP5-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6151,7 +6430,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_s52_mi_cheap5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_mi_cheap5] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_s52_mi_cheap5` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_s52_mi_cheap5",
+  - "label": "Q07 w_swing H52 micro cheap5 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6170,7 +6454,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70-RECREATE.md, Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6180,7 +6464,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_s52_mi_cheap5_deep70] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_mi_cheap5_deep70] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_s52_mi_cheap5_deep70` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_s52_mi_cheap5_deep70",
+  - "label": "Q07 w_swing H52 micro cheap5+deep70 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6199,7 +6488,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70_MOM6-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70_MOM6-RECREATE.md, Test docs/S_Q07W_S52_MI_CHEAP5_DEEP70_MOM6-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6209,7 +6498,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_s52_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_mi_cheap5_deep70_mom6] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_s52_mi_cheap5_deep70_mom6` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_s52_mi_cheap5_deep70_mom6",
+  - "label": "Q07 w_swing H52 micro cheap5+deep70+mom6 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6228,7 +6522,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S52_MI_CHEAP5_MOM6-RECREATE.md (Configuration section), Test docs/S_Q07W_S52_MI_CHEAP5_MOM6-RECREATE.md, Test docs/S_Q07W_S52_MI_CHEAP5_MOM6-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6238,7 +6532,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_s52_mi_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s52_mi_cheap5_mom6] Alt-data tags on the fires (ctx_feats tags): tier, dv20, c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_s52_mi_cheap5_mom6` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_s52_mi_cheap5_mom6",
+  - "label": "Q07 w_swing H52 micro cheap5+mom6 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6257,7 +6556,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_MI_CHEAP5_DEEP70_MOM6-RECREATE.md (Configuration section), Test docs/S_Q07W_S78_MI_CHEAP5_DEEP70_MOM6-RECREATE.md, Test docs/S_Q07W_S78_MI_CHEAP5_DEEP70_MOM6-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6267,7 +6566,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_s78_mi_cheap5_deep70_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_mi_cheap5_deep70_mom6] Alt-data tags on the fires (ctx_feats tags): c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_s78_mi_cheap5_deep70_mom6` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_s78_mi_cheap5_deep70_mom6",
+  - "label": "Q07 w_swing H78 micro cheap5+deep70+mom6 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6286,7 +6590,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_Q07W_S78_MI_CHEAP5_MOM6-RECREATE.md (Configuration section), Test docs/S_Q07W_S78_MI_CHEAP5_MOM6-RECREATE.md, Test docs/S_Q07W_S78_MI_CHEAP5_MOM6-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6296,7 +6600,12 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_q07w_s78_mi_cheap5_mom6] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_q07w_s78_mi_cheap5_mom6] Alt-data tags on the fires (ctx_feats tags): c_depth60, ret126, px_fire, as required by this cell's tags.
+- Parameters:
+  - Full lz_engine config row for `s_q07w_s78_mi_cheap5_mom6` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_q07w_s78_mi_cheap5_mom6",
+  - "label": "Q07 w_swing H78 micro cheap5+mom6 (test)",
+  - "status_text": "ready (md2 RL64 2026-10-24, Trader t181u)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6315,7 +6624,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_WAIT_INTRAWEEK-RECREATE.md, Test docs/S_WAIT_INTRAWEEK-RECREATE.md (Configuration section), Test docs/S_WAIT_INTRAWEEK-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6325,7 +6634,13 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Sizing:
   - [s_wait_intraweek] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_wait_intraweek] "DESK_INTEGRATION/DESK_PLAN.md section 6 WAIT: +3.6, needs execution test"
+  - [s_wait_intraweek] Read-back check: this doc was written through the PII gate and read back from Test; the sha256 recorded in the batch results file matches the read-back bytes.
+- Parameters:
+  - 4. WAIT_SPEC for this lane in that module: kind="1d", unit="1w", hold_from="plan", H=52*5 sessions; rule text: exit the close of the fire Friday + 52 weeks (W52 from the fire week); no stop; entry at the next session's open.
+  - Full lz_engine config row for `s_wait_intraweek` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim; the source placeholder row, before live_row applies the WAIT_SPEC kind/hold and the paper-test sizing in the Full algorithm section):
+  - "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+  - "max_delay_minutes": 65,
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6378,7 +6693,7 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Created by / source: IU Big Body Bar (TradingView Pine), adapted by Ausar
 - Description (from source records): IU big-body bar crypto (5m)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/ASTER_PUB_ENJ_IU_BODY-RECREATE.md (Configuration section), Test docs/FWD_ALPACA_ENJ_IU_BODY-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6393,6 +6708,11 @@ Merge evidence (tiers A): [A] muse_saty_magnum ~ saty_magnum (full evidence in M
 - Filters / data:
   - [ausar_pb45] data: Native spot completed OHLCV and received bid/ask.
   - [fwd_alpaca_enj_iu_body] data: WARMUP_BARS={}
+- Parameters:
+  - Sleeve id: `aster_pub_enj_iu_body`; module: `adapters3.aster_pub_enj_iu_body` (roster row in desk `config/sleeves.json`).
+  - Timeframe: 5m in the existing card (see the bar-lookup note in the algorithm for what the v3 code accepts). Session: `24h`. Cadence: 3600 seconds (`cadence_s=3600`).
+  - Sizing / slice: $10,000 capital and $10,000 cash; `bp_buffer_frac=0.02`; entry quantity is floor(cash / close) as above.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6415,7 +6735,7 @@ Merge evidence (tiers A): [A] ausar_public_iu_body_spot100 ~ femto_fwd_alpaca_en
 - Created by / source: not recorded
 - Description (from source records): QQQ core with a momentum tilt · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_CORE25_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6426,7 +6746,7 @@ Merge evidence (tiers A): [A] ausar_public_iu_body_spot100 ~ femto_fwd_alpaca_en
   - [ausar_pb84] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_CORE25_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_CORE25_M150] 5. Targets: whole shares, int(gross x equity x weight / price), where equity is account_value or net_value from extra when present, otherwise the slice capital (default $10,000). A target price at or below zero emits nothing. Gross is applied as coded and never silently capped in the sleeve; for gross above 1 the dispatcher buying-power check governs execution (for the 150% form the accounting adds: "The excess uses simulated borrowing.").
 - Filters / data:
   - [ausar_pb84] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_CORE25_M150] data: posted r19 data adapters
@@ -6454,7 +6774,7 @@ Merge evidence (tiers A, C): [A] ausar_pb84 ~ R19_ETF_CORE25_M150; [C] R19_ETF_C
 - Created by / source: not recorded
 - Description (from source records): QQQ core with a momentum tilt · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_CORE25_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6465,7 +6785,7 @@ Merge evidence (tiers A, C): [A] ausar_pb84 ~ R19_ETF_CORE25_M150; [C] R19_ETF_C
   - [ausar_pb83] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_CORE25_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_CORE25_C098] 5. Targets: whole shares, int(gross x equity x weight / price), where equity is account_value or net_value from extra when present, otherwise the slice capital (default $10,000). A target price at or below zero emits nothing. Gross is applied as coded and never silently capped in the sleeve; for gross above 1 the dispatcher buying-power check governs execution (for the 150% form the accounting adds: "The excess uses simulated borrowing.").
 - Filters / data:
   - [ausar_pb83] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_CORE25_C098] data: posted r19 data adapters
@@ -6493,7 +6813,7 @@ Merge evidence (tiers A, C): [A] ausar_pb83 ~ R19_ETF_CORE25_C098; [C] ausar_r19
 - Created by / source: not recorded
 - Description (from source records): QQQ core with a two-source momentum tilt · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_INTERVAL_CORE25_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6504,7 +6824,7 @@ Merge evidence (tiers A, C): [A] ausar_pb83 ~ R19_ETF_CORE25_C098; [C] ausar_r19
   - [ausar_pb92] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_INTERVAL_CORE25_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_INTERVAL_CORE25_M150] 5. Targets: desired shares = floor(weight x gross x NAV / price), whole shares, never capped inside the sleeve; NAV is the slice capital (capital_usd when the slice row carries it, else the cash figure). Price is the last close, falling back to the position average price for a held symbol with no bars. If any needed price is at or below zero, the sleeve emits nothing.
 - Filters / data:
   - [ausar_pb92] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_INTERVAL_CORE25_M150] data: posted r19 data adapters
@@ -6532,7 +6852,7 @@ Merge evidence (tiers A, C): [A] ausar_pb92 ~ R19_ETF_INTERVAL_CORE25_M150; [C] 
 - Created by / source: not recorded
 - Description (from source records): QQQ core with a two-source momentum tilt · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_INTERVAL_CORE25_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6543,7 +6863,7 @@ Merge evidence (tiers A, C): [A] ausar_pb92 ~ R19_ETF_INTERVAL_CORE25_M150; [C] 
   - [ausar_pb91] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_INTERVAL_CORE25_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_INTERVAL_CORE25_C098] 5. Targets: desired shares = floor(weight x gross x NAV / price), whole shares, never capped inside the sleeve; NAV is the slice capital (capital_usd when the slice row carries it, else the cash figure). Price is the last close, falling back to the position average price for a held symbol with no bars. If any needed price is at or below zero, the sleeve emits nothing.
 - Filters / data:
   - [ausar_pb91] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_INTERVAL_CORE25_C098] data: posted r19 data adapters
@@ -6571,7 +6891,7 @@ Merge evidence (tiers A, C): [A] ausar_pb91 ~ R19_ETF_INTERVAL_CORE25_C098; [C] 
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): 12-month momentum top decile (monthly)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/ts_momentum_decile.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6582,6 +6902,11 @@ Merge evidence (tiers A, C): [A] ausar_pb91 ~ R19_ETF_INTERVAL_CORE25_C098; [C] 
   - [ts_momentum_decile] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [ts_momentum_decile] data: WARMUP_BARS={"1Day": 253}
+- Parameters:
+  - MEDIAN_DV_DAYS = 63
+  - MEDIAN_DV_MIN = 1_000_000
+  - EQUITY_UTIL = 0.95
+  - NEW_ENTRIES_PAUSED = False  # was Decision #86's enforcer; park lifted by the owner 2026-10-14 21:54
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6601,7 +6926,7 @@ Merge evidence (tiers A): [A] femto_ts_momentum_decile ~ ts_momentum_decile (ful
 - Created by / source: The old Alpaca swing desk's Leader-1d research, via Femto-lean; its killed study, forward-tested
 - Description (from source records): Leader-1d event
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/GATE_1H-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6620,6 +6945,11 @@ Merge evidence (tiers A): [A] femto_ts_momentum_decile ~ ts_momentum_decile (ful
   - [gate_1h] data: WARMUP_BARS={"1Day": 252, "1Hour": 22}
   - [leader_d] data: WARMUP_BARS={"1Day": 252}
   - [leader_sc] data: WARMUP_BARS={"1Day": 252, "1Week": 52}
+- Parameters:
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
+  - Cadence: 300 seconds. Session: rth.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; timeout_s: null; params: {} (empty in the roster row; all parameters live in the strategy code stated above).
+  - Inputs declared in the roster row: bars:*:1Day, bars:*:1Hour, positions, journal:self.
 - Variant axes (catalog): [{"Variant": "Daily", "Rows": "`femto_leader_d`; Midna v3 `leader_d`", "Universe": "genome", "Filter": "SPY 60-session return \u2264 0", "Hold": "20 sessions", "Side": "long"}, {"Variant": "Small caps", "Rows": "`femto_leader_sc`; Midna v3 `leader_sc`", "Universe": "bottom tenth by dollar volume", "Filter": "none", "Hold": "20 sessions", "Side": "long"}, {"Variant": "Hourly", "Rows": "`femto_gate_1h`; Midna v3 `gate_1h`", "Universe": "41-name basket", "Filter": "none", "Hold": "20 hourly bars", "Side": "long"}, {"Variant": "Killed study", "Rows": "`killed_leader1d_long`", "Universe": "genome", "Filter": "none", "Hold": "open t+1 to close t+20", "Side": "long"}, {"Variant": "Killed study", "Rows": "`killed_leader1d_short`", "Universe": "41-name basket", "Filter": "none", "Hold": "open t+1 to close t+20", "Side": "short"}, {"Variant": "Daily", "Rows": "`femto_leader_d`; Midna v3 `leader_d`", "Universe": "genome", "Filter": "SPY 60-session return \u2264 0", "Hold": "20 sessions", "Side": "long"}, {"Variant": "Small caps", "Rows": "`femto_leader_sc`; Midna v3 `leader_sc`", "Universe": "bottom tenth by dollar volume", "Filter": "none", "Hold": "20 sessions", "Side": "long"}, {"Variant":
 
 ### Variants (4)
@@ -6653,7 +6983,7 @@ Merge evidence (tiers A): [A] femto_gate_1h ~ femto_leader_d; [A] femto_gate_1h 
 - Created by / source: The old Alpaca swing desk's momentum sleeve, via Femto-lean; Midna's TypeScript desk
 - Description (from source records): Six-month momentum leaders
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/MOMENTUM-RECREATE.md (Configuration section), Test sleeves/momentum.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6664,6 +6994,11 @@ Merge evidence (tiers A): [A] femto_gate_1h ~ femto_leader_d; [A] femto_gate_1h 
   - [momentum] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [momentum] data: WARMUP_BARS={"1Day": 127}
+- Parameters:
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
+  - Cadence: 300 seconds. Session: rth.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; timeout_s: null; params: {} (empty in the roster row; all parameters live in the strategy code stated above).
+  - CADENCE_S = 300
 - Variant axes (catalog): [{"Variant": "Old swing desk (Femto-lean)", "Rows": "`femto_momentum`; Midna v3 `momentum`", "Sizing": "30% of the book, \u2264 10 names", "Buy gates": "calendar, VIX, SPY", "Breaker": "40%"}, {"Variant": "Midna TypeScript", "Rows": "`midna_liquid_126_momentum`", "Sizing": "the whole book, equal dollars", "Buy gates": "dropped on the master desk", "Breaker": "dropped"}, {"Variant": "Old swing desk (Femto-lean)", "Rows": "`femto_momentum`; Midna v3 `momentum`", "Sizing": "30% of the book, \u2264 10 names", "Buy gates": "calendar, VIX, SPY", "Breaker": "40%"}, {"Variant": "Midna TypeScript", "Rows": "`midna_liquid_126_momentum`", "Sizing": "the whole book, equal dollars", "Buy gates": "dropped on the master desk", "Breaker": "dropped"}, {"Variant": "Old swing desk (Femto-lean)", "Rows": "`femto_momentum`; Midna v3 `momentum`", "Sizing": "30% of the book, \u2264 10 names", "Buy gates": "calendar, VIX, SPY", "Breaker": "40%"}, {"Variant": "Midna TypeScript", "Rows": "`midna_liquid_126_momentum`", "Sizing": "the whole book, equal dollars", "Buy gates": "dropped on the master desk", "Breaker": "dropped"}]
 
 ### Variants (1)
@@ -6921,7 +7256,7 @@ Merge evidence (tiers A): [A] griffith_xs_mom_12_1 ~ griffith_xs_mom_6_1 (full e
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): EMA4 rising VWAP
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_VWAP-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6932,7 +7267,11 @@ Merge evidence (tiers A): [A] griffith_xs_mom_12_1 ~ griffith_xs_mom_6_1 (full e
   - [s_mn_vwap] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_mn_vwap] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_vwap] 2. Cross definition (_cross, on the last two closed bars): needs at least WINDOW+1 = 21 bars. Up cross: previous close at or below previous VWAP and last close above last VWAP. Down cross: previous close at or above previous VWAP and last close below last VWAP. If either VWAP is None, both flags are False.
+  - [s_mn_vwap] Fixture where the entry symbol's last bar lags the universe latest bar by more than 4 days: no entry for that symbol (cross-stale refusal).
+- Parameters:
+  - Evaluation order in desk sleeves/s_mn_vwap.py signal(bars, slice_state, context), with CONFIG sleeve_id=s_mn_vwap, cadence_s=300, WINDOW=20, SLOT_BUDGET=1000.0:
+  - Adapter: adapters/s_mn_vwap.py (SLEEVE_ID, INPUTS=('bars', 'positions'), PRODUCERS with freshness_sla_s=900 for each input, DEFAULT_EQUITY=1000.0, evaluate = make_evaluate from adapters.laz8_common).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -6986,7 +7325,7 @@ Merge evidence (tiers A): [A] midna_ema4_vwap ~ s_mn_vwap (full evidence in MERG
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): MACD-CCI
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_MACD-RECREATE.md (Configuration section), Test docs/S_MN_MACD-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -6997,7 +7336,11 @@ Merge evidence (tiers A): [A] midna_ema4_vwap ~ s_mn_vwap (full evidence in MERG
   - [s_mn_macd] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_mn_macd] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_macd] 1. Exits first: for each held name with at least 35 bars, if histogram[-2] >= 0 and histogram[-1] < 0, emit a full-qty sell_to_close exit, price_hint = last close, reason naming the two histogram values.
+- Parameters:
+  - Universe: every symbol carried in view bars (Midna's swing basket upstream). Asset: US equities. Timeframe: 1d (daily closes).
+  - Sizing / slice: capital_usd 1000.0, cash_usd 1000.0 in the roster row; one $1,000 slot in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -7082,7 +7425,7 @@ Merge evidence (tiers A): [A] midna_macd_cci ~ s_mn_macd (full evidence in MERGE
 - Created by / source: Milkman Trades' PO10 extreme algo (NQ, August 2026 thread), translated to QQQ shares
 - Description (from source records): PO10 - QQQ 10-minute momentum
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/po10_qqq.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -7096,6 +7439,8 @@ Merge evidence (tiers A): [A] midna_macd_cci ~ s_mn_macd (full evidence in MERGE
 - Filters / data:
   - [ausar_pb10] data: QQQ 5-minute SIP bars from the configured extended-hours feed, completed 10-minute oscillator readings, QQQ and QID share quotes, and the New York session clock.
   - [po10_qqq] data: WARMUP_BARS={"5Min": 600}
+- Parameters:
+  - SLEEVE_ID = "po10_qqq"
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -7116,7 +7461,7 @@ Merge evidence (tiers A): [A] muse_po10_qqq ~ po10_qqq; [A] ausar_pb10 ~ po10_qq
 - Created by / source: Linda Raschke's PF3 momentum method, as designed into an algorithm by Grok (for ES 5-minute futures)
 - Description (from source records): Raschke PF3 momentum (SPY)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/raschke_pf3.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -7127,6 +7472,8 @@ Merge evidence (tiers A): [A] muse_po10_qqq ~ po10_qqq; [A] ausar_pb10 ~ po10_qq
   - [raschke_pf3] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [raschke_pf3] data: WARMUP_BARS={"5Min": 28}
+- Parameters:
+  - SLEEVE_ID = "raschke_pf3"
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -7242,7 +7589,7 @@ Merge evidence (tiers A): [A] muse_raschke_pf3 ~ raschke_pf3 (full evidence in M
 - Created by / source: Aurelia (Agentic-Trading-Desk) ENJ spot row; order logic designed for Midna's v3 desk
 - Description (from source records): Kraken ENJ order-book imbalance (spot) Adapter for free_kraken_enj_spot — interface glue ONLY (DESIGN §4).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/free_kraken_enj_spot.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -7253,6 +7600,11 @@ Merge evidence (tiers A): [A] muse_raschke_pf3 ~ raschke_pf3 (full evidence in M
   - [free_kraken_enj_spot] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [free_kraken_enj_spot] data: WARMUP_BARS={}
+- Parameters:
+  - EXIT_SPREAD_BPS = 200, HOLD_HOURS = 24. Design: from extra["book"]
+  - SPREAD_MAX_BPS = 50
+  - IMBALANCE_RATIO = 2.0
+  - EXIT_SPREAD_BPS = 200
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -7698,7 +8050,7 @@ Merge evidence (tiers A): [A] ausar_pb155 ~ R19_TIMING_OVERNIGHT_25BP (full evid
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_MN_CSMOM-RECREATE.md, Test docs/S_MN_CSMOM-RECREATE.md (Data inputs section), Test docs/S_MN_CSMOM-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -7708,7 +8060,10 @@ Merge evidence (tiers A): [A] ausar_pb155 ~ R19_TIMING_OVERNIGHT_25BP (full evid
 - Sizing:
   - [s_mn_csmom] lz_engine sizing: {"budget_usd": 9000, "max_slots": 9, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_csmom] 1. Recovery would require the sleeve module or catalog description for this exact canonical id to appear in one of the searched repos.
+- Parameters:
+  - Sizing config: {"budget_usd": 9000, "max_slots": 9, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}.
+  - lz_engine config exactly as in the Full algorithm (budget_usd 9000, max_slots 9, position_usd 1000, global_slot_usd 1000, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, min_dv20_usd 100000; exit max_bars 63 in 1d units).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -8577,7 +8932,7 @@ Merge evidence (tiers A, C): [A] r19_timing_cloud_aggressive ~ r19_timing_cloud_
 - Created by / source: Larry Connors' RSI(2), via trader.dev, StockCharts and Tomazetti's Pine script; the old swing desk via Femto-lean
 - Description (from source records): RSI(2) pullback
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/ASTER_PUB_RSI2_ADA-RECREATE.md (Configuration section), Test docs/ASTER_RSI2_1D-ALGORITHM.md (Spec (from SPECS in desk3/aster_batch1.py) section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -8597,6 +8952,11 @@ Merge evidence (tiers A, C): [A] r19_timing_cloud_aggressive ~ r19_timing_cloud_
   - [ausar_pb46] data: Completed hourly ADAUSDT spot OHLCV and received bid/ask.
   - [fwd_alpaca_ada_rsi2] data: WARMUP_BARS={"1Hour": 200}
   - [rsi_meanrev] data: WARMUP_BARS={"1Day": 200}
+- Parameters:
+  - Sleeve id: `aster_pub_rsi2_ada`; module: `aster_sleeves.aster_pub_rsi2_ada` (roster row in desk `config/sleeves.json`; the module itself also declares `CADENCE_S = 3600` and `INPUTS = ('bars', 'positions')`).
+  - Timeframe: 1h (hourly, per the card variant and the `1Hour` bar key). Session: `24h`. Cadence: 3600 seconds.
+  - Sizing / slice: $10,000 capital and $10,000 cash; `bp_buffer_frac=0.02`; entry quantity is floor(cash / close) as above.
+  - kind="rsi2", cadence_s=300, session="rth".
 - Variant axes (catalog): [{"Variant": "Public ETF recipe", "Rows": "`ausar_public_rsi2`; Midna v3 `aster_rsi2_1d`", "Bars": "daily", "RSI(2) entry": "\u2264 5, close < SMA5", "Extra exits": "10 bars"}, {"Variant": "Old desk basket (Femto-lean)", "Rows": "`femto_rsi_meanrev`; Midna v3 `rsi_meanrev`", "Bars": "daily", "RSI(2) entry": "< 10", "Extra exits": "RSI > 70, +5%, -8%, 5 sessions"}, {"Variant": "Tomazetti ADA (Binance)", "Rows": "`ausar_public_tomazetti_rsi2_spot100`; Midna v3 `aster_pub_rsi2_ada`", "Bars": "hourly", "RSI(2) entry": "< 10, RSI(2) 4-bar mean < 30", "Extra exits": "none"}, {"Variant": "Tomazetti ADA (Alpaca forward)", "Rows": "`femto_fwd_alpaca_ada_rsi2`; Midna v3 `fwd_alpaca_ada_rsi2`", "Bars": "hourly", "RSI(2) entry": "as above", "Extra exits": "none"}, {"Variant": "Public ETF recipe", "Rows": "`ausar_public_rsi2`; Midna v3 `aster_rsi2_1d`", "Bars": "daily", "RSI(2) entry": "\u2264 5, close < SMA5", "Extra exits": "10 bars"}, {"Variant": "Old desk basket (Femto-lean)", "Rows": "`femto_rsi_meanrev`; Midna v3 `rsi_meanrev`", "Bars": "daily", "RSI(2) entry": "< 10", "Extra exits": "RSI > 70, +5%, -8%, 5 sessions"}, {"Variant": "Tomazetti ADA (Binance)", "Rows": "`ausar_public_tomazetti
 
 ### Variants (2)
@@ -8765,7 +9125,7 @@ Merge evidence (tiers A): [A] ausar_pb150 ~ R19_TIMING_CLOUD_BASE (full evidence
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): 20-day VWAP reversion Adapter for ema_vwap — interface glue ONLY (DESIGN §4).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/EMA_VWAP-RECREATE.md (Configuration section), Test sleeves/ema_vwap.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -8776,6 +9136,11 @@ Merge evidence (tiers A): [A] ausar_pb150 ~ R19_TIMING_CLOUD_BASE (full evidence
   - [ema_vwap] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [ema_vwap] data: WARMUP_BARS={"1Day": 30}
+- Parameters:
+  - Module adapters3.ema_vwap; cadence_s 300; session rth; slice capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; inputs [bars, positions]; parked false. Source: muse-desk-v3/config/sleeves.json row id=ema_vwap.
+  - PROFIT_TARGET = 0.05
+  - STOP_LOSS = 0.08
+  - TIME_STOP_DAYS = 5
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -8795,7 +9160,7 @@ Merge evidence (tiers A): [A] femto_ema_vwap ~ ema_vwap (full evidence in MERGES
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Capitulation reversal (hourly) Adapter for capitulation — v2 interface glue ONLY (DESIGN §4a).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/CAPITULATION-RECREATE.md (Configuration section), Test sleeves/capitulation.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -8806,6 +9171,11 @@ Merge evidence (tiers A): [A] femto_ema_vwap ~ ema_vwap (full evidence in MERGES
   - [capitulation] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [capitulation] data: WARMUP_BARS={"1Day": 200, "1Hour": 20}
+- Parameters:
+  - Universe: the 41-name old-desk basket (served as the bars keys; CONFIG universe is ()). Asset: US equities. Timeframe: 1h signal with 1d filters (EMA200, ATR, 5/20 turn).
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; risk_pct 0.0025 in CONFIG (0.25 percent of equity per trade on the 8 percent stop distance).
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - RSI_PERIOD = 14
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -8825,7 +9195,7 @@ Merge evidence (tiers A): [A] femto_capitulation ~ capitulation (full evidence i
 - Created by / source: Milkman Trades' Legend's EMA, via the old Alpaca swing desk and Femto-lean; also the Milkman v2 study
 - Description (from source records): Legend's EMA (trend-day fade)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/LEGENDS_EMA-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -8836,6 +9206,11 @@ Merge evidence (tiers A): [A] femto_capitulation ~ capitulation (full evidence i
   - [legends_ema] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [legends_ema] data: WARMUP_BARS={"15Min": 200, "1Day": 14}
+- Parameters:
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
+  - Cadence: 300 seconds. Session: rth.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; timeout_s: null; params: {} (empty in the roster row; all parameters live in the strategy code stated above).
+  - Inputs declared in the roster row: bars:QQQ:15Min, bars:QQQ:1Day, positions, journal:self.
 - Variant axes (catalog): [{"Book": "Femto-lean (master desk)", "Symbol": "QQQ", "Trend day": "\u2265 0.7686", "Stop": "0.5 \u00d7 ATR", "Size": "0.25% risk", "Rows": "`femto_legends_ema`"}, {"Book": "Midna v3", "Symbol": "QQQ", "Trend day": "\u2265 0.7686", "Stop": "0.5 \u00d7 ATR", "Size": "0.25% risk", "Rows": "`legends_ema`"}, {"Book": "Milkman study (master desk)", "Symbol": "SPY", "Trend day": "\u2265 the 2000-2012 80th percentile", "Stop": "none", "Size": "$10,000", "Rows": "`mk_legendsemaintradayproxy`"}, {"Book": "Femto-lean (master desk)", "Symbol": "QQQ", "Trend day": "\u2265 0.7686", "Stop": "0.5 \u00d7 ATR", "Size": "0.25% risk", "Rows": "`femto_legends_ema`"}, {"Book": "Midna v3", "Symbol": "QQQ", "Trend day": "\u2265 0.7686", "Stop": "0.5 \u00d7 ATR", "Size": "0.25% risk", "Rows": "`legends_ema`"}, {"Book": "Milkman study (master desk)", "Symbol": "SPY", "Trend day": "\u2265 the 2000-2012 80th percentile", "Stop": "none", "Size": "$10,000", "Rows": "`mk_legendsemaintradayproxy`"}, {"Book": "Femto-lean (master desk)", "Symbol": "QQQ", "Trend day": "\u2265 0.7686", "Stop": "0.5 \u00d7 ATR", "Size": "0.25% risk", "Rows": "`femto_legends_ema`"}, {"Book": "Midna v3", "Symbol": "QQQ", "Trend day": 
 
 ### Variants (1)
@@ -8857,7 +9232,7 @@ Merge evidence (tiers A): [A] femto_legends_ema ~ mk_legendsemaintradayproxy; [A
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Microcap snapback (weekly)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/snapback.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -8868,6 +9243,11 @@ Merge evidence (tiers A): [A] femto_legends_ema ~ mk_legendsemaintradayproxy; [A
   - [snapback] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [snapback] data: WARMUP_BARS={"1Day": 260, "1Week": 60}
+- Parameters:
+  - BAND_FRAC = 0.10
+  - COST_BPS_SIDE = 0.015
+  - MAX_POSITIONS = 10  # ENH: the desk's standard sleeve-local cap
+  - ENH_EXP_ID = "ENH-SNAPBACK-20261024"
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -8887,7 +9267,7 @@ Merge evidence (tiers A): [A] femto_snapback ~ snapback (full evidence in MERGES
 - Created by / source: Milkman Trades' Morning Dip Limit, via the old Alpaca swing desk and Femto-lean; also the Milkman v2 study
 - Description (from source records): Morning dip limit
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/morning_dip.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -8898,6 +9278,8 @@ Merge evidence (tiers A): [A] femto_snapback ~ snapback (full evidence in MERGES
   - [morning_dip] v3 slice: {"capital_usd": 20000.0, "cash_usd": 20000.0} parked=False
 - Filters / data:
   - [morning_dip] data: WARMUP_BARS={"3Min": 16}
+- Parameters:
+  - CADENCE_S = 180
 - Variant axes (catalog): [{"Book": "Femto-lean (master desk; Midna v3 wraps it)", "Symbol": "QQQ", "Sides": "long", "Size": "0.25% risk", "Rows": "`femto_morning_dip`, `morning_dip`"}, {"Book": "Milkman study (master desk)", "Symbol": "SPY", "Sides": "long and short", "Size": "$10,000", "Rows": "`mk_morningdiplimitproxy`"}, {"Book": "Femto-lean (master desk; Midna v3 wraps it)", "Symbol": "QQQ", "Sides": "long", "Size": "0.25% risk", "Rows": "`femto_morning_dip`, `morning_dip`"}, {"Book": "Milkman study (master desk)", "Symbol": "SPY", "Sides": "long and short", "Size": "$10,000", "Rows": "`mk_morningdiplimitproxy`"}, {"Book": "Femto-lean (master desk; Midna v3 wraps it)", "Symbol": "QQQ", "Sides": "long", "Size": "0.25% risk", "Rows": "`femto_morning_dip`, `morning_dip`"}, {"Book": "Milkman study (master desk)", "Symbol": "SPY", "Sides": "long and short", "Size": "$10,000", "Rows": "`mk_morningdiplimitproxy`"}]
 
 ### Variants (1)
@@ -8919,7 +9301,7 @@ Merge evidence (tiers A): [A] femto_morning_dip ~ mk_morningdiplimitproxy; [A] f
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Red-day washout reversal
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/red_day_reversal.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -8930,6 +9312,11 @@ Merge evidence (tiers A): [A] femto_morning_dip ~ mk_morningdiplimitproxy; [A] f
   - [red_day_reversal] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [red_day_reversal] data: WARMUP_BARS={"1Day": 202}
+- Parameters:
+  - RED_DAY_THRESHOLD = -0.03
+  - RISK_FRACTION = 0.0025
+  - STOP_PCT = 0.02
+  - SLEEVE_NOTIONAL_CAP = 0.25
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -9148,7 +9535,7 @@ Merge evidence (tiers A): [A] femto_red_day_reversal ~ red_day_reversal (full ev
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): Large-cap prior-month reversal
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_REVERSAL-RECREATE.md (Configuration section), Test docs/S_MN_REVERSAL-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -9159,7 +9546,11 @@ Merge evidence (tiers A): [A] femto_red_day_reversal ~ red_day_reversal (full ev
   - [s_mn_reversal] v3 slice: {"capital_usd": 3000.0, "cash_usd": 3000.0} parked=False
   - [s_mn_reversal] lz_engine sizing: {"budget_usd": 3000, "max_slots": 3, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_reversal] Ranking: return21 for a symbol = last close / close 21 bars earlier - 1, requiring at least 22 bars; worst_names sorts all scored symbols by (return, symbol) ascending and takes the first 3, excluding any symbols named in the exclude set.
+- Parameters:
+  - Universe: every symbol carried in view bars (producer-defined large-cap set; the catalog names no tickers). Asset: US equities. Timeframe: 1d.
+  - Sizing / slice: capital_usd 3000.0, cash_usd 3000.0 in the roster row; 3 slots x $1,000 in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -9608,7 +9999,7 @@ Merge evidence (tiers A): [A] mk_vomyivomy ~ mk_vomyivomy_short (full evidence i
 - Created by / source: Astra's RRE Adaptive Desk v0.2.0, on Linda Raschke's methods
 - Description (from source records): Raschke RRE adaptive desk (SPY)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/raschke_rre.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -9619,6 +10010,11 @@ Merge evidence (tiers A): [A] mk_vomyivomy ~ mk_vomyivomy_short (full evidence i
   - [raschke_rre] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [raschke_rre] data: WARMUP_BARS={"5Min": 100}
+- Parameters:
+  - SERIES_ID = "SPY-5m-RTH-SIP-v1"
+  - CALENDAR_VERSION = "desk-rth-earlyclose-v1"
+  - MAX_QUOTE_AGE_S = 5.0
+  - COOLDOWN_S = 900
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -9638,7 +10034,7 @@ Merge evidence (tiers A): [A] muse_raschke_rre ~ raschke_rre (full evidence in M
 - Created by / source: Sol (ChatGPT), Saty Adaptive Opportunity Engine v0.3.0, from Saty Mahajan's public vocabulary
 - Description (from source records): Saty opportunity engine v0.3 (SPY shares)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/saty_gpt_v03.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -9649,6 +10045,10 @@ Merge evidence (tiers A): [A] muse_raschke_rre ~ raschke_rre (full evidence in M
   - [saty_gpt_v03] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [saty_gpt_v03] data: WARMUP_BARS={"1Day": 1000, "5Min": 1000}
+- Parameters:
+  - REPLAY_BARS = 120         # bounded replay window (spec 7.3)
+  - WARMUP_BARS = 1000        # pinned: structure + strategy warmup
+  - MAX_QUOTE_AGE_S = 5.0     # pinned: desk + risk quote age
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -9668,7 +10068,7 @@ Merge evidence (tiers A): [A] muse_saty_gpt_v03 ~ saty_gpt_v03 (full evidence in
 - Created by / source: Sol (ChatGPT), Saty Research System v0.2.0, from Saty Mahajan's public vocabulary; Midna's enhancements
 - Description (from source records): Saty research system v0.2 (SPY shares)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/saty_gpt_v02.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -9679,6 +10079,10 @@ Merge evidence (tiers A): [A] muse_saty_gpt_v03 ~ saty_gpt_v03 (full evidence in
   - [saty_gpt_v02] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [saty_gpt_v02] data: WARMUP_BARS={"5Min": 1000, "1Day": 100}
+- Parameters:
+  - REPLAY_BARS = 120         # bounded replay when no checkpoint
+  - WARMUP_BARS = 1000        # pinned: structure + strategy warmup
+  - MAX_QUOTE_AGE_S = 5.0     # pinned: desk + risk quote age
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -9927,7 +10331,7 @@ Merge evidence (tiers A): [A] muse_shen_fade ~ shen_fade (full evidence in MERGE
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Beaten-down weekly qualifiers Adapter for beatendown — v2 interface glue ONLY (DESIGN §4a).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/BEATENDOWN-RECREATE.md (Configuration section), Test sleeves/beatendown.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -9938,6 +10342,11 @@ Merge evidence (tiers A): [A] muse_shen_fade ~ shen_fade (full evidence in MERGE
   - [beatendown] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [beatendown] data: WARMUP_BARS={"1Day": 1}
+- Parameters:
+  - Universe: the weekly M2 qualifier list (no fixed symbol list in CONFIG; universe ()). Asset: US equities. Timeframe: 1w signal; Monday entries and exits.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the module's executed law is the 30 percent sleeve cap over account equity described above (the card's per-sleeve $100,000 book note is the old-desk basis; the v3 roster slice governs registration).
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - HOLD9_NAMES = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"]
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -10090,7 +10499,7 @@ Merge evidence (tiers A): [A] femto_beatendown ~ beatendown (full evidence in ME
 - Created by / source: AI Volume Strategy (TradingView Pine), adapted by Ausar
 - Description (from source records): AI volume spike crypto (4h)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/ASTER_PUB_LINK_AI_VOLUME-RECREATE.md (Configuration section), Test docs/FWD_ALPACA_LINK_AI_VOLUME-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -10105,6 +10514,11 @@ Merge evidence (tiers A): [A] femto_beatendown ~ beatendown (full evidence in ME
 - Filters / data:
   - [ausar_pb44] data: Native spot completed OHLCV and received bid/ask.
   - [fwd_alpaca_link_ai_volume] data: WARMUP_BARS={"4Hour": 60}
+- Parameters:
+  - Sleeve id: `aster_pub_link_ai_volume`; module: `adapters3.aster_pub_link_ai_volume` (roster row in desk `config/sleeves.json`).
+  - Timeframe: 4h (existing card). Session: `24h`. Cadence: 3600 seconds (`cadence_s=3600`).
+  - Sizing / slice: $10,000 capital and $10,000 cash; `bp_buffer_frac=0.02`; entry quantity is floor(cash / close) as above.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
 - Variant axes (catalog): [{"Row": "ausar_public_ai_volume_spot100", "Venue": "Binance LINKUSDT"}, {"Row": "femto_fwd_alpaca_link_ai_volume", "Venue": "Alpaca LINK/USD"}, {"Row": "ausar_public_ai_volume_spot100", "Venue": "Binance LINKUSDT"}, {"Row": "femto_fwd_alpaca_link_ai_volume", "Venue": "Alpaca LINK/USD"}, {"Row": "ausar_public_ai_volume_spot100", "Venue": "Binance LINKUSDT"}, {"Row": "femto_fwd_alpaca_link_ai_volume", "Venue": "Alpaca LINK/USD"}, {"Row": "ausar_public_ai_volume_spot100", "Venue": "Binance LINKUSDT"}, {"Row": "femto_fwd_alpaca_link_ai_volume", "Venue": "Alpaca LINK/USD"}]
 
 ### Variants (2)
@@ -10426,7 +10840,7 @@ Merge evidence (tiers A): [A] ausar_pb53 ~ R19_ADAUSDT_BREAKOUT_BASE_FIXED16_FUL
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Donchian 20/10 breakout Adapter for donchian — v2 interface glue ONLY (DESIGN §4a).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/DONCHIAN-RECREATE.md (Configuration section), Test docs/DONCHIAN_CRYPTO-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -10441,6 +10855,11 @@ Merge evidence (tiers A): [A] ausar_pb53 ~ R19_ADAUSDT_BREAKOUT_BASE_FIXED16_FUL
 - Filters / data:
   - [donchian] data: WARMUP_BARS={"1Day": 25}
   - [donchian_crypto] data: WARMUP_BARS={"15Min": 40}
+- Parameters:
+  - Universe: the 41-name old-desk basket (served as the bars keys; CONFIG universe is (), overridable via extra universe). Asset: US equities. Timeframe: 1d (checked daily at 10:32 ET per the card).
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; risk_pct 0.0025 in CONFIG (0.25 percent of equity per trade on the 25 percent disaster-stop distance).
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - Universe: SOLUSD only (traded as SOL/USD). Asset: crypto spot. Timeframe: 15m closed bars.
 - Variant axes (catalog): [{"Variant": "Equities", "Rows": "`femto_donchian`; Midna v3 `donchian`", "Bars": "daily", "Universe": "41-name basket", "Extra exits": "20-session time stop, 25% disaster stop", "Positions": "8"}, {"Variant": "Crypto", "Rows": "`femto_donchian_crypto`; Midna v3 `donchian_crypto`", "Bars": "15-minute", "Universe": "SOL/USD", "Extra exits": "none", "Positions": "1"}, {"Variant": "Equities", "Rows": "`femto_donchian`; Midna v3 `donchian`", "Bars": "daily", "Universe": "41-name basket", "Extra exits": "20-session time stop, 25% disaster stop", "Positions": "8"}, {"Variant": "Crypto", "Rows": "`femto_donchian_crypto`; Midna v3 `donchian_crypto`", "Bars": "15-minute", "Universe": "SOL/USD", "Extra exits": "none", "Positions": "1"}, {"Variant": "Equities", "Rows": "`femto_donchian`; Midna v3 `donchian`", "Bars": "daily", "Universe": "41-name basket", "Extra exits": "20-session time stop, 25% disaster stop", "Positions": "8"}, {"Variant": "Crypto", "Rows": "`femto_donchian_crypto`; Midna v3 `donchian_crypto`", "Bars": "15-minute", "Universe": "SOL/USD", "Extra exits": "none", "Positions": "1"}, {"Variant": "Equities", "Rows": "`femto_donchian`; Midna v3 `donchian`", "Bars": "daily", "Univ
 
 ### Variants (1)
@@ -10463,7 +10882,7 @@ Merge evidence (tiers A): [A] femto_donchian ~ femto_donchian_crypto; [A] femto_
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Phoenix breakout (red-day entry)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/phoenix.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -10474,6 +10893,8 @@ Merge evidence (tiers A): [A] femto_donchian ~ femto_donchian_crypto; [A] femto_
   - [phoenix] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [phoenix] data: WARMUP_BARS={"1Day": 61}
+- Parameters:
+  - CADENCE_S = 300
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -10659,7 +11080,7 @@ Merge evidence (tiers A): [A] femto_phoenix ~ phoenix (full evidence in MERGES.m
 - Created by / source: ChartsLector (his Qullamaggie TradingView screen), via Lazarus
 - Description (from source records): ChartsLector breakout leaders (small caps)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/S_CL_QM_SMALL-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -10673,6 +11094,8 @@ Merge evidence (tiers A): [A] femto_phoenix ~ phoenix (full evidence in MERGES.m
   - [s_cl_qm_small] lz_engine sizing: {"budget_usd": 8000, "max_slots": 8, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
   - [lz_s_cl_qm_small] data: cl_live (ChartsLector screens) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+- Parameters:
+  - Module laz_sleeves.s_cl_qm_small; cadence_s 86400; session rth; slice capital_usd 8000.0, cash_usd 8000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; inputs [bars_1day, positions, alt_data]; parked false. Source: muse-desk-v3/config/sleeves.json row id=s_cl_qm_small. The module's own constants are 8 slots x $1,000, matching the $8,000 slice.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -10900,7 +11323,7 @@ Merge evidence (tiers A, C): [A] lz_cl_qm_small ~ s_cl_qm_small; [C] lz_cl_qm_sm
 - Created by / source: not recorded
 - Description (from source records): Confirmed absorption control · LINKUSDT, 16-hour hold, available-cash sizing
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/ABSORPTION_LINKUSDT_4H-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -10921,7 +11344,8 @@ Merge evidence (tiers A, C): [A] lz_cl_qm_small ~ s_cl_qm_small; [C] lz_cl_qm_sm
   - [ausar_pb124] Exit when observed funding is nonnegative and a completed four-hour close is below the lowest low of the previous three completed four-hour bars. Execute no earlier than four hours after that signal bar closes and after both the bar and funding observations are received. The saved deadline is 96 hou
   - [ausar_pb6] Sell at the first eligible observed bid at or after sixteen hours from the confirmation bar’s completion. Partial exits retain that original deadline.
 - Sizing:
-  - not recorded in any consulted source
+  - [ABSORPTION_LINKUSDT_4H] Universe: LINKUSDT only (Binance spot). Timeframe: 4h bars. Slice: $10,000 (engine/algorithm doc). Cadence: 14400 s. Session: 24h, not flat by close. Fee: 10 bps per side.
+  - [ABSORPTION_LINKUSDT_4H] 3. Configure symbol LINKUSDT, slice cash $10,000 and the fixed16 exit.
 - Filters / data:
   - [ausar_pb109] data: Completed spot OHLCV and actual execution quote.
   - [ausar_pb110] data: Completed spot OHLCV and actual execution quote.
@@ -10992,7 +11416,7 @@ Merge evidence (tiers A): [A] ausar_pb6 ~ R19_LINKUSDT_NEGATIVE_FUNDING_SQUEEZE_
 - Created by / source: not recorded
 - Description (from source records): Four-hour confirmed absorption · ENJUSDT
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/ABSORPTION_ENJUSDT_4H-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -11013,7 +11437,9 @@ Merge evidence (tiers A): [A] ausar_pb6 ~ R19_LINKUSDT_NEGATIVE_FUNDING_SQUEEZE_
   - [ausar_pb79] Exit when observed funding is nonnegative and a completed four-hour close is below the lowest low of the previous three completed four-hour bars. Execute no earlier than four hours after that signal bar closes and after both the bar and funding observations are received. The saved deadline is 96 hou
   - [ausar_pb80] Exit when observed funding is nonnegative and a completed four-hour close is below the lowest low of the previous three completed four-hour bars. Execute no earlier than four hours after that signal bar closes and after both the bar and funding observations are received. The saved deadline is 96 hou
 - Sizing:
-  - not recorded in any consulted source
+  - [ABSORPTION_ENJUSDT_4H] Sizing (original books): 100% of book cash including the 10 bps fee, floored to the lot, capped by the displayed ask size. Sleeve slice in the engine: $10,000, cadence 14400 s, session 24h.
+  - [ABSORPTION_ENJUSDT_4H] Universe: ENJUSDT only (Binance spot). Timeframe: 4h bars. Slice: $10,000 (engine/algorithm doc). Cadence: 14400 s. Session: 24h, not flat by close. Fee: 10 bps per side.
+  - [ABSORPTION_ENJUSDT_4H] 3. Configure symbol ENJUSDT, slice cash $10,000 and the fixed16 exit.
 - Filters / data:
   - [ausar_pb5] data: Native four-hour spot OHLCV, 300-bar warm-up and received quote/depth.
   - [ausar_pb65] data: Completed spot OHLCV and actual execution quote.
@@ -11388,7 +11814,7 @@ Merge evidence (tiers A): [A] ausar_pb63 ~ R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_
 - Created by / source: not recorded
 - Description (from source records): Negative-funding breakout · ADAUSDT, funding reset plus price failure, 1% volume cap
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_VOLUME1PCT-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -11397,7 +11823,9 @@ Merge evidence (tiers A): [A] ausar_pb63 ~ R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_
 - Exit rules:
   - [ausar_pb62] Exit when observed funding is nonnegative and a completed four-hour close is below the lowest low of the previous three completed four-hour bars. Execute no earlier than four hours after that signal bar closes and after both the bar and funding observations are received. The saved deadline is 96 hou
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_VOLUME1PCT] A long-only ADAUSDT spot breakout: buy when the last completed 4-hour close breaks the prior 20-bar high while the observed funding rate is negative (a negative-funding squeeze). This variant's exit policy is `normalization_failure` and its sizing capacity is `volume1pct` (see Full algorithm).
+  - [R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_VOLUME1PCT] 5. Entry intent: `Intent(kind="enter", symbol="ADAUSDT", qty=quantity, price_hint=price, side="buy", position_intent="buy_to_open")`, reason naming the sleeve id, the nfs family, the close, the funding value and the cap `volume1pct`.
+  - [R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_VOLUME1PCT] Session 24h; cadence 14400 seconds; slice capital and cash $10,000; `bp_buffer_frac` 0.02; `flat_by_close` false; `flatten_time_et` null; parked false.
 - Filters / data:
   - [ausar_pb62] data: Native spot OHLCV, observed funding context and received bid/ask.
 - Key parameters (recorded, per alias): {"R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_VOLUME1PCT": {"family": "negative_funding_squeeze", "exit_policy": "normalization_failure", "capacity": "volume1pct", "symbol": "ADAUSDT", "fee_bps": 10}}
@@ -11423,7 +11851,7 @@ Merge evidence (tiers A): [A] ausar_pb62 ~ R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_
 - Created by / source: not recorded
 - Description (from source records): Negative-funding breakout · ADAUSDT, funding reset plus price failure, available-cash sizing
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_FULLCASH-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -11432,7 +11860,9 @@ Merge evidence (tiers A): [A] ausar_pb62 ~ R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_
 - Exit rules:
   - [ausar_pb61] Exit when observed funding is nonnegative and a completed four-hour close is below the lowest low of the previous three completed four-hour bars. Execute no earlier than four hours after that signal bar closes and after both the bar and funding observations are received. The saved deadline is 96 hou
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_FULLCASH] A long-only ADAUSDT spot breakout: buy when the last completed 4-hour close breaks the prior 20-bar high while the observed funding rate is negative (a negative-funding squeeze). This variant's exit policy is `normalization_failure` and its sizing capacity is `fullcash` (see Full algorithm).
+  - [R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_FULLCASH] 5. Entry intent: `Intent(kind="enter", symbol="ADAUSDT", qty=quantity, price_hint=price, side="buy", position_intent="buy_to_open")`, reason naming the sleeve id, the nfs family, the close, the funding value and the cap `fullcash`.
+  - [R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_FULLCASH] Session 24h; cadence 14400 seconds; slice capital and cash $10,000; `bp_buffer_frac` 0.02; `flat_by_close` false; `flatten_time_et` null; parked false.
 - Filters / data:
   - [ausar_pb61] data: Native spot OHLCV, observed funding context and received bid/ask.
 - Key parameters (recorded, per alias): {"R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_NORMALIZATION_FAILURE_FULLCASH": {"family": "negative_funding_squeeze", "exit_policy": "normalization_failure", "capacity": "fullcash", "symbol": "ADAUSDT", "fee_bps": 10}}
@@ -11553,7 +11983,7 @@ Merge evidence (tiers A): [A] ausar_pb61 ~ R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_
 - Created by / source: Kristjan Kullamägi (Qullamaggie), "My 3 timeless setups"; three desk implementations
 - Description (from source records): Qullamaggie breakout
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/qullamaggie.py, Test sleeves/qullamaggie_paper.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -11568,6 +11998,9 @@ Merge evidence (tiers A): [A] ausar_pb61 ~ R19_ADAUSDT_NEGATIVE_FUNDING_SQUEEZE_
 - Filters / data:
   - [qullamaggie] data: WARMUP_BARS={"1Day": 127}
   - [qullamaggie_paper] data: WARMUP_BARS={}
+- Parameters:
+  - CADENCE_S = 1800
+  - CADENCE_S = 300
 - Variant axes (catalog): [{"Variant": "Pass-3 research desk", "Rows": "`qm_leader_breakout_pass3`", "Universe": "genome", "Trigger bars": "1-minute", "Market filter": "QQQ risk-on", "Positions": "15"}, {"Variant": "Femto-lean's own", "Rows": "`femto_qullamaggie`; Midna v3 `qullamaggie`", "Universe": "genome", "Trigger bars": "5-minute", "Market filter": "none", "Positions": "10"}, {"Variant": "Aurelia paper engine", "Rows": "`femto_qullamaggie_paper`; Midna v3 `qullamaggie_paper`", "Universe": "20 mega-caps", "Trigger bars": "1-minute", "Market filter": "QQQ risk-on; the book down 1.5% at the open sells all", "Positions": "15"}, {"Variant": "Pass-3 research desk", "Rows": "`qm_leader_breakout_pass3`", "Universe": "genome", "Trigger bars": "1-minute", "Market filter": "QQQ risk-on", "Positions": "15"}, {"Variant": "Femto-lean's own", "Rows": "`femto_qullamaggie`; Midna v3 `qullamaggie`", "Universe": "genome", "Trigger bars": "5-minute", "Market filter": "none", "Positions": "10"}, {"Variant": "Aurelia paper engine", "Rows": "`femto_qullamaggie_paper`; Midna v3 `qullamaggie_paper`", "Universe": "20 mega-caps", "Trigger bars": "1-minute", "Market filter": "QQQ risk-on; the book down 1.5% at the open sells all
 
 ### Variants (2)
@@ -11761,7 +12194,7 @@ Merge evidence (tiers A): [A] femto_qullamaggie ~ femto_qullamaggie_paper; [A] f
 - Created by / source: Aurelia (Agentic-Trading-Desk) Kraken research books, via Femto-lean
 - Description (from source records): Kraken breakdown short (ADA / LINK)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/FREE_KRAKEN_ADA_BREAKDOWN-RECREATE.md (Configuration section), Test sleeves/free_kraken_ada_breakdown.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -11776,6 +12209,11 @@ Merge evidence (tiers A): [A] femto_qullamaggie ~ femto_qullamaggie_paper; [A] f
 - Filters / data:
   - [free_kraken_ada_breakdown] data: WARMUP_BARS={"240Min": 22}
   - [free_kraken_link_breakdown] data: WARMUP_BARS={"4Hour": 22}
+- Parameters:
+  - Module adapters3.free_kraken_ada_breakdown; cadence_s 3600; session 24h; slice capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; inputs [bars, kraken, positions]; parked false. Source: muse-desk-v3/config/sleeves.json row id=free_kraken_ada_breakdown.
+  - BUDGET_USD = 100_000.0
+  - MAX_EXPOSURE = 0.10
+  - BAR_SECONDS = 4 * 3600
 - Variant axes (catalog): [{"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_breakdown`; Midna v3 `free_kraken_ada_breakdown`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_breakdown`; Midna v3 `free_kraken_link_breakdown`"}]
 
 ### Variants (1)
@@ -11798,7 +12236,7 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_breakdown ~ femto_free_krake
 - Created by / source: Aurelia (Agentic-Trading-Desk) Kraken research books, via Femto-lean
 - Description (from source records): Kraken crowded-long failure short (ADA / LINK)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/FREE_KRAKEN_ADA_CROWDED-RECREATE.md (Configuration section), Test sleeves/free_kraken_ada_crowded.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -11813,6 +12251,11 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_breakdown ~ femto_free_krake
 - Filters / data:
   - [free_kraken_ada_crowded] data: WARMUP_BARS={"240Min": 22}
   - [free_kraken_link_crowded] data: WARMUP_BARS={"4Hour": 22}
+- Parameters:
+  - Module adapters3.free_kraken_ada_crowded; cadence_s 3600; session 24h; slice capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; inputs [bars, kraken, positions]; parked false. Source: muse-desk-v3/config/sleeves.json row id=free_kraken_ada_crowded.
+  - BUDGET_USD = 100_000.0
+  - MAX_EXPOSURE = 0.10
+  - BAR_SECONDS = 4 * 3600
 - Variant axes (catalog): [{"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_crowded`; Midna v3 `free_kraken_ada_crowded`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_crowded`; Midna v3 `free_kraken_link_crowded`"}]
 
 ### Variants (1)
@@ -11977,7 +12420,7 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_crowded ~ femto_free_kraken_
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_MN_TURTLE-RECREATE.md (Configuration section), Test docs/S_MN_TURTLE-RECREATE.md, Test docs/S_MN_TURTLE-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -11987,7 +12430,13 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_crowded ~ femto_free_kraken_
 - Sizing:
   - [s_mn_turtle] lz_engine sizing: {"budget_usd": 2000, "max_slots": 2, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_turtle] "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+  - [s_mn_turtle] Source producer and file are named in the config row's `source` block (see Configuration).
+- Parameters:
+  - Full lz_engine config row for `s_mn_turtle` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+  - "max_delay_minutes": 65,
+  - "limit_band_pct": 5.0,
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -12285,7 +12734,7 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_crowded ~ femto_free_kraken_
 - Created by / source: Midna's desk: a TradingView indicator reconstructed from a chart screenshot, and its desk sleeve
 - Description (from source records): Band-touch RSI divergence Adapter for bb_rsi_divergence — v2 plumbing only, no strategy math.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/BB_RSI_DIVERGENCE-RECREATE.md (Configuration section), Test sleeves/bb_rsi_divergence.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -12296,6 +12745,11 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_crowded ~ femto_free_kraken_
   - [bb_rsi_divergence] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [bb_rsi_divergence] data: WARMUP_BARS={"1Hour": 200}
+- Parameters:
+  - Universe: the 40-symbol expanded universe above (12-symbol UNIVERSE_12 with the expansion off). Asset: US-listed ETFs and equities. Timeframe: 1h completed regular-hours bars; entry closes 10:00 to 15:00 ET.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; risk_pct 0.0025 in CONFIG (see the Full algorithm sizing rule, with the 5 percent notional cap).
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - BB_MULTIPLIER = 2.0
 - Variant axes (catalog): [{"Version": "v2.2", "Code": "`sleeves/bb_rsi_divergence.py`", "Universe": "12 ETFs: SPY, QQQ, IWM, DIA, GLD, SLV, TLT, IEF, USO, UUP, XLF, XLK", "Sides": "long; a bearish divergence exits", "Entries": "one filled entry a session", "Signal closes": "10:00-15:00 ET"}, {"Version": "Expanded (Midna v3 `bb_rsi_divergence`)", "Code": "`sleeves/bb_rsi_divergence_expanded.py`", "Universe": "40: the 12, 8 more sector ETFs and 20 large caps", "Sides": "long and short (the mirror at the bid; a bullish divergence exits a short)", "Entries": "one per symbol a session, up to 3 open", "Signal closes": "any completed regular-session hour"}]
 
 ### Variants (1)
@@ -12648,7 +13102,7 @@ Merge evidence (tiers A): [A] killed_pairs_distance_coint ~ killed_pairs_news_fi
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): Distance-pair shares
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_PAIRS-RECREATE.md (Configuration section), Test docs/S_MN_PAIRS-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -12659,7 +13113,13 @@ Merge evidence (tiers A): [A] killed_pairs_distance_coint ~ killed_pairs_news_fi
   - [s_mn_pairs] v3 slice: {"capital_usd": 3000.0, "cash_usd": 3000.0} parked=False
   - [s_mn_pairs] lz_engine sizing: {"budget_usd": 3000, "max_slots": 3, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_pairs] Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - [s_mn_pairs] bars: view["bars"] {symbol: daily bars with t, c} for the six pair symbols, at least 60 sessions with matching timestamps per pair. Producer named bars, freshness SLA 900 seconds.
+  - [s_mn_pairs] Check the spread: a pair with 59 bars or one mismatched timestamp produces no entry; |z| of 1.99 produces no entry and 2.00 can.
+- Parameters:
+  - Universe: KO, PEP, XOM, CVX, JPM, BAC as the three declared pairs. Asset: US equities (long/short). Timeframe: 1d.
+  - Sizing / slice: capital_usd 3000.0, cash_usd 3000.0 in the roster row; $500 per leg, at most 3 pairs, in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -12679,7 +13139,7 @@ Merge evidence (tiers A): [A] midna_distance_pair_shares ~ s_mn_pairs (full evid
 - Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
 - Description (from source records): SPY put-call parity package
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/free_opt_parity.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -12690,6 +13150,10 @@ Merge evidence (tiers A): [A] midna_distance_pair_shares ~ s_mn_pairs (full evid
   - [free_opt_parity] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [free_opt_parity] data: WARMUP_BARS={}
+- Parameters:
+  - ENTRY_EDGE = 0.30
+  - EXIT_EDGE = 0.05
+  - MAX_WIDTH = 5.0
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -12900,7 +13364,7 @@ Merge evidence (tiers A, C): [A] ausar_opt_xsp_calm_a ~ ausar_opt_xsp_calm_b; [A
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Fear premium put spreads (red days) Adapter for fear_premium — interface glue ONLY (DESIGN §4).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/FEAR_PREMIUM-RECREATE.md (Configuration section), Test sleeves/fear_premium.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -12911,6 +13375,11 @@ Merge evidence (tiers A, C): [A] ausar_opt_xsp_calm_a ~ ausar_opt_xsp_calm_b; [A
   - [fear_premium] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [fear_premium] data: WARMUP_BARS={"1Day": 60}
+- Parameters:
+  - Module adapters3.fear_premium; cadence_s 300; session rth; slice capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; inputs [bars, positions, options]; parked false. Source: muse-desk-v3/config/sleeves.json row id=fear_premium.
+  - UNIVERSE_BETA_COUNT = 10
+  - BETA_LOOKBACK_DAYS = 60
+  - BETA_RERANK_DAYS = 7
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -12930,7 +13399,7 @@ Merge evidence (tiers A): [A] femto_fear_premium ~ fear_premium (full evidence i
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): High-IV iron condor
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/IRON_CONDOR-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -12941,6 +13410,11 @@ Merge evidence (tiers A): [A] femto_fear_premium ~ fear_premium (full evidence i
   - [iron_condor] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [iron_condor] data: WARMUP_BARS={"1Day": 30}
+- Parameters:
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
+  - Cadence: 300 seconds. Session: rth.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; timeout_s: null; params: {} (empty in the roster row; all parameters live in the strategy code stated above).
+  - Inputs declared in the roster row: bars:*:1Day, bars:VIX:1Day, options:chains, earnings, iv.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -12960,7 +13434,7 @@ Merge evidence (tiers A): [A] femto_iron_condor ~ iron_condor (full evidence in 
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): LEAPS momentum with covered calls
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/LEAPS_MOMENTUM-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -12971,6 +13445,11 @@ Merge evidence (tiers A): [A] femto_iron_condor ~ iron_condor (full evidence in 
   - [leaps_momentum] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [leaps_momentum] data: WARMUP_BARS={"1Day": 31}
+- Parameters:
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
+  - Cadence: 300 seconds. Session: rth.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; timeout_s: null; params: {} (empty in the roster row; all parameters live in the strategy code stated above).
+  - Inputs declared in the roster row: bars:*:1Day, options:chains, positions, journal:momentum.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -12990,7 +13469,7 @@ Merge evidence (tiers A): [A] femto_leaps_momentum ~ leaps_momentum (full eviden
 - Created by / source: A public options campaign, run by Aurelia (Agentic-Trading-Desk), via Femto-lean; Midna's variant
 - Description (from source records): QQQ weekly put ladder
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/qqq_put_ladder.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13001,6 +13480,8 @@ Merge evidence (tiers A): [A] femto_leaps_momentum ~ leaps_momentum (full eviden
   - [qqq_put_ladder] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [qqq_put_ladder] data: WARMUP_BARS={"1Day": 10}
+- Parameters:
+  - CADENCE_S = 900
 - Variant axes (catalog): [{"Variant": "Aurelia campaign (Femto-lean)", "Rows": "`femto_qqq_put_ladder`; Midna v3 `qqq_put_ladder`", "Target delta": "0.05", "Bought back": "\u2264 5 DTE, or challenged with no roll", "Cap": "12 contracts", "New-layer gate": "posture normal, QQQ not down over 5 sessions"}, {"Variant": "Midna TypeScript", "Rows": "`midna_qqq_csp_ladder`", "Target delta": "0.065", "Bought back": "\u2264 7 DTE, or severe", "Cap": "cash-secured", "New-layer gate": "QQQ not down and VIX not up on the day"}, {"Variant": "Aurelia campaign (Femto-lean)", "Rows": "`femto_qqq_put_ladder`; Midna v3 `qqq_put_ladder`", "Target delta": "0.05", "Bought back": "\u2264 5 DTE, or challenged with no roll", "Cap": "12 contracts", "New-layer gate": "posture normal, QQQ not down over 5 sessions"}, {"Variant": "Midna TypeScript", "Rows": "`midna_qqq_csp_ladder`", "Target delta": "0.065", "Bought back": "\u2264 7 DTE, or severe", "Cap": "cash-secured", "New-layer gate": "QQQ not down and VIX not up on the day"}, {"Variant": "Aurelia campaign (Femto-lean)", "Rows": "`femto_qqq_put_ladder`; Midna v3 `qqq_put_ladder`", "Target delta": "0.05", "Bought back": "\u2264 5 DTE, or challenged with no roll", "Cap": "12 contrac
 
 ### Variants (1)
@@ -13022,7 +13503,7 @@ Merge evidence (tiers A): [A] femto_qqq_put_ladder ~ midna_qqq_csp_ladder; [A] f
 - Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
 - Description (from source records): SPY 30-delta wheel
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/FREE_OPT_WHEEL-RECREATE.md (Configuration section), Test sleeves/free_opt_wheel.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13033,6 +13514,11 @@ Merge evidence (tiers A): [A] femto_qqq_put_ladder ~ midna_qqq_csp_ladder; [A] f
   - [free_opt_wheel] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [free_opt_wheel] data: WARMUP_BARS={}
+- Parameters:
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
+  - Cadence: 300 seconds. Session: 24h.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; timeout_s: null; params: {} (empty in the roster row; all parameters live in the strategy code stated above).
+  - BUDGET_USD = 100_000.0
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13648,7 +14134,7 @@ Merge evidence (tiers A, C): [A] ausar_opt_tensor_leaps_a ~ ausar_opt_tensor_lea
 - Created by / source: not recorded
 - Description (from source records): Core exposure plus option reserve · RSI2, long, 0.5% risk
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/OPT_QQQ95_RSI2_LONG-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13659,7 +14145,7 @@ Merge evidence (tiers A, C): [A] ausar_opt_tensor_leaps_a ~ ausar_opt_tensor_lea
   - [ausar_pb20] Close the option package when a fresh underlying bid is at least 2% above the saved entry spot price during market hours, or five minutes before the fifth market session closes, counting the entry day as session one. Earlier expiry or assignment-risk obligations take precedence. The 2% test is the u
   - [ausar_r19_OPT_QQQ95_RSI2_LONG] Close the option package when a fresh underlying bid is at least 2% above the saved entry spot price during market hours, or five minutes before the fifth market session closes, counting the entry day as session one. Earlier expiry or assignment-risk obligations take precedence. The 2% test is the u
 - Sizing:
-  - not recorded in any consulted source
+  - [OPT_QQQ95_RSI2_LONG] Slice capital and cash $10,000; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; parked false.
 - Filters / data:
   - [ausar_pb20] data: Underlying recovery OHLCV, IEX quotes and indicative/model option inputs.
   - [ausar_r19_OPT_QQQ95_RSI2_LONG] data: posted r19 data adapters
@@ -13689,7 +14175,7 @@ Merge evidence (tiers A, C): [A] ausar_pb20 ~ OPT_QQQ95_RSI2_LONG; [C] OPT_QQQ95
 - Created by / source: not recorded
 - Description (from source records): Core exposure plus option reserve · RSI2, vertical, 0.5% risk
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/OPT_QQQ95_RSI2_VERTICAL-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13700,7 +14186,7 @@ Merge evidence (tiers A, C): [A] ausar_pb20 ~ OPT_QQQ95_RSI2_LONG; [C] OPT_QQQ95
   - [ausar_pb21] Close the option package when a fresh underlying bid is at least 2% above the saved entry spot price during market hours, or five minutes before the fifth market session closes, counting the entry day as session one. Earlier expiry or assignment-risk obligations take precedence. The 2% test is the u
   - [ausar_r19_OPT_QQQ95_RSI2_VERTICAL] Close the option package when a fresh underlying bid is at least 2% above the saved entry spot price during market hours, or five minutes before the fifth market session closes, counting the entry day as session one. Earlier expiry or assignment-risk obligations take precedence. The 2% test is the u
 - Sizing:
-  - not recorded in any consulted source
+  - [OPT_QQQ95_RSI2_VERTICAL] Slice capital and cash $10,000; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; parked false.
 - Filters / data:
   - [ausar_pb21] data: Underlying recovery OHLCV, IEX quotes and indicative/model option inputs.
   - [ausar_r19_OPT_QQQ95_RSI2_VERTICAL] data: posted r19 data adapters
@@ -13728,7 +14214,7 @@ Merge evidence (tiers A, C): [A] ausar_pb21 ~ OPT_QQQ95_RSI2_VERTICAL; [C] OPT_Q
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): 20-day VWAP reversion call spreads Adapter for ema_vwap_options — interface glue ONLY (DESIGN §4).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/EMA_VWAP_OPTIONS-RECREATE.md (Configuration section), Test sleeves/ema_vwap_options.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13739,6 +14225,11 @@ Merge evidence (tiers A, C): [A] ausar_pb21 ~ OPT_QQQ95_RSI2_VERTICAL; [C] OPT_Q
   - [ema_vwap_options] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [ema_vwap_options] data: WARMUP_BARS={"1Day": 30}
+- Parameters:
+  - Module adapters3.ema_vwap_options; cadence_s 300; session rth; slice capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close true; flatten_time_et 15:55; params {}; inputs [bars, positions, options]; parked false. Source: muse-desk-v3/config/sleeves.json row id=ema_vwap_options.
+  - RISK_FRACTION = 0.0025
+  - MAX_POSITIONS = 5
+  - WIDTH_PCT = 0.06
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13758,7 +14249,7 @@ Merge evidence (tiers A): [A] femto_ema_vwap_options ~ ema_vwap_options (full ev
 - Created by / source: Milkman (milkmantrades.com) Bilbo Box v2 with Saty's Phase Oscillator; the old swing desk, via Femto-lean
 - Description (from source records): Bilbo Box calls Adapter for bilbo_options — v2 interface glue ONLY (DESIGN §4a).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/BILBO_OPTIONS-RECREATE.md (Configuration section), Test sleeves/bilbo_options.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13769,6 +14260,11 @@ Merge evidence (tiers A): [A] femto_ema_vwap_options ~ ema_vwap_options (full ev
   - [bilbo_options] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [bilbo_options] data: WARMUP_BARS={"5Min": 2400}
+- Parameters:
+  - Universe: the 20 names listed in the Full algorithm section. Asset: equity call options. Timeframe: 1h boxes from 5-minute extended-hours bars; 5-minute regular-hours exits.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; risk_pct 0.04 in CONFIG (4 percent of equity in premium per trade, 1-contract minimum).
+  - Cadence: 300 seconds. Session: rth. flat_by_close: true; flatten_time_et: 15:55; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - MAX_POSITIONS = 5
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13788,7 +14284,7 @@ Merge evidence (tiers A): [A] femto_bilbo_options ~ bilbo_options (full evidence
 - Created by / source: Quantpedia #0271 (Amini & Singal, buybacks before earnings); the old swing desk, via Femto-lean
 - Description (from source records): Buyback before earnings (call spreads) Adapter for earnings_buyback — interface glue ONLY (DESIGN §4).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/EARNINGS_BUYBACK-RECREATE.md (Configuration section), Test sleeves/earnings_buyback.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13799,6 +14295,11 @@ Merge evidence (tiers A): [A] femto_bilbo_options ~ bilbo_options (full evidence
   - [earnings_buyback] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [earnings_buyback] data: WARMUP_BARS={"1Day": 1}
+- Parameters:
+  - Universe: 73 basket and phase names (served as scan and bars keys; CONFIG universe is ()). Asset: equity options (call debit spreads, long-call fallback). Timeframe: 1d with hourly checks per the card.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; risk_pct 0.005 in CONFIG (0.5 percent of the book in debit per trade).
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - BUYBACK_MIN_PCT = 5.0
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13818,7 +14319,7 @@ Merge evidence (tiers A): [A] femto_earnings_buyback ~ earnings_buyback (full ev
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Capitulation reversal calls (0-7 DTE) Adapter for capitulation_options — v2 interface glue ONLY (DESIGN §4a).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/CAPITULATION_OPTIONS-RECREATE.md (Configuration section), Test sleeves/capitulation_options.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13829,6 +14330,11 @@ Merge evidence (tiers A): [A] femto_earnings_buyback ~ earnings_buyback (full ev
   - [capitulation_options] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [capitulation_options] data: WARMUP_BARS={"1Day": 200, "1Hour": 20}
+- Parameters:
+  - Universe: the 41-name old-desk basket (served as the bars keys; CONFIG universe is ()). Asset: equity call options, 0 to 7 DTE (at least 2 DTE with the enhancement on). Timeframe: 1h signal with 1d filters.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; risk_pct 0.001 in CONFIG (0.10 percent of the book in premium per trade).
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - RISK_FRACTION = 0.001  # 0.10% — smaller due to variance
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13848,7 +14354,7 @@ Merge evidence (tiers A): [A] femto_capitulation_options ~ capitulation_options 
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): RSI(2) pullback call spreads
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/rsi_meanrev_options.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13859,6 +14365,11 @@ Merge evidence (tiers A): [A] femto_capitulation_options ~ capitulation_options 
   - [rsi_meanrev_options] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [rsi_meanrev_options] data: WARMUP_BARS={"1Day": 200}
+- Parameters:
+  - RSI_OVERSOLD = 10.0
+  - RSI_OVERBOUGHT = 70.0
+  - MA200_PERIOD = 200
+  - RISK_FRACTION = 0.0025
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13878,7 +14389,7 @@ Merge evidence (tiers A): [A] femto_rsi_meanrev_options ~ rsi_meanrev_options (f
 - Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
 - Description (from source records): SPY / QQQ residual option pair
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/free_opt_pair.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13889,6 +14400,11 @@ Merge evidence (tiers A): [A] femto_rsi_meanrev_options ~ rsi_meanrev_options (f
   - [free_opt_pair] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [free_opt_pair] data: WARMUP_BARS={}
+- Parameters:
+  - BUDGET_USD = 100_000.0
+  - SOURCE_MAX_SECONDS = 90
+  - RECEIPT_MAX_SECONDS = 30
+  - FUTURE_TOLERANCE_SECONDS = 2
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13908,7 +14424,7 @@ Merge evidence (tiers A): [A] femto_free_opt_pair ~ free_opt_pair (full evidence
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): Listed distance-pair package
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_OPT_PAIRS-RECREATE.md (Configuration section), Test docs/S_MN_OPT_PAIRS-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13919,7 +14435,13 @@ Merge evidence (tiers A): [A] femto_free_opt_pair ~ free_opt_pair (full evidence
   - [s_mn_opt_pairs] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_mn_opt_pairs] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_opt_pairs] Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - [s_mn_opt_pairs] bars: view["bars"] {symbol: daily bars with t, c} for the six pair underlyings, at least 60 sessions. Producer named bars, freshness SLA 900 seconds.
+  - [s_mn_opt_pairs] 3. Wire the producers so every snapshot carries: daily bars for the pair underlyings, the options chains and quotes, and this sleeve's positions. The module also needs sleeves/s_mn_pairs.py and sleeves/laz8_opt.py placed in the fresh desk (laz8_opt has no repo copy; take it from the desk source tree).
+- Parameters:
+  - Universe: the declared pairs KO/PEP, XOM/CVX, JPM/BAC, traded as listed options on those underlyings. Asset: equity options. Timeframe: 1d.
+  - Sizing / slice: capital_usd 1000.0, cash_usd 1000.0 in the roster row; $500 premium budget per leg in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13939,7 +14461,7 @@ Merge evidence (tiers A): [A] midna_opt_distance_pair ~ s_mn_opt_pairs (full evi
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): Listed reversal call spread
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_OPT_REVERSAL-RECREATE.md (Configuration section), Test docs/S_MN_OPT_REVERSAL-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13950,7 +14472,11 @@ Merge evidence (tiers A): [A] midna_opt_distance_pair ~ s_mn_opt_pairs (full evi
   - [s_mn_opt_reversal] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_mn_opt_reversal] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_opt_reversal] 3. Ranking: for every symbol in bars with at least 22 bars, return21 = last close / close 21 bars earlier - 1. Sort ascending (return, then symbol order from the sorted scan); the worst performer is the first. No scored symbol means no entry.
+- Parameters:
+  - Universe: every symbol carried in view bars (producer-defined large-cap set; the catalog names no tickers). Asset: equity options (long calls). Timeframe: 1d.
+  - Sizing / slice: capital_usd 1000.0, cash_usd 1000.0 in the roster row; $1,000 premium budget in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -13970,7 +14496,7 @@ Merge evidence (tiers A): [A] midna_opt_reversal_call_spread ~ s_mn_opt_reversal
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): Listed Turtle ATM call
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_OPT_TURTLE-RECREATE.md (Configuration section), Test docs/S_MN_OPT_TURTLE-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -13981,7 +14507,11 @@ Merge evidence (tiers A): [A] midna_opt_reversal_call_spread ~ s_mn_opt_reversal
   - [s_mn_opt_turtle] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_mn_opt_turtle] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_opt_turtle] Breakout test (_breakout): the symbol needs at least 56 bars; breakout is last close > max of the closes 21 bars back through the bar before last (the prior 20 closes), OR last close > max of the closes 56 bars back through the bar before last (the prior 55 closes).
+- Parameters:
+  - Universe: every symbol carried in view bars (Midna's listed surface set upstream). Asset: equity options (long calls). Timeframe: 1d.
+  - Sizing / slice: capital_usd 1000.0, cash_usd 1000.0 in the roster row; $1,000 premium budget in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -14034,7 +14564,7 @@ Merge evidence (tiers A): [A] midna_opt_turtle_atm_call ~ s_mn_opt_turtle (full 
 - Created by / source: Azrael's 15.87 Rule, reverse-engineered from his worksheet
 - Description (from source records): 15.87 Rule - SPY same-day options
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/EM_1587-RECREATE.md (Configuration section), Test sleeves/em_1587.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -14048,6 +14578,11 @@ Merge evidence (tiers A): [A] midna_opt_turtle_atm_call ~ s_mn_opt_turtle (full 
 - Filters / data:
   - [ausar_pb9] data: Prior VIX and SPY closes, completed SPY and QQQ 5-minute opening ranges, mapped SPY levels, option-chain metadata and open-interest snapshot, and the session clock.
   - [em_1587] data: WARMUP_BARS={"5Min": 78}
+- Parameters:
+  - Universe: SPY (traded) with QQQ as the confirmation symbol. Asset: SPY 0DTE options. Timeframe: 5m bars; entries 09:50 to 11:05 ET; hard flat 11:30 ET.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; risk_pct 0.04 in CONFIG (4 percent of the slice in premium, half in the FAST regime).
+  - Cadence: 60 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - BUDGET_PCT = 0.04              # DC-8: premium budget per entry
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -14144,7 +14679,7 @@ Merge evidence (tiers A): [A] investandbefree_dmac ~ investandbefree_dmac_intrad
 - Created by / source: Milkman Trades' SATY day system (Golden Gate, Bilbo, Trigger Box), on Saty Mahajan's indicators
 - Description (from source records): Saty Day - SPY same-day options
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/saty_day.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -14158,6 +14693,11 @@ Merge evidence (tiers A): [A] investandbefree_dmac ~ investandbefree_dmac_intrad
 - Filters / data:
   - [ausar_pb11] data: Prior regular-session SPY close and ATR(14), completed 1-hour, 10-minute and 3-minute bars, QQQ direction, same-day SPY option-chain data and quotes, and the session calendar.
   - [saty_day] data: WARMUP_BARS={"5Min": 1000, "1Min": 100}
+- Parameters:
+  - F_TRIGGER = 0.236
+  - F_TARGET = 0.618
+  - F_RUNNER = 0.786
+  - PO_EXTREME = 61.8              # Bilbo gate zones (design 4.4)
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -14178,7 +14718,7 @@ Merge evidence (tiers A): [A] muse_saty_day ~ saty_day; [A] ausar_pb11 ~ saty_da
 - Created by / source: Sol (ChatGPT), autonomous engine design v1.0 of the Saty / Milkman Trades day system
 - Description (from source records): Saty Sol - SPY same-day options
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/saty_sol.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -14199,6 +14739,11 @@ Merge evidence (tiers A): [A] muse_saty_day ~ saty_day; [A] ausar_pb11 ~ saty_da
   - [ausar_pb13] data: Frozen prior SPY close and ATR(14), completed daily, 1-hour, 10-minute and 3-minute bars, current SPY price, listed SPY options and fresh quotes, and the actual session close.
   - [saty_sol] data: WARMUP_BARS={"5Min": 300, "1Min": 390}
   - [saty_sol_0dte] data: WARMUP_BARS={"5Min": 300, "1Min": 390}
+- Parameters:
+  - F_TRIGGER = 0.236
+  - F_TARGET = 0.618
+  - MAX_ADVERSE_ATR = 0.03         # no-chase band above the crossing
+  - PO_EXTREME = 61.8              # tag thresholds (recorded, never gates)
 - Variant axes (catalog): [{"Variant": "Sol's original", "Rows": "`muse_saty_sol`; Midna v3 `saty_sol`", "Expiry": "nearest expiry 2-4 calendar days out"}, {"Variant": "0DTE", "Rows": "`muse_saty_sol_0dte`; Midna v3 `saty_sol_0dte`", "Expiry": "today's expiry only"}, {"Variant": "Sol's original", "Rows": "`muse_saty_sol`; Midna v3 `saty_sol`", "Expiry": "nearest expiry 2-4 calendar days out"}, {"Variant": "0DTE", "Rows": "`muse_saty_sol_0dte`; Midna v3 `saty_sol_0dte`", "Expiry": "today's expiry only"}, {"Variant": "Sol's original", "Rows": "`muse_saty_sol`; Midna v3 `saty_sol`", "Expiry": "nearest expiry 2-4 calendar days out"}, {"Variant": "0DTE", "Rows": "`muse_saty_sol_0dte`; Midna v3 `saty_sol_0dte`", "Expiry": "today's expiry only"}, {"Variant": "Sol's original", "Rows": "`muse_saty_sol`; Midna v3 `saty_sol`", "Expiry": "nearest expiry 2-4 calendar days out"}, {"Variant": "0DTE", "Rows": "`muse_saty_sol_0dte`; Midna v3 `saty_sol_0dte`", "Expiry": "today's expiry only"}]
 
 ### Variants (1)
@@ -14223,7 +14768,7 @@ Merge evidence (tiers A): [A] muse_saty_sol ~ muse_saty_sol_0dte; [A] muse_saty_
 - Created by / source: not recorded
 - Description (from source records): Opening-range options · long, 0.5% risk
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/OPT_OPENING_GAMMA_B-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -14234,7 +14779,9 @@ Merge evidence (tiers A): [A] muse_saty_sol ~ muse_saty_sol_0dte; [A] muse_saty_
   - [ausar_pb15] Close the option package at 10:00 ET on the entry day. A missed exit remains due at the next opportunity; earlier expiry or assignment-risk obligations still apply.
   - [ausar_r19_OPT_OPENING_GAMMA_B] Close the option package at 10:00 ET on the entry day. A missed exit remains due at the next opportunity; earlier expiry or assignment-risk obligations still apply.
 - Sizing:
-  - not recorded in any consulted source
+  - [OPT_OPENING_GAMMA_B] 5. Sizing: risk fraction 0.005 of the $10,000 slice divided by the contract debit.
+  - [OPT_OPENING_GAMMA_B] Slice capital and cash $10,000; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; parked false.
+  - [OPT_OPENING_GAMMA_B] A qualifying setup inside 09:35 <= ET < 09:45 produces a long-put entry with DTE in (7, 14), delta 0.50-0.65, premium at most 0.015 of spot, sized by risk fraction 0.005 of the $10,000 slice over the debit; the same setup at or after 09:45 ET produces no new entry.
 - Filters / data:
   - [ausar_pb15] data: Actual IEX opening bars/break evidence and indicative/model contracts.
   - [ausar_r19_OPT_OPENING_GAMMA_B] data: posted r19 data adapters
@@ -14262,7 +14809,7 @@ Merge evidence (tiers A, C): [A] ausar_pb15 ~ OPT_OPENING_GAMMA_B; [C] ausar_r19
 - Created by / source: not recorded
 - Description (from source records): Opening-range options · long, 2.0% risk
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/OPT_OPENING_GAMMA_A-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -14273,7 +14820,9 @@ Merge evidence (tiers A, C): [A] ausar_pb15 ~ OPT_OPENING_GAMMA_B; [C] ausar_r19
   - [ausar_pb14] Close the option package at 10:00 ET on the entry day. A missed exit remains due at the next opportunity; earlier expiry or assignment-risk obligations still apply.
   - [ausar_r19_OPT_OPENING_GAMMA_A] Close the option package at 10:00 ET on the entry day. A missed exit remains due at the next opportunity; earlier expiry or assignment-risk obligations still apply.
 - Sizing:
-  - not recorded in any consulted source
+  - [OPT_OPENING_GAMMA_A] 5. Sizing: risk fraction 0.02 of the $10,000 slice divided by the contract debit.
+  - [OPT_OPENING_GAMMA_A] Slice capital and cash $10,000; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; parked false.
+  - [OPT_OPENING_GAMMA_A] A qualifying setup inside 09:35 <= ET < 09:45 produces a long-put entry with DTE in (0, 2), delta 0.50-0.65, premium at most 0.025 of spot, sized by risk fraction 0.02 of the $10,000 slice over the debit; the same setup at or after 09:45 ET produces no new entry.
 - Filters / data:
   - [ausar_pb14] data: Actual IEX opening bars/break evidence and indicative/model contracts.
   - [ausar_r19_OPT_OPENING_GAMMA_A] data: posted r19 data adapters
@@ -14335,7 +14884,7 @@ Merge evidence (tiers A, C): [A] ausar_pb14 ~ OPT_OPENING_GAMMA_A; [C] OPT_OPENI
 - Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
 - Description (from source records): Tail put after a -3% day
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/FREE_OPT_TAIL-RECREATE.md (Configuration section), Test sleeves/free_opt_tail.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -14346,6 +14895,11 @@ Merge evidence (tiers A, C): [A] ausar_pb14 ~ OPT_OPENING_GAMMA_A; [C] OPT_OPENI
   - [free_opt_tail] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [free_opt_tail] data: WARMUP_BARS={}
+- Parameters:
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
+  - Cadence: 300 seconds. Session: 24h.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; timeout_s: null; params: {} (empty in the roster row; all parameters live in the strategy code stated above).
+  - BUDGET_USD = 100_000.0
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -15298,7 +15852,7 @@ Merge evidence (tiers A): [A] ausar_public_squeeze20 ~ aster_squeeze_1d (full ev
 - Created by / source: Aurelia (Agentic-Trading-Desk paper desk), via Femto-lean; also APEX round 3 C1 (the AURELIA pair)
 - Description (from source records): Aurelia Nasdaq + gold allocation
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/AURELIA_GOLD-RECREATE.md (Configuration section), Test docs/AURELIA_NDX-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -15313,6 +15867,11 @@ Merge evidence (tiers A): [A] ausar_public_squeeze20 ~ aster_squeeze_1d (full ev
 - Filters / data:
   - [aurelia_gold] data: WARMUP_BARS={"1Day": 1}
   - [aurelia_ndx] data: WARMUP_BARS={"1Day": 1}
+- Parameters:
+  - Universe: GLD for this sleeve's orders; the shared book symbols are QQQ, TQQQ, GLD, BIL (the exposures and gross cap are computed over the whole book). Asset: US ETFs. Timeframe: 1d (daily signal aurelia-gc-band20-v1).
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; execution sizing is off context.equity (account equity), not the slice, per the module header (AURELIA-EXEC).
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - Universe: QQQ, TQQQ and BIL for this sleeve's orders; the shared book symbols are QQQ, TQQQ, GLD, BIL. Asset: US ETFs (incl. 3x leveraged TQQQ). Timeframe: 1d (daily signal aurelia-gc-band20-v1).
 - Variant axes (catalog): [{"Book": "Femto-lean (master desk)", "Posture cuts": "yes", "Nasdaq cap": "3\u00d7", "Capital": "\u2264 180% of a $500,000 book", "Rows": "`femto_aurelia_ndx`"}, {"Book": "Midna v3", "Posture cuts": "yes", "Nasdaq cap": "3\u00d7", "Capital": "account equity", "Rows": "`aurelia_ndx`, `aurelia_gold`"}, {"Book": "APEX C1 (master desk)", "Posture cuts": "no", "Nasdaq cap": "4\u00d7, 6\u00d7 in total", "Capital": "a $100,000 book, margin debit above it", "Rows": "`apex_c1_aurelia_pair`"}, {"Book": "Femto-lean (master desk)", "Posture cuts": "yes", "Nasdaq cap": "3\u00d7", "Capital": "\u2264 180% of a $500,000 book", "Rows": "`femto_aurelia_ndx`"}, {"Book": "Midna v3", "Posture cuts": "yes", "Nasdaq cap": "3\u00d7", "Capital": "account equity", "Rows": "`aurelia_ndx`, `aurelia_gold`"}, {"Book": "APEX C1 (master desk)", "Posture cuts": "no", "Nasdaq cap": "4\u00d7, 6\u00d7 in total", "Capital": "a $100,000 book, margin debit above it", "Rows": "`apex_c1_aurelia_pair`"}, {"Book": "Femto-lean (master desk)", "Posture cuts": "yes", "Nasdaq cap": "3\u00d7", "Capital": "\u2264 180% of a $500,000 book", "Rows": "`femto_aurelia_ndx`"}, {"Book": "Midna v3", "Posture cuts": "yes", "Nasdaq cap": "
 
 ### Variants (1)
@@ -15335,7 +15894,7 @@ Merge evidence (tiers A): [A] apex_c1_aurelia_pair ~ femto_aurelia_ndx; [A] apex
 - Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
 - Description (from source records): Own-IV straddle
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/free_opt_own_iv.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -15346,6 +15905,11 @@ Merge evidence (tiers A): [A] apex_c1_aurelia_pair ~ femto_aurelia_ndx; [A] apex
   - [free_opt_own_iv] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [free_opt_own_iv] data: WARMUP_BARS={}
+- Parameters:
+  - BUDGET_USD = 100_000.0
+  - SOURCE_MAX_SECONDS = 90
+  - RECEIPT_MAX_SECONDS = 30
+  - FUTURE_TOLERANCE_SECONDS = 2
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -15365,7 +15929,7 @@ Merge evidence (tiers A): [A] femto_free_opt_own_iv ~ free_opt_own_iv (full evid
 - Created by / source: Milkman Trades' Daily Bilbo Boxes, via the old Alpaca swing desk and Femto-lean
 - Description (from source records): Phase compression breakout (daily)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/phase_daily.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -15376,6 +15940,8 @@ Merge evidence (tiers A): [A] femto_free_opt_own_iv ~ free_opt_own_iv (full evid
   - [phase_daily] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [phase_daily] data: WARMUP_BARS={"1Day": 60}
+- Parameters:
+  - CADENCE_S = 300
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -15395,7 +15961,7 @@ Merge evidence (tiers A): [A] femto_phase_daily ~ phase_daily (full evidence in 
 - Created by / source: Aurelia (Agentic-Trading-Desk) free-paper option descendants, via Femto-lean
 - Description (from source records): Release straddle (CPI, jobs, FOMC)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/FREE_OPT_RELEASE-RECREATE.md (Configuration section), Test sleeves/free_opt_release.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -15406,6 +15972,11 @@ Merge evidence (tiers A): [A] femto_phase_daily ~ phase_daily (full evidence in 
   - [free_opt_release] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [free_opt_release] data: WARMUP_BARS={}
+- Parameters:
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the strategy's own virtual book / pool amounts are stated in the Full algorithm section where they differ (several of these strategies size off a $100,000 virtual book, not the $10,000 roster slice).
+  - Cadence: 300 seconds. Session: 24h.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; timeout_s: null; params: {} (empty in the roster row; all parameters live in the strategy code stated above).
+  - BUDGET_USD = 100_000.0
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -15425,7 +15996,7 @@ Merge evidence (tiers A): [A] femto_free_opt_release ~ free_opt_release (full ev
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): VXX call tail hedge
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/vix_hedge.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -15436,6 +16007,11 @@ Merge evidence (tiers A): [A] femto_free_opt_release ~ free_opt_release (full ev
   - [vix_hedge] v3 slice: {"capital_usd": 11000.0, "cash_usd": 11000.0} parked=False
 - Filters / data:
   - [vix_hedge] data: WARMUP_BARS={"1Day": 30}
+- Parameters:
+  - VIX_LEVEL_COMPLACENT = 16.0
+  - VIX_PCTL_LOOKBACK = 30
+  - VIX_PCTL_COMPLACENT = 25.0
+  - VIX_EXIT_SPIKE = 30.0
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -15652,7 +16228,7 @@ Merge evidence (tiers A): [A] femto_vix_hedge ~ vix_hedge (full evidence in MERG
 - Created by / source: ChartsLector (his VIX Mood Ring), via Lazarus
 - Description (from source records): ChartsLector market-fear rebound (QQQ)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/S_CL_VMR_QQQ-ALGORITHM.md (Indicators and parameters section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -15666,6 +16242,8 @@ Merge evidence (tiers A): [A] femto_vix_hedge ~ vix_hedge (full evidence in MERG
   - [s_cl_vmr_qqq] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
   - [lz_s_cl_vmr_qqq] data: cl_live (ChartsLector screens) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+- Parameters:
+  - VIX_MAX = 35.0. SLOT_USD = 1000.0. HOLD_SESSIONS = 5.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -16049,7 +16627,7 @@ Merge evidence (tiers A, C): [A] r19_etf_core25_c098 ~ r19_etf_core25_m150; [A] 
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): 60-day momentum rotation
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/momentum_rotation.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16060,6 +16638,8 @@ Merge evidence (tiers A, C): [A] r19_etf_core25_c098 ~ r19_etf_core25_m150; [A] 
   - [momentum_rotation] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [momentum_rotation] data: WARMUP_BARS={"1Day": 65}
+- Parameters:
+  - CADENCE_S = 300
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -16296,7 +16876,7 @@ Merge evidence (tiers A): [A] mk_weekdayopentocloseproxy ~ mk_weekdayopentoclose
 - Created by / source: not recorded
 - Description (from source records): ETF leader confirmed across two sources · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_INTERVAL1_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16307,7 +16887,7 @@ Merge evidence (tiers A): [A] mk_weekdayopentocloseproxy ~ mk_weekdayopentoclose
   - [ausar_pb90] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_INTERVAL1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_INTERVAL1_M150] Sizing: desired shares = floor(weight x gross x NAV / price), whole shares, never capped inside the sleeve. Price is the last close, falling back to the position average price for a held symbol with no bars. If any needed price is at or below zero, the sleeve emits nothing.
 - Filters / data:
   - [ausar_pb90] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_INTERVAL1_M150] data: posted r19 data adapters
@@ -16335,7 +16915,7 @@ Merge evidence (tiers A, C): [A] ausar_pb90 ~ R19_ETF_INTERVAL1_M150; [C] R19_ET
 - Created by / source: not recorded
 - Description (from source records): ETF leader confirmed across two sources · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_INTERVAL1_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16346,7 +16926,7 @@ Merge evidence (tiers A, C): [A] ausar_pb90 ~ R19_ETF_INTERVAL1_M150; [C] R19_ET
   - [ausar_pb89] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_INTERVAL1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_INTERVAL1_C098] Sizing: desired shares = floor(weight x gross x NAV / price), whole shares, never capped inside the sleeve. Price is the last close, falling back to the position average price for a held symbol with no bars. If any needed price is at or below zero, the sleeve emits nothing.
 - Filters / data:
   - [ausar_pb89] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_INTERVAL1_C098] data: posted r19 data adapters
@@ -16374,7 +16954,7 @@ Merge evidence (tiers A, C): [A] ausar_pb89 ~ R19_ETF_INTERVAL1_C098; [C] R19_ET
 - Created by / source: not recorded
 - Description (from source records): ETF leader excluding semiconductors · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_EXSMH1_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16385,7 +16965,7 @@ Merge evidence (tiers A, C): [A] ausar_pb89 ~ R19_ETF_INTERVAL1_C098; [C] R19_ET
   - [ausar_pb88] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_EXSMH1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_EXSMH1_M150] Sizing / slice: capital_usd 10000.0, cash_usd 10000.0, gross_target 1.5, bp_buffer_frac 0.02
 - Filters / data:
   - [ausar_pb88] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_EXSMH1_M150] data: posted r19 data adapters
@@ -16413,7 +16993,7 @@ Merge evidence (tiers A, C): [A] ausar_pb88 ~ R19_ETF_EXSMH1_M150; [C] R19_ETF_E
 - Created by / source: not recorded
 - Description (from source records): ETF leader excluding semiconductors · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_EXSMH1_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16424,7 +17004,7 @@ Merge evidence (tiers A, C): [A] ausar_pb88 ~ R19_ETF_EXSMH1_M150; [C] R19_ETF_E
   - [ausar_pb87] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_EXSMH1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_EXSMH1_C098] Sizing / slice: capital_usd 10000.0, cash_usd 10000.0, gross_target 0.98, bp_buffer_frac 0.02
 - Filters / data:
   - [ausar_pb87] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_EXSMH1_C098] data: posted r19 data adapters
@@ -16452,7 +17032,7 @@ Merge evidence (tiers A, C): [A] ausar_pb87 ~ R19_ETF_EXSMH1_C098; [C] ausar_r19
 - Created by / source: not recorded
 - Description (from source records): ETF leader with unchanged-share holding · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_DRIFT1_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16463,7 +17043,7 @@ Merge evidence (tiers A, C): [A] ausar_pb87 ~ R19_ETF_EXSMH1_C098; [C] ausar_r19
   - [ausar_pb86] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_DRIFT1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_DRIFT1_M150] Slice: capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null.
 - Filters / data:
   - [ausar_pb86] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_DRIFT1_M150] data: posted r19 data adapters
@@ -16491,7 +17071,7 @@ Merge evidence (tiers A, C): [A] ausar_pb86 ~ R19_ETF_DRIFT1_M150; [C] ausar_r19
 - Created by / source: not recorded
 - Description (from source records): ETF leader with unchanged-share holding · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_DRIFT1_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16502,7 +17082,7 @@ Merge evidence (tiers A, C): [A] ausar_pb86 ~ R19_ETF_DRIFT1_M150; [C] ausar_r19
   - [ausar_pb85] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_DRIFT1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_DRIFT1_C098] Slice: capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}.
 - Filters / data:
   - [ausar_pb85] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_DRIFT1_C098] data: posted r19 data adapters
@@ -16530,7 +17110,7 @@ Merge evidence (tiers A, C): [A] ausar_pb85 ~ R19_ETF_DRIFT1_C098; [C] R19_ETF_D
 - Created by / source: not recorded
 - Description (from source records): Two-source ETF leader with unchanged-share holding · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_INTERVAL_DRIFT1_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16541,7 +17121,8 @@ Merge evidence (tiers A, C): [A] ausar_pb85 ~ R19_ETF_DRIFT1_C098; [C] R19_ETF_D
   - [ausar_pb94] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_INTERVAL_DRIFT1_M150] Config row: id `aster_etf_interval_drift1_m150`, module `adapters3.aster_etf_interval_drift1_m150`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "bars_secondary", "positions"].
+  - [R19_ETF_INTERVAL_DRIFT1_M150] Sizing check: desired shares equal floor(weight x 1.5 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb94] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_M150] data: posted r19 data adapters
@@ -16569,7 +17150,7 @@ Merge evidence (tiers A, C): [A] ausar_pb94 ~ R19_ETF_INTERVAL_DRIFT1_M150; [C] 
 - Created by / source: not recorded
 - Description (from source records): Two-source ETF leader with unchanged-share holding · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_INTERVAL_DRIFT1_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16580,7 +17161,8 @@ Merge evidence (tiers A, C): [A] ausar_pb94 ~ R19_ETF_INTERVAL_DRIFT1_M150; [C] 
   - [ausar_pb93] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
   - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098] Reduce or replace holdings when the next monthly selection changes their target. This strategy has no price-based stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_INTERVAL_DRIFT1_C098] Config row: id `aster_etf_interval_drift1_c098`, module `adapters3.aster_etf_interval_drift1_c098`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "bars_secondary", "positions"].
+  - [R19_ETF_INTERVAL_DRIFT1_C098] Sizing check: desired shares equal floor(weight x 0.98 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb93] data: Completed historical ETF bars for signals; separately labeled IEX quotes for execution. The two-source versions compare complete Alpaca and Yahoo histories without joining them.
   - [ausar_r19_R19_ETF_INTERVAL_DRIFT1_C098] data: posted r19 data adapters
@@ -16815,7 +17397,7 @@ Merge evidence (tiers A, C): [A] r19_adausdt_breakout_base_fixed16_fullcash ~ r1
 - Created by / source: Aurelia (Agentic-Trading-Desk) Kraken research books, via Femto-lean
 - Description (from source records): Kraken basis repair (ADA / LINK)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/FREE_KRAKEN_ADA_BASIS-RECREATE.md (Configuration section), Test sleeves/free_kraken_ada_basis.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16830,6 +17412,11 @@ Merge evidence (tiers A, C): [A] r19_adausdt_breakout_base_fixed16_fullcash ~ r1
 - Filters / data:
   - [free_kraken_ada_basis] data: WARMUP_BARS={}
   - [free_kraken_link_basis] data: WARMUP_BARS={}
+- Parameters:
+  - Module adapters3.free_kraken_ada_basis; cadence_s 3600; session 24h; slice capital_usd 10000.0, cash_usd 10000.0; bp_buffer_frac 0.02; flat_by_close false; flatten_time_et null; params {}; inputs [kraken, positions]; parked false. Source: muse-desk-v3/config/sleeves.json row id=free_kraken_ada_basis.
+  - HOLD_HOURS = 16, QTY = 1. Design: on completed aligned 4h pairs only
+  - FENCE = ("kraken history collector fenced in Femto (Decision #119); "
+  - ENTRY_BASIS_BPS = 25
 - Variant axes (catalog): [{"Coin": "ADA", "Rows": "`femto_free_kraken_ada_basis`; Midna v3 `free_kraken_ada_basis`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_basis`; Midna v3 `free_kraken_link_basis`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_basis`; Midna v3 `free_kraken_ada_basis`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_basis`; Midna v3 `free_kraken_link_basis`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_basis`; Midna v3 `free_kraken_ada_basis`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_basis`; Midna v3 `free_kraken_link_basis`"}, {"Coin": "ADA", "Rows": "`femto_free_kraken_ada_basis`; Midna v3 `free_kraken_ada_basis`"}, {"Coin": "LINK", "Rows": "`femto_free_kraken_link_basis`; Midna v3 `free_kraken_link_basis`"}]
 
 ### Variants (1)
@@ -16977,7 +17564,7 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_basis ~ femto_free_kraken_li
 - Created by / source: not recorded
 - Description (from source records): Tensor relative-market cohort · cash funded, all volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_BETA_M2_52W_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -16986,7 +17573,9 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_basis ~ femto_free_kraken_li
 - Exit rules:
   - [ausar_pb127] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_BETA_M2_52W_25] Trades long stock positions from Tensor bundle fires in the M2-qualified relative-market cohort, 25 slots, cash funded, exiting at the 52nd-week deadline.
+  - [R19_TENSOR_BETA_M2_52W_25] 4. Fire-age enhancement (on by default, Test doc): fires older than 1 day, or future-dated, are refused as stale. Stale-fire pricing enhancement (on by default): when a current bar is available, the price cap is revalidated against the latest close and sizing uses the latest close.
+  - [R19_TENSOR_BETA_M2_52W_25] 5. Sizing: accounting ticket 4000 with fee_bps 10; Test implementation qty = floor($400 / entry price) (the scaled ticket), qty < 1 emits nothing.
 - Filters / data:
   - [ausar_pb127] data: Completed weekly symbol/SPY bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_BETA_M2_52W_25": {"family": "BETA", "capital_mode": "cash", "volatility": "all", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17012,7 +17601,7 @@ Merge evidence (tiers A): [A] ausar_pb127 ~ R19_TENSOR_BETA_M2_52W_25 (full evid
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · cash funded, all volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_ALL_CASH_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17021,7 +17610,9 @@ Merge evidence (tiers A): [A] ausar_pb127 ~ R19_TENSOR_BETA_M2_52W_25 (full evid
 - Exit rules:
   - [ausar_pb128] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_ALL_CASH_25] Trades long stock positions from Tensor buy-cyan fires meeting price, momentum and volume thresholds, 25 slots, cash funded, exiting at the 52nd-week deadline.
+  - [R19_TENSOR_C1_ALL_CASH_25] 5. Sizing: accounting ticket 4000 with fee_bps 10; Test implementation qty = floor($400 / entry price) (the scaled ticket), qty < 1 emits nothing.
+  - [R19_TENSOR_C1_ALL_CASH_25] Family C1, capital_mode cash, volatility all, slots 25, ticket 4000 (source book; $400 in the Test $10k slice), fee_bps 10.
 - Filters / data:
   - [ausar_pb128] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_ALL_CASH_25": {"family": "C1", "capital_mode": "cash", "volatility": "all", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17047,7 +17638,7 @@ Merge evidence (tiers A): [A] ausar_pb128 ~ R19_TENSOR_C1_ALL_CASH_25 (full evid
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · cash funded, higher recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_HOT_CASH_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17056,7 +17647,9 @@ Merge evidence (tiers A): [A] ausar_pb128 ~ R19_TENSOR_C1_ALL_CASH_25 (full evid
 - Exit rules:
   - [ausar_pb134] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_HOT_CASH_25] Accounting parameters for this variant: family C1, capital_mode cash, volatility hot, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_C1_HOT_CASH_25] 2. Entry gates: a Tensor bundle fire whose signal names a buy-cyan event; fire price <= 5; ret60 >= 31; vol20 >= 0.07; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_C1_HOT_CASH_25] Family: C1. Capital mode: cash. Volatility cut: hot. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb134] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_HOT_CASH_25": {"family": "C1", "capital_mode": "cash", "volatility": "hot", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17082,7 +17675,7 @@ Merge evidence (tiers A): [A] ausar_pb134 ~ R19_TENSOR_C1_HOT_CASH_25 (full evid
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · cash funded, quieter recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_COOL_CASH_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17091,7 +17684,9 @@ Merge evidence (tiers A): [A] ausar_pb134 ~ R19_TENSOR_C1_HOT_CASH_25 (full evid
 - Exit rules:
   - [ausar_pb131] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_COOL_CASH_25] Accounting parameters for this variant: family C1, capital_mode cash, volatility cool, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_C1_COOL_CASH_25] 2. Entry gates: a Tensor bundle fire whose signal names a buy-cyan event; fire price <= 5; ret60 >= 31; vol20 >= 0.07; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_C1_COOL_CASH_25] Family: C1. Capital mode: cash. Volatility cut: cool. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb131] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_COOL_CASH_25": {"family": "C1", "capital_mode": "cash", "volatility": "cool", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17117,7 +17712,7 @@ Merge evidence (tiers A): [A] ausar_pb131 ~ R19_TENSOR_C1_COOL_CASH_25 (full evi
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · one-session delay, all volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_ALL_DELAY_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17126,7 +17721,9 @@ Merge evidence (tiers A): [A] ausar_pb131 ~ R19_TENSOR_C1_COOL_CASH_25 (full evi
 - Exit rules:
   - [ausar_pb129] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_ALL_DELAY_25] Accounting parameters for this variant: family C1, capital_mode delay, volatility all, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_C1_ALL_DELAY_25] 2. Entry gates: a Tensor bundle fire whose signal names a buy-cyan event; fire price <= 5; ret60 >= 31; vol20 >= 0.07; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_C1_ALL_DELAY_25] Family: C1. Capital mode: delay. Volatility cut: all. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb129] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_ALL_DELAY_25": {"family": "C1", "capital_mode": "delay", "volatility": "all", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17152,7 +17749,7 @@ Merge evidence (tiers A): [A] ausar_pb129 ~ R19_TENSOR_C1_ALL_DELAY_25 (full evi
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · one-session delay, higher recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_HOT_DELAY_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17161,7 +17758,9 @@ Merge evidence (tiers A): [A] ausar_pb129 ~ R19_TENSOR_C1_ALL_DELAY_25 (full evi
 - Exit rules:
   - [ausar_pb135] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_HOT_DELAY_25] Accounting parameters for this variant: family C1, capital_mode delay, volatility hot, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_C1_HOT_DELAY_25] 2. Entry gates: a Tensor bundle fire whose signal names a buy-cyan event; fire price <= 5; ret60 >= 31; vol20 >= 0.07; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_C1_HOT_DELAY_25] Family: C1. Capital mode: delay. Volatility cut: hot. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb135] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_HOT_DELAY_25": {"family": "C1", "capital_mode": "delay", "volatility": "hot", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17187,7 +17786,7 @@ Merge evidence (tiers A): [A] ausar_pb135 ~ R19_TENSOR_C1_HOT_DELAY_25 (full evi
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · one-session delay, quieter recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_COOL_DELAY_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17196,7 +17795,9 @@ Merge evidence (tiers A): [A] ausar_pb135 ~ R19_TENSOR_C1_HOT_DELAY_25 (full evi
 - Exit rules:
   - [ausar_pb132] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_COOL_DELAY_25] Accounting parameters for this variant: family C1, capital_mode delay, volatility cool, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_C1_COOL_DELAY_25] 2. Entry gates: a Tensor bundle fire whose signal names a buy-cyan event; fire price <= 5; ret60 >= 31; vol20 >= 0.07; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_C1_COOL_DELAY_25] Family: C1. Capital mode: delay. Volatility cut: cool. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb132] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_COOL_DELAY_25": {"family": "C1", "capital_mode": "delay", "volatility": "cool", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17222,7 +17823,7 @@ Merge evidence (tiers A): [A] ausar_pb132 ~ R19_TENSOR_C1_COOL_DELAY_25 (full ev
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · QQQ reserve, all volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_ALL_RESERVE_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17231,7 +17832,9 @@ Merge evidence (tiers A): [A] ausar_pb132 ~ R19_TENSOR_C1_COOL_DELAY_25 (full ev
 - Exit rules:
   - [ausar_pb130] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_ALL_RESERVE_25] Accounting parameters for this variant: family C1, capital_mode reserve, volatility all, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_C1_ALL_RESERVE_25] 2. Entry gates: a Tensor bundle fire whose signal names a buy-cyan event; fire price <= 5; ret60 >= 31; vol20 >= 0.07; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_C1_ALL_RESERVE_25] Family: C1. Capital mode: reserve. Volatility cut: all. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb130] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_ALL_RESERVE_25": {"family": "C1", "capital_mode": "reserve", "volatility": "all", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17257,7 +17860,7 @@ Merge evidence (tiers A): [A] ausar_pb130 ~ R19_TENSOR_C1_ALL_RESERVE_25 (full e
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · QQQ reserve, higher recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_HOT_RESERVE_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17266,7 +17869,9 @@ Merge evidence (tiers A): [A] ausar_pb130 ~ R19_TENSOR_C1_ALL_RESERVE_25 (full e
 - Exit rules:
   - [ausar_pb136] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_HOT_RESERVE_25] Accounting parameters for this variant: family C1, capital_mode reserve, volatility hot, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_C1_HOT_RESERVE_25] 2. Entry gates: a Tensor bundle fire whose signal names a buy-cyan event; fire price <= 5; ret60 >= 31; vol20 >= 0.07; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_C1_HOT_RESERVE_25] Family: C1. Capital mode: reserve. Volatility cut: hot. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb136] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_HOT_RESERVE_25": {"family": "C1", "capital_mode": "reserve", "volatility": "hot", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17292,7 +17897,7 @@ Merge evidence (tiers A): [A] ausar_pb136 ~ R19_TENSOR_C1_HOT_RESERVE_25 (full e
 - Created by / source: not recorded
 - Description (from source records): Tensor cyan expansion · QQQ reserve, quieter recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_C1_COOL_RESERVE_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17301,7 +17906,9 @@ Merge evidence (tiers A): [A] ausar_pb136 ~ R19_TENSOR_C1_HOT_RESERVE_25 (full e
 - Exit rules:
   - [ausar_pb133] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_C1_COOL_RESERVE_25] Accounting parameters for this variant: family C1, capital_mode reserve, volatility cool, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_C1_COOL_RESERVE_25] 2. Entry gates: a Tensor bundle fire whose signal names a buy-cyan event; fire price <= 5; ret60 >= 31; vol20 >= 0.07; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_C1_COOL_RESERVE_25] Family: C1. Capital mode: reserve. Volatility cut: cool. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb133] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_C1_COOL_RESERVE_25": {"family": "C1", "capital_mode": "reserve", "volatility": "cool", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17327,7 +17934,7 @@ Merge evidence (tiers A): [A] ausar_pb133 ~ R19_TENSOR_C1_COOL_RESERVE_25 (full 
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · cash funded, all volatility, 10 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_ALL_CASH_10-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17336,7 +17943,9 @@ Merge evidence (tiers A): [A] ausar_pb133 ~ R19_TENSOR_C1_COOL_RESERVE_25 (full 
 - Exit rules:
   - [ausar_pb137] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_ALL_CASH_10] Accounting parameters for this variant: family G4, capital_mode cash, volatility all, slots 10, ticket 10000 (source book), fee_bps 10.
+  - [R19_TENSOR_G4_ALL_CASH_10] 2. Entry gates: a Tensor bundle fire with 'buy-green' in its primary markers (or 'green' in its signal); fire price <= 10; depth60 >= 70; ret60 >= 0; vol20 >= 0.09; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_G4_ALL_CASH_10] Family: G4. Capital mode: cash. Volatility cut: all. Slots: 10 distinct symbols.
 - Filters / data:
   - [ausar_pb137] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_ALL_CASH_10": {"family": "G4", "capital_mode": "cash", "volatility": "all", "slots": 10, "ticket": 10000, "fee_bps": 10}}
@@ -17362,7 +17971,7 @@ Merge evidence (tiers A): [A] ausar_pb137 ~ R19_TENSOR_G4_ALL_CASH_10 (full evid
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · cash funded, all volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_ALL_CASH_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17371,7 +17980,9 @@ Merge evidence (tiers A): [A] ausar_pb137 ~ R19_TENSOR_G4_ALL_CASH_10 (full evid
 - Exit rules:
   - [ausar_pb138] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_ALL_CASH_25] Accounting parameters for this variant: family G4, capital_mode cash, volatility all, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_G4_ALL_CASH_25] 2. Entry gates: a Tensor bundle fire with 'buy-green' in its primary markers (or 'green' in its signal); fire price <= 10; depth60 >= 70; ret60 >= 0; vol20 >= 0.09; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_G4_ALL_CASH_25] Family: G4. Capital mode: cash. Volatility cut: all. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb138] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_ALL_CASH_25": {"family": "G4", "capital_mode": "cash", "volatility": "all", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17397,7 +18008,7 @@ Merge evidence (tiers A): [A] ausar_pb138 ~ R19_TENSOR_G4_ALL_CASH_25 (full evid
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · cash funded, higher recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_HOT_CASH_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17406,7 +18017,9 @@ Merge evidence (tiers A): [A] ausar_pb138 ~ R19_TENSOR_G4_ALL_CASH_25 (full evid
 - Exit rules:
   - [ausar_pb145] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_HOT_CASH_25] Accounting parameters for this variant: family G4, capital_mode cash, volatility hot, slots 25, ticket 4000 (source book), fee_bps 10.
+  - [R19_TENSOR_G4_HOT_CASH_25] 2. Entry gates: a Tensor bundle fire with 'buy-green' in its primary markers (or 'green' in its signal); fire price <= 10; depth60 >= 70; ret60 >= 0; vol20 >= 0.09; average dollar volume >= $2,000,000.
+  - [R19_TENSOR_G4_HOT_CASH_25] Family: G4. Capital mode: cash. Volatility cut: hot. Slots: 25 distinct symbols.
 - Filters / data:
   - [ausar_pb145] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_HOT_CASH_25": {"family": "G4", "capital_mode": "cash", "volatility": "hot", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17432,7 +18045,7 @@ Merge evidence (tiers A): [A] ausar_pb145 ~ R19_TENSOR_G4_HOT_CASH_25 (full evid
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · cash funded, quieter recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_COOL_CASH_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17441,7 +18054,9 @@ Merge evidence (tiers A): [A] ausar_pb145 ~ R19_TENSOR_G4_HOT_CASH_25 (full evid
 - Exit rules:
   - [ausar_pb142] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_COOL_CASH_25] 4. Sizing: ticket = $4,000 (= $100,000 / 25 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 25 positions are held.
+  - [R19_TENSOR_G4_COOL_CASH_25] Sizing: qty = floor(400 / execution price); qty < 1 emits nothing. Entries stop once 25 distinct symbols are held. Orders are market, day, buy_to_open.
+  - [R19_TENSOR_G4_COOL_CASH_25] Family G4; capital_mode cash; volatility cool; slots 25; original ticket $4,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
 - Filters / data:
   - [ausar_pb142] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_COOL_CASH_25": {"family": "G4", "capital_mode": "cash", "volatility": "cool", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17467,7 +18082,7 @@ Merge evidence (tiers A): [A] ausar_pb142 ~ R19_TENSOR_G4_COOL_CASH_25 (full evi
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · dip-or-five-session wait, all volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_RED_TIMEOUT_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17476,7 +18091,9 @@ Merge evidence (tiers A): [A] ausar_pb142 ~ R19_TENSOR_G4_COOL_CASH_25 (full evi
 - Exit rules:
   - [ausar_pb148] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_RED_TIMEOUT_25] 4. Sizing: ticket = $4,000 (= $100,000 / 25 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 25 positions are held.
+  - [R19_TENSOR_G4_RED_TIMEOUT_25] Family G4; capital_mode red_timeout; volatility all; slots 25; original ticket $4,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
+  - [R19_TENSOR_G4_RED_TIMEOUT_25] v3 slice: $10,000 book, ticket $400, slots 25 (engine SPECS in `desk3/aster_batch15.py`).
 - Filters / data:
   - [ausar_pb148] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_RED_TIMEOUT_25": {"family": "G4", "capital_mode": "red_timeout", "volatility": "all", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17502,7 +18119,7 @@ Merge evidence (tiers A): [A] ausar_pb148 ~ R19_TENSOR_G4_RED_TIMEOUT_25 (full e
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · one-session delay, all volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_ALL_DELAY_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17511,7 +18128,9 @@ Merge evidence (tiers A): [A] ausar_pb148 ~ R19_TENSOR_G4_RED_TIMEOUT_25 (full e
 - Exit rules:
   - [ausar_pb139] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_ALL_DELAY_25] 4. Sizing: ticket = $4,000 (= $100,000 / 25 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 25 positions are held.
+  - [R19_TENSOR_G4_ALL_DELAY_25] Sizing: qty = floor(400 / execution price); qty < 1 emits nothing. Entries stop once 25 distinct symbols are held. Orders are market, day, buy_to_open.
+  - [R19_TENSOR_G4_ALL_DELAY_25] Family G4; capital_mode delay; volatility all; slots 25; original ticket $4,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
 - Filters / data:
   - [ausar_pb139] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_ALL_DELAY_25": {"family": "G4", "capital_mode": "delay", "volatility": "all", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17537,7 +18156,7 @@ Merge evidence (tiers A): [A] ausar_pb139 ~ R19_TENSOR_G4_ALL_DELAY_25 (full evi
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · one-session delay, higher recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_HOT_DELAY_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17546,7 +18165,9 @@ Merge evidence (tiers A): [A] ausar_pb139 ~ R19_TENSOR_G4_ALL_DELAY_25 (full evi
 - Exit rules:
   - [ausar_pb146] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_HOT_DELAY_25] 4. Sizing: ticket = $4,000 (= $100,000 / 25 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 25 positions are held.
+  - [R19_TENSOR_G4_HOT_DELAY_25] Family G4; capital_mode delay; volatility hot; slots 25; original ticket $4,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
+  - [R19_TENSOR_G4_HOT_DELAY_25] v3 slice: $10,000 book, ticket $400, slots 25 (engine SPECS in `desk3/aster_batch15.py`).
 - Filters / data:
   - [ausar_pb146] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_HOT_DELAY_25": {"family": "G4", "capital_mode": "delay", "volatility": "hot", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17572,7 +18193,7 @@ Merge evidence (tiers A): [A] ausar_pb146 ~ R19_TENSOR_G4_HOT_DELAY_25 (full evi
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · one-session delay, quieter recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_COOL_DELAY_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17581,7 +18202,9 @@ Merge evidence (tiers A): [A] ausar_pb146 ~ R19_TENSOR_G4_HOT_DELAY_25 (full evi
 - Exit rules:
   - [ausar_pb143] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_COOL_DELAY_25] 4. Sizing: ticket = $4,000 (= $100,000 / 25 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 25 positions are held.
+  - [R19_TENSOR_G4_COOL_DELAY_25] Sizing: qty = floor(400 / execution price); qty < 1 emits nothing. Entries stop once 25 distinct symbols are held. Orders are market, day, buy_to_open.
+  - [R19_TENSOR_G4_COOL_DELAY_25] Family G4; capital_mode delay; volatility cool; slots 25; original ticket $4,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
 - Filters / data:
   - [ausar_pb143] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_COOL_DELAY_25": {"family": "G4", "capital_mode": "delay", "volatility": "cool", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17607,7 +18230,7 @@ Merge evidence (tiers A): [A] ausar_pb143 ~ R19_TENSOR_G4_COOL_DELAY_25 (full ev
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · QQQ reserve, all volatility, 10 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_ALL_RESERVE_10-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17616,7 +18239,9 @@ Merge evidence (tiers A): [A] ausar_pb143 ~ R19_TENSOR_G4_COOL_DELAY_25 (full ev
 - Exit rules:
   - [ausar_pb140] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_ALL_RESERVE_10] 4. Sizing: ticket = $10,000 (= $100,000 / 10 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 10 positions are held.
+  - [R19_TENSOR_G4_ALL_RESERVE_10] Sizing: qty = floor(1000 / execution price); qty < 1 emits nothing. Entries stop once 10 distinct symbols are held. Orders are market, day, buy_to_open.
+  - [R19_TENSOR_G4_ALL_RESERVE_10] Family G4; capital_mode reserve; volatility all; slots 10; original ticket $10,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
 - Filters / data:
   - [ausar_pb140] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_ALL_RESERVE_10": {"family": "G4", "capital_mode": "reserve", "volatility": "all", "slots": 10, "ticket": 10000, "fee_bps": 10}}
@@ -17642,7 +18267,7 @@ Merge evidence (tiers A): [A] ausar_pb140 ~ R19_TENSOR_G4_ALL_RESERVE_10 (full e
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · QQQ reserve, all volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_ALL_RESERVE_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17651,7 +18276,9 @@ Merge evidence (tiers A): [A] ausar_pb140 ~ R19_TENSOR_G4_ALL_RESERVE_10 (full e
 - Exit rules:
   - [ausar_pb141] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_ALL_RESERVE_25] 4. Sizing: ticket = $4,000 (= $100,000 / 25 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 25 positions are held.
+  - [R19_TENSOR_G4_ALL_RESERVE_25] Sizing: qty = floor(400 / execution price); qty < 1 emits nothing. Entries stop once 25 distinct symbols are held. Orders are market, day, buy_to_open.
+  - [R19_TENSOR_G4_ALL_RESERVE_25] Family G4; capital_mode reserve; volatility all; slots 25; original ticket $4,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
 - Filters / data:
   - [ausar_pb141] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_ALL_RESERVE_25": {"family": "G4", "capital_mode": "reserve", "volatility": "all", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17677,7 +18304,7 @@ Merge evidence (tiers A): [A] ausar_pb141 ~ R19_TENSOR_G4_ALL_RESERVE_25 (full e
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · QQQ reserve, higher recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_HOT_RESERVE_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17686,7 +18313,9 @@ Merge evidence (tiers A): [A] ausar_pb141 ~ R19_TENSOR_G4_ALL_RESERVE_25 (full e
 - Exit rules:
   - [ausar_pb147] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_HOT_RESERVE_25] 4. Sizing: ticket = $4,000 (= $100,000 / 25 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 25 positions are held.
+  - [R19_TENSOR_G4_HOT_RESERVE_25] Family G4; capital_mode reserve; volatility hot; slots 25; original ticket $4,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
+  - [R19_TENSOR_G4_HOT_RESERVE_25] v3 slice: $10,000 book, ticket $400, slots 25 (engine SPECS in `desk3/aster_batch15.py`).
 - Filters / data:
   - [ausar_pb147] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_HOT_RESERVE_25": {"family": "G4", "capital_mode": "reserve", "volatility": "hot", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17712,7 +18341,7 @@ Merge evidence (tiers A): [A] ausar_pb147 ~ R19_TENSOR_G4_HOT_RESERVE_25 (full e
 - Created by / source: not recorded
 - Description (from source records): Tensor green value / recovery · QQQ reserve, quieter recent volatility, 25 positions
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, md2 catalog entry/exit/strategy text, Test docs/R19_TENSOR_G4_COOL_RESERVE_25-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17721,7 +18350,9 @@ Merge evidence (tiers A): [A] ausar_pb147 ~ R19_TENSOR_G4_HOT_RESERVE_25 (full e
 - Exit rules:
   - [ausar_pb144] Exit five minutes before the final market session closes in the 52nd calendar week, counting the originally scheduled entry week as week one. Holidays and early closes follow the exchange calendar. There is no price stop or profit target.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_TENSOR_G4_COOL_RESERVE_25] 4. Sizing: ticket = $4,000 (= $100,000 / 25 slots in the family card's sizing rule), whole shares; fees 30 / 15 / 10 bps by price in the R19 ledger reading (the accounting parameter row records fee_bps 10 for this book). Entries stop once 25 positions are held.
+  - [R19_TENSOR_G4_COOL_RESERVE_25] Sizing: qty = floor(400 / execution price); qty < 1 emits nothing. Entries stop once 25 distinct symbols are held. Orders are market, day, buy_to_open.
+  - [R19_TENSOR_G4_COOL_RESERVE_25] Family G4; capital_mode reserve; volatility cool; slots 25; original ticket $4,000; fee_bps 10 (accounting parameter row; R19 ledger price-tiered fees 30/15/10 bps per the code header).
 - Filters / data:
   - [ausar_pb144] data: Completed daily/weekly bars and canonical Tensor v698 features.
 - Key parameters (recorded, per alias): {"R19_TENSOR_G4_COOL_RESERVE_25": {"family": "G4", "capital_mode": "reserve", "volatility": "cool", "slots": 25, "ticket": 4000, "fee_bps": 10}}
@@ -17888,7 +18519,7 @@ Merge evidence (tiers A): [A] ausar_daily20_price_volume ~ ausar_daily20_tensor;
 - Created by / source: Ausar R17/R18 Tensor research on the v625 engine
 - Description (from source records): R19 weekly Tensor beta M2 52-week cohort
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/ASTER_TENSOR_BETA_CASH_ALL_25-ALGORITHM.md (Spec (from SPECS in desk3/aster_batch13.py) section), Test docs/ASTER_TENSOR_BETA_CASH_ALL_25-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17899,6 +18530,11 @@ Merge evidence (tiers A): [A] ausar_daily20_price_volume ~ ausar_daily20_tensor;
   - [aster_tensor_beta_cash_all_25] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [ausar_r19_R19_TENSOR_BETA_M2_52W_25] data: posted r19 data adapters
+- Parameters:
+  - Constants: TICKET = $400 (the $4,000 source book ticket
+  - scaled to the $10k slice), SLOTS = 25 distinct symbols,
+  - HOLD_SESSIONS = 260.
+  - Sleeve id: `aster_tensor_beta_cash_all_25`; module: `adapters3.aster_tensor_beta_cash_all_25` (roster row in desk `config/sleeves.json`).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -17919,7 +18555,7 @@ Merge evidence (tiers A, C): [A] r19_tensor_beta_m2_52w_25 ~ aster_tensor_beta_c
 - Created by / source: Ausar R17/R18 Tensor research on the archived Galath v615 engine
 - Description (from source records): R19 weekly Tensor C1 cyan ownership
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/ASTER_TENSOR_C1_CASH_ALL_25-ALGORITHM.md (Spec (from SPECS in desk3/aster_batch13.py) section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -17960,6 +18596,11 @@ Merge evidence (tiers A, C): [A] r19_tensor_beta_m2_52w_25 ~ aster_tensor_beta_c
   - [ausar_r19_R19_TENSOR_C1_COOL_RESERVE_25] data: posted r19 data adapters
   - [ausar_r19_R19_TENSOR_C1_HOT_CASH_25] data: posted r19 data adapters
   - [ausar_r19_R19_TENSOR_C1_HOT_DELAY_25] data: posted r19 data adapters
+- Parameters:
+  - kind="tensor", family="C1", capital_mode="cash",
+  - Constants: TICKET = $400 (the $4,000 source book ticket
+  - scaled to the $10k slice), SLOTS = 25 distinct symbols,
+  - HOLD_SESSIONS = 260.
 - Variant axes (catalog): [{"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve"}, {"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve"}, {"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve"}, {"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve"}, {"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve"}, {"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve"}]
 
 ### Variants (1)
@@ -18005,7 +18646,7 @@ Merge evidence (tiers A, C): [A] r19_tensor_c1_all_cash_25 ~ r19_tensor_c1_all_d
 - Created by / source: Ausar R17/R18 Tensor research on the archived Galath v615 engine
 - Description (from source records): R19 weekly Tensor G4 green ownership
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/ASTER_R19_TENSOR_G4_HOT_DELAY_25-RECREATE.md (Configuration section), Test docs/ASTER_TENSOR_G4_CASH_ALL_10-ALGORITHM.md (Spec (from SPECS in desk3/aster_batch14.py) section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18052,6 +18693,11 @@ Merge evidence (tiers A, C): [A] r19_tensor_c1_all_cash_25 ~ r19_tensor_c1_all_d
   - [ausar_r19_R19_TENSOR_G4_COOL_CASH_25] data: posted r19 data adapters
   - [ausar_r19_R19_TENSOR_G4_COOL_DELAY_25] data: posted r19 data adapters
   - [ausar_r19_R19_TENSOR_G4_COOL_RESERVE_25] data: posted r19 data adapters
+- Parameters:
+  - Universe: symbols named by passing Tensor fires; the existing card states the frozen 1,838-name research cohort. Asset: US equities. Timeframe: weekly Tensor fires; 1Day bars for prices and the session calendar.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0; ticket 400.0, slots 25; bp_buffer_frac=0.02.
+  - Cadence: 86400 seconds. Session: rth.
+  - family="G4", capital_mode="cash", volatility="all",
 - Variant axes (catalog): [{"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve \u00b7 red_timeout"}, {"Parameter": "Slots", "Values": "25 \u00b7 10"}, {"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve \u00b7 red_timeout"}, {"Parameter": "Slots", "Values": "25 \u00b7 10"}, {"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve \u00b7 red_timeout"}, {"Parameter": "Slots", "Values": "25 \u00b7 10"}, {"Parameter": "Volatility cut", "Values": "all \u00b7 cool \u00b7 hot"}, {"Parameter": "Capital mode", "Values": "cash \u00b7 delay \u00b7 reserve \u00b7 red_timeout"}, {"Parameter": "Slots", "Values": "25 \u00b7 10"}]
 
 ### Variants (1)
@@ -18144,7 +18790,7 @@ Merge evidence (tiers A): [A] ausar_h1state ~ ausar_wstate; [A] ausar_h1state ~ 
 - Created by / source: The old Alpaca swing desk's Daily Cyan GBM and GBM-rule research on its Tensor engine replica, via Femto-lean
 - Description (from source records): Daily Cyan GBM Adapter for daily_cyan_gbm — v2 interface glue ONLY (DESIGN §4a).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/DAILY_CYAN_GBM-RECREATE.md (Configuration section), Test sleeves/daily_cyan_gbm.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18155,6 +18801,11 @@ Merge evidence (tiers A): [A] ausar_h1state ~ ausar_wstate; [A] ausar_h1state ~ 
   - [daily_cyan_gbm] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [daily_cyan_gbm] data: WARMUP_BARS={"1Day": 20}
+- Parameters:
+  - Universe: the 1,838-name genome (served as scoring-file rows; CONFIG universe is ()). Asset: US equities. Timeframe: 1d.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the module's executed sizing fraction is NOTIONAL_FRACTION = 0.01 with the fill law described above.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - SCORE_CUT = 0.00208  # pre-change absolute cut (the experiment control)
 - Variant axes (catalog): [{"Variant": "Femto-lean", "Rows": "`femto_daily_cyan_gbm`; Midna v3 `daily_cyan_gbm`", "Score cut": "0.00208", "Size": "fill law"}, {"Variant": "Midna's forward lab", "Rows": "`midna_d_cyan_gbm`", "Score cut": "training 90th percentile", "Size": "$20,000 account / 6"}, {"Variant": "Femto-lean", "Rows": "`femto_daily_cyan_gbm`; Midna v3 `daily_cyan_gbm`", "Score cut": "0.00208", "Size": "fill law"}, {"Variant": "Midna's forward lab", "Rows": "`midna_d_cyan_gbm`", "Score cut": "training 90th percentile", "Size": "$20,000 account / 6"}, {"Variant": "Femto-lean", "Rows": "`femto_daily_cyan_gbm`; Midna v3 `daily_cyan_gbm`", "Score cut": "0.00208", "Size": "fill law"}, {"Variant": "Midna's forward lab", "Rows": "`midna_d_cyan_gbm`", "Score cut": "training 90th percentile", "Size": "$20,000 account / 6"}]
 
 ### Variants (1)
@@ -18176,7 +18827,7 @@ Merge evidence (tiers A): [A] femto_daily_cyan_gbm ~ midna_d_cyan_gbm; [A] femto
 - Created by / source: The old Alpaca swing desk's Daily Cyan GBM and GBM-rule research on its Tensor engine replica, via Femto-lean
 - Description (from source records): Daily Cyan small-cap rule
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/rule_1d_cyan_smallcap.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18187,6 +18838,11 @@ Merge evidence (tiers A): [A] femto_daily_cyan_gbm ~ midna_d_cyan_gbm; [A] femto
   - [rule_1d_cyan_smallcap] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [rule_1d_cyan_smallcap] data: WARMUP_BARS={"1Day": 21}
+- Parameters:
+  - MIN_DV20 = 1_000_000
+  - MCAP_THRESHOLD = 9.377766990661621
+  - NOTIONAL_FRACTION = 0.01  # A2-06: the executed sizing law
+  - MAX_POSITIONS = 10  # sleeve_core.MAX_POSITIONS (desk-wide cap is core Risk's)
 
 ### Variants (1)
 - **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18206,7 +18862,7 @@ Merge evidence (tiers A): [A] femto_rule_1d_cyan_smallcap ~ rule_1d_cyan_smallca
 - Created by / source: The old Alpaca swing desk's Daily Cyan GBM and GBM-rule research on its Tensor engine replica, via Femto-lean
 - Description (from source records): Daily Green turn-of-month rule
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/rule_1d_green_tom.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18217,6 +18873,11 @@ Merge evidence (tiers A): [A] femto_rule_1d_cyan_smallcap ~ rule_1d_cyan_smallca
   - [rule_1d_green_tom] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [rule_1d_green_tom] data: WARMUP_BARS={"1Day": 21}
+- Parameters:
+  - MIN_DV20 = 1_000_000
+  - NOTIONAL_FRACTION = 0.01  # A2-06: the executed sizing law
+  - MAX_POSITIONS = 10
+  - ENH_EXP_ID = "ENH-RULE-1D-GREEN-TOM-20261024"
 
 ### Variants (1)
 - **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18236,7 +18897,7 @@ Merge evidence (tiers A): [A] femto_rule_1d_green_tom ~ rule_1d_green_tom (full 
 - Created by / source: The old Alpaca swing desk's Daily Cyan GBM and GBM-rule research on its Tensor engine replica, via Femto-lean
 - Description (from source records): Hourly Cyan range-expansion rule
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/rule_1h_cyan_raw.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18247,6 +18908,11 @@ Merge evidence (tiers A): [A] femto_rule_1d_green_tom ~ rule_1d_green_tom (full 
   - [rule_1h_cyan_raw] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [rule_1h_cyan_raw] data: WARMUP_BARS={"1Hour": 100, "1Day": 20}
+- Parameters:
+  - MIN_DV20 = 1_000_000
+  - RANGE_ATR_MIN = 2.05
+  - WTGAP_MIN = 6.88
+  - NOTIONAL_FRACTION = 0.01  # A2-06: the executed sizing law
 
 ### Variants (1)
 - **1h**: recorded distinguishing tokens/parameters for this form: 1h (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18266,7 +18932,7 @@ Merge evidence (tiers A): [A] femto_rule_1h_cyan_raw ~ rule_1h_cyan_raw (full ev
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Tensor 1H swing flagship
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/tensor_swing.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18277,6 +18943,9 @@ Merge evidence (tiers A): [A] femto_rule_1h_cyan_raw ~ rule_1h_cyan_raw (full ev
   - [tensor_swing] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [tensor_swing] data: WARMUP_BARS={"1Day": 5}
+- Parameters:
+  - MIN_CONF = 7  # desk swing-watch floor used across Tensor consumers
+  - EXIT_TIME_STOP_BARS = 20  # old desk EXIT_TIME_STOP_BARS: the study's
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -18296,7 +18965,7 @@ Merge evidence (tiers A): [A] femto_tensor_swing ~ tensor_swing (full evidence i
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Tensor red-dip buys on fear days
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/tensor_red_dip.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18307,6 +18976,11 @@ Merge evidence (tiers A): [A] femto_tensor_swing ~ tensor_swing (full evidence i
   - [tensor_red_dip] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [tensor_red_dip] data: WARMUP_BARS={"1Day": 5}
+- Parameters:
+  - FEAR_QQQ_PCT = -1.5
+  - RISK_FRACTION = 0.0025
+  - STOP_LOSS_PCT = 0.08
+  - STRENGTH_TARGET_PCT = 0.03
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -18326,7 +19000,7 @@ Merge evidence (tiers A): [A] femto_tensor_red_dip ~ tensor_red_dip (full eviden
 - Created by / source: The old Alpaca swing desk's Daily Cyan GBM and GBM-rule research on its Tensor engine replica, via Femto-lean
 - Description (from source records): Weekly Cyan momentum ADX rule
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/rule_1w_cyan_mom_adx.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18337,6 +19011,11 @@ Merge evidence (tiers A): [A] femto_tensor_red_dip ~ tensor_red_dip (full eviden
   - [rule_1w_cyan_mom_adx] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [rule_1w_cyan_mom_adx] data: WARMUP_BARS={"1Day": 21}
+- Parameters:
+  - HOLD_BARS = 126
+  - MIN_DV20 = 1_000_000
+  - NOTIONAL_FRACTION = 0.01  # A2-06: the executed sizing law
+  - MAX_POSITIONS = 10
 - Variant axes (catalog): [{"Variant": "Femto-lean", "Rows": "`femto_rule_1w_cyan_mom_adx`; Midna v3 `rule_1w_cyan_mom_adx`", "Thresholds": "7.3503 / 0.4446 / 25.795", "Size": "fill law"}, {"Variant": "Midna's forward lab (w-cyan-adx)", "Rows": "`midna_w_cyan_high_adx`", "Thresholds": "7.35 / 0.445 / 25.8", "Size": "$20,000 account / 6"}, {"Variant": "Femto-lean", "Rows": "`femto_rule_1w_cyan_mom_adx`; Midna v3 `rule_1w_cyan_mom_adx`", "Thresholds": "7.3503 / 0.4446 / 25.795", "Size": "fill law"}, {"Variant": "Midna's forward lab (w-cyan-adx)", "Rows": "`midna_w_cyan_high_adx`", "Thresholds": "7.35 / 0.445 / 25.8", "Size": "$20,000 account / 6"}, {"Variant": "Femto-lean", "Rows": "`femto_rule_1w_cyan_mom_adx`; Midna v3 `rule_1w_cyan_mom_adx`", "Thresholds": "7.3503 / 0.4446 / 25.795", "Size": "fill law"}, {"Variant": "Midna's forward lab (w-cyan-adx)", "Rows": "`midna_w_cyan_high_adx`", "Thresholds": "7.35 / 0.445 / 25.8", "Size": "$20,000 account / 6"}]
 
 ### Variants (2)
@@ -18361,7 +19040,7 @@ Merge evidence (tiers A): [A] femto_rule_1w_cyan_mom_adx ~ midna_w_cyan_high_adx
 - Created by / source: The old Alpaca swing desk's Daily Cyan GBM and GBM-rule research on its Tensor engine replica, via Femto-lean
 - Description (from source records): Weekly swing high-beta WaveTrend rule
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test sleeves/rule_1w_swing_beta_wt.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18372,6 +19051,11 @@ Merge evidence (tiers A): [A] femto_rule_1w_cyan_mom_adx ~ midna_w_cyan_high_adx
   - [rule_1w_swing_beta_wt] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [rule_1w_swing_beta_wt] data: WARMUP_BARS={"1Day": 21}
+- Parameters:
+  - HOLD_BARS = 126
+  - MIN_DV20 = 1_000_000
+  - NOTIONAL_FRACTION = 0.01  # A2-06: the executed sizing law
+  - MAX_POSITIONS = 10
 
 ### Variants (1)
 - **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18731,7 +19415,7 @@ Merge evidence (tiers A): [A] femto_rule_1w_swing_beta_wt ~ rule_1w_swing_beta_w
 - Created by / source: Galath research lab (lab_live 1D Cyan books), run by Lazarus
 - Description (from source records): Daily Cyan desk feed
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/1DC-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18745,6 +19429,11 @@ Merge evidence (tiers A): [A] femto_rule_1w_swing_beta_wt ~ rule_1w_swing_beta_w
   - [1dc] lz_engine sizing: {"budget_usd": 12500, "max_slots": 68, "position_usd": 700, "position_usd_by_class": {"core_small": 700, "core_micro": 364, "test": 230}, "one_share_max_usd": 1000, "cap_pct_of_dv20": 5.0, "min_slot_fraction": 0.9, "global_slot_usd": 1725, "min_dv20_usd": 100000}
 - Filters / data:
   - [lz_1dc] data: desk_feed (lab_live books / tracker sc_tag) :: shadow/live/desk_extra_fires_v1.json
+- Parameters:
+  - Universe: symbols named by matching cyan 1D Lazarus fires (lab panel names, per the family card in this repo); Asset: US equities. Timeframe: 1D (family cyan).
+  - Sizing / slice: capital_usd 12500.0, cash_usd 12500.0; slots 68, so per-slot capital is about $183.82.
+  - Cadence: 300 seconds. Session: rth.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} (empty in the roster row - all parameters live in the engine SPECS entry above).
 
 ### Variants (1)
 - **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18764,7 +19453,7 @@ Merge evidence (tiers A): [A] lz_1dc ~ 1dc (full evidence in MERGES.md)
 - Created by / source: Galath research (tracker 1D Green), run by Lazarus
 - Description (from source records): Daily Green under $5
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/S_1DGP5-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18778,6 +19467,11 @@ Merge evidence (tiers A): [A] lz_1dc ~ 1dc (full evidence in MERGES.md)
   - [s_1dgp5] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
   - [lz_s_1dgp5] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+- Parameters:
+  - slots=1, capital=1000.0, cadence_s=300, session="rth",
+  - max_age_min=2880 (60*48), qqq_down=True, stop_pct=None,
+  - horizon_sessions=40, family="green", tf="1D", max_price=5.0.
+  - Catalog note in the wrapper: 1D Green under $5.
 
 ### Variants (1)
 - **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18832,7 +19526,7 @@ Merge evidence (tiers C): [C] lz_wait_intraweek ~ lz_s_wait_intraweek (full evid
 - Created by / source: Galath research lab (lab_live), run by Lazarus
 - Description (from source records): Lab 1D Green trees
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_1DG-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section), Test docs/S_1DG-ALGORITHM.md, Test docs/S_1DG-ALGORITHM.md (Adapter-layer post-filter section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18843,7 +19537,13 @@ Merge evidence (tiers C): [C] lz_wait_intraweek ~ lz_s_wait_intraweek (full evid
   - [s_1dg] v3 slice: {"capital_usd": 17000.0, "cash_usd": 17000.0} parked=False
   - [s_1dg] lz_engine sizing: {"budget_usd": 17000, "max_slots": 17, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_1dg] Fail-closed: no fresh matching fire means no entry; missing
+  - [s_1dg] desk3/enhance18.filter_entries: the stale_bar_gate (default ON;
+  - [s_1dg] OFF via extra["s_1dg_enh2"]["stale_bar_gate"]=False) refuses entry
+- Parameters:
+  - slots=17, capital=17000.0, cadence_s=300, session="rth",
+  - max_age_min=2880 (60*48), stop_pct=None, horizon_sessions=21,
+  - family="green", tf="1D", ml_pick=True.
 
 ### Variants (1)
 - **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18863,7 +19563,7 @@ Merge evidence (tiers A): [A] lz_1dg ~ s_1dg (full evidence in MERGES.md)
 - Created by / source: Galath research lab (lab_live), run by Lazarus
 - Description (from source records): Lab 1W Cyan books
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/S_1WLAB-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18877,6 +19577,10 @@ Merge evidence (tiers A): [A] lz_1dg ~ s_1dg (full evidence in MERGES.md)
   - [s_1wlab] lz_engine sizing: {"budget_usd": 22000, "max_slots": 22, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
   - [lz_s_1wlab] data: lab_live books (native Lazarus routing) :: DESK_INTEGRATION/lab_live/out/latest/*.json
+- Parameters:
+  - slots=22, capital=22000.0, cadence_s=3600, session="rth",
+  - max_age_min=11520 (60*24*8), stop_pct=0.15,
+  - horizon_sessions=126, family="cyan", tf="1W".
 
 ### Variants (1)
 - **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18897,7 +19601,7 @@ Merge evidence (tiers A, C): [A] lz_1wlab ~ s_1wlab; [C] s_1wlab ~ lz_s_1wlab (f
 - Created by / source: Galath research lab (lab_live), run by Lazarus
 - Description (from source records): Lab 1W Swing covered
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_1WSW-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section), Test docs/S_1WSW-ALGORITHM.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18908,7 +19612,11 @@ Merge evidence (tiers A, C): [A] lz_1wlab ~ s_1wlab; [C] s_1wlab ~ lz_s_1wlab (f
   - [s_1wsw] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_1wsw] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_1wsw] Family, signal-tier and cap-tier filters are enforced only
+- Parameters:
+  - slots=1, capital=1000.0, cadence_s=3600, session="rth",
+  - max_age_min=11520 (60*24*8), qqq_down=True, stop_pct=0.15,
+  - horizon_sessions=126, family="swing", tf="1W".
 
 ### Variants (1)
 - **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -18961,7 +19669,7 @@ Merge evidence (tiers C): [C] lz_wait_r2_dcyan ~ lz_s_wait_r2_dcyan (full eviden
 - Created by / source: Galath research (canonical Tensor v698 tracker), run by Lazarus
 - Description (from source records): Tensor tracker lanes (1H / 1D / 1W)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/1D-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -18993,6 +19701,11 @@ Merge evidence (tiers C): [C] lz_wait_r2_dcyan ~ lz_s_wait_r2_dcyan (full eviden
   - [lz_1d] data: tracker (canonical Tensor v698 engine) :: shadow/live/latest_fires_v3.json + shadow/log/ledger.jsonl
   - [lz_1h] data: tracker (canonical Tensor v698 engine) :: shadow/live/latest_fires_v3.json + shadow/log/ledger.jsonl
   - [lz_1w] data: tracker (canonical Tensor v698 engine) :: shadow/live/latest_fires_v3.json + shadow/log/ledger.jsonl
+- Parameters:
+  - Universe: symbols named by matching Lazarus fires (the tracker's canonical universe, per the family card in this repo); Asset: US equities. Timeframe: the daily fire lane (id 1d); bars are read as 1Day bars by default in the engine.
+  - Sizing / slice: capital_usd 10350.0, cash_usd 10350.0; slots 6, so per-slot capital is $1,725.00.
+  - Cadence: 300 seconds. Session: rth.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} (empty in the roster row - all parameters live in the engine SPECS entry above).
 - Variant axes (catalog): [{"Lane": "1h (`lz_1h`)", "Entry window": "30 min", "Limit band": "3%", "Hold counted from": "plan"}, {"Lane": "1d (`lz_1d`)", "Entry window": "65 min", "Limit band": "5%", "Hold counted from": "fill"}, {"Lane": "1w (`lz_1w`)", "Entry window": "65 min", "Limit band": "5%", "Hold counted from": "plan"}, {"Lane": "Midna 1D / 1W (`midna_hourly_1d`, `midna_hourly_1w`)", "Entry window": "65 min", "Limit band": "5%", "Hold counted from": "plan; $1,000 positions"}, {"Lane": "1h (`lz_1h`)", "Entry window": "30 min", "Limit band": "3%", "Hold counted from": "plan"}, {"Lane": "1d (`lz_1d`)", "Entry window": "65 min", "Limit band": "5%", "Hold counted from": "fill"}, {"Lane": "1w (`lz_1w`)", "Entry window": "65 min", "Limit band": "5%", "Hold counted from": "plan"}, {"Lane": "Midna 1D / 1W (`midna_hourly_1d`, `midna_hourly_1w`)", "Entry window": "65 min", "Limit band": "5%", "Hold counted from": "plan; $1,000 positions"}, {"Lane": "1h (`lz_1h`)", "Entry window": "30 min", "Limit band": "3%", "Hold counted from": "plan"}, {"Lane": "1d (`lz_1d`)", "Entry window": "65 min", "Limit band": "5%", "Hold counted from": "fill"}, {"Lane": "1w (`lz_1w`)", "Entry window": "65 min", "Limit band": "5%", "H
 
 ### Variants (3)
@@ -19024,7 +19737,7 @@ Merge evidence (tiers A): [A] lz_1d ~ lz_1h; [A] lz_1d ~ lz_1w; [A] lz_1d ~ midn
 - Created by / source: Galath research (tracker sc_tag / ue_tag tiers), run by Lazarus
 - Description (from source records): Weekly Cyan tier A
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/1WA-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -19052,6 +19765,11 @@ Merge evidence (tiers A): [A] lz_1d ~ lz_1h; [A] lz_1d ~ lz_1w; [A] lz_1d ~ midn
   - [lz_1wa] data: desk_feed (lab_live books / tracker sc_tag) :: shadow/live/desk_extra_fires_v1.json
   - [lz_s_1wc_micro] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
   - [lz_s_1wc_ml] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+- Parameters:
+  - Universe: symbols named by matching weekly cyan tier-A small-cap Lazarus fires (tracker universe by PIT SEC band, per the family card in this repo); Asset: US equities. Timeframe: 1W.
+  - Sizing / slice: capital_usd 17250.0, cash_usd 17250.0; slots 17, so per-slot capital is about $1,014.71.
+  - Cadence: 3600 seconds. Session: rth.
+  - flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} (empty in the roster row - all parameters live in the engine SPECS entry above).
 - Variant axes (catalog): [{"Lane": "`lz_1wa`", "Band": "small (core)"}, {"Lane": "`lz_1wc_micro`", "Band": "micro"}, {"Lane": "`lz_1wc_ml`", "Band": "mid/large"}, {"Lane": "`lz_1wa`", "Band": "small (core)"}, {"Lane": "`lz_1wc_micro`", "Band": "micro"}, {"Lane": "`lz_1wc_ml`", "Band": "mid/large"}, {"Lane": "`lz_1wa`", "Band": "small (core)"}, {"Lane": "`lz_1wc_micro`", "Band": "micro"}, {"Lane": "`lz_1wc_ml`", "Band": "mid/large"}, {"Lane": "`lz_1wa`", "Band": "small (core)"}, {"Lane": "`lz_1wc_micro`", "Band": "micro"}, {"Lane": "`lz_1wc_ml`", "Band": "mid/large"}]
 
 ### Variants (1)
@@ -19078,7 +19796,7 @@ Merge evidence (tiers A, C): [A] lz_1wa ~ lz_1wc_micro; [A] lz_1wa ~ lz_1wc_ml; 
 - Created by / source: Galath research (tracker ue_tag), run by Lazarus
 - Description (from source records): Weekly Green tier A small
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/S_1WG_SMALL-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -19092,6 +19810,11 @@ Merge evidence (tiers A, C): [A] lz_1wa ~ lz_1wc_micro; [A] lz_1wa ~ lz_1wc_ml; 
   - [s_1wg_small] lz_engine sizing: {"budget_usd": 2696, "max_slots": 2, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
   - [lz_s_1wg_small] data: sleeve_feed composer (tracker ledger + alt-data tags) :: shadow/paper_sleeve/live/sleeve_fires_v1.json
+- Parameters:
+  - slots=2, capital=2696.0, cadence_s=3600, session="rth",
+  - max_age_min=11520 (60*24*8), stop_pct=0.15,
+  - horizon_sessions=252, family="green", tf="1W",
+  - Catalog note in the wrapper: 1W Green tier A small.
 
 ### Variants (1)
 - **1w**: recorded distinguishing tokens/parameters for this form: 1w (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -19112,7 +19835,7 @@ Merge evidence (tiers A, C): [A] lz_1wg_small ~ s_1wg_small; [C] s_1wg_small ~ l
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): Forward lab accounts (Tensor scan)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_D_GREEN_BAND-ALGORITHM.md (Spec (from SPECS in desk3/lazarus_midna.py) section), Test docs/S_MN_D_GREEN_BAND-RECREATE.md (Configuration section), Test docs/S_MN_D_GREEN_BAND-ALGORITHM.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -19135,7 +19858,14 @@ Merge evidence (tiers A, C): [A] lz_1wg_small ~ s_1wg_small; [C] s_1wg_small ~ l
   - [s_mn_w_green_smh] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_mn_w_green_smh] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_d_green_band] family="green", timeframe 1D, hold_sessions=21, stop=None, gate="band", budget=1000.0.
+  - [s_mn_d_green_band] ENH20 cross-stale gate (on by default): refuse a symbol whose
+  - [s_mn_d_green_band] Gate "band": the entry price must lie between $10.00 and $20.00 inclusive.
+- Parameters:
+  - family="green", timeframe 1D, hold_sessions=21, stop=None, gate="band", budget=1000.0.
+  - Universe: symbols named by qualifying Green fires (Midna's daily panel upstream). Asset: US equities. Timeframe: 1D.
+  - Sizing / slice: capital_usd 1000.0, cash_usd 1000.0 in the roster row; engine budget 1000.0, 1 slot.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row (all parameters live in the engine SPECS entry).
 - Variant axes (catalog): [{"Account (row)": "w-cyan-breadth (`midna_w_cyan_quiet_tape`; Lazarus lane `midna_w_cyan_breadth`)", "Rule": "dv \u2264 6.92, slow state 2, breadth \u2265 0.037", "Hold": "126"}, {"Account (row)": "w-cyan-vix (`midna_w_cyan_mid_vix`)", "Rule": "dv \u2264 7.36, 126d \u2265 44.1%, VIX 13.71-26.38", "Hold": "252"}, {"Account (row)": "d-green-band (`midna_d_green_band`)", "Rule": "$10-20, dispersion 0.021-0.029, gap age 32-252", "Hold": "21"}, {"Account (row)": "w-green-smh (`midna_w_green_calm_smh`)", "Rule": "skew -0.68..0.472, SMH-SPY -0.049..0.097, no FOMC", "Hold": "126"}, {"Account (row)": "w-cyan-breadth (`midna_w_cyan_quiet_tape`; Lazarus lane `midna_w_cyan_breadth`)", "Rule": "dv \u2264 6.92, slow state 2, breadth \u2265 0.037", "Hold": "126"}, {"Account (row)": "w-cyan-vix (`midna_w_cyan_mid_vix`)", "Rule": "dv \u2264 7.36, 126d \u2265 44.1%, VIX 13.71-26.38", "Hold": "252"}, {"Account (row)": "d-green-band (`midna_d_green_band`)", "Rule": "$10-20, dispersion 0.021-0.029, gap age 32-252", "Hold": "21"}, {"Account (row)": "w-green-smh (`midna_w_green_calm_smh`)", "Rule": "skew -0.68..0.472, SMH-SPY -0.049..0.097, no FOMC", "Hold": "126"}, {"Account (row)": "w-cyan-breadth (`m
 
 ### Variants (1)
@@ -19163,7 +19893,7 @@ Merge evidence (tiers A): [A] midna_d_green_band ~ midna_w_cyan_breadth; [A] mid
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): Hourly Tensor playbook
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_HOURLY-RECREATE.md (Configuration section), Test docs/S_MN_HOURLY-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -19178,7 +19908,13 @@ Merge evidence (tiers A): [A] midna_d_green_band ~ midna_w_cyan_breadth; [A] mid
   - [s_mn_nostop] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_mn_nostop] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_hourly] 3. Slot gate: if the number held is at least 12, return the exits only.
+  - [s_mn_hourly] 5. Cross-stale gate (ENH20, on by default; off via extra s_mn_hourly_enh20 xstale_gate=False): refuse when the symbol's last 1Hour bar lags the latest 1Hour bar among signalled symbols by more than 4 hours, with a paired journal record to extra enh20_journal.
+- Parameters:
+  - Universe: symbols flagged in midna_signals (Midna's swing basket upstream). Asset: US equities. Timeframe: 1h (bars_1hour, 1Hour bars).
+  - Sizing / slice: capital_usd 12000.0, cash_usd 12000.0 in the roster row; 12 slots x $1,000 in the module call.
+  - Cadence: 3600 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - Roster inputs: bars_1hour, positions, midna_signals.
 - Variant axes (catalog): [{"Row": "`midna_hourly_playbook`", "Plan": "playbook 1.0.0"}, {"Row": "`midna_nostop` (Lazarus lane)", "Plan": "no stop, 60 hour bars, $1,000 \u00d7 2"}, {"Row": "`midna_hourly_playbook`", "Plan": "playbook 1.0.0"}, {"Row": "`midna_nostop` (Lazarus lane)", "Plan": "no stop, 60 hour bars, $1,000 \u00d7 2"}, {"Row": "`midna_hourly_playbook`", "Plan": "playbook 1.0.0"}, {"Row": "`midna_nostop` (Lazarus lane)", "Plan": "no stop, 60 hour bars, $1,000 \u00d7 2"}, {"Row": "`midna_hourly_playbook`", "Plan": "playbook 1.0.0"}, {"Row": "`midna_nostop` (Lazarus lane)", "Plan": "no stop, 60 hour bars, $1,000 \u00d7 2"}]
 
 ### Variants (1)
@@ -19201,7 +19937,7 @@ Merge evidence (tiers A): [A] midna_hourly_playbook ~ midna_nostop; [A] midna_ho
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk; also Kronos-base (shiyu-coder/Kronos; NeoQuasar/Kronos-base weights), reconstructed in the desk's six-strategy study
 - Description (from source records): Kronos-base TopkDropout
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_KRONOS-RECREATE.md (Configuration section), Test docs/S_MN_KRONOS-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -19212,7 +19948,12 @@ Merge evidence (tiers A): [A] midna_hourly_playbook ~ midna_nostop; [A] midna_ho
   - [s_mn_kronos] v3 slice: {"capital_usd": 2000.0, "cash_usd": 2000.0} parked=False
   - [s_mn_kronos] lz_engine sizing: {"budget_usd": 2000, "max_slots": 2, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_kronos] 1. Fires come from context.extra fires; only dict fires with sleeve_id exactly "s_mn_kronos", a symbol, and a date are considered. Age = session date minus fire date must satisfy 0 <= age <= 7.
+  - [s_mn_kronos] 4. Exits first: a held name not in the top list exits in full (sell_to_close, price_hint = last close if bars exist) only when sessions held (bars strictly after entry_date) >= 5; otherwise it is kept. Reason: forecast_changed min_hold_met.
+- Parameters:
+  - Universe: the symbols named by the latest fresh Kronos forecast fires (24 frozen names upstream, per the card). Asset: US equities. Timeframe: 1d.
+  - Sizing / slice: capital_usd 2000.0, cash_usd 2000.0 in the roster row; 4 names x $500 in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
 - Variant axes (catalog): [{"Book": "Midna (her v3 desk and the master desk's port)", "Book size": "$100,000", "Sizing": "95% of equity / 4, whole shares", "Orders": "at last \u00b1 0.1%", "Rows": "`midna_kronos_topk`, `s_mn_kronos`"}, {"Book": "Quant research reconstruction", "Book size": "$1,000,000", "Sizing": "95% of the cash after sales, 1% ADV caps, fractional", "Orders": "marketable limits, 30 minutes", "Rows": "`qr_kronosbasezeroshotustransfer`"}, {"Book": "Midna (her v3 desk and the master desk's port)", "Book size": "$100,000", "Sizing": "95% of equity / 4, whole shares", "Orders": "at last \u00b1 0.1%", "Rows": "`midna_kronos_topk`, `s_mn_kronos`"}, {"Book": "Quant research reconstruction", "Book size": "$1,000,000", "Sizing": "95% of the cash after sales, 1% ADV caps, fractional", "Orders": "marketable limits, 30 minutes", "Rows": "`qr_kronosbasezeroshotustransfer`"}, {"Book": "Midna (her v3 desk and the master desk's port)", "Book size": "$100,000", "Sizing": "95% of equity / 4, whole shares", "Orders": "at last \u00b1 0.1%", "Rows": "`midna_kronos_topk`, `s_mn_kronos`"}, {"Book": "Quant research reconstruction", "Book size": "$1,000,000", "Sizing": "95% of the cash after sales, 1% ADV caps, fr
 
 ### Variants (2)
@@ -20164,7 +20905,7 @@ Merge evidence (tiers A): [A] ausar_pb152 ~ R19_TIMING_HOUR_FLOOR0_DELAY1 (full 
 - Created by / source: Galath research lab (frozen rules), run by Lazarus
 - Description (from source records): Lab rule books (1D / 1W)
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_RULES_1D-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section), Test docs/S_RULES_1D-ALGORITHM.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20179,7 +20920,13 @@ Merge evidence (tiers A): [A] ausar_pb152 ~ R19_TIMING_HOUR_FLOOR0_DELAY1 (full 
   - [s_rules_1w] v3 slice: {"capital_usd": 6000.0, "cash_usd": 6000.0} parked=False
   - [s_rules_1w] lz_engine sizing: {"budget_usd": 6000, "max_slots": 6, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_rules_1d] Family/tier/cap filters are enforced only when the spec
+  - [s_rules_1d] No QQQ-down gate in this spec (qqq_down is not set).
+- Parameters:
+  - slots=44, capital=44000.0, cadence_s=300, session="rth",
+  - max_age_min=60*48 (48 hours), stop_pct=None,
+  - horizon_sessions=22, horizon_from_fire=True,
+  - Catalog note in the wrapper: Lab rule 1D, 43 frozen rules
 - Variant axes (catalog): [{"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}, {"Lane": "`lz_rules_1d`", "Frame": "daily"}, {"Lane": "`lz_rules_1w`", "Frame": "weekly"}]
 
 ### Variants (2)
@@ -20397,7 +21144,7 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_MN_GBM_1D_CYAN-RECREATE.md (Configuration section), Test docs/S_MN_GBM_1D_CYAN-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20407,7 +21154,13 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Sizing:
   - [s_mn_gbm_1d_cyan] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_gbm_1d_cyan] 5. Start state: start FLAT; upstream positions are reference only (config status_text).
+  - [s_mn_gbm_1d_cyan] "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+- Parameters:
+  - Full lz_engine config row for `s_mn_gbm_1d_cyan` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_mn_gbm_1d_cyan",
+  - "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+  - "lane": "s_mn_gbm_1d_cyan"
 
 ### Variants (1)
 - **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -20426,7 +21179,7 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_MN_HOURLY_1D-RECREATE.md (Configuration section), Test docs/S_MN_HOURLY_1D-RECREATE.md, Test docs/S_MN_HOURLY_1D-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20436,7 +21189,14 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Sizing:
   - [s_mn_hourly_1d] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_hourly_1d] "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+  - [s_mn_hourly_1d] Source producer and file are named in the config row's `source` block (see Configuration).
+  - [s_mn_hourly_1d] Bars / positions / fires in the shape the host code named in Files consumes; a missing fire or missing filter evidence fails closed in the host family rule.
+- Parameters:
+  - Full lz_engine config row for `s_mn_hourly_1d` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "id": "s_mn_hourly_1d",
+  - "label": "Midna Hourly 1D (Midna port)",
+  - "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
 
 ### Variants (1)
 - **1d**: recorded distinguishing tokens/parameters for this form: 1d (base strategy otherwise as in the algorithm above; token-derived from the sleeve ids and, where present, ausar_map variant text)
@@ -20455,7 +21215,7 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_MN_W_CYAN_ADX-RECREATE.md (Configuration section), Test docs/S_MN_W_CYAN_ADX-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20465,7 +21225,14 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Sizing:
   - [s_mn_w_cyan_adx] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_w_cyan_adx] 1. Scan: for each name the forward scan builds daily and weekly rows from the panel; a hit requires the weekly state to be cyan.
+  - [s_mn_w_cyan_adx] 3. Liquid filter (forward lab): last close at least $5 and 20-session mean dollar volume at least $1,000,000.
+  - [s_mn_w_cyan_adx] "status_text": "ready (Midna port; start FLAT; Midna positions are reference only)",
+- Parameters:
+  - Full lz_engine config row for `s_mn_w_cyan_adx` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+  - "max_delay_minutes": 65,
+  - "limit_band_pct": 5.0,
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -20484,7 +21251,7 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_WAIT_R2_DCYAN-RECREATE.md, Test docs/S_WAIT_R2_DCYAN-RECREATE.md (Configuration section), Test docs/S_WAIT_R2_DCYAN-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20494,7 +21261,12 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Sizing:
   - [s_wait_r2_dcyan] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_wait_r2_dcyan] Read-back check: this doc was written through the PII gate and read back from Test; the sha256 recorded in the batch results file matches the read-back bytes.
+- Parameters:
+  - 4. WAIT_SPEC for this lane in that module: kind="1d", unit="1d", hold_from="fill", H=21 sessions; rule text: hold the job's 1D horizon (21 sessions) from the fill; no stop; entry at the next session.
+  - Full lz_engine config row for `s_wait_r2_dcyan` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim; the source placeholder row, before live_row applies the WAIT_SPEC kind/hold and the paper-test sizing in the Full algorithm section):
+  - "id": "s_wait_r2_dcyan",
+  - "label": "R2 Daily Cyan extended (WAIT)",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -20549,7 +21321,7 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
 - Created by / source: not recorded
 - Description (from source records): QLD buy and hold · 100% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_QLD_ONLY_BUY_HOLD_C100-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20560,7 +21332,8 @@ Merge evidence (tiers A): [A] lz_rules_1d ~ lz_rules_1w; [A] lz_rules_1d ~ s_rul
   - [ausar_pb97] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
   - [ausar_r19_R19_ETF_QLD_ONLY_BUY_HOLD_C100] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_QLD_ONLY_BUY_HOLD_C100] 2. Equity basis: equity = extra['account_value'] or extra['net_value'] or slice capital_usd or 10000.0. Note the config slice is 10000.0 capital and 10000.0 cash.
+  - [R19_ETF_QLD_ONLY_BUY_HOLD_C100] Sizing / slice: capital_usd 10000.0, cash_usd 10000.0, gross_target 1.0, bp_buffer_frac 0.02
 - Filters / data:
   - [ausar_pb97] data: Verified ETF identities, the account cash and holdings, and separately labeled IEX execution quotes for the initial allocation.
   - [ausar_r19_R19_ETF_QLD_ONLY_BUY_HOLD_C100] data: posted r19 data adapters
@@ -20588,7 +21361,7 @@ Merge evidence (tiers A, C): [A] ausar_pb97 ~ R19_ETF_QLD_ONLY_BUY_HOLD_C100; [C
 - Created by / source: not recorded
 - Description (from source records): QLD monthly rebalance · 100% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_QLD_ONLY_MONTHLY_C100-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20599,7 +21372,8 @@ Merge evidence (tiers A, C): [A] ausar_pb97 ~ R19_ETF_QLD_ONLY_BUY_HOLD_C100; [C
   - [ausar_pb98] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
   - [ausar_r19_R19_ETF_QLD_ONLY_MONTHLY_C100] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_QLD_ONLY_MONTHLY_C100] 2. Equity basis: equity = extra['account_value'] or extra['net_value'] or slice capital_usd or 10000.0. Note the config slice is 10000.0 capital and 10000.0 cash.
+  - [R19_ETF_QLD_ONLY_MONTHLY_C100] Sizing / slice: capital_usd 10000.0, cash_usd 10000.0, gross_target 1.0, bp_buffer_frac 0.02
 - Filters / data:
   - [ausar_pb98] data: Verified ETF identities and separately labeled IEX execution quotes. Monthly versions also use the prior signal-session closes to calculate share targets.
   - [ausar_r19_R19_ETF_QLD_ONLY_MONTHLY_C100] data: posted r19 data adapters
@@ -20627,7 +21401,7 @@ Merge evidence (tiers A, C): [A] ausar_pb98 ~ R19_ETF_QLD_ONLY_MONTHLY_C100; [C]
 - Created by / source: not recorded
 - Description (from source records): QQQ and QLD equal-weight buy and hold · 100% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_QQQ_QLD_50_50_BUY_HOLD_C100-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20638,7 +21412,7 @@ Merge evidence (tiers A, C): [A] ausar_pb98 ~ R19_ETF_QLD_ONLY_MONTHLY_C100; [C]
   - [ausar_pb102] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
   - [ausar_r19_R19_ETF_QQQ_QLD_50_50_BUY_HOLD_C100] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_QQQ_QLD_50_50_BUY_HOLD_C100] Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 (desk config/sleeves.json row); target shares = floor(weight x gross x equity / price), gross 1.0.
 - Filters / data:
   - [ausar_pb102] data: Verified ETF identities, the account cash and holdings, and separately labeled IEX execution quotes for the initial allocation.
   - [ausar_r19_R19_ETF_QQQ_QLD_50_50_BUY_HOLD_C100] data: posted r19 data adapters
@@ -20666,7 +21440,7 @@ Merge evidence (tiers A, C): [A] ausar_pb102 ~ R19_ETF_QQQ_QLD_50_50_BUY_HOLD_C1
 - Created by / source: not recorded
 - Description (from source records): QQQ and QLD equal-weight monthly rebalance · 100% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_QQQ_QLD_50_50_MONTHLY_C100-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20677,7 +21451,9 @@ Merge evidence (tiers A, C): [A] ausar_pb102 ~ R19_ETF_QQQ_QLD_50_50_BUY_HOLD_C1
   - [ausar_pb103] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
   - [ausar_r19_R19_ETF_QQQ_QLD_50_50_MONTHLY_C100] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_QQQ_QLD_50_50_MONTHLY_C100] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_QQQ_QLD_50_50_MONTHLY_C100] Config row: id `aster_etf_qqq_qld_monthly`, module `adapters3.aster_etf_qqq_qld_monthly`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_QQQ_QLD_50_50_MONTHLY_C100] Sizing check: desired shares equal floor(weight x 1.0 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb103] data: Verified ETF identities and separately labeled IEX execution quotes. Monthly versions also use the prior signal-session closes to calculate share targets.
   - [ausar_r19_R19_ETF_QQQ_QLD_50_50_MONTHLY_C100] data: posted r19 data adapters
@@ -20705,7 +21481,7 @@ Merge evidence (tiers A, C): [A] ausar_pb103 ~ R19_ETF_QQQ_QLD_50_50_MONTHLY_C10
 - Created by / source: not recorded
 - Description (from source records): QQQ buy and hold · 100% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_QQQ_HOLD_FULL_C100-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20716,7 +21492,9 @@ Merge evidence (tiers A, C): [A] ausar_pb103 ~ R19_ETF_QQQ_QLD_50_50_MONTHLY_C10
   - [ausar_pb99] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
   - [ausar_r19_R19_ETF_QQQ_HOLD_FULL_C100] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_QQQ_HOLD_FULL_C100] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_QQQ_HOLD_FULL_C100] Config row: id `aster_etf_qqq_buy_hold`, module `adapters3.aster_etf_qqq_buy_hold`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_QQQ_HOLD_FULL_C100] Sizing check: desired shares equal floor(weight x 1.0 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb99] data: Verified ETF identities, the account cash and holdings, and separately labeled IEX execution quotes for the initial allocation.
   - [ausar_r19_R19_ETF_QQQ_HOLD_FULL_C100] data: posted r19 data adapters
@@ -20746,7 +21524,7 @@ Merge evidence (tiers A, C): [A] ausar_pb99 ~ R19_ETF_QQQ_HOLD_FULL_C100; [C] R1
 - Created by / source: not recorded
 - Description (from source records): QQQ monthly rebalance · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_QQQ_MONTHLY_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20757,7 +21535,9 @@ Merge evidence (tiers A, C): [A] ausar_pb99 ~ R19_ETF_QQQ_HOLD_FULL_C100; [C] R1
   - [ausar_pb101] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
   - [ausar_r19_R19_ETF_QQQ_MONTHLY_M150] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_QQQ_MONTHLY_M150] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_QQQ_MONTHLY_M150] Config row: id `aster_etf_qqq_monthly_m150`, module `adapters3.aster_etf_qqq_monthly_m150`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_QQQ_MONTHLY_M150] Sizing check: desired shares equal floor(weight x 1.5 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb101] data: Verified ETF identities and separately labeled IEX execution quotes. Monthly versions also use the prior signal-session closes to calculate share targets.
   - [ausar_r19_R19_ETF_QQQ_MONTHLY_M150] data: posted r19 data adapters
@@ -20785,7 +21565,7 @@ Merge evidence (tiers A, C): [A] ausar_pb101 ~ R19_ETF_QQQ_MONTHLY_M150; [C] aus
 - Created by / source: not recorded
 - Description (from source records): QQQ monthly rebalance · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_QQQ_MONTHLY_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20796,7 +21576,9 @@ Merge evidence (tiers A, C): [A] ausar_pb101 ~ R19_ETF_QQQ_MONTHLY_M150; [C] aus
   - [ausar_pb100] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
   - [ausar_r19_R19_ETF_QQQ_MONTHLY_C098] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_QQQ_MONTHLY_C098] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_QQQ_MONTHLY_C098] Config row: id `aster_etf_qqq_monthly_c098`, module `adapters3.aster_etf_qqq_monthly_c098`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_QQQ_MONTHLY_C098] Sizing check: desired shares equal floor(weight x 0.98 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb100] data: Verified ETF identities and separately labeled IEX execution quotes. Monthly versions also use the prior signal-session closes to calculate share targets.
   - [ausar_r19_R19_ETF_QQQ_MONTHLY_C098] data: posted r19 data adapters
@@ -20824,7 +21606,7 @@ Merge evidence (tiers A, C): [A] ausar_pb100 ~ R19_ETF_QQQ_MONTHLY_C098; [C] aus
 - Created by / source: not recorded
 - Description (from source records): S&P 500 ETF buy and hold · 100% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_SPY_HOLD_FULL_C100-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20835,7 +21617,9 @@ Merge evidence (tiers A, C): [A] ausar_pb100 ~ R19_ETF_QQQ_MONTHLY_C098; [C] aus
   - [ausar_pb106] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
   - [ausar_r19_R19_ETF_SPY_HOLD_FULL_C100] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_SPY_HOLD_FULL_C100] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_SPY_HOLD_FULL_C100] Config row: id `aster_etf_spy_buy_hold`, module `adapters3.aster_etf_spy_buy_hold`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_SPY_HOLD_FULL_C100] Sizing check: desired shares equal floor(weight x 1.0 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb106] data: Verified ETF identities, the account cash and holdings, and separately labeled IEX execution quotes for the initial allocation.
   - [ausar_r19_R19_ETF_SPY_HOLD_FULL_C100] data: posted r19 data adapters
@@ -20865,7 +21649,7 @@ Merge evidence (tiers A, C): [A] ausar_pb106 ~ R19_ETF_SPY_HOLD_FULL_C100; [C] R
 - Created by / source: not recorded
 - Description (from source records): S&P 500 ETF monthly rebalance · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_SPY_MONTHLY_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20876,7 +21660,9 @@ Merge evidence (tiers A, C): [A] ausar_pb106 ~ R19_ETF_SPY_HOLD_FULL_C100; [C] R
   - [ausar_pb108] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
   - [ausar_r19_R19_ETF_SPY_MONTHLY_M150] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_SPY_MONTHLY_M150] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_SPY_MONTHLY_M150] Config row: id `aster_etf_spy_monthly_m150`, module `adapters3.aster_etf_spy_monthly_m150`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_SPY_MONTHLY_M150] Sizing check: desired shares equal floor(weight x 1.5 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb108] data: Verified ETF identities and separately labeled IEX execution quotes. Monthly versions also use the prior signal-session closes to calculate share targets.
   - [ausar_r19_R19_ETF_SPY_MONTHLY_M150] data: posted r19 data adapters
@@ -20904,7 +21690,7 @@ Merge evidence (tiers A, C): [A] ausar_pb108 ~ R19_ETF_SPY_MONTHLY_M150; [C] R19
 - Created by / source: not recorded
 - Description (from source records): S&P 500 ETF monthly rebalance · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_SPY_MONTHLY_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20915,7 +21701,9 @@ Merge evidence (tiers A, C): [A] ausar_pb108 ~ R19_ETF_SPY_MONTHLY_M150; [C] R19
   - [ausar_pb107] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
   - [ausar_r19_R19_ETF_SPY_MONTHLY_C098] At each monthly rebalance, sell only holdings above the new fixed-portfolio target before buying any shortfall.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_SPY_MONTHLY_C098] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_SPY_MONTHLY_C098] Config row: id `aster_etf_spy_monthly_c098`, module `adapters3.aster_etf_spy_monthly_c098`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_SPY_MONTHLY_C098] Sizing check: desired shares equal floor(weight x 0.98 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb107] data: Verified ETF identities and separately labeled IEX execution quotes. Monthly versions also use the prior signal-session closes to calculate share targets.
   - [ausar_r19_R19_ETF_SPY_MONTHLY_C098] data: posted r19 data adapters
@@ -20943,7 +21731,7 @@ Merge evidence (tiers A, C): [A] ausar_pb107 ~ R19_ETF_SPY_MONTHLY_C098; [C] aus
 - Created by / source: not recorded
 - Description (from source records): Semiconductor ETF buy and hold · 150% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_SMH_HOLD_M150-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20954,7 +21742,9 @@ Merge evidence (tiers A, C): [A] ausar_pb107 ~ R19_ETF_SPY_MONTHLY_C098; [C] aus
   - [ausar_pb105] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
   - [ausar_r19_R19_ETF_SMH_HOLD_M150] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_SMH_HOLD_M150] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_SMH_HOLD_M150] Config row: id `aster_etf_smh_hold_m150`, module `adapters3.aster_etf_smh_hold_m150`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_SMH_HOLD_M150] Sizing check: desired shares equal floor(weight x 1.5 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb105] data: Verified ETF identities, the account cash and holdings, and separately labeled IEX execution quotes for the initial allocation.
   - [ausar_r19_R19_ETF_SMH_HOLD_M150] data: posted r19 data adapters
@@ -20982,7 +21772,7 @@ Merge evidence (tiers A, C): [A] ausar_pb105 ~ R19_ETF_SMH_HOLD_M150; [C] R19_ET
 - Created by / source: not recorded
 - Description (from source records): Semiconductor ETF buy and hold · 98% exposure
 - Algorithm status: **FULL**
-- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text
+- Algorithm sources consulted: ausar_map params/variant, femto land-wt config params, md2 catalog entry/exit/strategy text, Test docs/R19_ETF_SMH_HOLD_C098-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -20993,7 +21783,9 @@ Merge evidence (tiers A, C): [A] ausar_pb105 ~ R19_ETF_SMH_HOLD_M150; [C] R19_ET
   - [ausar_pb104] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
   - [ausar_r19_R19_ETF_SMH_HOLD_C098] Holds fixed share quantities after the initial allocation; this strategy has no scheduled profit target or calendar exit.
 - Sizing:
-  - not recorded in any consulted source
+  - [R19_ETF_SMH_HOLD_C098] 2. Equity basis: equity = extra["account_value"] or extra["net_value"] or slice capital_usd or 10000.0.
+  - [R19_ETF_SMH_HOLD_C098] Config row: id `aster_etf_smh_hold_c098`, module `adapters3.aster_etf_smh_hold_c098`, cadence_s 300, session rth, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close false, flatten_time_et null, parked false, inputs ["bars", "positions", "quotes"].
+  - [R19_ETF_SMH_HOLD_C098] Sizing check: desired shares equal floor(weight x 0.98 x equity-or-NAV / price) on the basis stated in the algorithm, whole shares only.
 - Filters / data:
   - [ausar_pb104] data: Verified ETF identities, the account cash and holdings, and separately labeled IEX execution quotes for the initial allocation.
   - [ausar_r19_R19_ETF_SMH_HOLD_C098] data: posted r19 data adapters
@@ -21490,7 +22282,7 @@ Merge evidence (tiers A): [A] femto_blowoff_1h ~ femto_blowoff_d (full evidence 
 - Created by / source: The old Alpaca swing desk, via Femto-lean
 - Description (from source records): Winner confluence (weekly qualifiers) Adapter for confluence — v2 interface glue ONLY (DESIGN §4a).
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, femto land-wt config params, md2 catalog entry/exit/strategy text, muse-desk-v3 roster params/slice, Test docs/CONFLUENCE-RECREATE.md (Configuration section), Test sleeves/confluence.py
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -21501,6 +22293,11 @@ Merge evidence (tiers A): [A] femto_blowoff_1h ~ femto_blowoff_d (full evidence 
   - [confluence] v3 slice: {"capital_usd": 10000.0, "cash_usd": 10000.0} parked=False
 - Filters / data:
   - [confluence] data: WARMUP_BARS={"1Day": 1}
+- Parameters:
+  - Universe: the weekly M2 qualifier list (no fixed symbol list in CONFIG; universe ()). Asset: US equities. Timeframe: 1w signal; Monday entries and exits.
+  - Sizing / slice: capital_usd 10000.0, cash_usd 10000.0 in the roster row; the module's executed law is the 30 percent sleeve cap over account equity described above.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - HOLD9_NAMES = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"]
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -21687,7 +22484,7 @@ Merge evidence (tiers C): [C] lz_s_wait_flow ~ lz_wait_flow (full evidence in ME
 - Created by / source: Galath research (MOONSHOT_FROZEN_SPEC v1.0), run by Lazarus; Midna's moonshot book
 - Description (from source records): Moonshot weekly lane
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_MOONSHOT-RECREATE.md (Configuration section), Test docs/S_MOONSHOT-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section), Test docs/S_MN_MOONSHOT-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -21702,7 +22499,12 @@ Merge evidence (tiers C): [C] lz_s_wait_flow ~ lz_wait_flow (full evidence in ME
   - [s_moonshot] v3 slice: {"capital_usd": 2581.0, "cash_usd": 2581.0} parked=True
   - [s_moonshot] lz_engine sizing: {"budget_usd": 2581, "max_slots": 2, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_moonshot] 3. Fresh fire: from context.extra fires, consider only dict fires with sleeve_id exactly "s_mn_moonshot", a symbol and a date, with age = session minus fire date satisfying 0 <= age <= 7; keep the one with the latest date. No fresh fire means no entry (fail closed).
+- Parameters:
+  - Universe: the single symbol named by the freshest qualifying upstream fire. Asset: US equities. Timeframe: 1d in the module CONFIG cadence (the pick itself is a weekly pick upstream, per the card's 1w timeframe).
+  - Sizing / slice: capital_usd 1000.0, cash_usd 1000.0 in the roster row; $1,000 budget in the module.
+  - Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - slots=10, capital=2581.0, cadence_s=3600, session="rth",
 - Variant axes (catalog): [{"Variant": "Lazarus lane (`lz_moonshot`; Midna v3 `s_moonshot`)", "Fires": "1W Cyan or Green", "60-week depth": "\u2265 70", "Hold": "52 weeks", "Open at once": "2"}, {"Variant": "Midna's book (`midna_w_cyan_moonshot`; Midna v3 `s_mn_moonshot`)", "Fires": "1W buy-cyan, \u2264 10 days old", "60-week depth": "\u2265 70.35", "Hold": "78 weeks (v3: 390 sessions)", "Open at once": "10"}, {"Variant": "Lazarus lane (`lz_moonshot`; Midna v3 `s_moonshot`)", "Fires": "1W Cyan or Green", "60-week depth": "\u2265 70", "Hold": "52 weeks", "Open at once": "2"}, {"Variant": "Midna's book (`midna_w_cyan_moonshot`; Midna v3 `s_mn_moonshot`)", "Fires": "1W buy-cyan, \u2264 10 days old", "60-week depth": "\u2265 70.35", "Hold": "78 weeks (v3: 390 sessions)", "Open at once": "10"}, {"Variant": "Lazarus lane (`lz_moonshot`; Midna v3 `s_moonshot`)", "Fires": "1W Cyan or Green", "60-week depth": "\u2265 70", "Hold": "52 weeks", "Open at once": "2"}, {"Variant": "Midna's book (`midna_w_cyan_moonshot`; Midna v3 `s_mn_moonshot`)", "Fires": "1W buy-cyan, \u2264 10 days old", "60-week depth": "\u2265 70.35", "Hold": "78 weeks (v3: 390 sessions)", "Open at once": "10"}, {"Variant": "Lazarus lane (`lz_moonsho
 
 ### Variants (1)
@@ -21756,7 +22558,7 @@ Merge evidence (tiers A): [A] lz_moonshot ~ midna_w_cyan_moonshot; [A] lz_moonsh
 - Created by / source: Midna's TypeScript desk (equity books), ported line for line to the master desk
 - Description (from source records): QQQ flip5 TZA hedge
 - Algorithm status: **FULL**
-- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice
+- Algorithm sources consulted: Test catalog entry/variants, lz_engine config (entry/exit/sizing), muse-desk-v3 roster params/slice, Test docs/S_MN_HEDGE-RECREATE.md (Configuration section), Test docs/S_MN_HEDGE-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -21767,7 +22569,13 @@ Merge evidence (tiers A): [A] lz_moonshot ~ midna_w_cyan_moonshot; [A] lz_moonsh
   - [s_mn_hedge] v3 slice: {"capital_usd": 1000.0, "cash_usd": 1000.0} parked=False
   - [s_mn_hedge] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_hedge] 4. Entry gate: if anything is held, or the signal is not on, or there are no TZA bars, return the exits only (single slot).
+  - [s_mn_hedge] 5. ENH19 stale-bar gate (on by default; switch extra s_mn_hedge_enh19 stale_gate): if the last TZA bar's date is more than 4 calendar days before the session, refuse the entry and journal a paired record (exp ENH19-LAZB7-20261024) to extra enh19_journal. Exits are untouched.
+- Parameters:
+  - Universe: TZA only (the signal is QQQ-based, upstream). Asset: leveraged ETF. Timeframe: 1d (bars_1day).
+  - Sizing / slice: capital_usd 1000.0, cash_usd 1000.0 in the roster row; entry notional is 30 percent of $1,000 = $300 in the module.
+  - Cadence: 86400 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.
+  - Roster inputs: bars_1day, positions, hedge_signal.
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -22317,7 +23125,7 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/LEGACY_EXIT-RECREATE.md, Test docs/LEGACY_EXIT-RECREATE.md (Data inputs section), Test docs/LEGACY_EXIT-RECREATE.md (Configuration section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -22327,7 +23135,10 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Sizing:
   - [legacy_exit] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1725, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1725, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [legacy_exit] 1. Recovery would require the sleeve module or catalog description for this exact canonical id to appear in one of the searched repos.
+- Parameters:
+  - Entry config: {"policy": "none", "max_delay_minutes": 0, "limit_band_pct": 0.0, "limit_buffer_pct": 1.0, "window_sessions": null, "no_chase_mult": null, "stock_red": false, "qqq_red": false, "order": "capped_limit_day"}. Read plainly: no entries are ever generated by this id.
+  - lz_engine config exactly as in the Full algorithm (entry policy none; exit per stored plan, 1d hold units; budget_usd 0, max_slots 0, position_usd 1725, cap_pct_of_dv20 1.0, min_slot_fraction 0.9, global_slot_usd 1725, min_dv20_usd 100000).
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -22520,7 +23331,7 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_MN_QQQ_LADDER-RECREATE.md (Configuration section), Test docs/S_MN_QQQ_LADDER-RECREATE.md
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -22530,7 +23341,13 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Sizing:
   - [s_mn_qqq_ladder] lz_engine sizing: {"budget_usd": 1000, "max_slots": 1, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_mn_qqq_ladder] 1. Severe challenge (checked first): spot at or below the strike, or ask at least 3x the sale credit, or live put delta at least 0.35: the put is bought back; this needs today's fresh chain and the cash for it.
+  - [s_mn_qqq_ladder] 4. Roll down: 8 to 21 DTE, challenged (ask at least 2x credit, delta at least 0.20, or QQQ at or below strike) but not severe: buy back and sell the band put below the strike in the later expiration nearest 45 days (38 to 52) whose bid is at least half the old credit, when the cash still secures it.
+- Parameters:
+  - Full lz_engine config row for `s_mn_qqq_ladder` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim):
+  - "status_text": "shadow-tracked (no broker orders): QQQ options ladder; Test desk is stocks-only \u2014 paper-tracked from option-marks/ladder",
+  - "file": "shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+  - "max_delay_minutes": 65,
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -22549,7 +23366,7 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_WAIT_CHASE-RECREATE.md, Test docs/S_WAIT_CHASE-RECREATE.md (Configuration section), Test docs/S_WAIT_CHASE-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -22559,7 +23376,12 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Sizing:
   - [s_wait_chase] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_wait_chase] Read-back check: this doc was written through the PII gate and read back from Test; the sha256 recorded in the batch results file matches the read-back bytes.
+- Parameters:
+  - 4. WAIT_SPEC for this lane in that module: kind="1w", unit="1w", hold_from="plan", H=52*5 sessions; rule text: exit W52 from the 1W fire week; no stop; entry at the next open.
+  - Full lz_engine config row for `s_wait_chase` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim; the source placeholder row, before live_row applies the WAIT_SPEC kind/hold and the paper-test sizing in the Full algorithm section):
+  - "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+  - "max_delay_minutes": 65,
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -22578,7 +23400,7 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_WAIT_FLOW-RECREATE.md, Test docs/S_WAIT_FLOW-RECREATE.md (Configuration section), Test docs/S_WAIT_FLOW-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -22588,7 +23410,12 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Sizing:
   - [s_wait_flow] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_wait_flow] Read-back check: this doc was written through the PII gate and read back from Test; the sha256 recorded in the batch results file matches the read-back bytes.
+- Parameters:
+  - 4. WAIT_SPEC for this lane in that module: kind="1d", unit="1d", hold_from="plan", H=60 sessions; rule text: exit the close of D+60; no stop; entry D+1 open.
+  - Full lz_engine config row for `s_wait_flow` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim; the source placeholder row, before live_row applies the WAIT_SPEC kind/hold and the paper-test sizing in the Full algorithm section):
+  - "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
+  - "max_delay_minutes": 65,
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -22607,7 +23434,7 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_WAIT_OLX_BOOKS-RECREATE.md, Test docs/S_WAIT_OLX_BOOKS-RECREATE.md (Configuration section), Test docs/S_WAIT_OLX_BOOKS-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -22617,7 +23444,12 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Sizing:
   - [s_wait_olx_books] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_wait_olx_books] Read-back check: this doc was written through the PII gate and read back from Test; the sha256 recorded in the batch results file matches the read-back bytes.
+- Parameters:
+  - 4. WAIT_SPEC for this lane in that module: kind="1d", unit="1d", hold_from="fill", H=126 sessions in the WAIT_SPEC table (the per-rule horizon H comes from each frozen rule); rule text: exit entry + H sessions, i.e. H + 1 from the fill (the s_rules mechanics), per frozen rule; no stop; entry at the next session.
+  - Full lz_engine config row for `s_wait_olx_books` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim; the source placeholder row, before live_row applies the WAIT_SPEC kind/hold and the paper-test sizing in the Full algorithm section):
+  - "label": "OLX R1/R2 books for the other lanes (WAIT)",
+  - "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
@@ -22636,7 +23468,7 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Created by / source: not recorded
 - Description (from source records): No strategy description recorded in consulted sources.
 - Algorithm status: **FULL**
-- Algorithm sources consulted: lz_engine config (entry/exit/sizing)
+- Algorithm sources consulted: lz_engine config (entry/exit/sizing), Test docs/S_WAIT_Q14-RECREATE.md (Configuration section), Test docs/S_WAIT_Q14-RECREATE.md (Data inputs section)
 
 ### Detailed algorithm
 - Signal / entry rules:
@@ -22646,7 +23478,13 @@ Merge evidence (tiers A): [A] midna_qqq_flip5_tza ~ s_mn_hedge (full evidence in
 - Sizing:
   - [s_wait_q14] lz_engine sizing: {"budget_usd": 0, "max_slots": 0, "position_usd": 1000, "position_usd_by_class": {}, "one_share_max_usd": null, "cap_pct_of_dv20": 1.0, "min_slot_fraction": 0.9, "global_slot_usd": 1000, "min_dv20_usd": 100000}
 - Filters / data:
-  - not recorded in any consulted source
+  - [s_wait_q14] "DESK_INTEGRATION/DESK_PLAN.md section 6 WAIT: OOS 1.41 vs 1.20, needs desk-model"
+  - [s_wait_q14] Read-back check: this doc was written through the PII gate and read back from Test; the sha256 recorded in the batch results file matches the read-back bytes.
+- Parameters:
+  - Full lz_engine config row for `s_wait_q14` in `packages/grokbot/rl64/lz_engine/config/sleeves.json` (verbatim; the source placeholder row, before live_row applies the WAIT_SPEC kind/hold and the paper-test sizing in the Full algorithm section):
+  - "id": "s_wait_q14",
+  - "label": "Q14 pxcap5 book (WAIT)",
+  - "file": "shadow/paper_sleeve/live/sleeve_fires_v1.json",
 
 ### Variants (1)
 - **base form (variant zero)**: base strategy as documented; no distinct variant recorded
