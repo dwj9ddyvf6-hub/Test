@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volatility Clock: how long a stock's burst of big moves will take to settle back</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Own-Volatility Normalisation Clock</h1>
+    <p class="job">One job: when a stock's recent moves suddenly get much bigger than that stock's own usual moves, say how many trading days it is likely to take for its moves to settle back to its own usual size.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading today's settling forecasts&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  var SRC={own:"its own past bursts",pooled_same_size:"past bursts of a similar size, shared across stocks"};
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="Today's forecasts measured from the closing prices of "+fmtDate(data.as_of_session)+", for the trading days starting "+fmtShort(data.next_session)+". Source: "+data.source;
+    showBanner("stale","These forecasts are the newest ones on record. They are measured from the close of "+fmtDate(data.as_of_session)+", the last trading day in the price history on record, so treat them as the latest published forecasts, made before the next trading day opens.");
+    var live=data.live||{}, hist=data.history||{}, claims=data.claims||{}, h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>This clock is new. Its live record starts today, and it earns stronger language only from that record as it grows. It says how long a burst of big moves is likely to last, never which way prices will go.</p><p>How to read the numbers: a stock\'s movement is measured over its last 10 trading days and stated as a yearly rate. A burst (a spike) starts on the first day that movement rises above the high line of the stock\'s own past movement: the level only 1 in 10 of its own earlier readings reached. A burst is over when that 10-day movement falls back below the stock\'s own usual (middle) level from the day the burst started. For each new burst, this page gives the middle guess for how many trading days settling will take, and a low-to-high range.</p></section>';
+
+    h+='<section class="card"><h2>The two promises this clock is graded on</h2><p class="claim">1. '+esc(claims.band||"")+'</p><p class="claim">2. '+esc(claims.median||"")+'</p><p>'+esc(data.window_note||"")+'</p></section>';
+
+    h+='<section class="card"><h2>New bursts starting today</h2>';
+    if((live.names||[]).length){
+      var ownN=0,poolN=0;(live.names||[]).forEach(function(n){if(n.library_source==="own")ownN++;else poolN++;});
+      h+='<p>'+esc(live.forecasts_today)+' stocks started a burst at the close of '+fmtShort(data.as_of_session)+'. A stock with at least 5 past bursts of its own, with known settling times, is forecast from its own past bursts ('+esc(ownN)+' below); the rest ('+esc(poolN)+' below) are forecast from past bursts of a similar size, shared across stocks. Each stock\'s own plain middle settling time is shown beside the forecast for comparison, where the stock has one; a stock with no past burst of its own that has settled yet has no plain figure, and none is shown for it.</p>';
+      h+="<table><tr><th>Stock</th><th>Movement now (usual)</th><th>Middle guess</th><th>Low-to-high range</th><th>Its own plain middle</th><th>Built from</th></tr>";
+      (live.names||[]).forEach(function(n){
+        h+="<tr><td><strong>"+esc(n.symbol)+"</strong>"+(n.spike_session&&n.spike_session!==data.as_of_session?"<br><span class=\"sub\">Burst started "+esc(fmtShort(n.spike_session))+", this stock's last trading day on record</span>":"")+"</td><td>"+esc(n.movement_pct)+"% a year ("+esc(n.usual_pct)+"% usual, "+esc(n.times_usual)+" times usual)</td><td><strong>"+esc(n.median_sessions)+" trading days</strong></td><td>"+esc(n.band_low)+" to "+esc(n.band_high)+" trading days</td><td>"+(n.plain_median_sessions==null?"No own past settling time yet":esc(n.plain_median_sessions)+" trading days")+"</td><td>"+esc(n.library_spikes)+" "+esc(SRC[n.library_source]||"past bursts")+" ("+esc(n.own_past_spikes)+" of its own)</td></tr>";
+      });
+      h+="</table>";
+    } else {
+      h+='<p>No stock started a new burst at the close of '+fmtShort(data.as_of_session)+', so no new forecast was recorded today.</p>';
+    }
+    h+='<p class="sub">Counted, not hidden: '+esc(live.names_on_record)+' stocks are on record; '+esc(live.names_checked)+' had a trading day on '+fmtShort(data.as_of_session)+' and '+esc(live.names_without_session_today)+' did not (those are counted at their own last trading day on record). Of those with a trading day on '+fmtShort(data.as_of_session)+', '+esc(live.names_below_floor)+' had too little of their own past (fewer than 126 earlier movement readings) to be judged and were set aside. '+esc(live.names_in_spike)+' stocks were in a burst at their latest close on record, and '+esc(live.names_already_running)+' of them had started their burst earlier, so their clocks are already running and no new forecast was made for them. '+(live.abstained_today&&live.abstained_today.length?esc(live.abstained_today.length)+" stocks that started a burst were set aside because too few past bursts were known to build a range from.":"No stock that started a burst today had to be set aside for too few past bursts.")+'</p></section>';
+
+    var cov=hist.coverage_pct, imp=hist.mae_improvement_pct;
+    h+='<section class="card"><h2>History, not live forecasts</h2><p>'+esc(hist.note||"")+'</p><p class="sub">History covered: '+fmtShort(hist.span_start)+" to "+fmtShort(hist.span_end)+". Spikes found in that history: "+esc(hist.episodes_total)+" ("+esc(hist.matured_episodes)+" settled inside the history, "+esc(hist.censored_episodes)+" never settled within 63 trading days, and "+esc(hist.unresolved_episodes)+" were still open when the history ended). Graded: "+esc(hist.graded)+"; set aside at the time for too few known past bursts: "+esc(hist.abstained)+"; not yet gradeable because the history ended before their 63 trading days ran out: "+esc(hist.pending)+"; of the graded spikes, "+esc(hist.censored)+" never settled within 63 trading days and were counted by the rule stated above.</p>";
+    h+="<p>Promise 1 in history: the real settling time fell inside the published range <strong>"+(cov==null?esc(hist.graded)+" graded, count only":esc(cov)+"% of the time")+"</strong>, against the promised 80 percent, give or take 5 points. "+(cov!=null?(cov>=75&&cov<=85?"In this past run, that promise held.":"In this past run, that promise was not met: the ranges were too narrow."):"")+"</p>";
+    h+="<p>Promise 2 in history: the middle figure's average error was <strong>"+(hist.mae_forecast==null?"count only":esc(hist.mae_forecast)+" trading days")+"</strong>, against the plain middle figure's "+(hist.mae_baseline==null?"count only":esc(hist.mae_baseline)+" trading days")+" over "+esc(hist.mae_cases)+" spikes that did settle and had their own plain figure to compare with: an improvement of "+(imp==null?"count only":esc(imp)+"%")+", against the promised at least 20 percent. "+(imp!=null?(imp>=20?"In this past run, that promise held.":"In this past run, that promise was not met."):"")+" These history figures are the honest starting point: the live record below is what this clock is actually graded on.</p>";
+    h+="<p>"+esc(((hist.study_record||{}).note)||"")+"</p></section>";
+
+    h+='<section class="card"><h2>The live record</h2><p class="count">'+esc(live.forecasts_recorded)+' forecasts recorded, '+esc(live.forecasts_graded)+' matured so far, on the way to '+esc(live.matured_target)+'</p>'+(live.correction_note?'<p>'+esc(live.correction_note)+'</p>':"")+'<p>Forecasts are written down at the close of the day a burst starts, before the days they describe. A forecast matures when its burst settles, or after 63 trading days if it has not settled by then.</p><p>'+esc(data.kill_criterion)+'</p><p>'+esc(data.thin_cell_rule)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    meta.textContent="";
+    showBanner("missing","Today's settling forecasts are not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+  });
+})();
+</script>
+</body>
+</html>
