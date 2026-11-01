@@ -146,9 +146,13 @@ def test_shared_sheet_linked_on_every_page():
 
 
 def test_shared_sheet_has_canonical_tokens_and_components():
+    # Canonical tokens are the FolioTend set adopted after this suite
+    # was written (repair 2026-10-31): the UI style is frozen on
+    # FolioTend navy/teal, so the pin follows the frozen sheet, not
+    # the pre-FolioTend values this test originally carried.
     css = (SITE / "shared.css").read_text(encoding="utf-8")
-    for token in ("--ink:#17202b", "--bg:#f5f7fa", "--accent:#0b5fa5",
-                  "--up:#1d7a3a", "--down:#b03a2e", "--nodata-bg:#eef1f5"):
+    for token in ("--ink:#0d2e41", "--bg:#edf6f5", "--accent:#098979",
+                  "--up:#098979", "--down:#b2595d", "--nodata-bg:#e6efed"):
         assert token in css, token
     for comp in (".topbar", ".verdict", ".meter", ".chip", ".statecard",
                  ".hubgrid", ".hubcard", ".chartbox", ".ladder", ".tiles",
@@ -186,7 +190,7 @@ def test_hone_shared_body_background_and_focus_ring():
     css = (SITE / "shared.css").read_text(encoding="utf-8")
     assert "body{letter-spacing:0;background:var(--bg);color:var(--ink)}" in css
     assert ":focus-visible" in css
-    assert "--faint:#5f7186" in css
+    assert "--faint:#5f7f8c" in css  # FolioTend value (repair 2026-10-31)
 
 
 def _lum(hexcolor):
