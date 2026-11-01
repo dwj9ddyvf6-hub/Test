@@ -136,12 +136,25 @@ def publish():
     # the byte-for-byte copy above is hash-verified.
     page_path = dest / "index.html"
     page = page_path.read_text(encoding="utf-8")
+    changed = False
     if "../shared.js" not in page:
         if "</head>" not in page:
             print("FAIL: desk page has no </head> to wire charts into")
             return 1
-        page_path.write_text(page.replace(
-            "</head>", WIRING + "</head>", 1), encoding="utf-8")
+        page = page.replace("</head>", WIRING + "</head>", 1)
+        changed = True
+    # Reader-copy style scrub on the published copy only (repair
+    # 2026-10-31): the terminal's pages carry no em dashes (the
+    # owner's style rule, pinned by test_visual_polish_20261030). The
+    # desk source is outside this program's surface and stays
+    # untouched; its one em dash, in the load-failure line, is
+    # replaced here at publish time, the same place the copy gains
+    # its chart wiring.
+    if "—" in page:
+        page = page.replace(" — ", ": ")
+        changed = True
+    if changed:
+        page_path.write_text(page, encoding="utf-8")
     feed = json.loads((dest / "terminal_feed.json").read_text(
         encoding="utf-8"))
     data = build_data(feed)
