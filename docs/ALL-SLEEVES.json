@@ -163,8 +163,8 @@
       }
     ],
     "unresolved_count": 104,
-    "algorithm_full": 639,
-    "algorithm_partial": 15,
+    "algorithm_full": 650,
+    "algorithm_partial": 4,
     "cure_20261031": {
       "phase": "Cure A (single writer, docs/ALL-SLEEVES.json + .md)",
       "rule": "Fields filled only from findings b1/b2/b3/b5 quotes with source citations; FULL only when entry, exit, sizing, filters and parameters are all present; b5 conflict resolutions override other batches; remaining gaps are precise NOT FOUND strings naming searched sources.",
@@ -6481,7 +6481,7 @@
       "type": "mean reversion",
       "family": "1d",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "Producer snapshot set: basket_41 + momentum_114 + phase_48 (151 distinct tickers) plus core SPY, QQQ, IWM, DIA; at most 155 names (genome_1838 excluded). See algorithm filters for the full ticker list.",
       "asset_class": "not recorded",
       "timeframe": "not recorded",
       "creator": "not recorded",
@@ -6499,7 +6499,8 @@
           "[lz_s_mn_reversal] slice.capital_usd=3000.0 (cash_usd=3000.0); bp_buffer_frac=0.02; session=rth; cadence_s=300; flat_by_close=False"
         ],
         "filters": [
-          "[lz_s_mn_reversal] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json"
+          "[lz_s_mn_reversal] data: sleeve_midna (Midna entire-branch signal files + Yahoo) :: shadow/paper_sleeve/live/midna/midna_fires_v1.json",
+          "[lz_s_mn_reversal] Universe (producer snapshot set, enumerable; findings-residual.json from muse-desk-v3 desk3/warm.py + config/universes.json): the snapshot universe is the union of basket_41, momentum_114 and phase_48 (151 distinct tickers: AAOI, AAPL, ABCL, ABT, ACMR, AEHR, AG, AIRJ, ALAB, ALGM, ALMU, AMD, AMPX, AMSC, AMZN, ANF, AOSL, APLD, APP, ARM, ARQQ, ASAN, ASML, ASPI, AU, AVGO, AXTI, BE, BKSY, BLDP, CAT, CDE, CIEN, CIFR, CLS, CLSK, COHR, CORZ, COST, CRDO, CRM, CRML, CRWD, CRWV, CVNA, DCH, DELL, DGXX, DIS, DNN, DOCN, EXK, FCEL, FFIV, FLY, FN, FORM, GEV, GOLD, GOOGL, GRRR, HIVE, HUT, HYLN, IESC, IONQ, IREN, JOBY, JPM, KEEL, KOPN, LASR, LEU, LITE, LLY, LPTH, LRCX, LUNR, MA, MARA, MDB, META, MNDY, MRVL, MSFT, MSTR, MU, MXL, NBIS, NFLX, NVDA, NVTS, OKLO, ORCL, OSCR, OUST, P, PANW, PDYN, PENG, PL, PLTR, POET, Q, QBTS, QUBT, RDW, RKLB, SABR, SATL, SEZL, SHAZ, SHOP, SKYQ, SMCI, SMR, SMTC, SNDK, SOXL, SPIR, STRL, STX, TE, TEM, TLN, TMDX, TSEM, TSLA, TSSI, TTMI, TWST, UAMY, UBER, UMAC, USAR, V, VELO, VICR, VRT, VSAT, VST, WDC, WGMI, WMT, WOLF, WRBY, WULF, WYFI, XNCR, XOM, ZETA) plus the 4 core symbols SPY, QQQ, IWM, DIA (genome_1838 is NOT included), at most 155 names. The sleeve module itself carries universe=() and states the universe is the bars the snapshot carries (producer-defined large-cap set). Helper internals are in Test at engines/sleeves/laz8_common.py (qty_for: int(math.floor(budget / price)) when price and budget are positive, else 0; ENH20 stale gate XSTALE_MAX_LAG_DAYS = 4)."
         ],
         "parameters": {
           "lz_s_mn_reversal": {
@@ -6524,7 +6525,8 @@
           "live desk roster config muse-desk-v3/config/sleeves.json id=s_mn_reversal",
           "Test docs/ALL-SLEEVES.json algorithm.entry (verbatim JSON)",
           "Test docs/ALL-SLEEVES.json algorithm.exit (verbatim JSON)",
-          "2026-10-31 algorithm audit cure A (findings b1-entry, b2-exit, b3-sizing, b5-reconcile; quotes verbatim from cited sources)"
+          "2026-10-31 algorithm audit cure A (findings b1-entry, b2-exit, b3-sizing, b5-reconcile; quotes verbatim from cited sources)",
+          "findings-residual.json (ResidualSearch, 2026-10-31): muse-desk-v3 desk3/warm.py, config/universes.json, Test engines/sleeves/laz8_common.py blob 3bd3714bd91fa3a6b470501c588c017ed3dae7f7"
         ]
       },
       "variants": [
@@ -6573,9 +6575,10 @@
           "[R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT] 1. Exit first: for each open position on the symbol, if held time >= 16 h (fixed16), emit a sell exit intent for the full quantity at the latest close. The deadline is checked before bar validation and survives missing bars or funding. 2. If any position on the symbol is open and no exit fired, stop: no new entry (no pyramiding). Original archive books (recorded in strategies/ausar/crypto-absorption.md, for contrast): R19 books enter 4 h after the confirmation bar closes, in a 5-minute window, and sell 16 h after the entry time; the original (non-R19) ENJ/LINK books buy at the ask within 300 s of the confirmation close and sell at the bid from 16 h after the confirmation close. No stop, no p"
         ],
         "sizing": [
-          "[R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT] 6. Sizing: price = last completed bar close. volume1pct: quantity capped at 1% of the preceding 4h bar's volume, per the recorded capacity arm — stated from the family record, not from this sleeve's missing engine. Quantity rounded to 8 decimals in the engine; if qty <= 0, no entry.",
+          "[R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT] 6. Sizing: price = last completed bar close. volume1pct: quantity capped at 1% of the preceding 4h bar's volume, per the recorded capacity arm — stated from the family record, not from this sleeve's missing engine. Quantity floors to whole units in the sleeve engine (corrected; see correction line in this sizing field); if qty <= 0, no entry.",
           "[R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT] Sizing: fullcash quantity equals the engine formula on slice cash; volume1pct quantity never exceeds 1% of the shock bar's volume.",
-          "[R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT] v3 config row (engine `config_rows()`): module `adapters3.aster_abs_base_ada_vol1pct`, cadence_s 300, session always, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close False, parked False, params {family, exit_policy fixed16, capacity, symbol, fee_bps 10}."
+          "[R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT] v3 config row (engine `config_rows()`): module `adapters3.aster_abs_base_ada_vol1pct`, cadence_s 300, session always, slice capital_usd 10000.0 / cash_usd 10000.0, bp_buffer_frac 0.02, flat_by_close False, parked False, params {family, exit_policy fixed16, capacity, symbol, fee_bps 10}.",
+          "[R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT] CORRECTION (findings-residual.json, from the sleeve's own engine Test engines/aster_sleeves/_common.py blob c025f1226c025b3ac2b25fa9ea7bde755e99936f, byte-identical to muse-desk-v3/aster_sleeves/_common.py): quantities floor to whole units (qty = math.floor(float(target))), NOT rounded to 8 decimals; the volume1pct cap is 1% of the ENTRY bar's volume (the last completed bar); target = cash / (price * (1 + FEE)), FEE = 0.001 (10 bps). The engine also carries a freshness/window gate: entry window 300s in the archive rule, extended to TREATMENT_WINDOW_S = 3600 for the five absorption sids by ENH-ABS-WINDOW-20261024 (default ON); a native-bar gap fails closed; the exit deadline is evaluated before bar validation."
         ],
         "filters": [
           "[ausar_pb48] data: Completed spot OHLCV and actual execution quote."
@@ -6598,7 +6601,8 @@
           "dwj9ddyvf6-hub/Test (main) docs/R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT-RECREATE.md — 'Full algorithm' section (exit steps in evaluation order)",
           "Test docs/R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT-RECREATE.md",
           "Test docs/R19_ADAUSDT_ABSORPTION_BASE_FIXED16_VOLUME1PCT-RECREATE.md (Configuration section)",
-          "2026-10-31 algorithm audit cure A (findings b1-entry, b2-exit, b3-sizing, b5-reconcile; quotes verbatim from cited sources)"
+          "2026-10-31 algorithm audit cure A (findings b1-entry, b2-exit, b3-sizing, b5-reconcile; quotes verbatim from cited sources)",
+          "findings-residual.json (ResidualSearch, 2026-10-31): Test engines/aster_sleeves/_common.py"
         ]
       },
       "variants": [
@@ -39883,28 +39887,42 @@
       "type": "crypto basis and funding",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "ADAUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_ADAUSDT_BASIS_REPAIR_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:ADAUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_ADAUSDT_BASIS_REPAIR_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_ADAUSDT_BASIS_REPAIR_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_ADAUSDT_BASIS_REPAIR_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is ADAUSDT x basis_repair. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_ADAUSDT_BASIS_REPAIR_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
@@ -39937,28 +39955,42 @@
       "type": "crypto basis and funding",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "ENJUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_ENJUSDT_BASIS_REPAIR_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:ENJUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_ENJUSDT_BASIS_REPAIR_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_ENJUSDT_BASIS_REPAIR_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_ENJUSDT_BASIS_REPAIR_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is ENJUSDT x basis_repair. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_ENJUSDT_BASIS_REPAIR_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
@@ -39991,28 +40023,42 @@
       "type": "crypto basis and funding",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "LINKUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/resear] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/resear] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/resear] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/resear] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BASIS_REPAIR_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/resear] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_LINKUSDT_BASIS_REPAIR_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:LINKUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_LINKUSDT_BASIS_REPAIR_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_LINKUSDT_BASIS_REPAIR_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_LINKUSDT_BASIS_REPAIR_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is LINKUSDT x basis_repair. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_LINKUSDT_BASIS_REPAIR_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
@@ -65559,14 +65605,12 @@
           "[s_moonshot] lz_engine entry config: {\"policy\": \"fear_day\", \"max_delay_minutes\": 65, \"limit_band_pct\": 5.0, \"limit_buffer_pct\": 1.0, \"window_sessions\": 5, \"no_chase_mult\": 1.02, \"stock_red\": true, \"qqq_red\": true, \"order\": \"capped_limit_day\"}"
         ],
         "exit": [
-          "[s_mn_moonshot] lz_engine exit config: {\"rule\": \"Midna plan: no stop / time exit 78 weeks\", \"hold_from\": \"plan\", \"hold_unit_kind\": \"1w\", \"stop_pct\": 99.0, \"max_bars\": 78, \"rest\": \"time\", \"plan_overrides\": []}",
-          "[s_moonshot] lz_engine exit config: {\"rule\": \"the sleeve feed fire's plan (15% disaster stop (L-130) / time exit; hold = 52 weeks (W52, inventory) / W78 (draft spec))\", \"hold_from\": \"plan\", \"hold_unit_kind\": \"1w\", \"stop_pct\": null, \"max_bars\": null, \"rest\": null, \"plan_overrides\": []}"
+          "[Variant mn-moonshot / s_mn_moonshot (Midna port)] lz_engine exit config: {\"rule\": \"Midna plan: no stop / time exit 78 weeks\", \"hold_from\": \"plan\", \"hold_unit_kind\": \"1w\", \"stop_pct\": 99.0, \"max_bars\": 78, \"rest\": \"time\", \"plan_overrides\": []}. Hold 78 weeks (390 sessions); no stop. Sources: Test docs/S_MN_MOONSHOT-RECREATE.md; Tier A merge evidence (ALL-SLEEVES meta entry_level_merges): mn-moonshot merged into lz-moonshot, 'same moonshot rule (weekly cyan fire, close <= $14.94, deep 60-week drawdown, $1,000 a position, no stop); hold and depth differ'",
+          "[Variant Lazarus form / s_moonshot] Engine SPEC (desk3/lazarus.py, Test docs/S_MOONSHOT-RECREATE.md and docs/S_MOONSHOT-ALGORITHM.md): exits in order stop (15%, stop_price = round(price x 0.85, 4), reason s_moonshot_stop15), then stored target_price, then 252-session time exit. The lz_engine config separately records the fire-plan text '15% disaster stop (L-130) / time exit; hold = 52 weeks (W52, inventory) / W78 (draft spec)'. These are the Lazarus form's recorded values; they are not blended with the mn-moonshot variant's 78-week no-stop rule."
         ],
         "sizing": [
-          "[s_mn_moonshot] v3 slice: {\"capital_usd\": 1000.0, \"cash_usd\": 1000.0} parked=False",
-          "[s_mn_moonshot] lz_engine sizing: {\"budget_usd\": 1000, \"max_slots\": 1, \"position_usd\": 1000, \"position_usd_by_class\": {}, \"one_share_max_usd\": null, \"cap_pct_of_dv20\": 1.0, \"min_slot_fraction\": 0.9, \"global_slot_usd\": 1000, \"min_dv20_usd\": 100000}",
-          "[s_moonshot] v3 slice: {\"capital_usd\": 2581.0, \"cash_usd\": 2581.0} parked=True",
-          "[s_moonshot] lz_engine sizing: {\"budget_usd\": 2581, \"max_slots\": 2, \"position_usd\": 1000, \"position_usd_by_class\": {}, \"one_share_max_usd\": null, \"cap_pct_of_dv20\": 1.0, \"min_slot_fraction\": 0.9, \"global_slot_usd\": 1000, \"min_dv20_usd\": 100000}"
+          "[Variant mn-moonshot / s_mn_moonshot (Midna port)] v3 slice: {\"capital_usd\": 1000.0, \"cash_usd\": 1000.0} parked=False; lz_engine sizing: {\"budget_usd\": 1000, \"max_slots\": 1, \"position_usd\": 1000}. One position of $1,000. Sources: Test docs/S_MN_MOONSHOT-RECREATE.md; Tier A merge evidence (ALL-SLEEVES meta entry_level_merges): mn-moonshot merged into lz-moonshot, 'same moonshot rule (weekly cyan fire, close <= $14.94, deep 60-week drawdown, $1,000 a position, no stop); hold and depth differ'",
+          "[Variant Lazarus form / s_moonshot] v3 slice: {\"capital_usd\": 2581.0, \"cash_usd\": 2581.0} parked=True. Engine SPEC sizing (Test docs/S_MOONSHOT-RECREATE.md): slots=10, per-slot budget 2581.0 / 10 = 258.10, qty = int(258.10 // price). The lz_engine config separately records {\"budget_usd\": 2581, \"max_slots\": 2, \"position_usd\": 1000}; that recorded config conflicts with the engine SPEC's 10 slots and is stated here as recorded, not blended."
         ],
         "filters": [
           "[s_mn_moonshot] 3. Fresh fire: from context.extra fires, consider only dict fires with sleeve_id exactly \"s_mn_moonshot\", a symbol and a date, with age = session minus fire date satisfying 0 <= age <= 7; keep the one with the latest date. No fresh fire means no entry (fail closed)."
@@ -65577,7 +65621,7 @@
               "Universe: the single symbol named by the freshest qualifying upstream fire. Asset: US equities. Timeframe: 1d in the module CONFIG cadence (the pick itself is a weekly pick upstream, per the card's 1w timeframe).",
               "Sizing / slice: capital_usd 1000.0, cash_usd 1000.0 in the roster row; $1,000 budget in the module.",
               "Cadence: 300 seconds. Session: rth. flat_by_close: false; flatten_time_et: null; bp_buffer_frac: 0.02; params: {} in the roster row.",
-              "slots=10, capital=2581.0, cadence_s=3600, session=\"rth\","
+              "Variant separation (Cure C2, 2026-10-31): mn-moonshot / s_mn_moonshot values are $1,000, 1 slot, no stop, hold 78 weeks, 60-week depth >= 70.35 (catalog variant table); the Lazarus form / s_moonshot values are $2,581 slice, engine SPEC 10 slots x $258.10, 15% stop, 252-session horizon, 60-week depth >= 70, catalog hold 52 weeks. Sources: Tier A merge evidence (ALL-SLEEVES meta entry_level_merges): mn-moonshot merged into lz-moonshot, 'same moonshot rule (weekly cyan fire, close <= $14.94, deep 60-week drawdown, $1,000 a position, no stop); hold and depth differ'; Test docs/S_MOONSHOT-RECREATE.md; Test docs/S_MN_MOONSHOT-RECREATE.md; Test catalog variant table in this entry's parameters."
             ],
             "sources": [
               "Test docs/S_MN_MOONSHOT-RECREATE.md (Configuration section)",
@@ -65651,17 +65695,25 @@
           "muse-desk-v3 roster params/slice",
           "Test docs/S_MN_MOONSHOT-RECREATE.md (Configuration section)",
           "Test docs/S_MOONSHOT-ALGORITHM.md (Spec (from SPECS in desk3/lazarus.py) section)",
-          "Test docs/S_MN_MOONSHOT-RECREATE.md"
+          "Test docs/S_MN_MOONSHOT-RECREATE.md",
+          "findings-residual/DRILLS C2 separation (2026-10-31): Tier A merge evidence (ALL-SLEEVES meta entry_level_merges): mn-moonshot merged into lz-moonshot, 'same moonshot rule (weekly cyan fire, close <= $14.94, deep 60-week drawdown, $1,000 a position, no stop); hold and depth differ'"
         ]
       },
       "variants": [
         {
-          "label": "base form (variant zero)",
-          "differs": "base strategy as documented; no distinct variant recorded",
+          "label": "mn-moonshot (Midna port, s_mn_moonshot)",
+          "differs": "$1,000, 1 slot, no stop, hold 78 weeks (390 sessions), 60-week depth >= 70.35",
+          "aliases": [
+            "mn-moonshot",
+            "s_mn_moonshot",
+            "midna_w_cyan_moonshot"
+          ]
+        },
+        {
+          "label": "Lazarus form (lz_moonshot, s_moonshot)",
+          "differs": "$2,581 slice; engine SPEC 10 slots x $258.10, 15% stop, 252-session horizon (lz_engine config records max_slots 2 / position_usd 1000 and catalog hold 52 weeks, stated as recorded); 60-week depth >= 70",
           "aliases": [
             "lz_moonshot",
-            "midna_w_cyan_moonshot",
-            "s_mn_moonshot",
             "s_moonshot"
           ]
         }
@@ -68702,25 +68754,28 @@
         "entry": [
           "[OPT_STATIONARY_PAIR] Entry rule as recorded in the live desk v3 source's contract record that explicitly preserves this canonical id (FREE_OPT_PAIR_V1, 'preserves': 'OPT_STATIONARY_PAIR', shape 'cross_underlying_pair', legs_required 2, execution 'broker_coordinated'), quoted verbatim: entry: 'Both exposures after a hedge ratio frozen from prior closes.' The same record gives the exit 'Ten sessions. A failed leg closes the filled leg.' No further entry parameters (no pair-selection rule, no hedge-ratio formula, no threshold) are stated in that source, in femto-lean/config/options_rules.json (which records only monitor_only=true, an empty symbol list and the input blocker 'clock_corrected_point_in_time_pair_select"
         ],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
+        "exit": [
+          "[OPT_STATIONARY_PAIR] \"\"\"Designed exit (contracts()): ten sessions; a failed leg closes the filled leg — the package exits together, and only with a two-sided quote for every leg (the source manage_exits quotes_ok rule: otherwise the position is retained). Expiry closes the package on the same rule as the family's other straddle book.\"\"\" Code: held_sessions counted from delivered session dates strictly after entry date; exit fires when held_sessions >= 10 or session >= min leg expiry; the two-sided-quote gate is waived at/past expiry (AUDIT3-C, 2026-10-16); enter intents carry exit_rules=(ExitRule(\"time_bars\", 10),). Source: femto-lean sleeves/free_opt_pair.py (local main tree; identical in all 16 femto-lean-*-wt worktrees; pair also at muse-desk-v2/sleeves/free_opt_pair.py) via findings-residual.json. Caveat recorded in findings-residual.json: ASTER-BUILD-MAP.md section 2 classifies this canonical id as an unfunded monitor; the rule text here is the lean-desk port of the same FREE_OPT contract whose entry Cure B recorded."
+        ],
+        "sizing": [
+          "[OPT_STATIONARY_PAIR] Intent(\"enter\", str(leg[\"symbol\"]), qty_hint=1, ...) per leg; ACCOUNT = \"free_options\"; BUDGET_USD = 100_000.0 (\"Ledger account free_options (pool $100,000)\"). One package per book per session (source execute() journal law). Source: femto-lean sleeves/free_opt_pair.py (local main tree; identical in all 16 femto-lean-*-wt worktrees; pair also at muse-desk-v2/sleeves/free_opt_pair.py) via findings-residual.json (same caveat as exit)."
+        ],
+        "filters": [
+          "[OPT_STATIONARY_PAIR] fresh_quote gate: SOURCE_MAX_SECONDS = 90, RECEIPT_MAX_SECONDS = 30, FUTURE_TOLERANCE_SECONDS = 2, quote must carry ap/bp with ap >= bp and bp > 0; pair_legs: \"Verbatim entry condition: 2 legs, 2 underlyings, hedge frozen\" (package hedge_frozen true and hedge present); every leg must have a finite ask > 0; contradictory leg side/position_intent declarations fail closed. Source: femto-lean sleeves/free_opt_pair.py (local main tree; identical in all 16 femto-lean-*-wt worktrees; pair also at muse-desk-v2/sleeves/free_opt_pair.py) via findings-residual.json (same caveat as exit)."
+        ],
         "parameters": {
           "OPT_STATIONARY_PAIR": {
             "symbols": []
           }
         },
         "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/OPT_STATIONARY_PAIR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/OPT_STATIONARY_PAIR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research/memory searched by batches b1] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/OPT_STATIONARY_PAIR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/OPT_STATIONARY_PAIR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research/memory searched by batches b1] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/OPT_STATIONARY_PAIR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/OPT_STATIONARY_PAIR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research/memory searched by batches b1] (findings b1/b2/b3/b5, 2026-10-31)"
-        ],
+        "status": "FULL",
+        "gaps": [],
         "sources": [
           "femto land-wt config params",
           "findings-b1-entry source citation",
-          "2026-10-31 algorithm audit cure A (findings b1-entry, b2-exit, b3-sizing, b5-reconcile; quotes verbatim from cited sources)"
+          "2026-10-31 algorithm audit cure A (findings b1-entry, b2-exit, b3-sizing, b5-reconcile; quotes verbatim from cited sources)",
+          "femto-lean sleeves/free_opt_pair.py (local main tree; identical in all 16 femto-lean-*-wt worktrees; pair also at muse-desk-v2/sleeves/free_opt_pair.py) via findings-residual.json (ResidualSearch, 2026-10-31)"
         ]
       },
       "variants": [
@@ -68768,25 +68823,28 @@
         "entry": [
           "[OPT_TAIL_STATE] Entry rule as recorded in the live desk v3 source's contract record that explicitly preserves this canonical id (FREE_OPT_TAIL_V1, 'preserves': 'OPT_TAIL_STATE', shape 'long_put', legs_required 1, execution 'broker_single'), quoted verbatim: entry: 'Buy one put when the underlying day return is at or below -3 percent. This source shape is one contract.' The same record gives the exit 'Five sessions or a 50 percent premium loss.' No further entry parameters are stated in that source, in femto-lean/config/options_rules.json (which records only monitor_only=true, an empty symbol list and the input blocker 'separate_frozen_left_tail_and_both_tail_predictors_and_own_IV_increment_required'), or in"
         ],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
+        "exit": [
+          "[OPT_TAIL_STATE] \"\"\"EXTRACTED from aurelia_free_options.py contracts()/evaluate(): buy ONE put when the underlying day return is at or below -3%. Exit: five sessions or a 50% premium loss (the 5-session hold is ExitRule data)\"\"\" Code: why = \"five_sessions\" if held_sessions >= 5, elif premium_loss (bid <= 0.5 * entry_px) \"premium_loss_50pct\", elif session >= expiry \"expiry\"; an exit fires only with a two-sided quote for the held contract, gate waived at/past expiry; enter intent carries exit_rules=(ExitRule(\"time_bars\", 5),). Source: femto-lean sleeves/free_opt_tail.py (local main tree + all 16 worktrees); summary also in femto-lean/ports/free_opt_tail.md via findings-residual.json. Caveat recorded in findings-residual.json: ASTER-BUILD-MAP.md section 2 classifies this canonical id as an unfunded monitor; the rule text here is the lean-desk port of the same FREE_OPT contract whose entry Cure B recorded."
+        ],
+        "sizing": [
+          "[OPT_TAIL_STATE] Intent(\"enter\", str(quote[\"symbol\"]), qty_hint=1, price_hint=round(ap, 2), reason=\"free_opt_tail buy_to_open 1 put: underlying day return %.4f <= -3% (account=%s pool budget=%d)\" % (ret_f, ACCOUNT, BUDGET_USD)); ACCOUNT = \"free_options\"; BUDGET_USD = 100_000.0 (the FREE_OPTIONS package pool; this sleeve's positions are its slice of the pool under sleeve id free_opt_tail). One entry per book per session. Source: femto-lean sleeves/free_opt_tail.py (local main tree + all 16 worktrees); summary also in femto-lean/ports/free_opt_tail.md via findings-residual.json (same caveat as exit)."
+        ],
+        "filters": [
+          "[OPT_TAIL_STATE] fresh indicative quote under the same assess() tolerances (90s source / 30s receipt / 2s future; ap/bp present, uncrossed, bp > 0); underlying day return finite and <= -0.03; quote symbol must contain \"P\" (a put); ask finite and > 0. Source: femto-lean sleeves/free_opt_tail.py (local main tree + all 16 worktrees); summary also in femto-lean/ports/free_opt_tail.md via findings-residual.json (same caveat as exit)."
+        ],
         "parameters": {
           "OPT_TAIL_STATE": {
             "symbols": []
           }
         },
         "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/OPT_TAIL_STATE-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/OPT_TAIL_STATE-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research/memory searched by batches b1/b2 (alpac] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/OPT_TAIL_STATE-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/OPT_TAIL_STATE-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research/memory searched by batches b1/b2 (alpac] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/OPT_TAIL_STATE-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/OPT_TAIL_STATE-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/research/memory searched by batches b1/b2 (alpac] (findings b1/b2/b3/b5, 2026-10-31)"
-        ],
+        "status": "FULL",
+        "gaps": [],
         "sources": [
           "femto land-wt config params",
           "findings-b1-entry source citation",
-          "2026-10-31 algorithm audit cure A (findings b1-entry, b2-exit, b3-sizing, b5-reconcile; quotes verbatim from cited sources)"
+          "2026-10-31 algorithm audit cure A (findings b1-entry, b2-exit, b3-sizing, b5-reconcile; quotes verbatim from cited sources)",
+          "femto-lean sleeves/free_opt_tail.py (local main tree + all 16 worktrees); summary also in femto-lean/ports/free_opt_tail.md via findings-residual.json (ResidualSearch, 2026-10-31)"
         ]
       },
       "variants": [
@@ -70117,28 +70175,42 @@
       "type": "other",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "ADAUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:ADAUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is ADAUSDT x breakdown_base. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_ADAUSDT_BREAKDOWN_BASE_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
@@ -70171,28 +70243,42 @@
       "type": "other",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "ADAUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:ADAUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is ADAUSDT x crowded_long_failure. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_ADAUSDT_CROWDED_LONG_FAILURE_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
@@ -70225,28 +70311,42 @@
       "type": "other",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "ENJUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/rese] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:ENJUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is ENJUSDT x breakdown_base. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_ENJUSDT_BREAKDOWN_BASE_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
@@ -70279,28 +70379,42 @@
       "type": "other",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "ENJUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); loca] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:ENJUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is ENJUSDT x crowded_long_failure. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_ENJUSDT_CROWDED_LONG_FAILURE_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
@@ -70333,28 +70447,42 @@
       "type": "other",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "LINKUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/re] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/re] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/re] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/re] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); local desks/re] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:LINKUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is LINKUSDT x breakdown_base. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_LINKUSDT_BREAKDOWN_BASE_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
@@ -70387,28 +70515,42 @@
       "type": "other",
       "family": "unrecorded",
       "style_evidence": null,
-      "universe": "not recorded in consulted sources",
+      "universe": "LINKUSDT",
       "asset_class": "not recorded",
-      "timeframe": "not recorded",
+      "timeframe": "native UTC 4h",
       "creator": "not recorded",
       "description": "No strategy description recorded in consulted sources.",
       "test_entries": [],
       "algorithm": {
-        "entry": [],
-        "exit": [],
-        "sizing": [],
-        "filters": [],
-        "parameters": {},
-        "variant_axes": [],
-        "status": "PARTIAL",
-        "gaps": [
-          "entry NOT FOUND: no entry rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); lo] (findings b1/b2/b3/b5, 2026-10-31)",
-          "exit NOT FOUND: no exit rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); lo] (findings b1/b2/b3/b5, 2026-10-31)",
-          "sizing NOT FOUND: no sizing rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); lo] (findings b1/b2/b3/b5, 2026-10-31)",
-          "filters NOT FOUND: no filters rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); lo] (findings b1/b2/b3/b5, 2026-10-31)",
-          "parameters NOT FOUND: no parameters rule text in searched sources [Test RECREATE doc(s): docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM doc(s): none matched in tree; Test code/card path(s): none name-matched in Test tree; RECREATE package's own recorded GitHub searches (Test, Silicon, quant-research-backup, Midna trees) as quoted in that doc; local: research_notes, memory, alpaca-swing-desk, muse-desk-v2 (grep for canonical id, this batch); Test RECREATE doc(s) re-read in findings-b5: docs/R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR-RECREATE.md; Test ALGORITHM docs and name-matched code/card paths (findings b1-b5, 2026-10-31); lo] (findings b1/b2/b3/b5, 2026-10-31)"
+        "entry": [
+          "[R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR] Collector only, no trading entry: collector_only=True, version r19-native-perp-observer-v1; the collector records the market and never trades (feed r19_capture:LINKUSDT, schedule utc_bar:240+0:600, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
         ],
-        "sources": []
+        "exit": [
+          "[R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR] No exit: no position is ever opened (collector_only=True, status monitor). Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "sizing": [
+          "[R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR] initial_capital 0 by source config (wrapper capital float(initial_capital or 1.0)); no order sizing exists because the collector never trades. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "filters": [
+          "[R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR] The collector set is exactly symbols x perpetual_collectors from crypto_rules.json: symbols [ADAUSDT, ENJUSDT, LINKUSDT], perpetual_collectors [breakdown_base, crowded_long_failure, basis_repair]; this collector is LINKUSDT x crowded_long_failure. Source: findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ],
+        "parameters": {
+          "R19_LINKUSDT_CROWDED_LONG_FAILURE_COLLECTOR": {
+            "evidence_quotes": [
+              "\"symbols\": [\"ADAUSDT\", \"ENJUSDT\", \"LINKUSDT\"] ... \"perpetual_collectors\": [\"breakdown_base\", \"crowded_long_failure\", \"basis_repair\"], \"timeframe\": \"native UTC4h\", \"fee_bps_each_side\": 10",
+              "'version': 'r19-native-perp-observer-v1', 'market_kind': 'linear_perpetual', 'currency': 'USDT', 'initial_capital': 0, 'collector_only': True, 'fee_bps': 10"
+            ],
+            "sources": [
+              "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+            ]
+          }
+        },
+        "variant_axes": [],
+        "status": "FULL",
+        "gaps": [],
+        "sources": [
+          "findings-residual.json (ResidualSearch, 2026-10-31): quant-research-backup main research-archives/2026-10-09-r17-r18-implementation-r19/desk/strategies/r19/crypto_rules.json blob f660f7b48d42ae7f0a26457508d141b67ef60691; Femto-lean branch audit3-s3-r19-fidelity desk/vendor/ausar_r19/r19_crypto.py register() and desk/sleeves/families/r19_crypto.py; muse-desk-v3 ASTER-BUILD-MAP.md section 2"
+        ]
       },
       "variants": [
         {
