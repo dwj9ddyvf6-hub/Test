@@ -10,10 +10,12 @@ caches, log files, lane state, runtime artifacts, data.json files over
 
 For each included file the local git blob SHA is compared with the repo
 blob SHA from a fresh recursive tree fetch; matches are skipped. Changed
-authored text files (.py/.md/.js) are sanitized in memory with the cure
-phase replacement map (personal identifiers -> neutral owner wording,
+authored text files (.py/.md/.js) redact first-name matches in memory
+using the existing private PII gate pattern (neutral owner wording,
 capitalization preserved at sentence and string starts); local files are
-never modified. The three cure-phase unfixable files (functional EDGAR
+never modified. Other private fields, including surnames and email
+addresses, remain subject to the fail-closed gate and cause a file to be
+skipped if still present. The three cure-phase unfixable files (functional EDGAR
 declaration strings and functional fixture data) are never sanitized or
 uploaded. Any candidate that still matches a gate pattern after
 sanitization (third-party data, functional strings) is skipped and
@@ -51,10 +53,6 @@ import pii_gate  # noqa: E402
 ROOT = Path(os.path.expanduser("~/workspace/terminal-lineup"))
 REPO_API = "/repos/dwj9ddyvf6-hub/Test"
 REPO_PATH = "dwj9ddyvf6-hub/Test"
-PUBLIC_COMMIT_IDENTITY = {
-    "name": "dwj9ddyvf6-hub",
-    "email": "316344525+dwj9ddyvf6-hub@users.noreply.github.com",
-}
 PREFIX = "terminal-lineup/"
 SYNC_LOG = Path(os.path.expanduser(
     "~/workspace/research_notes/test-repo-index-20261031/SYNC-LOG.md"))
@@ -66,19 +64,8 @@ UNFIXABLE = {
     "forecast/tests/test_insider_record_20261030.py",
 }
 
-# Configure sensitive matching values in the private runtime environment.
-# Fail closed when configuration is incomplete; never publish real identifiers.
-def _required_private_value(name: str) -> str:
-    value = os.environ.get(name, "").strip()
-    if not value:
-        raise SystemExit("Missing private privacy-filter configuration")
-    return value
-
-
-_FIRST = _required_private_value("SYNC_PII_FIRST_NAME")
-_LAST = _required_private_value("SYNC_PII_LAST_NAME")
-_EMAIL = _required_private_value("SYNC_PII_EMAIL")
-_FULL = f"{_FIRST} {_LAST}"
+# Identifying patterns live only in the existing private gate dependency.
+_FIRST_NAME_RX = dict(pii_gate.PATTERNS)["first_name"]
 
 
 def blob_sha(data: bytes) -> str:
@@ -97,22 +84,13 @@ def _cap_needed(text: str, start: int) -> bool:
 
 
 def sanitize(text: str) -> str:
-    """The cure phase replacement map, applied in memory only."""
-    text = text.replace(_EMAIL, "the owner's email")
-    text = text.replace(_FULL, "the owner")
-
-    def rep_poss(m):
-        return "The owner's" if _cap_needed(m.string, m.start()) \
-            else "the owner's"
-
-    text = re.sub(re.escape(_FIRST) + "'s", rep_poss, text)
-
+    """Redact first names via the private gate; remaining PII fails closed."""
     def rep_name(m):
-        return "The owner" if _cap_needed(m.string, m.start()) \
+        replacement = "The owner" if _cap_needed(m.string, m.start()) \
             else "the owner"
+        return replacement + ("'s" if m.group().lower().endswith("'s") else "")
 
-    text = re.sub(r"\b" + re.escape(_FIRST) + r"\b", rep_name, text)
-    return text
+    return _FIRST_NAME_RX.sub(rep_name, text)
 
 
 def gate_hits(text: str) -> list:
@@ -174,9 +152,7 @@ def fetch_head_and_tree():
 def put_file(repo_path: str, data: bytes, message: str,
              existing_sha: str | None) -> str:
     payload = {"message": message,
-               "content": base64.b64encode(data).decode(),
-               "author": PUBLIC_COMMIT_IDENTITY.copy(),
-               "committer": PUBLIC_COMMIT_IDENTITY.copy()}
+               "content": base64.b64encode(data).decode()}
     if existing_sha:
         payload["sha"] = existing_sha
     try:
