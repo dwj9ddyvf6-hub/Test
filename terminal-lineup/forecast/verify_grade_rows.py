@@ -278,8 +278,40 @@ def main(argv=None):
         print(f"CHAIN BREAK {result['first_break']}")
     else:
         print("chain: 0 breaks")
+    # Zero-row enumeration (HEALTH-R1-D09-20261031): the recount
+    # above only ever saw engines present in the ledger, so the
+    # engines that have never ledgered a forecast were silently
+    # absent from this verifier's own report. Enumerate the full
+    # registry here: every zero-row engine is named with the
+    # dated unblock condition its registry entry carries, and a
+    # zero-row engine WITHOUT a named state is a failure, not a
+    # silent omission.
+    registry_path = os.path.join(HERE, "registry.json")
+    try:
+        with open(registry_path, encoding="utf-8") as fh:
+            registry_ids = [e["id"] for e in
+                            json.load(fh).get("engines") or []]
+        with open(registry_path, encoding="utf-8") as fh:
+            registry_by_id = {e["id"]: e for e in
+                              json.load(fh).get("engines") or []}
+    except Exception:
+        registry_ids, registry_by_id = [], {}
+    for eid in sorted(set(registry_ids) - set(result["per_engine"])):
+        zstate = (registry_by_id.get(eid) or {}).get(
+            "zero_forecast_state") or {}
+        if zstate.get("trigger") and zstate.get("first_possible"):
+            print(f"{eid}: ZERO ROWS on the ledger; named state: "
+                  f"{zstate.get('reason', '')} trigger: "
+                  f"{zstate['trigger']} first possible: "
+                  f"{zstate['first_possible']}")
+        else:
+            print(f"{eid}: ZERO ROWS on the ledger and NO named "
+                  f"zero_forecast_state in the registry")
+            failures.append(
+                f"{eid}: zero ledger rows with no named "
+                f"zero_forecast_state (trigger and dated first "
+                f"possible) in the registry")
     for eid in sorted(result["per_engine"]):
-        e = result["per_engine"][eid]
         print(f"{eid}: forecasts raw {e['forecasts_raw']} voided "
               f"{e['forecasts_voided']} valid {e['forecasts_valid']}; "
               f"grades raw {e['grades_raw']} on_voided "
