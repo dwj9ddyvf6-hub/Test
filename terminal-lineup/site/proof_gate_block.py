@@ -27,9 +27,14 @@ the first partial scan (4,641 names) wrote 19 names whose
 Benjamini-Hochberg q values changed when the full 15,815 name
 scan recomputed the correction, and the changed values defeated
 the ledger's value hash dedupe, so those 19 names carry two rows
-each. Both rows stay on the record; this block counts each name
-once and names the superseded rows as ledger_duplicate_rows
-instead of letting them break or inflate the count.
+each. Later scans supersede earlier rows the same way, so the
+duplicate count is derived on every build as total forward rows
+minus distinct names (HEALTH-R1-D16-20261031: it read 15,834 at
+the 2026-10-31 recount, not the 19 of the first instance, and
+no figure here pins it). Both rows stay on the record; this
+block counts each name once and names the superseded rows as
+ledger_duplicate_rows instead of letting them break or
+inflate the count.
 
 Every state the gate publishes is provisional, and the block says
 so in plain words on the page itself.
@@ -144,9 +149,11 @@ def build_proof_gate_block(site_dir, engine_id, page_as_of, ledger_path):
            ", so no name on this page is shown as proven."))
     if duplicate_rows:
         words += (
-            f" {duplicate_rows} names carry an earlier superseded "
-            "row from the first partial scan beside their current "
-            "one; the record is append only, both rows stay on "
+            f" {duplicate_rows} earlier rows from earlier scans "
+            "sit beside the current row for their names (the "
+            "first instance was 19 names whose values changed "
+            "when the first full scan recomputed the correction); "
+            "the record is append only, every row stays on "
             "it, and every count on this page counts each name "
             "once.")
     return {
