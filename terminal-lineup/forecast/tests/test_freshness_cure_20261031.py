@@ -111,3 +111,19 @@ def test_stale_daily_pages_are_chipped_stale_on_hub():
         if hub_mod.is_stale(slug, d, latest) and 'chip stale' not in card:
             offenders.append(slug)
     assert not offenders, f"stale pages not chipped stale: {offenders}"
+
+
+def test_no_hub_card_carries_both_a_date_and_the_dateless_span():
+    # Regression blocker, HUB-DUAL-LABEL-20261031: a card whose page
+    # gained a reading date kept the "No reading date on record" span
+    # an earlier run had inserted, so 9 cards printed a true As-of
+    # date beside a claim that no date exists. The generator now
+    # replaces the dateless span when a date resolves.
+    hub = (SITE / "index.html").read_text(encoding="utf-8")
+    bad = []
+    for c in re.findall(r'<article class="hubcard".*?</article>',
+                         hub, re.S):
+        if "No reading date on record" in c and "As of " in c:
+            m = re.search(r'href="([a-z0-9-]+)/"', c)
+            bad.append(m.group(1) if m else c[:60])
+    assert not bad, f"cards with contradictory date labels: {bad}"
