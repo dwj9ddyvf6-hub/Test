@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow Tape: the day's biggest unusual options prints on SPY, QQQ and IWM</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .rule{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .rule h2{margin:0 0 8px;font-size:18px}
+  .rule p{margin:0 0 8px}
+  .rule p:last-child{margin-bottom:0}
+  .grading{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 22px;font-size:15px;color:#23405e}
+  .grading strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group .gline{font-size:14.5px;color:var(--soft);margin:0 0 10px}
+  .alert{border-top:1px solid var(--line);padding:12px 0 6px}
+  .alert .top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .alert .when{font-weight:700;font-size:15.5px;white-space:nowrap}
+  .alert .contract{font-size:16px;font-weight:600}
+  .alert .code{color:var(--faint);font-size:13px}
+  .alert .facts{margin-left:auto;font-size:14px;color:var(--soft);white-space:nowrap}
+  .alert .facts strong{color:var(--ink)}
+  .alert p{margin:4px 0;font-size:14.5px;color:var(--soft)}
+  .alert p strong{color:var(--ink);font-weight:600}
+  .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:20px;
+       padding:0 8px;white-space:nowrap}
+  .tag.golden{color:#6b4e12;border:1px solid var(--warn-line);background:var(--warn-bg)}
+  .tag.unusual{color:var(--accent);border:1px solid var(--accent)}
+  .dir-up{color:var(--up);font-weight:600}
+  .dir-down{color:var(--down);font-weight:600}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Flow Tape</h1>
+    <p class="job">One job: show the freshest trading day's biggest unusual options prints on SPY, QQQ and IWM, each with the score that flagged it, so you can see where the options money actually moved.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest tape&hellip;</p>
+
+  <section class="rule">
+    <h2>The scoring rule, in plain words</h2>
+    <p>Every options print is given a heat score for how unusual it is for its own contract. It earns points for: the money in the print compared with that contract's average print so far that day (at the average earns 1 point, 3 times it earns 2, 5 times earns 3, 10 times earns 4); how soon the contract expires (under 35 days earns 3 points, 35 to 98 days earns 2, longer earns 1); being a sweep, an order split across exchanges to fill at once (2 points); its size (5,000 contracts or more earns 1 point, 10,000 or more earns 2); how far its strike price sits from the current price (2% away earns 1.5 points, rising step by step to 7.5 points at 30% away or more); its size compared with the contract's open interest, the number of contracts already open (three quarters of it earns 1 point, up to 4 points at 5 times it); its size compared with the contract's average print size (4 times earns 1 point, up to 4 points at 10 times); and the contract's open interest compared with the average contract's (5 times earns 1 point, 10 times earns 2).</p>
+    <p>A print becomes an alert in one of two bands. <strong>High heat:</strong> its heat score reaches 15. <strong>Golden sweep:</strong> it is a sweep, its size is at least the contract's whole open interest, and the money in it is at least $1 million. A print is also tagged <strong>unusual</strong> when its strike sits at least 10% away from the current price and it expires within 35 days. Only the 25 largest alerts for each index are published here, biggest money first.</p>
+  </section>
+
+  <div id="grading" class="grading" hidden></div>
+  <main id="tape"></main>
+
+  <footer>
+    <p>How to read a direction: a bought call or a sold put points up, a bought put or a sold call points down. Which side of the market a print hit is judged against the latest available quote, not the quote at the exact moment of the print, so on a fast-moving contract the direction read can be wrong. Treat it as a read, not a fact.</p>
+    <p>An alert means a print was unusual by the rule above. It does not mean the buyer knew something. Big prints can be hedges, spreads, or positions being closed as easily as new bets.</p>
+    <p>Every published call from the morning tools is kept and graded in public at 1, 5 and 21 trading days, losers included: see <a href="../record/">The Record</a>. The tape's own alerts join that grading as it is extended to them; the line above says exactly where that stands.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var gradingEl = document.getElementById("grading");
+  var tapeEl = document.getElementById("tape");
+
+  function fmtMoney(v){
+    return "$" + Number(v).toLocaleString("en-US",{maximumFractionDigits:0});
+  }
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function fmtTimeET(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleTimeString("en-US",{timeZone:"America/New_York",
+      hour:"numeric", minute:"2-digit", second:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){ // YYYY-MM-DD in America/New_York
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5); // start from yesterday
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.session) bits.push("Trading day: " + fmtDateLong(r.session));
+    if (r.published_at_utc) bits.push("Published " + fmtTimestamp(r.published_at_utc));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+
+  function alertHTML(a){
+    var c = a.contract || {};
+    var contractWords = (c.kind === "call" ? "Call" : "Put") + ", " +
+      fmtPrice(c.strike) + " strike, expires " + fmtDateShort(c.expiry);
+    var tags = "";
+    if (a.golden_sweep) tags += ' <span class="tag golden">Golden sweep</span>';
+    if (a.unusual) tags += ' <span class="tag unusual">Unusual</span>';
+    var dirClass = a.direction === "bullish" ? "dir-up" :
+                   a.direction === "bearish" ? "dir-down" : "";
+    var h = '<div class="alert"><div class="top">' +
+      '<span class="when">' + esc(fmtTimeET(a.time_utc)) + '</span>' +
+      '<span class="contract">' + esc(contractWords) + '</span>' +
+      '<span class="code">' + esc(a.contract_code) + '</span>' + tags +
+      '<span class="facts">Heat score <strong>' + Number(a.heat_score).toFixed(1) +
+      '</strong> &middot; Band: <strong>' + esc(a.band) + '</strong></span></div>';
+    var dirSentence = a.direction === "neutral"
+      ? 'Its side gives <span>no clear direction</span> read.'
+      : 'Read as a bet that the index <span class="' + dirClass + '">' +
+        esc(a.direction_words) + '</span>.';
+    h += '<p><strong>' + Number(a.contracts).toLocaleString("en-US") +
+      ' contracts</strong> changed hands at ' + fmtPrice(a.price_per_contract) +
+      ' per contract, <strong>' + fmtMoney(a.premium_usd) + '</strong> in total. ' +
+      esc(a.side_words) + '. ' + dirSentence + '</p>';
+    h += '</div>';
+    return h;
+  }
+
+  function renderGroup(g){
+    var h = '<section class="group"><h2>' + esc(g.underlying) +
+      ' alerts for ' + fmtDateLong(g.session) + '</h2>';
+    h += '<p class="receipt">' + receiptLine(g.receipt) + '</p>';
+    if (!g.alerts || !g.alerts.length){
+      h += '<div class="nodata">No alerts fired on ' + esc(g.underlying) +
+        ' this trading day. Alerts are rare by design: a print has to be ' +
+        'far outside its contract\'s normal run to fire one, so a quiet ' +
+        'tape is a normal state, not missing data.</div>';
+    } else {
+      h += '<p class="gline">' + g.alerts.length + ' alerts, biggest money first.</p>' +
+        g.alerts.map(alertHTML).join("");
+    }
+    h += '</section>';
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var groups = data.groups || [];
+      var total = groups.reduce(function(n, g){
+        return n + ((g.alerts || []).length); }, 0);
+      if (data.grading_note){
+        gradingEl.innerHTML = "<strong>Not yet graded:</strong> " + esc(data.grading_note);
+        gradingEl.hidden = false;
+      }
+      if (!groups.length){
+        meta.textContent = "";
+        tapeEl.innerHTML = '<div class="nodata">No tape has been published yet. ' +
+          'When a trading day\'s tape is published, its alerts appear here with ' +
+          'the day named on them. A tape is never shown without the trading day ' +
+          'it belongs to.</div>';
+        return;
+      }
+      meta.textContent = "Tape for the trading day of " + fmtDateLong(data.session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+      if (data.session < latestCompletedSession()){
+        showBanner("stale", "This tape is out of date. It shows the trading day of " +
+          fmtDateLong(data.session) + ", and a newer tape has not been published yet. " +
+          "Treat it as the last published tape, not today's.");
+      }
+      if (!total){
+        tapeEl.innerHTML = '<div class="nodata">No alerts fired on this trading day, ' +
+          'on any of the three indexes. Alerts are rare by design: a print has to be ' +
+          'far outside its contract\'s normal run to fire one, so an empty tape is a ' +
+          'normal state, not missing data.</div>' +
+          groups.map(renderGroup).join("");
+        return;
+      }
+      tapeEl.innerHTML = groups.map(renderGroup).join("");
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The latest tape is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
