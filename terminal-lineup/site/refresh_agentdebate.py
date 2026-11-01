@@ -427,6 +427,27 @@ def main():
         "funds": funds,
     }
 
+    # Self-stamp (HEALTH-R1-D07-20261031): the tape family
+    # orchestrator stamps this consumer after its run, but a
+    # standalone refresh of this page overwrote the stamp, so
+    # the published page carried no tape_freshness block at all.
+    # Like refresh_flow_tape.py, the source stamps itself: this
+    # consumer's headline session is the scored session it
+    # debates, its tape figures are joined at the Flow Board's
+    # freshest session (the tape session, fail-closed above when
+    # that join is absent), so a successful refresh is current
+    # in the orchestrator's joined-consumer sense.
+    out["tape_freshness"] = {
+        "tape_session": fb.get("freshest_session"),
+        "consumer_session": session,
+        "state": "current",
+        "note": ("this consumer's headline session is "
+                 "the scored session it debates; its "
+                 "tape figures are joined at the "
+                 "freshest tape session and its refresh "
+                 "fail-closes when that join is absent"),
+    }
+
     blob = json.dumps(out, ensure_ascii=False).lower()
     for bad in BANNED:
         if bad in blob:
