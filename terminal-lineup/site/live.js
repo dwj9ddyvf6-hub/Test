@@ -173,10 +173,14 @@
     var rs = data.record_surface && data.record_surface.current_reading;
     var d = rs ? parseDay(rs.as_of) : null; if (d) return d;
     var gen = parseDay(data.generated_at) || parseDay(data.generated_at_utc) || parseDay(data.published_at_utc);
-    var keys = ["as_of_session", "session", "as_of", "freshest_session", "freshest_date", "modelled_freshest_date", "precomputed_freshest_date", "scored_run_session", "assembled_on", "replay_date", "grading_run_at", "date", "panel_last_session", "readings_through", "newest_source_time", "published_date", "generated_at", "generated_at_utc", "published_at_utc", "recorded_on"];
+    var keys = ["as_of_session", "session", "as_of", "freshest_session", "freshest_date", "freshest_day", "freshest_filed", "freshest_snapshot", "modelled_freshest_date", "precomputed_freshest_date", "scored_run_session", "assembled_on", "replay_date", "grading_run_at", "wire_grading_run_at", "second_search_finished", "first_search_finished", "date", "panel_last_session", "readings_through", "newest_source_time", "published_date", "generated_at", "generated_at_utc", "published_at_utc", "recorded_on"];
     for (var i = 0; i < keys.length; i++) {
       d = parseDay(data[keys[i]]);
       if (d && !(gen && (Date.parse(gen) - Date.parse(d)) > 370 * 86400000)) return d;
+    }
+    if (Array.isArray(data.names)) {
+      var snaps = data.names.map(function (n) { return n ? parseDay(n.snapshot_day) : null; }).filter(Boolean).sort();
+      if (snaps.length) return snaps[snaps.length - 1];
     }
     var blocks = [data.state, data.wire];
     for (var b = 0; b < blocks.length; b++) {
