@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Proving Ground: how strongly each tool on this site is backed</title>
+<style>
+  :root{
+    --ink:#232a33; --soft:#55626f; --faint:#8593a1;
+    --line:#dde1e7; --bg:#f4f4f2; --card:#ffffff;
+    --accent:#0b5fa5; --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --study-bg:#e8f3e8; --study-line:#a9cda9; --study-ink:#2c5a2c;
+    --live-bg:#e8effa; --live-line:#a9c2e5; --live-ink:#274a75;
+    --prov-bg:#fdf3e0; --prov-line:#e3c98f; --prov-ink:#6d5312;
+    --wait-bg:#f3ecec; --wait-line:#d3c3c3; --wait-ink:#5f4444;
+    --meas-bg:#eceae6; --meas-line:#cfcabf; --meas-ink:#55626f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .counts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+  .count{border-radius:10px;padding:10px 14px;font-size:15px;border:1px solid var(--line);background:var(--card)}
+  .count strong{font-size:19px}
+  .vocab{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 22px}
+  .vocab h2{margin:0 0 10px;font-size:19px}
+  .vocab dl{margin:0}
+  .vocab dt{font-weight:700;margin:12px 0 2px}
+  .vocab dt:first-of-type{margin-top:0}
+  .vocab dd{margin:0;color:var(--soft);font-size:15px;max-width:46em}
+  .tag{display:inline-block;border-radius:6px;padding:2px 11px;font-size:13.5px;
+       font-weight:600;border:1px solid}
+  .tag.study{background:var(--study-bg);border-color:var(--study-line);color:var(--study-ink)}
+  .tag.live{background:var(--live-bg);border-color:var(--live-line);color:var(--live-ink)}
+  .tag.proving{background:var(--prov-bg);border-color:var(--prov-line);color:var(--prov-ink)}
+  .tag.waiting{background:var(--wait-bg);border-color:var(--wait-line);color:var(--wait-ink)}
+  .tag.measuring{background:var(--meas-bg);border-color:var(--meas-line);color:var(--meas-ink)}
+  section.state{margin:0 0 26px}
+  section.state h2{font-size:21px;margin:0 0 4px}
+  section.state .statedef{color:var(--soft);font-size:15px;margin:0 0 12px;max-width:46em}
+  .tool{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:16px 20px;margin:0 0 12px}
+  .tool h3{margin:0 0 6px;font-size:17.5px}
+  .tool h3 a{color:var(--ink);text-decoration:none}
+  .tool h3 a:hover{text-decoration:underline}
+  .tool p{margin:6px 0 0;font-size:15px;color:var(--soft);max-width:48em}
+  .tool p strong{color:var(--ink);font-weight:600}
+  .nodata{background:var(--meas-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .joining{background:var(--card);border:1px solid var(--line);border-radius:14px;
+           padding:18px 20px;margin:26px 0 16px}
+  .joining h2{margin:0 0 6px;font-size:19px}
+  .joining p{color:var(--soft);font-size:15px;margin:0;max-width:46em}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Proving Ground</h1>
+    <p class="job">One job: for every tool classified on this page, how strongly its numbers are backed, read from that tool's own published record. Coverage is partial: the counts on this page name how many tools are classified, and the rest join as their classifications are assembled.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the proving ground&hellip;</p>
+  <div id="counts" class="counts"></div>
+
+  <section class="vocab" id="vocab">
+    <h2>What the proving states mean</h2>
+    <dl id="vocab-list"></dl>
+  </section>
+
+  <main id="results"></main>
+
+  <section class="joining">
+    <h2>More tools are on the way</h2>
+    <p id="joining-note">More tools are already designed for this site. Each one joins this page, with its proving state read from its own record, as it is built.</p>
+  </section>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var countsEl = document.getElementById("counts");
+  var vocabList = document.getElementById("vocab-list");
+  var results = document.getElementById("results");
+  var receipt = document.getElementById("receipt");
+  var joiningNote = document.getElementById("joining-note");
+
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function showBanner(text){
+    banner.textContent = text;
+    banner.className = "banner show missing";
+  }
+  function plainTime(iso){
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    var months = ["January","February","March","April","May","June","July",
+                  "August","September","October","November","December"];
+    return months[d.getUTCMonth()] + " " + d.getUTCDate() + ", " + d.getUTCFullYear();
+  }
+
+  function render(data){
+    var tools = data.tools || [];
+    var states = data.states || [];
+    var counts = data.counts || {};
+    if (!tools.length){
+      meta.textContent = "";
+      results.appendChild(el("p", "nodata",
+        "No proving record has been published yet. When the first one is, every built tool's proving state will be listed here."));
+      receipt.textContent = "";
+      return;
+    }
+    meta.textContent = tools.length + " tools built so far, each listed with the proving state its own record supports.";
+    states.forEach(function(s){
+      var chip = el("div", "count");
+      var strong = el("strong", null, String(counts[s.key] || 0));
+      chip.appendChild(strong);
+      chip.appendChild(document.createTextNode(" " + s.words.charAt(0).toLowerCase() + s.words.slice(1)));
+      countsEl.appendChild(chip);
+      var dt = el("dt", null, s.words);
+      var dd = el("dd", null, s.definition);
+      vocabList.appendChild(dt);
+      vocabList.appendChild(dd);
+    });
+    states.forEach(function(s){
+      var mine = tools.filter(function(t){ return t.state === s.key; });
+      if (!mine.length) return;
+      var sec = el("section", "state");
+      sec.appendChild(el("h2", null, s.words + " (" + mine.length + ")"));
+      sec.appendChild(el("p", "statedef", s.definition));
+      mine.forEach(function(t){
+        var card = el("article", "tool");
+        var h = el("h3");
+        var a = el("a", null, t.name);
+        a.href = "../" + t.slug + "/";
+        h.appendChild(a);
+        card.appendChild(h);
+        card.appendChild(el("span", "tag " + t.state, t.state_words));
+        var reason = el("p");
+        var label = el("strong", null, "Why this state: ");
+        reason.appendChild(label);
+        reason.appendChild(document.createTextNode(t.reason));
+        card.appendChild(reason);
+        if (t.next){
+          var next = el("p");
+          var nlabel = el("strong", null, "What would move it up: ");
+          next.appendChild(nlabel);
+          next.appendChild(document.createTextNode(t.next));
+          card.appendChild(next);
+        }
+        sec.appendChild(card);
+      });
+      results.appendChild(sec);
+    });
+    if (data.joining_note) joiningNote.textContent = data.joining_note;
+    var when = plainTime(data.newest_source_time);
+    receipt.textContent = "Where this comes from: " + (data.source || "") +
+      (when ? ". Newest record read: " + when + "." : ".");
+  }
+
+  fetch("data.json").then(function(r){
+    if (!r.ok) throw new Error("missing");
+    return r.json();
+  }).then(function(data){
+    if (!data || typeof data !== "object") throw new Error("bad");
+    render(data);
+  }).catch(function(){
+    meta.textContent = "";
+    showBanner("The proving ground record is not available right now. Nothing is shown until it can be read as published.");
+  });
+})();
+</script>
+</body>
+</html>
