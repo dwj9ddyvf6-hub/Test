@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skew Lens: how downside insurance is priced against upside</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --old-bg:#fdf6e3; --old-line:#e3cf8a; --old-ink:#6b5510;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.old{background:var(--old-bg);border:1px solid var(--old-line);color:var(--old-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0 0 8px}
+  .note p:last-child{margin-bottom:0}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;overflow-x:auto}
+  .group h2{margin:0 0 4px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:14px;white-space:nowrap}
+  th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  td.num,th.num{text-align:right}
+  tr:last-child td{border-bottom:none}
+  .sym{font-weight:700}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 16px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Skew Lens</h1>
+    <p class="job">One job: for each name on record, show how its downside insurance is priced against its upside, comparing the volatility priced into puts below the price with the volatility priced into calls the same distance above it.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the skew record&hellip;</p>
+
+  <section class="note" id="how" hidden>
+    <h2>How a figure on this page is worked out</h2>
+    <p id="construction"></p>
+    <p>A name shows a figure only when its record carries both sides that way for the same day and the same expiry. A name without both sides on record shows no figure, and nothing is estimated to fill the gap.</p>
+  </section>
+
+  <main id="main"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to all the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var howEl = document.getElementById("how");
+  var constructionEl = document.getElementById("construction");
+  var receiptEl = document.getElementById("receipt");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtNum(v){
+    return Number(v).toLocaleString("en-US",{maximumFractionDigits:2});
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var figures = data.figures || [];
+      var names = data.names || [];
+      if (!data.freshest_date || !names.length){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No per-strike ' +
+          'volatility record is on file yet. When the first record ' +
+          'is kept, each name will be checked here for put-side and ' +
+          'call-side readings at matched distances, and a figure ' +
+          'will show only where both sides are on record.</div>';
+        return;
+      }
+      meta.textContent = "Newest day on record: " +
+        fmtDateLong(data.freshest_date) + ". The per-strike record " +
+        "runs from " + fmtDateLong(data.oldest_date) + " to " +
+        fmtDateLong(data.freshest_date) + ": " + data.dated_readings +
+        " dated readings for " + data.names_on_record + " names, " +
+        data.strike_rows + " strike rows in all. Source: " +
+        data.source + ".";
+      var today = new Date();
+      var todayIso = today.getFullYear() + "-" +
+        String(today.getMonth() + 1).padStart(2, "0") + "-" +
+        String(today.getDate()).padStart(2, "0");
+      if (data.freshest_date < todayIso){
+        showBanner("old", "These records are not current: the newest " +
+          "day on record is " + fmtDateLong(data.freshest_date) +
+          ", and no newer record has been kept since.");
+      }
+      constructionEl.textContent = data.construction || "";
+      howEl.hidden = false;
+
+      var h = "";
+      if (figures.length){
+        h += '<section class="group"><h2>Names with both sides on record</h2>';
+        h += "<table><thead><tr>" +
+          "<th>Name</th><th>Day on record</th>" +
+          "<th class=\"num\">Put strike, 10% below</th>" +
+          "<th class=\"num\">Put reading</th>" +
+          "<th class=\"num\">Call strike, 10% above</th>" +
+          "<th class=\"num\">Call reading</th>" +
+          "<th class=\"num\">Days to expiry</th>" +
+          "<th>How the two sides compare</th>" +
+          "</tr></thead><tbody>";
+        figures.forEach(function(f){
+          h += "<tr>" +
+            '<td class="sym">' + esc(f.symbol) + "</td>" +
+            "<td>" + esc(fmtDateLong(f.date)) + "</td>" +
+            '<td class="num">' + esc(fmtNum(f.put_strike)) + "</td>" +
+            '<td class="num">' + esc(fmtNum(f.put_percent)) + "%</td>" +
+            '<td class="num">' + esc(fmtNum(f.call_strike)) + "</td>" +
+            '<td class="num">' + esc(fmtNum(f.call_percent)) + "%</td>" +
+            '<td class="num">' + esc(f.expiry_days) + "</td>" +
+            "<td>" + esc(f.sentence) + "</td>" +
+            "</tr>";
+        });
+        h += "</tbody></table></section>";
+      } else {
+        h += '<div class="nodata">' + esc(data.empty_note || "") + "</div>";
+      }
+      var modelled = data.modelled_figures || [];
+      if (modelled.length){
+        h += '<section class="group"><h2>Modelled figures from the chain snapshots</h2>';
+        h += "<p>" + esc(data.modelled_words || "") + "</p>";
+        h += "<table><thead><tr>" +
+          "<th>Name</th><th>Day on record</th><th>Expiry</th>" +
+          "<th class=\"num\">Put strike, 10% below</th>" +
+          "<th class=\"num\">Put reading</th>" +
+          "<th class=\"num\">Call strike, 10% above</th>" +
+          "<th class=\"num\">Call reading</th>" +
+          "<th>How the two sides compare</th>" +
+          "</tr></thead><tbody>";
+        modelled.forEach(function(f){
+          h += "<tr>" +
+            '<td class="sym">' + esc(f.symbol) + "</td>" +
+            "<td>" + esc(fmtDateLong(f.date)) + "</td>" +
+            "<td>" + esc(fmtDateLong(f.expiry)) + "</td>" +
+            '<td class="num">' + esc(fmtNum(f.put_strike)) + "</td>" +
+            '<td class="num">' + esc(fmtNum(f.put_percent)) + "%</td>" +
+            '<td class="num">' + esc(fmtNum(f.call_strike)) + "</td>" +
+            '<td class="num">' + esc(fmtNum(f.call_percent)) + "%</td>" +
+            "<td>" + esc(f.sentence) + "</td>" +
+            "</tr>";
+        });
+        h += "</tbody></table>";
+        var noFig = data.modelled_no_figure || [];
+        if (noFig.length){
+          h += "<p>No modelled figure for " + noFig.map(esc).join(", ") +
+            ": on their freshest day, no call reading sits inside the " +
+            "9 to 11 percent band above the price at the nearest expiry " +
+            "at least 7 days out, so the matched pair cannot form under " +
+            "the construction above. The band is not widened to fit.</p>";
+        }
+        h += "</section>";
+      }
+      var figured = {};
+      figures.forEach(function(f){ figured[f.symbol] = true; });
+      var plain = names.filter(function(n){ return !figured[n.symbol]; });
+      if (plain.length){
+        h += '<section class="group"><h2>Names with no figure on record</h2>';
+        h += "<table><thead><tr>" +
+          "<th>Name</th><th>Newest day on record</th><th>Figure</th>" +
+          "</tr></thead><tbody>";
+        plain.forEach(function(n){
+          h += "<tr>" +
+            '<td class="sym">' + esc(n.symbol) + "</td>" +
+            "<td>" + esc(fmtDateLong(n.date)) + "</td>" +
+            "<td>No figure on record: both sides at matched " +
+              "distances are not on record for this name</td>" +
+            "</tr>";
+        });
+        h += "</tbody></table></section>";
+      }
+      mainEl.innerHTML = h;
+
+      receiptEl.textContent = "Receipt: " + data.names_on_record +
+        " names on record over " + data.dated_readings +
+        " dated readings (" + data.strike_rows + " strike rows, " +
+        data.duplicates_collapsed + " duplicate rows set aside by " +
+        "the record's own rule of keeping the last one); " +
+        figures.length + " names carry both sides at matched " +
+        "distances, so " + figures.length + " figures are shown. " +
+        "A separate set of precomputed skew numbers, with no " +
+        "per-strike record behind them, is on file for " +
+        data.precomputed_freshest_names + " names on " +
+        fmtDateLong(data.precomputed_freshest_date) + "; those " +
+        "numbers are not shown as figures because how they were " +
+        "worked out is not on record. Source: " + data.source + ".";
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The skew record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
