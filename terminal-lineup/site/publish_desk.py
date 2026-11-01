@@ -109,6 +109,22 @@ def build_data(feed):
                   "start": period.get("start"),
                   "end": period.get("end")},
     }
+    # Provenance stamp (HEALTH-R1-D17-20261031): every other
+    # data.json on the site carries the provenance shape; the
+    # desk copy built here carried none, so the two highest
+    # trust surfaces were the two without provenance. The desk
+    # figures are the desk's own filed snapshot record, stamped
+    # in the same shape terminal_common uses.
+    data["feed"] = "filed_records"
+    data["price_basis"] = "session_record"
+    data["execution_pricing"] = False
+    data["provenance"] = {
+        "feed": "filed_records",
+        "price_basis": "session_record",
+        "execution_pricing": False,
+        "stamped_by": "publish_desk.py",
+        "source_file": "muse-desk-v3/terminal/terminal_feed.json",
+    }
     if str(HERE) not in sys.path:
         sys.path.insert(0, str(HERE))
     import record_surface
