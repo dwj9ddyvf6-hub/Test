@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Correlation Web: which of your names move together, and which move on their own</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .def ul{margin:4px 0 8px;padding-left:22px}
+  .def li{margin:2px 0}
+  .adder{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:16px 20px;margin:0 0 16px;font-size:15.5px}
+  .adder label{font-weight:600;margin-right:10px}
+  .adder input{font-size:16px;padding:6px 10px;border:1px solid var(--line);
+               border-radius:8px;background:#fff;color:var(--ink);width:10em;
+               text-transform:uppercase}
+  .adder button.add{font-size:15px;padding:7px 16px;border:1px solid var(--accent);
+    border-radius:8px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  .adder .note{margin:10px 0 0;font-size:14.5px;color:var(--soft)}
+  .empty,.summary{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .empty p,.summary p{margin:4px 0}
+  .empty .quick button, .pick .remove{font-size:14.5px;padding:3px 12px;margin:0 4px 4px 0;
+    border:1px solid var(--line);border-radius:999px;background:#fff;
+    color:var(--accent);font-weight:600;cursor:pointer}
+  .pick{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:14px 20px;margin:0 0 12px}
+  .pick .top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .pick h2{margin:0;font-size:21px}
+  .pick .remove{margin-left:auto}
+  .pick p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .pick p strong{color:var(--ink);font-weight:600}
+  .pair{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:12px 20px;margin:0 0 10px;font-size:15.5px}
+  .pair p{margin:2px 0}
+  .pair .num, .pick .num{font-weight:700;color:var(--accent)}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Correlation Web</h1>
+    <p class="job">One job: pick up to 10 names and see which of them have moved together and which have moved on their own, so you can tell whether a basket is really spread out or the same move repeated.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the records&hellip;</p>
+
+  <div class="def" id="defbox"></div>
+
+  <div class="adder">
+    <form id="addform">
+      <label for="sym">Add a name:</label>
+      <input id="sym" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Type a ticker, like AAPL" maxlength="12">
+      <button class="add" type="submit">Add</button>
+    </form>
+    <p class="note" id="addnote">Type the ticker letters for a stock or fund and press Add. You can pick up to 10 names at a time. Adding the same name twice keeps it once.</p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "correlation-web-names";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var defEl = document.getElementById("defbox");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var form = document.getElementById("addform");
+  var input = document.getElementById("sym");
+  var note = document.getElementById("addnote");
+  var DATA = null;
+  var IDX = {};
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric",
+      year:"numeric", timeZone:"UTC"});
+  }
+  function fmtNum(r){
+    return (r < 0 ? "-" : "") + Math.abs(r).toFixed(2);
+  }
+  function fmtRange(x){
+    return (x < 0 ? "-" : "") + Math.abs(x).toFixed(2);
+  }
+  function todayKey(){
+    var parts = new Intl.DateTimeFormat("en-US",
+      {timeZone:"America/New_York", year:"numeric", month:"2-digit",
+       day:"2-digit"}).formatToParts(new Date());
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function lastCompletedSession(){
+    var d = new Date(todayKey() + "T12:00:00Z");
+    do { d.setUTCDate(d.getUTCDate() - 1); }
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+    return d.toISOString().slice(0, 10);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function loadList(){
+    try {
+      var raw = localStorage.getItem(KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) return [];
+      return arr.filter(function(s){
+        return typeof s === "string" && s;
+      }).map(function(s){ return s.toUpperCase(); });
+    } catch (e) { return []; }
+  }
+  function saveList(list){
+    try { localStorage.setItem(KEY, JSON.stringify(list)); }
+    catch (e) { /* the list still shows for this visit */ }
+  }
+  function labelFor(r){
+    r = Math.round(r * 100) / 100;
+    var bands = DATA.scale || [];
+    for (var i = 0; i < bands.length; i++){
+      if (r >= bands[i].low && r <= bands[i].high) return bands[i].label;
+    }
+    return r > 1 ? bands[0].label : bands[bands.length - 1].label;
+  }
+  function pairStats(a, b){
+    var ra = DATA.returns_bp[IDX[a]], rb = DATA.returns_bp[IDX[b]];
+    var n = 0, sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+    for (var i = 0; i < ra.length; i++){
+      if (ra[i] === null || rb[i] === null) continue;
+      n++; sx += ra[i]; sy += rb[i];
+      sxx += ra[i] * ra[i]; syy += rb[i] * rb[i]; sxy += ra[i] * rb[i];
+    }
+    if (!n) return {shared: 0, r: null};
+    var cov = sxy - sx * sy / n;
+    var vx = sxx - sx * sx / n, vy = syy - sy * sy / n;
+    if (vx <= 0 || vy <= 0) return {shared: n, r: null};
+    return {shared: n, r: cov / Math.sqrt(vx * vy)};
+  }
+
+  function renderDefs(){
+    var d = DATA.definitions || {};
+    var h = "<p><strong>Your list stays yours:</strong> the names " +
+      "you pick are saved only in this browser, on this machine. " +
+      "They are never sent anywhere, and there is no account to " +
+      "sign into. Clear your browser's saved site data and the " +
+      "list is gone.</p>";
+    h += "<p><strong>How the number is worked out:</strong> " +
+      esc(d.construction || "") + "</p>";
+    h += "<p><strong>The window:</strong> " + esc(d.window || "") +
+      " On this page that is " + num(DATA.window_sessions) +
+      " sessions, from " + fmtDateShort(DATA.window_from) +
+      " to " + fmtDateShort(DATA.window_to) + ".</p>";
+    h += "<p><strong>The floor:</strong> " + esc(d.floor || "") +
+      "</p>";
+    h += "<p><strong>How to read the number</strong> (the number " +
+      "runs from -1.00 to 1.00 and is printed beside its words " +
+      "for every pair):</p><ul>";
+    (DATA.scale || []).forEach(function(b){
+      h += "<li>" + fmtRange(b.low) + " to " + fmtRange(b.high) +
+        ": " + esc(b.label) + "</li>";
+    });
+    h += "</ul>";
+    h += "<p>" + esc(d.newness || "") + "</p>";
+    defEl.innerHTML = h;
+  }
+
+  function pickCard(sym){
+    var h = '<section class="pick"><div class="top"><h2>' +
+      esc(sym) + "</h2>" +
+      '<button class="remove" type="button" data-sym="' + esc(sym) +
+      '">Remove</button></div>';
+    if (!(sym in IDX)){
+      h += "<p><strong>Not on record.</strong> No price history " +
+        "is kept for this name, so no pair with it can be shown. " +
+        "It stays on your list, and if a record is published for " +
+        "it later, its pairs will appear here.</p></section>";
+      return h;
+    }
+    var twins = (DATA.twins || {})[sym] || [];
+    if (!twins.length){
+      h += "<p><strong>No closest match is shown for this " +
+        "name.</strong> It does not share at least " +
+        DATA.min_overlap + " trading days in this window with " +
+        "any other name on record, so nothing honest can be " +
+        "named as its closest match.</p></section>";
+      return h;
+    }
+    var bits = twins.map(function(t){
+      return "<strong>" + esc(t.symbol) + "</strong> " +
+        '<span class="num">' + fmtNum(t.correlation) + "</span> " +
+        esc(t.label) + " (" + num(t.shared_days) +
+        " shared days)";
+    });
+    h += "<p>Closest matches anywhere on record: " +
+      bits.join("; ") + ".</p></section>";
+    return h;
+  }
+
+  function render(){
+    var list = loadList();
+    if (!DATA) return;
+    if (!list.length){
+      var ex = (DATA.examples || []).filter(function(s){
+        return s in IDX;
+      });
+      var h = '<section class="empty"><p><strong>Your list is ' +
+        "empty.</strong> Add the names you follow above, up to " +
+        DATA.max_picks + ", and every pair among them gets a line " +
+        "here: how closely the two moved together over the " +
+        "window, as a number and in plain words, with the number " +
+        "of days they share beside it.</p>";
+      if (ex.length){
+        h += '<p class="quick">Start with an example: ';
+        ex.forEach(function(s){
+          h += '<button type="button" data-add="' + esc(s) + '">' +
+            esc(s) + "</button>";
+        });
+        h += "</p>";
+      }
+      h += "</section>";
+      resultsEl.innerHTML = h;
+    } else {
+      var out = list.map(pickCard).join("");
+      var pairs = [];
+      var i, j;
+      for (i = 0; i < list.length; i++){
+        for (j = i + 1; j < list.length; j++){
+          pairs.push([list[i], list[j]]);
+        }
+      }
+      if (list.length < 2){
+        out += '<section class="summary"><p>Pick at least one ' +
+          "more name to see how the pair moved together.</p>" +
+          "</section>";
+      } else {
+        var published = [];
+        var lines = "";
+        pairs.forEach(function(pr){
+          var a = pr[0], b = pr[1];
+          if (!(a in IDX) || !(b in IDX)){
+            var missing = !(a in IDX) ? a : b;
+            lines += '<section class="pair"><p><strong>' + esc(a) +
+              " and " + esc(b) + ":</strong> not enough shared " +
+              "history. " + esc(missing) + " is not on record, " +
+              "so this pair shares 0 days in this window, and a " +
+              "pair needs at least " + DATA.min_overlap +
+              " shared days to be shown.</p></section>";
+            return;
+          }
+          var st = pairStats(a, b);
+          if (st.r === null || st.shared < DATA.min_overlap){
+            lines += '<section class="pair"><p><strong>' + esc(a) +
+              " and " + esc(b) + ":</strong> not enough shared " +
+              "history. These two share " + num(st.shared) +
+              " days in this window, and a pair needs at least " +
+              DATA.min_overlap + " shared days to be shown.</p>" +
+              "</section>";
+            return;
+          }
+          published.push({a: a, b: b, r: st.r, shared: st.shared});
+          lines += '<section class="pair"><p><strong>' + esc(a) +
+            " and " + esc(b) + ":</strong> " +
+            '<span class="num">' + fmtNum(st.r) + "</span> " +
+            esc(labelFor(st.r)) + " (" + num(st.shared) +
+            " shared days)</p></section>";
+        });
+        if (published.length === 1){
+          var p0 = published[0];
+          out += '<section class="summary"><p>Among your picks, ' +
+            "only one pair has enough shared history to be " +
+            "shown: <strong>" + esc(p0.a) + " and " + esc(p0.b) +
+            "</strong>, at " + fmtNum(p0.r) + ".</p></section>";
+        } else if (published.length > 1){
+          var most = published[0], least = published[0];
+          published.forEach(function(p){
+            if (p.r > most.r) most = p;
+            if (p.r < least.r) least = p;
+          });
+          out += '<section class="summary"><p>Among your picks, ' +
+            "<strong>" + esc(most.a) + " and " + esc(most.b) +
+            "</strong> move together most, at " + fmtNum(most.r) +
+            ". <strong>" + esc(least.a) + " and " + esc(least.b) +
+            "</strong> diversify most: they have the weakest link " +
+            "of your pairs, at " + fmtNum(least.r) + ", " +
+            esc(labelFor(least.r)) + ".</p></section>";
+        } else {
+          out += '<section class="summary"><p>No pair among your ' +
+            "picks has enough shared history to be shown: every " +
+            "pair shares fewer than " + DATA.min_overlap +
+            " days in this window.</p></section>";
+        }
+        out += lines;
+      }
+      resultsEl.innerHTML = out;
+    }
+    Array.prototype.forEach.call(
+      resultsEl.querySelectorAll("[data-add]"), function(b){
+        b.addEventListener("click", function(){
+          addName(b.getAttribute("data-add"));
+        });
+      });
+    Array.prototype.forEach.call(
+      resultsEl.querySelectorAll("[data-sym]"), function(b){
+        b.addEventListener("click", function(){
+          var list2 = loadList().filter(function(s){
+            return s !== b.getAttribute("data-sym");
+          });
+          saveList(list2);
+          render();
+        });
+      });
+  }
+
+  function addName(raw){
+    var sym = String(raw || "").trim().toUpperCase();
+    if (!sym) return;
+    var list = loadList();
+    if (list.indexOf(sym) === -1){
+      if (list.length >= (DATA ? DATA.max_picks : 10)){
+        note.textContent = "You can pick up to " +
+          (DATA ? DATA.max_picks : 10) +
+          " names at a time. Remove one first, then add " +
+          sym + ".";
+        input.value = "";
+        return;
+      }
+      list.push(sym);
+      saveList(list);
+      note.textContent = (sym in IDX)
+        ? sym + " is on your list."
+        : sym + " is on your list. It has no record, so its line " +
+          "says so plainly.";
+    } else {
+      note.textContent = sym + " is already on your list.";
+    }
+    input.value = "";
+    render();
+  }
+
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    addName(input.value);
+  });
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      DATA = data;
+      var symbols = data.symbols || [];
+      if (!symbols.length || data.state !== "published"){
+        meta.textContent = "";
+        defEl.innerHTML = "";
+        resultsEl.innerHTML = '<div class="nodata">No name has ' +
+          "been published yet. When the records are published, " +
+          "your picks will show a line for every pair among " +
+          "them. Nothing is shown for a record that has not " +
+          "been made.</div>";
+        return;
+      }
+      symbols.forEach(function(s, i){ IDX[s] = i; });
+      renderDefs();
+      meta.textContent = "Price history through " +
+        fmtDateLong(data.session) + ". Source: " + data.source + ".";
+      if (data.session !== lastCompletedSession()){
+        showBanner("stale", "These records are from " +
+          fmtDateLong(data.session) + ", which is not the most " +
+          "recent completed trading day. Treat them as the last " +
+          "published records, not today's.");
+      }
+      receiptEl.textContent = "Receipt: " +
+        num(data.coverage.names_on_record) + " names on record; " +
+        "the price history on record holds " +
+        num(data.history_sessions_on_record) + " sessions, from " +
+        fmtDateShort(data.history_from) + " to " +
+        fmtDateShort(data.history_to) + "; this page uses the " +
+        "most recent " + num(data.window_sessions) +
+        " of them; " + num(data.coverage.names_with_enough_days) +
+        " names have at least " + data.min_overlap +
+        " days in that window and " +
+        num(data.coverage.names_with_full_window) +
+        " have the full window.";
+      render();
+    })
+    .catch(function(){
+      meta.textContent = "";
+      defEl.innerHTML = "";
+      showBanner("missing", "The Correlation Web is not available " +
+        "right now. The data file for this page could not be " +
+        "loaded, so there is nothing honest to show. Please check " +
+        "back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
