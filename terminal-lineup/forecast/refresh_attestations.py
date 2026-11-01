@@ -149,8 +149,10 @@ def write_checkpoint(rows, checkpoint_path=CHECKPOINT_PATH):
             "%Y-%m-%dT%H:%M:%SZ"),
         "anchor": ("head hash and row count of forecast/"
                    "ledger.jsonl, written by refresh_attestations "
-                   "on every regeneration and carried off-machine "
-                   "by the hourly gated Test sync"),
+                   "on every regeneration; the file sits in the "
+                   "workspace tree the daily backup seal carries "
+                   "off-machine to the Silicon repo, so the head "
+                   "is anchored externally at daily cadence"),
     }
     try:
         with open(checkpoint_path, encoding="utf-8") as fh:
