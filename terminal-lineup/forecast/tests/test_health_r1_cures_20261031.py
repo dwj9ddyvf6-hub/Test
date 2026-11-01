@@ -134,9 +134,11 @@ def test_sampled_drill_report_carries_verify_block(tmp_path,
         p["git_sha"] = ar.git_blob_sha(data)
         blobs[p["git_sha"]] = data
     man = {"home_head": "deadbeef", "parts": parts}
+    flat = {f"snap/{p['name']}": {"sha": p["git_sha"]}
+            for p in parts}
     monkeypatch.setattr(
         rd, "_manifest",
-        lambda source, ref, snapshot: ({}, "snap", man))
+        lambda source, ref, snapshot: (flat, "snap", man))
     monkeypatch.setattr(ar, "assert_proven_receipt",
                         lambda head: None)
 
