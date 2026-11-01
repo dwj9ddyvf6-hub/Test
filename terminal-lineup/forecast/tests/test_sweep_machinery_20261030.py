@@ -116,11 +116,21 @@ def test_band_consumers_apply_guard_factor_in_check():
 
 
 def test_published_pages_carry_band_check_and_no_band_refusal():
+    # Durable re-take (HEALTH-R1-D12-20261031): GUARD above is the
+    # demonstrated 2026-10-29 session factor for the synthetic
+    # edge tests, not a permanent pin. The published claim that
+    # must hold every session is cross-surface consistency: each
+    # consumer's band check carries Engine 1's CURRENT published
+    # guard factor, whatever session produced it.
+    band = json.load(open(os.path.join(
+        SITE, "corrected-band", "data.json"), encoding="utf-8"))
+    current = band["live"]["session_quality_guard"][
+        "band_widen_factor"]
     for slug in ("touch-surface", "exceedance"):
         data = json.load(open(os.path.join(
             SITE, slug, "data.json"), encoding="utf-8"))
         check = data["live"]["engine1_band_check"]
-        assert check["guard_widen_factor"] == GUARD, slug
+        assert check["guard_widen_factor"] == current, slug
 
 
 # ---- (d) Pullback depth bound ---------------------------------------
