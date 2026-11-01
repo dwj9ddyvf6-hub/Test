@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Producer lanes by cadence class (liveness phase, 2026-10-31).
 
+Every lane also begins by running the live-server watchdog
+(watch_serve_live.py, cure D-R1-23), which restarts serve_live.py
+when the served terminal does not answer and fails the lane by
+name when it stays down.
+
 One runner, four lanes, each ending the same way: enrich every page,
 rebuild the hub (refresh_hub.py, which also republishes desk/), stamp
 a watermark in lane_state.json, and append ONE freshness line to
@@ -114,14 +119,21 @@ def main() -> int:
         return 2
     lane = sys.argv[1]
     slugs = CLASS_SLUGS.get(lane) or all_slugs()
+    # Live-server watchdog (cure D-R1-23): every lane first proves
+    # the served terminal answers, restarting it when it does not.
+    # A server that stays down fails the lane by name instead of
+    # passing silently while the terminal is unreachable.
+    server_code = run("watch_serve_live.py")
     if lane == "intraday":
         now_et = datetime.now(ET)
         if not market_open(now_et):
-            stamp(lane, "skipped-market-closed", slugs,
+            stamp(lane,
+                  "skipped-market-closed" if server_code == 0
+                  else "FAILED-live-server-down", slugs,
                   f"et={now_et.strftime('%a %H:%M')}")
-            return 0
+            return server_code
         code = run("tape_family_run.py")
-        if close() != 0:
+        if close() != 0 or server_code != 0:
             code = 1
         stamp(lane, "ok" if code == 0 else "FAILED", slugs)
         return code
@@ -130,7 +142,7 @@ def main() -> int:
         for script in WEEKLY_SCRIPTS:
             if run(script) != 0:
                 code = 1
-        if close() != 0:
+        if close() != 0 or server_code != 0:
             code = 1
         stamp(lane, "ok" if code == 0 else "FAILED", slugs)
         return code
@@ -139,6 +151,8 @@ def main() -> int:
     # lane re-enriches, republishes the hub and desk, and proves the
     # served tree is the freshest written tree.
     code = close()
+    if server_code != 0:
+        code = 1
     stamp(lane, "ok" if code == 0 else "FAILED", slugs)
     return code
 
