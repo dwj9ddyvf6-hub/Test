@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dark Prints: the off-exchange dark reading</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --stale-bg:#fdf6e3; --stale-line:#e3cf8a; --stale-ink:#6b5510;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.stale{background:var(--stale-bg);border:1px solid var(--stale-line);color:var(--stale-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 8px;font-size:21px}
+  .big{font-size:40px;font-weight:700;letter-spacing:-.01em;margin:2px 0}
+  .facts{font-size:14.5px;color:var(--soft);margin:4px 0}
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  th,td{text-align:right;padding:6px 10px;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  th{font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  .lookup{margin:0 0 12px}
+  .lookup label{font-size:15px;font-weight:600;display:block;margin:0 0 6px}
+  .lookup input{font-size:16px;padding:9px 12px;border:1px solid var(--line);
+        border-radius:10px;width:260px;max-width:100%;text-transform:uppercase}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Dark Prints</h1>
+    <p class="job">One job: show the dark reading for a trading session: how much of the off-exchange trading in the S&amp;P 500 stocks combined was sold short, with each index fund's own reading beside it.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the dark reading&hellip;</p>
+
+  <section class="note">
+    <h2>What the dark reading measures</h2>
+    <p id="measure">Loading&hellip;</p>
+  </section>
+
+  <main id="main"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">All the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var measureEl = document.getElementById("measure");
+  var receiptEl = document.getElementById("receipt");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtPct(v){ return Number(v).toFixed(1); }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function lastCompletedSession(){
+    var now = new Date(new Date().toLocaleString("en-US",{timeZone:"America/New_York"}));
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    d.setDate(d.getDate() - 1);
+    while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1);
+    var m = String(d.getMonth() + 1), day = String(d.getDate());
+    return d.getFullYear() + "-" + (m.length < 2 ? "0" + m : m) + "-" + (day.length < 2 ? "0" + day : day);
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      measureEl.textContent = data.measure || "";
+      var idx = data.index_reading;
+      if (!idx || typeof idx.pct !== "number" || !data.session){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No dark reading has been ' +
+          'published yet.</div>';
+        return;
+      }
+      if (data.session < lastCompletedSession()){
+        showBanner("stale", "This reading is from " + fmtDateLong(data.session) +
+          ", which is not the most recent completed trading session. It is " +
+          "the newest reading on record, shown as it stands.");
+      }
+      meta.textContent = "Trading session: " + fmtDateLong(data.session) +
+        ". Source: " + data.source + ".";
+      var r = data.receipt || {};
+      receiptEl.textContent = "Receipt: session " +
+        fmtDateLong(r.session || data.session) + ", published " +
+        (r.published || data.published_at_utc) + ". Source: " +
+        (r.source || data.source) + ". Coverage: " +
+        (r.coverage || data.coverage) + ".";
+
+      var h = "";
+      h += '<section class="group"><h2>' + esc(idx.name) + '</h2>' +
+        '<p class="big">' + esc(fmtPct(idx.pct)) + '%</p>' +
+        '<p class="facts">of the off-exchange trading volume in the S&amp;P 500 ' +
+        'stocks combined was sold short in the session of ' +
+        esc(fmtDateLong(idx.session)) + '.</p>' +
+        '<p class="facts">Coverage: ' + esc(idx.coverage) + '.</p></section>';
+
+      h += '<section class="group"><h2>The three index funds, each on its own</h2>' +
+        '<p class="facts">Each fund\'s own reading: the share of that fund\'s ' +
+        'own off-exchange trading volume that was sold short. A different, ' +
+        'simpler measure than the combined reading above.</p>' +
+        '<table><thead><tr><th>Fund</th><th>Trading session</th>' +
+        '<th>Sold short, share of its off-exchange volume</th></tr></thead><tbody>';
+      (data.funds || []).forEach(function(f){
+        h += '<tr><td>' + esc(f.symbol) + '</td><td>' +
+          esc(fmtDateLong(f.session)) + '</td><td>' + esc(fmtPct(f.pct)) + '%</td></tr>';
+      });
+      h += '</tbody></table></section>';
+
+      if ((data.history || []).length){
+        h += '<section class="group"><h2>Sessions on record</h2>' +
+          '<table><thead><tr><th>Trading session</th><th>S&amp;P 500 combined</th>' +
+          '<th>SPY</th><th>QQQ</th><th>IWM</th><th>Stocks behind the combined reading</th>' +
+          '</tr></thead><tbody>';
+        data.history.slice().reverse().forEach(function(s){
+          h += '<tr><td>' + esc(fmtDateLong(s.session)) + '</td><td>' +
+            esc(fmtPct(s.index_pct)) + '%</td><td>' + esc(fmtPct(s.funds.SPY)) + '%</td><td>' +
+            esc(fmtPct(s.funds.QQQ)) + '%</td><td>' + esc(fmtPct(s.funds.IWM)) + '%</td><td>' +
+            esc(s.index_used) + ' of ' + esc(s.index_total) + '</td></tr>';
+        });
+        h += '</tbody></table></section>';
+      }
+
+      var pn = data.per_name || {};
+      h += '<section class="group"><h2>One stock at a time</h2>' +
+        '<div class="lookup"><label for="pick">Look up a stock</label>' +
+        '<input id="pick" type="text" placeholder="Type a ticker, for example AAPL" autocomplete="off"></div>' +
+        '<p id="lookup-result" class="facts" hidden></p>' +
+        (pn.state === "collecting"
+          ? '<p class="facts">' + esc(pn.coverage || "") + '.</p></section>'
+          : '<div class="nodata">Not on record yet: ' + esc(pn.coverage || "") +
+            '.</div></section>');
+
+      var lp = data.large_prints || {};
+      h += '<section class="group"><h2>Large off-exchange prints</h2>' +
+        '<div class="nodata">None on record: ' + esc(lp.coverage || "") +
+        '.</div></section>';
+
+      mainEl.innerHTML = h;
+      var pick = document.getElementById("pick");
+      var lookupResult = document.getElementById("lookup-result");
+      pick.addEventListener("input", function(){
+        var q = pick.value.trim().toUpperCase();
+        if (!q){ lookupResult.hidden = true; return; }
+        lookupResult.hidden = false;
+        var latest = (data.per_name || {}).latest || {};
+        if (data.per_name && data.per_name.state === "collecting" &&
+            Object.prototype.hasOwnProperty.call(latest, q)){
+          lookupResult.textContent = q + ": " + latest[q] + "% of its " +
+            "off-exchange volume was sold short on " +
+            fmtDateLong(data.per_name.latest_session) +
+            ", the freshest stored session. Its readings for the other " +
+            "stored sessions are in the daily per-stock store this page " +
+            "counts above.";
+        } else if (data.per_name && data.per_name.state === "collecting"){
+          lookupResult.textContent = q + " is not on record for the " +
+            "freshest stored session (" +
+            fmtDateLong(data.per_name.latest_session) + "): it does not " +
+            "appear in that session's file, so it carries no reading " +
+            "for that session, never a zero.";
+        } else {
+          lookupResult.textContent = q + " is not on record: no per-stock dark " +
+            "reading is stored for any stock, so there is no reading to show " +
+            "for it. The combined reading above is the only dark reading on " +
+            "record.";
+        }
+      });
+    })
+    .catch(function(){
+      meta.textContent = "";
+      measureEl.textContent = "";
+      showBanner("missing", "The dark reading is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
