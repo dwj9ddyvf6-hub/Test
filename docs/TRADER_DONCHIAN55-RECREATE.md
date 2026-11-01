@@ -1,5 +1,5 @@
 # TRADER_DONCHIAN55: Recreation Package
-Status: UNRESOLVED in the ALL-SLEEVES accounting; this package holds the best evidence on file and does not claim a complete algorithm.
+Status: FULL in the ALL-SLEEVES accounting (docs/ALL-SLEEVES.json entry TRADER_DONCHIAN55, algorithm status FULL, verified live 2026-10-31 during Cure C2); this package's algorithm below is the complete algorithm the FULL entry records. The earlier UNRESOLVED header was stale and is superseded by the FULL entry.
 
 ## Provenance
 
@@ -8,7 +8,7 @@ Status: UNRESOLVED in the ALL-SLEEVES accounting; this package holds the best ev
 
 ## What this strategy is
 
-A Donchian 55/20 trend-following sleeve over a fixed 15-ETF universe: buy a close above the prior 55-day high while above the 200-day SMA; exit on a close below the prior 20-day low or below the 200-day SMA, an initial 2xATR14 stop, or 126 holding bars. Paper only, on a $10,000 slice.
+A Donchian 55/20 trend-following sleeve over a fixed universe of the 14 ETFs listed in the Configuration section: buy a close above the prior 55-day high while above the 200-day SMA; exit on a close below the prior 20-day low or below the 200-day SMA, an initial 2xATR14 stop, or 126 holding bars. Paper only, on a $10,000 slice.
 
 ## Full algorithm
 
@@ -36,7 +36,7 @@ From `docs/ASTER_TRADER_DONCHIAN55-ALGORITHM.md` (code-derived from `desk3/aster
 
 ## Configuration
 
-From the algorithm doc's spec section (engine `desk3/aster_batch16.py`): kind "donchian", inputs (bars, positions), cadence_s 86400, session rth, slice capital $10,000 (SLICE = 10000.0). Universe: SPY, QQQ, IWM, DIA, XLK, XLF, XLV, XLI, XLP, XLU, XLB, XLY, SMH, SOXX (15 ETFs; the card says "15 liquid ETFs (as RSI2)"). Minimum bars 252; entry channel 55; exit channel 20; SMA 200; maximum hold 126 bars; slots 10; notional fraction 0.10 of equity; dollar-volume fraction 0.01 of the 20-day average dollar volume; risk fraction 0.005 of equity; stop 2.0 x ATR14 (Wilder RMA). Deployed status per the accounting: original_independent_local_paper, running=False.
+From the algorithm doc's spec section (engine `desk3/aster_batch16.py`): kind "donchian", inputs (bars, positions), cadence_s 86400, session rth, slice capital $10,000 (SLICE = 10000.0). Universe: SPY, QQQ, IWM, DIA, XLK, XLF, XLV, XLI, XLP, XLU, XLB, XLY, SMH, SOXX (14 tickers as listed; the card says "15 liquid ETFs (as RSI2)", but the list carried here and in the card contains 14 tickers, so the observed count is 14). Minimum bars 252; entry channel 55; exit channel 20; SMA 200; maximum hold 126 bars; slots 10; notional fraction 0.10 of equity; dollar-volume fraction 0.01 of the 20-day average dollar volume; risk fraction 0.005 of equity; stop 2.0 x ATR14 (Wilder RMA). Deployed status per the accounting: original_independent_local_paper, running=False.
 
 ## Data inputs
 
