@@ -11,9 +11,14 @@ Evidence class: one committed calendar document on file, assembled
 2026-10-25 from the official release schedules published by the
 Federal Reserve (its meeting calendar) and the Bureau of Labor
 Statistics (its release schedules for consumer prices and for the
-jobs report), checked against a second, independent carrier of the
+jobs report), widened 2026-10-31 to calendar version
+desk-macro-calendar-v2 under Midna's Week Ahead macro calendar v2
+ruling (the owner's delegation, 2026-10-31): the ISM manufacturing and
+ISM services release dates were added from the Institute for
+Supply Management's official Report Release Date Calendar. The
+calendar is checked against a second, independent carrier of the
 same calendar: the copies of it carried inside the desk's own dated
-snapshots (session 2026-10-28). Every event published here must
+snapshots. Every event published here must
 appear, identical in date, kind, recorded time and recorded label,
 in both carriers, or this refresh stops and publishes nothing.
 
@@ -21,9 +26,11 @@ Reconstruction choices (stated as this build's own choices):
   - Plain names are translations of the calendar's own labels, one
     per kind, fixed here: the central bank rate decision (recorded
     label "FOMC rate decision"), the consumer prices report
-    (recorded label "Consumer Price Index") and the jobs report
-    (recorded label "Employment Situation"). Plain kinds likewise:
-    Central bank, Prices, Jobs.
+    (recorded label "Consumer Price Index"), the jobs report
+    (recorded label "Employment Situation"), the ISM manufacturing
+    report (recorded label "ISM Manufacturing PMI") and the ISM
+    services report (recorded label "ISM Services PMI"). Plain
+    kinds likewise: Central bank, Prices, Jobs, Business surveys.
   - Times: the calendar records each event's time as Eastern Time
     (its own field is the Eastern time of day). Eastern Time is
     New York time, so the times are shown exactly as recorded, in
@@ -35,15 +42,20 @@ Reconstruction choices (stated as this build's own choices):
   - Which events are upcoming, and the recent-past strip, are
     worked out on the reader's screen against that day's date in
     New York, so this file carries the whole calendar on record
-    (all 64 events) and running this script twice on the same
+    (all of its events) and running this script twice on the same
     sources produces the same file, byte for byte. Dates here come
     from the calendar document, never from the clock.
 
 Non-claims: this build does not claim the calendar covers anything
-beyond its three recorded kinds. It carries no Treasury sales, no
+beyond its five recorded kinds. It carries no Treasury sales, no
 central bank minutes and no other events, and the page says so in
 plain words. It does not claim any event will move prices, and it
-adds no event that is not in the calendar on record.
+adds no event that is not in the calendar on record. The ISM
+official calendar consulted for the v2 widening carries the 2026
+table only, so ISM events are on record for 2026; the Employment
+Cost Index and the Chicago PMI are not carried, because their
+official calendars carry no date in the current window and no
+date for them is invented here.
 
 Fail-closed rules: the calendar document missing, unreadable, of
 an unexpected version, or carrying an event kind, label, date or
@@ -77,7 +89,7 @@ SNAPSHOT_GLOB = os.path.join(
     WORKSPACE, "muse-desk-v3", "state", "snapshots", "*.json")
 OUT_PATH = os.path.join(HERE, "week-ahead", "data.json")
 
-EXPECTED_VERSION = "desk-macro-calendar-v1"
+EXPECTED_VERSION = "desk-macro-calendar-v2"
 
 # kind -> (recorded label, plain name, plain kind)
 KINDS = {
@@ -87,16 +99,22 @@ KINDS = {
             "Consumer prices report", "Prices"),
     "NFP": ("Employment Situation",
             "Jobs report", "Jobs"),
+    "ISM_MFG": ("ISM Manufacturing PMI",
+                "ISM manufacturing report", "Business surveys"),
+    "ISM_SVC": ("ISM Services PMI",
+                "ISM services report", "Business surveys"),
 }
 
 SOURCE_WORDS = ("The official release schedules published by the "
-                "Federal Reserve and the Bureau of Labor "
-                "Statistics, gathered into one calendar")
+                "Federal Reserve, the Bureau of Labor Statistics "
+                "and the Institute for Supply Management, "
+                "gathered into one calendar")
 
-SCOPE_NOTE = ("This calendar covers three kinds of events: central "
-              "bank rate decisions, the consumer prices report and "
-              "the jobs report. It carries no Treasury sales and "
-              "no other events, so none are shown.")
+SCOPE_NOTE = ("This calendar covers five kinds of events: central "
+              "bank rate decisions, the consumer prices report, "
+              "the jobs report, the ISM manufacturing report and "
+              "the ISM services report. It carries no Treasury "
+              "sales and no other events, so none are shown.")
 
 
 def fail(message):
@@ -185,8 +203,9 @@ def build():
     events.sort(key=lambda e: (e["date"], e["time_et"] or "", e["name"]))
 
     # Rolling 14 day coverage window (TRADING-PATH-WEEKAHEAD-20261031):
-    # the calendar on record covers only three kinds, so a weekday
-    # with no event in the window is UNVERIFIED, never quiet. Before
+    # the calendar on record covers only its recorded kinds, so a
+    # weekday with no event in the window is UNVERIFIED, never
+    # quiet. Before
     # this, the file carried no window at all and the 2026-10-30
     # pre-open read had to name the thinness itself: the window
     # 2026-10-30 to 2026-11-03 held zero events while the Employment
