@@ -58,7 +58,24 @@ def test_collector_universe_is_bounded_and_direction_unjudged():
     col = load_module("collect_pername_tape")
     uni = col.bounded_universe()
     assert set(["SPY", "QQQ", "IWM"]).issubset(set(uni))
-    assert 50 <= len(uni) <= 60  # tracked 50 + ETFs, bounded
+    # Durable re-take (HEALTH-R1-D13-20261031): the 50-to-60 pin
+    # broke when the Insider Wire record legitimately grew to
+    # 100 tracked names (103 with the ETFs). The bounded claim
+    # that must hold is the derivation: the universe is exactly
+    # the Insider Wire record's names, deduplicated, plus the
+    # index ETFs, and nothing else can enter it.
+    import json as _json
+    with open(col.INSIDER_PATH, encoding="utf-8") as fh:
+        doc = _json.load(fh)
+    tracked = []
+    for n in doc.get("names") or []:
+        sym = n.get("symbol")
+        if sym and sym not in tracked:
+            tracked.append(sym)
+    expected = tracked + [s for s in col.INDEX_ETFS
+                          if s not in tracked]
+    assert uni == expected
+    assert len(uni) == len(set(uni))
     assert col.DIRECTION_BASIS == "unjudged_no_print_time_quote"
     store = os.path.expanduser(
         "~/workspace/morgue/state/morgue/pername_tape/2026-10-29.json")
@@ -119,5 +136,24 @@ def test_grade_move_rule():
     if os.path.exists(grades_path):
         doc = json.load(open(grades_path))
         assert doc["totals"]["graded"] > 0
-        assert doc["sessions"]["2026-10-29"]["ungraded_by_reason"] == {
-            "next_session_close_not_yet_available": 75}
+        # Durable re-take (HEALTH-R1-D14-20261031): the pinned
+        # 2026-10-29 pending state was true only until the next
+        # session's close landed and that session graded in full.
+        # The binding claim is the rotation itself: every session
+        # except the freshest is fully graded with no pending
+        # reason, and the freshest session's alerts are exactly
+        # the ones awaiting the next session's close.
+        sessions = doc["sessions"]
+        freshest = max(sessions)
+        for day, sess in sessions.items():
+            if day == freshest:
+                continue
+            # Permanent reasons (neutral alerts never grade) may
+            # stay; the pending-close reason may not: that close
+            # has landed for every session but the freshest.
+            assert "next_session_close_not_yet_available" not in \
+                sess["ungraded_by_reason"], day
+        pending = sessions[freshest]
+        assert pending["ungraded_by_reason"] == {
+            "next_session_close_not_yet_available":
+                pending["alerts"] - pending["graded"]}
