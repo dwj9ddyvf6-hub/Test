@@ -195,7 +195,11 @@ def test_13f_panel_readings_recorded():
     data = load(os.path.join("13f-tracker", "data.json"))
     block = data["panel_reliability"]
     assert len(block["panel_readings"]) == 2
-    assert block["panel_drift_state"].startswith("undefined")
+    # Wording re-taken (health loop R2, 2026-10-31): the drift
+    # state is reader prose, and the reader-copy blocker bans the
+    # null word "undefined" from it; the generator's plain
+    # wording is "not computed: ..." (cure HEALTH-R2-DRIFT-PROSE).
+    assert block["panel_drift_state"].startswith("not computed")
     assert "third full filing period" in block["missing_input"]
     assert block["panel_drift_z"] is None
 
