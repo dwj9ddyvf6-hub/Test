@@ -35,7 +35,7 @@ import json
 import os
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -126,7 +126,46 @@ def regenerate(recorded_on=None, registry_path=REGISTRY_PATH,
         os.replace(tmp, registry_path)
     # The rewritten registry must still validate.
     registry_mod.load(registry_path)
+    # Ledger checkpoint (HEALTH-R1-D19-20261031): every
+    # regeneration also anchors the ledger's current head hash
+    # and row count in forecast/ledger-checkpoint.json, a file
+    # the hourly gated Test sync carries off this machine, so
+    # the head is anchored externally at sync cadence rather
+    # than only in records on this box.
+    write_checkpoint(rows)
     return changed
+
+
+CHECKPOINT_PATH = os.path.join(HERE, "ledger-checkpoint.json")
+
+
+def write_checkpoint(rows, checkpoint_path=CHECKPOINT_PATH):
+    """Write the ledger head/row-count anchor when it moved."""
+    head = rows[-1]["row_hash"] if rows else None
+    record = {
+        "ledger_rows": len(rows),
+        "ledger_head": head,
+        "checked_at_utc": datetime.now(timezone.utc).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"),
+        "anchor": ("head hash and row count of forecast/"
+                   "ledger.jsonl, written by refresh_attestations "
+                   "on every regeneration and carried off-machine "
+                   "by the hourly gated Test sync"),
+    }
+    try:
+        with open(checkpoint_path, encoding="utf-8") as fh:
+            prior = json.load(fh)
+        if prior.get("ledger_head") == head and \
+                prior.get("ledger_rows") == len(rows):
+            return False
+    except (OSError, ValueError):
+        pass
+    tmp = checkpoint_path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(record, fh, indent=2)
+        fh.write("\n")
+    os.replace(tmp, checkpoint_path)
+    return True
 
 
 def sync_pages(site_dir=SITE_DIR):
