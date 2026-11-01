@@ -27,9 +27,12 @@ import re
 from datetime import date
 
 TOP_KEYS = ("as_of_session", "session", "as_of", "freshest_session",
-            "freshest_date", "modelled_freshest_date",
+            "freshest_date", "freshest_day", "freshest_filed",
+            "freshest_snapshot", "modelled_freshest_date",
             "precomputed_freshest_date", "scored_run_session",
-            "assembled_on", "replay_date", "grading_run_at", "date",
+            "assembled_on", "replay_date", "grading_run_at",
+            "wire_grading_run_at", "second_search_finished",
+            "first_search_finished", "date",
             "panel_last_session", "readings_through",
             "newest_source_time", "published_date",
             "generated_at", "generated_at_utc", "published_at_utc",
@@ -82,6 +85,16 @@ def reading_date(data):
         d = parse_date(gradings[0].get("date"))
         if plausible(d):
             return d
+    # Repair 2026-10-31: per-name snapshot pages (expiry-pin-watch)
+    # carry the reading date on each name, not at top level. The
+    # freshest name snapshot is the page's reading date.
+    names = data.get("names")
+    if isinstance(names, list):
+        snaps = [parse_date(n.get("snapshot_day")) for n in names
+                 if isinstance(n, dict)]
+        snaps = [d for d in snaps if plausible(d)]
+        if snaps:
+            return max(snaps)
     for block_name in ("state", "wire"):
         block = data.get(block_name)
         if isinstance(block, dict):
