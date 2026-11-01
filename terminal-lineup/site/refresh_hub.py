@@ -22,10 +22,19 @@ untouched:
   data file and keep their authored chip and date.
 - A card that was Stale and whose page is current again gets back
   the chip it carried before it went stale: this refresher keeps
-  one small producer state file (hub_chips.json, the last non-stale
-  chip per slug, written only by this refresher) so a recovered
-  page never has to be retyped by hand and this refresher never
-  invents a Live chip for a page it has not seen live.
+  one small producer state file (hub_chip_memory.json, the last
+  non-stale chip per slug, written only by this refresher) so a
+  recovered page never has to be retyped by hand and this
+  refresher never invents a Live chip for a page it has not
+  seen live.
+- hub_chips.json is a different artefact with a different job
+  (cure D-R1-15, 2026-10-31): it is the FINAL census, regenerated
+  from the finished cards on every successful run, one entry per
+  hub card carrying that card's final chip word, Stale included,
+  the calculator pages included. It therefore always agrees
+  with the count line this refresher prints on the hub, because
+  both are counted from the same finished cards. It is never
+  read back as producer state; the recovery memory above is.
 - The count line and the lineup meter are recomputed from the
   final chips on the cards, so the hub's headline numbers can
   never again disagree with its own cards.
@@ -309,14 +318,23 @@ def main() -> int:
         return 1
     today = datetime.now().date()
     latest = latest_completed_session(today)
-    state_path = HERE / "hub_chips.json"
+    # Recovery memory: the last non-stale chip per slug. Before
+    # the D-R1-15 cure this lived in hub_chips.json, which made
+    # that file disagree with the hub census it was read as
+    # describing; on first run under the cure it migrates from
+    # the legacy file, whose contents are exactly this memory.
+    memory_path = HERE / "hub_chip_memory.json"
+    census_path = HERE / "hub_chips.json"
     saved_chips = {}
-    if state_path.exists():
-        try:
-            saved_chips = json.loads(
-                state_path.read_text(encoding="utf-8"))
-        except Exception:
-            saved_chips = {}
+    for seed in (memory_path, census_path):
+        if seed.exists():
+            try:
+                saved_chips = json.loads(
+                    seed.read_text(encoding="utf-8"))
+            except Exception:
+                saved_chips = {}
+            if saved_chips:
+                break
     failures = []
     stale_slugs = []
     counts = {"live": 0, "waiting": 0, "ungraded": 0, "stale": 0,
@@ -329,6 +347,14 @@ def main() -> int:
             continue
         slug = m.group(1)
         new_card = card
+        # Recovery memory completeness (D-R1-15 cure): record the
+        # pre-run chip of EVERY card that is not stale, including
+        # the dateless and calculator cards the date pass below
+        # cannot reach, so a later stale recovery never has to
+        # fall back to a guessed chip for any card in the lineup.
+        cur0 = re.search(r'class="chip ([a-z]+)"', card)
+        if cur0 and cur0.group(1) != "stale":
+            saved_chips[slug] = cur0.group(1)
         if slug in NO_DATA and 'class="updated"' not in new_card:
             # Calculator pages publish no reading: say so beside the
             # chip instead of leaving the card dateless.
@@ -515,9 +541,21 @@ def main() -> int:
         return 1
     if out != original:
         HUB.write_text(out, encoding="utf-8")
-    state_path.write_text(json.dumps(saved_chips, indent=1,
-                                     sort_keys=True) + "\n",
-                          encoding="utf-8")
+    memory_path.write_text(json.dumps(saved_chips, indent=1,
+                                      sort_keys=True) + "\n",
+                           encoding="utf-8")
+    # Final census (D-R1-15): one entry per finished card, its
+    # final chip word, counted from the same cards the count
+    # line above was counted from, so the two can never disagree.
+    census = {}
+    for card in final_cards:
+        m = re.search(r'href="([a-z0-9-]+)/"', card)
+        chip = re.search(r'class="chip ([a-z]+)"', card)
+        if m and chip:
+            census[m.group(1)] = chip.group(1)
+    census_path.write_text(json.dumps(census, indent=1,
+                                      sort_keys=True) + "\n",
+                           encoding="utf-8")
     print(f"hub refreshed: {total} cards; live {counts['live']}, "
           f"waiting {counts['waiting']}, not yet graded "
           f"{counts['ungraded']}, stale {counts['stale']}"
