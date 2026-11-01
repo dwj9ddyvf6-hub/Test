@@ -2,8 +2,8 @@
   "as_of_session": "2026-10-30",
   "calibration_attestation": {
     "attestation": {
-      "basis": "2 graded forecasts of 30 recorded on the ledger (mean scores: crps_approx 2.4433, pinball@0.025 0.4241, pinball@0.095 1.2854, pinball@0.16 1.8976, pinball@0.25 2.5425, pinball@0.75 2.2725, pinball@0.84 1.1256, pinball@0.905 0.1314, pinball@0.975 0.0941); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-      "forecasts_recorded": 30,
+      "basis": "2 graded forecasts of 36 recorded on the ledger (mean scores: crps_approx 2.4433, pinball@0.025 0.4241, pinball@0.095 1.2854, pinball@0.16 1.8976, pinball@0.25 2.5425, pinball@0.75 2.2725, pinball@0.84 1.1256, pinball@0.905 0.1314, pinball@0.975 0.0941); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 36,
       "graded_forecasts": 2,
       "recorded_on": "2026-10-31",
       "status": "not_attested"
@@ -17,6 +17,10 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution, over 1, 5 and 21 sessions; bands 50/68/81/95%. It is graded on a loss score on each of its stated percentile lines, where lower is better. It would be ended if the 68 percent band's coverage at any horizon sits outside its binomial interval after 120 graded forecasts, or a plain HAR band beats it on pinball at equal width. It counts as proven at 120 live forecasts (68% band claim graded at 120).",
+    "summary": "Publish a price band for SPY and QQQ whose stated percentage is a promise this page is graded against."
+  },
   "feed": "forecast_ledger",
   "history": {
     "cells": [
@@ -474,7 +478,170 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "2 graded forecasts of 36 recorded on the ledger (mean scores: crps_approx 2.4433, pinball@0.025 0.4241, pinball@0.095 1.2854, pinball@0.16 1.8976, pinball@0.25 2.5425, pinball@0.75 2.2725, pinball@0.84 1.1256, pinball@0.905 0.1314, pinball@0.975 0.0941); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 36,
+        "graded_forecasts": 2,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_01",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "history",
+        "kill_criterion",
+        "live",
+        "next_session",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "source",
+        "state",
+        "subject_chart",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_01",
+      "forecasts": 36,
+      "grades": 2,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 36 forecasts are on record and 2 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 24,
+          "path": "/history"
+        },
+        {
+          "items": 24,
+          "path": "/history/cells"
+        }
+      ],
+      "total_items_counted": 48
+    },
+    "version": 1
+  },
   "source": "Daily closing prices for SPY and QQQ from the price history on record (399 trading days, March 25, 2025 to October 23, 2026), and the daily closes of the volatility index on record (ending 2026-10-30).",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "items": [
+        {
+          "current": 755.72,
+          "high": 762.27,
+          "label": "SPY (the big S&P 500 fund)",
+          "low": 749.17
+        },
+        {
+          "current": 755.72,
+          "high": 765.37,
+          "label": "SPY (the big S&P 500 fund)",
+          "low": 746.07
+        },
+        {
+          "current": 755.72,
+          "high": 768.44,
+          "label": "SPY (the big S&P 500 fund)",
+          "low": 743.0
+        },
+        {
+          "current": 755.72,
+          "high": 774.74,
+          "label": "SPY (the big S&P 500 fund)",
+          "low": 736.7
+        }
+      ],
+      "kind": "band",
+      "label": "Each published range for the next session.",
+      "source": "live.names[0].horizons[0].bands[].lower/upper",
+      "title": "The latest band, drawn to scale"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Coverage percent per symbol, horizon and level.",
+      "rows": [
+        {
+          "name": "SPY 1d 50%",
+          "score": 46.2
+        },
+        {
+          "name": "SPY 1d 68%",
+          "score": 61.7
+        },
+        {
+          "name": "SPY 1d 81%",
+          "score": 72.7
+        },
+        {
+          "name": "SPY 1d 95%",
+          "score": 87.9
+        },
+        {
+          "name": "SPY 5d 50%",
+          "score": 45.9
+        },
+        {
+          "name": "SPY 5d 68%",
+          "score": 63.1
+        },
+        {
+          "name": "SPY 5d 81%",
+          "score": 73.5
+        },
+        {
+          "name": "SPY 5d 95%",
+          "score": 91.0
+        },
+        {
+          "name": "SPY 21d 50%",
+          "score": 47.6
+        },
+        {
+          "name": "SPY 21d 68%",
+          "score": 64.0
+        },
+        {
+          "name": "SPY 21d 81%",
+          "score": 78.7
+        },
+        {
+          "name": "SPY 21d 95%",
+          "score": 94.2
+        }
+      ],
+      "source": "history.cells[].coverage_pct",
+      "title": "How often the bands held, per cell"
+    },
+    "version": 1
+  },
   "tool": "Corrected Band Engine"
 }
