@@ -27,7 +27,11 @@ def test_hub_producer_exists_and_is_wired_last_into_tools_chain():
 def test_hub_count_line_matches_its_own_cards():
     hub = (SITE / "index.html").read_text(encoding="utf-8")
     chips = re.findall(r'class="chip ([a-z]+)"', hub)
-    assert len(chips) == 100, len(chips)
+    # The lineup has carried 102 cards since before the
+    # terminal-ui-implementation program (repair 2026-10-31: the
+    # hard 100 below was a stale pin from the 100-card hub; the
+    # invariant this test exists for is line == chips, kept below).
+    assert len(chips) == 102, len(chips)
     m = re.search(
         r"(\d+) tools in the lineup: (\d+) live, (\d+) waiting, "
         r"(\d+) not yet graded, (\d+) stale", hub)
@@ -38,7 +42,7 @@ def test_hub_count_line_matches_its_own_cards():
     assert waiting == chips.count("waiting")
     assert ungraded == chips.count("ungraded")
     assert stale == chips.count("stale")
-    meter = re.search(r"(\d+) of 100 tools live today", hub)
+    meter = re.search(r"(\d+) of 102 tools live today", hub)
     assert meter and int(meter.group(1)) == live
 
 
