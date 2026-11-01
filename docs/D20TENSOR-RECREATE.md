@@ -58,3 +58,7 @@ No dedicated test file for this id or for the v3 arm was found in the fresh Test
 - Score below the frozen threshold emits nothing; a position held at least 20 completed daily holding bars is sold in full before any entry is considered.
 - Shares equal int(min(equity x 0.10, dollar_volume20 x 0.01, cash) // close), at most 10 positions, ranked score descending with symbol-ascending ties.
 - Open item: this id stays UNRESOLVED until a sleeve module docstring or a catalog description for D20TENSOR itself is found.
+
+## Cure B audit note (2026-10-31, algorithm audit)
+
+NOT FOUND statement (precise, per cure A gaps in docs/ALL-SLEEVES.json): entry NOT FOUND, exit NOT FOUND, sizing NOT FOUND, filters NOT FOUND, parameters NOT FOUND for this canonical id (D20TENSOR) itself. Searched sources: this RECREATE doc and the Test tree (ALGORITHM docs and name-matched code/card paths), the recursive trees of dwj9ddyvf6-hub/Test, dwj9ddyvf6-hub/Silicon, dwj9ddyvf6-hub/quant-research-backup and dwj9ddyvf6-hub/Midna searched by filename for D20TENSOR / d20tensor and the D20 tokens, and the local desks and records (alpaca-swing-desk, muse-desk-v2, femto-lean, research_notes, memory), as recorded in findings b1/b2/b3/b5 of the 2026-10-31 algorithm audit and in this package's search record in Provenance. The complete algorithm in the Full algorithm section above belongs to the distinct v3 arm aster_tensor_d20_tensor and is evidence only, expressly not this id's settled algorithm; nothing for this id itself was found anywhere searched, and nothing is invented here.
