@@ -1060,6 +1060,21 @@ def main():
           f"forecastable {sum(1 for e in entrant_rows if e['forecastable'])}, "
           f"issued this run {issued_now}, league rows in record "
           f"{league_forecasts}, data -> {out_path}")
+    # Self-enrich tail (cure HEALTH-R2-RECORD-STRIP-20261031, same
+    # pattern as refresh_earningscal.py, in enrich_all.py's order:
+    # record surface first, explanation second, because the
+    # explanation body reads the record surface). A bare run of
+    # this refresher strips both blocks and the page publishes
+    # with no record surface and no explanation; the tail makes
+    # every run, bare or in a lane, leave the full record on the
+    # page. A failure is printed and named, never silent.
+    try:
+        import explanation as _ex
+        import record_surface as _rs
+        _rs.enrich_slug("calibration-league")
+        _ex.enrich_slug("calibration-league")
+    except Exception as _exc:
+        print(f"self-enrich failed: {_exc}")
 
 
 if __name__ == "__main__":
