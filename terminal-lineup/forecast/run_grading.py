@@ -129,6 +129,20 @@ def main():
         print(f"family {engine_id}: cells {len(fam['cells'])}, "
               f"BH tested {fam['tested_cells']}, rendering: "
               f"{rendering}")
+    # Post-append attestation regeneration (HEALTH-R1-D06-20261031):
+    # this runner appends grade rows outside refresh_engines, and
+    # graded counts are attestation figures, so a grading run that
+    # did not regenerate left every attestation contradicting the
+    # ledger it attests (the 2026-10-31 evening appends did exactly
+    # this to 7 engines). Every append path now closes with the
+    # same regeneration refresh_engines runs.
+    if new_grades or pg_graded:
+        from forecast import refresh_attestations
+        changed = refresh_attestations.regenerate()
+        synced, deferred = refresh_attestations.sync_pages()
+        print(f"attestations regenerated after grading appends: "
+              f"{len(changed)} changed; page blocks synced "
+              f"{len(synced)}, deferred {len(deferred)}")
     return 0
 
 
