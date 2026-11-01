@@ -148,16 +148,50 @@ def test_chain_refuses_present_negative_open_interest(tmp_path):
 
 # ---- earnings drift ----------------------------------------------------
 
-EARN_MEAN = -0.0012
-EARN_STD = 0.0144
+# Fixture moves (cure D-R1-04, 2026-10-31): the refresher's
+# per-event recompute gate (added 2026-10-31) recomputes the
+# study's pooled figures from live filings and the live DEEP
+# panel and refuses on any disagreement beyond 1e-12. The
+# original fixture invented rounded pooled figures (-0.0012 /
+# 0.0144) that no recomputation can reproduce, so the publishing
+# test failed at the recompute gate for a reason unrelated to
+# the defect this file blocks. The fixture now derives its
+# pooled figures from its own fixture moves (full precision,
+# computed with the same statistics the refresher uses) and
+# stubs the recompute leg to return those moves, exactly as it
+# stubs every other source path. The recompute gate itself is
+# blocked by test_earnings_refuses_when_recomputed_moves_disagree
+# below.
+import statistics as _statistics
+
+EARN_MOVES = ([0.012, 0.008, 0.021, 0.004, 0.017, 0.009, 0.026,
+               0.003, 0.014, 0.019, 0.006, 0.011, 0.023, 0.007,
+               0.015] +
+              [-0.009, -0.013, -0.005, -0.018, -0.002, -0.011,
+               -0.024, -0.007, -0.016, -0.004, -0.020, -0.010,
+               -0.001, -0.014, -0.028, -0.006, -0.012, -0.019,
+               -0.003, -0.008, -0.022])
+EARN_MEAN = _statistics.fmean(EARN_MOVES)
+EARN_STD = _statistics.stdev(EARN_MOVES)
 
 
 def _earn():
-    return {"state": "graded", "n": 36, "mean": EARN_MEAN,
-            "median": -0.0018, "std": EARN_STD,
-            "share_positive": 15 / 36,
+    return {"state": "graded", "n": len(EARN_MOVES),
+            "mean": EARN_MEAN,
+            "median": _statistics.median(EARN_MOVES),
+            "std": EARN_STD,
+            "share_positive":
+                sum(1 for mv in EARN_MOVES if mv > 0) / len(EARN_MOVES),
             "sharpe": EARN_MEAN / EARN_STD,
             "label": "fixture", "symbols": ["AAPL", "MSFT", "NVDA"]}
+
+
+def _stub_recompute(moves):
+    rows = [{"symbol": "AAPL", "report_date": "2026-01-05",
+             "session_date": "2026-01-05",
+             "drift_pct": round(mv * 100, 4)} for mv in moves]
+    return lambda names, cap, as_of, lookback_days: \
+        ((rows, list(moves)), None)
 
 
 def _earn_env(tmp_path, feed_generated="2026-10-29T20:51:17+00:00",
@@ -191,6 +225,7 @@ def _earn_env(tmp_path, feed_generated="2026-10-29T20:51:17+00:00",
     red.ENGINE_PATH = str(tmp_path / "studies_card.py")
     red.STUDY_PATH = str(tmp_path / "studies.py")
     red.OUT_PATH = str(tmp_path / "out" / "data.json")
+    red.recompute_event_rows = _stub_recompute(EARN_MOVES)
     return tmp_path
 
 
@@ -216,5 +251,15 @@ def test_earnings_refuses_feed_copy_that_differs_from_card(tmp_path):
     other = _earn()
     other["n"] = 35
     _earn_env(tmp_path, feed_earn=other)
+    assert red.build() == 1
+    assert not os.path.exists(red.OUT_PATH)
+
+
+def test_earnings_refuses_when_recomputed_moves_disagree(tmp_path):
+    # The recompute gate (2026-10-31): rows whose pooled figures
+    # do not reproduce the study's are not the study's events.
+    _earn_env(tmp_path)
+    red.recompute_event_rows = _stub_recompute(
+        [mv + 0.01 for mv in EARN_MOVES])
     assert red.build() == 1
     assert not os.path.exists(red.OUT_PATH)
