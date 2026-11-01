@@ -4,7 +4,7 @@ Start here. This file is the map of the whole repository for a reader (human or 
 
 Total files indexed: 6279
 
-Indexed commit: `ec5a51ee4b9c8332e501ae37bc46b336d1a7d579`. Generated at: 2026-10-31T22:14:07Z. Total size of indexed files (self entries excluded, their sizes are null): 210749300 bytes.
+Indexed commit: `ec5a51ee4b9c8332e501ae37bc46b336d1a7d579`. Generated at: 2026-10-31T22:14:07Z. Total size of indexed files (self entries excluded, their sizes are null): 210749540 bytes.
 
 ## What this repository is
 
@@ -44,7 +44,7 @@ A public library of trading strategies and the desk software around them: strate
 | research | 6 | 16775075 | Standalone research works. Home of the technical analysis study and practice archive (Markdown, PDF, DOCX and ZIP forms of the same work). |
 | sleeves | 569 | 5584627 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 269 | 527337 | Strategy cards: one card per catalogued strategy, grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json; they are not repeated in this prose map. |
-| terminal-lineup | 1411 | 47447623 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 1411 | 47447863 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 8 | 104508 | Repository-level regression blocker tests. |
 | tools | 1 | 0 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
