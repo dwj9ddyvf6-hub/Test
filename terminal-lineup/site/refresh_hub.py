@@ -18,8 +18,13 @@ untouched:
 - A card whose page is stale gets the Stale chip: headline session
   older than the latest completed session on a daily cadence (the
   audit's own definition). 13f-tracker is quarterly and exempt; the
-  two calculator pages (greeks-sketch, payoff-sketch) publish no
-  data file and keep their authored chip and date.
+  three single-issuance engines (half-life-clock, streak-trap,
+  mortality-curve) are exempt as their own class: their as_of is
+  their one registered issuance date, presented on the card as
+  "Issued ...", never as a daily reading date and never as stale
+  (cure D-R2-01, 2026-10-31); the two calculator pages
+  (greeks-sketch, payoff-sketch) publish no data file and keep
+  their authored chip and date.
 - A card that was Stale and whose page is current again gets back
   the chip it carried before it went stale: this refresher keeps
   one small producer state file (hub_chip_memory.json, the last
@@ -121,11 +126,24 @@ def headline_date(slug: str):
 WEEKLY = {"insider-wire", "insider-divergence", "filings-wire",
           "smart-money-tracker"}
 STATIC_STUDY = {"graveyard", "proving-ground", "replication-wire"}
+# Single-issuance engines (cure D-R2-01, 2026-10-31): each of
+# these pages has exactly ONE registered issuance and its as_of
+# IS that issuance date (mortality-curve's refresher ISSUE
+# constant, streak-trap's frozen issuance, half-life-clock's
+# published pre-issue record ahead of its first monthly round).
+# A session-date freshness expectation is the wrong class for
+# them: they are never session-stale, they keep their authored
+# (recovery-memory) chip rather than an invented Live, and their
+# card date is presented as the issuance it is ("Issued ..."),
+# not as a daily reading date.
+SINGLE_ISSUANCE = {"half-life-clock", "streak-trap",
+                   "mortality-curve"}
 
 
 def is_stale(slug: str, d: date, latest: date) -> bool:
     """Cadence-aware staleness from the reading date alone."""
-    if slug in QUARTERLY or slug in STATIC_STUDY:
+    if slug in QUARTERLY or slug in STATIC_STUDY \
+            or slug in SINGLE_ISSUANCE:
         return False
     if slug in WEEKLY:
         return (latest - d).days > 9
@@ -387,6 +405,11 @@ def main() -> int:
                         f'<span class="chip {back}">'
                         f'{CHIP_WORDS[back]}</span>',
                         new_card, count=1)
+                # Single-issuance cards (D-R2-01) present their
+                # date as the issuance it is; every other card
+                # presents its reading date as "As of".
+                date_label = ("Issued " if slug in SINGLE_ISSUANCE
+                              else "As of ") + plain_date(d)
                 # A card that carried the dateless span from an
                 # earlier run (when its page had no date) gets that
                 # span REPLACED by the resolved date: a dated card
@@ -394,13 +417,14 @@ def main() -> int:
                 new_card, _n = re.subn(
                     r'<span class="updated">No reading date '
                     r'on record</span>',
-                    lambda mm: '<span class="updated">As of ' +
-                    plain_date(d) + '</span>',
+                    lambda mm: '<span class="updated">' +
+                    date_label + '</span>',
                     new_card, count=1)
                 if not _n:
                     new_card, _n = re.subn(
-                        r'(<span class="updated">As of )[^<]*(</span>)',
-                        lambda mm: mm.group(1) + plain_date(d) +
+                        r'(<span class="updated">)'
+                        r'(?:As of |Issued )[^<]*(</span>)',
+                        lambda mm: mm.group(1) + date_label +
                         mm.group(2),
                         new_card, count=1)
                 if not _n:
@@ -410,8 +434,8 @@ def main() -> int:
                     new_card = re.sub(
                         r'(<span class="chip [a-z]+">[^<]*</span>)',
                         lambda mm: mm.group(1) +
-                        '<span class="updated">As of ' +
-                        plain_date(d) + '</span>',
+                        '<span class="updated">' + date_label +
+                        '</span>',
                         new_card, count=1)
             else:
                 # No reading date exists in the page's own data: say
