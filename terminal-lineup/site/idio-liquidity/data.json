@@ -22,6 +22,10 @@
     "reverse": "When the same size of drop lands on a fear day, with the market falling hard around it, the drop tends to unwind: the middle such stock is at least 0.5 points ahead of the market 20 trading days later."
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: direction, over 20 sessions. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if a leg is retired independently if its median confidence interval includes zero after 150 episodes. It counts as proven at 150 episodes per leg.",
+    "summary": "When a stock drops hard, tell apart the drops that were the stock's own bad news, which tend to stick, from the drops that were just a bad day for the whole market, which tend to bounce back."
+  },
   "feed": "forecast_ledger",
   "history": {
     "fear_days_judged": 29,
@@ -83,8 +87,108 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 0,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_13",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "claims",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "history",
+        "how_the_split_works",
+        "kill_criterion",
+        "live",
+        "market_today",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_cell_rule",
+        "today",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_13",
+      "forecasts": 55,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 55 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 4,
+          "path": "/history"
+        },
+        {
+          "items": 2,
+          "path": "/history/persist"
+        },
+        {
+          "items": 2,
+          "path": "/history/reverse"
+        }
+      ],
+      "total_items_counted": 8
+    },
+    "version": 1
+  },
   "source": "The daily price history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-10-30, 404 trading days), checked for this page. The longer daily history the design names (2016 to 2026) is not on this computer, so the history below runs on the history that exists.",
   "state": "proving",
+  "subject_chart": {
+    "lead": null,
+    "record": {
+      "kind": "ranked",
+      "label": "Median forward points for the persist and reverse arms.",
+      "rows": [
+        {
+          "name": "Persist arm",
+          "score": -0.612
+        },
+        {
+          "name": "Reverse arm",
+          "score": 0.742
+        }
+      ],
+      "source": "history.persist/reverse.median_points",
+      "title": "The split's study record, median points"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any group with fewer than 30 graded cases shows its count only, with no middle figure.",
   "today": {
     "hard_drops": 55,
