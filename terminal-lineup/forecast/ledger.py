@@ -30,6 +30,7 @@ Discipline (N1, ledger before display):
 import hashlib
 import json
 import os
+from datetime import datetime, timezone
 
 ROW_TYPES = ("genesis", "forecast", "grade", "correction")
 CLOCK_FIELDS = ("event_time", "publication_time", "first_available_time",
@@ -395,6 +396,30 @@ class Ledger:
         row["row_id"] = row["row_hash"][:16]
         with open(self.path, "a", encoding="utf-8") as fh:
             fh.write(_canonical(row) + "\n")
+        # Append provenance (cure D-R1-01, 2026-10-31): every
+        # append, from any path (the refresh runner, grading, or a
+        # standalone refresher run by hand), writes one line to the
+        # sidecar ledger_provenance.log beside the ledger, so the
+        # ledger's growth always carries run-level provenance.
+        # Before this cure the ledger advanced ~19,700 rows with
+        # no proof-log entry because only refresh_engines.py runs
+        # wrote refresh_proof.log. The sidecar is an audit record
+        # only: it is not part of the hash chain, and a sidecar
+        # write failure never blocks or alters an append.
+        try:
+            prov_path = os.path.join(
+                os.path.dirname(os.path.abspath(self.path)),
+                "ledger_provenance.log")
+            prov = {"ts_utc": datetime.now(timezone.utc).strftime(
+                        "%Y-%m-%dT%H:%M:%SZ"),
+                    "type": row.get("type"),
+                    "engine_id": row.get("engine_id"),
+                    "row_id": row["row_id"],
+                    "pid": os.getpid()}
+            with open(prov_path, "a", encoding="utf-8") as fh:
+                fh.write(_canonical(prov) + "\n")
+        except Exception:
+            pass
         new_stat = self._stat()
         self._cache_rows = rows + [row]
         self._cache_stat = new_stat
