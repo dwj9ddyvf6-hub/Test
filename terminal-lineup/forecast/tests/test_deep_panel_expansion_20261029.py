@@ -14,10 +14,18 @@ errors, isolates the bad symbol, and completes the batch.
 
 These tests fail on the pre-cure state and pass on the cured state.
 The panel test reads the panel file itself, never a log.
+
+Method cure D-R2-02 (2026-10-31): the panel test originally loaded
+the whole 1.1GB panel with json.load and was OOM-killed (SIGKILL)
+under the canonical suite runner even solo. It now streams the
+panel one symbol at a time via panel_stream.iter_panel. Every
+assertion is the original contract, unchanged.
 """
-import json
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from panel_stream import iter_panel  # noqa: E402
 
 PANEL = os.path.expanduser("~/workspace/morgue/data_cache/deep_bars.json")
 CURE_DIR = os.path.expanduser("~/workspace/morgue/data_cache/deep_cure_e")
@@ -53,8 +61,11 @@ def test_fetcher_isolates_invalid_symbol_and_completes():
 
 def test_panel_covers_beyond_board_universe():
     assert os.path.exists(PANEL), "DEEP panel missing: deep_bars.json"
-    with open(PANEL, encoding="utf-8") as fh:
-        panel = json.load(fh)
-    assert len(panel) > BASE_NAMES, len(panel)
-    ge = sum(1 for rows in panel.values() if len(rows) >= MIN_SESSIONS)
+    total = 0
+    ge = 0
+    for _sym, rows in iter_panel(PANEL):
+        total += 1
+        if len(rows) >= MIN_SESSIONS:
+            ge += 1
+    assert total > BASE_NAMES, total
     assert ge > BASE_GE_813, ge
