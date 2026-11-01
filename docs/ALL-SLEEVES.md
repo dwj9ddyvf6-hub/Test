@@ -9,14 +9,14 @@
 
 ## Counts (reconciled in print)
 
-- Raw sleeve ids in the crosswalk universe: **1562** (1,560 authoritative ids + the 2 named census artifacts `bars` and `id`, which sit in the non-strategy section).
-- Strategies: **651**
-- Aliases across strategies: **1559**
+- Raw sleeve ids in the crosswalk universe: **1565** (1,563 authoritative ids + the 2 named census artifacts `bars` and `id`, which sit in the non-strategy section; the 3 bta_onebar ids were added 2026-10-31 by the algorithm audit cure B from the live 336 roster, findings-b6-roster).
+- Strategies: **654**
+- Aliases across strategies: **1562**
 - Non-strategy (monitor/recorder/artifact) ids, counted separately: **3**
-- Check: 1559 + 3 = **1562** = raw ids. Exact.
+- Check: 1562 + 3 = **1565** = raw ids. Exact.
 - Merges by tier: A documented grouping: 752 union operations; C mechanical identity: 156; B exact-id is structural (one node per id string); D curated judgment: 0 (none asserted without A/C-grade evidence).
 - UNRESOLVED entries (kept separate, never force-merged): **104** (listed in MERGES.md with what would settle each class).
-- Algorithm completeness: FULL **636**, PARTIAL **15** (each PARTIAL entry names its specific gap). Updated 2026-10-31 by the algorithm audit cure A: fields filled only from cited findings evidence; FULL requires entry, exit, sizing, filters and parameters all present.
+- Algorithm completeness: FULL **639**, PARTIAL **15** (each PARTIAL entry names its specific gap). Updated 2026-10-31 by the algorithm audit cure A: fields filled only from cited findings evidence; FULL requires entry, exit, sizing, filters and parameters all present. Cure B (2026-10-31) added the 3 bta_onebar strategies as FULL from docs/BTA-ONEBAR-ALGORITHM.md and the live config rows (findings-b6-roster).
 
 
 # Type: trend following (200 strategies)
@@ -10079,7 +10079,7 @@ Merge evidence (tiers A): [A] femto_beatendown ~ beatendown (full evidence in ME
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
 
-# Type: breakout (52 strategies)
+# Type: breakout (55 strategies)
 
 
 ## AI volume spike crypto (4h)
@@ -11997,6 +11997,94 @@ Merge evidence (tiers A): [A] femto_free_kraken_ada_crowded ~ femto_free_kraken_
 - `s_mn_turtle` — md2_lz_engine: live
 
 **UNRESOLVED**: singleton with no Test entry and no recorded strategy description; would be settled by the sleeve module docstring or a catalog description
+
+## bta_onebar_qqq
+
+- Type: breakout | Family: bta_onebar | Style evidence (catalog): not recorded
+- Trades: QQQ — US equities
+- Timeframe: 30-minute bars
+- Created by / source: Breakout Trading Academy X post, 2026-10-30 (per docs/BTA-ONEBAR-ALGORITHM.md provenance)
+- Description (from source records): One-bar Donchian breakout on QQQ: 50-bar channel breakout entry on 30-minute bars, hold one bar, exit at the next bar's open; $10,000 sleeve slice, paper only. Algorithm 1 of docs/BTA-ONEBAR-ALGORITHM.md; recreation package docs/BTA_ONEBAR_QQQ-RECREATE.md.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test docs/BTA-ONEBAR-ALGORITHM.md, Test docs/SLEEVES.json roster row, live desk roster config muse-desk-v3/config/sleeves.json, 2026-10-31 algorithm audit cure B (findings b6-roster)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [bta_onebar_qqq] If the latest completed bar's high is at or above the channel high, a long entry fills at the channel high, or at that bar's open if the bar opened above the channel high. If the latest bar's low is at or below the channel low, a short entry fills at the channel low, or at that bar's open if it opened below it. If the bar spans both extremes, no entry. One position at a time. An entry is counted on the entry bar's ET date; at most 2 entries per day, and entries are only taken on the current session's bars. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 1 step 2)
+- Exit rules:
+  - [bta_onebar_qqq] Protective stop: Long: entry x 0.998. Short: entry x 1.002. No target, no trailing rule. Time exit: a position entered on bar T exits in full at the open of bar T+1, at market, with the closing position intent (sell_to_close for a long, buy_to_close for a short). No re-entry in the same bar as an exit. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 1 steps 4-5)
+- Sizing:
+  - [bta_onebar_qqq] qty = floor(slice equity / entry price), whole shares. If the live snapshot carries no slice, the configured $10,000 slice is used. The $10,000 slice is the notional cap and the binding sizing constraint. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 1 step 3 and translation table)
+- Filters / data:
+  - [bta_onebar_qqq] Channel gate: the prior 50 completed bars before the latest completed bar; fewer than 51 completed bars in total: no action. No filters and no other rules (family summary). data: 30-minute bars from the desk warm product (Alpaca SIP); inputs bars, bars_30min, bars:QQQ:30Min, positions, quotes, session_fills.
+- Parameters:
+  - 50-bar Donchian channel; 30-minute bars; stop 0.20 percent (long entry x 0.998, short entry x 1.002); max 2 entries/day; slice $10,000; cadence 60 seconds; parked false; paper only.
+  - Instrument: QQQ shares, long and short. Timeframe: 30-minute bars, completed bars only, every bar in the desk warm product for QQQ.
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: bta_onebar_qqq
+
+### Aliases (1) and status history
+- `bta_onebar_qqq` — test_sleeves_index: in_repo true, catalogued false, parked false; muse-desk-v3 roster: parked false, slice $10,000, cadence_s 60, session rth
+
+## bta_onebar_basket
+
+- Type: breakout | Family: bta_onebar | Style evidence (catalog): not recorded
+- Trades: SPY, QQQ, MDY, DIA — US equities
+- Timeframe: 30-minute bars
+- Created by / source: Breakout Trading Academy X post, 2026-10-30 (per docs/BTA-ONEBAR-ALGORITHM.md provenance)
+- Description (from source records): One-bar Donchian breakout basket: Algorithm 1 applied independently to each of SPY, QQQ, MDY and DIA (own channel, position, stop, size and daily counter per symbol); $10,000 sleeve slice, paper only. Algorithm 2 of docs/BTA-ONEBAR-ALGORITHM.md; recreation package docs/BTA_ONEBAR_BASKET-RECREATE.md.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test docs/BTA-ONEBAR-ALGORITHM.md, Test docs/SLEEVES.json roster row, live desk roster config muse-desk-v3/config/sleeves.json, 2026-10-31 algorithm audit cure B (findings b6-roster)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [bta_onebar_basket] Instruments: SPY, QQQ, MDY, DIA shares, long and short. Everything else identical to Algorithm 1, applied independently to each symbol: its own 50-bar channel from its own bars, its own position (one at a time per symbol, so up to four positions at once across the basket), and its own counter of at most 2 entries per day per symbol (up to 8 entries a day across the basket). No symbol's state, cap or position affects any other symbol. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 2)
+- Exit rules:
+  - [bta_onebar_basket] Per symbol, identical to Algorithm 1: protective stop at 0.20 percent (long: entry x 0.998; short: entry x 1.002), no target, no trailing rule; time exit in full at the open of bar T+1 at market; no re-entry in the same bar as an exit. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 2 with Algorithm 1 steps 4-5)
+- Sizing:
+  - [bta_onebar_basket] Per entry, the same $10,000 sleeve slice cap formula as Algorithm 1: qty = floor(slice equity / entry price), whole shares; if the live snapshot carries no slice, the configured $10,000 slice is used. Slice: $10,000 for the sleeve. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 2)
+- Filters / data:
+  - [bta_onebar_basket] Per-symbol channel gate identical to Algorithm 1 (prior 50 completed bars; fewer than 51 completed bars in total: no action for that symbol). No filters and no other rules (family summary). data: 30-minute bars from the desk warm product (Alpaca SIP); inputs bars, bars_30min, bars:SPY:30Min, bars:QQQ:30Min, bars:MDY:30Min, bars:DIA:30Min, positions, quotes, session_fills.
+- Parameters:
+  - 50-bar Donchian channel per symbol; 30-minute bars; stop 0.20 percent; max 2 entries/day per symbol (8 across the basket); up to 4 positions at once; slice $10,000; cadence 60 seconds; parked false; paper only.
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: bta_onebar_basket
+
+### Aliases (1) and status history
+- `bta_onebar_basket` — test_sleeves_index: in_repo true, catalogued false, parked false; muse-desk-v3 roster: parked false, slice $10,000, cadence_s 60, session rth
+
+## bta_onebar_rth
+
+- Type: breakout | Family: bta_onebar | Style evidence (catalog): not recorded
+- Trades: QQQ — US equities
+- Timeframe: 30-minute bars
+- Created by / source: Breakout Trading Academy X post, 2026-10-30 (per docs/BTA-ONEBAR-ALGORITHM.md provenance)
+- Description (from source records): One-bar Donchian breakout on QQQ, regular session only: Algorithm 1 computed only on RTH bars (09:30 to before 16:00 ET) with a 15:55 ET flat; $10,000 sleeve slice, paper only. Algorithm 3 of docs/BTA-ONEBAR-ALGORITHM.md; recreation package docs/BTA_ONEBAR_RTH-RECREATE.md.
+- Algorithm status: **FULL**
+- Algorithm sources consulted: Test docs/BTA-ONEBAR-ALGORITHM.md, Test docs/SLEEVES.json roster row, live desk roster config muse-desk-v3/config/sleeves.json, 2026-10-31 algorithm audit cure B (findings b6-roster)
+
+### Detailed algorithm
+- Signal / entry rules:
+  - [bta_onebar_rth] Identical to Algorithm 1 (50-bar channel breakout entry on 30-minute completed bars; at most 2 entries per day; one position at a time) with session restrictions: entries only during RTH, which follows from the bar filter: no bar outside the session can trigger an entry. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 3)
+- Exit rules:
+  - [bta_onebar_rth] Algorithm 1 exits (protective stop entry x 0.998 long / entry x 1.002 short, no target, no trailing rule; time exit in full at the open of bar T+1) plus: 15:55 ET flat. Any position still open at 15:55 ET exits at market at that time, instead of the next-bar-open exit carrying it past the close. This flat is the sleeve's own rule (config flat_by_close stays false), so there is exactly one flatten path. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 3)
+- Sizing:
+  - [bta_onebar_rth] Identical to Algorithm 1: qty = floor(slice equity / entry price), whole shares. If the live snapshot carries no slice, the configured $10,000 slice is used. Slice: $10,000. (docs/BTA-ONEBAR-ALGORITHM.md, Algorithm 3 with Algorithm 1 step 3)
+- Filters / data:
+  - [bta_onebar_rth] RTH bars only: the channel and all entry decisions are computed only on bars whose start time is from 09:30 ET to before 16:00 ET. Premarket and after-hours bars in the warm product are ignored entirely. Plus the Algorithm 1 channel gate (prior 50 completed bars; fewer than 51: no action). data: 30-minute bars from the desk warm product (Alpaca SIP); inputs bars, bars_30min, bars:QQQ:30Min, positions, quotes, session_fills.
+- Parameters:
+  - 50-bar Donchian channel on RTH bars only; 30-minute bars; stop 0.20 percent; max 2 entries/day; 15:55 ET flat; slice $10,000; cadence 60 seconds; parked false; paper only.
+
+### Variants (1)
+- **base form (variant zero)**: base strategy as documented; no distinct variant recorded
+  - aliases: bta_onebar_rth
+
+### Aliases (1) and status history
+- `bta_onebar_rth` — test_sleeves_index: in_repo true, catalogued false, parked false; muse-desk-v3 roster: parked false, slice $10,000, cadence_s 60, session rth
 
 # Type: divergence reversal (15 strategies)
 
