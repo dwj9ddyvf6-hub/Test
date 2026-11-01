@@ -186,6 +186,60 @@
       b.parentNode.insertBefore(hint, b);
     }
   }
+  // Keyboard grammar (repair 2026-10-31, spec 14.3.8): one grammar
+  // on every surface, from this one shared source. Keys act only
+  // when the reader is not typing in a field. "/" finds (the hub
+  // search, or the page's own search box), "h" goes to the hub,
+  // "r" jumps to the record section, "?" lists the keys where the
+  // reader stands, Escape hands the keyboard back to the page.
+  (function keyboardGrammar() {
+    var KEYS = [["/", "find a tool or a name on this page"],
+                ["h", "back to the hub (the list of all tools)"],
+                ["r", "jump to the record section"],
+                ["?", "this list of keys"],
+                ["Esc", "stop using the keys and clear the find box"]];
+    function typing(e) {
+      var t = e.target;
+      return t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" ||
+                   t.tagName === "SELECT" || t.isContentEditable);
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "Escape") {
+        var box = document.getElementById("hubsearch") ||
+                  document.querySelector('input[type="search"]');
+        if (box) { box.value = ""; box.dispatchEvent(new Event("input")); box.blur(); }
+        return;
+      }
+      if (typing(e)) return;
+      if (e.key === "/") {
+        var b = document.getElementById("hubsearch") ||
+                document.querySelector('input[type="search"]');
+        if (b) { e.preventDefault(); b.focus(); }
+      } else if (e.key === "h" || e.key === "H") {
+        if (!onHub) window.location.href = root + "index.html";
+      } else if (e.key === "r" || e.key === "R") {
+        var rec = document.getElementById("recordChart") ||
+                  document.querySelector(".recordchart, .related");
+        if (rec) rec.scrollIntoView();
+      } else if (e.key === "?") {
+        var old = document.querySelector(".keylist");
+        if (old) { old.remove(); return; }
+        var p = el("p", "keylist", "Keys: " + KEYS.map(function (k) {
+          return k[0] + " " + k[1];
+        }).join(" · "));
+        wrap.appendChild(p);
+        p.scrollIntoView();
+      }
+    });
+    if (wrap && !document.querySelector(".keyhint")) {
+      var hint = el("p", "keyhint", onHub
+        ? "Keys: / find a tool · e exceptions only · ? all keys"
+        : "Keys: h hub · r record · ? all keys");
+      wrap.appendChild(hint);
+    }
+  })();
+
   window.addEventListener("load", function () {
     setTimeout(addVerdict, 900); setTimeout(addVerdict, 2400); setTimeout(addVerdict, 4500);
     setTimeout(addScrollHints, 900); setTimeout(addScrollHints, 2400); setTimeout(addScrollHints, 4500);
