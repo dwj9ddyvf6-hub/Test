@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grade My Call: what the price actually did after your call</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.note{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .grader{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:16px 20px;margin:0 0 16px;font-size:15.5px}
+  .grader label{font-weight:600;margin-right:8px}
+  .grader input[type=text]{font-size:16px;padding:6px 10px;border:1px solid var(--line);
+               border-radius:8px;background:#fff;color:var(--ink);width:9em;
+               text-transform:uppercase}
+  .grader input[type=date]{font-size:16px;padding:6px 10px;border:1px solid var(--line);
+               border-radius:8px;background:#fff;color:var(--ink)}
+  .grader .dir{display:inline-block;margin:0 14px 0 4px}
+  .grader .dir label{font-weight:400;margin:0 10px 0 0}
+  .grader button.go{font-size:15px;padding:7px 16px;border:1px solid var(--accent);
+    border-radius:8px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  .grader .note{margin:10px 0 0;font-size:14.5px;color:var(--soft)}
+  .call{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:16px 20px;margin:0 0 14px}
+  .call .top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .call h2{margin:0;font-size:21px}
+  .call .remove{margin-left:auto;font-size:14.5px;padding:3px 12px;
+    border:1px solid var(--line);border-radius:999px;background:#fff;
+    color:var(--accent);font-weight:600;cursor:pointer}
+  .call p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .call p strong{color:var(--ink)}
+  .grades{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:12px 0 4px}
+  .grade{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .grade .label{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .grade .big{font-size:19px;font-weight:700;margin:3px 0}
+  .grade .detail{font-size:14px;color:var(--soft);margin:0}
+  .grade.pending{background:var(--nodata-bg)}
+  .up{color:var(--up)} .down{color:var(--down)}
+  .plain{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .plain p{margin:4px 0}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Grade My Call</h1>
+    <p class="job">One job: type in a call you made (a stock, whether you said it would go up or down, and the date you called it) and see what the price actually did 1, 5 and 21 trading days later, graded the same way this site grades its own calls.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the price history&hellip;</p>
+
+  <div class="def" id="defbox"></div>
+
+  <div class="grader">
+    <form id="gradeform">
+      <label for="sym">Stock:</label>
+      <input id="sym" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Like AAPL" maxlength="12">
+      <span class="dir" role="radiogroup" aria-label="Your call">
+        <label><input type="radio" name="dir" value="up" checked> I said it would go up</label>
+        <label><input type="radio" name="dir" value="down"> I said it would go down</label>
+      </span>
+      <label for="calldate">Date I called it:</label>
+      <input id="calldate" type="date">
+      <button class="go" type="submit">Grade my call</button>
+    </form>
+    <p class="note" id="gradenote">Your calls are kept only in this browser, on this device, and are never sent anywhere. Grading happens here, from the price history this page carries.</p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "grade-my-call-calls";
+  var HORIZONS = [1, 5, 21];
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var defEl = document.getElementById("defbox");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var form = document.getElementById("gradeform");
+  var symInput = document.getElementById("sym");
+  var dateInput = document.getElementById("calldate");
+  var note = document.getElementById("gradenote");
+  var DATA = null;
+  var calls = [];
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>\"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtPct(v){
+    var s = v > 0 ? "+" : "";
+    return s + Number(v).toFixed(2) + "%";
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric",
+      year:"numeric", timeZone:"UTC"});
+  }
+  function nthWeekdayAfter(iso, n){
+    var d = new Date(iso + "T12:00:00Z");
+    var left = n;
+    while (left > 0){
+      d.setUTCDate(d.getUTCDate() + 1);
+      if (d.getUTCDay() >= 1 && d.getUTCDay() <= 5) left -= 1;
+    }
+    return d.toISOString().slice(0, 10);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function loadCalls(){
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      var parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) { return []; }
+  }
+  function saveCalls(){
+    try { window.localStorage.setItem(KEY, JSON.stringify(calls)); }
+    catch (e) {}
+  }
+
+  // Grade one call against the shipped history. Returns a plain
+  // result object; the wording is built in renderCall.
+  function gradeCall(call){
+    var dates = DATA.dates;
+    var first = dates[0], last = dates[dates.length - 1];
+    var entry = DATA.prices[call.sym];
+    if (!entry){
+      return {state:"not-on-record"};
+    }
+    if (call.date < first){
+      return {state:"before-history", first:first};
+    }
+    if (call.date > last){
+      return {state:"after-history", last:last};
+    }
+    var start = entry[0], closes = entry[1];
+    var endIdx = start + closes.length - 1;
+    // First session for this name on or after the call date.
+    var j = null;
+    for (var i = Math.max(start, 0); i <= endIdx; i++){
+      if (dates[i] >= call.date){ j = i; break; }
+    }
+    if (j === null){
+      return {state:"no-price-on-or-after", lastDate:dates[endIdx],
+              lastClose:closes[closes.length - 1]};
+    }
+    var entryClose = closes[j - start];
+    var horizons = HORIZONS.map(function(h){
+      var k = j + h;
+      if (k <= endIdx){
+        var close = closes[k - start];
+        var pct = (close - entryClose) / entryClose * 100;
+        var right = (call.dir === "up" && pct > 0) ||
+                    (call.dir === "down" && pct < 0);
+        return {days:h, state:"graded", date:dates[k], close:close,
+                pct:pct, right:right};
+      }
+      if (k <= dates.length - 1){
+        return {days:h, state:"record-ended", endDate:dates[endIdx]};
+      }
+      return {days:h, state:"not-yet", gradeDate:nthWeekdayAfter(dates[j], h)};
+    });
+    return {state:"graded", entryDate:dates[j], entryClose:entryClose,
+            shifted: dates[j] !== call.date, horizons:horizons};
+  }
+
+  function horizonCard(hh){
+    var label = "After " + hh.days + (hh.days === 1 ? " trading day" : " trading days");
+    if (hh.state === "graded"){
+      var moveCls = hh.pct > 0 ? "up" : (hh.pct < 0 ? "down" : "");
+      var verdict = hh.pct === 0
+        ? "The price was unchanged, so your call was not right."
+        : (hh.right ? "Your call was right." : "Your call was not right.");
+      return '<div class="grade"><div class="label">' + label + '</div>' +
+        '<div class="big"><span class="' + moveCls + '">' + fmtPct(hh.pct) + '</span></div>' +
+        '<p class="detail">Closed at ' + fmtPrice(hh.close) + ' on ' +
+        fmtDateShort(hh.date) + '. ' + verdict + '</p></div>';
+    }
+    if (hh.state === "not-yet"){
+      return '<div class="grade pending"><div class="label">' + label + '</div>' +
+        '<div class="big">Not gradable yet</div>' +
+        '<p class="detail">The price history on record has not reached this point yet. ' +
+        'It becomes gradable after the close on ' + fmtDateShort(hh.gradeDate) + '.</p></div>';
+    }
+    return '<div class="grade pending"><div class="label">' + label + '</div>' +
+      '<div class="big">Not gradable</div>' +
+      '<p class="detail">This stock\'s prices on record end on ' +
+      fmtDateShort(hh.endDate) + ', before this point is reached, so there is no price to grade against.</p></div>';
+  }
+
+  function renderCall(call, idx){
+    var r = gradeCall(call);
+    var dirWords = call.dir === "up" ? "would go up" : "would go down";
+    var head = '<div class="call"><div class="top"><h2>' + esc(call.sym) + '</h2>' +
+      '<button class="remove" data-remove="' + idx + '" type="button">Remove</button></div>' +
+      '<p>You called it on <strong>' + fmtDateLong(call.date) + '</strong>: you said the price ' +
+      '<strong>' + dirWords + '</strong>.</p>';
+    if (r.state === "not-on-record"){
+      return head + '<p><strong>Not on record.</strong> ' + esc(call.sym) +
+        ' is not one of the ' + num(DATA.names_on_record) + ' stocks in the daily scoring run, ' +
+        'so there is no price history here to grade this call against.</p></div>';
+    }
+    if (r.state === "before-history"){
+      return head + '<p><strong>Not gradable.</strong> That date is before the first day ' +
+        'of the price history on record (' + fmtDateShort(r.first) + '), so there is no ' +
+        'starting price to grade from.</p></div>';
+    }
+    if (r.state === "after-history"){
+      return head + '<p><strong>Not gradable yet.</strong> That date is after the last day ' +
+        'of the price history on record (' + fmtDateShort(r.last) + '), so the call has no ' +
+        'starting price yet.</p></div>';
+    }
+    if (r.state === "no-price-on-or-after"){
+      return head + '<p><strong>Not gradable.</strong> ' + esc(call.sym) +
+        ' has no closing price on or after that date in the history on record; its last ' +
+        'recorded close was ' + fmtPrice(r.lastClose) + ' on ' + fmtDateShort(r.lastDate) + '.</p></div>';
+    }
+    var h = head + '<p>Starting price: <strong>' + fmtPrice(r.entryClose) + '</strong>, ' +
+      'the close on ' + fmtDateShort(r.entryDate) + '.';
+    if (r.shifted){
+      h += ' The date you picked was not a trading day for this stock, so the grade ' +
+           'starts from its next closing price.';
+    }
+    h += '</p><div class="grades">';
+    r.horizons.forEach(function(hh){ h += horizonCard(hh); });
+    h += '</div></div>';
+    return h;
+  }
+
+  function render(){
+    if (!DATA){
+      resultsEl.innerHTML = "";
+      return;
+    }
+    if (!calls.length){
+      resultsEl.innerHTML = '<div class="plain"><p>No call graded yet. ' +
+        'Enter a stock, the direction you called, and the date you called it above, ' +
+        'and its grade will appear here.</p></div>';
+      return;
+    }
+    resultsEl.innerHTML = calls.map(function(c, i){ return renderCall(c, i); }).join("");
+    Array.prototype.forEach.call(resultsEl.querySelectorAll("[data-remove]"),
+      function(btn){
+        btn.addEventListener("click", function(){
+          calls.splice(Number(btn.getAttribute("data-remove")), 1);
+          saveCalls();
+          render();
+        });
+      });
+  }
+
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    if (!DATA) return;
+    var sym = symInput.value.trim().toUpperCase();
+    var date = dateInput.value;
+    var dir = form.querySelector('input[name="dir"]:checked').value;
+    if (!sym){
+      note.textContent = "Type the ticker letters for the stock you called first.";
+      symInput.focus();
+      return;
+    }
+    if (!date){
+      note.textContent = "Pick the date you made the call.";
+      dateInput.focus();
+      return;
+    }
+    calls.unshift({sym:sym, dir:dir, date:date});
+    saveCalls();
+    note.textContent = "Your calls are kept only in this browser, on this device, and are never sent anywhere. Grading happens here, from the price history this page carries.";
+    render();
+  });
+
+  fetch("data.json")
+    .then(function(resp){
+      if (!resp.ok) throw new Error("missing");
+      return resp.json();
+    })
+    .then(function(data){
+      if (!data || !data.dates || !data.dates.length || !data.prices){
+        showBanner("missing", "The price history is not available right now, so no call can be graded. Please try again later.");
+        meta.textContent = "";
+        defEl.innerHTML = "<p>No price history has been recorded yet.</p>";
+        receiptEl.textContent = "";
+        DATA = null;
+        render();
+        return;
+      }
+      DATA = data;
+      meta.textContent = "Price history on record: " + num(data.history_sessions) +
+        " trading days, " + fmtDateShort(data.history_from) + " to " +
+        fmtDateShort(data.history_to) + ", for " + num(data.names_on_record) + " stocks.";
+      var m = data.method || {};
+      defEl.innerHTML = "<p><strong>How the grading works.</strong></p>" +
+        "<p>" + esc(m.start || "") + "</p>" +
+        "<p>" + esc(m.horizons || "") + "</p>" +
+        "<p>" + esc(m.right || "") + "</p>" +
+        "<p>" + esc(m.not_yet || "") + " " + esc(m.outside || "") + "</p>";
+      receiptEl.textContent = data.coverage + " Source: " + data.source + ".";
+      calls = loadCalls();
+      render();
+    })
+    .catch(function(){
+      showBanner("missing", "The price history could not be loaded, so no call can be graded. Please check your connection and try again.");
+      meta.textContent = "";
+      defEl.innerHTML = "<p>The price history is unavailable, so nothing can be graded right now.</p>";
+    });
+})();
+</script>
+</body>
+</html>
