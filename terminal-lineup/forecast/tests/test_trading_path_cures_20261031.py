@@ -97,8 +97,22 @@ def test_week_ahead_window_flags_unverified_weekdays():
             assert row["state"] == "covered", row
     nov2 = [r for r in cov if r["date"] == "2026-11-02"]
     if nov2:
-        assert nov2[0]["state"] == \
-            "unverified_no_events_on_record"
+        # WEEKAHEAD-V2-20261031: superseded by the ruled calendar
+        # v2 widening. 2026-11-02 now carries the ISM
+        # manufacturing report and reads covered; the days the
+        # widened calendar still does not cover (2026-11-03,
+        # 2026-11-05) keep the honest unverified flag below.
+        assert nov2[0]["state"] == "covered"
+        assert nov2[0]["event_names"] == ["ISM manufacturing report"]
+    nov4 = [r for r in cov if r["date"] == "2026-11-04"]
+    if nov4:
+        assert nov4[0]["state"] == "covered"
+        assert nov4[0]["event_names"] == ["ISM services report"]
+    for iso in ("2026-11-03", "2026-11-05"):
+        row = [r for r in cov if r["date"] == iso]
+        if row:
+            assert row[0]["state"] == \
+                "unverified_no_events_on_record", row
 
 
 # D5: one live band per name, from the chain map only.
