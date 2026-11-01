@@ -312,6 +312,7 @@ def main(argv=None):
                 f"zero_forecast_state (trigger and dated first "
                 f"possible) in the registry")
     for eid in sorted(result["per_engine"]):
+        e = result["per_engine"][eid]
         print(f"{eid}: forecasts raw {e['forecasts_raw']} voided "
               f"{e['forecasts_voided']} valid {e['forecasts_valid']}; "
               f"grades raw {e['grades_raw']} on_voided "
