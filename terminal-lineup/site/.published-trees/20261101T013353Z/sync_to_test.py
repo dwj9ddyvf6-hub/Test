@@ -51,6 +51,10 @@ import pii_gate  # noqa: E402
 ROOT = Path(os.path.expanduser("~/workspace/terminal-lineup"))
 REPO_API = "/repos/dwj9ddyvf6-hub/Test"
 REPO_PATH = "dwj9ddyvf6-hub/Test"
+PUBLIC_COMMIT_IDENTITY = {
+    "name": "dwj9ddyvf6-hub",
+    "email": "316344525+dwj9ddyvf6-hub@users.noreply.github.com",
+}
 PREFIX = "terminal-lineup/"
 SYNC_LOG = Path(os.path.expanduser(
     "~/workspace/research_notes/test-repo-index-20261031/SYNC-LOG.md"))
@@ -170,7 +174,9 @@ def fetch_head_and_tree():
 def put_file(repo_path: str, data: bytes, message: str,
              existing_sha: str | None) -> str:
     payload = {"message": message,
-               "content": base64.b64encode(data).decode()}
+               "content": base64.b64encode(data).decode(),
+               "author": PUBLIC_COMMIT_IDENTITY.copy(),
+               "committer": PUBLIC_COMMIT_IDENTITY.copy()}
     if existing_sha:
         payload["sha"] = existing_sha
     try:
