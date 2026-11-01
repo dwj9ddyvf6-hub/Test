@@ -1534,6 +1534,22 @@ def build():
           f"{len(next_views)} names, {created} new rows, "
           f"{recorded} recorded + {abstained} not-recorded in "
           "total)")
+    # Self-enrich tail (cure HEALTH-R2-RECORD-STRIP-20261031, same
+    # pattern as refresh_earningscal.py, in enrich_all.py's order:
+    # record surface first, explanation second, because the
+    # explanation body reads the record surface). This refresher
+    # runs bare in the refresh_tools panel re-sync and in
+    # standalone rechecks, with no lane close after it; without
+    # this tail a bare run strips both blocks and the page
+    # publishes with no record surface and no explanation.
+    # A failure is printed and named, never silent.
+    try:
+        import explanation as _ex
+        import record_surface as _rs
+        _rs.enrich_slug("earnings-distribution")
+        _ex.enrich_slug("earnings-distribution")
+    except Exception as _exc:
+        print(f"self-enrich failed: {_exc}")
     return 0
 
 
