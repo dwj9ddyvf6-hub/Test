@@ -37,6 +37,24 @@ HERE = Path(__file__).resolve().parent
 SOURCE = HERE.parents[1] / "muse-desk-v3" / "terminal"
 FILES = ("index.html", "terminal_feed.json")
 
+# Manifest sync (cure D-R2-01 root cause, 2026-11-01): this
+# producer writes served files (desk/index.html, desk/data.json)
+# but was the one served-tree writer that never imported
+# terminal_common, so the shared manifest-sync hook (MANIFEST-
+# SHARED-WRITE-20261031) never registered when it ran standalone
+# (as test_charts_ia's producer proof runs it). A desk publish
+# after the desk feed had advanced left asset-manifest.json
+# stale, and every later manifest verifier (shipyard, smoke
+# check) failed on desk/data.json until an unrelated terminal_
+# common process happened to exit. Importing the shared module
+# here puts this writer on the same write path as every other
+# refresh script: at process exit the manifest is rebuilt if
+# any served file changed.
+try:
+    import terminal_common as _tc  # noqa: F401 - registers sync
+except ImportError:  # publish stays runnable standalone
+    _tc = None
+
 # The shared chart wiring, exactly as the authored pages carry it.
 # Added to the published copy only; the desk source is untouched.
 WIRING = ('<link rel="stylesheet" href="../shared.css">\n'
