@@ -368,23 +368,31 @@ def build():
             return fail("the chain state stamps carry different "
                         "dates for different funds; refusing to "
                         "publish a mixed state.")
-    # The lane stamp's as_of is the day the morgue built the
-    # section (a run date); the archive's data date is its
-    # last_date, and that is what must agree with the per-fund
-    # chain stamps. Demanding the run date equal the data date
-    # refused every coherent cycle once the section was rebuilt
-    # on a later day than the archived session (hookup cure,
-    # 2026-10-29; same defect class as the tape family cure).
-    if lane.get("last_date") != as_of:
-        return fail("the archive collection stamp's last data "
-                    "date carries a different date from the "
-                    "chain stamps; refusing to publish a mixed "
-                    "state.")
-
     days_by_und = {und: stored_days(und) for und in UNDERLYINGS}
     total_days = sum(len(v) for v in days_by_und.values())
 
     if total_days == 0:
+        # Empty store: the stamps are the only record of the
+        # archive's state, so they bind. The lane stamp's as_of
+        # is the day the morgue built the section (a run date);
+        # the archive's data date is its last_date, and that is
+        # what must agree with the per-fund chain stamps.
+        # Demanding the run date equal the data date refused
+        # every coherent cycle once the section was rebuilt on a
+        # later day than the archived session (hookup cure,
+        # 2026-10-29; same defect class as the tape family cure).
+        # With a populated store this check does NOT bind
+        # (cure D-R1-03, 2026-10-31): the store accrues under
+        # the collector and the manifest check in the populated
+        # branch below is its binding agreement; a lane stamp
+        # carrying no last_date, or one predating the collector's
+        # first stored day, must not refuse a manifest-verified
+        # store.
+        if lane.get("last_date") != as_of:
+            return fail("the archive collection stamp's last data "
+                        "date carries a different date from the "
+                        "chain stamps; refusing to publish a mixed "
+                        "state.")
         for und in UNDERLYINGS:
             st = stamps[und]
             if st.get("status") != "no_data" or \
