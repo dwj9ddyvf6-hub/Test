@@ -1053,6 +1053,21 @@ def main():
     print(f"in-regime-oracle: as_of {as_of}, populations "
           f"{len(populations)}, included {len(included)}, "
           f"ledgered {created}, wrote {out}")
+    # Self-enrich tail (cure HEALTH-R2-RECORD-STRIP-20261031, same
+    # pattern as refresh_earningscal.py, in enrich_all.py's order:
+    # record surface first, explanation second, because the
+    # explanation body reads the record surface). A bare run of
+    # this refresher strips both blocks and the page publishes
+    # with no record surface and no explanation; the tail makes
+    # every run, bare or in a lane, leave the full record on the
+    # page. A failure is printed and named, never silent.
+    try:
+        import explanation as _ex
+        import record_surface as _rs
+        _rs.enrich_slug("in-regime-oracle")
+        _ex.enrich_slug("in-regime-oracle")
+    except Exception as _exc:
+        print(f"self-enrich failed: {_exc}")
 
 
 if __name__ == "__main__":
