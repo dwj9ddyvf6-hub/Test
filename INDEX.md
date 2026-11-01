@@ -4,7 +4,7 @@ Start here. This file is the map of the whole repository for a reader (human or 
 
 Total files indexed: 6675
 
-Indexed commit: `18a09f7a6fd70b4e33c91ece6011d772f8e86697`. Generated at: 2026-11-01T19:12:48Z. Total size of indexed files (self entries excluded, their sizes are null): 242557848 bytes.
+Indexed commit: `18a09f7a6fd70b4e33c91ece6011d772f8e86697`. Generated at: 2026-11-01T19:12:48Z. Total size of indexed files (self entries excluded, their sizes are null): 242558321 bytes.
 
 ## What this repository is
 
@@ -42,9 +42,9 @@ A public library of trading strategies and the desk software around them: strate
 | proof | 22 | 62140 | Install proof records: one JSON receipt per installed sleeve under proof/install/. |
 | psychology-engine | 124 | 5023354 | The standalone market-psychology engine package: engine code, audits, research and reports. One of the two psychology engines in this repository. |
 | research | 6 | 16775075 | Standalone research works. Home of the technical analysis study and practice archive (Markdown, PDF, DOCX and ZIP forms of the same work). |
-| sleeves | 570 | 5589411 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
+| sleeves | 570 | 5589404 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 269 | 527337 | Strategy cards: one card per catalogued strategy, grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json; they are not repeated in this prose map. |
-| terminal-lineup | 1797 | 75760103 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 1797 | 75760583 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 8 | 104508 | Repository-level regression blocker tests. |
 | tools | 1 | 0 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
