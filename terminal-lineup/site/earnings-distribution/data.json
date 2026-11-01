@@ -915,8 +915,8 @@
   },
   "calibration_attestation": {
     "attestation": {
-      "basis": "8 graded forecasts of 290 recorded on the ledger (mean scores: coverage_hit 0.0000, crps_approx 2.1797, pinball@0.1 0.3293, pinball@0.2 0.7429, pinball@0.3 0.9610, pinball@0.4 1.2495, pinball@0.5 1.4050, pinball@0.6 1.5215, pinball@0.7 1.4588, pinball@0.8 1.2411, pinball@0.9 0.8996); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-      "forecasts_recorded": 290,
+      "basis": "8 graded forecasts of 300 recorded on the ledger (mean scores: coverage_hit 0.0000, crps_approx 2.1797, pinball@0.1 0.3293, pinball@0.2 0.7429, pinball@0.3 0.9610, pinball@0.4 1.2495, pinball@0.5 1.4050, pinball@0.6 1.5215, pinball@0.7 1.4588, pinball@0.8 1.2411, pinball@0.9 0.8996); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 300,
       "graded_forecasts": 8,
       "recorded_on": "2026-10-31",
       "status": "not_attested"
@@ -942,6 +942,10 @@
     "state": "recorded"
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution and probability, over earnings session; signed 5-session post-report. It is graded on a loss score on each of its stated percentile lines, where lower is better. It would be ended if after two full seasons, the 80 percent band's coverage sits outside 70 to 90 percent, or exceedance Brier is no better than quoting the priced move's implied rate. It counts as proven at two full seasons.",
+    "summary": "For every company about to report earnings, publish how big its move is likely to be, and grade each season against that promise."
+  },
   "fe04_fair_gap_remainder": {
     "counts": {
       "full_residual": 0,
@@ -6305,7 +6309,7 @@
         "tier_label": "Largest companies (on the largest-company list)"
       }
     ],
-    "new_rows_today": 5,
+    "new_rows_today": 0,
     "signed_horizon_close": "2026-11-09"
   },
   "panel_last_session": "2026-10-30",
@@ -6325,6 +6329,103 @@
     "feed": "tastytrade_chain_snapshot",
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "8 graded forecasts of 300 recorded on the ledger (mean scores: coverage_hit 0.0000, crps_approx 2.1797, pinball@0.1 0.3293, pinball@0.2 0.7429, pinball@0.3 0.9610, pinball@0.4 1.2495, pinball@0.5 1.4050, pinball@0.6 1.5215, pinball@0.7 1.4588, pinball@0.8 1.2411, pinball@0.9 0.8996); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 300,
+        "graded_forecasts": 8,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_12",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "calendar",
+        "calibration_attestation",
+        "claim",
+        "decision_as_of",
+        "exceedance",
+        "execution_pricing",
+        "explanation",
+        "fe04_fair_gap_remainder",
+        "fe17_centre",
+        "fe18_pead",
+        "feed",
+        "grading_note",
+        "history",
+        "how_built",
+        "issue_day",
+        "issued_ts",
+        "kill_criterion",
+        "live",
+        "missed",
+        "next",
+        "panel_last_session",
+        "past_record",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "rest",
+        "self_test",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_rule",
+        "tiers",
+        "tool"
+      ]
+    },
+    "feed": "tastytrade_chain_snapshot",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_12",
+      "forecasts": 300,
+      "grades": 8,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 300 forecasts are on record and 8 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "tastytrade_chain_snapshot",
+      "price_basis": "snapshot",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 13,
+          "path": "/history"
+        },
+        {
+          "items": 0,
+          "path": "/history/pooled"
+        },
+        {
+          "items": 13,
+          "path": "/history/seasons"
+        },
+        {
+          "items": 0,
+          "path": "/history/signed_pooled"
+        }
+      ],
+      "total_items_counted": 26
+    },
+    "version": 1
   },
   "rest": {
     "count": 854,
@@ -59742,6 +59843,93 @@
   },
   "source": "The scheduled earnings calendar gathered on October 12, 2026, the stored past report dates from 2022 to 2024, and the daily price history on record",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "The priced move percent for each coming report.",
+      "rows": [
+        {
+          "name": "AEHR",
+          "score": 20.8326
+        },
+        {
+          "name": "TSEM",
+          "score": 17.1042
+        },
+        {
+          "name": "PLTR",
+          "score": 14.7792
+        },
+        {
+          "name": "TEM",
+          "score": 13.7012
+        },
+        {
+          "name": "AAPL",
+          "score": 4.4033
+        }
+      ],
+      "source": "next.names[].exceedance.priced_move_pct",
+      "title": "Priced earnings moves, biggest first"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Hits as a percent of graded reports, per season.",
+      "rows": [
+        {
+          "name": "2022 Q2",
+          "score": 100.0
+        },
+        {
+          "name": "2022 Q3",
+          "score": 64.71
+        },
+        {
+          "name": "2022 Q4",
+          "score": 64.71
+        },
+        {
+          "name": "2023 Q1",
+          "score": 58.82
+        },
+        {
+          "name": "2023 Q2",
+          "score": 80.95
+        },
+        {
+          "name": "2023 Q3",
+          "score": 81.82
+        },
+        {
+          "name": "2023 Q4",
+          "score": 82.61
+        },
+        {
+          "name": "2024 Q1",
+          "score": 72.0
+        },
+        {
+          "name": "2024 Q2",
+          "score": 76.67
+        },
+        {
+          "name": "2024 Q3",
+          "score": 86.21
+        },
+        {
+          "name": "2024 Q4",
+          "score": 80.0
+        },
+        {
+          "name": "2026 Q4",
+          "score": 84.62
+        }
+      ],
+      "source": "history.seasons[].hits/graded",
+      "title": "Hit rate per season, on record"
+    },
+    "version": 1
+  },
   "thin_rule": "A part is not published from a thin pool: a company's own history counts only at 8 or more of its past reports, a group's part needs at least 30 past moves in that group, and a season's coverage share is printed only at 30 or more graded reports. Below those counts, the count itself is shown with the reason.",
   "tiers": [
     {
