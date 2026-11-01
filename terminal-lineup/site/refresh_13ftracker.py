@@ -253,7 +253,7 @@ def panel_reliability_block(cur, pri, current_period, prior_period):
                            "counts"),
         "panel_drift_z": None,
         "panel_drift_state": (
-            "undefined: one period pair on record; a drift z "
+            "not computed: one period pair on record; a drift z "
             "needs a series of at least three panel readings "
             "with varying earlier readings"),
         "panel_readings": [
@@ -465,6 +465,21 @@ def build():
     print(f"Wrote {OUT_PATH} (periods {prior_period} -> "
           f"{current_period}, {len(cur)} holders on record, "
           f"top holder {out_holders[0]['holder'] if out_holders else 'none'})")
+    # Self-enrich tail (cure HEALTH-R2-DRIFT-PROSE-20261031, same
+    # pattern as refresh_calibrationleague.py, in enrich_all.py's
+    # order: record surface first, explanation second, because the
+    # explanation body reads the record surface). A bare run of
+    # this refresher strips both blocks and the page publishes
+    # with no record surface and no explanation; the tail makes
+    # every run, bare or in a lane, leave the full record on the
+    # page. A failure is printed and named, never silent.
+    try:
+        import explanation as _ex
+        import record_surface as _rs
+        _rs.enrich_slug("13f-tracker")
+        _ex.enrich_slug("13f-tracker")
+    except Exception as _exc:
+        print(f"self-enrich failed: {_exc}")
     return 0
 
 
