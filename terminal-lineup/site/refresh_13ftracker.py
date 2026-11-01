@@ -253,7 +253,7 @@ def panel_reliability_block(cur, pri, current_period, prior_period):
                            "counts"),
         "panel_drift_z": None,
         "panel_drift_state": (
-            "not computed: one period pair on record; a drift z "
+            "undefined: one period pair on record; a drift z "
             "needs a series of at least three panel readings "
             "with varying earlier readings"),
         "panel_readings": [
