@@ -165,7 +165,7 @@ MODULES = ["market-mood", "regime-dial", "morning-map",
            "calibration-league"]
 RECORD_SECTION = ["record", "horizon-grades"]
 VISUAL_FRONT = [
-    ("market-mood", "Nine gauges of market mood in one reading."),
+    ("market-mood", "Nine gauges of market mood, each on its own scale."),
     ("corrected-band", "The published price ranges, drawn widening over the days ahead."),
     ("vol-term-shape", "How the expected size of moves changes with time."),
     ("capitulation-clock", "How close the market sits to a washout reading."),
@@ -207,6 +207,12 @@ def _mini_types():
 
 def restructure(hub):
     """Rebuild the hub body in the ruled order. Returns new hub text."""
+    # The exception monitor section (main's repair 2026-10-31 block)
+    # is producer-owned: drop the previous run's here, before the
+    # section surgery below, or its opening tag would dangle in the
+    # prefix and swallow the rebuilt visual front on the next run.
+    hub = re.sub(r'<section id="needs-attention">.*?</section>\n?',
+                 "", hub, count=1, flags=re.S)
     cards = re.findall(r"<article class=\"hubcard\".*?</article>",
                        hub, re.S)
     by_slug, order = {}, []
@@ -323,6 +329,15 @@ def main() -> int:
             continue
         slug = m.group(1)
         new_card = card
+        if slug in NO_DATA and 'class="updated"' not in new_card:
+            # Calculator pages publish no reading: say so beside the
+            # chip instead of leaving the card dateless.
+            new_card = re.sub(
+                r'(<span class="chip [a-z]+">[^<]*</span>)',
+                lambda mm: mm.group(1) +
+                '<span class="updated">Calculator, no reading '
+                'date</span>',
+                new_card, count=1)
         if slug not in NO_DATA:
             try:
                 d = headline_date(slug)
@@ -346,10 +361,22 @@ def main() -> int:
                         f'<span class="chip {back}">'
                         f'{CHIP_WORDS[back]}</span>',
                         new_card, count=1)
+                # A card that carried the dateless span from an
+                # earlier run (when its page had no date) gets that
+                # span REPLACED by the resolved date: a dated card
+                # must never also claim no reading date is on record.
                 new_card, _n = re.subn(
-                    r'(<span class="updated">As of )[^<]*(</span>)',
-                    lambda mm: mm.group(1) + plain_date(d) + mm.group(2),
+                    r'<span class="updated">No reading date '
+                    r'on record</span>',
+                    lambda mm: '<span class="updated">As of ' +
+                    plain_date(d) + '</span>',
                     new_card, count=1)
+                if not _n:
+                    new_card, _n = re.subn(
+                        r'(<span class="updated">As of )[^<]*(</span>)',
+                        lambda mm: mm.group(1) + plain_date(d) +
+                        mm.group(2),
+                        new_card, count=1)
                 if not _n:
                     # Freshness cure: a card with no date span gets one
                     # inserted beside its chip; a date is never left
@@ -399,6 +426,90 @@ def main() -> int:
         r'(<span>Full lineup: )\d+(</span>)',
         lambda mm: mm.group(1) + str(total) + mm.group(2),
         out, count=1)
+    # Exception monitor (repair 2026-10-31, spec 14.3.1): one section
+    # that answers "is anything wrong?" on its own. It lists ONLY the
+    # cards that need attention (Stale or Missing chip, or no reading
+    # date on record), built from the final chips and dates above, and
+    # it is rebuilt on every run: restructure() drops it with the rest
+    # of the non-card body and this pass writes the fresh one. When
+    # nothing needs attention the section says so in one line. The
+    # toggle button filters the card grids to these same cards; its
+    # wiring rides in the terminal-keys script injected below.
+    out = re.sub(r'<section id="needs-attention">.*?</section>\n?',
+                 "", out, count=1, flags=re.S)
+    final_cards = re.findall(r"<article class=\"hubcard\".*?</article>",
+                             out, re.S)
+    exceptions = []
+    for card in final_cards:
+        m = re.search(r'href="([a-z0-9-]+)/"', card)
+        chip = re.search(r'class="chip ([a-z]+)">([^<]*)</span>', card)
+        upd = re.search(r'class="updated">([^<]*)</span>', card)
+        name = re.search(r"<h3><a[^>]*>([^<]+)</a></h3>", card)
+        if not m or not chip:
+            continue
+        dateless = bool(upd and "No reading date" in upd.group(1))
+        if chip.group(1) in ("stale", "missing") or dateless:
+            exceptions.append((m.group(1), name.group(1) if name else m.group(1),
+                               chip.group(1), chip.group(2),
+                               upd.group(1) if upd else ""))
+    if exceptions:
+        # The state word rides as plain text, not a chip span: the
+        # hub's chip census (and its blocker) counts card chips
+        # against the count line, and monitor rows are not cards.
+        rows = "\n".join(
+            f'<li><a href="{slug}/">{nm}</a> '
+            f'<span class="updated">{word}'
+            f'{", " + upd if upd else ""}</span></li>'
+            for slug, nm, cls, word, upd in exceptions)
+        monitor = (
+            '<section id="needs-attention"><h2>Needs attention</h2>\n'
+            f'<p class="hubcount">{len(exceptions)} of {total} tools '
+            "need attention: stale, missing, or carrying no reading "
+            "date. Everything else is current or honestly dated.</p>\n"
+            '<button id="exceptions-toggle" type="button">'
+            "Show exceptions only</button>\n"
+            f'<ul class="exceptionlist">\n{rows}\n</ul></section>\n')
+    else:
+        monitor = (
+            '<section id="needs-attention"><h2>Needs attention</h2>\n'
+            '<p class="hubcount">Nothing needs attention: no tool is '
+            "stale or missing, and every tool carries its reading "
+            "date.</p></section>\n")
+    vf_at = out.find('<section id="visual-front">')
+    vf_end = out.find("</section>", vf_at)
+    if vf_at >= 0 and vf_end >= 0:
+        at = vf_end + len("</section>")
+        out = out[:at] + "\n" + monitor + out[at:]
+    else:
+        failures.append("visual front section not found for monitor")
+    # Hub keys (repair 2026-10-31, spec 14.3.8): the hub half of the
+    # terminal keyboard grammar (shared.js carries the rest). Injected
+    # once, marked, and preserved verbatim by restructure()'s suffix.
+    if "terminal-keys" not in out:
+        keys_script = (
+            "<script>/* terminal-keys */\n"
+            "(function(){\n"
+            "  var btn = document.getElementById(\"exceptions-toggle\");\n"
+            "  var only = false;\n"
+            "  function applyOnly(){\n"
+            "    var keep = {};\n"
+            "    document.querySelectorAll(\".exceptionlist a\").forEach(function(a){ keep[a.getAttribute(\"href\")] = 1; });\n"
+            "    document.querySelectorAll(\".hubcard\").forEach(function(c){\n"
+            "      var a = c.querySelector(\"h3 a\");\n"
+            "      c.style.display = (!only || (a && keep[a.getAttribute(\"href\")])) ? \"\" : \"none\";\n"
+            "    });\n"
+            "    if (btn) btn.textContent = only ? \"Show all tools\" : \"Show exceptions only\";\n"
+            "  }\n"
+            "  if (btn) btn.addEventListener(\"click\", function(){ only = !only; applyOnly(); });\n"
+            "  document.addEventListener(\"keydown\", function(e){\n"
+            "    if (e.metaKey || e.ctrlKey || e.altKey) return;\n"
+            "    var t = e.target;\n"
+            "    if (t && (t.tagName === \"INPUT\" || t.tagName === \"TEXTAREA\" || t.tagName === \"SELECT\")) return;\n"
+            "    if (e.key === \"e\" || e.key === \"E\") { only = !only; applyOnly(); }\n"
+            "  });\n"
+            "})();\n"
+            "</script>\n")
+        out = out.replace("</body>", keys_script + "</body>", 1)
     if failures:
         print("FAILURES: " + "; ".join(failures))
         return 1
