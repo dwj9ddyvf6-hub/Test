@@ -106,8 +106,14 @@ def test_desk_publish_copy_matches_source():
     assert a == b, "terminal_feed.json"
     published = (SITE / "desk" / "index.html").read_text()
     assert DESK_WIRING in published, "chart wiring missing"
-    assert published.replace(DESK_WIRING, "", 1) == \
-        (src / "index.html").read_text(), "page content changed"
+    # Repair 2026-10-31: the producer also scrubs the desk source's
+    # one em dash on the published copy (the terminal's no-em-dash
+    # reader-copy rule; the desk source itself is outside the
+    # terminal surface and untouched). The expected page is the
+    # source with exactly that documented transform applied.
+    expected = (src / "index.html").read_text().replace(" — ", ": ")
+    assert published.replace(DESK_WIRING, "", 1) == expected, \
+        "page content changed beyond wiring and the em-dash scrub"
 
 
 def _drawn_countbars(slug):
@@ -205,7 +211,15 @@ def test_market_mood_gauge_dials_values_unchanged():
     data = json.loads((SITE / "market-mood" / "data.json").read_text())
     comp = data["state"]["composite_percentile"]
     assert html.count("gauge-marker") >= 5
-    assert f'<p class="bignum">{comp}</p>' in html
+    # Repair 2026-10-31 (spec 14.4.5): the composite is no longer the
+    # headline bignum integrating nine gauges into one number. The
+    # regime word leads, the gauges' own spread is stated, and the
+    # composite survives as one labelled median line with the oldest
+    # gauge reading it rests on. Values are unchanged.
+    assert f'<p class="bignum">{comp}</p>' not in html
+    assert f"Composite percentile {comp}: the median of the" in html
+    assert "oldest gauge reading" in html
+    assert "The gauges spread from" in html
     pipe = (WORKSPACE / "terminal-lineup" / "psychology-engine"
             / "pipeline.py").read_text()
     assert "def gauge_svg" in pipe
@@ -238,8 +252,18 @@ def _subject_render(slug):
 
 
 def _fmt(v):
-    return str(round(float(v) * 100) / 100).rstrip("0").rstrip(".") \
-        if float(v) != int(float(v)) else str(int(float(v)))
+    # Mirror the kit's fmt exactly (repair 2026-10-31): visual.js
+    # computes String(Math.round(n * 100) / 100) in IEEE doubles, so
+    # 0.225 (stored slightly high) prints 0.23 while 0.285 (stored
+    # slightly low) prints 0.28. Python's round() (banker's) and a
+    # decimal quantize both disagreed with the renderer on such
+    # values; floor(x + 0.5) on the same double product is the JS
+    # operation, and repr() is the same shortest-roundtrip form.
+    import math
+    r = math.floor(float(v) * 100 + 0.5) / 100
+    if r == int(r) and abs(r) < 1e15:
+        return str(int(r))
+    return repr(r)
 
 
 def _check_subject(slug, lead_vals, record_vals):
@@ -394,8 +418,13 @@ def test_subject_honest_pop_chart():
 
 def test_subject_idio_liquidity_chart():
     d = _d("idio-liquidity")
+    # Repair 2026-10-31: on the refreshed Oct-30 data the neither
+    # group is empty (the page's own note: an in-between day puts the
+    # hard drops in neither group and no forecast is made about them),
+    # so the honest lead is no chart, the same rule the builder
+    # states for a flat desk. An empty source list expects None.
     _check_subject("idio-liquidity",
-                   [n["own_move_pct"] for n in d["today"]["neither"][:12]],
+                   [n["own_move_pct"] for n in d["today"]["neither"][:12]] or None,
                    [d["history"]["persist"]["median_points"],
                     d["history"]["reverse"]["median_points"]])
 
@@ -545,7 +574,11 @@ watchlist-pulse""".split()
 
 
 def _fmt(v):
-    r = round(float(v) * 100) / 100
+    # Same mirror of the kit's fmt as the first _fmt above (this
+    # second definition shadows it at runtime, so both carry the
+    # repair 2026-10-31 fix).
+    import math
+    r = math.floor(float(v) * 100 + 0.5) / 100
     if r == int(r) and abs(r) < 1e15:
         return str(int(r))
     return repr(r)
