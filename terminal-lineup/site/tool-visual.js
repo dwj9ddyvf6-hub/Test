@@ -386,6 +386,21 @@
       return grid(rows, s, "The names the router said to avoid, and why", "The per-name verdicts in the latest session on record, with the reason for each. Every other name in that session drew no call or an abstention, as the page states.");
     },
     "sector-rotation": function (d, s) {
+      /* Repair 2026-10-31 (spec 14.2, change between two points):
+         each sector carries two honest numeric readings of the same
+         quantity, its rank over 21 sessions and its rank over 5
+         sessions, so the lead is a slope graph of the rank change.
+         Rank 1 is the strongest sector: a falling line is a sector
+         whose rank improved. The 5-session average moves stay on the
+         page's own record below. */
+      var pairs = (d.sectors || []).filter(function (x) { return isNum(x.rank_21) && isNum(x.rank_5); })
+        .map(function (x) { return { name: x.sector, from: x.rank_21, to: x.rank_5 }; });
+      if (pairs.length >= 2 && VisualKit.slope) {
+        return VisualKit.slope({ pairs: pairs, session: s, lowerIsBetter: true,
+          fromLabel: "rank over 21 sessions", toLabel: "rank over 5 sessions",
+          title: "Sector ranks, from the 21-session rank to the 5-session rank",
+          label: "One line per sector, from its rank over the last 21 sessions to its rank over the last 5. Rank 1 is the strongest. A line that falls is a sector whose rank improved; a line that rises is one whose rank slipped. Both ranks are printed at the line ends." });
+      }
       return tiles((d.sectors || []).map(function (x) { return { label: x.sector, value: x.avg_change_5_pct, word: x.label || "" }; }),
         s, "Sectors over the last 5 sessions", "Each tile is one sector's average move over the last 5 sessions on record, in percent.");
     },
