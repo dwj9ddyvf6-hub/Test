@@ -97,3 +97,7 @@ No tests for this exact lane were found in Test. Behavior checklist, from the al
 - An entry order is a capped limit day order respecting limit_band_pct 5.0, limit_buffer_pct 1.0 and no_chase_mult 1.02, within max_delay_minutes 65.
 - An open position exits at a 15% disaster stop, or at the 78-week time exit counted from fill, whichever comes first.
 - Sizing cannot be verified for this lane: it is not in the record.
+
+## Cure B addendum (2026-10-31, algorithm audit)
+
+Sizing rule text carried into this repo from its only source, which is outside Test: the live desk roster config muse-desk-v3/config/sleeves.json, row id=s_q07w_g78_sm_deep70_wcov, as recorded in findings-b3-sizing / findings-b5-reconcile of the 2026-10-31 algorithm audit (verdict FOUND_EXTERNAL_ONLY: this lane's RECREATE package carried no sizing values). The cured ALL-SLEEVES sizing text for this lane, verbatim: "[lz_s_q07w_g78_sm_deep70_wcov] slice.capital_usd=1000.0 (cash_usd=1000.0); bp_buffer_frac=0.02; session=rth; cadence_s=86400; flat_by_close=False" This addendum supersedes the "sizing not in the record" statements above, which described the in-Test record only: the sizing rule exists, its source is the external roster config named here, and the rule text itself now stands in this doc.
