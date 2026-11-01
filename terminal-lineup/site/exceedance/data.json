@@ -18,6 +18,10 @@
   },
   "claim": "The promise, written down in advance: the chances this page gives for a move larger than 2 expected moves in 5 trading days must score at least 0.005 points better than simply using the plain overall rate every time, measured the same way on the same days. If they do not, this page reports itself failed.",
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: probability, over 5 and 21 sessions. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 120 index forecasts, no Brier improvement over the base rate. It counts as proven at 120 index forecasts.",
+    "summary": "Say how likely a move bigger than the priced move is, for the big index funds and for each stock on record, and never say which way the move will go."
+  },
   "feed": "forecast_ledger",
   "history": {
     "cells": [
@@ -52450,8 +52454,189 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (10803 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 10803,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-10-31",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_06",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "claim",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "history",
+        "kill_criterion",
+        "live",
+        "next_session",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_cell_rule",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_06",
+      "forecasts": 16206,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 16206 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 9,
+          "path": "/history"
+        },
+        {
+          "items": 9,
+          "path": "/history/cells"
+        },
+        {
+          "items": 0,
+          "path": "/history/claim_cell_pooled"
+        },
+        {
+          "items": 0,
+          "path": "/history/study_record"
+        }
+      ],
+      "total_items_counted": 18
+    },
+    "version": 1
+  },
   "source": "Daily prices for 1,833 names from the price history on record (399 trading days for the index funds, March 25, 2025 to October 23, 2026), and the expected-move bands published by the Corrected Band Engine from the same history.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Realised share per forecast, forecast beside it.",
+      "rows": [
+        {
+          "coverage": "forecast 33.5 percent",
+          "name": "EX1 on SPY",
+          "score": 35.7
+        },
+        {
+          "coverage": "forecast 9.3 percent",
+          "name": "EX2 on SPY",
+          "score": 10.1
+        },
+        {
+          "coverage": "forecast 29.9 percent",
+          "name": "DD on SPY",
+          "score": 22.4
+        },
+        {
+          "coverage": "forecast 41.3 percent",
+          "name": "EX1 on QQQ",
+          "score": 40.7
+        },
+        {
+          "coverage": "forecast 12.0 percent",
+          "name": "EX2 on QQQ",
+          "score": 16.1
+        },
+        {
+          "coverage": "forecast 28.6 percent",
+          "name": "DD on QQQ",
+          "score": 26.8
+        },
+        {
+          "coverage": "forecast 38.5 percent",
+          "name": "EX1 on IWM",
+          "score": 33.2
+        },
+        {
+          "coverage": "forecast 9.2 percent",
+          "name": "EX2 on IWM",
+          "score": 5.5
+        }
+      ],
+      "source": "history.cells[].realised_pct",
+      "title": "How often each big move actually happened"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Mean forecast percent per cell, realised beside it.",
+      "rows": [
+        {
+          "coverage": "realised 35.7 percent",
+          "name": "EX1 on SPY",
+          "score": 33.5
+        },
+        {
+          "coverage": "realised 10.1 percent",
+          "name": "EX2 on SPY",
+          "score": 9.3
+        },
+        {
+          "coverage": "realised 22.4 percent",
+          "name": "DD on SPY",
+          "score": 29.9
+        },
+        {
+          "coverage": "realised 40.7 percent",
+          "name": "EX1 on QQQ",
+          "score": 41.3
+        },
+        {
+          "coverage": "realised 16.1 percent",
+          "name": "EX2 on QQQ",
+          "score": 12.0
+        },
+        {
+          "coverage": "realised 26.8 percent",
+          "name": "DD on QQQ",
+          "score": 28.6
+        },
+        {
+          "coverage": "realised 33.2 percent",
+          "name": "EX1 on IWM",
+          "score": 38.5
+        },
+        {
+          "coverage": "realised 5.5 percent",
+          "name": "EX2 on IWM",
+          "score": 9.2
+        }
+      ],
+      "source": "history.cells[].mean_forecast_pct",
+      "title": "Forecast against realised, per cell"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any graded cell with fewer than 30 graded cases shows its count only, with no score.",
   "tool": "Exceedance Forecaster"
 }
