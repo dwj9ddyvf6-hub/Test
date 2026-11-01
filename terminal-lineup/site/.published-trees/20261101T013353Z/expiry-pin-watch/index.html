@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expiry Pin Watch: the strikes where the most contracts are still open</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:900px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0 0 8px}
+  .note p:last-child{margin-bottom:0}
+  .note ul{margin:0;padding-left:20px}
+  .note li{margin:6px 0}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;overflow-x:auto}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .face{font-size:14.5px;color:var(--soft);margin:0 0 12px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;white-space:nowrap}
+  th,td{text-align:right;padding:5px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  td.strike,th.strike{text-align:left;font-weight:700}
+  tr:last-child td{border-bottom:none}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Expiry Pin Watch</h1>
+    <p class="job">One job: for each name and expiry day on record, show the strikes where the most contracts are still open, the levels price can get pulled toward as the expiry nears.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the pin watch record&hellip;</p>
+
+  <main id="main"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to all the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var receiptEl = document.getElementById("receipt");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtNum(v){
+    return Number(v).toLocaleString("en-US",{maximumFractionDigits:0});
+  }
+  function fmtMoney(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function renderPins(data){
+    var h = "";
+    (data.names || []).forEach(function(n){
+      var pin = n.pin || {};
+      var distPct = (typeof pin.strike === "number" &&
+                     typeof n.spot === "number" && n.spot)
+        ? Math.abs(pin.strike - n.spot) / n.spot * 100 : null;
+      h += '<section class="group"><h2>' + esc(n.symbol) + "</h2>";
+      h += '<p class="face">Snapshot day: ' + esc(fmtDateLong(n.snapshot_day)) +
+        ". Open interest dated " + esc(fmtDateLong(n.oi_date)) +
+        ". The price recorded with this watch: " + esc(fmtMoney(n.spot)) +
+        ". Open interest is the count of contracts still open at each strike.</p>";
+      if (typeof pin.strike === "number"){
+        h += '<p class="face"><strong>Heaviest strike at the nearest expiry (' +
+          esc(fmtDateLong(pin.expiry)) + "): " + esc(fmtMoney(pin.strike)) +
+          "</strong>, with " + esc(fmtNum(pin.total_oi)) +
+          " contracts still open (calls " + esc(fmtNum(pin.call_oi)) +
+          ", puts " + esc(fmtNum(pin.put_oi)) + ").";
+        if (distPct !== null){
+          h += " That strike sits " + distPct.toFixed(1) +
+            "% away from the recorded price" +
+            (distPct > 10 ? ", far from it, so it is a level on record, " +
+              "not a nearby pull." : ".");
+        }
+        h += "</p>";
+      }
+      h += "<table><thead><tr>" +
+        '<th class="strike">Expiry</th><th>Heaviest strike</th>' +
+        "<th>Call contracts open</th><th>Put contracts open</th>" +
+        "<th>Contracts still open</th></tr></thead><tbody>";
+      (n.expiries || []).forEach(function(e){
+        h += '<tr><td class="strike">' + esc(fmtDateLong(e.expiry)) + "</td><td>" +
+          esc(fmtMoney(e.heaviest_strike)) + "</td><td>" +
+          esc(fmtNum(e.call_oi)) + "</td><td>" +
+          esc(fmtNum(e.put_oi)) + "</td><td>" +
+          esc(fmtNum(e.total_oi)) + "</td></tr>";
+      });
+      h += "</tbody></table>";
+      h += '<p class="face">' + esc(fmtNum(n.expiry_count_with_oi)) +
+        " expiries carry open interest on record, from " +
+        esc(fmtNum(n.contracts_with_oi)) + " of " + esc(fmtNum(n.contracts)) +
+        " contracts in the snapshot.</p></section>";
+    });
+    return h;
+  }
+
+  function renderEmpty(data){
+    var h = '<section class="note"><h2>No pin is on record yet</h2>';
+    h += "<p>" + esc(data.what_the_job_needs || "") + "</p>";
+    h += "<p>" + esc(data.empty_reason || "") + "</p></section>";
+    if ((data.what_exists || []).length){
+      h += '<section class="note"><h2>What is on record</h2><ul>';
+      data.what_exists.forEach(function(line){
+        h += "<li>" + esc(line) + "</li>";
+      });
+      h += "</ul></section>";
+    }
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var r = data.receipt || {};
+      if (typeof data.pins_on_record !== "number" || !data.checked){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No pin watch record has been published yet.</div>';
+        return;
+      }
+      meta.textContent = "Checked " + fmtDateLong(data.checked) + ". Source: " +
+        data.source + ".";
+      receiptEl.textContent = "Receipt: checked " +
+        fmtDateLong(r.checked || data.checked) + ". Source: " +
+        (r.source || data.source) + ". Coverage: " +
+        (r.coverage || data.coverage) + ".";
+      if (!data.pins_on_record || !(data.names || []).length){
+        mainEl.innerHTML = renderEmpty(data);
+        return;
+      }
+      mainEl.innerHTML = renderPins(data);
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The pin watch record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
