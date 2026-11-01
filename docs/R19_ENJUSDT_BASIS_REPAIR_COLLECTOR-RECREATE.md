@@ -56,3 +56,7 @@ No dedicated test file for this sleeve was found in Test. Behaviour checklist fr
 
 - No behaviour can be verified from the record: any candidate recreation must first be matched against an original sleeve module docstring or catalog description, neither of which is in any searched repo.
 - The only checkable facts are the id, the accounting type (crypto basis and funding) and the deployed state mode=unfunded_monitor running=False.
+
+## Cure B audit note (2026-10-31, algorithm audit)
+
+NOT FOUND statement (precise, per cure A gaps in docs/ALL-SLEEVES.json): entry NOT FOUND, exit NOT FOUND, sizing NOT FOUND, filters NOT FOUND, parameters NOT FOUND for this canonical id (R19_ENJUSDT_BASIS_REPAIR_COLLECTOR). Searched sources: this RECREATE doc and the Test tree (ALGORITHM docs and name-matched code/card paths), the recursive trees of dwj9ddyvf6-hub/Test, dwj9ddyvf6-hub/Silicon, dwj9ddyvf6-hub/quant-research-backup and dwj9ddyvf6-hub/Midna, and the local desks and records (alpaca-swing-desk, muse-desk-v2, femto-lean, research_notes, memory), as recorded in findings b1/b2/b3/b5 of the 2026-10-31 algorithm audit and in this package's own search record in Provenance. The deployed record for this id is an unfunded monitor (mode=unfunded_monitor, running=False) with nothing beyond the id recorded. Nothing was found anywhere searched, and nothing is invented here.
