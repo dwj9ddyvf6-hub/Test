@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activity Profile: how active each big index fund's options were today, against its own usual level</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .building{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .building h2{margin:0 0 6px;font-size:18px;color:var(--ink)}
+  .building p{margin:0 0 6px}
+  .building p:last-child{margin-bottom:0}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .group p strong{color:var(--ink);font-weight:600}
+  .compare{background:var(--nodata-bg);border-radius:10px;padding:12px 14px;
+           font-size:15px;margin:10px 0}
+  .compare .times{font-size:19px;font-weight:700;color:var(--ink)}
+  .facts{display:flex;flex-wrap:wrap;gap:6px 22px;margin:8px 0 2px;font-size:14.5px;color:var(--soft)}
+  .facts strong{color:var(--ink)}
+  .session{border-top:1px solid var(--line);padding:10px 0 4px}
+  .session:first-of-type{border-top:none}
+  .session .receipt{font-size:13px;color:var(--faint);margin:2px 0 0}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Activity Profile</h1>
+    <p class="job">One job: for each of SPY, QQQ and IWM, show how active its options trading was on the latest recorded day, compared with that same name's own usual level.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the profile&hellip;</p>
+
+  <div id="building" class="building" hidden></div>
+  <main id="names"></main>
+  <section id="sessions" class="group" hidden></section>
+
+  <footer>
+    <p>How the comparison works: a name's usual level is the average of its own 20 prior recorded trading days, whole days compared with whole days. The current day never counts toward its own usual level. Until 20 prior days are on record, no comparison is shown at all: a ratio built on a baseline that does not exist yet would be a made-up number, and this page does not make up numbers.</p>
+    <p>How to read the net premium figures: every print is read for direction (a bought call or a sold put leans up; a bought put or a sold call leans down), and the net premium is the up-leaning premium minus the down-leaning premium, calls and puts counted apart. Prints that were part of a multi-part trade count in the totals but not in the net premium, and cancelled prints never count at all. Which side of the market a print hit is judged against the latest available quote, not the quote at the exact moment of the print, so the direction read can be wrong on a fast-moving contract.</p>
+    <p>A day can only be counted here if its full tape was recorded. A day with no recording is not a quiet day and is never counted as zero activity: it is simply not on record. The full day's biggest prints are on the <a href="../flow-tape/">Flow Tape</a>, and every tool here is graded in public on <a href="../record/">The Record</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var buildingEl = document.getElementById("building");
+  var namesEl = document.getElementById("names");
+  var sessionsEl = document.getElementById("sessions");
+
+  var UNKNOWN_COMPLETENESS = "Completeness unknown: this reading does not declare how complete it is, so no completeness is claimed for it";
+
+  function fmtMoney(v){
+    var sign = Number(v) < 0 ? "-$" : "$";
+    return sign + Math.abs(Number(v)).toLocaleString("en-US",{maximumFractionDigits:0});
+  }
+  function fmtMoneyM(v){
+    var m = Number(v) / 1e6;
+    var sign = m < 0 ? "-$" : "$";
+    return sign + Math.abs(m).toLocaleString("en-US",{minimumFractionDigits:1, maximumFractionDigits:1}) + " million";
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function completenessWords(decl){
+    if (!decl || !decl.state_words) return UNKNOWN_COMPLETENESS;
+    return decl.state_words;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.session) bits.push("Trading day: " + fmtDateLong(r.session));
+    if (r.published_at_utc) bits.push("Published " + fmtTimestamp(r.published_at_utc));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    bits.push(completenessWords(r.completeness));
+    return bits.join(" &middot; ");
+  }
+
+  function nameHTML(n){
+    var a = n.activity || {};
+    var cmp = n.comparison || {};
+    var base = Number(n.baseline_sessions || 0);
+    var needed = Number(n.baseline_needed || 20);
+    var h = '<section class="group"><h2>' + esc(n.underlying) + '</h2>';
+    h += '<p class="receipt">Receipt: ' + receiptLine(n.receipt) + '</p>';
+    if (cmp.state === "shown" && cmp.premium_times_usual != null){
+      h += '<div class="compare"><span class="times">' +
+        Number(cmp.premium_times_usual).toLocaleString("en-US") +
+        ' times its usual level</span> of premium traded, and ' +
+        Number(cmp.prints_times_usual).toLocaleString("en-US") +
+        ' times its usual number of prints. Baseline: ' + base +
+        ' prior recorded days.</div>';
+    } else {
+      h += '<div class="compare"><strong>' +
+        esc(cmp.state_words || "Comparison not available for this name.") +
+        '</strong> Baseline: ' + base + ' of ' + needed +
+        ' prior recorded days.</div>';
+    }
+    h += '<div class="facts">' +
+      '<span>Prints looked at: <strong>' + Number(a.prints_examined).toLocaleString("en-US") + '</strong></span>' +
+      '<span>Premium traded in total: <strong>' + fmtMoney(a.total_premium_usd) + '</strong></span>' +
+      '<span>Net premium in calls: <strong>' + fmtMoneyM(a.call_net_premium_usd) + '</strong></span>' +
+      '<span>Net premium in puts: <strong>' + fmtMoneyM(a.put_net_premium_usd) + '</strong></span>' +
+      '<span>Prints that were part of a multi-part trade: <strong>' + Number(a.multileg_prints).toLocaleString("en-US") + '</strong></span>' +
+      '<span>Cancelled prints excluded: <strong>' + Number(a.cancelled_prints_excluded).toLocaleString("en-US") + '</strong></span>' +
+      '<span>Contracts covered: <strong>' + Number(a.contracts_in_scope).toLocaleString("en-US") + '</strong></span>' +
+      '</div>';
+    h += '<p>Completeness of this reading: ' + esc(completenessWords(n.completeness)) + '</p>';
+    h += '</section>';
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var names = data.names || [];
+      var sessions = data.sessions || [];
+      var baseline = data.baseline || {};
+      if (!names.length || !data.current_session){
+        meta.textContent = "";
+        namesEl.innerHTML = '<div class="nodata">No trading day has been recorded yet. ' +
+          'When a day\'s tape is published, each name\'s activity for that day is shown here ' +
+          'with its receipt, and the count toward its 20-day baseline begins. Nothing is ' +
+          'shown for a day that is not on record.</div>';
+        return;
+      }
+      meta.textContent = "Latest recorded trading day: " + fmtDateLong(data.current_session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+
+      if (data.current_session < latestCompletedSession()){
+        showBanner("stale", "This profile is out of date. Its latest recorded trading day is " +
+          fmtDateLong(data.current_session) + ", and a newer day has not been recorded yet. " +
+          "Treat it as the last recorded profile, not today's.");
+      }
+
+      var needed = Number(baseline.needed || 20);
+      var base = Number(baseline.baseline_sessions || 0);
+      var recorded = Number(baseline.sessions_recorded || sessions.length);
+      if (baseline.state === "building"){
+        buildingEl.innerHTML = "<h2>Baseline still building: " + base + " of " + needed + " sessions recorded</h2>" +
+          "<p>Each name's usual level needs " + needed + " prior recorded trading days behind it. " +
+          "So far " + recorded + (recorded === 1 ? " trading day is" : " trading days are") +
+          " on record in total, counting the latest day itself, which leaves " + base +
+          (base === 1 ? " prior day" : " prior days") + " behind the latest day. " +
+          "Until the count reaches " + needed + ", this page shows each name's recorded activity " +
+          "for the latest day and says plainly that no comparison can be made yet.</p>";
+        buildingEl.hidden = false;
+      } else {
+        buildingEl.innerHTML = "<h2>Baseline ready</h2><p>Each comparison below rests on " +
+          needed + " prior recorded trading days for that name.</p>";
+        buildingEl.hidden = false;
+      }
+
+      namesEl.innerHTML = names.map(nameHTML).join("");
+
+      if (sessions.length){
+        var sh = "<h2>Recorded trading days</h2>" +
+          "<p>Every trading day whose tape was recorded counts once toward each baseline, " +
+          "however many times it ran that day. The freshest run of each day is the one kept. " +
+          "A day that was never recorded is not on this list and is never counted as a quiet day.</p>";
+        sh += sessions.map(function(s){
+          return '<div class="session"><strong>' + fmtDateLong(s.session) + '</strong>: ' +
+            Number(s.prints_looked_at).toLocaleString("en-US") + ' prints looked at, ' +
+            fmtMoney(s.total_premium_usd) + ' of premium traded. ' +
+            esc(completenessWords(s.completeness)) +
+            '<p class="receipt">Receipt: ' + receiptLine(s.receipt) + '</p></div>';
+        }).join("");
+        sessionsEl.innerHTML = sh;
+        sessionsEl.hidden = false;
+      }
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The profile is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
