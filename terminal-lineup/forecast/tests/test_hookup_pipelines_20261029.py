@@ -14,6 +14,7 @@ Each test fails on the pre-cure state:
 """
 
 import ast
+import json
 import os
 import re
 import sys
@@ -99,10 +100,16 @@ def test_hub_has_no_stale_pre_cure_claims():
         assert stale not in hub, stale
     cards = re.findall(r'<article class="hubcard".*?</article>',
                        hub, re.S)
-    assert len(cards) == 100
+    # Card count re-taken durably (health loop R2, 2026-10-31):
+    # the lineup grew 100 -> 102 cards (D-R1-15 census), so the
+    # count is derived from the hub's own final census file,
+    # never a borrowed constant.
+    census = json.loads(read("hub_chips.json"))
+    assert len(cards) == len(census)
     hrefs = [re.search(r'href="([a-z0-9-]+)/"', c).group(1)
              for c in cards]
-    assert len(set(hrefs)) == 100
+    assert len(set(hrefs)) == len(census)
+    assert set(hrefs) == set(census)
 
 
 def test_audit_pages_state_partial_coverage():
