@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gap-Fill Pane: how often gaps filled, and how fast</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:16px;color:#23405e}
+  .def strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .group p strong{color:var(--ink);font-weight:600}
+  .big{font-size:19px;color:var(--ink)}
+  .big strong{font-size:26px}
+  table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:15px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line)}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  .thin{color:var(--faint);font-style:italic}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Gap-Fill Pane</h1>
+    <p class="job">One job: show how often gaps in SPY, QQQ and IWM filled, and how fast, over the price history on record.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the count&hellip;</p>
+
+  <div class="def"><strong>What counts:</strong> a gap is counted when a name opens a trading day at a different price from its previous day's close, and it counts as filled if the price trades all the way back to that previous close at any point during that same trading day.</div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p>How the count works: every completed trading day in the history on record was checked for each of the three names. A day that opened exactly at the previous close has no gap and is not counted. Fills are counted only within the gap's own trading day: a gap that did not trade back to the previous close that day is counted as not filled, however it moved on later days. Because fills are counted within the same day, every filled gap in this count filled the same day it opened.</p>
+    <p>Why some rows show no percentage: a row with fewer than 30 events shows its counts only. A percentage built on a handful of events reads as far more certain than it is, so it is left off until the count grows. Every published call and count from these tools is graded in public on <a href="../record/">The Record</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function pct(f){
+    return (Number(f) * 100).toLocaleString("en-US",{minimumFractionDigits:1, maximumFractionDigits:1}) + "%";
+  }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.session) bits.push("Counted through: " + fmtDateLong(r.session));
+    if (r.published_at_utc) bits.push("Published " + fmtTimestamp(r.published_at_utc));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+  function rowHTML(c){
+    var share = (c.thin || c.frequency == null)
+      ? '<span class="thin">Too few events for a percentage</span>'
+      : "<strong>" + pct(c.frequency) + "</strong> filled";
+    return "<tr><td>" + esc(c.label) + '</td><td class="num">' +
+      Number(c.n).toLocaleString("en-US") + '</td><td class="num">' +
+      Number(c.fills).toLocaleString("en-US") + '</td><td class="num">' +
+      share + "</td></tr>";
+  }
+  function tableHTML(title, intro, cells){
+    var h = '<section class="group"><h2>' + esc(title) + "</h2><p>" + esc(intro) + "</p>";
+    h += "<table><thead><tr><th></th>" +
+      '<th class="num">Gaps counted</th><th class="num">Filled</th>' +
+      '<th class="num">Share filled</th></tr></thead><tbody>';
+    h += cells.map(rowHTML).join("");
+    h += "</tbody></table></section>";
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var n = Number(data.events || 0);
+      if (!n || data.state !== "graded"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No gap count has been published yet. ' +
+          "When the count over the price history on record is published, it appears here " +
+          "with every count next to its percentage. Nothing is shown for a count that " +
+          "has not been made.</div>";
+        return;
+      }
+      var names = data.names || [];
+      meta.textContent = "Counted through " + fmtDateLong(data.as_of) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+
+      if (data.as_of < latestCompletedSession()){
+        showBanner("stale", "This count is out of date. It was counted through " +
+          fmtDateLong(data.as_of) + ", and a newer count has not been published yet. " +
+          "Treat it as the last published count, not today's.");
+      }
+
+      var h = '<section class="group"><h2>The count</h2>';
+      h += '<p class="receipt">Receipt: ' + receiptLine(data.receipt) + "</p>";
+      h += '<p class="big"><strong>' + Number(data.fills).toLocaleString("en-US") +
+        " of " + n.toLocaleString("en-US") + " gaps filled (" +
+        pct(data.frequency) + ")</strong></p>";
+      h += "<p>Those " + n.toLocaleString("en-US") + " gaps were counted across " +
+        Number(data.name_count).toLocaleString("en-US") + " names (" +
+        esc(names.join(", ")) + ") over the " +
+        Number(data.lookback_days).toLocaleString("en-US") +
+        " days of price history on record when the study ran" +
+        (data.sessions_per_name
+          ? ", " + Number(data.sessions_per_name).toLocaleString("en-US") +
+            " gapped trading days per name"
+          : "") +
+        ". A day that opened exactly at its previous close has no gap and is not counted.</p>";
+      h += "<p><strong>How fast:</strong> fills are counted only within the gap's own " +
+        "trading day, so every one of the " + Number(data.fills).toLocaleString("en-US") +
+        " filled gaps filled the same day it opened. Gaps that did not fill that day are " +
+        "counted as not filled.</p>";
+      h += "</section>";
+      h += tableHTML("By gap size",
+        "How big the gap was at the open, as a share of the previous close. " +
+        "Every row shows the number of gaps behind it.",
+        data.by_band || []);
+      h += tableHTML("By day of the week",
+        "The weekday the gap opened on. Every row shows the number of gaps behind it.",
+        data.by_weekday || []);
+      resultsEl.innerHTML = h;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The gap count is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
