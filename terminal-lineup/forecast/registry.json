@@ -235,6 +235,13 @@
           "count": 0,
           "named_in": "forecast/grading_conventions_20261030.json"
         }
+      },
+      "zero_forecast_state": {
+        "forecasts_recorded": 0,
+        "reason": "No name qualifies: judging a dip against a stock's own past dips needs 750 of its own past trading days behind it, and the longest history on the live record is 404 days (2026-10-30); every one of the 1,832 names checked was set aside for that reason and counted.",
+        "trigger": "The first session on which the live panel's longest name history reaches 750 past trading days; the panel accrues one session per trading day, so no shorter stand-in can bring this forward.",
+        "first_possible": "2028-03-20",
+        "first_possible_words": "At one accrued session per trading day from the 404 days on record at 2026-10-30, the longest history reaches 750 on the 346th following session, 2028-03-20, per the session calendar."
       }
     },
     {
@@ -876,6 +883,13 @@
         "holdability_and_co_losses": "The 21 session tercile distribution is holdable as an input; by construction its losses are the weighted losses of its members, so a member's bad window is inherited, not diversified away, when members correlate.",
         "execution_net": "A forecast, not a trade: graded by ranked probability score before costs. Any portfolio built on the blend pays its own costs outside this record.",
         "price_aware_baseline": "Equal weights over the same forecasters, and the single best member forecaster's own distribution, over the same windows."
+      },
+      "zero_forecast_state": {
+        "forecasts_recorded": 0,
+        "reason": "The two eligible forecasters share no stock on the freshest census, so no name carries two forecasters to route, and no forecaster has a graded 21-session record to pick weights by.",
+        "trigger": "A name carrying both forecasters, once a forecaster has a graded 21-session record.",
+        "first_possible": "2026-11-23",
+        "first_possible_words": "The first graded 21-session board records arrive November 23, 2026."
       }
     },
     {
@@ -1131,6 +1145,13 @@
         "holdability_and_co_losses": "A timing forecast, holdable as a retirement schedule; families promoted in the same era tend to decay on the same regime change, so obituaries cluster.",
         "execution_net": "A forecast, not a trade: no execution cost is charged to the grade. Retiring a signal early costs the return it would have made, which the grading window records as the miss.",
         "price_aware_baseline": "No decay (the promoted IC persists) and a fixed lifetime for every family regardless of its own grading curve."
+      },
+      "zero_forecast_state": {
+        "forecasts_recorded": 0,
+        "reason": "This engine issues in monthly rounds and its first round has not opened yet; 0 of the 24 deciding rounds are issued.",
+        "trigger": "The first monthly round opens at the start of November 2026 and issues then by the refresher's registered FIRST_ISSUE.",
+        "first_possible": "2026-11-02",
+        "first_possible_words": "The first round opens Monday, November 2, 2026."
       }
     },
     {
@@ -1219,6 +1240,13 @@
         "holdability_and_co_losses": "The claim is a cohort against a control on the same fear days, holdable only as that comparison; every selected name shares the fear day, so the cohort is one market bet with selection on top.",
         "execution_net": "A forecast, not a trade: grades are cohort versus control returns before costs. Entering on a fear day pays the widest spreads of the month, outside this record and identical for the control.",
         "price_aware_baseline": "The fear day random entry control itself (T1: any uptrend name on the same day), which is the price aware null this engine must beat, not zero."
+      },
+      "zero_forecast_state": {
+        "forecasts_recorded": 0,
+        "reason": "No cohort has started: the freshest session (2026-10-30) was a fear day, but no rising-trend stock passed all three checks, so no group was written to the record.",
+        "trigger": "The first fear day after 2026-10-29 on which at least one rising-trend stock passes all three checks; that day all three groups are written at the close.",
+        "first_possible": "2026-11-02",
+        "first_possible_words": "The earliest a qualifying fear day can occur is the next session, Monday, November 2, 2026; fear days are rare, so the record builds in quarters rather than weeks."
       }
     },
     {
@@ -1303,6 +1331,13 @@
         "holdability_and_co_losses": "The 21 session excess distribution is holdable for a paper position; the three footprints share quarterly 13F timing, so cohorts form in filing season clusters.",
         "execution_net": "A forecast, not a trade: grades are the excess return distribution before costs. Quiet names are thin, and entering them moves the price the signal said was not moving, outside this record.",
         "price_aware_baseline": "The same names' unconditional 21 session excess distribution, and a price only accumulation screen (rising price on rising volume) on the same universe."
+      },
+      "zero_forecast_state": {
+        "forecasts_recorded": 0,
+        "reason": "No name passes all three legs at once today: the dark leg can be judged (5,721 names over 723 sessions), but only 2 names pass the insider and filings legs together, so no group has formed.",
+        "trigger": "A name passing all three legs at once at a quarterly holdings publication or the weekly dark refresh; groups form at those points and the verdict needs 100 recorded group names.",
+        "first_possible": "2026-11-02",
+        "first_possible_words": "The earliest next formation point is the week of Monday, November 2, 2026 (weekly dark refresh); the quarterly holdings publication is the other formation point."
       }
     },
     {
