@@ -62,6 +62,17 @@ def sha(data: bytes) -> str:
 
 
 def main() -> int:
+    # Retention (HEALTH-R1-D19-20261031): retain the tree about
+    # to be proven before the proof, so a previous published
+    # tree always exists to flip back to (site/retain_tree.py).
+    try:
+        sys.path.insert(0, str(HERE))
+        import retain_tree
+        stamp, created = retain_tree.snapshot(str(HERE))
+        print(f"retained tree {stamp} "
+              f"({'created' if created else 'unchanged'})")
+    except Exception as exc:  # retention must never block proof
+        print(f"retention skipped: {exc}")
     if not server_up() and not start_server():
         print(f"FAIL: live server does not answer on port {PORT}")
         return 1
