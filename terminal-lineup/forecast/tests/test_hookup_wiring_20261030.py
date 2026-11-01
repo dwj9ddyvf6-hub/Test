@@ -12,6 +12,7 @@ the Aperture proof-gate rows as its own weekly windows.
 """
 import json
 import os
+import re
 import sys
 
 import pytest
@@ -114,8 +115,15 @@ def test_filings_wire_joins_every_company_to_a_tracked_symbol():
 def test_second_opinion_families_speak_from_the_stores():
     d = load("second-opinion")
     cov = d["coverage"]
-    assert cov["prints_names_on_file"] == 52
-    assert cov["facts_names_on_file"] == 43
+    # Re-taken durably (health loop R2, 2026-10-31): coverage is
+    # tied to the page's own assembled names, the tie the
+    # refresher's publish gate enforces, not to the 52 / 43
+    # borrowed when this test was written (the tape universe
+    # re-take, cured D-R1-13, grew prints coverage to 102).
+    assert cov["prints_names_on_file"] == sum(
+        1 for n in d["names"] if n.get("prints"))
+    assert cov["facts_names_on_file"] == sum(
+        1 for n in d["names"] if n.get("facts"))
     dist_keys = ("no_family", "one_family", "two_families", "three_families",
                  "four_families", "five_families", "six_families")
     assert sum(cov[k] for k in dist_keys) == len(d["names"])
@@ -198,7 +206,11 @@ def test_engine19_live_record_counts_only_its_own_windows():
              and r.get("type") == "forecast"
              and (r.get("outcome") or {}).get("kind")
              == "provisional_proof_forward_check"]
-    assert len(proof) == 4641  # reported in the proof_gate block
+    # Re-taken durably (health loop R2, 2026-10-31): the count is
+    # the total the page's own proof_gate block reports, not the
+    # 4,641 borrowed when this test was written (the block's
+    # duplicate derivation is cured D-R1-16: 31,649 total rows).
+    assert len(proof) == d["proof_gate"]["ledger_rows_total"]
 
 
 class _Prices:
@@ -306,5 +318,11 @@ def test_proving_ground_checks_the_current_records():
     assert '== "no_snapshot_yet"' not in src
     assert '== "no_open_interest_picture_yet"' not in src
     d = load("proving-ground")
-    assert d["tools_count"] == 42
-    assert sum(d["counts"].values()) == 42
+    # Re-taken durably (health loop R2, 2026-10-31): the count is
+    # the THE-70 catalogue's own numbered-entry count, not the
+    # 42 borrowed when this test was written.
+    catalog = open(os.path.join(SITE, "..", "THE-70-TOOLS.md"),
+                   encoding="utf-8").read()
+    tools_total = len(re.findall(r"^\d+\. \*\*", catalog, re.M))
+    assert d["tools_count"] == tools_total
+    assert sum(d["counts"].values()) == tools_total
