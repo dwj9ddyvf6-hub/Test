@@ -28,8 +28,12 @@
     if (!data || typeof data !== "object") return null;
     var rs = data.record_surface && data.record_surface.current_reading;
     if (rs && rs.as_of) return String(rs.as_of);
-    var keys = ["as_of_session", "session", "as_of", "freshest_session", "freshest_date", "modelled_freshest_date", "precomputed_freshest_date", "scored_run_session", "assembled_on", "replay_date", "grading_run_at", "date", "panel_last_session", "readings_through", "newest_source_time", "published_date", "generated_at", "generated_at_utc", "published_at_utc", "recorded_on"];
+    var keys = ["as_of_session", "session", "as_of", "freshest_session", "freshest_date", "freshest_day", "freshest_filed", "freshest_snapshot", "modelled_freshest_date", "precomputed_freshest_date", "scored_run_session", "assembled_on", "replay_date", "grading_run_at", "wire_grading_run_at", "second_search_finished", "first_search_finished", "date", "panel_last_session", "readings_through", "newest_source_time", "published_date", "generated_at", "generated_at_utc", "published_at_utc", "recorded_on"];
     for (var i = 0; i < keys.length; i++) if (data[keys[i]]) return String(data[keys[i]]);
+    if (Array.isArray(data.names)) {
+      var snaps = data.names.map(function (n) { return n && n.snapshot_day ? String(n.snapshot_day) : null; }).filter(Boolean).sort();
+      if (snaps.length) return snaps[snaps.length - 1];
+    }
     var blocks = [data.state, data.wire];
     for (var b = 0; b < blocks.length; b++) {
       if (!blocks[b]) continue;
@@ -37,6 +41,30 @@
       for (var j = 0; j < bk.length; j++) if (blocks[b][bk[j]]) return String(blocks[b][bk[j]]);
     }
     return null;
+  }
+  /* Titles are claims (repair 2026-10-31, spec 14.1.5, cure class
+     C7): a chart heading states the takeaway its own numbers support,
+     computed here from the rows being drawn, never written by hand
+     per page and never beyond what the data carries. The caller's
+     descriptive title stays as the first half; the claim follows. */
+  function claimTitle(title, claim) {
+    if (!claim) return title || null;
+    return title ? title + ": " + claim : claim;
+  }
+  function topClaim(rows) {
+    var best = null;
+    (rows || []).forEach(function (r) {
+      var s = num(r && r.score);
+      if (s != null && (best == null || s > best.score)) best = { name: r.name, score: s };
+    });
+    return best ? String(best.name) + " is highest at " + fmt(best.score) : null;
+  }
+  function moveClaim(first, last) {
+    var a = num(first), b = num(last);
+    if (a == null || b == null) return null;
+    if (b > a) return "rose from " + fmt(a) + " to " + fmt(b);
+    if (b < a) return "fell from " + fmt(a) + " to " + fmt(b);
+    return "ended where it started, at " + fmt(a);
   }
   function receipt(session, drawn, unit, extra) {
     var bits = [];
@@ -104,7 +132,7 @@
       '<span class="vk-bullet-value">' + fmt(v) + (zoneName ? " · " + esc(zoneName) : "") + "</span>" +
       "<span>" + fmt(hi) + " " + esc(zones[zones.length - 1].label || "") + "</span></div>" + spark + "</div>";
     if (input.raw) return inner;
-    return frame(input.title || null, input.label || "The bar shows where the reading sits in its range. The exact value and its zone are printed under the bar.",
+    return frame(claimTitle(input.title, fmt(v) + (zoneName ? ", in the " + zoneName + " zone" : "")), input.label || "The bar shows where the reading sits in its range. The exact value and its zone are printed under the bar.",
       inner, input.session, 1, "reading");
   }
 
@@ -361,7 +389,7 @@
       html += "</div>";
     });
     html += "</div>";
-    return frame(input.title || null, input.label || "Rows on record, best first. Bar length is set by the biggest score on this page.",
+    return frame(claimTitle(input.title, topClaim(rows)), input.label || "Rows on record, best first. Bar length is set by the biggest score on this page.",
       html, input.session, rows.length, "rows", drawn + " rows carry a score.");
   }
 
@@ -388,7 +416,9 @@
         (t.word ? "<br>" + esc(t.word) : "") + "</div>";
     });
     html += "</div>";
-    return frame(input.title || null, input.label || "One tile per name on record. Colour follows the reading in this page data.",
+    var tileTop = null;
+    withData.forEach(function (t) { if (tileTop == null || t.value > tileTop.value) tileTop = t; });
+    return frame(claimTitle(input.title, tileTop ? String(tileTop.label) + " is highest at " + fmt(tileTop.value) : null), input.label || "One tile per name on record. Colour follows the reading in this page data.",
       html, input.session, withData.length, "tiles");
   }
   function heatStrip(input) {
@@ -466,7 +496,7 @@
     s += "</svg>";
     var lineLabel = input.label || "How the headline figure moved, from the dated values on record. A gap means a missing session.";
     if (!input.spark && (lo > 0 || hi < 0)) lineLabel += " The scale runs " + fmt(lo) + " to " + fmt(hi) + "; zero is outside it, so heights compare positions, not amounts from zero.";
-    return frame(input.spark ? null : (input.title || null), input.spark ? null : lineLabel,
+    return frame(input.spark ? null : claimTitle(input.title, moveClaim(valid.length ? valid[0].value : null, valid.length ? valid[valid.length - 1].value : null)), input.spark ? null : lineLabel,
       s, input.session, valid.length, "dated values");
   }
 
@@ -507,6 +537,44 @@
       s, input.session, pairs.length, "pairs", lacking ? lacking + " rows lacked a pair." : null);
   }
 
+
+  /* Slope: change between two points (repair 2026-10-31, spec 14.2).
+     One line per row from its first reading to its second, on one
+     common scale, both exact values printed at the line ends. Colour
+     follows the direction of the change; a caller whose lower value
+     is the better one passes lowerIsBetter so the colour follows the
+     meaning, and its label says which way is better. Fails closed to
+     the state card when fewer than two complete pairs are on record.
+     Categorical from/to standings (decay-watch) are not pairs and are
+     never drawn here. */
+  function slope(input) {
+    input = input || {};
+    var pairs = (Array.isArray(input.pairs) ? input.pairs : []).filter(function (p) { return p && p.name != null && num(p.from) != null && num(p.to) != null; });
+    if (pairs.length < 2) return stateCard(input.words || "Too few two-point changes are on record for a slope chart.", input.session, pairs.length, "pairs");
+    var lo = Infinity, hi = -Infinity;
+    pairs.forEach(function (p) { lo = Math.min(lo, p.from, p.to); hi = Math.max(hi, p.from, p.to); });
+    if (hi === lo) hi = lo + 1;
+    var W = 640, padT = 28, rowH = 30, plotH = pairs.length * rowH;
+    var H = padT + plotH + 10;
+    var xL = 218, xR = 498;
+    function Y(v) { return padT + (hi - v) / (hi - lo) * (plotH - 14) + 7; }
+    var s = svgOpen(W, H, "change between two points");
+    s += '<text x="' + xL + '" y="15" text-anchor="middle" class="vk-axis">' + esc(input.fromLabel || "first reading") + '</text>';
+    s += '<text x="' + xR + '" y="15" text-anchor="middle" class="vk-axis">' + esc(input.toLabel || "second reading") + '</text>';
+    pairs.forEach(function (p) {
+      var better = input.lowerIsBetter ? p.to < p.from : p.to > p.from;
+      var worse = input.lowerIsBetter ? p.to > p.from : p.to < p.from;
+      var stroke = better ? "var(--accent)" : (worse ? "var(--down)" : "var(--faint)");
+      var y1 = Y(p.from), y2 = Y(p.to), ym = (y1 + y2) / 2;
+      s += '<text x="0" y="' + (ym + 4) + '" class="vk-axis vk-barlabel"><title>' + esc(p.name) + '</title>' + esc(String(p.name).slice(0, 30)) + '</text>';
+      s += '<line x1="' + xL + '" y1="' + y1.toFixed(1) + '" x2="' + xR + '" y2="' + y2.toFixed(1) + '" style="stroke:' + stroke + ';stroke-width:2"></line>';
+      s += '<circle cx="' + xL + '" cy="' + y1.toFixed(1) + '" r="4" class="vk-dot"></circle><circle cx="' + xR + '" cy="' + y2.toFixed(1) + '" r="4" class="vk-dot"></circle>';
+      s += '<text x="' + (xL - 10) + '" y="' + (y1 + 4) + '" text-anchor="end" class="vk-axis">' + fmt(p.from) + '</text>';
+      s += '<text x="' + (xR + 10) + '" y="' + (y2 + 4) + '" class="vk-axis">' + fmt(p.to) + '</text>';
+    });
+    s += "</svg>";
+    return frame(input.title || null, input.label || "One line per row, from its first reading to its second. Both exact values are printed at the line ends.", s, input.session, pairs.length, "pairs");
+  }
 
   /* ---- Charts-IA extension (2026-10-31): the INFO-MAP vocabulary in
      FolioTend style. Navy ink, teal accent/up, muted red down, mint
@@ -555,7 +623,7 @@
        size of the move. A truncated scale says so in the label. */
     var areaLabel = input.label || "The dated values on record. The line's height carries each value; the shading under it is decoration only.";
     if (xy.lo > 0 || xy.hi < 0) areaLabel += " The scale runs " + fmt(xy.lo) + " to " + fmt(xy.hi) + "; zero is outside it.";
-    return frame(input.title || null, areaLabel, s, input.session, valid.length, "dated values");
+    return frame(claimTitle(input.title, moveClaim(valid[0].value, valid[valid.length - 1].value)), areaLabel, s, input.session, valid.length, "dated values");
   }
   /* Sparkline: the same dated line, small, for cards and strips. */
   function sparkline(input) {
@@ -627,7 +695,9 @@
       s += '<text x="' + (x + w / 2) + '" y="' + (H - 8) + '" text-anchor="middle" class="vk-axis">' + esc(String(b.label || "").slice(0, 12)) + "</text>";
     });
     s += "</svg>";
-    return frame(input.title || null, input.label || "One bar per bucket on record, heights on one scale. Red bars sit below zero.", s, input.session, buckets.length, "buckets");
+    var dTotal = buckets.reduce(function (a, b) { return a + b.value; }, 0);
+    var dTop = buckets.slice().sort(function (a, b) { return b.value - a.value; })[0];
+    return frame(claimTitle(input.title, dTop && dTotal > 0 ? String(dTop.label || "the fullest bucket") + " is the fullest bucket at " + fmt(dTop.value) + " of " + fmt(dTotal) : null), input.label || "One bar per bucket on record, heights on one scale. Red bars sit below zero.", s, input.session, buckets.length, "buckets");
   }
   /* CountBars: horizontal SVG bars for counts, values printed at the end. */
   function countBars(input) {
@@ -644,7 +714,7 @@
       s += '<text x="' + (W - 4) + '" y="' + (y + 14) + '" text-anchor="end" class="vk-axis">' + fmt(r.score) + "</text>";
     });
     s += "</svg>";
-    return frame(input.title || null, input.label || "Counts on record, drawn on one scale so the big and small counts can be compared at a glance.", s, input.session, rows.length, "counts");
+    return frame(claimTitle(input.title, topClaim(rows)), input.label || "Counts on record, drawn on one scale so the big and small counts can be compared at a glance.", s, input.session, rows.length, "counts");
   }
   /* Heatmap: a grid of cells coloured by value. */
   function heatmap(input) {
@@ -721,7 +791,8 @@
       s += '<text x="' + (padL + 16) + '" y="' + y + '" class="vk-axis vk-legend">' + esc(String(sl.label).slice(0, 34)) + " " + fmt(sl.value) + " (" + Math.round(100 * sl.value / total) + "%)</text>";
     });
     s += "</svg>";
-    return frame(input.title || null, input.label || "Each part is one share of the whole on record, drawn as a length on one bar. Longer means a bigger share; every share also prints its value and percent.", s, input.session, slices.length, "shares");
+    var sTop = slices.slice().sort(function (a, b) { return b.value - a.value; })[0];
+    return frame(claimTitle(input.title, sTop ? String(sTop.label) + " is the biggest part at " + Math.round(100 * sTop.value / total) + "%" : null), input.label || "Each part is one share of the whole on record, drawn as a length on one bar. Longer means a bigger share; every share also prints its value and percent.", s, input.session, slices.length, "shares");
   }
   /* Donut kept as a name only: it now draws the stacked bar above.
      Encoding cure (14.1.1/14.2): shares no longer ride angle/area. */
@@ -730,7 +801,7 @@
   var VK = {
     ladder: ladder, band: band, curve: curve, dial: dial, meterBench: meterBench,
     ranked: ranked, tiles: tiles, heatStrip: heatStrip, tape: tape, line: line,
-    accrual: accrual, scatter: scatter, sessionOf: sessionOf, _esc: esc,
+    accrual: accrual, scatter: scatter, slope: slope, sessionOf: sessionOf, _esc: esc,
     area: area, sparkline: sparkline, fan: fan, distribution: distribution,
     heatmap: heatmap, gaugeZones: gaugeZones, bullet: bullet, timeline: timeline,
     countBars: countBars, donut: donut, stackedBar: stackedBar
@@ -770,6 +841,7 @@
         case "line": return { series: rowsToSeries(src), session: session };
         case "accrual": return { have: src && src.have, need: src && src.need, unit: a.vkUnit || "items", session: session };
         case "scatter": return { rows: (src || []).map(function (r) { return { x: r[a.vkX], y: r[a.vkY], label: r.label || r.name }; }), session: session };
+        case "slope": return { pairs: (src || []).map(function (r) { return { name: r.name || r.label, from: r[a.vkFrom || "from"], to: r[a.vkTo || "to"] }; }), session: session };
         case "area": return { series: rowsToSeries(src), session: session };
         case "sparkline": return { series: rowsToSeries(src), session: session };
         case "fan": return { steps: src, session: session };
