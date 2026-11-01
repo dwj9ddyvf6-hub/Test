@@ -47,6 +47,16 @@ can only accrue forward from the first snapshot. The record states
 that state instead of fabricating a breadth.
 
 Usage: python3 earnings_record.py [--past 150] [--forward 60]
+
+Record window cure (HEALTH-R1-D08-20261031): --past/--forward bound
+only which days this run FETCHES. The aggregate record is built
+from the lane's whole append-only snapshot store on disk, never
+from the fetch window alone. The chain's --past 10 invocation
+once rebuilt the record from 10 past days, so every tracked name
+carried at most one report, no name could reach the 4 prior
+forecast errors a standardized surprise requires, and the PEAD
+surprise count published 0 forever while the snapshot store held
+614 days of the lane's own history.
 """
 
 import json
@@ -260,6 +270,23 @@ def main(argv):
             os.replace(tmp, snap)
         fetched += 1
         day_rows[iso] = rows
+    # HEALTH-R1-D08-20261031: the record aggregates the whole
+    # snapshot store on disk (append-only, one file per fetched
+    # calendar day), not just this run's fetch window. Days the
+    # window did not touch are already parsed snapshots; load
+    # them in the same {day_iso: [rows]} shape.
+    for fname in sorted(os.listdir(SNAP_DIR)):
+        if not fname.endswith(".json"):
+            continue
+        iso = fname[:-5]
+        if iso in day_rows:
+            continue
+        try:
+            with open(os.path.join(SNAP_DIR, fname),
+                      encoding="utf-8") as fh:
+                day_rows[iso] = json.load(fh)["rows"]
+        except (OSError, ValueError, KeyError):
+            continue
     names = build_record(day_rows, tracked, today.isoformat())
     record = {
         "updated_ts": datetime.now(timezone.utc)
@@ -268,7 +295,8 @@ def main(argv):
                    "(api.nasdaq.com/api/calendar/earnings), full "
                    "rows kept by earnings_record.py"),
         "window": {"past_days": past, "forward_days": forward,
-                   "days_fetched": fetched, "days_failed": failed},
+                   "days_fetched": fetched, "days_failed": failed,
+                   "record_days_from_store": len(day_rows)},
         "names_tracked": len(tracked),
         "names_with_reports": sum(
             1 for n in names.values() if n["reports_on_record"]),
