@@ -149,8 +149,9 @@ def build_proof_gate_block(site_dir, engine_id, page_as_of, ledger_path):
            ", so no name on this page is shown as proven."))
     if duplicate_rows:
         words += (
-            f" {duplicate_rows} earlier rows from earlier scans "
-            "sit beside the current row for their names (the "
+            f" {duplicate_rows} earlier superseded rows from "
+            "earlier scans sit beside the current row for their "
+            "names (the "
             "first instance was 19 names whose values changed "
             "when the first full scan recomputed the correction); "
             "the record is append only, every row stays on "
