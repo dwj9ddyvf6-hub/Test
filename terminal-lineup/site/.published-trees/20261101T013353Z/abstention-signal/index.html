@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abstention Signal: when the tools mostly stay silent, the next three weeks tend to be rough</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 4px;font-size:17px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .pair{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0}
+  .pair .box{flex:1 1 260px;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .pair .big{font-size:34px;font-weight:700;margin:2px 0}
+  .stamp{display:inline-block;background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);border-radius:8px;padding:2px 10px;font-size:13.5px;font-weight:600;margin:4px 0}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Abstention Signal</h1>
+    <p class="job">One job: forecast whether SPY's next three weeks will move more than its own recent typical movement, from how many of this site's tools stayed silent that day.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function card(title, inner){return '<section class="card"><h2>'+esc(title)+'</h2>'+inner+'</section>';}
+  function pc1(x){return x==null?"Not on record":(Number(x)*100).toFixed(1)+"%";}
+
+  fetch("data.json").then(function(r){if(!r.ok) throw new Error(r.status); return r.json();}).then(function(d){
+    meta.textContent="Decision record checked through "+fmtDate(d.as_of_session)+". Source: "+d.source+".";
+    var out="";
+
+    out+=card("Still being proven",
+      '<p class="sub">This tool is new and its own record is still being built. It earns stronger words only from days it has written down in advance and had graded, never from the older studies behind it. Its verdict needs 80 graded days, and its record starts with only 5 days on which anyone\'s silence can even be counted, so this proving state will take time.</p>');
+
+    // ---- The idea ----
+    out+=card("The idea", '<p>'+esc(d.idea)+'</p>'
+      +'<p class="sub">A day when a tool has nothing to read is never counted as a silence. A day spoiled by a fault in the reading is set aside as a faulty day, never counted either. Only a tool whose rule ran on data it actually read, and which then deliberately gave no call, counts as silent.</p>');
+
+    // ---- Today ----
+    var t=d.today;
+    var rateWords='<p>'+esc(t.words)+'</p>'
+      +'<table><tbody>'
+      +'<tr><th>Freshest day the record reaches</th><td>'+fmtDate(t.day)+'</td></tr>'
+      +'<tr><th>Tools running that day that can stay silent</th><td>'+t.active.map(esc).join(", ")+'</td></tr>'
+      +'<tr><th>Stayed silent</th><td>'+(t.abstained.length?t.abstained.map(esc).join(", "):"none")+'</td></tr>'
+      +'<tr><th>Silence rate that day</th><td>'+t.abstained.length+' of '+t.active.length+' ('+pc1(t.rate)+')</td></tr>'
+      +'<tr><th>Independent silences behind that rate</th><td>'+t.independent_abstainers+'</td></tr>'
+      +'<tr><th>Faulty days set aside that day</th><td>'+t.defect_tagged+'</td></tr>'
+      +'<tr><th>Recorded days the rate can be compared against</th><td>'+t.rate_days_on_record+' of the '+t.rate_days_needed+' needed</td></tr>'
+      +'</tbody></table>'
+      +'<p class="sub">The recorded rates so far: '+t.rates_so_far.map(function(r){return fmtDate(r.day)+": "+pc1(r.rate);}).join("; ")+'.</p>';
+    out+=card("The freshest day, and where its silence stands", rateWords);
+
+    // ---- The two chances ----
+    out+=card("Today's two chances, side by side",
+      '<div class="pair">'
+      +'<div class="box"><div class="sub">The silence forecast: SPY moves more than its recent typical movement over the next 21 trading days ('+fmtDate(t.horizon_open)+' to '+fmtDate(t.horizon_close_21)+')</div><div class="big">'+pc1(t.p_main)+'</div><div class="sub">'+esc(t.p_main_form)+'.</div></div>'
+      +'<div class="box"><div class="sub">The control: the same chance built from the market\'s fear gauge alone</div><div class="big">'+pc1(t.p_control)+'</div><div class="sub">'+esc(t.p_control_form)+'.</div></div>'
+      +'</div>'
+      +'<p class="sub">The plain overall rate from the past is '+t.base_rate_pct+'%: on past days like these, the following three weeks moved more than the recent typical movement 42.2% of the time. Both chances start there today, honestly, because the silence rate cannot yet be compared with its own recent range and the fear gauge\'s own record on file is short. The newest fear gauge close on record is '+t.vix_newest_close+' on '+fmtDate(t.vix_newest_date)+'; there is no fear gauge close on record for the freshest day itself. A second, shorter forecast is recorded the same day for the next 5 trading days (through '+fmtDate(t.horizon_close_5)+'), graded the same way.</p>');
+
+    // ---- The book ----
+    var book='<p class="sub">'+esc(d.book.version_words)+'</p><h3>Can stay silent</h3>';
+    d.book.can_abstain.forEach(function(b){
+      book+='<p style="margin:10px 0 2px"><strong>'+esc(b.name)+'.</strong> '+esc(b.test)+'</p><p class="sub" style="margin:0 0 6px">'+esc(b.status)+'</p>';
+    });
+    book+='<h3>Cannot stay silent</h3>';
+    d.book.cannot_abstain.forEach(function(b){
+      book+='<p style="margin:10px 0 2px"><strong>'+esc(b.name)+'.</strong> '+esc(b.why)+'</p>';
+    });
+    out+=card("The tools that can stay silent, and the ones that cannot", book);
+
+    // ---- The decision record ----
+    var rows="";
+    d.decision_days.forEach(function(x){
+      var notes=[];
+      if(x.defect_excluded.length) notes.push("Faulty day set aside: "+x.defect_excluded.join(", ")+".");
+      if(x.missing_data_notes.length) notes.push("Withheld or no call for lack of anything to read (not a silence): "+x.missing_data_notes.join(", ")+".");
+      rows+='<tr><td>'+fmtDate(x.day)+'</td><td>'+x.active.map(esc).join(", ")+'</td><td>'+(x.abstained.length?x.abstained.map(esc).join(", "):"none")+'</td><td>'+pc1(x.rate)+'</td><td>'+x.independent_abstainers+'</td><td class="sub">'+notes.map(esc).join(" ")+'</td></tr>';
+    });
+    out+=card("Every day the silence can be counted on",
+      '<p class="sub">These are all the days on which any tool above left a real record of running or staying silent. Days with no such record are not silences, and no older day is reconstructed.</p>'
+      +'<table><thead><tr><th>Day</th><th>Running</th><th>Stayed silent</th><th>Rate</th><th>Independent silences</th><th>Notes</th></tr></thead><tbody>'+rows+'</tbody></table>');
+
+    // ---- History ----
+    var h=d.outcome_history;
+    out+=card("Where the plain rate comes from",
+      '<p>'+esc(h.words)+'</p>'
+      +'<table><tbody>'
+      +'<tr><th>Past days fully measured (21 trading days)</th><td>'+h.days+' ('+fmtDate(h.span_start)+' to '+fmtDate(h.span_end)+')</td></tr>'
+      +'<tr><th>Days the following movement was the bigger one</th><td>'+h.exceedances+' of '+h.days+' ('+h.base_rate_pct+'%)</td></tr>'
+      +'<tr><th>Typical movement at the end of the price record</th><td>'+h.panel_end_median_pct+'% a year</td></tr>'
+      +'<tr><th>Newest completed three-week movement</th><td>'+h.latest_completed_pct+'% a year</td></tr>'
+      +'<tr><th>Shorter measure (5 trading days): days measured, plain rate</th><td>'+h.secondary_days+' days, '+h.secondary_base_rate_pct+'%</td></tr>'
+      +'<tr><th>Days the fear gauge alone could be fitted on</th><td>'+h.control_fitted_days+' of 30 needed</td></tr>'
+      +'</tbody></table>');
+
+    // ---- Live record ----
+    var lv=d.live;
+    out+=card("The live record",
+      '<p>'+esc(lv.words)+'</p>'
+      +'<table><tbody>'
+      +'<tr><th>Days recorded so far</th><td>'+lv.days_recorded+'</td></tr>'
+      +'<tr><th>Forecasts recorded</th><td>'+lv.forecasts_recorded+'</td></tr>'
+      +'<tr><th>Forecasts graded</th><td>'+lv.forecasts_graded+'</td></tr>'
+      +'<tr><th>Counted toward the 80 that decide this tool</th><td>'+lv.counted_toward_80+' of '+lv.target+'</td></tr>'
+      +'</tbody></table>');
+
+    // ---- Grading, kill, thin rule ----
+    out+=card("How it is graded, and when it retires",
+      '<p>'+esc(d.grading_words)+'</p>'
+      +'<p class="claim">'+esc(d.kill_criterion)+'</p>'
+      +'<p class="sub">'+esc(d.thin_cell_rule)+'</p>');
+
+    main.innerHTML=out;
+  }).catch(function(e){
+    banner.className="banner show missing";
+    banner.textContent="This page's latest record could not be loaded. Nothing is shown rather than something stale.";
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
