@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qualified Board: the day's stocks that passed every check</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:14px;
+           padding:18px 20px;margin:0 0 22px;font-size:16px}
+  .summary p{margin:0 0 8px}
+  .summary p:last-child{margin-bottom:0}
+  .summary .small{font-size:14.5px;color:var(--soft)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group .gline{font-size:14.5px;color:var(--soft);margin:0 0 14px}
+  .group h3{font-size:15px;margin:18px 0 4px;color:var(--ink)}
+  .group h3:first-of-type{margin-top:6px}
+  .name{border-top:1px solid var(--line);padding:12px 0 6px}
+  .name .top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .name .sym{font-size:17px;font-weight:700}
+  .name .sector{color:var(--soft);font-size:14px}
+  .name .facts{margin-left:auto;font-size:14px;color:var(--soft);white-space:nowrap}
+  .name .facts strong{color:var(--ink)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;color:var(--up);
+       border:1px solid var(--up);border-radius:20px;padding:0 8px;white-space:nowrap}
+  .name p{margin:4px 0;font-size:14.5px}
+  .name .checks{color:var(--soft)}
+  .name .checks strong{color:var(--ink);font-weight:600}
+  .name .missed{color:var(--bad-ink)}
+  .name .missed strong{font-weight:700}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+  @media (max-width:640px){.name .facts{white-space:normal;margin-left:0}}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Qualified Board</h1>
+    <p class="job">One job: show the day's highest-scoring stocks, mark the ones that passed every check, and say exactly which checks each name passed and which one it missed, so you can see what is actually worth a closer look and why.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest board&hellip;</p>
+  <div id="summary" class="summary" hidden></div>
+  <main id="board"></main>
+
+  <footer>
+    <p>What the score means: each name is run through the same eight checks, and the score blends the checks into one number from 0 to 100. Higher means more of the evidence lined up in the name's favor on that day. The score is a summary of the checks, not a forecast, and it does not rank which stock will gain the most.</p>
+    <p>What passing every check takes: the name trades more than 500,000 shares and more than $5 million a day on average, its typical daily move is at least 2%, its price is not sitting more than 2% below its 50-day or 200-day average line, its trend is in an early stage (stage 1 or 2), at least 5 of the 8 checks line up in its favor, its combined score reaches 65, and at least 70% of the measures behind its score had real data behind them.</p>
+    <p>Every name below is shown exactly as the published board recorded it: the checks it passed, and the exact requirement it missed when it missed one, in plain words. Nothing is added and nothing is rounded into a pass.</p>
+    <p>Every name on this board is kept and graded in public at 1, 5 and 21 trading days, losers included: see <a href="../record/">The Record</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var summaryEl = document.getElementById("summary");
+  var boardEl = document.getElementById("board");
+
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){ // YYYY-MM-DD in America/New_York
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5); // start from yesterday
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.session) bits.push("Trading day: " + fmtDateLong(r.session));
+    if (r.published_at_utc) bits.push("Published " + fmtTimestamp(r.published_at_utc));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+
+  function checksLine(n){
+    var favor = [], between = [], against = [], nodata = [];
+    n.checks.forEach(function(c){
+      if (c.state === "in_favor") favor.push(c.name);
+      else if (c.state === "in_between") between.push(c.name);
+      else if (c.state === "against") against.push(c.name);
+      else nodata.push(c.name);
+    });
+    var parts = [];
+    parts.push("<strong>In its favor (" + n.checks_in_favor + " of " +
+      n.checks_total + "):</strong> " +
+      (favor.length ? esc(favor.join(", ")) : "none"));
+    if (between.length) parts.push("<strong>In between:</strong> " + esc(between.join(", ")));
+    if (against.length) parts.push("<strong>Against it:</strong> " + esc(against.join(", ")));
+    if (nodata.length) parts.push("<strong>Not enough data to judge:</strong> " + esc(nodata.join(", ")));
+    return parts.join(". ") + ".";
+  }
+
+  function nameHTML(n, total){
+    var h = '<div class="name"><div class="top">' +
+      '<span class="sym">' + esc(n.symbol) + '</span>' +
+      (n.sector ? '<span class="sector">' + esc(n.sector) + '</span>' : '') +
+      (n.passed_every_check ? '<span class="tag">Passed every check</span>' : '') +
+      '<span class="facts">Score <strong>' + Number(n.score).toFixed(1) +
+      ' of 100</strong> &middot; Coverage <strong>' +
+      (n.coverage_pct == null ? 'not recorded' : Number(n.coverage_pct).toFixed(1) + '% of the data behind the score') +
+      '</strong> &middot; No. ' + n.rank_by_score + ' of ' + total +
+      ' by score &middot; Closed at ' + fmtPrice(n.close) + '</span></div>';
+    h += '<p class="checks">' + checksLine(n) + '</p>';
+    if (!n.passed_every_check && n.missed && n.missed.length){
+      h += '<p class="missed"><strong>Missed:</strong> ' +
+        n.missed.map(esc).join(" ") + '</p>';
+    }
+    h += '</div>';
+    return h;
+  }
+
+  function renderSummary(c){
+    var lines = [];
+    lines.push('<p><strong>' + c.passed_every_check_published + ' of the ' +
+      c.names_published + ' published names passed every check</strong> for this trading day. ' +
+      'Across the whole run, ' + c.passed_every_check_all + ' of the ' +
+      c.names_scored.toLocaleString("en-US") + ' scored names passed every check.</p>');
+    lines.push('<p class="small">The run checked ' + c.names_checked.toLocaleString("en-US") +
+      ' listed stocks; ' + c.not_enough_data + ' had too little data to score at all. ' +
+      'The ' + c.names_published + ' highest-scoring names are published below, ' +
+      'the ones that passed every check first, then the rest, each in score order.</p>');
+    summaryEl.innerHTML = lines.join("");
+    summaryEl.hidden = false;
+  }
+
+  function renderGroup(g){
+    var h = '<section class="group"><h2>Board for ' + fmtDateLong(g.session) + '</h2>';
+    h += '<p class="receipt">' + receiptLine(g.receipt) + '</p>';
+    var passed = g.names.filter(function(n){ return n.passed_every_check; });
+    var rest = g.names.filter(function(n){ return !n.passed_every_check; });
+    h += '<p class="gline">' + passed.length + ' of these ' + g.names.length +
+      ' names passed every check. They are listed first; the rest follow, ' +
+      'each with the exact requirement it missed.</p>';
+    if (passed.length){
+      h += '<h3>Passed every check</h3>' +
+        passed.map(function(n){ return nameHTML(n, g.names.length); }).join("");
+    }
+    if (rest.length){
+      h += '<h3>High scores that missed at least one requirement</h3>' +
+        rest.map(function(n){ return nameHTML(n, g.names.length); }).join("");
+    }
+    h += '</section>';
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var groups = (data.groups || []).filter(function(g){
+        return g.names && g.names.length;
+      });
+      if (!groups.length){
+        meta.textContent = "";
+        boardEl.innerHTML = '<div class="nodata">No board has been published yet. ' +
+          'When a board is published for a trading day, it appears here with its day ' +
+          'named on it. A board is never shown without the trading day it belongs to.</div>';
+        return;
+      }
+      meta.textContent = "Board for the trading day of " + fmtDateLong(data.session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+      if (data.session < latestCompletedSession()){
+        showBanner("stale", "This board is out of date. It shows the trading day of " +
+          fmtDateLong(data.session) + ", and a newer board has not been published yet. " +
+          "Treat it as the last published board, not today's.");
+      }
+      renderSummary(data.counts);
+      boardEl.innerHTML = groups.map(renderGroup).join("");
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The latest board is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
