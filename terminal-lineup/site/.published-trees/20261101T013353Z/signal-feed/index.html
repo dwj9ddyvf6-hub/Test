@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal Feed: the newest published calls across this site, in one dated stream</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --empty:#eef1f5;
+    --up:#177245; --down:#b03a2e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card h2{margin:0 0 8px;font-size:18px}
+  .card p{margin:0 0 8px;font-size:15.5px}
+  .card p:last-child{margin-bottom:0}
+  .proving{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 22px;font-size:15px;color:#23405e}
+  .proving strong{color:var(--ink)}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+  .filters button{font:inherit;font-size:14px;font-weight:600;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--soft);
+    border-radius:999px;padding:6px 14px}
+  .filters button.on{border-color:var(--accent);color:var(--accent);background:#eef4fb}
+  .entry{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:14px 20px;margin:0 0 12px}
+  .entry .top{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+  .entry .kind{font-size:12.5px;font-weight:700;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--accent)}
+  .entry .name{font-size:17px;font-weight:700}
+  .entry .when{font-size:13.5px;color:var(--faint);margin-left:auto}
+  .entry .detail{font-size:15px;margin:6px 0 4px}
+  .entry .grade{font-size:14.5px;color:var(--soft);margin:0}
+  .entry .grade .g-graded_with_its_group{color:var(--ink);font-weight:600}
+  .nodata{background:var(--empty);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Signal Feed</h1>
+    <p class="job">One job: show the newest calls, cards and alerts this site's tools have published, in one dated stream, each entry stamped with the tool that published it and the grading state its own record gives it.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the feed&hellip;</p>
+
+  <div id="proving" class="proving" style="display:none"></div>
+
+  <section class="card" id="counts-card" style="display:none">
+    <h2>What is in this feed</h2>
+    <div id="counts"></div>
+    <p id="excluded"></p>
+  </section>
+
+  <div id="filters" class="filters" style="display:none"></div>
+  <p id="shown" class="meta" style="margin-bottom:12px"></p>
+  <div id="stream"></div>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">All the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"),
+      provingEl=document.getElementById("proving"),
+      countsCard=document.getElementById("counts-card"),
+      countsEl=document.getElementById("counts"),
+      excludedEl=document.getElementById("excluded"),
+      filtersEl=document.getElementById("filters"),
+      shownEl=document.getElementById("shown"),
+      streamEl=document.getElementById("stream"),
+      receiptEl=document.getElementById("receipt");
+  var allEntries=[], currentFilter="All";
+
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtTimestamp(iso){var d=new Date(iso); if(isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})+" ET";}
+  function sessionKey(d){var parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d); var m={};
+    parts.forEach(function(p){m[p.type]=p.value;}); return m.year+"-"+m.month+"-"+m.day;}
+  function latestCompletedSession(){var d=new Date(Date.now()-864e5);
+    for(;;){var key=sessionKey(d); var dow=new Date(key+"T12:00:00Z").getUTCDay();
+      if(dow>=1&&dow<=5) return key; d=new Date(d.getTime()-864e5);}}
+  function showBanner(kind,text){banner.className="banner show "+kind; banner.textContent=text;}
+
+  function renderStream(){
+    var list=allEntries.filter(function(e){
+      return currentFilter==="All" || e.source_tool===currentFilter;});
+    shownEl.textContent=list.length+" of "+allEntries.length+" entries shown"+
+      (currentFilter==="All"?"":", published by "+currentFilter)+", newest first.";
+    if(!list.length){
+      streamEl.innerHTML='<div class="nodata">No entries from that tool are in the feed right now.</div>';
+      return;
+    }
+    var h="";
+    list.forEach(function(e){
+      h+='<article class="entry"><div class="top">'+
+        '<span class="kind">'+esc(e.kind_words)+'</span>'+
+        '<span class="name">'+esc(e.name)+'</span>'+
+        '<span class="when">'+esc(e.session_long)+' &middot; recorded '+
+          esc(fmtTimestamp(e.sort_time_utc))+'</span></div>'+
+        '<p class="detail">'+esc(e.detail)+'</p>'+
+        '<p class="grade">Published by '+esc(e.source_tool)+'. '+
+        '<span class="g-'+esc(e.grading_state)+'">'+esc(e.grading_words)+
+        '</span></p></article>';
+    });
+    streamEl.innerHTML=h;
+  }
+
+  function renderFilters(sources){
+    var tools=["All"].concat(sources.map(function(s){return s.tool;}));
+    filtersEl.style.display="flex";
+    filtersEl.innerHTML="";
+    tools.forEach(function(t){
+      var b=document.createElement("button");
+      var n = t==="All" ? allEntries.length :
+        sources.filter(function(s){return s.tool===t;})[0].contributed;
+      b.textContent=t+" ("+n+")";
+      if(t===currentFilter) b.className="on";
+      b.addEventListener("click",function(){
+        currentFilter=t;
+        Array.prototype.forEach.call(filtersEl.children,function(c){
+          c.className="";});
+        b.className="on";
+        renderStream();
+      });
+      filtersEl.appendChild(b);
+    });
+  }
+
+  fetch("data.json",{cache:"no-store"})
+    .then(function(res){ if(!res.ok) throw new Error("missing"); return res.json(); })
+    .then(function(data){
+      if(!data.entries || !data.entries.length)
+        throw new Error("empty");
+      allEntries=data.entries;
+      provingEl.style.display="block";
+      provingEl.innerHTML="<strong>"+esc(data.proving_state)+".</strong> "+esc(data.proving_note);
+      meta.textContent="Newest entry: "+esc(fmtTimestamp(data.newest_entry_time_utc))+
+        " · Freshest trading day in the feed: "+data.freshest_session_long+
+        " · "+data.total_entries+" entries in all";
+      if (data.freshest_session < latestCompletedSession()){
+        showBanner("stale","This feed's freshest trading day is "+data.freshest_session_long+". A newer trading day has finished since, so treat this as the latest stream on record, not today's.");
+      }
+      countsCard.style.display="block";
+      var ch="";
+      data.sources.forEach(function(s){
+        ch+="<p><strong>"+esc(s.tool)+":</strong> "+s.contributed+
+          " entries in this feed, from "+esc(s.published_words)+".</p>";
+      });
+      countsEl.innerHTML=ch;
+      if(data.excluded_sources && data.excluded_sources.length){
+        excludedEl.textContent="Left out: "+data.excluded_sources.map(function(x){
+          return x.tool+" ("+x.reason+")";}).join("; ")+".";
+      } else {
+        excludedEl.textContent="No source was left out: every source named above could be dated from its own record.";
+      }
+      renderFilters(data.sources);
+      renderStream();
+      receiptEl.textContent="Receipt: "+data.total_entries+" entries, newest first, each graded exactly as its own record states it. Source: "+data.source+".";
+    })
+    .catch(function(err){
+      meta.textContent="";
+      if(err && err.message==="empty"){
+        streamEl.innerHTML='<div class="nodata">No feed has been published yet. Nothing is padded to fill the page.</div>';
+        showBanner("missing","No entries to show yet: the records behind this page have not arrived.");
+      } else {
+        streamEl.innerHTML='<div class="nodata">The feed is not available right now.</div>';
+        showBanner("missing","The feed is not available right now. Check back after the next trading day is recorded.");
+      }
+    });
+})();
+</script>
+</body>
+</html>
