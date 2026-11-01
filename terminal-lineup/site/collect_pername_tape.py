@@ -69,7 +69,12 @@ DIRECTION_REASON = (
 
 
 def bounded_universe():
-    """The tracked 50 from the Insider Wire record plus the ETFs."""
+    """The Insider Wire record's tracked names plus the ETFs.
+
+    Bounded by that record (HEALTH-R1-D13-20261031): the wire
+    tracked 50 names when this collector was written and 100 at
+    the 2026-10-31 audit; the universe is whatever the record
+    names, deduplicated, and nothing else can enter it."""
     names = []
     if os.path.exists(INSIDER_PATH):
         doc = json.load(open(INSIDER_PATH, encoding="utf-8"))
