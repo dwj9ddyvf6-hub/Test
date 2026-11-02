@@ -287,6 +287,30 @@ def _run() -> int:
                 print(f"failure output {slug}: {tail}", flush=True)
         else:
             ran.append(slug)
+    # Attestation resync (cure WEEK-READINESS-R2-20261102-N): the
+    # engines above appended new rows to the ledger during the
+    # loop, so the attestations they attached at write time no
+    # longer recount against the final ledger and the smoke check
+    # fails on an otherwise clean run. Recount the registry on the
+    # final ledger, then re-attach every page's block from it.
+    # Fatal like the first recount: publishing stale attestations
+    # is the defect this cures, never a state to ship.
+    for label, argv in (
+            ("attestation-refresh-final",
+             [sys.executable,
+              str(ROOT / "forecast" / "refresh_attestations.py"),
+              "--registry-only"]),
+            ("attestation-reattach",
+             [sys.executable, str(HERE / "reattach_attestations.py")])):
+        print(f"start {label}", flush=True)
+        t0 = time.time()
+        r = subprocess.run(argv, capture_output=True, text=True)
+        print(f"done {label} in {time.time() - t0:.0f}s "
+              f"exit {r.returncode}", flush=True)
+        if r.stdout:
+            print(r.stdout.strip()[-1000:], flush=True)
+        if r.returncode != 0:
+            failures.append(f"{label} (exited {r.returncode})")
     rec = subprocess.run([sys.executable, str(HERE / "refresh_record.py")],
                          capture_output=True, text=True)
     if rec.returncode != 0:
