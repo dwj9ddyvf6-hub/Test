@@ -1,5 +1,9 @@
 {
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its current reading is from 2026-10-30. Its study record, the history it was built and checked on, holds 5 counted items on file. Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule.",
+    "summary": "For each recorded trading day, show how much premium changed hands in SPY, QQQ and IWM options, how it split between calls and puts, and what share of it sat on the put side."
+  },
   "feed": "forecast_ledger",
   "freshest_session": "2026-10-30",
   "how": "The total is every dollar of premium across the prints examined that day. The split is the net premium in calls and in puts: money taken in on prints judged bought minus money paid out on prints judged sold, per side; prints that are part of a multi-part trade count in the total but not in the net figures. The meter is the put share: the put side's share of the two sides' combined net premium, measured on the size of each side's net figure. A share is shown only where both sides are on record for that session.",
@@ -523,6 +527,51 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "published_at_utc": "2026-10-30T20:47:07.178172+00:00",
+  "record_surface": {
+    "calibration_record": null,
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "execution_pricing",
+        "feed",
+        "freshest_session",
+        "how",
+        "names",
+        "price_basis",
+        "provenance",
+        "published_at_utc",
+        "session_dates",
+        "sessions",
+        "sessions_recorded",
+        "source",
+        "tape_freshness",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": null,
+    "missing": {
+      "what_and_when": "Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 5,
+          "path": "/sessions"
+        }
+      ],
+      "total_items_counted": 5
+    },
+    "version": 1
+  },
   "session_dates": [
     "2026-10-26",
     "2026-10-27",
@@ -564,6 +613,38 @@
   ],
   "sessions_recorded": 5,
   "source": "Every options trade printed on the three big index funds during the trading day, scored print by print as it came in",
+  "subject_chart": {
+    "lead": null,
+    "record": {
+      "kind": "curve",
+      "label": "Put share percent per session on record for the first fund.",
+      "points": [
+        {
+          "x": "2026-10-26",
+          "y": 32.3
+        },
+        {
+          "x": "2026-10-27",
+          "y": 48.6
+        },
+        {
+          "x": "2026-10-28",
+          "y": 92.2
+        },
+        {
+          "x": "2026-10-29",
+          "y": 45.2
+        },
+        {
+          "x": "2026-10-30",
+          "y": 51.3
+        }
+      ],
+      "source": "names[0].sessions[].put_share_percent",
+      "title": "Put share on record, SPY"
+    },
+    "version": 1
+  },
   "tape_freshness": {
     "consumer_session": "2026-10-30",
     "note": "built from the freshest tape session",
