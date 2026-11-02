@@ -1,5 +1,9 @@
 # Repository instructions for LLM agents
 
+## Read the map first (mandatory)
+
+Before answering anything about this repository, follow the reading protocol in [START-HERE.md](START-HERE.md): read START-HERE.md, then [INDEX.md](INDEX.md) (the prose map of the whole repository), then the section of [ROADMAP.md](ROADMAP.md) for your topic, then the README.md or AREA.md at the top of each area you touch. Never answer from README.md alone (it is the strategy catalog front page), never treat docs/CATALOG.json as the catalog of the whole repository (it covers the strategy cards only), and never conclude a file is absent without searching INDEX.json by path fragment. These guardrails below govern how to work safely here; they do not replace the map.
+
 For strategy, market-data, research, trading, or deployment work:
 
 1. Read [docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md](docs/AGENTIC_TRADE_DESK_BUILD_GUIDE.md), this repository's README, [docs/CATALOG.json](docs/CATALOG.json), and [docs/VERIFY.md](docs/VERIFY.md). For trade-desk architecture, setup, risk, operations, and LLM routines, follow the reading order in [agentic-trade-desk/README.md](agentic-trade-desk/README.md) and its nested `AGENTS.md`.
