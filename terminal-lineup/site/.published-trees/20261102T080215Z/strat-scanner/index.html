@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strat Scanner: the bar pattern each name showed today</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+    --prove-bg:#f3eefb; --prove-line:#c9b8ec; --prove-ink:#4a3572;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .prove{background:var(--prove-bg);border:1px solid var(--prove-line);color:var(--prove-ink);
+       border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px}
+  .prove strong{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .summary p{margin:4px 0}
+  .filters{margin:0 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .filters button{font:inherit;font-size:14.5px;padding:7px 14px;border-radius:999px;
+       border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+  .filters button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .meaning{color:var(--soft);font-size:15px;margin:0 0 12px;max-width:46em}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  .seq{white-space:nowrap;font-variant-numeric:tabular-nums}
+  .seq .d{color:var(--faint);font-size:12.5px}
+  .tag{display:inline-block;background:#eef4fb;border:1px solid #bcd4ee;color:#23405e;
+       border-radius:999px;padding:1px 9px;font-size:13px;margin:1px 2px 1px 0;white-space:nowrap}
+  .tag.shape{background:#fdf3e0;border-color:#e8c57c;color:#6b4e12}
+  .tag.failed{background:#fdeeec;border-color:#e5a49c;color:#7a2a20}
+  .scroll{overflow-x:auto}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Strat Scanner</h1>
+    <p class="job">One job: name the bar pattern each stock showed on the most recent trading day on record, using the published TheStrat labels, grouped by pattern. Labels only: what the bars did, nothing about what to do with it.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <div id="prove" class="prove" style="display:none"></div>
+  <p id="meta" class="meta">Loading the records&hellip;</p>
+
+  <div class="def" id="defbox" style="display:none"></div>
+
+  <div class="filters" id="filters" style="display:none"></div>
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var proveEl = document.getElementById("prove");
+  var meta = document.getElementById("meta");
+  var defEl = document.getElementById("defbox");
+  var filtersEl = document.getElementById("filters");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+  var ACTIVE = "all";
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric",
+      year:"numeric", timeZone:"UTC"});
+  }
+  function todayKey(){
+    var parts = new Intl.DateTimeFormat("en-US",
+      {timeZone:"America/New_York", year:"numeric", month:"2-digit",
+       day:"2-digit"}).formatToParts(new Date());
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function lastCompletedSession(){
+    var d = new Date(todayKey() + "T12:00:00Z");
+    do { d.setUTCDate(d.getUTCDate() - 1); }
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+    return d.toISOString().slice(0, 10);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function groupLabel(g){
+    if (g.key === "2u") return "2-up";
+    if (g.key === "2d") return "2-down";
+    return g.label;
+  }
+  function labelWord(lab){
+    if (lab === "2u") return "2-up";
+    if (lab === "2d") return "2-down";
+    if (lab == null) return "first bar on record";
+    return String(lab);
+  }
+
+  function renderDefs(){
+    var w = DATA.words || {};
+    var h = "<p><strong>The labels:</strong> every name is compared " +
+      "with its own day before and given one of four labels: " +
+      "<strong>1</strong>, <strong>2-up</strong>, " +
+      "<strong>2-down</strong> or <strong>3</strong>. What each " +
+      "one means is printed with its group below.</p>";
+    h += "<p><strong>Closed:</strong> " + esc(w.colour || "") + "</p>";
+    h += "<p><strong>Shapes:</strong> " + esc(w.hammer || "") + " " +
+      esc(w.shooter || "") + "</p>";
+    h += "<p><strong>Failed 2s:</strong> " + esc(w.failed_2u || "") +
+      " " + esc(w.failed_2d || "") + "</p>";
+    h += "<p><strong>Completed patterns:</strong> " +
+      esc(w.completed || "") + "</p>";
+    h += "<p><strong>The run of labels:</strong> " +
+      esc(w.sequence || "") + "</p>";
+    defEl.innerHTML = h;
+    defEl.style.display = "";
+  }
+
+  function renderFilters(){
+    var h = '<button type="button" data-k="all"' +
+      (ACTIVE === "all" ? ' class="on"' : "") + ">All patterns (" +
+      num(DATA.names_labelled) + ")</button>";
+    (DATA.groups || []).forEach(function(g){
+      h += '<button type="button" data-k="' + esc(g.key) + '"' +
+        (ACTIVE === g.key ? ' class="on"' : "") + ">" +
+        esc(groupLabel(g)) + " (" + num(g.count) + ")</button>";
+    });
+    filtersEl.innerHTML = h;
+    filtersEl.style.display = "";
+    var btns = filtersEl.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++){
+      btns[i].addEventListener("click", function(){
+        ACTIVE = this.getAttribute("data-k");
+        renderFilters();
+        render();
+      });
+    }
+  }
+
+  function rowHtml(n){
+    var tags = "";
+    if (n.shape === "hammer") tags += '<span class="tag shape">Hammer shape</span>';
+    if (n.shape === "shooter") tags += '<span class="tag shape">Shooter shape</span>';
+    if (n.failed_2){
+      tags += '<span class="tag failed">' +
+        (n.label === "2u" ? "Failed 2-up" : "Failed 2-down") +
+        "</span>";
+    }
+    (n.completed || []).forEach(function(c){
+      tags += '<span class="tag">' + esc(c) + "</span>";
+    });
+    var seq = (n.sequence || []).map(function(s){
+      return '<span class="d">' + esc(fmtDateShort(s.date)) +
+        ":</span> " + esc(labelWord(s.label));
+    }).join(" &middot; ");
+    return "<tr><td><strong>" + esc(n.symbol) + "</strong></td>" +
+      "<td>" + esc(n.colour || "") + "</td>" +
+      '<td class="seq">' + seq + "</td>" +
+      "<td>" + (tags || "") + "</td></tr>";
+  }
+
+  function render(){
+    var groups = (DATA.groups || []).filter(function(g){
+      return ACTIVE === "all" || g.key === ACTIVE;
+    });
+    var total = groups.reduce(function(a, g){
+      return a + (g.names || []).length; }, 0);
+    if (!total){
+      resultsEl.innerHTML = '<div class="nodata">No names were ' +
+        "labelled for " + fmtDateLong(DATA.session) +
+        ". Nothing is padded to fill the page.</div>";
+      return;
+    }
+    var h = '<section class="summary"><p><strong>' +
+      num(DATA.names_labelled) + " names</strong> were labelled " +
+      "for " + fmtDateLong(DATA.session) + ", out of " +
+      num(DATA.names_on_record) + " names on record; " +
+      num(DATA.names_not_labelled) + " had no bar that day and " +
+      "show nothing. " + num(DATA.shape_counts.hammer) +
+      " names carry a hammer shape and " +
+      num(DATA.shape_counts.shooter) + " a shooter shape; " +
+      num(DATA.failed_2_count) + " carry a failed 2 flag; " +
+      num(DATA.completed_patterns_count) + " completed patterns " +
+      "finished on the day.</p></section>";
+    groups.forEach(function(g){
+      h += '<section class="group"><h2>' + esc(groupLabel(g)) +
+        " &middot; " + esc(g.name) + " (" + num(g.count) +
+        ")</h2>" +
+        '<p class="meaning">' + esc(g.meaning) + "</p>" +
+        '<div class="scroll"><table><thead><tr>' +
+        "<th>Name</th><th>Closed</th>" +
+        "<th>Its labels, last " + num(DATA.sequence_sessions) +
+        " sessions</th><th>Also on the day</th>" +
+        "</tr></thead><tbody>";
+      (g.names || []).forEach(function(n){ h += rowHtml(n); });
+      h += "</tbody></table></div></section>";
+    });
+    resultsEl.innerHTML = h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      DATA = data;
+      if (!data.session || data.state !== "published" ||
+          !(data.groups || []).length){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No scan has ' +
+          "been published yet. When the labels are published, " +
+          "the names will be listed here, grouped by the pattern " +
+          "they showed. Nothing is shown for a record that has " +
+          "not been made.</div>";
+        return;
+      }
+  function proveNote(state, note){var s = String(state || ""), n = String(note || "");
+    if (s && n.toLowerCase().indexOf(s.toLowerCase()) === 0){
+      n = n.slice(s.length).replace(/^[:\s]+/, "");
+      n = n.charAt(0).toUpperCase() + n.slice(1);}
+    return n;}
+      proveEl.innerHTML = "<strong>" + esc(data.proving_state) +
+        "</strong><br>" + esc(proveNote(data.proving_state, data.proving_note));
+      proveEl.style.display = "";
+      renderDefs();
+      meta.textContent = "Scanned trading day: " +
+        fmtDateLong(data.session) + ". Source: " + data.source + ".";
+      if (data.session !== lastCompletedSession()){
+        showBanner("stale", "This scan is for " +
+          fmtDateLong(data.session) + ", which is not the most " +
+          "recent completed trading day. It is the freshest day " +
+          "in the price history on record; treat it as the last " +
+          "published scan, not today's.");
+      }
+      receiptEl.textContent = "Receipt: " + data.coverage + ".";
+      renderFilters();
+      render();
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Strat Scanner is not available " +
+        "right now. The data file for this page could not be " +
+        "loaded, so there is nothing honest to show. Please check " +
+        "back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
