@@ -429,7 +429,7 @@
     var pctRows = parsed.filter(function (r) { return r.v >= 0 && r.v <= 100; });
     if (pctRows.length >= 2) {
       var sum = pctRows.reduce(function (a, r) { return a + r.v; }, 0);
-      if (sum >= 90 && sum <= 110 && (slug === "living-router" || slug === "portfolio-builder" || slug === "router")) {
+      if (sum >= 90 && sum <= 110) {
         var cardA = compCard("Shares at a glance", "One bar, split by the shares in the table below. The key names every part and its value.");
         var bar = el("div", "gb-allocbar"); var key = el("div", "gb-key");
         var cols = ["#177366", "#3d3a8c", "#d9a441", "#7ee0c3", "#b0342e", "#5b6b75"];
@@ -573,11 +573,284 @@
     grid.parentNode.insertBefore(line, grid.nextSibling);
   }
 
+
+  /* ============ R2 SECTION (2026-11-02, FINAL rows 2-7) ============ */
+  /* Row 3: full per-card C1 grammar. Every legacy card gains a plain
+     sentence (its own first paragraph or heading), a hero (its own
+     first big figure) and a footnote (this page's own data date).
+     Text is copied from the card itself; nothing is invented. */
+  function enhanceCardsR2(data) {
+    var asOf = asOfOf(data);
+    Array.prototype.forEach.call(document.querySelectorAll(".card,.chartbox,.verdict,.panel,.sc"), function (c) {
+      if (c.closest(".gb-fdlg,.gb-disc,.gb-comp") || c.hasAttribute("data-gb-full")) return;
+      if (c.querySelector(":scope > .gb-sentence") && c.querySelector(":scope > .gb-foot")) { c.setAttribute("data-gb-full","1"); return; }
+      if (!c.querySelector(":scope > .gb-sentence")) {
+        var s = "";
+        var pp = c.querySelector("p:not(.kicker):not(.gb-foot):not(.meta)");
+        if (pp) s = (pp.textContent || "").trim().replace(/\s+/g, " ");
+        if (!s) { var hd = c.querySelector("h2,h3,h4"); if (hd) s = pageName() + ": " + (hd.textContent || "").trim() + ". The figures below are this section's own reading."; }
+        if (s) { var se = el("p", "gb-sentence", s.slice(0, 220)); var hEl = c.querySelector("h2,h3,h4,.t,.name"); if (hEl && hEl.nextSibling) c.insertBefore(se, hEl.nextSibling); else if (c.firstChild) c.insertBefore(se, c.firstChild.nextSibling); }
+      }
+      if (!c.querySelector(":scope > .gb-hero")) {
+        var hv = c.querySelector(".bignum,.vvalue,.fig,.big");
+        if (hv && (hv.textContent || "").trim()) { var he = el("p", "gb-hero", (hv.textContent || "").trim().slice(0, 40)); var se2 = c.querySelector(":scope > .gb-sentence"); if (se2 && se2.nextSibling) c.insertBefore(he, se2.nextSibling); }
+      }
+      if (!c.querySelector(":scope > .gb-foot")) {
+        c.appendChild(el("p", "gb-foot", "From this page's own data" + (asOf ? ", as of " + asOf : "") + ". The table or chart in this card is the record."));
+      }
+      c.setAttribute("data-gb-full", "1");
+    });
+  }
+  /* Row 5 (F8): the subject comes first. A proving-state card that
+     sits ahead of the page's subject chart is moved behind it. */
+  function subjectFirstR2() {
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".card,.verdict"));
+    var prov = null;
+    for (var i = 0; i < Math.min(3, cards.length); i++) { if (/being proven|still being proven|proving state/i.test(cards[i].textContent || "")) { prov = cards[i]; break; } }
+    if (!prov) return;
+    var chart = document.querySelector(".chartbox, .gb-lead, .gb-comp, canvas, svg");
+    if (chart) { var host = chart.closest(".card,.chartbox,section") || chart; if (host && host !== prov && prov.parentNode && prov.compareDocumentPosition(host) & 2) { /* prov is before host */ host.parentNode.insertBefore(prov, host.nextSibling); } }
+  }
+  /* Row 4: C15 NEW badges. Diffs the rendered ranker labels against
+     the stored prior-session set in rowsets.json (built by
+     build_prior_rows.py). If the stored session is not earlier than
+     this page's own session, no badges render: the baseline session
+     itself never claims novelty. */
+  var rowsetsCache = null;
+  function newBadgesR2(data) {
+    var asOf = asOfOf(data); if (!asOf || onHub) return;
+    function apply(store) {
+      var rec = store && store[slug]; if (!rec || !rec.rows || !rec.session) return;
+      if (!(rec.session < asOf)) return;
+      var prior = {}; rec.rows.forEach(function (r) { prior[r] = 1; });
+      var n = 0;
+      Array.prototype.forEach.call(document.querySelectorAll(".gb-rkrow .id"), function (idEl) {
+        var lab = (idEl.textContent || "").trim();
+        if (lab && !prior[lab] && !idEl.querySelector(".gb-badge")) { var b = el("span", "gb-badge new", "NEW"); b.style.marginLeft = "6px"; idEl.appendChild(b); n++; }
+      });
+      if (n) { var comp = document.querySelector(".gb-comp"); if (comp && !comp.querySelector(".gb-newnote")) comp.appendChild(el("p", "gb-foot gb-newnote", n + " row(s) are new since the stored prior session (" + rec.session + ").")); }
+    }
+    if (rowsetsCache) { apply(rowsetsCache); return; }
+    fetch(root + "rowsets.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (s) { rowsetsCache = s; apply(s); }).catch(function () {});
+  }
+  /* Row 7a: market-mood C4 state strip from the true dated composite
+     record (composite-history.json, produced by build_mood_history.py
+     from the psychology engine's live state files). Bands are the
+     composite's own percentile bands; the strip accrues per session
+     and says so until it is long. */
+  function moodStripR2() {
+    if (document.querySelector(".gb-moodstrip")) return;
+    fetch("composite-history.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (h) {
+      if (!h || !h.points || h.points.length < 1 || document.querySelector(".gb-moodstrip")) return;
+      var card = compCard("Composite over time", "One block per session on record, coloured by the composite's own percentile band. The record accrues one point per session from the recorder; it is not backfilled.");
+      card.classList.add("gb-moodstrip");
+      var strip = el("div", "gb-strip");
+      h.points.forEach(function (pt) {
+        var seg = document.createElement("span");
+        seg.style.background = pt.composite < 25 ? "#b0342e" : pt.composite < 50 ? "#d9a441" : pt.composite < 75 ? "#3d9a84" : "#0b3b46";
+        seg.title = pt.date + ": " + pt.composite + (pt.regime ? " (" + pt.regime + ")" : ""); strip.appendChild(seg);
+      });
+      card.appendChild(strip);
+      var last = h.points[h.points.length - 1];
+      var ax = el("div", "gb-strip-axis"); ax.appendChild(el("span", null, h.points[0].date)); ax.appendChild(el("span", null, "Current: " + last.composite + (last.regime ? " " + last.regime : "") + " on " + last.date)); card.appendChild(ax);
+      card.appendChild(el("p", "gb-foot", h.points.length + " session(s) on record. Bands: under 25 extreme fear, 25 to 50 fearful, 50 to 75 neutral to greedy, 75 and over greed. Green and red here name the composite's own bands, printed in the axis text as well."));
+      placeComp(card);
+    }).catch(function () {});
+  }
+  /* Row 7b: morning-map C2 hero strip + honest subject visual. The
+     page's own indexes carry spot, flip, call wall and put wall per
+     index; the strip and the level diagram are drawn from those
+     numbers. This replaces the no-bars top chart: levels, not bars,
+     because the page publishes levels and no position sizes. */
+  function morningMapR2(data) {
+    if (!data || !Array.isArray(data.indexes) || !data.indexes.length) return;
+    if (!document.querySelector(".gb-stats")) {
+      var first = data.indexes[0];
+      function fig(ix, key) { var o = ix && ix[key]; return o && o.state && typeof o.state.value === "number" ? o.state.value : (o && typeof o.value === "number" ? o.value : null); }
+      function deep(ix, key) { /* indexes entries vary; search shallowly */
+        var found = null; (function walk(v, d) { if (found != null || d > 3 || !v || typeof v !== "object") return; if (typeof v[key] === "number") { found = v[key]; return; } Object.keys(v).forEach(function (k) { walk(v[k], d + 1); }); })(ix, 0); return found; }
+      var stats = [];
+      data.indexes.slice(0, 3).forEach(function (ix) {
+        var sym = ix.symbol || ix.name || "Index";
+        var spot = deep(ix, "spot"), flip = deep(ix, "flip");
+        stats.push({ label: sym + " spot", value: spot == null ? "no data" : "$" + fmt(spot, 2), sub: "Session " + (data.session || ""), dark: stats.length === 0 });
+        if (flip != null) stats.push({ label: sym + " flip", value: "$" + fmt(flip, 2), sub: spot == null ? "" : (spot >= flip ? "Spot above the flip" : "Spot below the flip"), sign: spot == null ? "" : (spot >= flip ? "up" : "down") });
+      });
+      if (stats.length) {
+        var grid = el("div", "gb-stats");
+        stats.forEach(function (s) { var d = el("div", "gb-stat" + (s.dark ? " dark" : "") + (s.sign ? " " + s.sign : "")); d.appendChild(el("p", "gb-slabel", s.label)); d.appendChild(el("p", "gb-svalue", s.value)); d.appendChild(el("p", "gb-ssub", s.sub)); grid.appendChild(d); });
+        var h1 = document.querySelector("h1"); if (h1 && h1.parentNode) h1.parentNode.insertBefore(grid, h1.nextSibling);
+      }
+    }
+    if (!document.querySelector(".gb-mmlevels")) {
+      var card = compCard("Where the levels sit", "For each index: the put wall, the flip, the spot price and the call wall from this page's own data, drawn as levels on one line. Spot is the dark peg.");
+      card.classList.add("gb-mmlevels");
+      data.indexes.slice(0, 3).forEach(function (ix) {
+        var sym = ix.symbol || ix.name || "Index";
+        function deep2(key) { var found = null; (function walk(v, d) { if (found != null || d > 3 || !v || typeof v !== "object") return; if (typeof v[key] === "number") { found = v[key]; return; } Object.keys(v).forEach(function (k) { walk(v[k], d + 1); }); })(ix, 0); return found; }
+        var pw = deep2("put_wall"), fl = deep2("flip"), sp = deep2("spot"), cw = deep2("call_wall");
+        if (pw == null || cw == null || sp == null) return;
+        var lo = Math.min(pw, fl == null ? pw : fl, sp, cw), hi = Math.max(pw, fl == null ? cw : fl, sp, cw); if (hi === lo) hi = lo + 1;
+        var row = el("div"); row.style.margin = "10px 0";
+        row.appendChild(el("p", "gb-slabel", sym + ": put wall $" + fmt(pw, 2) + (fl != null ? ", flip $" + fmt(fl, 2) : "") + ", spot $" + fmt(sp, 2) + ", call wall $" + fmt(cw, 2)));
+        var band = el("div", "gb-band"); band.style.background = "linear-gradient(90deg,#b0342e 0%,#f2c14e 45%,#a8d8c0 100%)";
+        [["put wall", pw, "#b0342e"], ["flip", fl, "#86580a"], ["spot", sp, "#10283a"], ["call wall", cw, "#18744f"]].forEach(function (lv) {
+          if (lv[1] == null) return; var peg = el("span", "peg"); peg.style.left = "calc(" + ((lv[1] - lo) / (hi - lo) * 100) + "% - 2px)"; peg.style.background = lv[2]; peg.title = lv[0] + " $" + lv[1]; band.appendChild(peg);
+        });
+        row.appendChild(band); card.appendChild(row);
+      });
+      card.appendChild(el("p", "gb-foot", "Levels from this page's own data for " + (data.session || "the latest session") + ". No position sizes are published on this page, so no size bars are drawn."));
+      placeComp(card);
+      var vk = document.getElementById("vkHost"); if (vk && !vk.querySelector("svg,canvas,table")) vk.style.display = "none";
+    }
+  }
+
+  /* R2 deep extractor: many pages publish their figures as count
+     maps, subject_charts row sets, or per-name price books rather
+     than ranked arrays. Every row below is copied from the page's
+     own data at the path named in the card footnote. */
+  function deepRowsR2(data) {
+    var best = null, bestPath = "";
+    function consider(items, path) { if (items && items.length >= 3 && (!best || items.length > best.length)) { best = items; bestPath = path; } }
+    var LAB = ["symbol","name","id","title","sector","holder","ticker","label","tool","kind","state","claim"];
+    var VAL = ["score","value","pct","percent","count","graded_count","rose_count","heat","premium","strike","average_pct","sessions_recorded","total","buried"];
+    function rowOf(r) {
+      if (!r || typeof r !== "object" || Array.isArray(r)) return null;
+      var lab = null;
+      for (var i = 0; i < LAB.length; i++) { if (r[LAB[i]] != null && typeof r[LAB[i]] !== "object") { lab = String(r[LAB[i]]); break; } }
+      if (lab == null && typeof r.days === "number") lab = r.days + " day horizon";
+      if (lab == null && typeof r.session === "string") lab = r.session;
+      if (lab == null && typeof r.date === "string") lab = r.date;
+      if (lab == null) return null;
+      var v = null;
+      for (var k = 0; k < VAL.length; k++) { if (typeof r[VAL[k]] === "number") { v = r[VAL[k]]; break; } }
+      if (v == null) { var ns = Object.keys(r).map(function (kk) { return r[kk]; }).filter(function (x) { return typeof x === "number" && isFinite(x); }); if (ns.length) v = ns[ns.length - 1]; }
+      if (v == null && typeof r.detail === "string") { var m = r.detail.match(/heat score ([\d.]+)/); if (m) v = parseFloat(m[1]); }
+      if (v == null) return null;
+      return { label: lab.slice(0, 42), raw: [lab], nums: [v], v: v };
+    }
+    function walk(v, path, depth) {
+      if (!v || depth > 4) return;
+      if (Array.isArray(v)) {
+        var items = v.map(rowOf).filter(Boolean);
+        if (items.length >= 3) consider(items, path);
+        v.slice(0, 3).forEach(function (x, i) { walk(x, path + "[]", depth + 1); });
+        return;
+      }
+      if (typeof v === "object") {
+        var keys = Object.keys(v);
+        var numEntries = keys.filter(function (k) { return typeof v[k] === "number" && isFinite(v[k]); });
+        if (numEntries.length >= 3 && path.indexOf("record_surface") < 0 && path.indexOf("contract") < 0) {
+          consider(numEntries.map(function (k) { return { label: k.replace(/_/g, " "), raw: [k], nums: [v[k]], v: v[k] }; }), path);
+        }
+        /* per-name price books: {SYM: [flag, [closes...]]} -> the
+           change over the book's own record, first to last close */
+        var symKeys = keys.filter(function (k) { return Array.isArray(v[k]) && v[k].length === 2 && Array.isArray(v[k][1]) && v[k][1].length > 20; });
+        if (symKeys.length >= 3) {
+          consider(symKeys.slice(0, 400).map(function (k) { var s = v[k][1]; var chg = s[0] ? (s[s.length - 1] / s[0] - 1) * 100 : 0; return { label: k, raw: [k], nums: [Math.round(chg * 10) / 10], v: Math.round(chg * 10) / 10 }; }), path + " (change over the record, %)");
+        }
+        keys.forEach(function (k) { if (k !== "record_surface" || path === "") walk(v[k], path ? path + "." + k : k, depth + 1); });
+        if (path === "" && v.record_surface) walk(v.record_surface, "record_surface", depth + 1);
+      }
+    }
+    walk(data, "", 0);
+    return best ? { items: best, path: bestPath } : null;
+  }
+  function deepComponentR2(data) {
+    if (document.querySelector(".gb-maincomp,.gb-quad,.gb-gaugewrap")) return;
+    var found = deepRowsR2(data); if (!found) return;
+    var items = found.items;
+    var card = compCard("The figures, ranked", "The rows this page publishes, ranked by their headline figure. Every row is copied from the page's own data; the source is named in the footnote.");
+    var mx = Math.max.apply(null, items.map(function (r) { return Math.abs(r.v); }).concat([1]));
+    items.slice().sort(function (a, b) { return Math.abs(b.v) - Math.abs(a.v); }).slice(0, 8).forEach(function (r, i) {
+      var row = el("div", "gb-rkrow"); row.appendChild(el("span", "r", String(i + 1)));
+      var mid = el("div"); mid.appendChild(el("span", "id", r.label));
+      var bar = el("div", "gb-rkbar"); var f = document.createElement("i"); f.style.width = Math.max(2, Math.abs(r.v) / mx * 100) + "%"; bar.appendChild(f); mid.appendChild(bar); row.appendChild(mid);
+      row.appendChild(el("span", "val", String(r.v))); row.appendChild(el("span", "d", "")); card.appendChild(row);
+    });
+    card.classList.add("gb-maincomp");
+    card.appendChild(el("p", "gb-foot", "Source in this page's data: " + (found.path || "top level") + ". The page's own tables and charts below stay the record."));
+    placeComp(card);
+  }
+
+
+  /* Categorical last resort: pages whose rows carry a verdict or
+     grade instead of a figure (echo-lens readings, receipts) bind
+     as counted rows: one row per category, valued by its count in
+     the page's own data. Counts are counted, never typed. */
+  function categoricalComponentR2(data) {
+    if (document.querySelector(".gb-maincomp,.gb-quad,.gb-gaugewrap") || !data) return;
+    var best = null;
+    (function walk(v, depth) {
+      if (!v || depth > 3 || best) return;
+      if (Array.isArray(v)) {
+        if (v.length >= 3 && v[0] && typeof v[0] === "object") {
+          ["verdict", "grade", "state", "status"].forEach(function (k) {
+            if (best) return;
+            var counts = {}, n = 0;
+            v.forEach(function (r) { if (r && r[k] != null && typeof r[k] !== "object") { counts[String(r[k])] = (counts[String(r[k])] || 0) + 1; n++; } });
+            var cats = Object.keys(counts);
+            if (n >= 3 && cats.length >= 2) best = { items: cats.map(function (c) { return { label: c, raw: [c], nums: [counts[c]], v: counts[c] }; }), key: k, total: n };
+          });
+        }
+        v.slice(0, 2).forEach(function (x) { walk(x, depth + 1); });
+        return;
+      }
+      if (typeof v === "object") Object.keys(v).forEach(function (k) { if (k !== "record_surface") walk(v[k], depth + 1); });
+    })(data, 0);
+    if (!best) return;
+    var card = compCard("Rows by " + best.key, "Every row on this page carries a " + best.key + " instead of a figure, so the component counts them: one row per " + best.key + ", valued by how many rows carry it.");
+    var mx = Math.max.apply(null, best.items.map(function (r) { return r.v; }).concat([1]));
+    best.items.slice().sort(function (a, b) { return b.v - a.v; }).slice(0, 8).forEach(function (r, i) {
+      var row = el("div", "gb-rkrow"); row.appendChild(el("span", "r", String(i + 1)));
+      var mid = el("div"); mid.appendChild(el("span", "id", r.label.slice(0, 42))); var bar = el("div", "gb-rkbar"); var f = document.createElement("i"); f.style.width = Math.max(2, r.v / mx * 100) + "%"; bar.appendChild(f); mid.appendChild(bar); row.appendChild(mid);
+      row.appendChild(el("span", "val", String(r.v))); row.appendChild(el("span", "d", "")); card.appendChild(row);
+    });
+    card.classList.add("gb-maincomp");
+    card.appendChild(el("p", "gb-foot", "Counted from " + best.total + " rows in this page's own data at render time."));
+    placeComp(card);
+  }
+
+  /* Row 2 fallback: bind a component from the subject_chart record or
+     any dated series when tables and ranked arrays yield nothing. */
+  function fallbackComponentR2(data) {
+    if (document.querySelector(".gb-maincomp,.gb-quad,.gb-gaugewrap") || !data) return;
+    var sc = data.subject_chart && data.subject_chart.record;
+    if (sc && Array.isArray(sc.points) && sc.points.length >= 3) {
+      var items = sc.points.filter(function (p) { return typeof p.y === "number"; }).map(function (p) { return { label: String(p.x), raw: [String(p.x), String(p.y)], nums: [p.y], v: p.y }; });
+      if (items.length >= 3) {
+        var card = compCard("The record, ranked", "The points in this page's own subject chart, as ranked rows. The chart itself stays the record above.");
+        var mx = Math.max.apply(null, items.map(function (r) { return Math.abs(r.v); }).concat([1]));
+        items.slice().sort(function (a, b) { return Math.abs(b.v) - Math.abs(a.v); }).slice(0, 8).forEach(function (r, i) {
+          var row = el("div", "gb-rkrow"); row.appendChild(el("span", "r", String(i + 1)));
+          var mid = el("div"); mid.appendChild(el("span", "id", r.label.slice(0, 28))); var bar = el("div", "gb-rkbar"); var f = document.createElement("i"); f.style.width = Math.max(2, Math.abs(r.v) / mx * 100) + "%"; bar.appendChild(f); mid.appendChild(bar); row.appendChild(mid);
+          row.appendChild(el("span", "val", String(r.v))); row.appendChild(el("span", "d", "")); card.appendChild(row);
+        });
+        card.classList.add("gb-maincomp"); placeComp(card); return;
+      }
+    }
+    var series = findSeries(data);
+    if (series && series.length >= 5) {
+      var vals = series.map(function (p) { return p.v; }); var lo2 = Math.min.apply(null, vals), hi2 = Math.max.apply(null, vals);
+      var cardS = compCard("History as states", "Each block is one session from this page's own history, coloured from low (pale) to high (dark teal).");
+      var strip = el("div", "gb-strip");
+      series.slice(-130).forEach(function (p) { var q = hi2 > lo2 ? (p.v - lo2) / (hi2 - lo2) : 0.5; var seg = document.createElement("span"); seg.style.background = ["#dcebe5", "#9fd3c3", "#3d9a84", "#0b3b46"][Math.min(3, Math.floor(q * 4))]; seg.title = p.d + ": " + p.v; strip.appendChild(seg); });
+      cardS.classList.add("gb-maincomp"); cardS.appendChild(strip);
+      var ax = el("div", "gb-strip-axis"); ax.appendChild(el("span", null, series[0].d)); ax.appendChild(el("span", null, "Current: " + series[series.length - 1].v + " on " + series[series.length - 1].d)); cardS.appendChild(ax);
+      placeComp(cardS);
+    }
+  }
+
   whenReady(function () {
     /* F6 cure: the shell (topbar, finder, pills) renders immediately;
        the data fetch now only fills the as_of stamp and components,
        so a 35 MB data.json can no longer delay the chrome. */
     try { shell(null); } catch (e) {}
+    /* Heavy pages: if the data fetch is still running at 5s, bind
+       from the rendered DOM tables so the component is not held
+       hostage by a 37 MB data.json. */
+    setTimeout(function () { try { buildClassComponent(null); } catch (e) {} try { enhanceCardsR2(null); } catch (e) {} }, 5000);
+    setTimeout(function () { try { buildClassComponent(null); } catch (e) {} }, 10000);
     try { jumpPills(); } catch (e) {}
     try { applyGrammar(); } catch (e) {}
     loadData(function (data) {
@@ -590,13 +863,26 @@
       try { if (slug === "breadth-meter") breadthNote(data); } catch (e) {}
       try { leadCard(data); } catch (e) {}
       try { buildClassComponent(data); } catch (e) {}
+      try { fallbackComponentR2(data); } catch (e) {}
+      try { deepComponentR2(data); } catch (e) {}
+      try { categoricalComponentR2(data); } catch (e) {}
+      try { if (slug === "market-mood") moodStripR2(); } catch (e) {}
+      try { if (slug === "morning-map") morningMapR2(data); } catch (e) {}
+      try { enhanceCardsR2(data); } catch (e) {}
+      try { subjectFirstR2(); } catch (e) {}
+      try { newBadgesR2(data); } catch (e) {}
       try { universalAtoms(data); } catch (e) {}
       try { applyGrammar(); } catch (e) {}
       /* pages render their own tables async; re-run the DOM-bound
          cures twice so late cards/tables get the same treatment */
-      [1200, 3000].forEach(function (ms) { setTimeout(function () {
+      [1200, 3000, 6000].forEach(function (ms) { setTimeout(function () {
         try { applyGrammar(); } catch (e) {}
         try { buildClassComponent(data); } catch (e) {}
+        try { fallbackComponentR2(data); } catch (e) {}
+        try { deepComponentR2(data); } catch (e) {}
+        try { categoricalComponentR2(data); } catch (e) {}
+        try { enhanceCardsR2(data); } catch (e) {}
+        try { newBadgesR2(data); } catch (e) {}
         try { universalAtoms(data); } catch (e) {}
         try { dedupeLiveStamp(); } catch (e) {}
       }, ms); });
