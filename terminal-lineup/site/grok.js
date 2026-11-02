@@ -591,7 +591,11 @@
       var t = (cand[i].textContent || "").trim();
       if (t.length >= 1 && t.length <= 32 && /-?\$?\d/.test(t) && cand[i].children.length === 0) return t;
     }
-    return "";
+    /* Last resort: the first number token in the card's own opening
+       text (a count, a price, a percent the card itself leads with). */
+    var own = (c.textContent || "").replace(/\s+/g, " ").slice(0, 300);
+    var m = own.match(/-?\$?\d[\d,]*(\.\d+)?%?/);
+    return m ? m[0] : "";
   }
   function enhanceCardsR2(data) {
     var asOf = asOfOf(data);
@@ -639,7 +643,10 @@
     var subs = document.querySelectorAll(".gb-moodstrip,.gb-mmlevels,.gb-gaugewrap,.gb-moodband,.gb-breadth-note");
     for (var i = 0; i < subs.length; i++) {
       var s = subs[i].closest(".card,section") || subs[i];
-      if (s && s !== generic && s.parentNode === generic.parentNode && (generic.compareDocumentPosition(s) & 4)) { generic.parentNode.insertBefore(s, generic); return; }
+      /* The subject card and the generic card can sit under different
+         wrappers (placeComp anchors differ); moving the node across
+         wrappers is still the same page order fix. */
+      if (s && s !== generic && !s.contains(generic) && (generic.compareDocumentPosition(s) & 4)) { generic.parentNode.insertBefore(s, generic); return; }
     }
   }
   /* Row 5 (F8): the subject comes first. A proving-state card that
