@@ -598,30 +598,46 @@
     var im = all.replace(/\d{4}-\d{2}-\d{2}/g, " ").match(/(?<![\d.,/-])\d{1,6}(?![\d./-])/);
     return im ? im[0] : "";
   }
+  /* R3-AUDIT cure: insertAfterChildR3 inserts into card c after the
+     card-level child containing anchor (headings are often nested;
+     insertBefore with a nested node's nextSibling throws and aborted
+     the whole enhance pass on the Master shell, same bug class). */
+  function insertAfterChildR3(c, node, anchor) {
+    var a = anchor;
+    while (a && a.parentNode !== c) a = a.parentNode;
+    if (a && a.nextSibling) c.insertBefore(node, a.nextSibling);
+    else if (a) c.appendChild(node);
+    else if (c.firstChild) c.insertBefore(node, c.firstChild.nextSibling);
+    else c.appendChild(node);
+  }
   function enhanceCardsR2(data) {
     var asOf = asOfOf(data);
     Array.prototype.forEach.call(document.querySelectorAll(".card,.chartbox,.verdict,.panel,.sc,.hubcard"), function (c) {
+      try {
       if (c.closest(".gb-fdlg,.gb-disc,.gb-comp") || c.hasAttribute("data-gb-full")) return;
       if (!c.querySelector(":scope > .gb-sentence")) {
         var s = "";
         var pp = c.querySelector("p:not(.kicker):not(.gb-kicker):not(.gb-foot):not(.meta)");
         if (pp) s = (pp.textContent || "").trim().replace(/\s+/g, " ");
         if (!s) { var hd = c.querySelector("h2,h3,h4"); if (hd) s = pageName() + ": " + (hd.textContent || "").trim() + ". The figures below are this section's own reading."; }
-        if (s) { var se = el("p", "gb-sentence", s.slice(0, 220)); var hEl = c.querySelector("h2,h3,h4,.t,.name"); if (hEl && hEl.nextSibling) c.insertBefore(se, hEl.nextSibling); else if (c.firstChild) c.insertBefore(se, c.firstChild.nextSibling); }
+        if (s) { var se = el("p", "gb-sentence", s.slice(0, 220)); var hEl = c.querySelector("h2,h3,h4,.t,.name"); insertAfterChildR3(c, se, hEl); }
       }
       if (!c.querySelector(":scope > .gb-hero")) {
         var heroTxt = heroFromCardR3(c);
-        if (heroTxt) { var he = el("p", "gb-hero", heroTxt); var se2 = c.querySelector(":scope > .gb-sentence"); if (se2 && se2.nextSibling) c.insertBefore(he, se2.nextSibling); else if (c.firstChild) c.insertBefore(he, c.firstChild.nextSibling); }
+        if (heroTxt) { var he = el("p", "gb-hero", heroTxt); var se2 = c.querySelector(":scope > .gb-sentence"); insertAfterChildR3(c, he, se2 || c.querySelector("h2,h3,h4,.t,.name")); }
       }
       if (!c.querySelector(":scope > .gb-foot")) {
         var ownDate = "";
         if (c.classList.contains("hubcard")) { var up = c.querySelector(".updated"); if (up) ownDate = (up.textContent || "").trim(); }
         c.appendChild(el("p", "gb-foot", ownDate ? ownDate + ". From this page's own data; the table or chart in this card is the record." : "From this page's own data" + (asOf ? ", as of " + asOf : "") + ". The table or chart in this card is the record."));
       }
-      /* Honest stamp (R2-CURE row 3): data-gb-full only when all three
-         grammar parts are actually on the card; otherwise partial. */
-      if (c.querySelector(":scope > .gb-sentence") && c.querySelector(":scope > .gb-hero") && c.querySelector(":scope > .gb-foot")) c.setAttribute("data-gb-full", "1");
-      else c.setAttribute("data-gb-partial", "1");
+      /* Honest stamp (R2-CURE row 3 + R3 exclusive stamps): full only
+         when all three grammar parts are on the card, and stamping
+         one state removes the other (dual-stamped cards were
+         double-counted as partial by every census). */
+      if (c.querySelector(":scope > .gb-sentence") && c.querySelector(":scope > .gb-hero") && c.querySelector(":scope > .gb-foot")) { c.setAttribute("data-gb-full", "1"); c.removeAttribute("data-gb-partial"); }
+      else { c.setAttribute("data-gb-partial", "1"); c.removeAttribute("data-gb-full"); }
+      } catch (e) { /* one bad card never kills the pass */ }
     });
   }
   /* R2-CURE (row 6b): a second date must never ride inside a kicker.
@@ -655,7 +671,12 @@
   function subjectFirstR2() {
     var cards = Array.prototype.slice.call(document.querySelectorAll(".card,.verdict"));
     var prov = null;
-    for (var i = 0; i < Math.min(4, cards.length); i++) { if (/being proven|still being proven|proving state/i.test(cards[i].textContent || "")) { prov = cards[i]; break; } }
+    /* R3-AUDIT cure (proving-ground coincidence): provSkipR3 — the
+       subject component card itself, and any card that CONTAINS the
+       subject chart, cannot be the stray proving card; its rows may
+       carry proving-state words because proving is its subject. */
+    function provSkipR3(card) { return card.classList.contains("gb-comp") || !!card.querySelector(".gb-comp,.chartbox"); }
+    for (var i = 0; i < Math.min(4, cards.length); i++) { if (!provSkipR3(cards[i]) && /being proven|still being proven|proving state/i.test(cards[i].textContent || "")) { prov = cards[i]; break; } }
     if (!prov || !prov.parentNode) return;
     /* R2-CURE (row 5): the subject is the page's NATIVE subject chart
        first, else the injected subject component. compareDocumentPosition
