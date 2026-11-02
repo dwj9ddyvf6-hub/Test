@@ -352,6 +352,26 @@ def build():
          (A03, ["+2.41% vs +0.52%", "+0.61% vs −1.12%",
                 "−0.16%, −0.36%, −1.16%"])]))
 
+    def _horizon_words(pub_, qual_):
+        # Data-driven horizon wording (cure R2-E): graded horizons
+        # report their own counted figures; ungraded horizons quote
+        # the grading record's own line for when grades first land.
+        parts = []
+        for hz, label in (("5d", "5 days"), ("21d", "21 days")):
+            p, q = pub_[hz], qual_[hz]
+            if p.get("state") == "graded":
+                parts.append(
+                    f"At {label}: {p['n_mature']} published calls graded, "
+                    f"{round(p['hit_rate'] * 100):.0f}% rose, averaging "
+                    f"{pct(p['mean'])}; the pass-every-check group: "
+                    f"{q['n_mature']} graded, "
+                    f"{round(q['hit_rate'] * 100):.0f}% rose, averaging "
+                    f"{pct(q['mean'])}.")
+            else:
+                parts.append(
+                    f"The {label} grades are {p.get('line') or 'not yet graded'}.")
+        return " ".join(parts)
+
     # 16 Live board grades (read fresh from the grading record)
     sc = load_json("morgue/output/scorecard.json")
     gen = sc.get("generated_at")
@@ -361,8 +381,22 @@ def build():
     qual = sc["board"]["qualified"]["horizons"]
     if pub["1d"]["state"] != "graded" or qual["1d"]["state"] != "graded":
         fail("scorecard: the 1-day board grades are not in the graded state this page states")
-    if pub["5d"]["state"] != "not_yet_graded" or pub["21d"]["state"] != "not_yet_graded":
-        fail("scorecard: the 5-day or 21-day board grades have landed, so this page's wording is stale")
+    # Cure WEEK-READINESS-R2-20261102-E: the 5-day grades landed on
+    # schedule (22 published calls graded by 2026-11-02) and the old
+    # exact-state pin then refused every run forever. The wording
+    # below is now built from the record's actual horizon states, so
+    # a horizon landing is reported, never a refusal; the fail-closed
+    # shape check is that every horizon is in a state this page can
+    # state honestly (graded with a mature count, or not yet graded).
+    for hz in ("5d", "21d"):
+        for side in (pub, qual):
+            st = side[hz].get("state")
+            if st not in ("graded", "not_yet_graded"):
+                fail(f"scorecard: the {hz} board grades are in a state "
+                     f"this page cannot state ({st})")
+            if st == "graded" and not side[hz].get("n_mature"):
+                fail(f"scorecard: the {hz} board grades say graded "
+                     "with no mature calls behind them")
     p1, q1 = pub["1d"], qual["1d"]
     claims.append({
         "claim": "The board's live published stock calls rise more often than not after 1 day.",
@@ -375,8 +409,7 @@ def build():
                    f"{round(p1['hit_rate'] * 100):.0f}% rose, averaging {pct(p1['mean'])}. "
                    f"The pass-every-check group: {q1['n_mature']} graded, "
                    f"{round(q1['hit_rate'] * 100):.0f}% rose, averaging {pct(q1['mean'])}. "
-                   f"The 5-day grades first land after the October 30, 2026 close and the "
-                   f"21-day grades after the November 23, 2026 close."),
+                   + _horizon_words(pub, qual)),
         "when": f"Grading record run {fmt_day(gen)}",
         "note": None,
     })
@@ -525,8 +558,16 @@ def build():
         fail("studies record: the gap study is not in the graded shape this page states")
     bands = gf["partitions"]["by_band"]
     small, big = bands["<1%"], bands["1-2%"]
-    if small["n"] + big["n"] != gf["n"] or small["fills"] + big["fills"] != gf["fills"]:
+    # Cure WEEK-READINESS-R2-20261102-L: the study record grew a
+    # ">=2%" band (1 case by 2026-10-31), so a two-band sum no
+    # longer adds to the total and refused every run. The split
+    # check now sums every band the record carries, and the
+    # wording below reports the extra band when one exists.
+    if sum(b["n"] for b in bands.values()) != gf["n"] or \
+            sum(b["fills"] for b in bands.values()) != gf["fills"]:
         fail("studies record: the gap study's size split does not add up to its total")
+    extra_bands = [(k, b) for k, b in bands.items()
+                   if k not in ("<1%", "1-2%")]
     claims.append({
         "claim": "Overnight gaps usually fill.",
         "maker": "A common trading saying, measured by our gap study",
@@ -538,7 +579,11 @@ def build():
                    f"({gf['frequency'] * 100:.1f}%). By size: gaps under 1% filled "
                    f"{small['fills']} of {small['n']} ({small['frequency'] * 100:.1f}%), "
                    f"and gaps of 1 to 2% filled only {big['fills']} of {big['n']} "
-                   f"({big['frequency'] * 100:.1f}%)."),
+                   f"({big['frequency'] * 100:.1f}%)."
+                   + "".join(
+                       f" Gaps of {k} filled {b['fills']} of {b['n']} "
+                       f"({b['frequency'] * 100:.1f}%)."
+                       for k, b in extra_bands)),
         "when": f"Study record made {fmt_day(gs['generated_at'])}",
         "note": None,
     })
