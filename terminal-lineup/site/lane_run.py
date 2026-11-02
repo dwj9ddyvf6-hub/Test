@@ -106,7 +106,7 @@ def stamp(lane: str, result: str, slugs, note: str = "") -> str:
 
 def close() -> int:
     code = 0
-    for script in ("enrich_all.py", "refresh_hub.py"):
+    for script in ("enrich_all.py", "refresh_hub.py", "build_grok_index.py", "build_prior_rows.py", "build_mood_history.py"):
         if run(script) != 0:
             code = 1
     return code
