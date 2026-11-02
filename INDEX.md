@@ -2,9 +2,9 @@
 
 Start here. This file is the map of the whole repository for a reader (human or LLM) arriving cold. Its machine-readable twin is [INDEX.json](INDEX.json), generated from the same inventory by [tools/build_repo_index.py](tools/build_repo_index.py).
 
-Total files indexed: 7226
+Total files indexed: 7238
 
-Indexed commit: `d04a62bbc638b467053c93766547830b1c0caea9`. Generated at: 2026-11-02T14:30:37Z. Total size of indexed files (self entries excluded, their sizes are null): 291418245 bytes.
+Indexed commit: `eb20f031eed27f6b3a76686cd032567991575e58`. Generated at: 2026-11-02T15:14:34Z. Total size of indexed files (self entries excluded, their sizes are null): 291689347 bytes.
 
 ## What this repository is
 
@@ -34,7 +34,7 @@ A public library of trading strategies and the desk software around them: strate
 | aster_sleeves | 12 | 22716 | Aster sleeve entry points (thin wrappers over the shared engine commons). |
 | config | 2 | 147573 | Desk configuration. config/sleeves.json is the live roster config mirrored into this repository (336 sleeves, paper trading only). |
 | desk3 | 51 | 432490 | The desk3 sleeve collection and its portfolio branches: the v3 desk engine modules, sleeve modules and portfolio books. |
-| docs | 1207 | 21040116 | Documentation at scale: the strategy catalog data, the current-desk and all-strategies accountings, one algorithm and recreation document per strategy, verification notes, and the research collections under docs/research/. |
+| docs | 1217 | 21290336 | Documentation at scale: the strategy catalog data, the current-desk and all-strategies accountings, one algorithm and recreation document per strategy, verification notes, and the research collections under docs/research/. |
 | educational | 40 | 687776 | The shipyard engines collection (educational/shipyard-engines/): self-contained educational trading engines and their supporting material, kept whole. |
 | engines | 20 | 314478 | Shared engine code: desk3 bridges and enhancements, sleeve commons, the roster config copy and a transport kernel. |
 | indicator | 2 | 8942 | A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/). |
@@ -48,7 +48,7 @@ A public library of trading strategies and the desk software around them: strate
 | research | 10 | 16995531 | Standalone research works: the technical analysis study and practice archive, and the master trader study, in Markdown, PDF, DOCX and ZIP forms. |
 | sleeves | 571 | 5590107 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 270 | 528108 | Strategy cards: one card per catalogued strategy (269 cards), grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json. |
-| terminal-lineup | 2174 | 104893614 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 2176 | 104914496 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 9 | 105111 | Repository-level regression blocker tests. |
 | tools | 2 | 649 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
@@ -91,8 +91,8 @@ A public library of trading strategies and the desk software around them: strate
 ### Terminal lineup
 
 - [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md): the lineup manifest.
-- terminal-lineup/site/ (1915 files): the public tool site; each tool has its own folder with its page and data, and the refresh scripts sit at the top of site/.
-- terminal-lineup/forecast/ (102 files): the forecast engines, their registry, grading and ledger code, and their tests. See also terminal-lineup/FORECAST-ENGINES-30.md.
+- terminal-lineup/site/ (1916 files): the public tool site; each tool has its own folder with its page and data, and the refresh scripts sit at the top of site/.
+- terminal-lineup/forecast/ (103 files): the forecast engines, their registry, grading and ledger code, and their tests. See also terminal-lineup/FORECAST-ENGINES-30.md.
 - terminal-lineup/ root: design documents, bug logs, build progress files and 110 workflow scripts that built the tools.
 - terminal-lineup/oracle/: the oracle provenance record. terminal-lineup/records/: build and search records. terminal-lineup/specs/: specifications.
 
@@ -107,7 +107,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`d04a62bbc638b467053c93766547830b1c0caea9`) is listed in INDEX.json: 7226 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`eb20f031eed27f6b3a76686cd032567991575e58`) is listed in INDEX.json: 7238 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
