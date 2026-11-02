@@ -526,6 +526,15 @@ def build():
         "tool": "Promoted Book",
         "source": SOURCE_WORDS,
         "state": "published",
+        # Honest dateless stamp (cure WEEK-READINESS-R2-20261102-H):
+        # the book records no age for an entry (see age_note), so the
+        # page carries an explicit null with its reason instead of
+        # no date field at all, which read as a census gap.
+        "as_of": None,
+        "as_of_note": ("No single reading date: the book records no "
+                       "age for an entry, so this page is honestly "
+                       "dateless; its study windows are stated on "
+                       "the page."),
         "proving_state": study_state["words"],
         "proving_words": study_state["definition"],
         "counts": {
