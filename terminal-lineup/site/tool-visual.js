@@ -303,17 +303,25 @@
       return windowChange(d, s, "Biggest rises over the last 21 sessions", "Each name's last close against its close 21 sessions earlier, in percent. This is the shortest window this page itself offers.", 21);
     },
     "morning-map": function (d, s) {
-      var idx = (d.indexes || [])[0];
-      if (!idx) return null;
+      /* Cure WEEK-READINESS-R2-20261102-G: the lead used to draw
+         only the first index, and read as an empty chart because a
+         levels ladder has no bars. It now draws one ladder per
+         index on the map (SPY, QQQ and IWM), each with its price
+         marked among its own call wall, flip level and put wall:
+         the subject of the page, drawn from its own data. */
       function val(o) { return o && isNum(o.value) ? o.value : null; }
-      var levels = [
-        { name: (idx.symbol || "") + " call wall", price: val(idx.call_wall) },
-        { name: (idx.symbol || "") + " flip level", price: val(idx.flip) },
-        { name: (idx.symbol || "") + " put wall", price: val(idx.put_wall) }
-      ].filter(function (l) { return isNum(l.price); });
-      if (!levels.length) return null;
-      return VisualKit.ladder({ levels: levels, current: idx.spot, session: s, title: "Where the price sits among the levels",
-        label: "The call wall, the flip level and the put wall for the first index on the map, with its price marked in place. Sizes are not published on this page, so no bars are drawn." });
+      var html = "";
+      (d.indexes || []).forEach(function (idx) {
+        var levels = [
+          { name: (idx.symbol || "") + " call wall", price: val(idx.call_wall) },
+          { name: (idx.symbol || "") + " flip level", price: val(idx.flip) },
+          { name: (idx.symbol || "") + " put wall", price: val(idx.put_wall) }
+        ].filter(function (l) { return isNum(l.price); });
+        if (!levels.length) return;
+        html += VisualKit.ladder({ levels: levels, current: idx.spot, session: s, title: "Where " + (idx.symbol || "the index") + " sits among its levels",
+          label: "The call wall, the flip level and the put wall for " + (idx.symbol || "this index") + ", with its price marked in place. This page publishes levels, not sizes, so the chart is a ladder of levels, not bars." });
+      });
+      return html || null;
     },
     "odds-cards": function (d, s) {
       return ranked((d.families || []).map(function (f) {
