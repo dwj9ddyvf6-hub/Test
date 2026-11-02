@@ -37,11 +37,33 @@ def load_sessions(store_path):
 def append_session(store_path, session, values):
     """Append one dated snapshot of a page's charted subject values
     and return the full kept list, oldest first. See the module
-    docstring for the one identical-repeat guard."""
+    docstring for the one identical-repeat guard.
+
+    Same-session replacement (cure WEEK-READINESS-R2-20261102-M):
+    a session is one entry, never two. When a refresh rebuilds the
+    same session's card (the Morning Map's card of record for a
+    session is republished intraday with revised levels), the new
+    snapshot REPLACES that session's entry, matching the card-of-
+    record convention (last card per day wins) that the wall
+    engines already use. Before this cure the store stacked two
+    entries both dated 2026-10-30 with different flips, so the
+    record chart drew one session twice with two truths."""
     sessions = load_sessions(store_path)
     entry = {"session": session, "values": values}
-    if not sessions or sessions[-1] != entry:
-        sessions.append(entry)
+    healed = []
+    placed = False
+    for kept in sessions:
+        if isinstance(kept, dict) and kept.get("session") == session:
+            if not placed:
+                healed.append(entry)
+                placed = True
+            # any further entry for this session is a pre-cure
+            # duplicate and is dropped, healing the store
+            continue
+        healed.append(kept)
+    if not placed:
+        healed.append(entry)
+    sessions = healed
     os.makedirs(os.path.dirname(os.path.abspath(store_path)),
                 exist_ok=True)
     tmp = store_path + ".tmp"
