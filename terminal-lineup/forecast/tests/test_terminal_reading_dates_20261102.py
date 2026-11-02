@@ -87,6 +87,12 @@ def test_skewlens_live_reading_date_is_modelled_date():
         assert data["as_of"] == data["modelled_freshest_date"]
 
 
+def test_completionclock_wall_register_is_a_floor_not_exact():
+    src = (SITE / "refresh_completionclock.py").read_text()
+    assert "if wc_tests < 12 or wc_broke < 4:" in src
+    assert "wc_tests != 12" not in src
+
+
 def test_hub_static_study_class_includes_finished_studies():
     src = (SITE / "refresh_hub.py").read_text()
     m = re.search(r"STATIC_STUDY = \{(.*?)\}", src, re.S)
