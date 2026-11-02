@@ -17,6 +17,10 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: probability, over to weekly expiry, graded at expiry close. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 26 weekly expiries, its Brier is no better than the uncorrected IV POP's. It counts as proven at 26 weekly expiries.",
+    "summary": "For SPY and QQQ, attach an honest chance of finishing above each strike to this week's expiry, and grade every strike when the week ends."
+  },
   "feed": "tastytrade_chain_snapshot",
   "kill_criterion": "This tool is retired if, after 26 weekly expiries have been graded, its score for how close its chances were is no better than the score of the market's own uncorrected chances recorded beside them.",
   "live": {
@@ -55,6 +59,80 @@
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "131 graded forecasts of 549 recorded on the ledger (mean scores: brier 0.3256, log_loss 0.9259); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 549,
+        "graded_forecasts": 131,
+        "recorded_on": "2026-11-02",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_05",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "as_of",
+        "calibration_attestation",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "kill_criterion",
+        "live",
+        "method",
+        "price_basis",
+        "price_history_as_of",
+        "provenance",
+        "record_surface",
+        "scope_line",
+        "self_test",
+        "source",
+        "state",
+        "subject_chart",
+        "surfaces",
+        "thin_cell_rule",
+        "tool",
+        "waiting",
+        "what_exists"
+      ]
+    },
+    "feed": "tastytrade_chain_snapshot",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_05",
+      "forecasts": 549,
+      "grades": 131,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 549 forecasts are on record and 131 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "tastytrade_chain_snapshot",
+      "price_basis": "snapshot",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 2,
+          "path": "/method"
+        }
+      ],
+      "total_items_counted": 2
+    },
+    "version": 1
+  },
   "scope_line": "A win rate is not an edge. This page states the chance of finishing above a strike; it says nothing about how much a trade would win or lose, or whether any trade pays.",
   "self_test": {
     "oracle_cases": 8,
@@ -65,6 +143,449 @@
   },
   "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-10-30).",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "curve",
+      "label": "Honest chance percent by strike.",
+      "points": [
+        {
+          "x": "734.0",
+          "y": 97.8
+        },
+        {
+          "x": "735.0",
+          "y": 97.4
+        },
+        {
+          "x": "736.0",
+          "y": 96.9
+        },
+        {
+          "x": "737.0",
+          "y": 96.3
+        },
+        {
+          "x": "738.0",
+          "y": 95.7
+        },
+        {
+          "x": "739.0",
+          "y": 94.5
+        },
+        {
+          "x": "740.0",
+          "y": 93.3
+        },
+        {
+          "x": "741.0",
+          "y": 91.6
+        },
+        {
+          "x": "742.0",
+          "y": 90.9
+        },
+        {
+          "x": "743.0",
+          "y": 89.6
+        },
+        {
+          "x": "744.0",
+          "y": 88.5
+        },
+        {
+          "x": "745.0",
+          "y": 87.5
+        },
+        {
+          "x": "746.0",
+          "y": 85.7
+        },
+        {
+          "x": "747.0",
+          "y": 84.1
+        },
+        {
+          "x": "748.0",
+          "y": 82.0
+        },
+        {
+          "x": "749.0",
+          "y": 79.3
+        },
+        {
+          "x": "750.0",
+          "y": 76.8
+        },
+        {
+          "x": "751.0",
+          "y": 74.1
+        },
+        {
+          "x": "752.0",
+          "y": 72.0
+        },
+        {
+          "x": "753.0",
+          "y": 69.6
+        },
+        {
+          "x": "754.0",
+          "y": 67.1
+        },
+        {
+          "x": "755.0",
+          "y": 63.1
+        },
+        {
+          "x": "756.0",
+          "y": 59.7
+        },
+        {
+          "x": "757.0",
+          "y": 56.0
+        },
+        {
+          "x": "758.0",
+          "y": 53.7
+        },
+        {
+          "x": "759.0",
+          "y": 51.0
+        },
+        {
+          "x": "760.0",
+          "y": 48.3
+        },
+        {
+          "x": "761.0",
+          "y": 44.4
+        },
+        {
+          "x": "762.0",
+          "y": 40.6
+        },
+        {
+          "x": "763.0",
+          "y": 37.0
+        },
+        {
+          "x": "764.0",
+          "y": 34.5
+        },
+        {
+          "x": "765.0",
+          "y": 31.6
+        },
+        {
+          "x": "766.0",
+          "y": 28.7
+        },
+        {
+          "x": "767.0",
+          "y": 25.0
+        },
+        {
+          "x": "768.0",
+          "y": 22.5
+        },
+        {
+          "x": "769.0",
+          "y": 20.4
+        },
+        {
+          "x": "770.0",
+          "y": 18.4
+        },
+        {
+          "x": "771.0",
+          "y": 16.3
+        },
+        {
+          "x": "772.0",
+          "y": 14.4
+        },
+        {
+          "x": "773.0",
+          "y": 12.7
+        },
+        {
+          "x": "774.0",
+          "y": 10.9
+        },
+        {
+          "x": "775.0",
+          "y": 9.7
+        },
+        {
+          "x": "776.0",
+          "y": 8.4
+        },
+        {
+          "x": "777.0",
+          "y": 7.7
+        },
+        {
+          "x": "778.0",
+          "y": 7.0
+        },
+        {
+          "x": "779.0",
+          "y": 6.6
+        },
+        {
+          "x": "780.0",
+          "y": 6.0
+        },
+        {
+          "x": "781.0",
+          "y": 5.3
+        }
+      ],
+      "source": "surfaces[0].rows[].p_pct",
+      "title": "Chance of finishing above each strike, SPY"
+    },
+    "record": {
+      "kind": "curve",
+      "label": "The second surface on record, chance percent by strike.",
+      "points": [
+        {
+          "x": "645.0",
+          "y": 98.2
+        },
+        {
+          "x": "650.0",
+          "y": 97.2
+        },
+        {
+          "x": "655.0",
+          "y": 94.8
+        },
+        {
+          "x": "660.0",
+          "y": 91.7
+        },
+        {
+          "x": "665.0",
+          "y": 87.3
+        },
+        {
+          "x": "670.0",
+          "y": 82.2
+        },
+        {
+          "x": "675.0",
+          "y": 74.1
+        },
+        {
+          "x": "676.0",
+          "y": 72.9
+        },
+        {
+          "x": "677.0",
+          "y": 70.9
+        },
+        {
+          "x": "678.0",
+          "y": 69.3
+        },
+        {
+          "x": "679.0",
+          "y": 66.8
+        },
+        {
+          "x": "680.0",
+          "y": 64.9
+        },
+        {
+          "x": "681.0",
+          "y": 62.6
+        },
+        {
+          "x": "682.0",
+          "y": 60.6
+        },
+        {
+          "x": "683.0",
+          "y": 58.7
+        },
+        {
+          "x": "684.0",
+          "y": 56.8
+        },
+        {
+          "x": "685.0",
+          "y": 54.5
+        },
+        {
+          "x": "686.0",
+          "y": 52.9
+        },
+        {
+          "x": "687.0",
+          "y": 50.8
+        },
+        {
+          "x": "688.0",
+          "y": 49.2
+        },
+        {
+          "x": "689.0",
+          "y": 47.4
+        },
+        {
+          "x": "690.0",
+          "y": 45.3
+        },
+        {
+          "x": "691.0",
+          "y": 42.4
+        },
+        {
+          "x": "692.0",
+          "y": 40.2
+        },
+        {
+          "x": "693.0",
+          "y": 38.2
+        },
+        {
+          "x": "694.0",
+          "y": 35.4
+        },
+        {
+          "x": "695.0",
+          "y": 33.3
+        },
+        {
+          "x": "696.0",
+          "y": 30.8
+        },
+        {
+          "x": "697.0",
+          "y": 29.1
+        },
+        {
+          "x": "698.0",
+          "y": 27.3
+        },
+        {
+          "x": "699.0",
+          "y": 25.7
+        },
+        {
+          "x": "700.0",
+          "y": 24.2
+        },
+        {
+          "x": "701.0",
+          "y": 22.7
+        },
+        {
+          "x": "702.0",
+          "y": 21.0
+        },
+        {
+          "x": "703.0",
+          "y": 19.3
+        },
+        {
+          "x": "704.0",
+          "y": 18.1
+        },
+        {
+          "x": "705.0",
+          "y": 16.7
+        },
+        {
+          "x": "706.0",
+          "y": 15.7
+        },
+        {
+          "x": "707.0",
+          "y": 14.8
+        },
+        {
+          "x": "708.0",
+          "y": 13.8
+        },
+        {
+          "x": "709.0",
+          "y": 12.9
+        },
+        {
+          "x": "710.0",
+          "y": 11.8
+        },
+        {
+          "x": "711.0",
+          "y": 11.1
+        },
+        {
+          "x": "712.0",
+          "y": 10.3
+        },
+        {
+          "x": "713.0",
+          "y": 9.5
+        },
+        {
+          "x": "714.0",
+          "y": 8.8
+        },
+        {
+          "x": "715.0",
+          "y": 8.4
+        },
+        {
+          "x": "716.0",
+          "y": 7.9
+        },
+        {
+          "x": "717.0",
+          "y": 6.8
+        },
+        {
+          "x": "718.0",
+          "y": 6.5
+        },
+        {
+          "x": "719.0",
+          "y": 6.2
+        },
+        {
+          "x": "720.0",
+          "y": 5.4
+        },
+        {
+          "x": "721.0",
+          "y": 4.7
+        },
+        {
+          "x": "722.0",
+          "y": 4.4
+        },
+        {
+          "x": "723.0",
+          "y": 4.0
+        },
+        {
+          "x": "724.0",
+          "y": 3.7
+        },
+        {
+          "x": "725.0",
+          "y": 3.5
+        },
+        {
+          "x": "726.0",
+          "y": 3.3
+        }
+      ],
+      "source": "surfaces[1].rows[].p_pct",
+      "title": "Chance of finishing above each strike, QQQ"
+    },
+    "version": 1
+  },
   "surfaces": [
     {
       "contracts_on_record": 12318,
