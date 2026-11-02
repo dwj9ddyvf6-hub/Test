@@ -5,17 +5,19 @@ Mirrors the included-file set of the original one-time save: site/**,
 forecast/** (minus the live ledger), specs/**, oracle/**, records/**,
 root Markdown files and root workflow scripts, under the repo prefix
 terminal-lineup/. Excluded: the deep_store and psychology-engine trees,
-caches, log files, lane state, runtime artifacts, data.json files over
-5 MB, and any file over 5 MB. Deletions are left alone.
+caches, log files, lane state, runtime artifacts, and any file over
+5 MB, except data.json, whose cap is 50 MB (R3 cure, 2026-11-02: the
+5 MB cap silently unpublished eight pages whose subject IS their
+data.json; the pages fetch that file by name, so a data.json under
+the data cap publishes whole, never trimmed). Deletions are left alone.
 
 For each included file the local git blob SHA is compared with the repo
 blob SHA from a fresh recursive tree fetch; matches are skipped. Changed
 authored text files (.py/.md/.js) redact first-name matches in memory
 using the existing private PII gate pattern (neutral owner wording,
 capitalization preserved at sentence and string starts); local files are
-never modified. Other private fields, including surnames and email
-addresses, remain subject to the fail-closed gate and cause a file to be
-skipped if still present. The three cure-phase unfixable files (functional EDGAR
+never modified. Other private fields remain subject to the fail-closed
+gate and cause a file to be skipped if still present. The three cure-phase unfixable files (functional EDGAR
 declaration strings and functional fixture data) are never sanitized or
 uploaded. Any candidate that still matches a gate pattern after
 sanitization (third-party data, functional strings) is skipped and
@@ -58,6 +60,7 @@ PREFIX = "terminal-lineup/"
 SYNC_LOG = Path(os.path.expanduser(
     "~/workspace/research_notes/test-repo-index-20261031/SYNC-LOG.md"))
 FIVE_MB = 5 * 1024 * 1024
+DATA_JSON_CAP = 50 * 1024 * 1024  # R3 cure: see header docstring
 AUTHORED_EXTS = {".py", ".md", ".js"}
 UNFIXABLE = {
     "site/build_xbrl_route.py",
@@ -147,9 +150,9 @@ def included_files() -> list:
                 continue
             if rel == "forecast/ledger.jsonl":
                 continue
-            if p.name == "data.json" and size > FIVE_MB:
+            if p.name == "data.json" and size > DATA_JSON_CAP:
                 continue
-            if size > FIVE_MB:
+            if p.name != "data.json" and size > FIVE_MB:
                 continue
             included.append(rel)
 
@@ -179,8 +182,15 @@ def fetch_head_and_tree():
 
 def put_file(repo_path: str, data: bytes, message: str,
              existing_sha: str | None) -> str:
+    # Avoid GitHub's account-default email when publishing public commits.
+    identity = {
+        "name": "Repository Maintainer",
+        "email": "316344525+dwj9ddyvf6-hub@users.noreply.github.com",
+    }
     payload = {"message": message,
-               "content": base64.b64encode(data).decode()}
+               "content": base64.b64encode(data).decode(),
+               "author": dict(identity),
+               "committer": dict(identity)}
     if existing_sha:
         payload["sha"] = existing_sha
     try:
@@ -201,6 +211,30 @@ def put_file(repo_path: str, data: bytes, message: str,
     return resp.get("content", {}).get("sha")
 
 
+INSIDER_WIRE_DATA = "site/insider-wire/data.json"
+
+
+def _insider_wire_first_names_are_third_party(text: str) -> bool:
+    """True only when every first_name occurrence in the insider-wire
+    data sits inside a multiword proper name (a capitalised name token
+    adjacent within the same quoted string), i.e. a third-party
+    insider's full name on a public SEC filing, never a standalone
+    reference. Any other shape fails closed."""
+    for m in _FIRST_NAME_RX.finditer(text):
+        lo = text.rfind('"', 0, m.start())
+        hi = text.find('"', m.end())
+        if lo < 0 or hi < 0:
+            return False
+        value = text[lo + 1:hi]
+        tokens = [t for t in re.split(r"[^A-Za-z.'-]+", value) if t]
+        if len(tokens) < 2:
+            return False
+        if not any(t[0].isupper() and not _FIRST_NAME_RX.search(t)
+                   for t in tokens):
+            return False
+    return True
+
+
 def candidate_for(rel: str, raw: bytes):
     """Return (candidate_bytes, skip_reason). Exactly one is set."""
     if rel in UNFIXABLE:
@@ -217,8 +251,19 @@ def candidate_for(rel: str, raw: bytes):
             if hits:
                 return None, f"gate patterns remain after sanitization: {hits}"
             return cand.encode("utf-8"), None
-    hits = gate_hits(raw.decode("utf-8", errors="replace"))
+    text = raw.decode("utf-8", errors="replace")
+    hits = gate_hits(text)
     if hits:
+        # Eighth one-file gate exception (pii_gate.FILE_EXCEPTIONS,
+        # 2026-11-02): insider-wire's data.json is third-party public
+        # SEC Form 4 data whose only hit is first_name, each time as
+        # part of a third-party insider's full name. The waiver here
+        # mirrors the gate's: this exact file, first_name only, and
+        # only while every occurrence is a multiword proper name and
+        # no other pattern hits. Anything else still skips.
+        if (rel == INSIDER_WIRE_DATA and hits == ["first_name"]
+                and _insider_wire_first_names_are_third_party(text)):
+            return raw, None
         return None, f"gate patterns in non-authored file: {hits}"
     return raw, None
 
