@@ -56,6 +56,7 @@ hub structure is not the expected card grid.
 """
 
 import json
+import os
 import re
 import sys
 from datetime import date, datetime, timedelta
@@ -68,6 +69,19 @@ except ImportError:  # refresh stays runnable standalone
 
 HERE = Path(__file__).resolve().parent
 HUB = HERE / "index.html"
+
+
+def _atomic_write(path: Path, text: str) -> None:
+    """Write via a temp file in the same directory + rename
+    (HUB-BLANK-20261102 cure). An in-place write_text truncates the
+    target first, so a writer killed mid-write (memory-saturation
+    window, 2026-11-02 17:58Z) left the hub at 0 bytes and the sync
+    published a blank page. With temp + os.replace the target is
+    only ever swapped for a complete file; a killed writer leaves
+    at most a stray .atomic-tmp, which the sync excludes by name."""
+    tmp = path.with_name(path.name + ".atomic-tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
 
 DATE_FIELDS = ("as_of_session", "session", "as_of", "recorded_on",
                "published_at_utc", "generated_at_utc")
@@ -576,10 +590,9 @@ def main() -> int:
         print("FAILURES: " + "; ".join(failures))
         return 1
     if out != original:
-        HUB.write_text(out, encoding="utf-8")
-    memory_path.write_text(json.dumps(saved_chips, indent=1,
-                                      sort_keys=True) + "\n",
-                           encoding="utf-8")
+        _atomic_write(HUB, out)
+    _atomic_write(memory_path, json.dumps(saved_chips, indent=1,
+                                          sort_keys=True) + "\n")
     # Final census (D-R1-15): one entry per finished card, its
     # final chip word, counted from the same cards the count
     # line above was counted from, so the two can never disagree.
@@ -589,9 +602,8 @@ def main() -> int:
         chip = re.search(r'class="chip ([a-z]+)"', card)
         if m and chip:
             census[m.group(1)] = chip.group(1)
-    census_path.write_text(json.dumps(census, indent=1,
-                                      sort_keys=True) + "\n",
-                           encoding="utf-8")
+    _atomic_write(census_path, json.dumps(census, indent=1,
+                                          sort_keys=True) + "\n")
     print(f"hub refreshed: {total} cards; live {counts['live']}, "
           f"waiting {counts['waiting']}, not yet graded "
           f"{counts['ungraded']}, stale {counts['stale']}"
