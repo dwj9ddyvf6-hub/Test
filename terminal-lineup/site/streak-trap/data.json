@@ -17,6 +17,10 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: probability and distribution, over next 30 outcomes for the displayed figure. It is graded on how often its stated ranges contain what actually happens, checked against the width of those ranges. It would be ended if over the first 10 matured triggers, shrinkage forecasts are not better calibrated than a no-change forecast. It counts as proven at first 10 matured triggers.",
+    "summary": "Stake a dated prediction on what every young headline number on this site will read after its next 30 outcomes land, before anyone quotes it at face value."
+  },
   "feed": "forecast_ledger",
   "grades_appended_this_run": 0,
   "how_words": "For each figure: take its long-run family rate, measure how wide the honest range around the young figure is, and let that width decide how much weight the long-run rate gets. A very young figure gets pulled a long way; an older one barely moves. The range staked is the middle 80% of where that arithmetic puts the figure after 30 more outcomes, and the chance printed beside it is the chance the figure moves at least one third of the way back toward its long-run rate. Where no long-run record exists yet for a family, the neutral 50% is used and stamped as neutral.",
@@ -66,6 +70,78 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "proving_state": "Still being proven",
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "4 graded forecasts of 16 recorded on the ledger (mean scores: centre_abs_error 0.1353, coverage_hit 0.0000, move_brier 0.4651, rival_centre_abs_error 0.1516, rival_move_brier 1.0000, width 0.1923); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 16,
+        "graded_forecasts": 4,
+        "recorded_on": "2026-11-02",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_21",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-29",
+      "keys_present": [
+        "as_of",
+        "calibration_attestation",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "grades_appended_this_run",
+        "how_words",
+        "idea_words",
+        "issuance_words",
+        "issued_this_run",
+        "kill_words",
+        "live_record",
+        "not_triggering",
+        "price_basis",
+        "provenance",
+        "proving_state",
+        "record_surface",
+        "self_test",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_cell_words",
+        "tool",
+        "triggers",
+        "void_words"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_21",
+      "forecasts": 16,
+      "grades": 4,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 16 forecasts are on record and 4 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
   "self_test": {
     "live_record_untouched": true,
     "registered_centres_recomputed": 16,
@@ -75,6 +151,169 @@
   },
   "source": "the published records of the Wall Check, The Record and the Replication Wire pages, the Grade-A Board's completed re-check cycle, and the shared public forecast record",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Centre chance percent per family.",
+      "rows": [
+        {
+          "name": "Wall and flip respect",
+          "score": 68.3
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 68.3
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 60.4
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 63.5
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 63.5
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 63.5
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 63.5
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 63.5
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 63.5
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 63.5
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 63.5
+        },
+        {
+          "name": "Wall and flip respect",
+          "score": 36.5
+        },
+        {
+          "name": "Board calls, next-session rise",
+          "score": 62.0
+        },
+        {
+          "name": "Board calls, next-session rise",
+          "score": 63.3
+        },
+        {
+          "name": "Checked claims holding up",
+          "score": 14.1
+        },
+        {
+          "name": "Checked claims holding up",
+          "score": 47.2
+        }
+      ],
+      "source": "triggers[].centre_pct",
+      "title": "Each streak reading, as a chance"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Base percent per family, centre beside it.",
+      "rows": [
+        {
+          "coverage": "centre 68.3 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 68.3 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 60.4 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 63.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 63.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 63.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 63.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 63.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 63.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 63.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 63.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 36.5 percent",
+          "name": "Wall and flip respect",
+          "score": 50.0
+        },
+        {
+          "coverage": "centre 62.0 percent",
+          "name": "Board calls, next-session rise",
+          "score": 50.46
+        },
+        {
+          "coverage": "centre 63.3 percent",
+          "name": "Board calls, next-session rise",
+          "score": 50.46
+        },
+        {
+          "coverage": "centre 14.1 percent",
+          "name": "Checked claims holding up",
+          "score": 6.54
+        },
+        {
+          "coverage": "centre 47.2 percent",
+          "name": "Checked claims holding up",
+          "score": 41.49
+        }
+      ],
+      "source": "triggers[].base_pct",
+      "title": "Each streak reading against its base"
+    },
+    "version": 1
+  },
   "thin_cell_words": "The thin rule, on this page above all: nothing here is graded on a partial count. A figure with some of its next 30 outcomes in is still open, and its count is printed as open.",
   "tool": "Streak Trap",
   "triggers": [
