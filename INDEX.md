@@ -2,9 +2,9 @@
 
 Start here. This file is the map of the whole repository for a reader (human or LLM) arriving cold. Its machine-readable twin is [INDEX.json](INDEX.json), generated from the same inventory by [tools/build_repo_index.py](tools/build_repo_index.py).
 
-Total files indexed: 6804
+Total files indexed: 6805
 
-Indexed commit: `8a359ccbe2a4a3204b5d5e13ca7193d75b6069f7`. Generated at: 2026-11-02T06:15:36Z. Total size of indexed files (self entries excluded, their sizes are null): 265475218 bytes.
+Indexed commit: `2ddf641b01c34f04ca8632157b6d2b9b522f510f`. Generated at: 2026-11-02T07:14:46Z. Total size of indexed files (self entries excluded, their sizes are null): 265544009 bytes.
 
 ## What this repository is
 
@@ -46,7 +46,7 @@ A public library of trading strategies and the desk software around them: strate
 | research | 9 | 16994663 | Standalone research works. Home of the technical analysis study and practice archive (Markdown, PDF, DOCX and ZIP forms of the same work). |
 | sleeves | 570 | 5589404 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 269 | 527337 | Strategy cards: one card per catalogued strategy, grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json; they are not repeated in this prose map. |
-| terminal-lineup | 1801 | 80769981 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 1802 | 80838772 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 8 | 104508 | Repository-level regression blocker tests. |
 | tools | 1 | 0 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
@@ -103,7 +103,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`8a359ccbe2a4a3204b5d5e13ca7193d75b6069f7`) is listed in INDEX.json: 6804 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`2ddf641b01c34f04ca8632157b6d2b9b522f510f`) is listed in INDEX.json: 6805 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
