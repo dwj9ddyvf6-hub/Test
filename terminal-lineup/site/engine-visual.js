@@ -71,7 +71,7 @@
       if (!Array.isArray(names) || !names.length || !names[0].horizons) return null;
       var hz = names[0].horizons[0];
       var items = (hz.bands || []).map(function (b) {
-        return { label: names[0].name || "Index", low: b.lower, high: b.upper, current: names[0].close };
+        return { label: (names[0].name || "Index") + " " + b.level + " percent band", low: b.lower, high: b.upper, current: names[0].close };
       });
       if (!items.length) return null;
       return VisualKit.band({ items: items, session: s, title: "The latest band, drawn to scale",
