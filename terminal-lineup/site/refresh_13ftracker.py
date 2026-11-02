@@ -440,6 +440,11 @@ def build():
     data = {
         "tool": "13F Tracker",
         "state": "on_record",
+        # Canonical headline date (cure WEEK-READINESS-R2-20261102-H):
+        # the freshest filing date among the holders on record, so
+        # the page and hub read one true date instead of none.
+        "as_of": max((h.get("filed") or "" for h in out_holders),
+                     default="") or None,
         "current_period": current_period,
         "prior_period": prior_period,
         "holders_on_record": len(cur),
