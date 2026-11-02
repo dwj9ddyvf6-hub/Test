@@ -16,6 +16,10 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: direction (cohort), over 5 sessions. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if after 80 fires, the interaction mean is zero or positive, or no better than short volume alone. This is a cohort fade forecast, never a short book: A16 killed shorting picked names after borrow costs. It counts as proven at 80 fires.",
+    "summary": "Warn when a popular flow score looks bullish only because of the trades it leaves out, and short selling is heavy at the same time."
+  },
   "feed": "forecast_ledger",
   "forecast": {
     "companion_claim": "Companion claim, recorded the same way: the middle gain of the largest-gap group alone will be below zero over the same 5 trading days.",
@@ -204,6 +208,83 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "published_at_utc": "2026-10-30T20:47:07.178172+00:00",
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (10 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 10,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-11-02",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_09",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "calibration_attestation",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "forecast",
+        "history",
+        "kill_criterion",
+        "live",
+        "panel_last_session",
+        "price_basis",
+        "provenance",
+        "published_at_utc",
+        "record_surface",
+        "short_volume_route",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_rule",
+        "today",
+        "tool",
+        "universe"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_09",
+      "forecasts": 10,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 10 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 4,
+          "path": "/history"
+        },
+        {
+          "items": 4,
+          "path": "/history/sessions"
+        }
+      ],
+      "total_items_counted": 8
+    },
+    "version": 1
+  },
   "short_volume_route": {
     "not_used": [
       "The Short Volume Ledger page's own store: it has stored 0 days, so it supplies nothing.",
@@ -214,6 +295,52 @@
   },
   "source": "The daily options-print tape summaries for the three big index funds, and the short-sale share of each day's volume from the FINRA off-exchange daily file as republished in the morning map record",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Score gap (buys only against all prints) per fund, short share beside it.",
+      "rows": [
+        {
+          "coverage": "short share 0.3919",
+          "name": "SPY",
+          "score": -0.5811
+        },
+        {
+          "coverage": "short share 0.6012",
+          "name": "QQQ",
+          "score": -0.1505
+        },
+        {
+          "coverage": "short share 0.9191",
+          "name": "IWM",
+          "score": -0.628
+        }
+      ],
+      "source": "today.names[].gap",
+      "title": "The intake bias itself, per fund"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Score gap per fund in the latest history session.",
+      "rows": [
+        {
+          "name": "SPY",
+          "score": 0.4773
+        },
+        {
+          "name": "QQQ",
+          "score": 0.7119
+        },
+        {
+          "name": "IWM",
+          "score": -0.4342
+        }
+      ],
+      "source": "history.sessions[].names[].gap",
+      "title": "The bias on 2026-10-29"
+    },
+    "version": 1
+  },
   "thin_rule": "Below 30 graded, counts only: no percentage and no score is drawn from a handful of tests.",
   "today": {
     "bias_only": [
