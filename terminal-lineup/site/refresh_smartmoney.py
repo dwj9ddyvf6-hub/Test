@@ -533,6 +533,9 @@ def build():
     data = {
         "tool": "Smart Money Tracker",
         "state": "on_record",
+        # Canonical headline date (cure WEEK-READINESS-R2-20261102-H):
+        # the last filing date of the current period on record.
+        "as_of": cur_filed[-1] if cur_filed else None,
         "proving_state": proving_state,
         "proving_definition": proving_definition,
         "current_period": current_period,
