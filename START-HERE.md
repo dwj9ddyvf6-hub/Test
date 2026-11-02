@@ -44,7 +44,7 @@ Counts are files (blobs) at the index commit named in INDEX.md, regenerated as p
 | indicator | 2 | A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/). |
 | integration | 328 | Integration adapters that wire each sleeve into the desk runner, plus the wiring guide. |
 | laz_sleeves | 11 | Lazarus sleeve entry points (thin wrappers over the shared engine commons). |
-| master | 75 | The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. |
+| master | 75 | The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. Caution: the hourly mirror sync owns master/ wholesale and rewrites it entire, so master/AREA.md is best-effort and may be overwritten or removed by the mirror; the durable description of master/ lives in START-HERE.md, INDEX.md and ROADMAP.md. |
 | packages | 1928 | Whole packages contributed by the desk's builders, grouped by author (ausar, claude, grokbot), kept whole rather than cherry-picked. |
 | pine | 2 | Pine Script sources (the BB/RSI divergence indicator for TradingView). |
 | proof | 23 | Install proof records: one JSON receipt per installed sleeve under proof/install/. |
@@ -55,6 +55,18 @@ Counts are files (blobs) at the index commit named in INDEX.md, regenerated as p
 | terminal-lineup | 2174 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 9 | Repository-level regression blocker tests. |
 | tools | 2 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
+
+## Dispersed collection: Tensor
+
+Tensor has no single home in this repository: its material is dispersed by design across six areas, and no folder contains all of it. The homes are:
+
+- Sleeve code: the 30 tensor modules at the top of sleeves/ (the aster_tensor_* and aster_r19_tensor_* families, plus tensor_swing.py and tensor_red_dip.py), including the D20 pair, sleeves/aster_tensor_d20_tensor.py and sleeves/aster_tensor_d20_pv.py. More tensor code sits under sleeves/tensor_research/ (the tensor feed library), at sleeves/midna/midna_tensor.py, and inside family folders under sleeves/.
+- Adapters: adapters3/ holds the matching Aster adapter module for each tensor sleeve (30 files, same file stems as the sleeves), and integration/ holds the matching *_adapter.py wiring module for each (30 files).
+- Documents: 86 tensor documents under docs/: the ASTER_TENSOR_* algorithm and recreation documents (48 files covering the aster_tensor family, the D20 documents among them), docs/D20TENSOR-RECREATE.md, and the R19_TENSOR_*, GRIFFITH_TENSOR_*, MK_CREATIVETENSOR*, QR_TENSOR_*, TENSOR_SWING and TENSOR_RED_DIP recreation documents.
+- Strategy cards: the 28 tensor cards under strategies/, including the strategies/tensor_research/ family folder.
+- Packages: tensor material also sits inside whole packages under packages/ (155 path hits, mostly the Ausar Aster packages).
+
+To enumerate all of it, search INDEX.json by the path fragment "tensor" (377 hits at the indexed commit named in INDEX.md). The search returns the pile; this entry is the routing: start from the sleeve's row in docs/SLEEVES.md, then read the sleeve, its adapters3/ and integration/ adapters, and its docs/ document pair.
 
 ## Where to go next
 
