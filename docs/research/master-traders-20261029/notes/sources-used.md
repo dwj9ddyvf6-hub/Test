@@ -1,0 +1,3 @@
+Sources consulted 2026-10-28/29 via web search, for learning methods (not grading):
+Minervini Trend Template, Kell Cycle, Qullamaggie breakouts/EP, O'Neil CAN SLIM, Livermore, Darvas, Weinstein, Druckenmiller, Soros, Tudor Jones, Schwartz, Kovner, Robertson, Bacon, Thorp/Kelly, Simons/Medallion, Asness/AQR trend, McLean-Pontiff (used here for how quant practitioners think about decay/crowding in practice), CBOE PUT/BXM, VRP Bakshi-Kapadia, Taleb/Universa, Van Tharp R, LTCM/Niederhoffer as cautionary teaching stories in risk chapters (as the greats themselves use them), Zanger, David Ryan, Saliba, McMillan, Augen, dispersion, 0DTE/GEX, Shaw, Arnott, Schwager themes.
+Full URLs are cited inline in report.md.
