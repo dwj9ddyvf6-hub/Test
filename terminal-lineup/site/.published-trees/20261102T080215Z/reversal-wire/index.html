@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reversal Wire: the reversal-shaped pattern labels, kept as a dated wire</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --ok-bg:#e9f5ec; --ok-line:#9cc7a5; --ok-ink:#1e5c31;
+    --yet-bg:#eef1f5; --yet-line:#c3cedb; --yet-ink:#43536a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .labelsline{background:var(--card);border:1px solid var(--line);border-radius:14px;
+              padding:16px 20px;font-size:15.5px;margin:0 0 18px;max-width:52em}
+  .state{display:inline-block;border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;
+         background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);margin:0 0 6px}
+  .statedef{font-size:14.5px;color:var(--soft);max-width:46em;margin:0 0 20px}
+  .counts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 10px}
+  .count{border-radius:10px;padding:10px 14px;font-size:15px;border:1px solid var(--line);background:var(--card)}
+  .count strong{font-size:19px}
+  .note{font-size:14.5px;color:var(--soft);margin:0 0 6px;max-width:52em}
+  h2.section{font-size:21px;margin:30px 0 6px}
+  h3.kind{font-size:17px;margin:22px 0 4px}
+  .kindwords{font-size:14.5px;color:var(--soft);max-width:46em;margin:0 0 10px}
+  .entries{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+  .entry{background:var(--card);border:1px solid var(--line);border-radius:10px;
+         padding:8px 12px;font-size:14.5px}
+  .entry strong{font-size:15px}
+  .entry .lab{display:block;color:var(--soft);font-size:13.5px}
+  .nodata{background:var(--yet-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  .receipt{font-size:13.5px;color:var(--faint);margin:26px 0 0;max-width:52em}
+  footer{margin-top:34px;font-size:14px;color:var(--soft)}
+  footer a{color:var(--accent)}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Reversal Wire</h1>
+    <p class="job">One job: keep the reversal-shaped pattern labels from the published bar-pattern record, hammers, shooters and failed patterns, as a dated wire you can read session by session.</p>
+    <p class="free">Free. No paywall, no signup, no login, nothing for sale.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta"></p>
+
+  <p class="labelsline">These are pattern labels from a published rule system, kept and shown as labels. They are not calls to act: a label names the shape a name's bar showed on the day, and nothing on this page says what to do about one.</p>
+
+  <div><span id="state" class="state" style="display:none"></span></div>
+  <p id="statedef" class="statedef"></p>
+
+  <div id="counts" class="counts"></div>
+  <p id="sessionsnote" class="note"></p>
+
+  <main id="results"></main>
+
+  <p id="receipt" class="receipt"></p>
+
+  <footer>
+    <p><a href="../">Back to the full list of tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var stateEl = document.getElementById("state");
+  var statedefEl = document.getElementById("statedef");
+  var countsEl = document.getElementById("counts");
+  var noteEl = document.getElementById("sessionsnote");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function todayKey(){
+    var parts = new Intl.DateTimeFormat("en-US",
+      {timeZone:"America/New_York", year:"numeric", month:"2-digit",
+       day:"2-digit"}).formatToParts(new Date());
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function lastCompletedSession(){
+    var d = new Date(todayKey() + "T12:00:00Z");
+    do { d.setUTCDate(d.getUTCDate() - 1); }
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+    return d.toISOString().slice(0, 10);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var sessions = data.sessions || [];
+      if (!sessions.length || data.state !== "published"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No labels have been published on this wire yet. ' +
+          "When the record names hammer, shooter or failed shapes for a session, they will appear " +
+          "here dated to that session. Nothing is shown for a record that has not been made.</div>";
+        return;
+      }
+      var counts = data.counts || {};
+      stateEl.textContent = data.proving_state;
+      stateEl.style.display = "";
+      statedefEl.textContent = data.proving_note;
+      meta.textContent = "Freshest session on the wire: " + fmtDateLong(data.session) +
+        ". Source: " + data.source + ".";
+      if (data.session !== lastCompletedSession()){
+        showBanner("stale", "This wire's freshest session is " + fmtDateLong(data.session) +
+          ", which is not the most recent completed trading day. It is the freshest session " +
+          "the record names these shapes for; treat it as the last published wire, not today's.");
+      }
+      countsEl.innerHTML =
+        '<span class="count"><strong>' + num(counts.total_entries) + '</strong> label entries on the wire</span>' +
+        '<span class="count"><strong>' + num(counts.distinct_names) + '</strong> names carrying them</span>' +
+        '<span class="count"><strong>' + num(counts.hammer) + '</strong> hammer shapes</span>' +
+        '<span class="count"><strong>' + num(counts.shooter) + '</strong> shooter shapes</span>' +
+        '<span class="count"><strong>' + num(counts.failed_total) + '</strong> failed patterns (' +
+          num(counts.failed_2u) + ' failed 2-up, ' + num(counts.failed_2d) + ' failed 2-down)</span>';
+      noteEl.textContent = data.sessions_note;
+
+      var kindWords = {};
+      (data.kind_words || []).forEach(function(k){ kindWords[k.kind] = k; });
+      var kindOrder = ["hammer", "shooter", "failed_2u", "failed_2d"];
+      var h = "";
+      sessions.forEach(function(s){
+        h += '<h2 class="section">' + esc(fmtDateLong(s.date)) + "</h2>";
+        h += '<p class="note"><strong>' + num(s.counts.total_entries) + "</strong> label entries across <strong>" +
+          num(s.counts.distinct_names) + "</strong> names this session: " +
+          num(s.counts.hammer) + " hammer shapes, " + num(s.counts.shooter) + " shooter shapes, " +
+          num(s.counts.failed_2u) + " failed 2-up, " + num(s.counts.failed_2d) + " failed 2-down.</p>";
+        kindOrder.forEach(function(kind){
+          var kw = kindWords[kind] || {};
+          var list = s.entries.filter(function(e){ return e.kind === kind; });
+          if (!list.length) return;
+          h += '<h3 class="kind">' + esc(kw.label || kind) + " (" + num(list.length) + ")</h3>";
+          h += '<p class="kindwords">' + esc(kw.words || "") + "</p>";
+          h += '<div class="entries">';
+          list.forEach(function(e){
+            h += '<span class="entry"><strong>' + esc(e.symbol) + '</strong>' +
+                 '<span class="lab">' + esc(e.label) + "</span></span>";
+          });
+          h += "</div>";
+        });
+      });
+      resultsEl.innerHTML = h;
+      receiptEl.textContent = "Receipt: " + data.coverage + ".";
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Reversal Wire is not available right now. The data file for this " +
+        "page could not be loaded, so there is nothing honest to show. Please check back after " +
+        "the next update.");
+    });
+})();
+</script>
+</body>
+</html>
