@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Living Router: a weighted spread of chances instead of one verdict</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+  @media (max-width:700px){table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Living Router</h1>
+    <p class="job">One job: when the tracked forecasters disagree about a stock, publish a weighted spread of three chances for its next 21 trading days instead of one verdict, with the weights themselves on the record.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  function pct(x){return (Math.round(x*1000)/10)+"%";}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="As of the newest calls on record, "+fmtShort(data.as_of)+". Source: "+data.source+".";
+    var h="";
+    h+='<section class="card"><h2>The idea</h2><p>'+esc(data.idea_words)+'</p></section>';
+
+    h+='<section class="card"><h2>Today\'s weights</h2><p class="sub">'+esc(data.weights_words)+'</p><table><tr><th>Forecaster</th><th>Kind of evidence</th><th>Weight today</th><th>Its record</th><th>How its call becomes three chances</th></tr>';
+    (data.forecasters||[]).forEach(function(f){
+      h+='<tr><td>'+esc(f.name)+'</td><td>'+esc(f.family_words)+'</td><td>'+(f.eligible?pct(f.weight):'0% (not eligible yet)')+'</td><td>'+esc(f.track_record_words)+'</td><td>'+esc(f.conversion_words)+'</td></tr>';
+    });
+    h+='</table><p class="sub">'+esc(data.family_cap_note)+'</p></section>';
+
+    var c=data.census||{};
+    h+='<section class="card"><h2>Today\'s contested stocks</h2><p>'+esc(c.words)+'</p>';
+    h+='<table><tr><th>Counted today</th><th>Stocks</th></tr>'
+      +'<tr><td>Stocks carrying at least one forecaster\'s call</td><td><span class="count">'+esc(c.names_with_any_forecaster)+'</span></td></tr>'
+      +'<tr><td>Stocks with exactly one forecaster (below the disagreement threshold, counted, not dropped)</td><td>'+esc(c.names_with_one_forecaster)+'</td></tr>'
+      +'<tr><td>Stocks where two or more forecasters agree</td><td>'+esc(c.names_with_two_agreeing)+'</td></tr>'
+      +'<tr><td>Stocks where two or more forecasters disagree</td><td>'+esc(c.names_contested)+'</td></tr>'
+      +'<tr><td>Contested stocks publishing flat chances (earned weight under the floor)</td><td>'+esc(c.names_flat)+'</td></tr></table>';
+    var names=data.contested_names||[];
+    if(names.length){
+      h+='<table><tr><th>Stock</th><th>Bottom third</th><th>Middle third</th><th>Top third</th><th>Coverage (share of total forecaster weight)</th><th>Flat?</th></tr>';
+      names.forEach(function(n){h+='<tr><td>'+esc(n.symbol)+'</td><td>'+pct(n.p_bottom)+'</td><td>'+pct(n.p_middle)+'</td><td>'+pct(n.p_top)+'</td><td>'+pct(n.coverage_weight)+'</td><td>'+(n.flat?'Flat: its earned weight is under the floor, so the chances are a third each and are graded that way':'')+'</td></tr>';});
+      h+='</table>';
+    } else {
+      h+='<p class="sub">No stock is contested today, so no chances are published today. The first contested stock appears the day two eligible forecasters speak about the same stock and disagree.</p>';
+    }
+    h+='</section>';
+
+    var lr=data.live_record||{};
+    h+='<section class="card"><h2>The live record</h2><p>'+esc(lr.words)+'</p><table><tr><th>Measure</th><th>Count</th></tr>'
+      +'<tr><td>Distributions recorded</td><td>'+esc(lr.distributions_recorded)+'</td></tr>'
+      +'<tr><td>Graded name-windows so far</td><td>'+esc(lr.graded_name_windows)+' of '+esc(lr.target)+'</td></tr>'
+      +'<tr><td>Independent windows so far (counted without overlap, the stricter count)</td><td>'+esc(lr.independent_windows)+'</td></tr></table>'
+      +'<p class="sub">'+esc(data.thin_cell_words)+'</p></section>';
+
+    var ct=data.controls||{};
+    h+='<section class="card"><h2>The two comparisons</h2><p><strong>The plain average.</strong> '+esc(ct.equal_weight_words)+'</p><p><strong>The best single forecaster.</strong> '+esc(ct.best_single_words)+'</p></section>';
+
+    h+='<section class="card"><h2>What would retire this page\'s method</h2><p>'+esc(data.kill_words)+'</p><p class="sub">'+esc(data.proving_state)+': this page earns stronger words only from its own recorded results, never from anyone else\'s.</p></section>';
+
+    var st=data.self_test||{};
+    h+='<section class="card"><h2>The machinery, checked</h2><p class="sub">'+esc(st.words)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","The newest record could not be loaded. Nothing on this page is estimated or filled in: when the record is missing, the page says so.");
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
