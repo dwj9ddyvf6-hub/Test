@@ -216,6 +216,7 @@ def build():
             "tool": "Filings Wire",
             "state": "not_on_record",
             "checked": as_of,
+            "as_of": as_of,
             "companies_on_record": 0,
             "freshest_filed": None,
             "companies": [],
@@ -339,6 +340,13 @@ def build():
             "tool": "Filings Wire",
             "state": "on_record",
             "checked": as_of,
+            # Canonical reading date (cure WEEK-READINESS-20261102):
+            # this page's own reading date is the day the collection
+            # was checked, not the freshest filing inside it. Every
+            # freshness resolver reads as_of first; without it the
+            # hub dated this page by a filing dated 2026-10-16 and
+            # marked a page checked 2026-11-01 as stale.
+            "as_of": as_of,
             "companies_on_record": len(companies),
             "freshest_filed": freshest,
             "companies": companies,
