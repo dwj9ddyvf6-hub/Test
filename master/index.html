@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gp67CbJMcc0wkPdLYxDRl/eSHJ6K75KVA7GqRRjwwCA='; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <script>(()=>{const F=fetch.bind(window),P=Object.create(null),H=5000;if(!/[?&]f=/.test(location.search))for(const u of ["edition.json", "panels.json", "pulse.json", "charts.json", "market.json", "reads-index.json", "lineup.json"]){const e={};e.p=F(u,{cache:'no-cache'}).then(r=>{e.t=Date.now()+H;return r},x=>{delete P[u];throw x});P[u]=e}window.fetch=function(i,o){const e=typeof i==='string'&&!(o&&o.method&&o.method!=='GET')&&P[i];if(e&&(!e.t||Date.now()<e.t)){const s=o&&o.signal,c=e.p.then(r=>r.clone());if(!s)return c;const A=()=>new DOMException('Aborted','AbortError');if(s.aborted)return Promise.reject(A());return new Promise((y,n)=>{s.addEventListener('abort',()=>n(A()),{once:true});c.then(y,n)})}if(e)delete P[i];return F(i,o)}})();</script>
-<link rel="preload" href="market.4aa394c0dd.js" as="script">
+<link rel="preload" href="market.55e728f815.js" as="script">
 <link rel="preload" href="market.c133dcfde4.css" as="style">
 <title>Master Terminal</title>
 <meta name="description" content="The day’s best setups, the Fear-Day Buy List: one clear plan per stock, where to buy, where it is wrong, where to take profit, the evidence behind it in plain English, and every call scored.">
@@ -24,19 +24,21 @@
 <link rel="stylesheet" href="ascend.df45c501e2.css">
 <link rel="stylesheet" href="lineup.76eb5d9edd.css">
 <link rel="stylesheet" href="viz_market.b1b967e6e9.css">
+<link rel="stylesheet" href="viz_engines.b330ddb68a.css">
 <script src="app.8ffafb9895.js" defer></script>
-<script src="viz.3de73f6e1a.js" defer></script>
+<script src="viz.a0315e70f8.js" defer></script>
 <script src="context.50c6ee21e3.js" defer></script>
 <script src="brief.18cc4bc19a.js" defer></script>
 <script src="strip.1c7448c356.js" defer></script>
 <script src="heur.30d334cec7.js" defer></script>
-<script src="funnel.3f10fcfc44.js" defer></script>
+<script src="funnel.18ffd4369b.js" defer></script>
 <script src="vendor.1db8f35cdc.js" defer></script>
-<script src="ascend.082885b12a.js" defer></script>
-<script src="lineup.c5363aa07d.js" defer></script>
-<script src="optdata.6c9209742d.js" defer></script>
-<script src="viz_market.44c5652350.js" defer></script>
-<script src="dkc.2d2cdafce0.js" defer></script>
+<script src="ascend.731341f827.js" defer></script>
+<script src="lineup.ffcce9165f.js" defer></script>
+<script src="optdata.65ed773df7.js" defer></script>
+<script src="viz_market.619ed1b0f1.js" defer></script>
+<script src="dkc.7a2a3d4762.js" defer></script>
+<script src="viz_engines.10e1aca279.js" defer></script>
 <link rel="stylesheet" href="grok-master.css"></head>
 <body>
 <header class="hdr" id="mast">
@@ -88,7 +90,7 @@
       </section>
       </div>
     </div>
-    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.4aa394c0dd.js" data-css="market.c133dcfde4.css" hidden>
+    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.55e728f815.js" data-css="market.c133dcfde4.css" hidden>
       <div class="glance" id="glance"></div>
       <div class="strip" id="strip" aria-label="Market strip" hidden></div>
       <section class="mk" id="m-tick" aria-label="Headlines" hidden></section>
@@ -176,23 +178,18 @@
         </div>
       </section>
     </div>
-    <div class="panel" id="p-engine" role="tabpanel" aria-labelledby="t-engine" data-js="engine.2337995edf.js" data-css="engine.2d29ddf30a.css" hidden>
+    <div class="panel" id="p-engine" role="tabpanel" aria-labelledby="t-engine" data-js="engine.690ae43e94.js" data-css="engine.2d29ddf30a.css" hidden>
       <span class="anc" id="engine"></span>
       <section class="ek" id="e-rank" aria-labelledby="h-e-rank" data-anchor data-jump="Engine" hidden></section>
       <section class="ek" id="e-fc" aria-labelledby="h-e-fc" data-anchor data-jump="Forecasts" hidden></section>
     </div>
     <div class="panel" id="p-hub" role="tabpanel" aria-labelledby="t-hub" hidden>
-      <section id="hub" aria-labelledby="h-hub" data-anchor data-jump="Hub">
-        <div class="shd"><div class="sht"><p class="kick">Every panel, its state and source</p><h2 id="h-hub">Hub</h2></div><span class="pv" id="hubn"></span></div>
-        <div class="card">
-          <div class="a-hbar"><label class="sr" for="hubq">Search panels</label><input id="hubq" class="a-hq" type="search" autocomplete="off" placeholder="Search panels"><div class="a-tg" id="hubf" role="group"><button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="published" aria-pressed="false">Published</button><button type="button" data-f="awaiting" aria-pressed="false">Awaiting</button></div></div>
-          <ul class="a-hubl" id="hubl"></ul>
-          <h3 class="a-slah">Freshness</h3><div class="a-sla" id="hubsla"></div>
-        </div>
-        <details class="wh"><summary>What is this?</summary><p>Every section and tool on the terminal with its state, source and limitation, as this edition stamped them. Published panels have a reading; awaiting panels have none yet or wait for their first.</p></details>
+      <section id="hub" aria-labelledby="h-hub" data-anchor data-jump="Ranker">
+        <div class="shd"><div class="sht"><p class="kick">Breakout · expansion · risk</p><h2 id="h-hub">Opportunity Ranker</h2></div></div>
+        <div class="card" id="hub-rank"></div>
       </section>
       <section id="h-lineup" aria-labelledby="h-h-lineup" data-anchor data-jump="Lineup">
-        <div class="shd"><div class="sht"><p class="kick">Opening range to receipts</p><h2 id="h-h-lineup">Desk lineup</h2></div><span class="pv" id="lu-asof"></span></div>
+        <div class="shd"><div class="sht"><p class="kick">Opening range to payoff</p><h2 id="h-h-lineup">Desk lineup</h2></div><span class="pv" id="lu-asof"></span></div>
         <div class="card"><div class="lu-tg" id="lu-chips" role="group" aria-label="Lineup tools"></div><div id="lu-body"></div></div>
       </section>
       <section id="h-gaps" aria-labelledby="h-h-gaps" data-anchor data-jump="Gap-Fill">
@@ -204,7 +201,7 @@
         <div class="card" id="lu-corr"></div>
       </section>
       <section id="h-optdata" aria-labelledby="h-h-optdata" data-anchor data-jump="Options data">
-        <div class="shd"><div class="sht"><p class="kick">Sources, ages and the memo</p><h2 id="h-h-optdata">Options data</h2></div></div>
+        <div class="shd"><div class="sht"><p class="kick">Expected range by expiry</p><h2 id="h-h-optdata">Options data</h2></div></div>
         <div class="card" id="od-body"></div>
       </section>
       <section id="h-read" aria-labelledby="h-h-read" data-anchor data-jump="Chart Read">
