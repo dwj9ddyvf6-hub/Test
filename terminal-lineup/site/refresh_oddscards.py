@@ -306,6 +306,10 @@ def build():
                           "result of a finished study: the replay below, "
                           "re-checked by a second run."),
         "replay_date": "October 27, 2026",
+        # Canonical headline date (cure WEEK-READINESS-R2-20261102-H):
+        # the replay date above in ISO form, so resolvers that read
+        # as_of first find the study's true date.
+        "as_of": "2026-10-27",
         "window_words": "December 20, 2019 to October 15, 2026",
         "headline": {
             "total_cases": replay["cases"],
