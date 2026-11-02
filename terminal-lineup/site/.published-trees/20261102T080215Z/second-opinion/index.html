@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Second Opinion: how many separate kinds of evidence actually speak for one name</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .picker{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:16px 20px;margin:0 0 16px;font-size:15.5px}
+  .picker label{font-weight:600;margin-right:10px}
+  .picker select{font-size:16px;padding:6px 10px;border:1px solid var(--line);
+                 border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+  .picker .quick{margin:10px 0 0;font-size:14.5px;color:var(--soft)}
+  .picker .quick button{font-size:14.5px;padding:3px 12px;margin:0 4px 4px 0;
+    border:1px solid var(--line);border-radius:999px;background:#fff;
+    color:var(--accent);font-weight:600;cursor:pointer}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .group p strong{color:var(--ink);font-weight:600}
+  .big{font-size:19px;color:var(--ink)}
+  .big strong{font-size:26px}
+  .fam{border-top:1px solid var(--line);padding:12px 0 4px;margin-top:10px}
+  .fam h3{margin:0 0 2px;font-size:17px}
+  .fam .speaks{font-weight:600;color:var(--accent);font-size:13.5px;
+               text-transform:uppercase;letter-spacing:.04em}
+  .fam .silent{font-weight:600;color:var(--faint);font-size:13.5px;
+               text-transform:uppercase;letter-spacing:.04em}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:15px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Second Opinion</h1>
+    <p class="job">One job: for one name, show how many separate kinds of evidence actually speak for it, what each kind says, and where they agree or disagree.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the records&hellip;</p>
+
+  <div class="def">
+    <p><strong>Why families, not products:</strong> <span id="why">Many products read the same underlying records, so ten products agreeing can be one fact repeated; this page counts the separate records, called families, instead.</span></p>
+    <p><strong>How a direction is read:</strong> the price family points positive for a name that passed every check, mixed for a score of 60 or more that did not pass, and cautious below 60. The options prints family follows the sign of its net premium (money in minus money out). The modelled positioning family is cautious when the price sits below its flip level and its modelled pressure is negative, positive when the price sits above the flip and the pressure is positive, and mixed otherwise. The filings family speaks in facts, not a direction, so it is never counted in the agreement count.</p>
+    <p><strong>Counts, not percentages:</strong> a handful of families is too few to turn into a percentage, so this page prints counts only.</p>
+  </div>
+
+  <div class="picker">
+    <label for="pick">Pick a name:</label>
+    <select id="pick"></select>
+    <p class="quick">Best covered: <span id="quick"></span></p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+  var pickEl = document.getElementById("pick");
+  var quickEl = document.getElementById("quick");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function money(x){
+    var v = Number(x);
+    return "$" + v.toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function moneyM(x){
+    var v = Number(x) / 1e6;
+    var s = Math.abs(v).toLocaleString("en-US",{minimumFractionDigits:1, maximumFractionDigits:1});
+    return (v < 0 ? "-$" : "$") + s + " million";
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric", year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTs(iso){
+    var d = new Date(iso);
+    return d.toLocaleString("en-US",{month:"short", day:"numeric", year:"numeric",
+      hour:"numeric", minute:"2-digit", timeZone:"UTC", timeZoneName:"short"});
+  }
+  function todayKey(){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(new Date());
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function lastCompletedSession(){
+    var d = new Date(todayKey() + "T12:00:00Z");
+    do { d.setUTCDate(d.getUTCDate() - 1); }
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+    return d.toISOString().slice(0, 10);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function stanceWord(s){
+    return s === "positive" ? "positive" : s === "mixed" ? "mixed" : "cautious";
+  }
+
+  function famHead(fam, speaking){
+    return '<div class="fam"><h3>' + esc(fam.name) + "</h3>" +
+      '<p class="' + (speaking ? "speaks" : "silent") + '">' +
+      (speaking ? "Speaking" : "Silent") + "</p>" +
+      "<p>" + esc(fam.about) + "</p>";
+  }
+
+  function render(name){
+    var byFam = {};
+    DATA.families.forEach(function(f){ byFam[f.id] = f; });
+    var total = DATA.families.length;
+    var speaking = name.families_speaking;
+    var h = '<section class="group"><h2>' + esc(name.symbol) + "</h2>";
+    h += '<p class="big"><strong>' + speaking + " of " + total +
+      " families</strong> speak for this name.</p>";
+
+    var dir = name.directional || [];
+    if (!speaking){
+      h += "<p><strong>No family has anything on record for this name, so there is no second opinion to give.</strong> " +
+        "Every family below is silent, each with its reason.</p>";
+    } else if (!dir.length){
+      h += "<p>No family that carries a direction is speaking for this name, so there is no agreement to count. " +
+        "The family that speaks does so in facts, not a direction.</p>";
+    } else if (dir.length === 1){
+      h += "<p>Only <strong>1 family</strong> that carries a direction is speaking, and it points <strong>" +
+        stanceWord(dir[0]) + "</strong>, so there is nothing for it to agree or disagree with yet.</p>";
+    } else {
+      var counts = {};
+      dir.forEach(function(s){ counts[s] = (counts[s] || 0) + 1; });
+      var kinds = Object.keys(counts);
+      if (kinds.length === 1){
+        h += "<p>Agreement: <strong>all " + dir.length + " families</strong> that carry a direction point the same way: <strong>" +
+          stanceWord(kinds[0]) + "</strong>.</p>";
+      } else {
+        var parts = kinds.map(function(k){
+          return counts[k] + (counts[k] === 1 ? " points " : " point ") + stanceWord(k);
+        });
+        h += "<p>Disagreement: the <strong>" + dir.length + " families</strong> that carry a direction do not all agree: " +
+          parts.join(", ") + ".</p>";
+      }
+    }
+
+    // Price family
+    h += famHead(byFam.price, !!name.price);
+    if (name.price){
+      var p = name.price;
+      h += "<p>On the scored day it closed at <strong>" + money(p.close) + "</strong> and scored <strong>" +
+        Number(p.score).toFixed(1) + " of 100</strong>: <strong>" + p.confirming + " of " + p.checks_total +
+        " checks</strong> lined up in its favor, and it <strong>" +
+        (p.qualified ? "passed every check" : "did not pass every check") + "</strong>. " +
+        "The measures behind the score had data " + Number(p.dc_pct).toFixed(1) + "% of the time. " +
+        "This family points <strong>" + stanceWord(p.stance) + "</strong>.</p>";
+      if (p.categories && p.categories.length){
+        h += "<table><thead><tr><th>Check</th><th>Reading</th>" +
+          '<th class="num">Score</th></tr></thead><tbody>';
+        p.categories.forEach(function(c){
+          h += "<tr><td>" + esc(c.name) + "</td><td>" + esc(c.state) + "</td>" +
+            '<td class="num">' + (c.score == null ? "not enough data" : Number(c.score).toFixed(1)) + "</td></tr>";
+        });
+        h += "</tbody></table>";
+      }
+    } else {
+      h += '<div class="nodata">' + esc(name.price_silent_reason ||
+        "No scored record is on file for this name.") + "</div>";
+    }
+    h += "</div>";
+
+    // Options prints family
+    h += famHead(byFam.prints, !!name.prints);
+    if (name.prints){
+      var t = name.prints;
+      if (t.net_premium == null){
+        h += "<p><strong>" + num(t.prints) + " prints</strong> on the day, <strong>" +
+          moneyM(t.total_premium) + "</strong> in total. " +
+          num(t.high_heat) + " prints reached the high heat band and " + num(t.golden_sweeps) +
+          " were golden sweeps. Average heat was " + Number(t.mean_heat).toFixed(2) +
+          ". Which side the money leaned to is not judged for single names: " +
+          "no record of the quote at the moment of each print exists to judge it against, " +
+          "so this family speaks in counts and heat, with no direction.</p>";
+      } else {
+        h += "<p><strong>" + num(t.prints) + " prints</strong> on the day, <strong>" +
+          moneyM(t.total_premium) + "</strong> in total. The money leaned to the " +
+          (t.net_premium < 0 ? "selling" : t.net_premium > 0 ? "buying" : "neither") +
+          " side: net premium <strong>" + moneyM(t.net_premium) + "</strong> (calls " +
+          moneyM(t.call_net_premium) + ", puts " + moneyM(t.put_net_premium) + "). " +
+          num(t.high_heat) + " prints reached the high heat band and " + num(t.golden_sweeps) +
+          " were golden sweeps. Average heat was " + Number(t.mean_heat).toFixed(2) +
+          ". This family points <strong>" + stanceWord(t.stance) + "</strong>.</p>";
+      }
+    } else {
+      h += '<div class="nodata">No prints record is kept for this name yet, ' +
+        "so this family has nothing to read for it.</div>";
+    }
+    h += "</div>";
+
+    // Modelled positioning family
+    h += famHead(byFam.positioning, !!name.positioning);
+    if (name.positioning){
+      var g = name.positioning;
+      h += "<p>The price, at <strong>" + money(g.spot) + "</strong>, sits <strong>" +
+        (g.below_flip ? "below" : "above") + "</strong> the flip level of <strong>" +
+        money(g.flip) + "</strong>. Modelled pressure is <strong>" +
+        (g.net_gex_b < 0 ? "-$" : "$") + Math.abs(g.net_gex_b).toFixed(2) +
+        " billion per 1% move</strong>, which " +
+        (g.net_gex_b < 0 ? "sharpens moves rather than softening them" : "softens moves rather than sharpening them") +
+        ". The walls stand at <strong>" + money(g.call_wall) + "</strong> above and <strong>" +
+        money(g.put_wall) + "</strong> below. The chain behind this covered " +
+        num(g.contracts_used) + " of " + num(g.chain_total) + " contracts. " +
+        "Dark pool short selling ran at " + Number(g.dix_pct).toFixed(1) +
+        "% on " + fmtDateShort(g.dix_date) + ", inside this same record, not a separate family. " +
+        "This family points <strong>" + stanceWord(g.stance) + "</strong>.</p>";
+    } else {
+      h += '<div class="nodata">Modelled positioning is recorded for SPY, QQQ and IWM only; ' +
+        "no positioning record is kept for single stocks, so this family has nothing to read for this name.</div>";
+    }
+    h += "</div>";
+
+    // Filings family
+    h += famHead(byFam.filings, !!name.filings);
+    if (name.filings){
+      var f = name.filings;
+      h += "<p>On record, each line kept separate:</p><table><tbody>";
+      Object.keys(f.readings).forEach(function(k){
+        h += "<tr><td>" + esc(k) + "</td>" +
+          '<td class="num"><strong>' + Number(f.readings[k]).toFixed(1) + " of 100</strong></td></tr>";
+      });
+      h += "</tbody></table>";
+      if (f.insider_transactions){
+        h += "<p>Company insiders: <strong>" + num(f.insider_transactions) +
+          " transactions</strong> on file, the latest filed " +
+          fmtDateShort(f.insider_latest) + ".</p>";
+      }
+      if (f.si_pct != null){
+        h += "<p>Shares sold short: <strong>" + Number(f.si_pct).toFixed(2) +
+          "% of the shares out</strong>, at <strong>" + Number(f.days_to_cover).toFixed(2) +
+          " days to cover</strong>, from the settlement of " +
+          fmtDateShort(f.si_settlement) + ".</p>";
+      }
+      h += "<p>These lines are reported separately and on different dates, so they are shown as facts and never merged into one verdict.</p>";
+    } else {
+      h += '<div class="nodata">No filings or positioning record is on file for this name. ' +
+        "Those records are on file for " + num(DATA.coverage.filings_names_on_file) +
+        " names, and this is not one of them.</div>";
+    }
+    h += "</div>";
+
+    // Company facts family
+    h += famHead(byFam.facts, !!name.facts);
+    if (name.facts){
+      var cf = name.facts;
+      h += "<p>Company facts are on record for this name: <strong>" +
+        num(cf.figures_recorded) + " of " + num(cf.figures_total) +
+        " headline figures</strong> carry a stored annual reading" +
+        (cf.freshest_filed ? ", the freshest filed " + fmtDateShort(cf.freshest_filed) : "") +
+        ". The figures themselves are on the Filings Wire page. " +
+        "This family speaks in facts, not a direction.</p>";
+    } else {
+      h += '<div class="nodata">' + esc(DATA.silent_reasons.facts) + "</div>";
+    }
+    h += "</div>";
+
+    // News family
+    h += famHead(byFam.news, !!name.news);
+    if (name.news){
+      var nw = name.news;
+      h += "<p><strong>" + num(nw.articles) + " articles</strong> are on record " +
+        "for this name in the latest news window, the freshest from " +
+        fmtDateShort(nw.freshest) + ". The freshest headline: " +
+        esc(nw.headline) + ". This family speaks in facts, not a direction.</p>";
+    } else {
+      h += '<div class="nodata">' + esc(name.news_silent_reason || DATA.silent_reasons.news) + "</div>";
+    }
+    h += "</div>";
+
+    h += "</section>";
+    resultsEl.innerHTML = h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      DATA = data;
+      var names = data.names || [];
+      if (!names.length || data.state !== "published"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No name has been published yet. ' +
+          "When the records are published, this page will list every name on record with the " +
+          "families that speak for it and the ones that stay silent. Nothing is shown for a " +
+          "record that has not been made.</div>";
+        return;
+      }
+      if (data.why_families) document.getElementById("why").textContent = data.why_families;
+      var cov = data.coverage || {};
+      meta.textContent = "Scored trading day: " + fmtDateLong(data.session) +
+        ". Source: " + data.source + ".";
+      if (data.session !== lastCompletedSession()){
+        showBanner("stale", "These records are from " + fmtDateLong(data.session) +
+          ", which is not the most recent completed trading day. Treat them as the last " +
+          "published records, not today's.");
+      }
+      var bySymbol = {};
+      names.forEach(function(n){ bySymbol[n.symbol] = n; });
+      names.forEach(function(n){
+        var opt = document.createElement("option");
+        opt.value = n.symbol;
+        opt.textContent = n.symbol + " (" + n.families_speaking + " of " +
+          data.families.length + " families)";
+        pickEl.appendChild(opt);
+      });
+      var quick = ["SPY", "QQQ", "IWM", "GO"].filter(function(s){ return bySymbol[s]; });
+      quick.forEach(function(s){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = s;
+        b.addEventListener("click", function(){
+          pickEl.value = s;
+          render(bySymbol[s]);
+        });
+        quickEl.appendChild(b);
+      });
+      var start = bySymbol[data.default_name] || names[0];
+      pickEl.value = start.symbol;
+      pickEl.addEventListener("change", function(){ render(bySymbol[pickEl.value]); });
+      receiptEl.textContent = "Receipt: " + (data.receipt ? data.receipt.coverage : "") +
+        " Scored day published " + fmtTs(data.board_published_at_utc) +
+        "; prints published " + fmtTs(data.prints_published_at_utc) +
+        "; positioning built " + fmtTs(data.positioning_built_at_utc) +
+        "; filings dated " + fmtDateShort(data.filings_as_of) + ".";
+      render(start);
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Second Opinion is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
