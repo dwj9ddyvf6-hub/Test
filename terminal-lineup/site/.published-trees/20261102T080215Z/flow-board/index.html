@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flow Board: call-side net premium against put-side net premium, by name and day</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --empty:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card h2{margin:0 0 8px;font-size:18px}
+  .card p{margin:0 0 8px;font-size:15.5px}
+  .card p:last-child{margin-bottom:0}
+  .proving{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 22px;font-size:15px;color:#23405e}
+  .proving strong{color:var(--ink)}
+  .board{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:1080px;font-size:14.5px}
+  .board .hint{font-size:13.5px;color:var(--soft);margin:0 0 8px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  th{font-size:12.5px;color:var(--soft);font-weight:600}
+  th.day{text-align:center;font-size:14px;color:var(--ink);border-bottom:2px solid var(--line)}
+  td.name,th.name{text-align:left;font-weight:700}
+  td.diff{font-weight:700}
+  tr:last-child td{border-bottom:none}
+  .complete p{margin:0 0 6px;font-size:14.5px}
+  .complete p:last-child{margin-bottom:0}
+  .nodata{background:var(--empty);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Flow Board</h1>
+    <p class="job">One job: for each name on record, show the call-side net premium against the put-side net premium for each recorded trading day, with the difference between the two sides.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the board&hellip;</p>
+
+  <section class="card">
+    <h2>What these figures are, in plain words</h2>
+    <p id="networds">Loading&hellip;</p>
+    <p id="diffwords"></p>
+  </section>
+
+  <div id="proving" class="proving" style="display:none"></div>
+
+  <div id="board"></div>
+  <div id="completeness"></div>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">All the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"),
+      netEl=document.getElementById("networds"), diffEl=document.getElementById("diffwords"),
+      provingEl=document.getElementById("proving"), boardEl=document.getElementById("board"),
+      compEl=document.getElementById("completeness"), receiptEl=document.getElementById("receipt");
+
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function money(v){
+    if (v==null) return "Not on record";
+    var sign=v<0?"-$":(v>0?"+$":"$");
+    return sign+Math.abs(Math.round(v)).toLocaleString("en-US");
+  }
+  function fmtDateLong(iso){var d=new Date(iso+"T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtTimestamp(iso){var d=new Date(iso); if(isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})+" ET";}
+  function sessionKey(d){var parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d); var m={};
+    parts.forEach(function(p){m[p.type]=p.value;}); return m.year+"-"+m.month+"-"+m.day;}
+  function latestCompletedSession(){var d=new Date(Date.now()-864e5);
+    for(;;){var key=sessionKey(d); var dow=new Date(key+"T12:00:00Z").getUTCDay();
+      if(dow>=1&&dow<=5) return key; d=new Date(d.getTime()-864e5);}}
+  function showBanner(kind,text){banner.className="banner show "+kind; banner.textContent=text;}
+
+  fetch("data.json",{cache:"no-store"})
+    .then(function(res){ if(!res.ok) throw new Error("missing"); return res.json(); })
+    .then(function(data){
+      if(!data.rows || !data.rows.length || !data.sessions || !data.sessions.length)
+        throw new Error("empty");
+      netEl.textContent=data.net_words;
+      diffEl.textContent=data.difference_words;
+      provingEl.style.display="block";
+      provingEl.innerHTML="<strong>"+esc(data.proving_state)+".</strong> "+esc(data.proving_note);
+      meta.textContent="Freshest trading day on record: "+data.freshest_session_long+
+        " · Published "+fmtTimestamp(data.published_at_utc)+
+        " · "+data.names_recorded+" names on record · Data behind it: "+data.source;
+      if (data.freshest_session < latestCompletedSession()){
+        showBanner("stale","This shows "+data.freshest_session_long+", the freshest trading day on record. A newer trading day has finished since, so treat this as the latest picture on record, not today's.");
+      }
+      var h='<section class="board"><p class="hint">This board is wide: scroll sideways inside it to see every day in full.</p><table><thead><tr><th class="name" rowspan="2">Name</th>';
+      data.sessions.forEach(function(s){
+        h+='<th class="day" colspan="3">'+esc(s.session_long)+"</th>";
+      });
+      h+="</tr><tr>";
+      data.sessions.forEach(function(){
+        h+="<th>Calls, net premium</th><th>Puts, net premium</th><th>Difference: calls minus puts</th>";
+      });
+      h+="</tr></thead><tbody>";
+      data.rows.forEach(function(r){
+        h+='<tr><td class="name">'+esc(r.underlying)+"</td>";
+        r.cells.forEach(function(c){
+          h+="<td>"+money(c.call_net_premium_usd)+"</td>"+
+             "<td>"+money(c.put_net_premium_usd)+"</td>"+
+             '<td class="diff">'+money(c.difference_usd)+"</td>";
+        });
+        h+="</tr>";
+      });
+      h+="</tbody></table></section>";
+      boardEl.innerHTML=h;
+
+      var ch='<section class="card complete"><h2>How complete is each day on this board?</h2>';
+      data.rows.forEach(function(r){
+        r.cells.forEach(function(c){
+          ch+="<p><strong>"+esc(r.underlying)+", "+esc(c.session_long)+":</strong> "+
+            Number(c.prints_examined).toLocaleString("en-US")+" prints examined. "+
+            esc(c.completeness_words)+".</p>";
+        });
+      });
+      ch+="</section>";
+      compEl.innerHTML=ch;
+      receiptEl.textContent=data.receipt.coverage+". Source: "+data.source+".";
+    })
+    .catch(function(){
+      netEl.textContent="The board is not on record right now.";
+      diffEl.textContent="";
+      meta.textContent="";
+      showBanner("missing","No board to show yet: the record behind this page has not arrived. Check back after the next trading day is recorded.");
+      boardEl.innerHTML='<div class="nodata">Nothing to show yet.</div>';
+    });
+})();
+</script>
+</body>
+</html>
