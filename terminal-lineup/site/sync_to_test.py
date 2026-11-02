@@ -25,7 +25,8 @@ around. One proof line is appended to the sync log per run.
 
 Usage: python3 sync_to_test.py [--dry-run]
 Exit codes: 0 clean (gate-blocked skips are a logged, expected state),
-2 truncated tree, 3 hard API error (including 403/429 rate stops).
+2 truncated tree, 3 hard API error (including 403/429 rate stops),
+4 zero-byte guard refusal (nothing published, file named).
 """
 
 from __future__ import annotations
@@ -108,6 +109,31 @@ def gate_hits(text: str) -> list:
     return [name for name, rx in pii_gate.PATTERNS if rx.search(text)]
 
 
+def zero_byte_violations(changed: list, repo_sizes: dict) -> list:
+    """Zero-byte publish guard (HUB-BLANK-20261102 cure).
+
+    changed is [(rel, candidate_bytes)]; repo_sizes maps repo path
+    -> current blob size. Returns one named violation per candidate
+    that must never be published: (a) any zero-byte .html page file
+    outright, and (b) any zero-byte file whose repo version is
+    non-empty (a shrink-to-zero of published content). On
+    2026-11-02 a writer killed mid-write truncated the hub to
+    0 bytes and the unguarded sync published the empty file."""
+    violations = []
+    for rel, cand in changed:
+        if len(cand) != 0:
+            continue
+        if rel.lower().endswith(".html"):
+            violations.append(
+                f"{rel}: zero-byte .html page refused outright")
+        elif repo_sizes.get(PREFIX + rel, 0) > 0:
+            violations.append(
+                f"{rel}: zero-byte candidate would shrink the "
+                f"non-empty repo version "
+                f"({repo_sizes[PREFIX + rel]} bytes) to zero")
+    return violations
+
+
 def included_files() -> list:
     """The original save's included set, rebuilt from the local tree."""
     included = []
@@ -123,6 +149,8 @@ def included_files() -> list:
                 continue
             if p.suffix == ".log":
                 continue
+            if p.name.endswith(".atomic-tmp"):
+                continue  # refresh_hub atomic-write temp, never publish
             if p.name == "lane_state.json":
                 continue
             if p.name in (".live-server.pid", "live-server.log",
@@ -243,6 +271,18 @@ def main(argv=None) -> int:
                 continue
             changed.append((rel, cand))
 
+        # Zero-byte guard (HUB-BLANK-20261102): checked over the
+        # whole changed set BEFORE any upload, so a refused publish
+        # publishes nothing and fails loud with the file named.
+        repo_sizes = {p: e.get("size", 0) for p, e in blobs.items()}
+        violations = zero_byte_violations(changed, repo_sizes)
+        if violations:
+            for v in violations:
+                print(f"GUARD REFUSAL: {v}", flush=True)
+            summary["guard_violations"] = violations
+            print(json.dumps(summary, indent=1))
+            return 4
+
         print(f"census: {len(changed)} changed, "
               f"{summary['skipped_unchanged']} unchanged, "
               f"{len(summary['skipped_gate'])} gate-skipped", flush=True)
@@ -280,6 +320,10 @@ def main(argv=None) -> int:
         for repo_path, data, key in (
                 ("INDEX.json", idx_json, "index_json"),
                 ("INDEX.md", idx_md, "index_md")):
+            if len(data) == 0:
+                print(f"GUARD REFUSAL: {repo_path}: zero-byte "
+                      f"generated index refused", flush=True)
+                return 4
             if repo_shas2.get(repo_path) == blob_sha(data):
                 summary[key] = "unchanged"
                 continue
