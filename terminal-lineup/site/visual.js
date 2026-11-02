@@ -238,22 +238,28 @@
       [b.mid, b.current].forEach(function (v) { var n = num(v); if (n != null) { lo = Math.min(lo, n); hi = Math.max(hi, n); } });
     });
     if (hi === lo) hi = lo + 1;
-    var W = 640, rowH = 34, H = items.length * rowH + 24;
-    var plotL = 185, plotR = 470;
+    /* Overlap cure (WEEK-READINESS-R2-20261102-F): the row label
+       used to sit left of the plot on the same line as the bar, so
+       the widest band, whose low edge is the scale minimum, started
+       at the plot edge and ran into its label (the Corrected Band
+       nit). The label now sits on its own line above the bar and
+       the bar owns the full plot width; no bar can touch a label. */
+    var W = 640, rowH = 40, H = items.length * rowH + 24;
+    var plotL = 0, plotR = 470;
     function X(v) { return plotL + (v - lo) / (hi - lo) * (plotR - plotL); }
-    function shortLabel(s) { s = String(s == null ? "" : s); return s.length > 26 ? s.slice(0, 25) + "\u2026" : s; }
+    function shortLabel(s) { s = String(s == null ? "" : s); return s.length > 40 ? s.slice(0, 39) + "\u2026" : s; }
     var s = svgOpen(W, H, "range bands");
     items.forEach(function (b, i) {
       var y = 12 + i * rowH;
-      s += '<text x="0" y="' + (y + 15) + '" class="vk-axis"><title>' + esc(b.label || "") + '</title>' + esc(shortLabel(b.label || "")) + "</text>";
+      s += '<text x="0" y="' + (y + 10) + '" class="vk-axis"><title>' + esc(b.label || "") + '</title>' + esc(shortLabel(b.label || "")) + "</text>";
       if (b.high === b.low) {
-        s += '<circle cx="' + X(b.low) + '" cy="' + (y + 10) + '" r="5" class="vk-pt"></circle>';
+        s += '<circle cx="' + X(b.low) + '" cy="' + (y + 24) + '" r="5" class="vk-pt"></circle>';
       } else {
-        s += '<rect x="' + X(b.low) + '" y="' + (y + 3) + '" width="' + Math.max(2, X(b.high) - X(b.low)) + '" height="14" class="vk-bandrect"></rect>';
+        s += '<rect x="' + X(b.low) + '" y="' + (y + 17) + '" width="' + Math.max(2, X(b.high) - X(b.low)) + '" height="14" class="vk-bandrect"></rect>';
       }
-      if (num(b.mid) != null) s += '<line x1="' + X(b.mid) + '" y1="' + y + '" x2="' + X(b.mid) + '" y2="' + (y + 20) + '" class="vk-mark"></line>';
-      if (num(b.current) != null) s += '<circle cx="' + X(b.current) + '" cy="' + (y + 10) + '" r="4" class="vk-cur"></circle>';
-      s += '<text x="' + (W - 4) + '" y="' + (y + 15) + '" text-anchor="end" class="vk-axis">' + fmt(b.low) + " to " + fmt(b.high) + "</text>";
+      if (num(b.mid) != null) s += '<line x1="' + X(b.mid) + '" y1="' + (y + 14) + '" x2="' + X(b.mid) + '" y2="' + (y + 34) + '" class="vk-mark"></line>';
+      if (num(b.current) != null) s += '<circle cx="' + X(b.current) + '" cy="' + (y + 24) + '" r="4" class="vk-cur"></circle>';
+      s += '<text x="' + (W - 4) + '" y="' + (y + 29) + '" text-anchor="end" class="vk-axis">' + fmt(b.low) + " to " + fmt(b.high) + "</text>";
     });
     s += "</svg>";
     return frame(input.title || null, input.label || "Each band is a range on record. The dot is where price or the outcome sits.",
