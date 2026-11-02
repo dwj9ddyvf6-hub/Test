@@ -178,34 +178,23 @@
     else document.body.insertBefore(grid, document.body.firstChild);
   }
 
-  /* Market Mood (P2): C3 gauge + printed recipe. The composite is the
-     median of the 4 core gauges (the page's own stated method); the
-     recipe rows are those gauges with raw value, percentile and the
-     gauge's own as_of. Gauges with no percentile are listed as such. */
+  /* Market Mood (P2): the nine gauges lead, with their recipe.
+     R3 RULING (owner, 2026-11-02, binding): no single composite
+     headline appears anywhere on this page. The hero gauge and the
+     labelled median line are removed; the recipe table (the four
+     core gauges with raw value, percentile and their own reading
+     dates) leads instead. Presentation only: the engine still
+     computes and records the composite, and composite-history.json
+     keeps accruing; this layer simply never prints the current
+     composite value or its regime word. */
   function moodRecipe(data) {
     if (!data || !data.state || !data.state.gauges || document.querySelector(".gb-gaugewrap")) return;
     var st = data.state, core = ["G2", "G3", "G5", "G6"];
     var wrapG = el("section", "gb-gaugewrap");
     wrapG.style.cssText = "background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:0 0 16px";
-    var panel = el("div", "gb-gauge");
-    panel.appendChild(el("p", "gb-kicker", "Composite, with its recipe"));
-    var pct = st.composite_percentile;
-    var arc = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    arc.setAttribute("viewBox", "0 0 200 110"); arc.style.width = "100%";
-    var frac = Math.max(0, Math.min(1, (pct || 0) / 100));
-    var bg = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    bg.setAttribute("d", "M 15 100 A 85 85 0 0 1 185 100"); bg.setAttribute("fill", "none"); bg.setAttribute("stroke", "#454a5e"); bg.setAttribute("stroke-width", "13");
-    var fg = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    var ang = Math.PI * (1 - frac), ex = 100 + 85 * Math.cos(ang), ey = 100 - 85 * Math.sin(ang);
-    fg.setAttribute("d", "M 15 100 A 85 85 0 0 1 " + ex.toFixed(1) + " " + ey.toFixed(1));
-    fg.setAttribute("fill", "none"); fg.setAttribute("stroke", "#7ee0c3"); fg.setAttribute("stroke-width", "13");
-    arc.appendChild(bg); arc.appendChild(fg); panel.appendChild(arc);
-    panel.appendChild(el("div", "gb-big", pct == null ? "no data" : String(pct)));
-    panel.appendChild(el("p", "gb-glabel", "Composite percentile, 0 (extreme fear) to 100 (greed). " + (st.disagreement || "") + " Reading date " + (st.date || "not dated") + "."));
-    wrapG.appendChild(panel);
     var side = el("div");
-    side.appendChild(el("p", "gb-kicker", "How the composite is built"));
-    side.appendChild(el("p", "gb-sentence", "The composite is the median of the four core gauges below. Every ingredient prints its raw value, its percentile and its own reading date, so the headline number can be checked by hand."));
+    side.appendChild(el("p", "gb-kicker", "The nine gauges, with their recipe"));
+    side.appendChild(el("p", "gb-sentence", "Nine gauges carry this page; each stands on its own card below with its own reading date. The engine also records a composite, the median of the four core gauges in this table, in its history file. By the owner's ruling no single composite headline is shown here: the gauges themselves are the reading. Every ingredient prints its raw value, its percentile and its own reading date, so the recipe can be checked by hand."));
     var t = el("table", "gb-parts");
     t.innerHTML = "<thead><tr><th>Gauge</th><th>Raw value</th><th>Percentile</th><th></th><th>As of</th></tr></thead>";
     var tb = document.createElement("tbody");
@@ -220,7 +209,7 @@
       tb.appendChild(tr);
     });
     t.appendChild(tb); side.appendChild(t);
-    side.appendChild(el("p", "gb-foot", "Median check: the middle two core percentiles averaged give the composite above. Gauges outside the core four stand on their own cards on this page and never enter the composite."));
+    side.appendChild(el("p", "gb-foot", "Median check: the middle two core percentiles averaged give the composite the engine records. Gauges outside the core four stand on their own cards on this page and never enter the composite."));
     wrapG.appendChild(side);
     var h1 = document.querySelector("h1");
     var anchor = document.querySelector(".explblock") || h1;
@@ -595,7 +584,19 @@
        text (a count, a price, a percent the card itself leads with). */
     var own = (c.textContent || "").replace(/\s+/g, " ").slice(0, 300);
     var m = own.match(/-?\$?\d[\d,]*(\.\d+)?%?/);
-    return m ? m[0] : "";
+    if (m) return m[0];
+    /* R3 (row 4): the figure may sit past the opening 300 chars (a
+       table's first value, a figline deep in the card). Scan the
+       whole card for a figure-shaped token: money, percent or a
+       decimal first (a bare year or a date fragment is not a hero),
+       then any standalone integer that is not part of a date. The
+       hero is still a copy of the card's own text; a card with no
+       figure anywhere returns "" and stays honestly partial. */
+    var all = (c.textContent || "").replace(/\s+/g, " ");
+    var fm = all.match(/-?\$[\d,]+(\.\d+)?|-?\d[\d,]*\.\d+\s?%|-?\d[\d,]*\.\d+|-?\d[\d,]*\s?%/);
+    if (fm) return fm[0].trim().slice(0, 40);
+    var im = all.replace(/\d{4}-\d{2}-\d{2}/g, " ").match(/(?<![\d.,/-])\d{1,6}(?![\d./-])/);
+    return im ? im[0] : "";
   }
   function enhanceCardsR2(data) {
     var asOf = asOfOf(data);
@@ -724,14 +725,18 @@
       var card = compCard("Composite over time", "One block per session on record, coloured by the composite's own percentile band. The record accrues one point per session from the recorder; it is not backfilled.");
       card.classList.add("gb-moodstrip");
       var strip = el("div", "gb-strip");
-      h.points.forEach(function (pt) {
+      h.points.forEach(function (pt, idx) {
         var seg = document.createElement("span");
         seg.style.background = moodBandR3(pt.composite);
-        seg.title = pt.date + ": " + pt.composite + (pt.regime ? " (" + pt.regime + ")" : ""); strip.appendChild(seg);
+        /* R3 RULING (2026-11-02): past days keep their labels; the
+           latest point is the current reading, so its label carries
+           its date only, and the axis endpoint below names no
+           current composite value or regime. */
+        seg.title = idx === h.points.length - 1 ? pt.date : pt.date + ": " + pt.composite + (pt.regime ? " (" + pt.regime + ")" : ""); strip.appendChild(seg);
       });
       card.appendChild(strip);
       var last = h.points[h.points.length - 1];
-      var ax = el("div", "gb-strip-axis"); ax.appendChild(el("span", null, h.points[0].date)); ax.appendChild(el("span", null, "Current: " + last.composite + (last.regime ? " " + last.regime : "") + " on " + last.date)); card.appendChild(ax);
+      var ax = el("div", "gb-strip-axis"); ax.appendChild(el("span", null, h.points[0].date)); ax.appendChild(el("span", null, last.date)); card.appendChild(ax);
       card.appendChild(el("p", "gb-foot", h.points.length + " session(s) on record. Bands: under 25 extreme fear, 25 to 50 fearful, 50 to 75 neutral to greedy, 75 and over greed. The band is named in each block's label and in the axis text; green and red are reserved for returns and are not used here."));
       placeComp(card);
     }).catch(function () {});
