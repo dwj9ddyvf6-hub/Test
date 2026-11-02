@@ -27,7 +27,12 @@
       link.rel = "stylesheet"; link.href = root + "visual.css";
       head.appendChild(link);
     }
-    [["visual.js"], ["page_charts.js"], ["explanation.js"], ["live.js"]].forEach(function (pair) {
+    if (!document.querySelector('link[href$="grok.css"]')) {
+      var glink = document.createElement("link");
+      glink.rel = "stylesheet"; glink.href = root + "grok.css";
+      head.appendChild(glink);
+    }
+    [["visual.js"], ["page_charts.js"], ["explanation.js"], ["live.js"], ["grok.js"]].forEach(function (pair) {
       var name = pair[0];
       if (!document.querySelector('script[src$="' + name + '"]')) {
         var sc = document.createElement("script");
