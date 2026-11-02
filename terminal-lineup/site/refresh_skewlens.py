@@ -448,6 +448,17 @@ def build():
         return fail(err)
     return {
         "tool": "Skew Lens",
+        # Canonical reading date (cure WEEK-READINESS-20261102):
+        # the live arm of this page is the modelled figure set
+        # (the recorded per-strike lane was retired in its favour
+        # on 2026-10-31 and carries no matched figure), so the
+        # page's reading date is the modelled freshest date when
+        # modelled figures exist, else the recorded freshest date.
+        # Without it every freshness resolver dated this page by
+        # the retired ledger's 2026-10-14 and marked it stale
+        # while its modelled reading stood at the latest session.
+        "as_of": (modelled["freshest_date"] if modelled["figures"]
+                  else ledger1["freshest_date"]),
         "source": SOURCE_WORDS,
         "construction": CONSTRUCTION_WORDS,
         "empty_note": EMPTY_WORDS,
