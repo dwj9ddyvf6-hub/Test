@@ -2,9 +2,9 @@
 
 Start here. This file is the map of the whole repository for a reader (human or LLM) arriving cold. Its machine-readable twin is [INDEX.json](INDEX.json), generated from the same inventory by [tools/build_repo_index.py](tools/build_repo_index.py).
 
-Total files indexed: 7177
+Total files indexed: 7226
 
-Indexed commit: `d45bb33e64060ac311b8a119bc98e85f1b937e68`. Generated at: 2026-11-02T13:13:11Z. Total size of indexed files (self entries excluded, their sizes are null): 290008627 bytes.
+Indexed commit: `bdadde69b7115fc10e4966ca1f9f6579bbf1ee49`. Generated at: 2026-11-02T14:14:18Z. Total size of indexed files (self entries excluded, their sizes are null): 291202983 bytes.
 
 ## What this repository is
 
@@ -12,43 +12,45 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Reading order
 
-1. This file, INDEX.md: the map.
-2. [INDEX.json](INDEX.json): every file, when you need the exact path, size or blob sha of anything.
-3. [README.md](README.md): the strategy catalog front page.
-4. [docs/CATALOG.json](docs/CATALOG.json): the catalog data, one card per strategy with variants folded in; the cards themselves live under strategies/.
-5. [docs/ALL-SLEEVES.md](docs/ALL-SLEEVES.md): the full accounting of every distinct strategy across all desks, with its machine-readable twin docs/ALL-SLEEVES.json.
-6. [docs/SLEEVES.md](docs/SLEEVES.md): the current desk roster, one row per installed sleeve, mirrored from config/sleeves.json.
-7. The research collections under docs/research/ and research/ (see entry points below).
-8. [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md): the public terminal lineup and its tools, then the site and forecast code beneath it.
+1. [START-HERE.md](START-HERE.md): the mandatory first read: reading protocol, complete map and anti-miss rules.
+2. This file, INDEX.md: the map.
+3. [ROADMAP.md](ROADMAP.md): routing by question and topic, with the exact files to read in order for each topic.
+4. [INDEX.json](INDEX.json): every file, when you need the exact path, size or blob sha of anything.
+5. [README.md](README.md): the strategy catalog front page.
+6. [docs/CATALOG.json](docs/CATALOG.json): the catalog data, one card per strategy with variants folded in; the cards themselves live under strategies/.
+7. [docs/ALL-SLEEVES.md](docs/ALL-SLEEVES.md): the full accounting of every distinct strategy across all desks, with its machine-readable twin docs/ALL-SLEEVES.json.
+8. [docs/SLEEVES.md](docs/SLEEVES.md): the current desk roster, one row per installed sleeve, mirrored from config/sleeves.json.
+9. The research collections under docs/research/ and research/ (see entry points below).
+10. [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md): the public terminal lineup and its tools, then the site and forecast code beneath it.
 
 ## Map of every top-level area
 
 | Area | Files | Bytes | What it is |
 | --- | ---: | ---: | --- |
-| (root) | 11 | 244553 | Repository root: the README catalog front page, this index, the agent rules file, and the build notes for the newest sleeve families. |
-| adapters | 30 | 118112 | Standalone desk adapters for recently built sleeves (one-bar, Trullas variants, Teddy ORB, PRZM and others), one file per sleeve. |
-| adapters3 | 265 | 133233 | The Aster adapter set: one adapter module per Aster sleeve variant, mirroring the sleeves they wire in. |
+| (root) | 13 | 263396 | Repository root: the entry files (START-HERE.md, ROADMAP.md, INDEX.md, INDEX.json, README.md, AGENTS.md, index.html), and the build notes for the newest sleeve families. |
+| adapters | 31 | 118740 | Standalone desk adapters for recently built sleeves (one-bar, Trullas variants, Teddy ORB, PRZM and others), one file per sleeve. |
+| adapters3 | 266 | 133835 | The Aster adapter set: one adapter module per Aster sleeve variant, mirroring the sleeves they wire in. |
 | agentic-trade-desk | 55 | 280328 | The operational kit for running an agentic trade desk: a runnable skeleton, docs and templates. Paper trading only. |
-| aster_sleeves | 11 | 22122 | Aster sleeve entry points (thin wrappers over the shared engine commons). |
-| config | 1 | 146936 | Desk configuration. config/sleeves.json is the live roster config mirrored into this repository. |
-| desk3 | 50 | 431768 | The desk3 sleeve collection and its portfolio branches. |
-| docs | 1180 | 19879044 | Documentation at scale: the strategy catalog data, the current-desk and all-strategies accountings, one algorithm and recreation document per strategy, verification notes, and the research collections under docs/research/. |
-| educational | 39 | 687056 | Files grouped under this top-level area; see INDEX.json for the full listing. |
-| engines | 19 | 313734 | Shared engine code: desk3 bridges and enhancements, sleeve commons, the roster config copy and a transport kernel. |
-| indicator | 1 | 8192 | A single indicator package. |
-| integration | 327 | 360381 | Integration adapters that wire each sleeve into the desk runner, plus the wiring guide. |
-| laz_sleeves | 10 | 13080 | Lazarus sleeve entry points (thin wrappers over the shared engine commons). |
-| master | 74 | 16692213 | Files grouped under this top-level area; see INDEX.json for the full listing. |
-| packages | 1927 | 117474043 | Whole packages contributed by the desk's builders, grouped by author. See the packages entry point in INDEX.md for the per-author breakdown. |
-| pine | 1 | 9994 | Pine Script sources. |
-| proof | 22 | 62140 | Install proof records: one JSON receipt per installed sleeve under proof/install/. |
+| aster_sleeves | 12 | 22716 | Aster sleeve entry points (thin wrappers over the shared engine commons). |
+| config | 2 | 147573 | Desk configuration. config/sleeves.json is the live roster config mirrored into this repository (336 sleeves, paper trading only). |
+| desk3 | 51 | 432490 | The desk3 sleeve collection and its portfolio branches: the v3 desk engine modules, sleeve modules and portfolio books. |
+| docs | 1207 | 21040116 | Documentation at scale: the strategy catalog data, the current-desk and all-strategies accountings, one algorithm and recreation document per strategy, verification notes, and the research collections under docs/research/. |
+| educational | 40 | 687776 | The shipyard engines collection (educational/shipyard-engines/): self-contained educational trading engines and their supporting material, kept whole. |
+| engines | 20 | 314478 | Shared engine code: desk3 bridges and enhancements, sleeve commons, the roster config copy and a transport kernel. |
+| indicator | 2 | 8942 | A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/). |
+| integration | 328 | 361029 | Integration adapters that wire each sleeve into the desk runner, plus the wiring guide. |
+| laz_sleeves | 11 | 13670 | Lazarus sleeve entry points (thin wrappers over the shared engine commons). |
+| master | 75 | 16693278 | The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. |
+| packages | 1928 | 117474908 | Whole packages contributed by the desk's builders, grouped by author (ausar, claude, grokbot), kept whole rather than cherry-picked. |
+| pine | 2 | 10625 | Pine Script sources (the BB/RSI divergence indicator for TradingView). |
+| proof | 23 | 62782 | Install proof records: one JSON receipt per installed sleeve under proof/install/. |
 | psychology-engine | 124 | 5023354 | The standalone market-psychology engine package: engine code, audits, research and reports. One of the two psychology engines in this repository. |
-| research | 9 | 16994663 | Standalone research works. Home of the technical analysis study and practice archive (Markdown, PDF, DOCX and ZIP forms of the same work). |
-| sleeves | 570 | 5589404 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
-| strategies | 269 | 527337 | Strategy cards: one card per catalogued strategy, grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json; they are not repeated in this prose map. |
-| terminal-lineup | 2173 | 104892432 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
-| tests | 8 | 104508 | Repository-level regression blocker tests. |
-| tools | 1 | 0 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
+| research | 10 | 16995531 | Standalone research works: the technical analysis study and practice archive, and the master trader study, in Markdown, PDF, DOCX and ZIP forms. |
+| sleeves | 571 | 5590107 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
+| strategies | 270 | 528108 | Strategy cards: one card per catalogued strategy (269 cards), grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json. |
+| terminal-lineup | 2174 | 104893441 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
+| tests | 9 | 105111 | Repository-level regression blocker tests. |
+| tools | 2 | 649 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
 ## Entry points into every major collection
 
@@ -77,12 +79,14 @@ A public library of trading strategies and the desk software around them: strate
 
 - docs/: catalog, accountings, per-strategy algorithm and recreation documents, guides and verification notes.
 - docs/verify/: verification notes.
-- docs/research/: the collected research works, including the two below.
+- docs/research/: the collected research works. Every study is named in ROADMAP.md; the entry points are: agent-methods (docs/research/agent-methods/2026-10-31/), the complete LLM enhancement sweep records (docs/research/llm-enhancement-extraction-20261031/, 26 files: reports, cluster extractions, pass deep-dives, verifications and doctrine landings), master-traders-20261029, midna-trader-formation-20261029, onebar-family-2026-10-30, psychology-engine-2026-10-30 and technical-analysis-mastery-20261030.
 - Psychology engine, first of two: [psychology-engine/](psychology-engine/README.md), the standalone package with engine/, audit/, research/ and report/ sections.
 - Psychology engine, second of two: docs/research/psychology-engine-2026-10-30/, the research build with its own engine under docs/research/psychology-engine-2026-10-30/engine/ and the study papers beside it.
 - Technical analysis, first of two: docs/research/technical-analysis-mastery-20261030/, the mastery work with census/ and sections/ folders and the combined texts at its top.
 - Technical analysis, second of two: research/technical-analysis-study-2026-10-30/, the study and practice archive in Markdown, PDF, DOCX and ZIP forms.
 - docs/research/onebar-family-2026-10-30/: the one-bar family analysis.
+- Master trader study, second form: research/master-trader-study-2026-10-29/ (study.md, README.md and the Word form), beside the docs/research/ master-traders-20261029 report.
+- master/: the mirrored Master Terminal edition (hashed JS and CSS assets plus deskview, edition, market, pulse, sleeves, positions, charts and panels data files), reached from the front door at index.html. educational/: the shipyard engines collection under educational/shipyard-engines/.
 
 ### Terminal lineup
 
@@ -103,7 +107,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`d45bb33e64060ac311b8a119bc98e85f1b937e68`) is listed in INDEX.json: 7177 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`bdadde69b7115fc10e4966ca1f9f6579bbf1ee49`) is listed in INDEX.json: 7226 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
