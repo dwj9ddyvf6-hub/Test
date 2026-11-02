@@ -2,9 +2,9 @@
 
 Start here. This file is the map of the whole repository for a reader (human or LLM) arriving cold. Its machine-readable twin is [INDEX.json](INDEX.json), generated from the same inventory by [tools/build_repo_index.py](tools/build_repo_index.py).
 
-Total files indexed: 6805
+Total files indexed: 7177
 
-Indexed commit: `2ddf641b01c34f04ca8632157b6d2b9b522f510f`. Generated at: 2026-11-02T07:14:46Z. Total size of indexed files (self entries excluded, their sizes are null): 265544009 bytes.
+Indexed commit: `061c0a22905d0e260753463a9426144c0acb76ce`. Generated at: 2026-11-02T08:32:30Z. Total size of indexed files (self entries excluded, their sizes are null): 290008301 bytes.
 
 ## What this repository is
 
@@ -38,7 +38,7 @@ A public library of trading strategies and the desk software around them: strate
 | indicator | 1 | 8192 | A single indicator package. |
 | integration | 327 | 360381 | Integration adapters that wire each sleeve into the desk runner, plus the wiring guide. |
 | laz_sleeves | 10 | 13080 | Lazarus sleeve entry points (thin wrappers over the shared engine commons). |
-| master | 73 | 16281255 | Files grouped under this top-level area; see INDEX.json for the full listing. |
+| master | 74 | 16692410 | Files grouped under this top-level area; see INDEX.json for the full listing. |
 | packages | 1927 | 117474043 | Whole packages contributed by the desk's builders, grouped by author. See the packages entry point in INDEX.md for the per-author breakdown. |
 | pine | 1 | 9994 | Pine Script sources. |
 | proof | 22 | 62140 | Install proof records: one JSON receipt per installed sleeve under proof/install/. |
@@ -46,7 +46,7 @@ A public library of trading strategies and the desk software around them: strate
 | research | 9 | 16994663 | Standalone research works. Home of the technical analysis study and practice archive (Markdown, PDF, DOCX and ZIP forms of the same work). |
 | sleeves | 570 | 5589404 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 269 | 527337 | Strategy cards: one card per catalogued strategy, grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json; they are not repeated in this prose map. |
-| terminal-lineup | 1802 | 80838772 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 2173 | 104891909 | The public terminal lineup: the tool site under site/, the forecast engines under forecast/, build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 8 | 104508 | Repository-level regression blocker tests. |
 | tools | 1 | 0 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
@@ -87,7 +87,7 @@ A public library of trading strategies and the desk software around them: strate
 ### Terminal lineup
 
 - [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md): the lineup manifest.
-- terminal-lineup/site/ (1544 files): the public tool site; each tool has its own folder with its page and data, and the refresh scripts sit at the top of site/.
+- terminal-lineup/site/ (1915 files): the public tool site; each tool has its own folder with its page and data, and the refresh scripts sit at the top of site/.
 - terminal-lineup/forecast/ (102 files): the forecast engines, their registry, grading and ledger code, and their tests. See also terminal-lineup/FORECAST-ENGINES-30.md.
 - terminal-lineup/ root: design documents, bug logs, build progress files and 110 workflow scripts that built the tools.
 - terminal-lineup/oracle/: the oracle provenance record. terminal-lineup/records/: build and search records. terminal-lineup/specs/: specifications.
@@ -103,7 +103,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`2ddf641b01c34f04ca8632157b6d2b9b522f510f`) is listed in INDEX.json: 6805 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`061c0a22905d0e260753463a9426144c0acb76ce`) is listed in INDEX.json: 7177 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
