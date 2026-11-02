@@ -1,0 +1,90 @@
+/* Master Desk terminal, the Market tab's dashboards (market.js): GrokBot Desk's ChartsLector tab, copied: the dark chart
+   panel (.chart), the Mood Ring gauge (.clgauge) and its parts (.clpart), the pills (.clpill), the state badges (.clst)
+   and strips (.clstrip), the heat tiles (.clheat) and the quadrant lists (.clq). Tokens from app.css; chart canvases
+   keep TradingView's dark palette in both themes (DESIGN_COPY §1). */
+#p-market{--mx:1}
+.mk .card>*+*{margin-top:14px}
+/* the chart panel: GrokBot .chart, .chart .top .tk .brandtag, .legend */
+.cp{background:#131722;border-radius:16px;padding:14px 12px 10px;color:#dfe3ee}
+.cpt{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;padding:0 4px 8px;margin-bottom:6px;border-bottom:1px solid #262a35}
+.cpn{font-weight:800;color:#7ee0c3;font-size:15px;letter-spacing:.02em;text-transform:uppercase}
+.cpb{font-size:10px;letter-spacing:.2em;color:#9aa3b8;text-transform:uppercase}.cpb b{color:#7ee0c3}
+.cpl{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:#c9cfdd;padding:8px 4px 0}
+.cpl i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.cpl i.kd{height:0;border-top:2px dashed}
+.mk [data-c="1"]{background:#7ee0c3}.mk [data-c="2"]{background:#f2d68a}.mk [data-c="3"]{background:#e3807a}.mk [data-c="4"]{color:#8a91a6}
+.mk [data-c="5"]{color:#ef9a9a}.mk [data-c="6"]{background:#ff9800}.mk [data-c="7"]{background:#ab47bc}.mk [data-c="8"]{background:#b9a7f0}.mk .cpl i.kd[data-c="2"]{background:none;color:#f2d68a}
+.cpc{min-height:20px;margin:4px 4px 0;font-size:12.5px;line-height:1.5;color:#9aa3b8;font-variant-numeric:tabular-nums}
+.card>.cpc{color:var(--mu);margin:8px 0 0}
+.cbx{min-height:150px}
+.cps{display:block;touch-action:pan-y;font-family:var(--fs)}
+.cps text{fill:#9aa3b8;font-size:11px}.cpx text{fill:#787b86;font-size:10.5px}
+.cps .tgt{fill:#fff;font-size:10.5px;font-weight:700}.cps .k{fill:#131722}
+.cps .gd{stroke:#262a35}.cps .rf{stroke:#8a91a6;stroke-dasharray:4 4}.cps .zl{stroke:#8a91a6}
+.cps .b1{fill:#7ee0c3}.cps .b2{fill:#e3807a}
+.cps .qL{fill:#2bb07f}.cps .qI{fill:#4a8fe0}.cps .qG{fill:#d4504a}.cps .qW{fill:#e2bf3f}
+.cps .rs0{fill:#dfe3ee;font-size:10.5px;font-weight:700;paint-order:stroke;stroke:#262b3b;stroke-width:3px}.cps .rs1{fill:#1d2131;font-size:10.5px;font-weight:700}
+/* the index charts: two panels side by side on a wide screen */
+.ixg{display:grid;gap:16px}
+@media (min-width:900px){.ixg{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ixg .vt{margin-top:6px}
+/* the Mood Ring: GrokBot .clwrap.g2 .clgauge .big .lbl, .clparts .clpart .bar */
+.gw{display:grid;gap:14px}
+@media (min-width:760px){.gw{grid-template-columns:minmax(260px,320px) 1fr;align-items:start}}
+.gg{background:#131722;border-radius:16px;padding:12px 10px 12px;color:#dfe3ee;text-align:center}
+.gg svg{display:block;width:100%;height:auto}.gg text{fill:#9aa3b8;font-size:10px}
+.gn{font-size:40px;font-weight:800;color:#fff;line-height:1;margin-top:-6px;font-variant-numeric:tabular-nums}
+.gb{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 10px;margin-top:8px;font-size:12.5px;color:#9aa3b8}.gb .bdg{font-size:12.5px;padding:3px 11px}
+.gp{display:grid;gap:10px}
+.gph{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;font-weight:700;color:var(--hd)}
+.gph small{font-size:12.5px;font-weight:500;color:var(--mu)}.gph span:last-child{flex:none;font-weight:600;color:var(--mu);font-variant-numeric:tabular-nums}
+.gpb{height:9px;margin-top:4px;border-radius:999px;background:var(--acb);border:1px solid var(--ln);overflow:hidden}.gpb i{display:block;height:100%;border-radius:999px;background:var(--ac)}
+/* pills and state badges: GrokBot .clpill .yes .no .mid and .clst in his colours */
+.mps{display:flex;flex-wrap:wrap;gap:6px}.gw .mps{margin-top:12px}
+.mp{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--ln);border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:700;background:var(--sf2);color:var(--tx);white-space:nowrap}
+.mp.y{background:var(--upb);border-color:transparent;color:var(--up)}.mp.n{background:var(--dnb);border-color:transparent;color:var(--dn)}
+.sw{width:9px;height:9px;border-radius:2px}
+.ps{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:800;letter-spacing:.04em;color:#fff;background:#5f667a}
+.ps.GREEN{background:#18744f}.ps.BLUE{background:#2a66b0}.ps.YELLOW{background:#e2bf3f;color:#10283a}.ps.AMBER{background:#e0913a;color:#10283a}.ps.PURPLE{background:#7a4fc0}.ps.RED{background:#b13e38}
+.mk [data-c=GREEN],.mk [data-c=Leading]{background:#2bb07f}.mk [data-c=BLUE],.mk [data-c=Improving]{background:#4a8fe0}.mk [data-c=YELLOW],.mk [data-c=Weakening]{background:#e2bf3f}
+.mk [data-c=AMBER]{background:#e0913a}.mk [data-c=PURPLE]{background:#9467d0}.mk [data-c=RED],.mk [data-c=Lagging]{background:#d4504a}
+.rl{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--mu)}.rl b{color:var(--hd)}
+.mk .card>.rl+.spw{margin-top:4px}.mk .card>.spw+.cpc{margin-top:2px}
+.spw{height:22px;border-radius:6px;overflow:hidden}
+.ck{border-collapse:collapse;font-size:13px}.ck th,.ck td{padding:4px 10px 4px 0;text-align:left}.ck thead th{font:500 11px/1.3 var(--fm);letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}
+.ck tbody th{font-weight:600;color:var(--tx)}.ck td{font-weight:800;text-align:center;min-width:44px}.ck .y{color:var(--up)}.ck .n{color:var(--dn)}.ck .m{color:var(--wn)}
+/* tiles in rows of 2 on a phone: his .grid of .stat, .clra */
+.t3,.t4,.t6{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:720px){.t3{grid-template-columns:repeat(3,minmax(0,1fr))}.t4{grid-template-columns:repeat(4,minmax(0,1fr))}.t6{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1080px){.t6{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.mk .tile .v{font-size:19px}@media (min-width:600px){.mk .tile .v{font-size:21px}}.mk .tile .s{color:var(--mu)}.t3 .tile .v{font-size:17px}.tsd{margin-top:4px;font-size:12.5px;color:var(--mu)}
+/* the heatmap: GrokBot .clheat .tl, his colour scale in five steps (light), Codex's dark tiles (dark) */
+.tgs{display:flex;flex-wrap:wrap;gap:8px 16px}
+.hg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+@media (min-width:600px){.hg{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:900px){.hg{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.hsp{grid-column:1/-1;border-top:1px dashed var(--ln);margin:3px 0}
+.hx{min-width:0;border:0;border-radius:10px;padding:8px 6px;text-align:center;line-height:1.25;font-variant-numeric:tabular-nums;color:#10283a;background:#e9eef0}
+.hx b{display:block;font-size:13.5px;font-weight:800}.hx em{display:block;font-style:normal;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hx span{display:block;font-size:16px;font-weight:800}.hx small{display:block;font-size:10.5px;font-weight:600}
+.hx[aria-pressed=true]{outline:3px solid var(--hd);outline-offset:-3px}
+.u1{background:#a7e0c6}.u2{background:#7bd4aa}.u3{background:#4cca8f}.u4{background:#2fad72}.u5{background:#218355;color:#fff}
+.d1{background:#e6a6a2}.d2{background:#dc7a73}.d3{background:#d04036;color:#fff}.d4{background:#b53027;color:#fff}.d5{background:#88221b;color:#fff}
+@media not all{.hx{color:#f4f7fc;background:#1b2c3e}.u1{background:#1c3631}.u2{background:#1e4a3e}.u3{background:#1f5f4a}.u4{background:#1d7556}.u5{background:#156e4e}
+.d1{background:#3a2629}.d2{background:#50292d}.d3{background:#672b30}.d4{background:#7e2b31}.d5{background:#962a31}}
+.mk .more{display:block}
+/* rotation: GrokBot .clq .qbox .clqr, and his RRG on a wide screen */
+.rmap:empty{display:none}.rmap{border-radius:12px;overflow:hidden}
+.qg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:760px){.qg{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.qb{min-width:0;border:1px solid var(--ln);border-radius:12px;padding:8px 4px;background:var(--sf2)}
+.qb h3{display:flex;align-items:center;gap:6px;margin:0 0 4px;padding:0 6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.qb h3 i{width:8px;height:8px;border-radius:50%}.qb h3 .mu{font-size:12px;letter-spacing:0}
+.mk [data-q=Leading]{color:var(--up)}.mk [data-q=Improving]{color:var(--bl)}.mk [data-q=Weakening]{color:var(--wn)}.mk [data-q=Lagging]{color:var(--dn)}
+.qh,.qr{display:grid;grid-template-columns:minmax(0,1fr) 48px 48px;gap:4px;align-items:center}
+.qh{padding:0 6px 2px;font-size:10px;letter-spacing:.03em;text-transform:uppercase;color:var(--mu)}.qh span+span{text-align:right}
+.qr{width:100%;min-height:36px;padding:3px 6px;border:0;border-radius:8px;background:none;text-align:left;font-size:12.5px;color:var(--tx)}
+.qr b{white-space:nowrap}.qr i{font-style:normal;color:var(--mu);font-weight:600}.qr span{text-align:right;font-variant-numeric:tabular-nums}
+.qr[aria-pressed=true]{background:var(--acb);box-shadow:inset 0 0 0 1px var(--ac)}.qn{padding:2px 6px}
+.lft summary{cursor:pointer;min-height:36px;display:flex;align-items:center;font-size:var(--s);color:var(--mu)}.lft ul{font-size:var(--s);color:var(--mu)}.lft li{padding:2px 0}
+@media (forced-colors:active){.hx,.qr[aria-pressed=true]{forced-color-adjust:auto}}
