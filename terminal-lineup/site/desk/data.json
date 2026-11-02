@@ -1,20 +1,26 @@
 {
   "account": {
-    "buying_power": 3532855.74,
-    "cash": 1072385.79,
-    "equity": 1077369.24,
+    "buying_power": 4163300.04,
+    "cash": 1040825.01,
+    "equity": 1070720.45,
     "last_equity": 1077853.05,
-    "portfolio_value": 1077369.24,
+    "portfolio_value": 1070720.45,
     "status": "ACTIVE"
   },
   "epoch": {
-    "end": "2026-11-02T13:05:07.015925+00:00",
+    "end": "2026-11-02T14:50:01.254276+00:00",
     "start": "2026-10-26T20:14:30.681985+00:00",
     "starting_capital": 1000000.0
   },
   "execution_pricing": false,
   "feed": "filed_records",
-  "positions": [],
+  "positions": [
+    {
+      "qty": 0.384754672,
+      "strategies": [],
+      "symbol": "BTCUSD"
+    }
+  ],
   "positions_source": "strategies[].open_positions (symbol, qty), aggregated by symbol",
   "price_basis": "session_record",
   "provenance": {
@@ -24,7 +30,7 @@
     "source_file": "muse-desk-v3/terminal/terminal_feed.json",
     "stamped_by": "publish_desk.py"
   },
-  "published_at_utc": "2026-11-02T13:05:07.015925+00:00",
+  "published_at_utc": "2026-11-02T14:50:01.254276+00:00",
   "record_surface": {
     "calibration_record": null,
     "current_reading": {
@@ -68,7 +74,18 @@
   "session": "2026-11-02",
   "source": "desk snapshot terminal_feed.json, copied read-only by publish_desk.py from muse-desk-v3/terminal/",
   "subject_chart": {
-    "lead": null,
+    "lead": {
+      "kind": "ranked",
+      "label": "Each open position in the current session snapshot, named, biggest holding first.",
+      "rows": [
+        {
+          "name": "BTCUSD",
+          "score": 0.384754672
+        }
+      ],
+      "source": "positions[].qty (strategies[].open_positions)",
+      "title": "Open positions, by shares held"
+    },
     "record": {
       "kind": "curve",
       "label": "The two equity readings the snapshot itself carries: the starting capital at the epoch start and the equity at the latest cycle. Nothing between them is on record in the snapshot.",
@@ -79,7 +96,7 @@
         },
         {
           "x": "2026-11-02",
-          "y": 1077369.24
+          "y": 1070720.45
         }
       ],
       "source": "epoch.starting_capital / account.equity",
