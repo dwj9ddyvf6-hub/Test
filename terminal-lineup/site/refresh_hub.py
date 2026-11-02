@@ -125,7 +125,19 @@ def headline_date(slug: str):
 
 WEEKLY = {"insider-wire", "insider-divergence", "filings-wire",
           "smart-money-tracker"}
-STATIC_STUDY = {"graveyard", "proving-ground", "replication-wire"}
+STATIC_STUDY = {"graveyard", "proving-ground", "replication-wire",
+                # Finished study publications and the event-driven
+                # standings page (cure WEEK-READINESS-20261102):
+                # grade-a-board republishes the two finished
+                # 2026-10-27 searches and grades nothing new, so
+                # its subject date can never advance; decay-watch
+                # republishes the shared book's gradings and moves
+                # only when a grading event lands (none has since
+                # 2026-10-27, fail-closed elsewhere). A session
+                # freshness expectation is the wrong class for
+                # both: their cards keep their honest subject date
+                # and never carry a Stale chip for it.
+                "grade-a-board", "decay-watch"}
 # Single-issuance engines (cure D-R2-01, 2026-10-31): each of
 # these pages has exactly ONE registered issuance and its as_of
 # IS that issuance date (mortality-curve's refresher ISSUE
