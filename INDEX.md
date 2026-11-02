@@ -4,7 +4,7 @@ Start here. This file is the map of the whole repository for a reader (human or 
 
 Total files indexed: 7226
 
-Indexed commit: `75f52cee5286e6e28f19ba60effd05952a57329b`. Generated at: 2026-11-02T14:17:53Z. Total size of indexed files (self entries excluded, their sizes are null): 291414940 bytes.
+Indexed commit: `d04a62bbc638b467053c93766547830b1c0caea9`. Generated at: 2026-11-02T14:30:37Z. Total size of indexed files (self entries excluded, their sizes are null): 291418245 bytes.
 
 ## What this repository is
 
@@ -27,7 +27,7 @@ A public library of trading strategies and the desk software around them: strate
 
 | Area | Files | Bytes | What it is |
 | --- | ---: | ---: | --- |
-| (root) | 13 | 263396 | Repository root: the entry files (START-HERE.md, ROADMAP.md, INDEX.md, INDEX.json, README.md, AGENTS.md, index.html), and the build notes for the newest sleeve families. |
+| (root) | 13 | 266701 | Repository root: the entry files (START-HERE.md, ROADMAP.md, INDEX.md, INDEX.json, README.md, AGENTS.md, index.html), and the build notes for the newest sleeve families. |
 | adapters | 31 | 118740 | Standalone desk adapters for recently built sleeves (one-bar, Trullas variants, Teddy ORB, PRZM and others), one file per sleeve. |
 | adapters3 | 266 | 133835 | The Aster adapter set: one adapter module per Aster sleeve variant, mirroring the sleeves they wire in. |
 | agentic-trade-desk | 55 | 280328 | The operational kit for running an agentic trade desk: a runnable skeleton, docs and templates. Paper trading only. |
@@ -40,7 +40,7 @@ A public library of trading strategies and the desk software around them: strate
 | indicator | 2 | 8942 | A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/). |
 | integration | 328 | 361029 | Integration adapters that wire each sleeve into the desk runner, plus the wiring guide. |
 | laz_sleeves | 11 | 13670 | Lazarus sleeve entry points (thin wrappers over the shared engine commons). |
-| master | 75 | 16905062 | The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. |
+| master | 75 | 16905062 | The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. Caution: the hourly mirror sync owns master/ wholesale and rewrites it entire, so master/AREA.md is best-effort and may be overwritten or removed by the mirror; the durable description of master/ lives in START-HERE.md, INDEX.md and ROADMAP.md. |
 | packages | 1928 | 117474908 | Whole packages contributed by the desk's builders, grouped by author (ausar, claude, grokbot), kept whole rather than cherry-picked. |
 | pine | 2 | 10625 | Pine Script sources (the BB/RSI divergence indicator for TradingView). |
 | proof | 23 | 62782 | Install proof records: one JSON receipt per installed sleeve under proof/install/. |
@@ -107,7 +107,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`75f52cee5286e6e28f19ba60effd05952a57329b`) is listed in INDEX.json: 7226 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`d04a62bbc638b467053c93766547830b1c0caea9`) is listed in INDEX.json: 7226 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
