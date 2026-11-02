@@ -36,9 +36,29 @@ PANEL_PATH = os.path.expanduser("~/workspace/morgue/data_cache/board_bt_bars.jso
 DATA = "https://data.alpaca.markets"
 
 
+def _capped_end(end_iso):
+    """The request end for a through date, capped out of the recent
+    SIP window. Cure PANEL-END-RECENT-SIP-20261102: the subscription
+    refuses (403) any SIP query whose end sits inside its recent
+    window, and end = through + 1 day at 00:00Z is always hours in
+    the future for the scheduled 17:46 run, so the advance could
+    only ever pass on late-night catch-up runs. Daily bars for a
+    completed session are stamped 04:00Z, so capping the end at
+    now minus 20 minutes never drops a completed bar in a
+    post-close run; an early run simply finds no new bars and the
+    lane fails loudly, as designed."""
+    from datetime import timezone
+    requested = datetime.fromisoformat(f"{end_iso}T00:00:00+00:00")
+    cap = datetime.now(timezone.utc) - timedelta(minutes=20)
+    if requested <= cap:
+        return f"{end_iso}T00:00:00Z"
+    return cap.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def fetch_bars(symbols, start_iso, end_iso):
     """{symbol: {date: [date,o,h,l,c,v]}} from Alpaca SIP daily bars."""
     from alpaca_lib import api_request
+    end_param = _capped_end(end_iso)
     out = {}
     batch = 200
     for i in range(0, len(symbols), batch):
@@ -47,7 +67,7 @@ def fetch_bars(symbols, start_iso, end_iso):
         while True:
             params = {"symbols": ",".join(chunk), "timeframe": "1Day",
                       "start": f"{start_iso}T00:00:00Z",
-                      "end": f"{end_iso}T00:00:00Z",
+                      "end": end_param,
                       "feed": "sip", "limit": 10000}
             if token:
                 params["page_token"] = token
