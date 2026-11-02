@@ -4,7 +4,7 @@ Start here. This file is the map of the whole repository for a reader (human or 
 
 Total files indexed: 7241
 
-Indexed commit: `45f9a7d304f1fb0ed663b92f3ff94a56b2e06934`. Generated at: 2026-11-02T15:38:40Z. Total size of indexed files (self entries excluded, their sizes are null): 291980404 bytes.
+Indexed commit: `b3485c7417da58cf04dae2575df095697ee09fb5`. Generated at: 2026-11-02T16:13:42Z. Total size of indexed files (self entries excluded, their sizes are null): 292008192 bytes.
 
 ## What this repository is
 
@@ -27,7 +27,7 @@ A public library of trading strategies and the desk software around them: strate
 
 | Area | Files | Bytes | What it is |
 | --- | ---: | ---: | --- |
-| (root) | 13 | 266701 | Repository root: the entry files (START-HERE.md, ROADMAP.md, INDEX.md, INDEX.json, README.md, AGENTS.md, index.html), and the build notes for the newest sleeve families. |
+| (root) | 13 | 267512 | Repository root: the entry files (START-HERE.md, ROADMAP.md, INDEX.md, INDEX.json, README.md, AGENTS.md, index.html), and the build notes for the newest sleeve families. |
 | adapters | 31 | 118740 | Standalone desk adapters for recently built sleeves (one-bar, Trullas variants, Teddy ORB, PRZM and others), one file per sleeve. |
 | adapters3 | 266 | 133835 | The Aster adapter set: one adapter module per Aster sleeve variant, mirroring the sleeves they wire in. |
 | agentic-trade-desk | 55 | 280328 | The operational kit for running an agentic trade desk: a runnable skeleton, docs and templates. Paper trading only. |
@@ -48,7 +48,7 @@ A public library of trading strategies and the desk software around them: strate
 | research | 10 | 16995531 | Standalone research works: the technical analysis study and practice archive, and the master trader study, in Markdown, PDF, DOCX and ZIP forms. |
 | sleeves | 571 | 5590107 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 270 | 528108 | Strategy cards: one card per catalogued strategy (269 cards), grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json. |
-| terminal-lineup | 2180 | 104971161 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 2180 | 104998138 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 9 | 105111 | Repository-level regression blocker tests. |
 | tools | 2 | 649 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
@@ -107,7 +107,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`45f9a7d304f1fb0ed663b92f3ff94a56b2e06934`) is listed in INDEX.json: 7241 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`b3485c7417da58cf04dae2575df095697ee09fb5`) is listed in INDEX.json: 7241 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
