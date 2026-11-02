@@ -366,10 +366,21 @@ def build():
             return fail(f"the published map page carries no {sym} card")
         def _v(x):
             return x["value"] if isinstance(x, dict) else x
+        # Spot basis cure (WEEK-READINESS-R2-20261102-K): the map
+        # page's "spot" is the session close from the price panel
+        # (its stated spot_basis), while the card's spot is the
+        # snapshot spot the card was built from, which the page
+        # carries as snapshot_spot. Comparing the card against the
+        # panel close refused every republication built on a later
+        # day (proven 2026-11-02: card 760.34 vs panel close
+        # 755.72, walls and flip in exact agreement). The card is
+        # compared against its own spot field; walls and flip are
+        # still compared exactly.
+        card_spot = e.get("snapshot_spot", _v(e["spot"]))
         if abs(_v(e["call_wall"]) - card["call_wall"]) > 1e-9 or \
                 abs(_v(e["put_wall"]) - card["put_wall"]) > 1e-9 or \
                 abs(_v(e["flip"]) - card["flip"]) > 1e-6 or \
-                abs(_v(e["spot"]) - card["spot"]) > 1e-9:
+                abs(card_spot - card["spot"]) > 1e-9:
             return fail(f"the published map page's freshest {sym} card "
                         "disagrees with the card store")
 
