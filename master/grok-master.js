@@ -66,27 +66,51 @@ ready(function () {
      page title), sentence = its own first paragraph, hero = its own
      first big figure, footnote names the source. data-gb-full is
      stamped only when all three parts are really on the card. */
-  function grammar() {
-    Array.prototype.forEach.call(document.querySelectorAll(".card,.panel,.tile,.read,.view section,section.card"), function (c) {
+  /* R3-AUDIT cure (row 1): insertAfterChildR3 inserts a node into the
+     card c after the card-level child that contains anchor. The old
+     code used c.insertBefore(node, h.nextSibling) with h NESTED
+     inside the card (read cards: h3.tk inside .top), which throws
+     "not a child of this node", aborted the whole grammar pass, and
+     left every later card (including lookup read cards) unstamped. */
+  function insertAfterChildR3(c, node, anchor) {
+    var a = anchor;
+    while (a && a.parentNode !== c) a = a.parentNode;
+    if (a && a.nextSibling) c.insertBefore(node, a.nextSibling);
+    else if (a) c.appendChild(node);
+    else if (c.firstChild) c.insertBefore(node, c.firstChild);
+    else c.appendChild(node);
+  }
+  function grammarCardR3(c) {
+    try {
       if (c.closest(".gb-mbar,.gb-mtabs,.gb-mstats,.gb-fdlg") || c.hasAttribute("data-gb-full")) return;
-      var h = c.querySelector("h1,h2,h3,h4"); if (!h) return;
-      if (!c.querySelector(":scope > .gb-kicker")) { var k = el("p", "gb-kicker", (h.textContent || "").trim().slice(0, 60)); c.insertBefore(k, c.firstChild); }
+      var h = c.querySelector("h1,h2,h3,h4");
+      var titleEl = h || c.querySelector(".tk,.tog,.t,.name,.hd,summary,caption");
+      var titleTxt = titleEl ? (titleEl.textContent || "").trim().replace(/\s+/g, " ").slice(0, 60) : "";
+      if (!titleTxt) { var own0 = (c.textContent || "").replace(/\s+/g, " ").trim(); titleTxt = own0.slice(0, 60); }
+      if (!titleTxt) return;
+      if (!c.querySelector(":scope > .gb-kicker")) { var k = el("p", "gb-kicker", titleTxt); c.insertBefore(k, c.firstChild); }
       if (!c.querySelector(":scope > .gb-sentence")) {
         var p = c.querySelector("p:not(.gb-kicker):not(.gb-foot)");
         var st = p ? (p.textContent || "").trim().replace(/\s+/g, " ") : "";
-        if (st.length <= 12) { var own = (c.textContent || "").replace(/\s+/g, " ").trim(); var ht = (h.textContent || "").trim(); if (own.indexOf(ht) === 0) own = own.slice(ht.length).trim(); st = own.slice(0, 220); }
-        if (st.length > 12) { var s = el("p", "gb-sentence", st.slice(0, 220)); if (h.nextSibling) c.insertBefore(s, h.nextSibling); else c.insertBefore(s, c.firstChild.nextSibling); }
+        if (st.length <= 12) { var own = (c.textContent || "").replace(/\s+/g, " ").trim(); if (own.indexOf(titleTxt) === 0) own = own.slice(titleTxt.length).trim(); st = own.slice(0, 220); }
+        if (st.length > 12) { var s = el("p", "gb-sentence", st.slice(0, 220)); insertAfterChildR3(c, s, h || titleEl); }
       }
       if (!c.querySelector(":scope > .gb-hero")) {
         var hv = c.querySelector(".bignum,.vvalue,.fig,.big,strong,b");
         var heroTxt = "";
         if (hv && /\d/.test(hv.textContent || "") && (hv.textContent || "").trim().length <= 32) heroTxt = (hv.textContent || "").trim().slice(0, 40);
-        if (!heroTxt) { var m = (c.textContent || "").replace(/\s+/g, " ").slice(0, 300).match(/-?\$?\d[\d,]*(\.\d+)?%?/); if (m) heroTxt = m[0]; }
-        if (heroTxt) { var he = el("p", "gb-hero", heroTxt); var se = c.querySelector(":scope > .gb-sentence"); if (se && se.nextSibling) c.insertBefore(he, se.nextSibling); else if (h.nextSibling) c.insertBefore(he, h.nextSibling); }
+        if (!heroTxt) { var all = (c.textContent || "").replace(/\s+/g, " "); var fm = all.match(/-?\$[\d,]+(\.\d+)?|-?\d[\d,]*\.\d+\s?%|-?\d[\d,]*\.\d+|-?\d[\d,]*\s?%/); if (fm) heroTxt = fm[0].trim().slice(0, 40); }
+        if (!heroTxt) { var im = (c.textContent || "").replace(/\s+/g, " ").replace(/\d{4}-\d{2}-\d{2}/g, " ").match(/(?<![\d.,/-])\d{1,6}(?![\d./-])/); if (im) heroTxt = im[0]; }
+        if (heroTxt) { var he = el("p", "gb-hero", heroTxt); var se = c.querySelector(":scope > .gb-sentence"); insertAfterChildR3(c, he, se || h || titleEl); }
       }
       if (!c.querySelector(":scope > .gb-foot")) c.appendChild(el("p", "gb-foot", "From this view's own data. The table or chart in this card is the record."));
-      if (c.querySelector(":scope > .gb-sentence") && c.querySelector(":scope > .gb-hero") && c.querySelector(":scope > .gb-foot")) c.setAttribute("data-gb-full", "1"); else c.setAttribute("data-gb-partial", "1");
-    });
+      /* Exclusive stamps: an upgraded card must not keep its old
+         partial stamp (censuses double-counted dual-stamped cards). */
+      if (c.querySelector(":scope > .gb-sentence") && c.querySelector(":scope > .gb-hero") && c.querySelector(":scope > .gb-foot")) { c.setAttribute("data-gb-full", "1"); c.removeAttribute("data-gb-partial"); } else { c.setAttribute("data-gb-partial", "1"); c.removeAttribute("data-gb-full"); }
+    } catch (e) { /* one bad card never kills the pass for the rest */ }
+  }
+  function grammar() {
+    Array.prototype.forEach.call(document.querySelectorAll(".card,.panel,.tile,.read,.view section,section.card"), grammarCardR3);
     Array.prototype.forEach.call(document.querySelectorAll(".gb-mtab"), function (t) { t.classList.toggle("on", t.getAttribute("data-view") === viewOf()); });
   }
   /* C18 finder: dialog over the app's own views and section headings. */
@@ -114,7 +138,7 @@ ready(function () {
   enhance();
   [1200, 3000, 6000].forEach(function (ms) { setTimeout(enhance, ms); });
   var pending = null;
-  new MutationObserver(function () { if (pending) return; pending = setTimeout(function () { pending = null; grammar(); }, 400); }).observe(document.body, { childList: true, subtree: true });
+  new MutationObserver(function () { if (pending) return; pending = setTimeout(function () { pending = null; enhance(); }, 400); }).observe(document.body, { childList: true, subtree: true });
   window.addEventListener("hashchange", function () { setTimeout(enhance, 350); });
 });
 })();
