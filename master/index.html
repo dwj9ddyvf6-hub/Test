@@ -11,7 +11,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="edition.json" as="fetch" crossorigin>
-<link rel="stylesheet" href="app.0d6223d379.css">
+<link rel="stylesheet" href="app.e4a5faefcb.css">
 <link rel="stylesheet" href="viz.a17524480c.css">
 <link rel="stylesheet" href="context.290b3d5052.css">
 <link rel="stylesheet" href="brief.d9b66f2b08.css">
@@ -19,7 +19,8 @@
 <link rel="stylesheet" href="heur.809b23b99c.css">
 <link rel="stylesheet" href="funnel.cc0a756c83.css">
 <link rel="stylesheet" href="vendor.89ab384cbf.css">
-<link rel="stylesheet" href="ascend.8824e85ce7.css">
+<link rel="stylesheet" href="ascend.81686ec211.css">
+<link rel="stylesheet" href="lineup.76eb5d9edd.css">
 <script src="app.6c1f00913c.js" defer></script>
 <script src="viz.78545f67a4.js" defer></script>
 <script src="context.50c6ee21e3.js" defer></script>
@@ -28,7 +29,9 @@
 <script src="heur.30d334cec7.js" defer></script>
 <script src="funnel.792640c61b.js" defer></script>
 <script src="vendor.8d450cd734.js" defer></script>
-<script src="ascend.f2dde6da33.js" defer></script>
+<script src="ascend.211a70606b.js" defer></script>
+<script src="lineup.165d0c0aec.js" defer></script>
+<script src="optdata.6c9209742d.js" defer></script>
 </head>
 <body>
 <header class="hdr" id="mast">
@@ -89,7 +92,7 @@
         </div>
       </section>
     </div>
-    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.dd08fc5c55.js" data-css="market.dcb4e6d26b.css" hidden>
+    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.dd08fc5c55.js" data-css="market.c133dcfde4.css" hidden>
       <div class="glance" id="glance"></div>
       <div class="strip" id="strip" aria-label="Market strip" hidden></div>
       <section class="mk" id="m-tick" aria-label="Headlines" hidden></section>
@@ -177,8 +180,29 @@
         <div class="card">
           <div class="a-hbar"><label class="sr" for="hubq">Search panels</label><input id="hubq" class="a-hq" type="search" autocomplete="off" placeholder="Search panels"><div class="a-tg" id="hubf" role="group"><button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="published" aria-pressed="false">Published</button><button type="button" data-f="awaiting" aria-pressed="false">Awaiting</button></div></div>
           <ul class="a-hubl" id="hubl"></ul>
+          <h3 class="a-slah">Freshness</h3><div class="a-sla" id="hubsla"></div>
         </div>
         <details class="wh"><summary>What is this?</summary><p>Every section and tool on the terminal with its state, source and limitation, as this edition stamped them. Published panels have a reading; awaiting panels have none yet or wait for their first.</p></details>
+      </section>
+      <section id="h-lineup" aria-labelledby="h-h-lineup" data-anchor data-jump="Lineup">
+        <div class="shd"><div class="sht"><p class="kick">Opening range to receipts</p><h2 id="h-h-lineup">Desk lineup</h2></div><span class="pv" id="lu-asof"></span></div>
+        <div class="card"><div class="lu-tg" id="lu-chips" role="group" aria-label="Lineup tools"></div><div id="lu-body"></div></div>
+      </section>
+      <section id="h-gaps" aria-labelledby="h-h-gaps" data-anchor data-jump="Gap-Fill">
+        <div class="shd"><div class="sht"><p class="kick">Same-session fills</p><h2 id="h-h-gaps">Gap-Fill</h2></div></div>
+        <div class="card" id="lu-gap"></div>
+      </section>
+      <section id="h-corr" aria-labelledby="h-h-corr" data-anchor data-jump="Correlation">
+        <div class="shd"><div class="sht"><p class="kick">Who moves together</p><h2 id="h-h-corr">Correlation Web</h2></div></div>
+        <div class="card" id="lu-corr"></div>
+      </section>
+      <section id="h-optdata" aria-labelledby="h-h-optdata" data-anchor data-jump="Options data">
+        <div class="shd"><div class="sht"><p class="kick">Sources, ages and the memo</p><h2 id="h-h-optdata">Options data</h2></div></div>
+        <div class="card" id="od-body"></div>
+      </section>
+      <section id="h-read" aria-labelledby="h-h-read" data-anchor data-jump="Chart Read">
+        <div class="shd"><div class="sht"><p class="kick">Evidence for and against</p><h2 id="h-h-read">Chart Read Engine</h2></div></div>
+        <div class="card" id="lu-read"></div>
       </section>
     </div>
     <div class="panel" id="p-how" role="tabpanel" aria-labelledby="t-how" hidden>
@@ -188,7 +212,7 @@
         <ol class="steps">
           <li><b>Read everything.</b> After each close the desk reads every stock on its list the same way: the trend and its averages, the levels where buyers and sellers stepped in before, momentum and its divergences, volume, volatility, candles and gaps, chart patterns, Wyckoff events and the Elliott wave count, the fund each stock follows, the market, and its own strategies.</li>
           <li><b>One plan.</b> From those levels it builds one plan: where to buy, the daily close that proves it wrong, where to take profit, and by when. A stock that is falling gets a plan that buys only once it turns.</li>
-          <li><b>Conviction and the desk’s take.</b> Each kind of evidence (the trend, the levels, momentum, volume, the wave count and so on) casts one vote, however many readings it has. Conviction counts how many kinds clearly agree, net (at least half a vote each, less any clearly against): High at four, Solid at three. The desk’s take adds what the evidence does not hold: support stacked at the buy, the fund it follows, earnings inside the hold.</li>
+          <li><b>Conviction and the desk’s take.</b> Each kind of evidence (the trend, the levels, momentum, volume, the wave count and so on) casts one vote, however many readings it has. Every kind of chart reading votes, patterns, candles, Wyckoff and the wave count included; what its vote weighs is earned on the desk’s own graded reads, and each kind’s record shows beside its vote. A study grade of X means not yet proven by published studies, not barred. Conviction counts how many kinds clearly agree, net (at least half a vote each, less any clearly against): High at four, Solid at three. The desk’s take adds what the evidence does not hold: support stacked at the buy, the fund it follows, earnings inside the hold.</li>
           <li><b>The strip.</b> Above the Buy List, five reads of the session. SPY gamma: the dealers' net gamma per 1% move from the option chain, under the usual convention that dealers are long the calls and short the puts (open interest does not say who holds it); Dampening when it is positive, Amplifying when negative, the word changing only after two reads agree, with the flip (where it changes sign) and the largest put and call walls. Range: the VIX's one-day expected move (VIX ÷ 15.87) and how much of it the clock has funded. Day: Pin, Grind or Volatile from the gamma, the gap and the range so far, logged and graded each session. Fear: Calm under 15, Normal to 18.5, Stressed above, against a forecast of realized volatility; a fear day is the Buy List's own rule: SPY down 1% or more on the day, under its 50-day average, or a volatility spike. SPX / NQ: whether SPY and QQQ agree today.</li>
           <li><b>The Fear-Day Buy List.</b> When the market has a fear day inside a bull market, the desk lists names in three lanes: uptrend pullbacks, deep resets and a micro and nano lane. Each card gives its reasons, the vetoes that apply, and a plan: buy at the next open, hold about 60 sessions, a disaster stop as a level, and a weight that risks the same on every name. The market gate sits on top: under a Risk-off badge a buy reads as a smaller size or as a watch, never as a plain buy.</li>
           <li><b>The record.</b> Every call the desk lists, including those from its earlier board, is written down before the outcome and scored as a reader could trade it, losers included: a buy that waits for a daily close fills at the next session’s open, and a daily close below the out line sells at the next open.</li>
