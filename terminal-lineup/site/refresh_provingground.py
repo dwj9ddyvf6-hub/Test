@@ -202,10 +202,32 @@ TOOLS = [
 NO_DATA = {"payoff-sketch", "greeks-sketch"}
 
 
+def hub_card_links(hub):
+    """Links from the hub's card grid only: one card per tool.
+
+    Cure WEEK-READINESS-20261102: the duplicate check below used
+    to count every href on the hub page. Since the 2026-10-31 hub
+    rebuild the hub also carries a Visual Front of featured tiles
+    and a Needs Attention monitor, both of which link a tool a
+    second time by design as cross-references, so the old count
+    refused every run (the 2026-10-30 tools refresh failure class)
+    while the card grid itself held every tool exactly once. The
+    check's real claim is about the listing: no tool may be
+    listed twice in the card grid, and every classified tool must
+    be listed there. Cross-references outside the grid are not
+    listings."""
+    links = []
+    for card in re.findall(r'<article class="hubcard".*?</article>',
+                           hub, re.S):
+        links += re.findall(r'href="([a-z0-9-]+)/"', card)
+    return links
+
+
 def main():
     hub = open(HUB_PATH).read()
-    hub_links = re.findall(r'href="([a-z0-9-]+)/"', hub)
-    need(len(hub_links) == len(set(hub_links)), "hub links a tool more than once")
+    hub_links = hub_card_links(hub)
+    need(len(hub_links) == len(set(hub_links)),
+         "hub card grid links a tool more than once")
     classified = {slug for _, slug, _, _ in TOOLS}
     # Every classified tool must be linked from the hub exactly
     # once (the duplicate check above plus this subset check).
