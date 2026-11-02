@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://s3.tradingview.com; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <title>Master Terminal</title>
 <meta name="description" content="The day’s best setups, the Fear-Day Buy List: one clear plan per stock, where to buy, where it is wrong, where to take profit, the evidence behind it in plain English, and every call scored.">
 <meta name="color-scheme" content="light">
@@ -11,7 +11,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" href="edition.json" as="fetch" crossorigin>
-<link rel="stylesheet" href="app.e4a5faefcb.css">
+<link rel="stylesheet" href="app.4bda57714f.css">
 <link rel="stylesheet" href="viz.a17524480c.css">
 <link rel="stylesheet" href="context.290b3d5052.css">
 <link rel="stylesheet" href="brief.d9b66f2b08.css">
@@ -19,24 +19,24 @@
 <link rel="stylesheet" href="heur.809b23b99c.css">
 <link rel="stylesheet" href="funnel.cc0a756c83.css">
 <link rel="stylesheet" href="vendor.89ab384cbf.css">
-<link rel="stylesheet" href="ascend.81686ec211.css">
+<link rel="stylesheet" href="ascend.df45c501e2.css">
 <link rel="stylesheet" href="lineup.76eb5d9edd.css">
-<script src="app.6c1f00913c.js" defer></script>
-<script src="viz.78545f67a4.js" defer></script>
+<script src="app.4405cfae70.js" defer></script>
+<script src="viz.3de73f6e1a.js" defer></script>
 <script src="context.50c6ee21e3.js" defer></script>
 <script src="brief.18cc4bc19a.js" defer></script>
 <script src="strip.1c7448c356.js" defer></script>
 <script src="heur.30d334cec7.js" defer></script>
 <script src="funnel.792640c61b.js" defer></script>
 <script src="vendor.8d450cd734.js" defer></script>
-<script src="ascend.211a70606b.js" defer></script>
-<script src="lineup.165d0c0aec.js" defer></script>
+<script src="ascend.31ca63dc85.js" defer></script>
+<script src="lineup.c5363aa07d.js" defer></script>
 <script src="optdata.6c9209742d.js" defer></script>
 </head>
 <body>
 <header class="hdr" id="mast">
   <div class="hw">
-    <a class="logo" href="#setups" aria-label="Master Terminal: the setups"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19V9M10 19V5M15 19v-6"/><path d="M14 9l4-5 3 3"/></svg></a>
+    <a class="logo" href="#market" aria-label="Master Terminal: the market"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19V9M10 19V5M15 19v-6"/><path d="M14 9l4-5 3 3"/></svg></a>
     <div class="bn">
       <h1 class="brand">Master Terminal</h1>
       <div class="stat">
@@ -82,15 +82,6 @@
         <div class="card" id="lrankc"></div>
       </section>
       </div>
-      <section id="look" aria-labelledby="h-look" data-anchor data-jump="Look up" hidden>
-        <div class="shd"><div class="sht"><p class="kick">Any stock on the list</p><h2 id="h-look">Look up</h2></div><span class="pv" id="look-meta"></span></div>
-        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> The desk's read of any stock on the desk's roster, not only the Buy List.</p><p><b>How.</b> Type a ticker for its take, plan and evidence, read from the latest daily bars.</p></details>
-        <div class="card">
-          <form id="lf" class="lf" role="search"><label class="sr" for="lq">Stock symbol</label><input id="lq" class="lq" type="text" inputmode="search" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Symbol, e.g. AAPL" maxlength="12"><button class="btn" type="submit">Read</button></form>
-          <ul class="ls" id="ls"></ul>
-          <div id="lres"></div>
-        </div>
-      </section>
     </div>
     <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.dd08fc5c55.js" data-css="market.c133dcfde4.css" hidden>
       <div class="glance" id="glance"></div>
@@ -136,8 +127,18 @@
       <section class="mk" id="m-risk" aria-labelledby="h-m-risk" data-anchor data-jump="Risk appetite" hidden></section>
       <section class="mk" id="m-heat" aria-labelledby="h-m-heat" data-anchor data-jump="Heatmap" hidden></section>
       <section class="mk" id="m-rot" aria-labelledby="h-m-rot" data-anchor data-jump="Rotation" hidden></section>
+      <section id="look" aria-labelledby="h-look" data-anchor data-jump="Look up" hidden>
+        <div class="shd"><div class="sht"><p class="kick">Any stock on the list</p><h2 id="h-look">Look up</h2></div><span class="pv" id="look-meta"></span></div>
+        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> The desk's read of any stock on the desk's roster, not only the Buy List.</p><p><b>How.</b> Type a ticker for its take, plan and evidence, read from the latest daily bars.</p></details>
+        <div class="card">
+          <form id="lf" class="lf" role="search"><label class="sr" for="lq">Stock symbol</label><input id="lq" class="lq" type="text" inputmode="search" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Symbol, e.g. AAPL" maxlength="12"><button class="btn" type="submit">Read</button></form>
+          <ul class="ls" id="ls"></ul>
+          <div id="lres"></div>
+        </div>
+      </section>
     </div>
     <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.d0c15a08f9.js" data-css="desk.cf3bdbae7b.css" hidden>
+      <span class="anc" id="desk"></span>
       <div id="d-wait"><p class="card mu">Loading the desk…</p><svg width="1" height="1400" aria-hidden="true" focusable="false"></svg></div>
       <section id="d-book" aria-labelledby="h-d-book" data-anchor data-jump="My Book" hidden></section>
       <section id="d-over" hidden></section><section id="d-curve" hidden></section><section id="d-lead" hidden></section><section id="d-sl" hidden></section><section id="d-pos" hidden></section><section id="d-heat" hidden></section><section id="d-eng" hidden></section><section id="d-closed" hidden></section><section id="d-sc" hidden></section>
@@ -171,6 +172,7 @@
       </section>
     </div>
     <div class="panel" id="p-engine" role="tabpanel" aria-labelledby="t-engine" data-js="engine.2337995edf.js" data-css="engine.2d29ddf30a.css" hidden>
+      <span class="anc" id="engine"></span>
       <section class="ek" id="e-rank" aria-labelledby="h-e-rank" data-anchor data-jump="Engine" hidden></section>
       <section class="ek" id="e-fc" aria-labelledby="h-e-fc" data-anchor data-jump="Forecasts" hidden></section>
     </div>
