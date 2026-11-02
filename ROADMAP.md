@@ -14,6 +14,16 @@ Read in order:
 6. sleeves/: the sleeve source code (319 standalone modules at the top, the rest under family folders; family folders are enumerated in INDEX.json). This is the code the cards describe.
 7. laz_sleeves/ and aster_sleeves/: thin sleeve entry points over the shared commons in engines/. desk3/: the v3 desk sleeve collection and portfolio branches. adapters/, adapters3/ and integration/: the adapter sets that wire sleeves into the desk (see the desk code section).
 
+### Tensor: where the Tensor material lives
+
+Tensor is dispersed by design; there is no Tensor folder. Read in order:
+
+1. The sleeve code: the tensor modules at the top of sleeves/ (the aster_tensor_* and aster_r19_tensor_* families, plus tensor_swing.py and tensor_red_dip.py), including the D20 pair, sleeves/aster_tensor_d20_tensor.py and sleeves/aster_tensor_d20_pv.py; then the feed library under sleeves/tensor_research/ and sleeves/midna/midna_tensor.py. A tensor sleeve's row in docs/SLEEVES.md names its code file.
+2. The adapters: adapters3/ holds the matching Aster adapter module for each tensor sleeve (same file stem), and integration/ holds the matching *_adapter.py wiring module for each.
+3. The documents: docs/ASTER_TENSOR_*-ALGORITHM.md and docs/ASTER_TENSOR_*-RECREATE.md (the algorithm and recreation documents for the aster_tensor family, the D20 documents among them), docs/D20TENSOR-RECREATE.md, and the R19_TENSOR_*, GRIFFITH_TENSOR_*, MK_CREATIVETENSOR*, QR_TENSOR_*, TENSOR_SWING and TENSOR_RED_DIP recreation documents under docs/.
+4. The cards: the tensor strategy cards under strategies/, including the strategies/tensor_research/ family folder.
+5. The full set: search INDEX.json by the path fragment "tensor" (377 hits at the indexed commit named in INDEX.md); tensor material also sits inside whole packages under packages/.
+
 ## The desk code
 
 Read in order:
