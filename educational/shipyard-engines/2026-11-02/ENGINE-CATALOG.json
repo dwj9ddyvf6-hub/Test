@@ -1,0 +1,78 @@
+{
+  "schema": "SHIPYARD_ENGINE_ONLY_CATALOG_V1",
+  "status": "local_offline_review_candidate",
+  "collection": "selected caller-input kernels and synthetic tests; not a deployable application or feed",
+  "engines": [
+    {
+      "id": "forecast.numeric.scorers.v1",
+      "description": "30 manual numeric scorer contracts; uncalibrated research hypotheses, not live feeds",
+      "entrypoint": "dist/forecast-engines.mjs",
+      "exports": ["evaluateForecastEngine", "listForecastEngines", "SILICON_FORECAST_SOURCE"],
+      "input": "caller-supplied numeric feature object",
+      "eligibility": "decision_eligible is always false"
+    },
+    {
+      "id": "chartslector.pine-subset.v1",
+      "description": "complete bounded JS calculator for the reviewed Pine subset only",
+      "entrypoint": "research/chartslector/adapter.mjs",
+      "exports": ["calculateChartslector", "CHARTSLECTOR_SOURCE"],
+      "input": "two caller-supplied aligned synthetic or user-provided OHLCV panels",
+      "excludes": ["full archive", "full Lector", "acquisition", "ranking", "orders"]
+    },
+    {
+      "id": "math-labs.explicit-input.v1",
+      "description": "eight independent caller-input math labs plus two shared helpers",
+      "entrypoints": [
+        "components/static-gex.mjs",
+        "components/bullflow-activity.mjs",
+        "components/finviz-filter.mjs",
+        "components/stockrover-factors.mjs",
+        "components/confluence.mjs",
+        "components/portfolio.mjs",
+        "components/strategy-sma.mjs",
+        "components/daily-change-alerts.mjs",
+        "components/shared/csv.mjs",
+        "components/shared/input-validation.mjs"
+      ],
+      "input": "explicit caller-provided rows or CSV; synthetic tests do not contain market samples",
+      "limits": ["no provider access", "portfolio result is hypothetical", "labels do not imply vendor access"]
+    },
+    {
+      "id": "saty.research.kernels.v1",
+      "description": "in-memory indicator, structure, routing and mechanical research hypotheses",
+      "entrypoints": [
+        "python/saty/saty_reference.py",
+        "python/saty/saty_system/"
+      ],
+      "input": "caller-supplied bars, calendars and context",
+      "limits": ["not a reproduction of a complete discretionary method", "no broker or service connection"]
+    },
+    {
+      "id": "raschke.rre.kernels.v1",
+      "description": "causal RRE core and RRE1/RRE2/RRE3 candidate-policy variants",
+      "entrypoints": ["python/rre/raschke_core.py", "python/rre/raschke_engine.py"],
+      "input": "caller-supplied bars, session calendar and prior-session reference",
+      "limits": ["candidate signals are not orders", "no live feed, broker, or account state"]
+    },
+    {
+      "id": "lector.chart-math-subset.v1",
+      "description": "standalone indicator, causal chart-geometry, Elliott-structure and chart-analog subset",
+      "entrypoint": "research/lector-chart-math/engine.mjs",
+      "exports": ["explainChart", "analyzeElliottWave", "buildPatternHistory", "patternHistorySentence", "patternHistorySentences"],
+      "input": "caller-supplied timestamped OHLCV bars and explicit observation clocks",
+      "excludes": ["full live-Lector bundle", "provider parsing", "desk interpretation", "setup plan", "operational ledger"]
+    }
+  ],
+  "not_catalogued_as_engines": [
+    "historical source-binding metadata (not included or verified here)",
+    "FE06/FE12 source-provider transforms",
+    "full Lector and Aperture",
+    "Psychology calculator and its private operational bridge"
+  ],
+  "claims": {
+    "live_data": false,
+    "calibration": false,
+    "trading_performance": false,
+    "production_readiness": false
+  }
+}
