@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sponsored Reset: do the filings tell held washed-out stocks from abandoned ones?</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Sponsored Reset</h1>
+    <p class="job">One job: on fear days, test whether the public filings tell washed-out stocks that are still held from washed-out stocks that have been abandoned, before the next 20 trading days begin.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function card(title, inner){return '<section class="card"><h2>'+esc(title)+'</h2>'+inner+'</section>';}
+  function pts(x){return (x>0?"+":"")+Number(x).toFixed(2)+" points";}
+  function gateWords(h){
+    if(h.gate===null) return "could not be read yet";
+    return h.gate? "passed (market close "+h.gate_close+" against a 200-day average of "+h.gate_mean_200+")" : "did not pass";
+  }
+
+  fetch("data.json").then(function(r){if(!r.ok) throw new Error(r.status); return r.json();}).then(function(d){
+    meta.textContent="Price history checked through "+fmtDate(d.as_of)+". Source: "+d.source;
+    var out="";
+
+    out+=card("Still being proven", '<p class="sub">This tool is new and its own record is still being built. It earns stronger words only from fear-day groups it has written down in advance and had graded, never from the older study behind it. Its verdict needs three matured groups, and fear days are rare, so this proving state will be long.</p>');
+
+    // ---- The idea ----
+    out+=card("The idea", '<p>'+esc(d.idea)+'</p>'
+      +'<p class="claim">'+esc(d.claim.words)+'</p>'
+      +'<p class="sub">'+esc(d.claim.points_explained)+'</p>');
+
+    // ---- The three arms, side by side ----
+    var a='<table><thead><tr><th>Group recorded on the day</th><th>What it is</th></tr></thead><tbody>';
+    d.arms.forEach(function(arm){
+      a+='<tr><td><strong>'+esc(arm.name)+'</strong></td><td>'+esc(arm.words)+'</td></tr>';
+    });
+    a+='</tbody></table><p class="sub">All three groups are written to the public record at the fear day\'s close, on the same day and on the same terms, so the comparison can never be rearranged afterwards.</p>';
+    out+=card("The three groups, side by side", a);
+
+    // ---- The parent survivor's record ----
+    var P=d.parent_record;
+    out+=card(P.label, '<p class="sub">'+esc(P.words)+'</p>');
+
+    // ---- How every piece is measured ----
+    var D=d.definitions, S=D.sponsorship;
+    var m='<table><tbody>'
+      +'<tr><th>What counts as a fear day</th><td>'+esc(D.fear_day)+'</td></tr>'
+      +'<tr><th>What counts as washed out</th><td>'+esc(D.washed_out)+'</td></tr>'
+      +'<tr><th>The combined score</th><td>'+esc(D.combined_score)+'</td></tr>'
+      +'<tr><th>The market gate</th><td>'+esc(D.gate)+'</td></tr>'
+      +'<tr><th>Backing on record</th><td>'+esc(S.words)+' The big-holder counts compare the period ended '+esc(fmtDate(S.periods[0]))+' ('+esc(S.filers_current)+' holders filed) with the period ended '+esc(fmtDate(S.periods[1]))+' ('+esc(S.filers_prior)+' filed). The insider record was gathered '+esc(fmtDate(S.insider_gathered))+' from filings filed since '+esc(fmtDate(S.insider_window_start))+'; its buy flag holds for exactly five names: '+esc(S.any_buy_names.join(", "))+'. '+esc(S.limits)+'</td></tr>'
+      +'</tbody></table>';
+    out+=card("How every piece is measured", m);
+
+    // ---- Labelled history ----
+    var H=d.history;
+    var h='<p class="sub"><strong>'+esc(H.label)+'.</strong> '+esc(H.words)+'</p>';
+    h+='<table><thead><tr><th>Fear day</th><th>Market gate</th><th>Washed-out stocks scored</th><th>Top fifth of the score</th><th>Of those, backed on record</th></tr></thead><tbody>';
+    H.days.forEach(function(day){
+      h+='<tr><td>'+esc(fmtDate(day.date))+' (SPY '+esc(day.spy_change_pct)+'% that day)</td><td>'+esc(gateWords(day))+'</td><td>'+esc(day.pool_count)+'</td><td>'+esc(day.composite_count)+(day.composite_names.length? ': '+esc(day.composite_names.join(", ")) : '')+'</td><td>'+esc(day.sponsored_count)+(day.sponsored_names.length? ': '+esc(day.sponsored_names.join(", ")) : '')+'</td></tr>';
+    });
+    h+='</tbody></table><p class="sub">Across all 22 fear days: '+esc(H.totals.pool_name_days)+' washed-out stock-days scored on '+esc(H.totals.days_with_pool)+' days that formed a pool at all, '+esc(H.totals.composite_name_days)+' top-fifth placings, and never more than '+esc(H.totals.max_sponsored_names)+' backed names on any single day.</p>';
+    out+=card("Fear days on record, worked as history", h);
+
+    // ---- Live record ----
+    var L=d.live;
+    var l='<table><tbody>'
+      +'<tr><th>Fear-day groups started</th><td>'+esc(L.cohorts_formed)+'</td></tr>'
+      +'<tr><th>Groups matured and graded</th><td>'+esc(L.cohorts_matured)+' of '+esc(L.proving_target_cohorts)+' needed for the verdict below</td></tr>'
+      +'<tr><th>Forecasts written to the public record</th><td>'+esc(L.records_written)+'</td></tr>'
+      +'<tr><th>Forecasts graded so far</th><td>'+esc(L.records_graded)+'</td></tr>'
+      +'</tbody></table>';
+    if(L.freshest_note){ l+='<p class="sub">'+esc(L.freshest_note)+'</p>'; }
+    if(L.missed_fear_days && L.missed_fear_days.length){ l+='<p class="sub">Fear days that passed unrecorded and will never be backfilled: '+esc(L.missed_fear_days.join(", "))+'. They stay out of every figure.</p>'; }
+    l+='<p class="sub">'+esc(L.wait)+'</p>'
+      +'<p class="sub">'+esc(d.thin_cell_rule)+'</p>';
+    out+=card("The live record", l);
+
+    out+=card("When this tool retires itself", '<p class="sub">'+esc(d.kill_criterion)+'</p>');
+
+    // ---- The working, checked ----
+    var T=d.self_test;
+    out+=card("The working, checked", '<p class="sub">Before anything is published, the washed-out test, the two score parts, the market gate and the group grading are run on hand-built price series whose answers are known in advance ('+esc(T.feature_cases_checked)+' checks, all matching), the score\'s top fifth is checked on a pool whose order is known, the settled fear-day list is checked against the price history, the insider record is checked against its own published totals, the big-holder filer counts are recomputed from the filing sets and checked against the published tracker record, and the three-group recording is run end to end on a throwaway copy of the public record ('+esc(T.ledger_arms_checked)+' groups recorded there). Test records never enter the live record. Latest check: passed.</p>');
+
+    main.innerHTML=out;
+  }).catch(function(e){
+    banner.className="banner show missing";
+    banner.textContent="The latest figures could not be loaded. Nothing is shown rather than something out of date.";
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
