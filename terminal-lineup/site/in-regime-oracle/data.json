@@ -1,7 +1,7 @@
 {
   "as_of": "2026-10-30",
   "bar_words": "A group joins only when at least 30 of its calls have been graded. Below that, a few lucky or unlucky calls would swing its rate wildly, so it is listed below as excluded, with its count printed, never quietly dropped.",
-  "cadence_words": "New chances are issued on Mondays before the market opens, and only on Mondays. Today is not a Monday, so nothing is issued today. The first issue is Monday, 2026-11-02, and it will cover the Board gate, the one group that has cleared the bar, with the inputs computed on this refresh.",
+  "cadence_words": "New chances are issued on Mondays before the market opens, and only on Mondays. Today is a Monday: the groups over the bar are issued today (0 new record rows).",
   "calibration_attestation": {
     "attestation": {
       "basis": "no graded forecasts on record yet (0 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities. Counting basis: the engine's own weekly window forecasts only (outcome kind next_window_hit_rate_exceeds_trailing); the Aperture proof-gate provisional rows hosted under this engine id (outcome kind provisional_proof_forward_check) are counted in the page proof_gate block, not in this engine's forecast record.",
@@ -41,11 +41,11 @@
   "ledger_rows_created_this_run": 0,
   "live_record": {
     "counting_basis": "the engine's own weekly window forecasts only (outcome kind next_window_hit_rate_exceeds_trailing); the Aperture proof-gate provisional rows hosted under this engine id (outcome kind provisional_proof_forward_check) are counted in the proof_gate block, not here",
-    "forecasts_recorded": 0,
+    "forecasts_recorded": 1,
     "target": 12,
     "windows_graded": 0,
-    "windows_issued": 0,
-    "words": "0 weekly windows issued so far, 0 graded, of the 12 graded windows that decide this page. The record starts with the first Monday issue; nothing is backfilled."
+    "windows_issued": 1,
+    "words": "1 weekly windows issued so far, 0 graded, of the 12 graded windows that decide this page. The record starts with the first Monday issue; nothing is backfilled."
   },
   "populations": [
     {
@@ -196,18 +196,18 @@
   "price_basis": "close",
   "proof_gate": {
     "by_state": {
-      "MIXED": 13973,
-      "OBSERVING": 1842,
+      "MIXED": 13978,
+      "OBSERVING": 1837,
       "SUPPORTED": 0
     },
-    "forward_duplicates": 11881,
+    "forward_duplicates": 2667,
     "forward_records_created": 15815,
-    "ledger_duplicate_rows": 15834,
+    "ledger_duplicate_rows": 31649,
     "ledger_rows_recounted": 15815,
-    "ledger_rows_total": 31649,
+    "ledger_rows_total": 47464,
     "names_scanned": 15815,
-    "source_as_of": "2026-10-29",
-    "words": "The proof gate scanned 15815 names and wrote each name's provisional state to the forward record, where it will be checked against what the name does next. Every state is provisional: 13973 names read MIXED, 1842 are still OBSERVING, and 0 names are SUPPORTED today, so no name on this page is shown as proven. 15834 earlier superseded rows from earlier scans sit beside the current row for their names (the first instance was 19 names whose values changed when the first full scan recomputed the correction); the record is append only, every row stays on it, and every count on this page counts each name once."
+    "source_as_of": "2026-10-30",
+    "words": "The proof gate scanned 15815 names and wrote each name's provisional state to the forward record, where it will be checked against what the name does next. Every state is provisional: 13978 names read MIXED, 1837 are still OBSERVING, and 0 names are SUPPORTED today, so no name on this page is shown as proven. 31649 earlier superseded rows from earlier scans sit beside the current row for their names (the first instance was 19 names whose values changed when the first full scan recomputed the correction); the record is append only, every row stays on it, and every count on this page counts each name once."
   },
   "provenance": {
     "execution_pricing": false,
