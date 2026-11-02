@@ -579,37 +579,86 @@
      sentence (its own first paragraph or heading), a hero (its own
      first big figure) and a footnote (this page's own data date).
      Text is copied from the card itself; nothing is invented. */
+  /* R2-CURE (row 3): hero from the card itself. First a big-figure
+     element; failing that, the card's own first short number-bearing
+     element (a figline, a bold figure, a stat value). The hero is a
+     COPY of text already on the card; nothing is computed or invented. */
+  function heroFromCardR3(c) {
+    var hv = c.querySelector(".bignum,.vvalue,.fig,.big,.figline,.gb-svalue,.census b");
+    if (hv && (hv.textContent || "").trim()) return (hv.textContent || "").trim().slice(0, 40);
+    var cand = c.querySelectorAll("strong,b,span,p,div");
+    for (var i = 0; i < cand.length; i++) {
+      var t = (cand[i].textContent || "").trim();
+      if (t.length >= 1 && t.length <= 32 && /-?\$?\d/.test(t) && cand[i].children.length === 0) return t;
+    }
+    return "";
+  }
   function enhanceCardsR2(data) {
     var asOf = asOfOf(data);
-    Array.prototype.forEach.call(document.querySelectorAll(".card,.chartbox,.verdict,.panel,.sc"), function (c) {
+    Array.prototype.forEach.call(document.querySelectorAll(".card,.chartbox,.verdict,.panel,.sc,.hubcard"), function (c) {
       if (c.closest(".gb-fdlg,.gb-disc,.gb-comp") || c.hasAttribute("data-gb-full")) return;
-      if (c.querySelector(":scope > .gb-sentence") && c.querySelector(":scope > .gb-foot")) { c.setAttribute("data-gb-full","1"); return; }
       if (!c.querySelector(":scope > .gb-sentence")) {
         var s = "";
-        var pp = c.querySelector("p:not(.kicker):not(.gb-foot):not(.meta)");
+        var pp = c.querySelector("p:not(.kicker):not(.gb-kicker):not(.gb-foot):not(.meta)");
         if (pp) s = (pp.textContent || "").trim().replace(/\s+/g, " ");
         if (!s) { var hd = c.querySelector("h2,h3,h4"); if (hd) s = pageName() + ": " + (hd.textContent || "").trim() + ". The figures below are this section's own reading."; }
         if (s) { var se = el("p", "gb-sentence", s.slice(0, 220)); var hEl = c.querySelector("h2,h3,h4,.t,.name"); if (hEl && hEl.nextSibling) c.insertBefore(se, hEl.nextSibling); else if (c.firstChild) c.insertBefore(se, c.firstChild.nextSibling); }
       }
       if (!c.querySelector(":scope > .gb-hero")) {
-        var hv = c.querySelector(".bignum,.vvalue,.fig,.big");
-        if (hv && (hv.textContent || "").trim()) { var he = el("p", "gb-hero", (hv.textContent || "").trim().slice(0, 40)); var se2 = c.querySelector(":scope > .gb-sentence"); if (se2 && se2.nextSibling) c.insertBefore(he, se2.nextSibling); }
+        var heroTxt = heroFromCardR3(c);
+        if (heroTxt) { var he = el("p", "gb-hero", heroTxt); var se2 = c.querySelector(":scope > .gb-sentence"); if (se2 && se2.nextSibling) c.insertBefore(he, se2.nextSibling); else if (c.firstChild) c.insertBefore(he, c.firstChild.nextSibling); }
       }
       if (!c.querySelector(":scope > .gb-foot")) {
-        c.appendChild(el("p", "gb-foot", "From this page's own data" + (asOf ? ", as of " + asOf : "") + ". The table or chart in this card is the record."));
+        var ownDate = "";
+        if (c.classList.contains("hubcard")) { var up = c.querySelector(".updated"); if (up) ownDate = (up.textContent || "").trim(); }
+        c.appendChild(el("p", "gb-foot", ownDate ? ownDate + ". From this page's own data; the table or chart in this card is the record." : "From this page's own data" + (asOf ? ", as of " + asOf : "") + ". The table or chart in this card is the record."));
       }
-      c.setAttribute("data-gb-full", "1");
+      /* Honest stamp (R2-CURE row 3): data-gb-full only when all three
+         grammar parts are actually on the card; otherwise partial. */
+      if (c.querySelector(":scope > .gb-sentence") && c.querySelector(":scope > .gb-hero") && c.querySelector(":scope > .gb-foot")) c.setAttribute("data-gb-full", "1");
+      else c.setAttribute("data-gb-partial", "1");
     });
+  }
+  /* R2-CURE (row 6b): a second date must never ride inside a kicker.
+     The live layer's "Reading as of" chip date disagreed with the
+     header's data stamp on market-mood; kickers carry the card's own
+     section name only, so any embedded ISO date is stripped here. */
+  function stripKickerDates() {
+    Array.prototype.forEach.call(document.querySelectorAll(".kicker,.gb-kicker"), function (k) {
+      var t = k.textContent || "";
+      if (/\d{4}-\d{2}-\d{2}/.test(t) || /Reading as of/i.test(t)) k.textContent = t.replace(/Reading as of\s*/i, "").replace(/\d{4}-\d{2}-\d{2}/g, "").replace(/[\s·|]+$/, "").trim() || pageName().slice(0, 60);
+    });
+  }
+  /* R2-CURE (row 7): the SPEC-mapped subject component leads, not the
+     generic ranker. Any subject component card (mood strip, level
+     diagram, gauge wrap, recipe) is moved ahead of a generic
+     .gb-maincomp ranker card on the same page. */
+  function subjectLeadR3() {
+    var generic = document.querySelector(".gb-maincomp.gb-comp");
+    if (!generic || !generic.parentNode) return;
+    var subs = document.querySelectorAll(".gb-moodstrip,.gb-mmlevels,.gb-gaugewrap,.gb-moodband,.gb-breadth-note");
+    for (var i = 0; i < subs.length; i++) {
+      var s = subs[i].closest(".card,section") || subs[i];
+      if (s && s !== generic && s.parentNode === generic.parentNode && (generic.compareDocumentPosition(s) & 4)) { generic.parentNode.insertBefore(s, generic); return; }
+    }
   }
   /* Row 5 (F8): the subject comes first. A proving-state card that
      sits ahead of the page's subject chart is moved behind it. */
   function subjectFirstR2() {
     var cards = Array.prototype.slice.call(document.querySelectorAll(".card,.verdict"));
     var prov = null;
-    for (var i = 0; i < Math.min(3, cards.length); i++) { if (/being proven|still being proven|proving state/i.test(cards[i].textContent || "")) { prov = cards[i]; break; } }
-    if (!prov) return;
-    var chart = document.querySelector(".chartbox, .gb-lead, .gb-comp, canvas, svg");
-    if (chart) { var host = chart.closest(".card,.chartbox,section") || chart; if (host && host !== prov && prov.parentNode && prov.compareDocumentPosition(host) & 2) { /* prov is before host */ host.parentNode.insertBefore(prov, host.nextSibling); } }
+    for (var i = 0; i < Math.min(4, cards.length); i++) { if (/being proven|still being proven|proving state/i.test(cards[i].textContent || "")) { prov = cards[i]; break; } }
+    if (!prov || !prov.parentNode) return;
+    /* R2-CURE (row 5): the subject is the page's NATIVE subject chart
+       first, else the injected subject component. compareDocumentPosition
+       bit 4 (FOLLOWING) on prov means the host comes after prov, i.e.
+       prov currently leads and must move behind the host. (The R2 code
+       tested bit 2, PRECEDING, the opposite, so it never fired.) */
+    var hosts = document.querySelectorAll(".chartbox");
+    var host = null;
+    for (var i = 0; i < hosts.length; i++) { var h = hosts[i].closest(".card,.chartbox,section") || hosts[i]; if (h !== prov && !h.contains(prov)) { host = h; break; } }
+    if (!host) { var comp = document.querySelector(".gb-comp:not(.gb-maincomp)") || document.querySelector(".gb-lead"); if (comp) host = comp.closest(".card,.chartbox,section") || comp; }
+    if (host && host !== prov && host.parentNode === prov.parentNode && (prov.compareDocumentPosition(host) & 4)) host.parentNode.insertBefore(prov, host.nextSibling);
   }
   /* Row 4: C15 NEW badges. Diffs the rendered ranker labels against
      the stored prior-session set in rowsets.json (built by
@@ -617,18 +666,35 @@
      this page's own session, no badges render: the baseline session
      itself never claims novelty. */
   var rowsetsCache = null;
+  /* R2-CURE (row 4): badge targets are every rendered row identity on
+     the page, not ranker rows only: ranker labels, table first cells
+     and hubcard titles (badgeTargetsR3). The store's baseline is the
+     prior session's set (baseline_rows/baseline_session, rotated by
+     build_prior_rows.py only when a newer session lands), so the diff
+     window cannot race the lane that writes the store. */
+  function badgeTargetsR3() {
+    var out = [];
+    Array.prototype.forEach.call(document.querySelectorAll(".gb-rkrow .id"), function (n) { out.push({ el: n, host: n }); });
+    Array.prototype.forEach.call(document.querySelectorAll("table tbody tr"), function (tr) {
+      if (tr.closest(".gb-comp,.gb-fdlg")) return;
+      var td = tr.querySelector("td"); if (td && (td.textContent || "").trim()) out.push({ el: td, host: tr });
+    });
+    return out;
+  }
   function newBadgesR2(data) {
     var asOf = asOfOf(data); if (!asOf || onHub) return;
     function apply(store) {
-      var rec = store && store[slug]; if (!rec || !rec.rows || !rec.session) return;
-      if (!(rec.session < asOf)) return;
-      var prior = {}; rec.rows.forEach(function (r) { prior[r] = 1; });
+      var rec = store && store[slug]; if (!rec) return;
+      var bRows = rec.baseline_rows || rec.rows, bSess = rec.baseline_session || rec.session;
+      if (!bRows || !bSess) return;
+      if (!(bSess < asOf)) return;
+      var prior = {}; bRows.forEach(function (r) { prior[r] = 1; });
       var n = 0;
-      Array.prototype.forEach.call(document.querySelectorAll(".gb-rkrow .id"), function (idEl) {
-        var lab = (idEl.textContent || "").trim();
-        if (lab && !prior[lab] && !idEl.querySelector(".gb-badge")) { var b = el("span", "gb-badge new", "NEW"); b.style.marginLeft = "6px"; idEl.appendChild(b); n++; }
+      badgeTargetsR3().forEach(function (tg) {
+        var lab = (tg.el.textContent || "").trim().replace(/\s*NEW\s*$/, "");
+        if (lab && !prior[lab] && !tg.host.querySelector(".gb-badge.new")) { var b = el("span", "gb-badge new", "NEW"); b.style.marginLeft = "6px"; tg.el.appendChild(b); n++; }
       });
-      if (n) { var comp = document.querySelector(".gb-comp"); if (comp && !comp.querySelector(".gb-newnote")) comp.appendChild(el("p", "gb-foot gb-newnote", n + " row(s) are new since the stored prior session (" + rec.session + ").")); }
+      if (n) { var comp = document.querySelector(".gb-comp") || document.querySelector(".card"); if (comp && !comp.querySelector(".gb-newnote")) comp.appendChild(el("p", "gb-foot gb-newnote", n + " row(s) are new since the stored prior session (" + bSess + ").")); }
     }
     if (rowsetsCache) { apply(rowsetsCache); return; }
     fetch(root + "rowsets.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (s) { rowsetsCache = s; apply(s); }).catch(function () {});
@@ -638,6 +704,12 @@
      from the psychology engine's live state files). Bands are the
      composite's own percentile bands; the strip accrues per session
      and says so until it is long. */
+  /* R2-CURE (row 6a): mood band colours. SPEC non-negotiable 5 reserves
+     green/red for returns; the composite's fear bands are states, not
+     returns, so the strip uses the warn/teal state scale (moodBandR3):
+     deep amber, amber, teal, dark teal. The state is also named in the
+     segment title and the axis text, so colour never carries it alone. */
+  function moodBandR3(v) { return v < 25 ? "#86580a" : v < 50 ? "#d9a441" : v < 75 ? "#3d9a84" : "#0b3b46"; }
   function moodStripR2() {
     if (document.querySelector(".gb-moodstrip")) return;
     fetch("composite-history.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (h) {
@@ -647,13 +719,13 @@
       var strip = el("div", "gb-strip");
       h.points.forEach(function (pt) {
         var seg = document.createElement("span");
-        seg.style.background = pt.composite < 25 ? "#b0342e" : pt.composite < 50 ? "#d9a441" : pt.composite < 75 ? "#3d9a84" : "#0b3b46";
+        seg.style.background = moodBandR3(pt.composite);
         seg.title = pt.date + ": " + pt.composite + (pt.regime ? " (" + pt.regime + ")" : ""); strip.appendChild(seg);
       });
       card.appendChild(strip);
       var last = h.points[h.points.length - 1];
       var ax = el("div", "gb-strip-axis"); ax.appendChild(el("span", null, h.points[0].date)); ax.appendChild(el("span", null, "Current: " + last.composite + (last.regime ? " " + last.regime : "") + " on " + last.date)); card.appendChild(ax);
-      card.appendChild(el("p", "gb-foot", h.points.length + " session(s) on record. Bands: under 25 extreme fear, 25 to 50 fearful, 50 to 75 neutral to greedy, 75 and over greed. Green and red here name the composite's own bands, printed in the axis text as well."));
+      card.appendChild(el("p", "gb-foot", h.points.length + " session(s) on record. Bands: under 25 extreme fear, 25 to 50 fearful, 50 to 75 neutral to greedy, 75 and over greed. The band is named in each block's label and in the axis text; green and red are reserved for returns and are not used here."));
       placeComp(card);
     }).catch(function () {});
   }
@@ -662,17 +734,34 @@
      index; the strip and the level diagram are drawn from those
      numbers. This replaces the no-bars top chart: levels, not bars,
      because the page publishes levels and no position sizes. */
+  /* R2-CURE (row 7b): numAtR3 reads a level from an index entry in any
+     of the shapes the data actually uses: a plain number (spot), or a
+     {state, value} object (put_wall / call_wall / flip, where state is
+     the receipt's status word and value is the level). The R2 reader
+     only accepted a plain number under the key itself, so every wall
+     read as absent and the level card rendered empty. */
+  function numAtR3(ix, key) {
+    if (!ix || typeof ix !== "object") return null;
+    var o = ix[key];
+    if (typeof o === "number" && isFinite(o)) return o;
+    if (o && typeof o === "object" && typeof o.value === "number" && isFinite(o.value)) return o.value;
+    var found = null;
+    (function walk(v, d) {
+      if (found != null || d > 3 || !v || typeof v !== "object") return;
+      var w = v[key];
+      if (typeof w === "number" && isFinite(w)) { found = w; return; }
+      if (w && typeof w === "object" && typeof w.value === "number" && isFinite(w.value)) { found = w.value; return; }
+      Object.keys(v).forEach(function (k) { if (k !== "receipt") walk(v[k], d + 1); });
+    })(ix, 0);
+    return found;
+  }
   function morningMapR2(data) {
     if (!data || !Array.isArray(data.indexes) || !data.indexes.length) return;
     if (!document.querySelector(".gb-stats")) {
-      var first = data.indexes[0];
-      function fig(ix, key) { var o = ix && ix[key]; return o && o.state && typeof o.state.value === "number" ? o.state.value : (o && typeof o.value === "number" ? o.value : null); }
-      function deep(ix, key) { /* indexes entries vary; search shallowly */
-        var found = null; (function walk(v, d) { if (found != null || d > 3 || !v || typeof v !== "object") return; if (typeof v[key] === "number") { found = v[key]; return; } Object.keys(v).forEach(function (k) { walk(v[k], d + 1); }); })(ix, 0); return found; }
       var stats = [];
       data.indexes.slice(0, 3).forEach(function (ix) {
         var sym = ix.symbol || ix.name || "Index";
-        var spot = deep(ix, "spot"), flip = deep(ix, "flip");
+        var spot = numAtR3(ix, "spot"), flip = numAtR3(ix, "flip");
         stats.push({ label: sym + " spot", value: spot == null ? "no data" : "$" + fmt(spot, 2), sub: "Session " + (data.session || ""), dark: stats.length === 0 });
         if (flip != null) stats.push({ label: sym + " flip", value: "$" + fmt(flip, 2), sub: spot == null ? "" : (spot >= flip ? "Spot above the flip" : "Spot below the flip"), sign: spot == null ? "" : (spot >= flip ? "up" : "down") });
       });
@@ -687,8 +776,7 @@
       card.classList.add("gb-mmlevels");
       data.indexes.slice(0, 3).forEach(function (ix) {
         var sym = ix.symbol || ix.name || "Index";
-        function deep2(key) { var found = null; (function walk(v, d) { if (found != null || d > 3 || !v || typeof v !== "object") return; if (typeof v[key] === "number") { found = v[key]; return; } Object.keys(v).forEach(function (k) { walk(v[k], d + 1); }); })(ix, 0); return found; }
-        var pw = deep2("put_wall"), fl = deep2("flip"), sp = deep2("spot"), cw = deep2("call_wall");
+        var pw = numAtR3(ix, "put_wall"), fl = numAtR3(ix, "flip"), sp = numAtR3(ix, "spot"), cw = numAtR3(ix, "call_wall");
         if (pw == null || cw == null || sp == null) return;
         var lo = Math.min(pw, fl == null ? pw : fl, sp, cw), hi = Math.max(pw, fl == null ? cw : fl, sp, cw); if (hi === lo) hi = lo + 1;
         var row = el("div"); row.style.margin = "10px 0";
@@ -870,9 +958,12 @@
       try { if (slug === "morning-map") morningMapR2(data); } catch (e) {}
       try { enhanceCardsR2(data); } catch (e) {}
       try { subjectFirstR2(); } catch (e) {}
+      try { subjectLeadR3(); } catch (e) {}
+      try { stripKickerDates(); } catch (e) {}
       try { newBadgesR2(data); } catch (e) {}
       try { universalAtoms(data); } catch (e) {}
       try { applyGrammar(); } catch (e) {}
+      try { stripKickerDates(); } catch (e) {}
       /* pages render their own tables async; re-run the DOM-bound
          cures twice so late cards/tables get the same treatment */
       [1200, 3000, 6000].forEach(function (ms) { setTimeout(function () {
@@ -882,6 +973,9 @@
         try { deepComponentR2(data); } catch (e) {}
         try { categoricalComponentR2(data); } catch (e) {}
         try { enhanceCardsR2(data); } catch (e) {}
+        try { subjectFirstR2(); } catch (e) {}
+        try { subjectLeadR3(); } catch (e) {}
+        try { stripKickerDates(); } catch (e) {}
         try { newBadgesR2(data); } catch (e) {}
         try { universalAtoms(data); } catch (e) {}
         try { dedupeLiveStamp(); } catch (e) {}
