@@ -1,0 +1,13 @@
+{
+  "name": "shipyard-engine-only-research",
+  "version": "0.0.0-local-candidate",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify": "node scripts/verify-engine-package.mjs",
+    "test:js": "node --test tests/forecast-engines.test.mjs tests/chartslector-synthetic.test.mjs tests/math-labs.test.mjs tests/lector-chart-math.test.mjs",
+    "test:python": "python -B -m unittest discover -s tests -p 'test_*_kernels.py'",
+    "test:parity": "python -B scripts/build_forecast_parity_vectors.py --check",
+    "test": "npm run verify && npm run test:js && npm run test:python && npm run test:parity"
+  }
+}
