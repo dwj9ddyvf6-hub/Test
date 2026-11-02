@@ -231,23 +231,23 @@ def render_markdown(index):
     add("1. [START-HERE.md](START-HERE.md): the mandatory first read: "
         "reading protocol, complete map and anti-miss rules.")
     add("2. This file, INDEX.md: the map.")
-    add("9. [ROADMAP.md](ROADMAP.md): routing by question and topic, "
+    add("3. [ROADMAP.md](ROADMAP.md): routing by question and topic, "
         "with the exact files to read in order for each topic.")
-    add("10. [INDEX.json](INDEX.json): every file, when you need the "
+    add("4. [INDEX.json](INDEX.json): every file, when you need the "
         "exact path, size or blob sha of anything.")
-    add("3. [README.md](README.md): the strategy catalog front page.")
-    add("4. [docs/CATALOG.json](docs/CATALOG.json): the catalog data, "
+    add("5. [README.md](README.md): the strategy catalog front page.")
+    add("6. [docs/CATALOG.json](docs/CATALOG.json): the catalog data, "
         "one card per strategy with variants folded in; the cards "
         "themselves live under strategies/.")
-    add("5. [docs/ALL-SLEEVES.md](docs/ALL-SLEEVES.md): the full "
+    add("7. [docs/ALL-SLEEVES.md](docs/ALL-SLEEVES.md): the full "
         "accounting of every distinct strategy across all desks, with "
         "its machine-readable twin docs/ALL-SLEEVES.json.")
-    add("6. [docs/SLEEVES.md](docs/SLEEVES.md): the current desk roster, "
+    add("8. [docs/SLEEVES.md](docs/SLEEVES.md): the current desk roster, "
         "one row per installed sleeve, mirrored from "
         "config/sleeves.json.")
-    add("7. The research collections under docs/research/ and "
+    add("9. The research collections under docs/research/ and "
         "research/ (see entry points below).")
-    add("8. [terminal-lineup/THE-70-TOOLS.md]"
+    add("10. [terminal-lineup/THE-70-TOOLS.md]"
         "(terminal-lineup/THE-70-TOOLS.md): the public terminal lineup "
         "and its tools, then the site and forecast code beneath it.")
     add("")
