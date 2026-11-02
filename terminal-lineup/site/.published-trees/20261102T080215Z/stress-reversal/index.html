@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stress-Reversal Staging: do yesterday's losers turn, in order?</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  input[type=search]{width:100%;max-width:420px;padding:9px 12px;font-size:15px;border:1px solid var(--line);border-radius:8px;margin:4px 0 8px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Stress-Reversal Staging</h1>
+    <p class="job">One job: when the broad market is in the deepest third of its fall, state whether yesterday's biggest losers turn around in a set order, stage by stage, and grade each stage on its own.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest reading&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function pct(v){return (v>0?"+":"")+Number(v).toFixed(2)+"%";}
+  function card(title, inner){return '<section class="card"><h2>'+esc(title)+'</h2>'+inner+'</section>';}
+
+  fetch("data.json").then(function(r){if(!r.ok) throw new Error(r.status); return r.json();}).then(function(d){
+    meta.textContent="Reading measured from the close of "+fmtDate(d.as_of_session)+". Prices from: "+d.source;
+    var out="";
+    var C=d.condition, L=d.live, H=d.history;
+
+    out+=card("Still being proven", '<p class="sub">This tool is new and its own record is still being built. It earns stronger words only from forecasts it has published and had graded, never from the older study behind it. Its proving is decided by its first '+esc(L.proving_episodes)+' live stress stretches.</p>');
+
+    out+=card("The claim under test", '<p class="claim">'+esc(d.claim)+'</p>');
+
+    // ---- The three stages ----
+    var stg="";
+    stg+='<table><thead><tr><th>Stage</th><th>What it says</th><th>What it means if this stage fails</th></tr></thead><tbody>'
+      +'<tr><td><strong>Stage 1: the turn begins, by the next trading day</strong></td><td>Each flagged stock\'s gain or loss over the next trading day beats the broad market\'s over the same day.</td><td>The losers did not even start to turn. This is the stage the whole tool stands or falls on: see the retirement rule below.</td></tr>'
+      +'<tr><td><strong>Stage 2: the lag is made up, within 3 trading days</strong></td><td>Over the next 3 trading days, each flagged stock makes up the whole of its past week\'s lag behind the typical stock.</td><td>The turn started but stalled: the stocks bounced without catching up, so the catch-up part of the pattern did not happen.</td></tr>'
+      +'<tr><td><strong>Stage 3: how far it goes, at 1, 3 and 5 trading days</strong></td><td>The middle total gain or loss across the whole flagged group at 1, 3 and 5 trading days lands where stated.</td><td>The order may be right but the size is wrong: the stated middle gains or losses do not match what the group actually did.</td></tr>'
+      +'</tbody></table>';
+    out+=card("The three stages, in order", stg);
+
+    // ---- Today ----
+    var t="";
+    t+='<table><tbody>'
+      +'<tr><th>The broad market\'s fall from its highest close in the record on hand</th><td>'+esc(C.drawdown_pct)+'%</td></tr>'
+      +'<tr><th>The deepest third of the fall begins at</th><td>'+esc(C.threshold_pct)+'% or lower</td></tr>'
+      +'<tr><th>Stress stretches in the record on hand</th><td>'+esc(C.episodes_in_history)+' stretches across '+esc(C.stress_sessions_in_history)+' trading days</td></tr>'
+      +'</tbody></table>';
+    if(L.state==="firing"){
+      t+='<p><span class="count">'+esc(L.forecasts.length)+'</span> <span class="sub">stocks flagged today. The market is in the deepest third of its fall, so the script is running. Every flagged stock carries the same three stage forecasts, taken from the history run below:</span></p>';
+      var S=L.stage_forecast;
+      t+='<table><tbody>'
+        +'<tr><th>Stage 1: chance the turn begins by the next trading day</th><td>'+esc(S.stage_1_pct)+'%</td></tr>'
+        +'<tr><th>Stage 2: chance the past week\'s lag is fully made up within 3 trading days</th><td>'+esc(S.stage_2_pct)+'%</td></tr>'
+        +'<tr><th>Stage 3: middle total gain or loss at 1 / 3 / 5 trading days</th><td>'+pct(S.stage_3_medians_pct.plus_1)+' / '+pct(S.stage_3_medians_pct.plus_3)+' / '+pct(S.stage_3_medians_pct.plus_5)+'</td></tr>'
+        +'</tbody></table>';
+      t+='<input type="search" id="q" placeholder="Type a stock symbol to filter the table">';
+      t+='<table id="ft"><thead><tr><th>Stock</th><th>Yesterday\'s gain or loss</th></tr></thead><tbody>';
+      L.forecasts.forEach(function(f){
+        t+='<tr><td>'+esc(f.symbol)+'</td><td>'+pct(f.yesterday_return_pct)+'</td></tr>';
+      });
+      t+='</tbody></table>';
+      t+='<p class="sub">The flagged group is the bottom third of yesterday\'s returns among the stocks with a full week of prices on record. Every flagged stock stays in every stage\'s count, including the ones that do not turn.</p>';
+    } else {
+      t+='<p class="sub">Waiting. The market is not yet in the deepest third of its fall: it stands at '+esc(C.drawdown_pct)+'%, and the deepest third begins at '+esc(C.threshold_pct)+'% or lower. No forecasts were published today, and none will be until the reading crosses that line.</p>';
+    }
+    out+=card("Today", t);
+
+    // ---- History ----
+    var S=H.study_record, h="";
+    h+='<p class="sub">The same three stages, run over the stress stretches in the record on hand. These are history, worked out today from old prices; none of them were published before the fact, and none are in the live record.</p>';
+    h+='<table><thead><tr><th>Stage</th><th>Result</th><th>Count</th><th>Stress stretches it rests on</th></tr></thead><tbody>'
+      +'<tr><td>Stage 1: the turn begins by the next trading day</td><td>'+esc(H.stage_1.rate_pct)+'% of flagged stocks</td><td>'+esc(H.stage_1.hits)+' of '+esc(H.stage_1.denominator)+' flagged stock-days</td><td>'+esc(H.stage_1.episodes)+'</td></tr>'
+      +'<tr><td>Stage 2: the lag is fully made up within 3 trading days</td><td>'+esc(H.stage_2.rate_pct)+'% of flagged stocks</td><td>'+esc(H.stage_2.hits)+' of '+esc(H.stage_2.denominator)+' flagged stock-days</td><td>'+esc(H.stage_2.episodes)+'</td></tr>'
+      +'<tr><td>Stage 3: middle total gain or loss at 1 / 3 / 5 trading days</td><td>'+pct(H.stage_3_medians_pct.plus_1)+' / '+pct(H.stage_3_medians_pct.plus_3)+' / '+pct(H.stage_3_medians_pct.plus_5)+'</td><td>'+esc(H.stage_3_counts.plus_1)+' / '+esc(H.stage_3_counts.plus_3)+' / '+esc(H.stage_3_counts.plus_5)+' flagged stock-days with a price at that day</td><td>'+esc(H.episodes)+'</td></tr>'
+      +'</tbody></table>';
+    h+='<p class="sub">Stress stretches in this run: '+esc(H.episodes)+', over '+esc(H.graded_day0_events)+' flagged days and '+esc(H.cohort_name_events)+' flagged stock-days in total. Days inside one stretch overlap, so the stretch count is the honest guide to how much separate evidence a rate rests on.</p>';
+    h+='<h3>The earlier study\'s own figures</h3>';
+    h+='<p class="sub">'+esc(S.source_name)+'</p>';
+    h+='<table><thead><tr><th>Years</th><th>Reading</th><th>Value</th></tr></thead><tbody>';
+    S.rows.forEach(function(r){
+      h+='<tr><td>'+esc(r.era)+'</td><td>'+esc(r.measure)+'</td><td>'+esc(r.value)+(r.strength?' (strength '+esc(r.strength)+')':'')+'</td></tr>';
+    });
+    h+='</tbody></table>';
+    h+='<p class="sub">'+esc(S.note)+'</p>';
+    out+=card("History, not live forecasts", h);
+
+    // ---- Caveats + reconstruction ----
+    var cv="";
+    d.caveats.forEach(function(c){ cv+='<p class="sub">'+esc(c)+'</p>'; });
+    out+=card("Two things to keep in mind", cv);
+    out+=card("What had to be filled in", '<p class="sub">'+esc(d.reconstruction_note)+'</p>');
+
+    // ---- Live record ----
+    out+=card("The live record", '<table><tbody>'
+      +'<tr><th>Forecasts published and kept on record</th><td>'+esc(L.forecasts_recorded)+'</td></tr>'
+      +'<tr><th>Forecasts graded so far</th><td>'+esc(L.forecasts_graded)+'</td></tr>'
+      +'<tr><th>Live stress stretches so far</th><td>'+esc(L.forward_episodes_so_far)+' of the first '+esc(L.proving_episodes)+' that decide proving</td></tr>'
+      +'</tbody></table>'
+      +'<p class="sub">'+esc(d.thin_cell_rule)+'</p>');
+
+    out+=card("When this tool retires", '<p class="sub">'+esc(d.kill_criterion)+'</p>');
+
+    main.innerHTML=out;
+    var q=document.getElementById("q");
+    if(q){ q.addEventListener("input", function(){
+      var needle=q.value.trim().toUpperCase(), trs=document.querySelectorAll("#ft tbody tr");
+      trs.forEach(function(tr){ tr.style.display = (!needle || tr.textContent.toUpperCase().indexOf(needle)>=0) ? "" : "none"; });
+    });}
+  }).catch(function(e){
+    banner.className="banner show missing";
+    banner.textContent="The latest figures could not be loaded. Nothing is shown rather than something out of date.";
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
