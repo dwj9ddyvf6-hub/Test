@@ -1,10 +1,34 @@
-/* GrokBot design shell for the Master edition (R2, 2026-11-02).
-   Injected by the mirror's publish step (mirror_master.py), which is
-   the lane that produces the master/ pages in the Test repo. SPEC
-   tokens only; no Master data is touched. */
-:root{--teal-dark:#0b3b46;--teal-darker:#082d36;--teal:#177366;--teal-soft:#e3f1ec;--navy:#10283a;--ink:#1c2b39;--muted:#5b6b75;--bg:#eef5f2;--card:#ffffff;--line:#cfe0da;--green:#18744f;--red:#b0342e;--slate:#2a2d3a;--slate-line:#454a5e;--mint:#7ee0c3}
+/* GrokBot design shell for the Master edition (R2 + R2-CURE 2026-11-02).
+   Injected by the mirror's publish step (mirror_master.py), the lane
+   that produces the master/ pages in the Test repo. SPEC tokens and
+   the full shell grammar (C1/C2/C12/C13/C18); no Master data touched. */
+:root{--teal-dark:#0b3b46;--teal-darker:#082d36;--teal:#177366;--teal-soft:#e3f1ec;--navy:#10283a;--ink:#1c2b39;--muted:#5b6b75;--bg:#eef5f2;--card:#ffffff;--line:#cfe0da;--green:#18744f;--red:#b0342e;--slate:#2a2d3a;--slate-2:#343849;--slate-line:#454a5e;--mint:#7ee0c3}
 body{background:linear-gradient(160deg,#f4f9f7 0%,#e9f3ef 60%,#eef5f2 100%)!important;color:var(--ink)!important}
 .gb-kicker{font-size:12px!important;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin:0 0 6px}
 .gb-mbar{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,#0b3b46,#082d36);color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;font-weight:800;font-size:15px;box-shadow:0 4px 16px rgba(8,45,54,.25)}
 .gb-mbar .gb-dot{width:9px;height:9px;border-radius:50%;background:#1e6f5c;box-shadow:0 0 0 4px rgba(30,111,92,.35)}
 .gb-mbar a{color:#7ee0c3;text-decoration:none;font-size:13px;font-weight:700}
+.gb-mfind-btn{margin-left:auto;background:#0f2530;color:#7ee0c3;border:1px solid #2c5a63;border-radius:999px;padding:5px 12px;font-weight:700;font-size:13px;cursor:pointer}
+.gb-mtabs{position:sticky;top:44px;z-index:59;display:flex;gap:6px;flex-wrap:wrap;background:rgba(238,245,242,.94);backdrop-filter:blur(8px);padding:8px 14px}
+.gb-mtab{background:#dfece7;color:var(--navy);border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;text-decoration:none}
+.gb-mtab.on{background:var(--navy);color:#fff}
+.gb-mjump{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 8px}
+.gb-mpill{background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 11px;font-weight:700;font-size:12.5px;text-decoration:none}
+.gb-mstats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:1100px;margin:10px auto;padding:0 14px}
+@media(min-width:720px){.gb-mstats{grid-template-columns:repeat(4,1fr)}}
+.gb-mstat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.gb-mstat.dark{background:linear-gradient(180deg,#0b3b46,#082d36);color:#fff}
+.gb-mstat.dark .gb-msvalue{color:#fff}.gb-mstat.dark .gb-mslabel,.gb-mstat.dark .gb-mssub{color:#c9cfdd}
+.gb-mslabel{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0}
+.gb-msvalue{font-size:21px;font-weight:800;color:var(--navy);margin:2px 0}
+.gb-mssub{font-size:12.5px;color:var(--muted);margin:0}
+.gb-sentence{font-size:13.5px;line-height:1.5;margin:4px 0}
+.gb-hero{font-size:28px;font-weight:800;line-height:1.05;color:var(--navy);margin:4px 0}
+.gb-foot{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.gb-fdlg{position:fixed;inset:0;background:rgba(8,45,54,.45);z-index:200;display:flex;justify-content:center;align-items:flex-start;padding:8vh 12px}
+.gb-fpanel{background:#fff;border-radius:18px;max-width:680px;width:100%;padding:16px;box-shadow:0 12px 40px rgba(8,45,54,.35)}
+.gb-finput{width:100%;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.gb-flist{margin-top:10px;max-height:50vh;overflow:auto}
+.gb-fit{display:block;padding:9px 8px;color:var(--ink);text-decoration:none;font-weight:700;border-top:1px solid var(--line)}
+.gb-fempty{color:var(--muted);text-align:center;padding:16px}
+section,article,.card,.panel{scroll-margin-top:130px}
