@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exceedance Forecaster: how likely a move bigger than the priced move is</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  input[type=search]{font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;width:100%;max-width:340px;margin:4px 0 8px}
+  .scroll{max-height:520px;overflow:auto}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Exceedance Forecaster</h1>
+    <p class="job">One job: say how likely a move bigger than the priced move is, for the big index funds and for each stock on record, and never say which way the move will go.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest chances&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  var NAMES={SPY:"SPY (the big S&P 500 fund)",QQQ:"QQQ (the big Nasdaq-100 fund)",IWM:"IWM (the big small-company fund)"};
+  var LABEL={ex1:"Move larger than 1 expected move in 5 trading days",ex2:"Move larger than 2 expected moves in 5 trading days",dd:"Largest drop from a peak larger than 1.5 expected moves within 21 trading days"};
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="Chances measured from the closing prices of "+fmtDate(data.as_of_session)+", for the trading days starting "+fmtShort(data.next_session)+". Source: "+data.source;
+    showBanner("stale","These chances are the newest ones on record. They are measured from the close of "+fmtDate(data.as_of_session)+", the last trading day in the price history on record, so treat them as the latest published forecast, made before the next trading day opens.");
+    var live=data.live||{}, hist=data.history||{}, h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>This engine is new. Its live record starts today, and it earns stronger language only from that record as it grows. Every chance on this page is about the size of a move, never about which way it goes.</p></section>';
+
+    h+='<section class="card"><h2>The three index funds today</h2><p class="sub">An expected move is the size of move the market has been pricing for that stretch, measured the corrected way used by the Corrected Band Engine. A chance is the share of similar past days, counted in the way described below, that were followed by a move at least that large.</p><table><tr><th>Fund</th><th>'+esc(LABEL.ex1)+'</th><th>'+esc(LABEL.ex2)+'</th><th>'+esc(LABEL.dd)+'</th></tr>';
+    (live.indexes||[]).forEach(function(n){
+      h+="<tr><td><strong>"+esc(NAMES[n.symbol]||n.symbol)+"</strong><br><span class='sub'>Expected move, 5 days: "+esc(n.em5_pct)+"%. Expected move, 21 days: "+esc(n.em21_pct)+"%.</span></td><td><strong>"+esc(n.ex1.p_pct)+"%</strong></td><td><strong>"+esc(n.ex2.p_pct)+"%</strong></td><td><strong>"+esc(n.dd.p_pct)+"%</strong></td></tr>";
+    });
+    h+="</table></section>";
+
+    h+='<section class="card"><h2>Every stock on record</h2><p class="sub">'+esc(live.names_qualifying)+' stocks carry a chance today. '+esc(live.excluded_total)+' of the '+esc(live.names_checked)+' names checked were set aside and counted: '+esc((live.excluded||{}).too_little_history)+' with too little history on record, '+esc((live.excluded||{}).no_session_on_as_of)+' with no trading session on the measured day, and '+esc((live.excluded||{}).no_measurable_score)+' whose readings could not be measured. Type part of a name to find it.</p><input type="search" id="q" placeholder="Search by stock name" aria-label="Search by stock name"><div class="scroll"><table><thead><tr><th>Stock</th><th>'+esc(LABEL.ex1)+'</th><th>'+esc(LABEL.ex2)+'</th><th>'+esc(LABEL.dd)+'</th></tr></thead><tbody id="rows"></tbody></table></div><p class="sub" id="shown"></p></section>';
+
+    h+='<section class="card"><h2>The readings behind today\'s numbers</h2><p>Three readings are counted for each name. A reading counts when it is large by that name\'s own recent standards, or, for the market-wide reading, when it reaches the stated share. Today\'s index readings:</p><table><tr><th>Fund</th><th>Overnight gap size</th><th>How much prices have been moving</th><th>Warning readings counted</th></tr>';
+    (live.readings||[]).forEach(function(r){
+      h+="<tr><td><strong>"+esc(r.symbol)+"</strong></td><td>"+esc(r.gap_size_pct)+"% "+(r.gap_flag?"(counts: in the largest fifth of its own recent gaps)":"(does not count)")+"</td><td>About "+esc(r.movement_pct)+"% a year at the recent pace "+(r.movement_flag?"(counts: in the largest fifth of its own recent readings)":"(does not count)")+"</td><td><strong>"+esc(r.score)+" of 3</strong></td></tr>";
+    });
+    var b=live.breadth||{};
+    h+='</table><p>The market-wide reading: '+esc(b.share_below_pct)+'% of the '+esc(b.names_counted)+' names counted ended the measured day below their previous close. It counts as a washout reading when that share reaches '+esc(b.threshold_pct)+'%, so today it '+(b.flag?"counts.":"does not count.")+'</p>';
+    (live.absent_readings||[]).forEach(function(a){
+      h+="<p><strong>"+esc(a.name)+": "+esc(a.state)+".</strong> "+esc(a.why)+"</p>";
+    });
+    h+="<p>Each name's chances come from its own past days with the same count of warning readings, softened toward that name's plain overall rate so a handful of days cannot set the number.</p></section>";
+
+    var pooled=hist.claim_cell_pooled||{};
+    h+='<section class="card"><h2>History, not live forecasts</h2><p>'+esc(hist.note||"")+'</p><p class="sub">History covered: '+fmtShort(hist.span_start)+" to "+fmtShort(hist.span_end)+" ("+esc(hist.sessions)+' trading days on record). Scoring, in plain words: a score of 0 would be perfect, and a larger score means the stated chances were further from what happened. Below 30 graded cases, a cell would show its count only.</p>';
+    h+="<h3>The claim's own test, in history</h3><p>For a move larger than 2 expected moves in 5 trading days, pooled across the three index funds over "+esc(pooled.graded)+" graded study days: this method scored <strong>"+esc(pooled.brier_ours)+"</strong>, the plain overall rate scored <strong>"+esc(pooled.brier_base)+"</strong>, an improvement of <strong>"+esc(pooled.improvement)+"</strong> points against the promised margin of "+esc(pooled.margin_needed)+" points. On this history the promised margin was <strong>"+(pooled.margin_met?"met":"not met")+"</strong>.</p>";
+    h+="<table><tr><th>Fund</th><th>Forecast</th><th>Graded days</th><th>Happened</th><th>Average chance stated</th><th>Score: this method</th><th>Score: plain overall rate</th></tr>";
+    (hist.cells||[]).forEach(function(c){
+      h+="<tr><td>"+esc(c.symbol)+"</td><td>"+esc(LABEL[c.forecast]||c.forecast)+"</td><td>"+esc(c.graded)+"</td><td>"+esc(c.events)+" times ("+esc(c.realised_pct)+"%)</td><td>"+esc(c.mean_forecast_pct)+"%</td><td>"+(c.brier_ours==null?esc(c.graded)+" graded, count only":esc(c.brier_ours))+"</td><td>"+(c.brier_base==null?esc(c.graded)+" graded, count only":esc(c.brier_base))+"</td></tr>";
+    });
+    h+="</table><p>"+esc(((hist.study_record||{}).note)||"")+"</p></section>";
+
+    h+='<section class="card"><h2>The live record</h2><p class="count">'+esc(live.index_forecasts_recorded)+" of "+esc(live.kill_target_index_forecasts)+' index forecasts toward the retirement test</p><p>Forecast days recorded so far: '+esc(live.issue_days)+". Individual forecasts recorded: "+esc(live.forecasts_recorded)+" (the three index funds plus every qualifying stock, three chances each). Graded so far: "+esc(live.forecasts_graded)+", because none of the days they cover has happened yet in the price history on record.</p><p class='claim'>"+esc(data.claim)+"</p><p>"+esc(data.kill_criterion)+"</p><p>"+esc(data.thin_cell_rule)+"</p></section>";
+
+    main.innerHTML=h;
+
+    var rowsEl=document.getElementById("rows"), shownEl=document.getElementById("shown"), qEl=document.getElementById("q");
+    var names=live.names||[];
+    function render(filter){
+      var out="", shown=0;
+      for(var i=0;i<names.length;i++){
+        var n=names[i];
+        if(filter && n.symbol.indexOf(filter)<0) continue;
+        shown++;
+        out+="<tr><td><strong>"+esc(n.symbol)+"</strong></td><td>"+esc(n.ex1.p_pct)+"%</td><td>"+esc(n.ex2.p_pct)+"%</td><td>"+esc(n.dd.p_pct)+"%</td></tr>";
+      }
+      rowsEl.innerHTML=out;
+      shownEl.textContent="Showing "+shown+" of "+names.length+" stocks.";
+    }
+    render("");
+    qEl.addEventListener("input",function(){render(qEl.value.trim().toUpperCase());});
+  }).catch(function(){
+    meta.textContent="";
+    showBanner("missing","The latest chances are not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+  });
+})();
+</script>
+</body>
+</html>
