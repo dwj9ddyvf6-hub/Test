@@ -61,60 +61,30 @@ CONFIG_EXTS = {".yaml", ".yml", ".toml", ".ini", ".cfg", ".example",
                ".webmanifest", ".tsbuildinfo"}
 
 AREA_DESCRIPTIONS = {
-    "(root)": "Repository root: the README catalog front page, this index, "
-              "the agent rules file, and the build notes for the newest "
-              "sleeve families.",
-    "adapters": "Standalone desk adapters for recently built sleeves "
-                "(one-bar, Trullas variants, Teddy ORB, PRZM and others), "
-                "one file per sleeve.",
-    "adapters3": "The Aster adapter set: one adapter module per Aster "
-                 "sleeve variant, mirroring the sleeves they wire in.",
-    "agentic-trade-desk": "The operational kit for running an agentic "
-                          "trade desk: a runnable skeleton, docs and "
-                          "templates. Paper trading only.",
-    "aster_sleeves": "Aster sleeve entry points (thin wrappers over the "
-                     "shared engine commons).",
-    "config": "Desk configuration. config/sleeves.json is the live roster "
-              "config mirrored into this repository.",
-    "desk3": "The desk3 sleeve collection and its portfolio branches.",
-    "docs": "Documentation at scale: the strategy catalog data, the "
-            "current-desk and all-strategies accountings, one algorithm "
-            "and recreation document per strategy, verification notes, "
-            "and the research collections under docs/research/.",
-    "engines": "Shared engine code: desk3 bridges and enhancements, "
-               "sleeve commons, the roster config copy and a transport "
-               "kernel.",
-    "indicator": "A single indicator package.",
-    "integration": "Integration adapters that wire each sleeve into the "
-                   "desk runner, plus the wiring guide.",
-    "laz_sleeves": "Lazarus sleeve entry points (thin wrappers over the "
-                   "shared engine commons).",
-    "packages": "Whole packages contributed by the desk's builders, "
-                "grouped by author. See the packages entry point in "
-                "INDEX.md for the per-author breakdown.",
-    "pine": "Pine Script sources.",
-    "proof": "Install proof records: one JSON receipt per installed "
-             "sleeve under proof/install/.",
-    "psychology-engine": "The standalone market-psychology engine "
-                         "package: engine code, audits, research and "
-                         "reports. One of the two psychology engines in "
-                         "this repository.",
-    "research": "Standalone research works. Home of the technical "
-                "analysis study and practice archive (Markdown, PDF, "
-                "DOCX and ZIP forms of the same work).",
-    "sleeves": "Sleeve source code grouped by family, plus standalone "
-               "sleeve modules at the top of the folder.",
-    "strategies": "Strategy cards: one card per catalogued strategy, "
-                  "grouped by family folder. The family folders are "
-                  "enumerated in docs/CATALOG.json and in INDEX.json; "
-                  "they are not repeated in this prose map.",
-    "terminal-lineup": "The public terminal lineup: the tool site under "
-                       "site/, the forecast engines under forecast/, "
-                       "build records, design documents, the oracle and "
-                       "the workflow scripts that built the tools.",
-    "tests": "Repository-level regression blocker tests.",
-    "tools": "Repository tooling. Home of build_repo_index.py, the "
-             "generator that produces INDEX.json and INDEX.md.",
+    "(root)": 'Repository root: the entry files (START-HERE.md, ROADMAP.md, INDEX.md, INDEX.json, README.md, AGENTS.md, index.html), and the build notes for the newest sleeve families.',
+    "adapters": 'Standalone desk adapters for recently built sleeves (one-bar, Trullas variants, Teddy ORB, PRZM and others), one file per sleeve.',
+    "adapters3": 'The Aster adapter set: one adapter module per Aster sleeve variant, mirroring the sleeves they wire in.',
+    "agentic-trade-desk": 'The operational kit for running an agentic trade desk: a runnable skeleton, docs and templates. Paper trading only.',
+    "aster_sleeves": 'Aster sleeve entry points (thin wrappers over the shared engine commons).',
+    "config": 'Desk configuration. config/sleeves.json is the live roster config mirrored into this repository (336 sleeves, paper trading only).',
+    "desk3": 'The desk3 sleeve collection and its portfolio branches: the v3 desk engine modules, sleeve modules and portfolio books.',
+    "docs": 'Documentation at scale: the strategy catalog data, the current-desk and all-strategies accountings, one algorithm and recreation document per strategy, verification notes, and the research collections under docs/research/.',
+    "educational": 'The shipyard engines collection (educational/shipyard-engines/): self-contained educational trading engines and their supporting material, kept whole.',
+    "engines": 'Shared engine code: desk3 bridges and enhancements, sleeve commons, the roster config copy and a transport kernel.',
+    "indicator": 'A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/).',
+    "integration": 'Integration adapters that wire each sleeve into the desk runner, plus the wiring guide.',
+    "laz_sleeves": 'Lazarus sleeve entry points (thin wrappers over the shared engine commons).',
+    "master": "The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html.",
+    "packages": "Whole packages contributed by the desk's builders, grouped by author (ausar, claude, grokbot), kept whole rather than cherry-picked.",
+    "pine": 'Pine Script sources (the BB/RSI divergence indicator for TradingView).',
+    "proof": 'Install proof records: one JSON receipt per installed sleeve under proof/install/.',
+    "psychology-engine": 'The standalone market-psychology engine package: engine code, audits, research and reports. One of the two psychology engines in this repository.',
+    "research": 'Standalone research works: the technical analysis study and practice archive, and the master trader study, in Markdown, PDF, DOCX and ZIP forms.',
+    "sleeves": 'Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder.',
+    "strategies": 'Strategy cards: one card per catalogued strategy (269 cards), grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json.',
+    "terminal-lineup": 'The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools.',
+    "tests": 'Repository-level regression blocker tests.',
+    "tools": 'Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md.',
 }
 
 
@@ -258,8 +228,12 @@ def render_markdown(index):
     add("")
     add("## Reading order")
     add("")
-    add("1. This file, INDEX.md: the map.")
-    add("2. [INDEX.json](INDEX.json): every file, when you need the "
+    add("1. [START-HERE.md](START-HERE.md): the mandatory first read: "
+        "reading protocol, complete map and anti-miss rules.")
+    add("2. This file, INDEX.md: the map.")
+    add("9. [ROADMAP.md](ROADMAP.md): routing by question and topic, "
+        "with the exact files to read in order for each topic.")
+    add("10. [INDEX.json](INDEX.json): every file, when you need the "
         "exact path, size or blob sha of anything.")
     add("3. [README.md](README.md): the strategy catalog front page.")
     add("4. [docs/CATALOG.json](docs/CATALOG.json): the catalog data, "
@@ -334,8 +308,16 @@ def render_markdown(index):
     add("- docs/: catalog, accountings, per-strategy algorithm and "
         "recreation documents, guides and verification notes.")
     add("- docs/verify/: verification notes.")
-    add("- docs/research/: the collected research works, including the "
-        "two below.")
+    add("- docs/research/: the collected research works. Every study "
+        "is named in ROADMAP.md; the entry points are: agent-methods "
+        "(docs/research/agent-methods/2026-10-31/), the complete LLM "
+        "enhancement sweep records "
+        "(docs/research/llm-enhancement-extraction-20261031/, 26 files: "
+        "reports, cluster extractions, pass deep-dives, verifications "
+        "and doctrine landings), master-traders-20261029, "
+        "midna-trader-formation-20261029, onebar-family-2026-10-30, "
+        "psychology-engine-2026-10-30 and "
+        "technical-analysis-mastery-20261030.")
     add("- Psychology engine, first of two: "
         "[psychology-engine/](psychology-engine/README.md), the "
         "standalone package with engine/, audit/, research/ and "
@@ -354,6 +336,16 @@ def render_markdown(index):
         "practice archive in Markdown, PDF, DOCX and ZIP forms.")
     add("- docs/research/onebar-family-2026-10-30/: the one-bar family "
         "analysis.")
+    add("- Master trader study, second form: "
+        "research/master-trader-study-2026-10-29/ (study.md, README.md "
+        "and the Word form), beside the docs/research/ "
+        "master-traders-20261029 report.")
+    add("- master/: the mirrored Master Terminal edition (hashed JS "
+        "and CSS assets plus deskview, edition, market, pulse, "
+        "sleeves, positions, charts and panels data files), reached "
+        "from the front door at index.html. educational/: the "
+        "shipyard engines collection under "
+        "educational/shipyard-engines/.")
     add("")
     add("### Terminal lineup")
     add("")
