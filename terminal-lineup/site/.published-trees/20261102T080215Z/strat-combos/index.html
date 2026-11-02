@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strat Combos Board: the label combinations names showed</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+    --prove-bg:#f3eefb; --prove-line:#c9b8ec; --prove-ink:#4a3572;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .prove{background:var(--prove-bg);border:1px solid var(--prove-line);color:var(--prove-ink);
+       border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px}
+  .prove strong{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .summary p{margin:4px 0}
+  h2.sec{font-size:22px;margin:26px 0 6px}
+  p.secnote{color:var(--soft);font-size:15px;margin:0 0 14px;max-width:46em}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:16px 20px;margin:0 0 12px}
+  .group h3{margin:0 0 4px;font-size:19px}
+  .group .seqline{color:var(--soft);font-size:15px;margin:0 0 8px}
+  details{margin-top:6px}
+  summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:14.5px}
+  .names{font-size:14.5px;margin-top:8px;word-spacing:.1em;line-height:1.9}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Strat Combos Board</h1>
+    <p class="job">One job: group every name the Strat Scanner labelled by the combination of labels it showed over the last 5 sessions, largest groups first. Labels only: what the bars did, nothing about what to do with it.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <div id="prove" class="prove" style="display:none"></div>
+  <p id="meta" class="meta">Loading the records&hellip;</p>
+
+  <div class="def" id="defbox" style="display:none"></div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var proveEl = document.getElementById("prove");
+  var meta = document.getElementById("meta");
+  var defEl = document.getElementById("defbox");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric",
+      year:"numeric", timeZone:"UTC"});
+  }
+  function todayKey(){
+    var parts = new Intl.DateTimeFormat("en-US",
+      {timeZone:"America/New_York", year:"numeric", month:"2-digit",
+       day:"2-digit"}).formatToParts(new Date());
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function lastCompletedSession(){
+    var d = new Date(todayKey() + "T12:00:00Z");
+    do { d.setUTCDate(d.getUTCDate() - 1); }
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+    return d.toISOString().slice(0, 10);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function renderDefs(){
+    var h = "<p><strong>How to read this board:</strong> " +
+      esc(DATA.note) + "</p>";
+    h += "<p><strong>The labels:</strong> every name is compared " +
+      "with its own day before and given one of four labels. What " +
+      "each one means, in the Strat Scanner's own words:</p>";
+    (DATA.label_words || []).forEach(function(w){
+      h += "<p><strong>" + esc(w.label) + " &middot; " +
+        esc(w.name) + ":</strong> " + esc(w.meaning) + "</p>";
+    });
+    defEl.innerHTML = h;
+    defEl.style.display = "";
+  }
+
+  function namesBlock(names, label){
+    return "<details><summary>" + esc(label) + " (" +
+      num(names.length) + ")</summary><p class=\"names\">" +
+      names.map(esc).join(", ") + "</p></details>";
+  }
+
+  function render(){
+    var total = (DATA.groups || []).reduce(function(a, g){
+      return a + (g.names || []).length; }, 0);
+    if (!total){
+      resultsEl.innerHTML = '<div class="nodata">No names were ' +
+        "labelled for " + fmtDateLong(DATA.session) +
+        ", so there are no combinations to show. Nothing is " +
+        "padded to fill the page.</div>";
+      return;
+    }
+    var range = (DATA.sequence_dates || []).map(fmtDateShort)
+      .join(" to ");
+    var h = '<section class="summary"><p><strong>' +
+      num(DATA.names_labelled) + " names</strong> were labelled " +
+      "for " + fmtDateLong(DATA.session) + ", out of " +
+      num(DATA.names_on_record) + " names on record; " +
+      num(DATA.names_not_labelled) + " had no bar that day and " +
+      "show nothing. Those names fall into <strong>" +
+      num(DATA.combination_count) + " combinations</strong> of " +
+      "labels over the last " + num(DATA.sequence_sessions) +
+      " sessions (" + esc(range) + "); the largest holds " +
+      num(DATA.largest_group_count) + " names. Counts only: no " +
+      "combination is shown as a share of the whole.</p></section>";
+
+    h += '<h2 class="sec">The named patterns the Scanner itself ' +
+      "counts as finished</h2>" +
+      '<p class="secnote">' + esc(DATA.completed_words) + " The " +
+      "Scanner's record names " + num(DATA.completed_patterns_count) +
+      " finished patterns over " + num(DATA.completed_names_count) +
+      " names for this day; a name can carry two, so these " +
+      "groups count patterns, not names.</p>";
+    (DATA.completed_groups || []).forEach(function(g){
+      h += '<section class="group"><h3>' + esc(g.pattern) +
+        " (" + num(g.count) + ")</h3>" +
+        namesBlock(g.names, "Names with this pattern") +
+        "</section>";
+    });
+
+    h += '<h2 class="sec">Every combination, largest first</h2>' +
+      '<p class="secnote">Each group is one exact run of ' +
+      num(DATA.sequence_sessions) + " labels, oldest first, " +
+      "named by its last two labels.</p>";
+    (DATA.groups || []).forEach(function(g){
+      h += '<section class="group"><h3>' + esc(g.name) +
+        " (" + num(g.count) + ")</h3>" +
+        '<p class="seqline">The run: ' +
+        esc((g.sequence_words || []).join(" · ")) +
+        "</p>" +
+        namesBlock(g.names, "Names in this group") +
+        "</section>";
+    });
+    resultsEl.innerHTML = h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      DATA = data;
+      if (!data.session || data.state !== "published" ||
+          !(data.groups || []).length){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No board has ' +
+          "been published yet. When the Strat Scanner's labels " +
+          "are published, the combinations will be listed here. " +
+          "Nothing is shown for a record that has not been " +
+          "made.</div>";
+        return;
+      }
+  function proveNote(state, note){var s = String(state || ""), n = String(note || "");
+    if (s && n.toLowerCase().indexOf(s.toLowerCase()) === 0){
+      n = n.slice(s.length).replace(/^[:\s]+/, "");
+      n = n.charAt(0).toUpperCase() + n.slice(1);}
+    return n;}
+      proveEl.innerHTML = "<strong>" + esc(data.proving_state) +
+        "</strong><br>" + esc(proveNote(data.proving_state, data.proving_note));
+      proveEl.style.display = "";
+      renderDefs();
+      meta.textContent = "Scanned trading day: " +
+        fmtDateLong(data.session) + ". Source: " + data.source + ".";
+      if (data.session !== lastCompletedSession()){
+        showBanner("stale", "This board is for " +
+          fmtDateLong(data.session) + ", which is not the most " +
+          "recent completed trading day. It is the freshest day " +
+          "in the Strat Scanner's published record; treat it as " +
+          "the last published board, not today's.");
+      }
+      receiptEl.textContent = "Receipt: " + data.coverage + ".";
+      render();
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Strat Combos Board is not " +
+        "available right now. The data file for this page could " +
+        "not be loaded, so there is nothing honest to show. " +
+        "Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
