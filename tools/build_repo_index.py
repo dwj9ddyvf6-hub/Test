@@ -74,7 +74,7 @@ AREA_DESCRIPTIONS = {
     "indicator": 'A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/).',
     "integration": 'Integration adapters that wire each sleeve into the desk runner, plus the wiring guide.',
     "laz_sleeves": 'Lazarus sleeve entry points (thin wrappers over the shared engine commons).',
-    "master": "The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html.",
+    "master": "The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. Caution: the hourly mirror sync owns master/ wholesale and rewrites it entire, so master/AREA.md is best-effort and may be overwritten or removed by the mirror; the durable description of master/ lives in START-HERE.md, INDEX.md and ROADMAP.md.",
     "packages": "Whole packages contributed by the desk's builders, grouped by author (ausar, claude, grokbot), kept whole rather than cherry-picked.",
     "pine": 'Pine Script sources (the BB/RSI divergence indicator for TradingView).',
     "proof": 'Install proof records: one JSON receipt per installed sleeve under proof/install/.',
