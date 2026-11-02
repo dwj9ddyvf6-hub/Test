@@ -843,9 +843,20 @@ def build():
     # 4 breaks to 12 / 4 when the 2026-10-30 session's tests
     # graded; counts counted from wall-check/data.json by_name
     # on this date. (First registered 2026-10-29, cure G17.)
-    if wc_tests != 12 or wc_broke != 4:
-        return fail("the wall-grading record disagrees with the "
-                    "12 graded tests and 4 breaks on record")
+    # Accrual floors (cure WEEK-READINESS-20261102, the
+    # half-life-clock 2026-10-31 pattern): graded wall tests are
+    # an accrual that only grows as new sessions grade (12 -> 15
+    # when the next cards graded), and exact equality made this
+    # engine fail every scheduled run after each grading landed.
+    # The claim this cross-check protects is narrower: the
+    # registered record is present and has not gone backwards.
+    # The counts published below are the actual sums, never the
+    # floor.
+    if wc_tests < 12 or wc_broke < 4:
+        return fail("the wall-grading record fell behind its "
+                    "registered floor of 12 graded tests and 4 "
+                    f"breaks (counted {wc_tests} tests and "
+                    f"{wc_broke} breaks)")
     cards_on_record = 9  # SPY/QQQ/IWM x 2026-10-26/27/28, Engine 8 record
     wall_asof = walllife.get("published_at_utc")
     nd = NormalDist()
