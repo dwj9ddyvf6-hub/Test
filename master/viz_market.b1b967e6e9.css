@@ -1,0 +1,59 @@
+/* Market context charts (viz_market.js): a one-line reading above each chart, the chart, nothing about the engine */
+.vz{margin:0 0 .75rem}
+.vzh{margin:.15rem 0 .55rem;font-size:1rem;line-height:1.35;font-weight:600;color:var(--hd)}
+.vzh b{font-weight:700}
+.vzh.vz-u{color:var(--up)}
+.vzh.vz-d{color:var(--dn)}
+.vzh.vz-w{color:var(--wn)}
+.vzc{border:1px solid var(--ln2);border-radius:10px;background:var(--sf);padding:.5rem .55rem .35rem;margin:0 0 .6rem}
+.vzc h3{margin:0 0 .25rem;font-size:.8125rem;font-weight:600;color:var(--mu);letter-spacing:.01em}
+.vzc svg{display:block;width:100%;height:auto;overflow:visible}
+.vzg{display:grid;gap:.6rem;grid-template-columns:1fr}
+@media (min-width:900px){.vzg.c2{grid-template-columns:1fr 1fr}.vzg.c3{grid-template-columns:1fr 1fr 1fr}}
+.vzk{display:flex;flex-wrap:wrap;gap:.25rem .9rem;margin:.25rem 0 0;font-size:.75rem;color:var(--mu)}
+.vzk i{display:inline-block;width:.9rem;height:.2rem;border-radius:2px;vertical-align:middle;margin-right:.3rem}
+.vzk i.d{height:0;border-top:2px dashed currentColor;background:none}
+.vzage{font-size:.75rem;color:var(--mu);font-weight:400;margin-left:.35rem}
+/* svg parts: colours from the page's palette, so both themes read */
+.vz-ax{fill:var(--mu);font:11px var(--fs)}
+.vz-axb{fill:var(--tx);font:600 11px var(--fs)}
+.vz-lb{fill:var(--tx);font:12px var(--fs)}
+.vz-gd{stroke:var(--ln2);stroke-width:1}
+.vz-z{stroke:var(--mu);stroke-width:1.2}
+.vz-ref{stroke:var(--mu);stroke-width:1.2;stroke-dasharray:4 4}
+.vz-up{fill:var(--up)}
+.vz-dn{fill:var(--dn)}
+.vz-wn{fill:var(--wn)}
+.vz-in{fill:var(--in)}
+.vz-bl{fill:var(--bl)}
+.vz-mu{fill:var(--ln)}
+.vz-sup{stroke:var(--up)}
+.vz-sdn{stroke:var(--dn)}
+.vz-sbl{stroke:var(--bl)}
+.vz-sin{stroke:var(--in)}
+.vz-swn{stroke:var(--wn)}
+.vz-ln{fill:none;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.vz-band{fill:var(--bl);opacity:.12}
+.vz-bandd{fill:var(--dn);opacity:.14}
+.vz-spot{stroke:var(--tx);stroke-width:2}
+.vzk .k-up{background:var(--up)}.vzk .k-dn{background:var(--dn)}.vzk .k-bl{background:var(--bl)}.vzk .k-in{background:var(--in)}.vzk .k-wn{background:var(--wn)}.vzk .k-mu{background:var(--ln)}
+/* GrokBot's look (owner's benchmark, 2026-11-02): light page, dark chart cards, one state palette; the page's tokens are
+   redefined inside a chart card so every chart reads on the dark ground */
+.vzc,#m-live .a-plw{background:#262a36;border-color:#262a36;color:#e9eef5;
+  --tx:#e9eef5;--hd:#f4f7fc;--mu:#a3adbf;--ln:#4a5266;--ln2:#363c4c;--up:#3fcf9a;--dn:#f0686a;--wn:#e8bb5a;--bl:#5c9dff;--in:#b09bff}
+.vzc h3{color:#7ee0c3;font-weight:700;letter-spacing:.02em}
+.vzc .vzk{color:#a3adbf}
+#m-live .a-plw{border-radius:10px;padding:8px}
+#m-live .a-pls .a-pl{stroke-width:2.4}
+#m-live .a-pls .a-kSPY{stroke:#3fcf9a}#m-live .a-pls .a-kQQQ{stroke:#5c9dff}#m-live .a-pls .a-kIWM{stroke:#f0a040}#m-live .a-pls .a-kSMH{stroke:#c08bff}
+#m-live .a-pls .a-ax{fill:#a3adbf}
+.vzh{font-size:1.125rem;font-weight:700}
+/* band gauges: the band the reading sits in, a needle, the value and its word */
+.vzb{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin:.15rem 0 .55rem;align-items:baseline}
+.vzb b{font:600 .8125rem var(--fs);color:#e9eef5}.vzb span{font:600 .8125rem var(--fs);text-align:right}
+.vzb svg{grid-column:1/-1}
+/* 390 px: tiles two across, charts full width */
+@media (max-width:600px){#m-pos .t3,#market #chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}}
+.vz-bw{fill:#14171f;font:600 9px var(--fs)}
+.vz-nd{fill:#fff}.vz-ndl{stroke:#fff;stroke-width:2}
+.vt-up{color:var(--up)}.vt-dn{color:var(--dn)}.vt-wn{color:var(--wn)}.vt-bl{color:var(--bl)}
