@@ -379,6 +379,16 @@ def main():
     out = {
         "tool": "One-Page Report",
         "state": "published",
+        # Honest dateless stamp (cure WEEK-READINESS-R2-20261102-H):
+        # this page gathers other tools' readings, each dated in
+        # its own section, and makes no reading of its own, so it
+        # carries no single reading date (2026-10-31 ruling); the
+        # explicit null replaces the nested future scheduled-report
+        # date a shallow census mistook for this page's as_of.
+        "as_of": None,
+        "as_of_note": ("No single reading date: every reading on "
+                       "this page is another tool's, dated in its "
+                       "own section."),
         "proving_state": "A measuring tool, nothing to prove",
         "proving_note": "This page only gathers readings other tools on this site have already published, each under its own name and date, and makes no reading of its own, so there is nothing of its own to grade.",
         "names_count": len(names),
