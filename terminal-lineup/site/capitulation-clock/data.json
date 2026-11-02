@@ -5,7 +5,7 @@
       "basis": "no graded forecasts on record yet (164 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
       "forecasts_recorded": 164,
       "graded_forecasts": 0,
-      "recorded_on": "2026-10-31",
+      "recorded_on": "2026-11-02",
       "status": "not_attested"
     },
     "engine_id": "engine_16",
@@ -22,10 +22,6 @@
     "separate_words": "The two halves are graded separately. Either half can fail on its own, and a failed half is retired on its own."
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: direction and probability, over 20 sessions (return leg); 10 sessions (exhaustion leg). It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 200 episodes, either leg's confidence interval includes its null. It counts as proven at 200 episodes.",
-    "summary": "When a stock that is already falling prints its own heaviest falling-day trading, say what tends to happen next: how it does against the market over 20 trading days, and how fast the heavy trading dies down."
-  },
   "feed": "forecast_ledger",
   "gate_words": "The same heavy trading on a rising stock is treated by an older finding as a warning sign, not a buying sign. So this tool only ever fires on a stock that is already in a fall of its own, and never on a stock that is rising.",
   "history": {
@@ -80,185 +76,12 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "no graded forecasts on record yet (164 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 164,
-        "graded_forecasts": 0,
-        "recorded_on": "2026-10-31",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_16",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-10-30",
-      "keys_present": [
-        "as_of_session",
-        "calibration_attestation",
-        "claims",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "gate_words",
-        "history",
-        "kill_criterion",
-        "live",
-        "price_basis",
-        "provenance",
-        "record_surface",
-        "source",
-        "state",
-        "study_record",
-        "subject_chart",
-        "tension_words",
-        "thin_cell_rule",
-        "today",
-        "tool",
-        "trigger_words"
-      ]
-    },
-    "feed": "forecast_ledger",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_16",
-      "forecasts": 164,
-      "grades": 0,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "Live grades are still building: 164 forecasts are on record and none are graded yet. Grades arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "forecast_ledger",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 4,
-          "path": "/history"
-        },
-        {
-          "items": 0,
-          "path": "/study_record"
-        },
-        {
-          "items": 2,
-          "path": "/history/exhaustion_half"
-        },
-        {
-          "items": 2,
-          "path": "/history/return_half"
-        }
-      ],
-      "total_items_counted": 8
-    },
-    "version": 1
-  },
   "source": "The daily price and share-volume history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-10-30, 404 trading days), checked for this page. The longer daily history the parent studies ran on (2016 to 2026) is not on this computer, so the history below runs on the history that exists, which holds only stocks that still trade.",
   "state": "proving",
   "study_record": {
     "f6": "In the long study (2016 to 2026), heavy trading on falling days inside a fall lined up with better days ahead in both stretches of years checked: the link measured +0.040 and +0.020, and the heaviest fifth beat the lightest fifth by 0.95 and 1.28 points.",
     "label": "The earlier studies this tool is built from",
     "n6": "A second study of volume-confirmed falls found the same direction: the link measured +0.016 and +0.015 in its two samples."
-  },
-  "subject_chart": {
-    "lead": {
-      "kind": "ranked",
-      "label": "Down volume against its line, per triggered name.",
-      "rows": [
-        {
-          "coverage": "activity 1.18 times its line",
-          "name": "AAOI",
-          "score": 1.08
-        },
-        {
-          "coverage": "activity 1.55 times its line",
-          "name": "AMZN",
-          "score": 1.33
-        },
-        {
-          "coverage": "activity 1.44 times its line",
-          "name": "CACC",
-          "score": 1.27
-        },
-        {
-          "coverage": "activity 1.53 times its line",
-          "name": "CCJ",
-          "score": 1.32
-        },
-        {
-          "coverage": "activity 1.33 times its line",
-          "name": "COIN",
-          "score": 1.24
-        },
-        {
-          "coverage": "activity 1.86 times its line",
-          "name": "COO",
-          "score": 1.55
-        },
-        {
-          "coverage": "activity 1.12 times its line",
-          "name": "CRWV",
-          "score": 1.03
-        },
-        {
-          "coverage": "activity 1.33 times its line",
-          "name": "DLR",
-          "score": 1.14
-        },
-        {
-          "coverage": "activity 1.45 times its line",
-          "name": "ENOV",
-          "score": 1.1
-        },
-        {
-          "coverage": "activity 1.42 times its line",
-          "name": "ESAB",
-          "score": 1.32
-        },
-        {
-          "coverage": "activity 1.96 times its line",
-          "name": "FFIV",
-          "score": 1.56
-        },
-        {
-          "coverage": "activity 1.5 times its line",
-          "name": "FND",
-          "score": 1.4
-        }
-      ],
-      "source": "today.triggers[].down_volume_times_line",
-      "title": "Today's capitulation triggers, by falling-day volume"
-    },
-    "record": {
-      "kind": "ranked",
-      "label": "Exhaustion share and median forward return from the history run.",
-      "rows": [
-        {
-          "name": "Exhaustion share, percent",
-          "score": 56.3
-        },
-        {
-          "name": "Median forward return, points",
-          "score": 0.14
-        }
-      ],
-      "source": "history.exhaustion_half.share_pct / return_half.median_points",
-      "title": "The study record, as outcomes"
-    },
-    "version": 1
   },
   "tension_words": "One earlier study points the other way. It measured a nearby but different thing, trading drying up after a fall rather than trading surging on falling days, and it found the drying-up version predicted worse, not better, days ahead, in both stretches of years it checked. This tool follows the surging version, the one two other studies found pointed up, and prints the disagreement here rather than hiding it. The live record below is what will settle which reading is right for this exact definition.",
   "thin_cell_rule": "Any half with fewer than 30 graded episodes shows its count only, with no middle figure and no share.",
