@@ -2,9 +2,9 @@
 
 Start here. This file is the map of the whole repository for a reader (human or LLM) arriving cold. Its machine-readable twin is [INDEX.json](INDEX.json), generated from the same inventory by [tools/build_repo_index.py](tools/build_repo_index.py).
 
-Total files indexed: 7247
+Total files indexed: 7345
 
-Indexed commit: `9412d3fb82f896911c653f1487bdfa04684525a7`. Generated at: 2026-11-02T17:22:49Z. Total size of indexed files (self entries excluded, their sizes are null): 292446395 bytes.
+Indexed commit: `9f9bcd6f2b289586fbc94021a4dcda684bc20cc2`. Generated at: 2026-11-02T18:44:36Z. Total size of indexed files (self entries excluded, their sizes are null): 292565901 bytes.
 
 ## What this repository is
 
@@ -40,7 +40,7 @@ A public library of trading strategies and the desk software around them: strate
 | indicator | 2 | 8942 | A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/). |
 | integration | 328 | 361029 | Integration adapters that wire each sleeve into the desk runner, plus the wiring guide. |
 | laz_sleeves | 11 | 13670 | Lazarus sleeve entry points (thin wrappers over the shared engine commons). |
-| master | 76 | 17230120 | The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. Caution: the hourly mirror sync owns master/ wholesale and rewrites it entire, so master/AREA.md is best-effort and may be overwritten or removed by the mirror; the durable description of master/ lives in START-HERE.md, INDEX.md and ROADMAP.md. |
+| master | 79 | 17334307 | The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. Caution: the hourly mirror sync owns master/ wholesale and rewrites it entire, so master/AREA.md is best-effort and may be overwritten or removed by the mirror; the durable description of master/ lives in START-HERE.md, INDEX.md and ROADMAP.md. |
 | packages | 1928 | 117474908 | Whole packages contributed by the desk's builders, grouped by author (ausar, claude, grokbot), kept whole rather than cherry-picked. |
 | pine | 2 | 10625 | Pine Script sources (the BB/RSI divergence indicator for TradingView). |
 | proof | 23 | 62782 | Install proof records: one JSON receipt per installed sleeve under proof/install/. |
@@ -48,7 +48,7 @@ A public library of trading strategies and the desk software around them: strate
 | research | 10 | 16995531 | Standalone research works: the technical analysis study and practice archive, and the master trader study, in Markdown, PDF, DOCX and ZIP forms. |
 | sleeves | 571 | 5590107 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 270 | 528108 | Strategy cards: one card per catalogued strategy (269 cards), grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json. |
-| terminal-lineup | 2184 | 105345675 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 2279 | 105360994 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 9 | 105111 | Repository-level regression blocker tests. |
 | tools | 2 | 649 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
@@ -91,7 +91,7 @@ A public library of trading strategies and the desk software around them: strate
 ### Terminal lineup
 
 - [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md): the lineup manifest.
-- terminal-lineup/site/ (1924 files): the public tool site; each tool has its own folder with its page and data, and the refresh scripts sit at the top of site/.
+- terminal-lineup/site/ (2019 files): the public tool site; each tool has its own folder with its page and data, and the refresh scripts sit at the top of site/.
 - terminal-lineup/forecast/ (103 files): the forecast engines, their registry, grading and ledger code, and their tests. See also terminal-lineup/FORECAST-ENGINES-30.md.
 - terminal-lineup/ root: design documents, bug logs, build progress files and 110 workflow scripts that built the tools.
 - terminal-lineup/oracle/: the oracle provenance record. terminal-lineup/records/: build and search records. terminal-lineup/specs/: specifications.
@@ -107,7 +107,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`9412d3fb82f896911c653f1487bdfa04684525a7`) is listed in INDEX.json: 7247 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`9f9bcd6f2b289586fbc94021a4dcda684bc20cc2`) is listed in INDEX.json: 7345 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
