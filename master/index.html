@@ -3,14 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gp67CbJMcc0wkPdLYxDRl/eSHJ6K75KVA7GqRRjwwCA='; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+<script>(()=>{const F=fetch.bind(window),P=Object.create(null),H=5000;if(!/[?&]f=/.test(location.search))for(const u of ["edition.json", "panels.json", "pulse.json", "charts.json", "market.json", "reads-index.json", "lineup.json"]){const e={};e.p=F(u,{cache:'no-cache'}).then(r=>{e.t=Date.now()+H;return r},x=>{delete P[u];throw x});P[u]=e}window.fetch=function(i,o){const e=typeof i==='string'&&!(o&&o.method&&o.method!=='GET')&&P[i];if(e&&(!e.t||Date.now()<e.t)){const s=o&&o.signal,c=e.p.then(r=>r.clone());if(!s)return c;const A=()=>new DOMException('Aborted','AbortError');if(s.aborted)return Promise.reject(A());return new Promise((y,n)=>{s.addEventListener('abort',()=>n(A()),{once:true});c.then(y,n)})}if(e)delete P[i];return F(i,o)}})();</script>
+<link rel="preload" href="market.4aa394c0dd.js" as="script">
+<link rel="preload" href="market.c133dcfde4.css" as="style">
 <title>Master Terminal</title>
 <meta name="description" content="The day’s best setups, the Fear-Day Buy List: one clear plan per stock, where to buy, where it is wrong, where to take profit, the evidence behind it in plain English, and every call scored.">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#0b3b46">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="preload" href="edition.json" as="fetch" crossorigin>
 <link rel="stylesheet" href="app.4bda57714f.css">
 <link rel="stylesheet" href="viz.a17524480c.css">
 <link rel="stylesheet" href="context.290b3d5052.css">
@@ -21,17 +23,20 @@
 <link rel="stylesheet" href="vendor.89ab384cbf.css">
 <link rel="stylesheet" href="ascend.df45c501e2.css">
 <link rel="stylesheet" href="lineup.76eb5d9edd.css">
-<script src="app.4405cfae70.js" defer></script>
+<link rel="stylesheet" href="viz_market.b1b967e6e9.css">
+<script src="app.8ffafb9895.js" defer></script>
 <script src="viz.3de73f6e1a.js" defer></script>
 <script src="context.50c6ee21e3.js" defer></script>
 <script src="brief.18cc4bc19a.js" defer></script>
 <script src="strip.1c7448c356.js" defer></script>
 <script src="heur.30d334cec7.js" defer></script>
-<script src="funnel.792640c61b.js" defer></script>
-<script src="vendor.8d450cd734.js" defer></script>
-<script src="ascend.31ca63dc85.js" defer></script>
+<script src="funnel.3f10fcfc44.js" defer></script>
+<script src="vendor.1db8f35cdc.js" defer></script>
+<script src="ascend.082885b12a.js" defer></script>
 <script src="lineup.c5363aa07d.js" defer></script>
 <script src="optdata.6c9209742d.js" defer></script>
+<script src="viz_market.44c5652350.js" defer></script>
+<script src="dkc.2d2cdafce0.js" defer></script>
 <link rel="stylesheet" href="grok-master.css"></head>
 <body>
 <header class="hdr" id="mast">
@@ -83,7 +88,7 @@
       </section>
       </div>
     </div>
-    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.dd08fc5c55.js" data-css="market.c133dcfde4.css" hidden>
+    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.4aa394c0dd.js" data-css="market.c133dcfde4.css" hidden>
       <div class="glance" id="glance"></div>
       <div class="strip" id="strip" aria-label="Market strip" hidden></div>
       <section class="mk" id="m-tick" aria-label="Headlines" hidden></section>
@@ -137,7 +142,7 @@
         </div>
       </section>
     </div>
-    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.d0c15a08f9.js" data-css="desk.cf3bdbae7b.css" hidden>
+    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.a690939c24.js" data-css="desk.cf3bdbae7b.css" hidden>
       <span class="anc" id="desk"></span>
       <div id="d-wait"><p class="card mu">Loading the desk…</p><svg width="1" height="1400" aria-hidden="true" focusable="false"></svg></div>
       <section id="d-book" aria-labelledby="h-d-book" data-anchor data-jump="My Book" hidden></section>
