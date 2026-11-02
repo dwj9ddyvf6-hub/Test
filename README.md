@@ -1,8 +1,8 @@
 # Strategy catalog
 
-> **Start here: [INDEX.md](INDEX.md)** is the map of this whole repository for a reader arriving cold, and [INDEX.json](INDEX.json) is its machine-readable twin listing every file in the repository. Read the index first, then this page.
+> **Start here: [START-HERE.md](START-HERE.md)** is the mandatory first read for any reader (human or LLM) arriving cold: its reading protocol, the complete map and the anti-miss rules. Then [INDEX.md](INDEX.md), the prose map of the whole repository, [ROADMAP.md](ROADMAP.md), the routing by topic, and [INDEX.json](INDEX.json), the machine-readable twin listing every file in the repository. Read those first, then this page. This page is the strategy catalog front page only.
 
-**651 distinct trading strategies** have been built across our desks, and this repository is the public library that holds them: the strategy cards, the code, the recreation notes that let anyone rebuild a strategy from its recorded rules, the desk software that runs the current roster, and the guides that teach an agent (or a person) how to build a desk like this. It holds **6,266 files** in total. Everything below is a map of the whole repository, not just the catalog.
+**651 distinct trading strategies** have been built across our desks, and this repository is the public library that holds them: the strategy cards, the code, the recreation notes that let anyone rebuild a strategy from its recorded rules, the desk software that runs the current roster, and the guides that teach an agent (or a person) how to build a desk like this. It holds **7,226 files** in total. Everything below is a map of the whole repository, not just the catalog.
 
 ## The research engines and studies
 
@@ -78,6 +78,7 @@ Monitors and research recorders are not listed as strategies in any of the three
 
 | You want to | Go to |
 |---|---|
+| See the whole repository, not just the catalog | [START-HERE.md](START-HERE.md) first (mandatory protocol and complete map), then [INDEX.md](INDEX.md) and [ROADMAP.md](ROADMAP.md). |
 | Understand one strategy | Its card under `strategies/<family>/`, then its entry in [the accounting](docs/ALL-SLEEVES.md) for the full algorithm and variants. |
 | Rebuild a strategy from its rules | The matching `-ALGORITHM.md` and `-RECREATE.md` notes in `docs/` (1,056 notes between them). |
 | See what the desk runs today | [The current desk index](docs/SLEEVES.md) (336 sleeves) and `config/sleeves.json`. |
