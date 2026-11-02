@@ -310,7 +310,12 @@
     /* Encoding cure (14.1.3/14.1.7): both ends of the value scale
        are printed, and a scale that does not include zero says so. */
     s = gridH(s, W, pad, yLo, yHi, Y);
-    if (yLo > 0 || yHi < 0) s += '<text x="' + pad + '" y="' + (H - 18) + '" class="vk-axis">Scale runs ' + fmt(yLo) + " to " + fmt(yHi) + "; zero is outside it.</text>";
+    /* R2 cure (2026-11-02, breadth-meter garble): the scale note used
+       to be drawn at H-18 inside the plot, on top of the bottom grid
+       label and the date labels, and a second copy of the top value
+       was drawn at the top. Both are gone: the grid labels are the
+       only y-axis text, and the scale note rides in the frame label
+       below (see the return, which appends it to the label text). */
     var top = pts.reduce(function (a, p, j) { return p.y > pts[a].y ? j : a; }, 0);
     s += '<circle cx="' + X(top) + '" cy="' + Y(pts[top].y) + '" r="4" class="vk-cur"></circle>';
     /* Point notes (2026-10-31, Wave 3 Item E): a point carrying a
@@ -323,10 +328,11 @@
       s += '<text x="' + X(j) + '" y="' + (Y(p.y) + (j % 2 ? 16 : -8)) + '" text-anchor="middle" class="vk-note">' + esc(p.note) + "</text>";
     });
     s += '<text x="' + pad + '" y="' + (H - 6) + '" class="vk-axis">' + esc(pts[0].x != null ? pts[0].x : "") + "</text>";
-    s += '<text x="' + (W - pad - 40) + '" y="' + (H - 6) + '" class="vk-axis">' + esc(pts[pts.length - 1].x != null ? pts[pts.length - 1].x : "") + "</text>";
-    s += '<text x="' + pad + '" y="14" class="vk-axis">' + fmt(yHi) + "</text></svg>";
+    s += '<text x="' + (W - pad - 40) + '" y="' + (H - 6) + '" class="vk-axis">' + esc(pts[pts.length - 1].x != null ? pts[pts.length - 1].x : "") + "</text></svg>";
     x = y = null;
-    return frame(input.title || null, input.label || "The shape on record, drawn from the points in this page data.",
+    var curveLabel = input.label || "The shape on record, drawn from the points in this page data.";
+    if (yLo > 0 || yHi < 0) curveLabel += " The scale runs " + fmt(yLo) + " to " + fmt(yHi) + "; zero is outside it.";
+    return frame(input.title || null, curveLabel,
       s, input.session, pts.length, "points");
   }
 
