@@ -143,6 +143,15 @@ def test_proof_gate_recounts():
     assert fwd["ledger_rows"] == total
 
 
+# ---- O: text floor for heat / bullet-scale text (UI 14.5.10) ----
+def test_heat_and_bullet_scale_text_floor_16px():
+    css = _src("visual.css")
+    for cls in (".vk-heat-cell", ".vk-cal-cell", ".vk-bullet-scale"):
+        line = [ln for ln in css.splitlines() if ln.startswith(cls)]
+        assert line, cls
+        assert "font-size:16px" in line[0], (cls, line[0])
+
+
 # ---- M: session history same-session replacement ----
 def test_session_history_replaces_same_session(tmp_path):
     import session_history as sh
