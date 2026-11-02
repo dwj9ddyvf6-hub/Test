@@ -287,6 +287,10 @@
     }
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: direction, over 21 sessions. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if after 60 fires per arm, either arm's mean sign is wrong. It counts as proven at 60 fires per arm.",
+    "summary": "Forecast what happens when company insiders and options traders disagree about the same stock."
+  },
   "feed": "forecast_ledger",
   "forecast": {
     "arm_a": "Arm A: in a name where insiders have sold heavily (at least 10 sales for every buy across the record) while options trading is at its hottest, the name will trail SPY by an average of at least 1.5 points over the next 21 trading days.",
@@ -983,6 +987,92 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "published_at_utc": "2026-10-30T20:47:07.178172+00:00",
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (146 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 146,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-11-02",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_10",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-10-30",
+      "keys_present": [
+        "calibration_attestation",
+        "coverage",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "forecast",
+        "grading_note",
+        "history",
+        "insider_legs",
+        "kill_criterion",
+        "live",
+        "panel_last_session",
+        "pername_today",
+        "plan_adjustment",
+        "price_basis",
+        "provenance",
+        "published_at_utc",
+        "record_surface",
+        "self_test",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_rule",
+        "today",
+        "tool",
+        "waiting"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_10",
+      "forecasts": 209,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 209 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 6,
+          "path": "/history"
+        },
+        {
+          "items": 6,
+          "path": "/history/sessions"
+        },
+        {
+          "items": 0,
+          "path": "/history/would_have"
+        }
+      ],
+      "total_items_counted": 12
+    },
+    "version": 1
+  },
   "self_test": {
     "cases": 12,
     "note": "On every run, the two tests and the comparison-group rule are also exercised on made-up records in memory, covering each way a name can land and the two ways it must not fire (no insider record, or no heat reading). All cases passed on this run. Made-up records are never written to the record of real forecasts.",
@@ -990,6 +1080,133 @@
   },
   "source": "Company ownership filings gathered on October 26, 2026, and the daily options-print tape summaries",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Insider sales per eligible name, buys beside each bar.",
+      "rows": [
+        {
+          "coverage": "3 buys",
+          "name": "ACN",
+          "score": 9
+        },
+        {
+          "coverage": "1 buys",
+          "name": "CCI",
+          "score": 1
+        },
+        {
+          "coverage": "4 buys",
+          "name": "CROX",
+          "score": 9
+        },
+        {
+          "coverage": "3 buys",
+          "name": "DFIN",
+          "score": 3
+        },
+        {
+          "coverage": "5 buys",
+          "name": "DRH",
+          "score": 2
+        },
+        {
+          "coverage": "7 buys",
+          "name": "EVRG",
+          "score": 5
+        },
+        {
+          "coverage": "4 buys",
+          "name": "GO",
+          "score": 1
+        },
+        {
+          "coverage": "1 buys",
+          "name": "KDP",
+          "score": 3
+        },
+        {
+          "coverage": "1 buys",
+          "name": "MO",
+          "score": 2
+        },
+        {
+          "coverage": "4 buys",
+          "name": "OPCH",
+          "score": 0
+        },
+        {
+          "coverage": "1 buys",
+          "name": "OXY",
+          "score": 0
+        },
+        {
+          "coverage": "5 buys",
+          "name": "PEB",
+          "score": 1
+        }
+      ],
+      "source": "insider_legs.arm_b_eligible[].sells",
+      "title": "Insider buying names: sales against buys"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Insider buys per eligible name.",
+      "rows": [
+        {
+          "name": "ACN",
+          "score": 3
+        },
+        {
+          "name": "CCI",
+          "score": 1
+        },
+        {
+          "name": "CROX",
+          "score": 4
+        },
+        {
+          "name": "DFIN",
+          "score": 3
+        },
+        {
+          "name": "DRH",
+          "score": 5
+        },
+        {
+          "name": "EVRG",
+          "score": 7
+        },
+        {
+          "name": "GO",
+          "score": 4
+        },
+        {
+          "name": "KDP",
+          "score": 1
+        },
+        {
+          "name": "MO",
+          "score": 1
+        },
+        {
+          "name": "OPCH",
+          "score": 4
+        },
+        {
+          "name": "OXY",
+          "score": 1
+        },
+        {
+          "name": "PEB",
+          "score": 5
+        }
+      ],
+      "source": "insider_legs.arm_b_eligible[].buys",
+      "title": "Insider buying names: buys on record"
+    },
+    "version": 1
+  },
   "thin_rule": "Below 30 graded in any group, counts only: no average and no score is drawn from a handful of tests.",
   "today": {
     "arm_a": [],
