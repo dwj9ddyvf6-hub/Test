@@ -72,12 +72,17 @@ ready(function () {
       var h = c.querySelector("h1,h2,h3,h4"); if (!h) return;
       if (!c.querySelector(":scope > .gb-kicker")) { var k = el("p", "gb-kicker", (h.textContent || "").trim().slice(0, 60)); c.insertBefore(k, c.firstChild); }
       if (!c.querySelector(":scope > .gb-sentence")) {
-        var p = c.querySelector("p:not(.gb-kicker)");
-        if (p && (p.textContent || "").trim().length > 12) { var s = el("p", "gb-sentence", (p.textContent || "").trim().replace(/\s+/g, " ").slice(0, 220)); if (h.nextSibling) c.insertBefore(s, h.nextSibling); }
+        var p = c.querySelector("p:not(.gb-kicker):not(.gb-foot)");
+        var st = p ? (p.textContent || "").trim().replace(/\s+/g, " ") : "";
+        if (st.length <= 12) { var own = (c.textContent || "").replace(/\s+/g, " ").trim(); var ht = (h.textContent || "").trim(); if (own.indexOf(ht) === 0) own = own.slice(ht.length).trim(); st = own.slice(0, 220); }
+        if (st.length > 12) { var s = el("p", "gb-sentence", st.slice(0, 220)); if (h.nextSibling) c.insertBefore(s, h.nextSibling); else c.insertBefore(s, c.firstChild.nextSibling); }
       }
       if (!c.querySelector(":scope > .gb-hero")) {
         var hv = c.querySelector(".bignum,.vvalue,.fig,.big,strong,b");
-        if (hv && /\d/.test(hv.textContent || "") && (hv.textContent || "").trim().length <= 32) { var he = el("p", "gb-hero", (hv.textContent || "").trim().slice(0, 40)); var se = c.querySelector(":scope > .gb-sentence"); if (se && se.nextSibling) c.insertBefore(he, se.nextSibling); }
+        var heroTxt = "";
+        if (hv && /\d/.test(hv.textContent || "") && (hv.textContent || "").trim().length <= 32) heroTxt = (hv.textContent || "").trim().slice(0, 40);
+        if (!heroTxt) { var m = (c.textContent || "").replace(/\s+/g, " ").slice(0, 300).match(/-?\$?\d[\d,]*(\.\d+)?%?/); if (m) heroTxt = m[0]; }
+        if (heroTxt) { var he = el("p", "gb-hero", heroTxt); var se = c.querySelector(":scope > .gb-sentence"); if (se && se.nextSibling) c.insertBefore(he, se.nextSibling); else if (h.nextSibling) c.insertBefore(he, h.nextSibling); }
       }
       if (!c.querySelector(":scope > .gb-foot")) c.appendChild(el("p", "gb-foot", "From this view's own data. The table or chart in this card is the record."));
       if (c.querySelector(":scope > .gb-sentence") && c.querySelector(":scope > .gb-hero") && c.querySelector(":scope > .gb-foot")) c.setAttribute("data-gb-full", "1"); else c.setAttribute("data-gb-partial", "1");
