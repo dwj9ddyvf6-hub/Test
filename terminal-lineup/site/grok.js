@@ -718,10 +718,21 @@
       if (!bRows || !bSess) return;
       if (!(bSess < asOf)) return;
       var prior = {}; bRows.forEach(function (r) { prior[r] = 1; });
+      /* AMAZING-CURE DEFECT-C15-IDENTITY (2026-11-02): a rendered label
+         may badge only when it is a producer identity of the CURRENT
+         session (in latest_rows, extracted by build_prior_rows.py from
+         data.json with the same IDKEYS walk) AND absent from the prior
+         baseline. The R3 rule diffed every rendered table cell against
+         the baseline alone, so stat, date and prose labels the producer
+         never extracted badged as false positives, and removal-only
+         pages badged rows that were not new. Identity now matches the
+         producer both ways: latest[lab] required, prior[lab] forbids. */
+      var lRows = rec.latest_rows || rec.rows || [];
+      var latest = {}; lRows.forEach(function (r) { latest[r] = 1; });
       var n = 0;
       badgeTargetsR3().forEach(function (tg) {
         var lab = (tg.el.textContent || "").trim().replace(/\s*NEW\s*$/, "");
-        if (lab && !prior[lab] && !tg.host.querySelector(".gb-badge.new")) { var b = el("span", "gb-badge new", "NEW"); b.style.marginLeft = "6px"; tg.el.appendChild(b); n++; }
+        if (lab && latest[lab] && !prior[lab] && !tg.host.querySelector(".gb-badge.new")) { var b = el("span", "gb-badge new", "NEW"); b.style.marginLeft = "6px"; tg.el.appendChild(b); n++; }
       });
       if (n) { var comp = document.querySelector(".gb-comp") || document.querySelector(".card"); if (comp && !comp.querySelector(".gb-newnote")) comp.appendChild(el("p", "gb-foot gb-newnote", n + " row(s) are new since the stored prior session (" + bSess + ").")); }
     }
@@ -739,6 +750,47 @@
      deep amber, amber, teal, dark teal. The state is also named in the
      segment title and the axis text, so colour never carries it alone. */
   function moodBandR3(v) { return v < 25 ? "#86580a" : v < 50 ? "#d9a441" : v < 75 ? "#3d9a84" : "#0b3b46"; }
+  /* AMAZING Build (2026-11-02): VIX ring as ONE additional gauge card
+     on market-mood. It does not displace, reorder or headline over the
+     nine gauges (the owner's Market Mood ruling stands); it is appended
+     as its own component card after them, reading vix-ring.json built
+     by build_vix_ring.py from the captured VIX daily closes, and it
+     prints the reading's own date on its face. The ring sweep maps the
+     10 to 40 range onto the circle; the band name is printed in words
+     so colour never carries the state alone. */
+  function vixRingCard() {
+    if (document.querySelector(".gb-vixring")) return;
+    fetch("vix-ring.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (v) {
+      if (!v || typeof v.value !== "number" || document.querySelector(".gb-vixring")) return;
+      var card = compCard("Volatility, as one ring", "The VIX reading for " + v.date + ", on its own scale. This card sits beside the nine gauges above; it is not one of them and it does not sum them up.");
+      card.classList.add("gb-vixring");
+      var frac = Math.max(0, Math.min(1, (v.value - 10) / 30));
+      var circ = 2 * Math.PI * 52;
+      var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 140 140"); svg.setAttribute("width", "150");
+      svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "VIX " + v.value + " on " + v.date + ", " + v.band);
+      var bg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      bg.setAttribute("cx", "70"); bg.setAttribute("cy", "70"); bg.setAttribute("r", "52");
+      bg.setAttribute("fill", "none"); bg.setAttribute("stroke", "#d7e6e3"); bg.setAttribute("stroke-width", "13");
+      var fg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      fg.setAttribute("cx", "70"); fg.setAttribute("cy", "70"); fg.setAttribute("r", "52");
+      fg.setAttribute("fill", "none"); fg.setAttribute("stroke", "#0b3b46"); fg.setAttribute("stroke-width", "13");
+      fg.setAttribute("stroke-linecap", "round");
+      fg.setAttribute("stroke-dasharray", (frac * circ).toFixed(1) + " " + circ.toFixed(1));
+      fg.setAttribute("transform", "rotate(-90 70 70)");
+      var tx = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      tx.setAttribute("x", "70"); tx.setAttribute("y", "72"); tx.setAttribute("text-anchor", "middle");
+      tx.setAttribute("font-size", "26"); tx.setAttribute("font-weight", "800"); tx.setAttribute("fill", "#0d2e41");
+      tx.textContent = v.value.toFixed(2);
+      var tb = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      tb.setAttribute("x", "70"); tb.setAttribute("y", "94"); tb.setAttribute("text-anchor", "middle");
+      tb.setAttribute("font-size", "13"); tb.setAttribute("fill", "#5b7180");
+      tb.textContent = v.band;
+      svg.appendChild(bg); svg.appendChild(fg); svg.appendChild(tx); svg.appendChild(tb);
+      card.appendChild(svg);
+      card.appendChild(el("p", "gb-foot", "VIX for " + v.date + ": " + v.value.toFixed(2) + " (" + v.band + "). Bands: " + v.bands + ". Source: " + v.source + "."));
+    }).catch(function () {});
+  }
   function moodStripR2() {
     if (document.querySelector(".gb-moodstrip")) return;
     fetch("composite-history.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (h) {
@@ -988,6 +1040,7 @@
       try { deepComponentR2(data); } catch (e) {}
       try { categoricalComponentR2(data); } catch (e) {}
       try { if (slug === "market-mood") moodStripR2(); } catch (e) {}
+      try { if (slug === "market-mood") vixRingCard(); } catch (e) {}
       try { if (slug === "morning-map") morningMapR2(data); } catch (e) {}
       try { enhanceCardsR2(data); } catch (e) {}
       try { subjectFirstR2(); } catch (e) {}
