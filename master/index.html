@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gp67CbJMcc0wkPdLYxDRl/eSHJ6K75KVA7GqRRjwwCA='; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <script>(()=>{const F=fetch.bind(window),P=Object.create(null),H=5000;if(!/[?&]f=/.test(location.search))for(const u of ["edition.json", "panels.json", "pulse.json", "charts.json", "market.json", "reads-index.json", "lineup.json"]){const e={};e.p=F(u,{cache:'no-cache'}).then(r=>{e.t=Date.now()+H;return r},x=>{delete P[u];throw x});P[u]=e}window.fetch=function(i,o){const e=typeof i==='string'&&!(o&&o.method&&o.method!=='GET')&&P[i];if(e&&(!e.t||Date.now()<e.t)){const s=o&&o.signal,c=e.p.then(r=>r.clone());if(!s)return c;const A=()=>new DOMException('Aborted','AbortError');if(s.aborted)return Promise.reject(A());return new Promise((y,n)=>{s.addEventListener('abort',()=>n(A()),{once:true});c.then(y,n)})}if(e)delete P[i];return F(i,o)}})();</script>
-<link rel="preload" href="market.55e728f815.js" as="script">
+<link rel="preload" href="market.c7be00f819.js" as="script">
 <link rel="preload" href="market.c133dcfde4.css" as="style">
 <title>Master Terminal</title>
 <meta name="description" content="The day’s best setups, the Fear-Day Buy List: one clear plan per stock, where to buy, where it is wrong, where to take profit, the evidence behind it in plain English, and every call scored.">
@@ -13,32 +13,34 @@
 <meta name="theme-color" content="#0b3b46">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="app.4bda57714f.css">
+<link rel="stylesheet" href="app.490d741f93.css">
 <link rel="stylesheet" href="viz.a17524480c.css">
 <link rel="stylesheet" href="context.290b3d5052.css">
 <link rel="stylesheet" href="brief.d9b66f2b08.css">
-<link rel="stylesheet" href="strip.319600ecdb.css">
+<link rel="stylesheet" href="strip.ce662f40de.css">
 <link rel="stylesheet" href="heur.809b23b99c.css">
 <link rel="stylesheet" href="funnel.cc0a756c83.css">
 <link rel="stylesheet" href="vendor.89ab384cbf.css">
-<link rel="stylesheet" href="ascend.02ba630cbd.css">
+<link rel="stylesheet" href="ascend.30fe068256.css">
 <link rel="stylesheet" href="lineup.76eb5d9edd.css">
 <link rel="stylesheet" href="viz_market.b1b967e6e9.css">
-<link rel="stylesheet" href="viz_engines.b9a21ec657.css">
+<link rel="stylesheet" href="viz_engines.b900669679.css">
 <script src="app.8ffafb9895.js" defer></script>
-<script src="viz.a0315e70f8.js" defer></script>
+<script src="viz.1245bdfe72.js" defer></script>
 <script src="context.50c6ee21e3.js" defer></script>
 <script src="brief.18cc4bc19a.js" defer></script>
-<script src="strip.1c7448c356.js" defer></script>
+<script src="gauges.ee9547eb0d.js" defer></script>
+<script src="strip.c0d7d67e39.js" defer></script>
 <script src="heur.30d334cec7.js" defer></script>
-<script src="funnel.18ffd4369b.js" defer></script>
+<script src="gk.84d7d22fe0.js" defer></script>
+<script src="funnel.203f4cb435.js" defer></script>
 <script src="vendor.1db8f35cdc.js" defer></script>
-<script src="ascend.26bb157d5a.js" defer></script>
+<script src="ascend.cdf089b1ad.js" defer></script>
 <script src="lineup.ffcce9165f.js" defer></script>
-<script src="optdata.65ed773df7.js" defer></script>
+<script src="optdata.ec8d0b1d02.js" defer></script>
 <script src="viz_market.84efc5a8ea.js" defer></script>
 <script src="dkc.7a2a3d4762.js" defer></script>
-<script src="viz_engines.10e1aca279.js" defer></script>
+<script src="viz_engines.99df4740a0.js" defer></script>
 <link rel="stylesheet" href="grok-master.css"></head>
 <body>
 <header class="hdr" id="mast">
@@ -90,23 +92,11 @@
       </section>
       </div>
     </div>
-    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.55e728f815.js" data-css="market.c133dcfde4.css" hidden>
+    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.c7be00f819.js" data-css="market.c133dcfde4.css" hidden>
       <div class="glance" id="glance"></div>
       <div class="strip" id="strip" aria-label="Market strip" hidden></div>
       <section class="mk" id="m-tick" aria-label="Headlines" hidden></section>
-      <section class="mk" id="m-live" aria-labelledby="h-m-live" data-anchor data-jump="Pulse today" hidden></section>
-      <section class="mk" id="m-sect" aria-labelledby="h-m-sect" data-anchor data-jump="Sectors today" hidden></section>
-      <section class="mk" id="m-movers" aria-labelledby="h-m-movers" data-anchor data-jump="Movers" hidden></section>
-      <section class="mk" id="m-cal" aria-labelledby="h-m-cal" data-anchor data-jump="Calendar" hidden></section>
-      <section class="mk" id="m-psy" aria-labelledby="h-m-psy" data-anchor data-jump="Market Mood" hidden></section>
-      <section class="mk" id="m-ladder" aria-labelledby="h-m-ladder" data-anchor data-jump="Gamma Ladder" hidden></section>
-      <section class="mk" id="m-pins" aria-labelledby="h-m-pins" data-anchor data-jump="Pin Watch" hidden></section>
-      <section class="mk" id="m-insider" aria-labelledby="h-m-insider" data-anchor data-jump="Insider Wire" hidden></section>
-      <section class="mk" id="m-news" aria-labelledby="h-m-news" data-anchor data-jump="News" hidden></section>
-      <section class="fsum" id="f-sum" aria-label="Morning Map, Qualified Board and Golden Sweep Wire in brief" hidden></section>
-      <section class="fn" id="f-map" aria-labelledby="h-f-map" data-anchor data-jump="Morning Map" hidden></section>
-      <section class="fn" id="f-board" aria-labelledby="h-f-board" data-anchor data-jump="Qualified Board" hidden></section>
-      <section class="fn" id="f-wire" aria-labelledby="h-f-wire" data-anchor data-jump="Golden Sweeps" hidden></section>
+      <div class="mgrp" id="mg-read" data-jump="Market read" data-view>
       <section class="market" id="market" aria-labelledby="h-mkt" data-anchor data-jump="Market read" hidden>
         <div class="shd"><div class="sht"><p class="kick">The market today</p><h2 id="h-mkt">Market read</h2></div><span class="pv" id="asof"></span></div>
         <details class="wh"><summary>What is this?</summary><p><b>Why.</b> The market's backdrop in one look: whether conditions favour buying setups.</p><p><b>How.</b> The badge counts four trend checks: the S&P 500 against its 50-day average, the share of stocks above their 50-day averages, volatility against the past year, and offensive sectors against the S&P 500. Three or four passing reads Risk-on, two Mixed, one or none Risk-off. It is a trend read, not today's move; during the session it uses today's live prices.</p></details>
@@ -117,34 +107,71 @@
           <p class="cal" id="cal" hidden></p>
         </div>
       </section>
+      <section class="mk" id="m-movers" aria-labelledby="h-m-movers" data-anchor data-jump="Movers" hidden></section>
+      <section class="mk" id="m-cal" aria-labelledby="h-m-cal" data-anchor data-jump="Calendar" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-mood" data-jump="Mood Ring" data-view>
+      <section class="mk" id="m-mood" aria-labelledby="h-m-mood" data-anchor data-jump="Mood Ring" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-pulse" data-jump="Pulse" data-view>
+      <section class="mk" id="m-live" aria-labelledby="h-m-live" data-anchor data-jump="Pulse today" hidden></section>
+      <section class="mk" id="m-pulse" aria-labelledby="h-m-pulse" data-anchor data-jump="Pulse" hidden></section>
+      <section class="mk" id="m-idx" aria-labelledby="h-m-idx" data-anchor data-jump="Indexes" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-breadth" data-jump="Breadth" data-view>
+      <section class="mk" id="m-breadth" aria-labelledby="h-m-breadth" data-anchor data-jump="Breadth" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-risk" data-jump="Risk appetite" data-view>
+      <section class="mk" id="m-risk" aria-labelledby="h-m-risk" data-anchor data-jump="Risk appetite" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-sect" data-jump="Sectors" data-view>
+      <section class="mk" id="m-sect" aria-labelledby="h-m-sect" data-anchor data-jump="Sectors today" hidden></section>
       <section id="sectors" aria-labelledby="h-sec" data-anchor data-jump="Sectors" hidden>
         <div class="shd"><div class="sht"><p class="kick">Leaders and laggards</p><h2 id="h-sec">Sector strength</h2></div><span class="pv" id="sec-meta"></span></div>
         <details class="wh"><summary>What is this?</summary><p><b>Why.</b> Which sectors lead and which lag, so setups can be weighed by their group.</p><p><b>How.</b> Each sector ETF's relative strength against the S&P 500, strongest first.</p></details>
         <div class="card">
-          <ol class="sec" id="secl"></ol>
+          <ol class="sec" id="secl" data-viz></ol>
           <p class="axis" aria-hidden="true"><span></span><span class="ax"><span>← Lagging</span><span>Leading →</span></span><span></span></p>
         </div>
       </section>
+      <section class="mk" id="m-heat" aria-labelledby="h-m-heat" data-anchor data-jump="Heatmap" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-rot" data-jump="Rotation" data-view>
+      <section class="mk" id="m-rot" aria-labelledby="h-m-rot" data-anchor data-jump="Rotation" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-psy" data-jump="Psychology" data-view>
+      <section class="mk" id="m-psy" aria-labelledby="h-m-psy" data-anchor data-jump="Market Mood" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-pos" data-jump="Positioning" data-view>
       <section class="mk" id="m-pos" aria-labelledby="h-m-pos" data-anchor data-jump="Positioning" hidden></section>
       <section class="mk" id="m-vendor" aria-labelledby="h-m-vendor" data-anchor data-jump="Move and regime" hidden></section>
-      <section class="mk" id="m-idx" aria-labelledby="h-m-idx" data-anchor data-jump="Indexes" hidden></section>
-      <section class="mk" id="m-mood" aria-labelledby="h-m-mood" data-anchor data-jump="Mood Ring" hidden></section>
-      <section class="mk" id="m-pulse" aria-labelledby="h-m-pulse" data-anchor data-jump="Pulse" hidden></section>
-      <section class="mk" id="m-breadth" aria-labelledby="h-m-breadth" data-anchor data-jump="Breadth" hidden></section>
-      <section class="mk" id="m-risk" aria-labelledby="h-m-risk" data-anchor data-jump="Risk appetite" hidden></section>
-      <section class="mk" id="m-heat" aria-labelledby="h-m-heat" data-anchor data-jump="Heatmap" hidden></section>
-      <section class="mk" id="m-rot" aria-labelledby="h-m-rot" data-anchor data-jump="Rotation" hidden></section>
+      <section class="mk" id="m-ladder" aria-labelledby="h-m-ladder" data-anchor data-jump="Gamma Ladder" hidden></section>
+      <section class="mk" id="m-pins" aria-labelledby="h-m-pins" data-anchor data-jump="Pin Watch" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-boards" data-jump="Boards" data-view>
+      <section class="fsum" id="f-sum" aria-label="Morning Map, Qualified Board and Golden Sweep Wire in brief" hidden></section>
+      <section class="fn" id="f-map" aria-labelledby="h-f-map" data-anchor data-jump="Morning Map" hidden></section>
+      <section class="fn" id="f-board" aria-labelledby="h-f-board" data-anchor data-jump="Qualified Board" hidden></section>
+      <section class="fn" id="f-wire" aria-labelledby="h-f-wire" data-anchor data-jump="Golden Sweeps" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-news" data-jump="News" data-view>
+      <section class="mk" id="m-news" aria-labelledby="h-m-news" data-anchor data-jump="News" hidden></section>
+      <section class="mk" id="m-insider" aria-labelledby="h-m-insider" data-anchor data-jump="Insider Wire" hidden></section>
+      </div>
+      <div class="mgrp" id="mg-look" data-jump="Look up" data-view>
       <section id="look" aria-labelledby="h-look" data-anchor data-jump="Look up" hidden>
         <div class="shd"><div class="sht"><p class="kick">Any stock on the list</p><h2 id="h-look">Look up</h2></div><span class="pv" id="look-meta"></span></div>
         <details class="wh"><summary>What is this?</summary><p><b>Why.</b> The desk's read of any stock on the desk's roster, not only the Buy List.</p><p><b>How.</b> Type a ticker for its take, plan and evidence, read from the latest daily bars.</p></details>
+        <div id="lviz"></div>
         <div class="card">
           <form id="lf" class="lf" role="search"><label class="sr" for="lq">Stock symbol</label><input id="lq" class="lq" type="text" inputmode="search" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Symbol, e.g. AAPL" maxlength="12"><button class="btn" type="submit">Read</button></form>
           <ul class="ls" id="ls"></ul>
           <div id="lres"></div>
         </div>
       </section>
+      </div>
     </div>
-    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.a690939c24.js" data-css="desk.cf3bdbae7b.css" hidden>
+    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.040e5abd31.js" data-css="desk.cf3bdbae7b.css" hidden>
       <span class="anc" id="desk"></span>
       <div id="d-wait"><p class="card mu">Loading the desk…</p><svg width="1" height="1400" aria-hidden="true" focusable="false"></svg></div>
       <section id="d-book" aria-labelledby="h-d-book" data-anchor data-jump="My Book" hidden></section>
