@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One-Page Report: every published reading on one name, on one page</title>
+<style>
+  :root{
+    --ink:#232a33; --soft:#55626f; --faint:#8593a1;
+    --line:#dde1e7; --bg:#f4f4f2; --card:#ffffff;
+    --accent:#0b5fa5; --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --warn-bg:#fdf3e0; --warn-line:#e3c98f; --warn-ink:#6d5312;
+    --meas-bg:#eceae6; --meas-line:#cfcabf; --meas-ink:#55626f;
+    --pos:#2c5a2c; --neg:#7a2a20; --mid:#6d5312;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .tag{display:inline-block;border-radius:6px;padding:2px 11px;font-size:13.5px;
+       font-weight:600;border:1px solid;background:var(--meas-bg);
+       border-color:var(--meas-line);color:var(--meas-ink)}
+  .proving{background:var(--card);border:1px solid var(--line);border-radius:14px;
+           padding:14px 20px;margin:0 0 22px}
+  .proving p{margin:8px 0 0;color:var(--soft);font-size:15px;max-width:46em}
+  .picker{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 8px}
+  .picker label{font-weight:600;font-size:15px}
+  .picker select{font-size:16px;padding:7px 10px;border:1px solid var(--line);
+                 border-radius:8px;background:var(--card);color:var(--ink)}
+  .quick{display:flex;gap:8px;flex-wrap:wrap}
+  .quick button{font-size:14px;padding:6px 13px;border:1px solid var(--line);
+                border-radius:8px;background:var(--card);color:var(--accent);
+                font-weight:600;cursor:pointer}
+  .quick button:hover{border-color:var(--accent)}
+  .report-head{background:var(--card);border:1px solid var(--line);border-radius:14px;
+               padding:18px 20px;margin:14px 0 22px}
+  .report-head h2{margin:0 0 4px;font-size:26px}
+  .report-head p{margin:4px 0 0;color:var(--soft);font-size:15.5px;max-width:46em}
+  .report-head p strong{color:var(--ink)}
+  section.tool{background:var(--card);border:1px solid var(--line);border-radius:14px;
+               padding:18px 20px;margin:0 0 14px}
+  section.tool h3{margin:0 0 2px;font-size:19px}
+  section.tool .when{font-size:13.5px;color:var(--faint);margin:0 0 6px}
+  section.tool .about{color:var(--soft);font-size:14.5px;margin:0 0 12px;max-width:46em}
+  .stale-note{background:var(--warn-bg);border:1px solid var(--warn-line);
+              color:var(--warn-ink);border-radius:8px;padding:8px 12px;
+              font-size:14px;margin:0 0 12px}
+  .nodata{background:var(--meas-bg);border-radius:10px;padding:12px 14px;font-size:15px}
+  .lines{margin:0;padding:0;list-style:none}
+  .lines li{margin:5px 0;font-size:15.5px}
+  .lines li strong{font-weight:600}
+  .pos{color:var(--pos);font-weight:600}
+  .neg{color:var(--neg);font-weight:600}
+  .mid{color:var(--mid);font-weight:600}
+  table.checks{border-collapse:collapse;margin:10px 0 4px;width:100%;max-width:560px}
+  table.checks td,table.checks th{border-bottom:1px solid var(--line);
+    padding:5px 8px 5px 0;font-size:14.5px;text-align:left;vertical-align:top}
+  table.checks td.num{text-align:right;white-space:nowrap}
+  .fam{border-top:1px solid var(--line);padding:12px 0 4px;margin-top:12px}
+  .fam:first-of-type{border-top:none;margin-top:0;padding-top:2px}
+  .fam h4{margin:0 0 2px;font-size:16px}
+  .fam .speaks{font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+  .fam .speaks.yes{color:var(--pos)}
+  .fam .speaks.no{color:var(--faint)}
+  .fam p{margin:5px 0;font-size:15px;color:var(--soft);max-width:46em}
+  .fam .lines li{color:var(--ink)}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>One-Page Report</h1>
+    <p class="job">One job: pick a name and read, on one page, every reading this site has published on it, each under the name of the tool that published it and the date of its record.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the report&hellip;</p>
+
+  <section class="proving">
+    <span class="tag" id="proving-tag"></span>
+    <p id="proving-note"></p>
+  </section>
+
+  <div class="picker">
+    <label for="pick">Pick a name:</label>
+    <select id="pick"></select>
+    <div class="quick" id="quick"></div>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var pickEl = document.getElementById("pick");
+  var quickEl = document.getElementById("quick");
+  var results = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function showBanner(text){
+    banner.textContent = text;
+    banner.className = "banner show missing";
+  }
+  function fmtDateLong(iso){
+    if (!iso) return "";
+    var d = new Date(iso + "T12:00:00Z");
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",
+      year:"numeric",timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    if (!iso) return "";
+    var d = new Date(iso + "T12:00:00Z");
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString("en-US",{month:"long",day:"numeric",
+      year:"numeric",timeZone:"UTC"});
+  }
+  function todayKey(){
+    var d = new Date();
+    var m = {year:String(d.getUTCFullYear()),
+             month:String(d.getUTCMonth() + 1).padStart(2, "0"),
+             day:String(d.getUTCDate()).padStart(2, "0")};
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function lastCompletedSession(){
+    var d = new Date(todayKey() + "T12:00:00Z");
+    do { d.setUTCDate(d.getUTCDate() - 1); }
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+    return d.toISOString().slice(0, 10);
+  }
+  function money(v){
+    var sign = v < 0 ? "-$" : "$";
+    return sign + Math.abs(Math.round(v)).toLocaleString("en-US");
+  }
+  function money2(v){
+    return (v < 0 ? "-$" : "$") + Math.abs(v).toFixed(2);
+  }
+  function num(v){ return Number(v).toLocaleString("en-US"); }
+  function stanceHtml(s){
+    var cls = s === "positive" ? "pos" : s === "cautious" ? "neg" : "mid";
+    return '<span class="' + cls + '">' + esc(s) + "</span>";
+  }
+  function notOnRecord(text){
+    return '<div class="nodata">Not on record for this name: ' + esc(text) + "</div>";
+  }
+  function staleNote(sec){
+    if (sec.date === lastCompletedSession()) return "";
+    return '<p class="stale-note">This section\'s record is dated ' +
+      esc(fmtDateShort(sec.date)) + ", which is not the most recent completed " +
+      "trading day. Treat it as the last published record, not today's.</p>";
+  }
+  function sectionShell(sec, bodyHtml){
+    return '<section class="tool"><h3>' + esc(sec.tool) + "</h3>" +
+      '<p class="when">Record dated ' + esc(fmtDateLong(sec.date)) + "</p>" +
+      staleNote(sec) +
+      '<p class="about">' + esc(sec.about) + "</p>" + bodyHtml + "</section>";
+  }
+
+  function scoredBody(e){
+    var s = e.scored;
+    if (!s) return notOnRecord("this name was checked on the scored day but there was too little price history to score it, so no score was published for it.");
+    var h = '<ul class="lines">' +
+      "<li><strong>Score:</strong> " + esc(s.score) + " out of 100</li>" +
+      "<li><strong>Checks in favor:</strong> " + esc(s.checks_in_favor) +
+        " of " + esc(s.checks_total) + "</li>" +
+      "<li><strong>Passed every check:</strong> " +
+        (s.passed_every_check ? "yes" : "no") + "</li>" +
+      "<li><strong>Closing price on the scored day:</strong> " +
+        money2(s.close) + "</li>" +
+      "<li><strong>Share of the measures behind the score that had data:</strong> " +
+        esc(s.data_behind_score_pct) + "%</li>";
+    if (s.sector) h += "<li><strong>Sector:</strong> " + esc(s.sector) + "</li>";
+    if (s.index) h += "<li><strong>Index:</strong> " + esc(s.index) + "</li>";
+    h += "</ul>";
+    if (s.board){
+      var b = s.board;
+      h += "<p><strong>On the board for " + esc(fmtDateShort(b.session)) +
+        ":</strong> ranked " + esc(b.rank_by_score) +
+        " of the 50 published names. Its eight checks that day:</p>";
+      h += '<table class="checks"><tr><th>Check</th><th>Reading</th>' +
+        '<th style="text-align:right">Score</th></tr>';
+      b.checks.forEach(function(c){
+        var state = c.state === "in_favor" ? "in favor" :
+                    c.state === "in_between" ? "in between" :
+                    c.state === "no_data" ? "not enough data" : "against";
+        h += "<tr><td>" + esc(c.name) + '</td><td>' + esc(state) +
+          '</td><td class="num">' +
+          (c.score == null ? "Not on record" : esc(c.score)) + "</td></tr>";
+      });
+      h += "</table>";
+      if (b.missed && b.missed.length)
+        h += "<p>Missed: " + esc(b.missed.join("; ")) + "</p>";
+    }
+    return h;
+  }
+
+  function famBlock(def, speaking, inner){
+    return '<div class="fam"><h4>' + esc(def.name) + "</h4>" +
+      '<p class="speaks ' + (speaking ? "yes" : "no") + '">' +
+      (speaking ? "Speaking" : "Silent") + "</p>" +
+      "<p>" + esc(def.about) + "</p>" + inner + "</div>";
+  }
+  function silentLine(text){ return '<div class="nodata">' + esc(text) + "</div>"; }
+
+  function familiesBody(e, sym){
+    var f = e.families;
+    var defs = {};
+    DATA.family_defs.forEach(function(d){ defs[d.id] = d; });
+    if (!f) return notOnRecord("no family record was published for this name.");
+    var h = "<p><strong>" + esc(f.families_speaking) + " of " +
+      esc(DATA.family_defs.length) + " families speak for " + esc(sym) +
+      ".</strong> Each family is shown in its own words below; they are " +
+      "never added together into one verdict.</p>";
+
+    // Price and trading history
+    if (f.price){
+      var p = f.price;
+      var inner = '<ul class="lines">' +
+        "<li><strong>Score:</strong> " + esc(p.score) + " out of 100</li>" +
+        "<li><strong>Checks in favor:</strong> " + esc(p.confirming) +
+          " of " + esc(p.checks_total) + "</li>" +
+        "<li><strong>Passed every check:</strong> " +
+          (p.qualified ? "yes" : "no") + "</li>" +
+        "<li><strong>Closing price:</strong> " + money2(p.close) + "</li>" +
+        "<li><strong>Share of measures with data:</strong> " +
+          esc(p.dc_pct) + "%</li>" +
+        "<li><strong>This family's own word:</strong> " +
+          stanceHtml(p.stance) + "</li></ul>";
+      if (p.categories){
+        inner += '<table class="checks"><tr><th>Part</th><th>Reading</th>' +
+          '<th style="text-align:right">Score</th></tr>';
+        p.categories.forEach(function(c){
+          inner += "<tr><td>" + esc(c.name) + "</td><td>" + esc(c.state) +
+            '</td><td class="num">' +
+            (c.score == null ? "Not on record" : esc(c.score)) + "</td></tr>";
+        });
+        inner += "</table>";
+      }
+      h += famBlock(defs.price, true, inner);
+    } else {
+      h += famBlock(defs.price, false, silentLine(
+        f.price_silent_reason ||
+        "Nothing on record for this name in this family."));
+    }
+
+    // Options prints
+    if (f.prints){
+      var pr = f.prints;
+      var prLines = '<ul class="lines">' +
+        "<li><strong>Prints recorded:</strong> " + num(pr.prints) + "</li>" +
+        "<li><strong>Money in those prints, in total:</strong> " +
+          money(pr.total_premium) + "</li>";
+      if (pr.net_premium == null){
+        prLines += "<li><strong>Direction:</strong> not judged for single " +
+          "names: no record of the quote at the moment of each print " +
+          "exists to judge it against.</li>";
+      } else {
+        prLines +=
+        "<li><strong>Net premium (money in minus money out):</strong> " +
+          money(pr.net_premium) + "</li>" +
+        "<li><strong>Net premium in calls:</strong> " +
+          money(pr.call_net_premium) + "</li>" +
+        "<li><strong>Net premium in puts:</strong> " +
+          money(pr.put_net_premium) + "</li>";
+      }
+      prLines +=
+        "<li><strong>Average heat score:</strong> " + esc(pr.mean_heat) + "</li>" +
+        "<li><strong>Prints with a high heat score:</strong> " +
+          num(pr.high_heat) + "</li>" +
+        "<li><strong>Golden sweeps:</strong> " + num(pr.golden_sweeps) + "</li>" +
+        (pr.stance ? "<li><strong>This family's own word:</strong> " +
+          stanceHtml(pr.stance) + "</li>" : "") + "</ul>";
+      h += famBlock(defs.prints, true, prLines);
+    } else {
+      h += famBlock(defs.prints, false, silentLine(
+        "No prints record is kept for this name yet."));
+    }
+
+    // Modelled options positioning
+    if (f.positioning){
+      var po = f.positioning;
+      h += famBlock(defs.positioning, true, '<ul class="lines">' +
+        "<li><strong>Last price in the record:</strong> " +
+          money2(po.spot) + "</li>" +
+        "<li><strong>Flip level:</strong> " + money2(po.flip) +
+          " (the price sat " + (po.below_flip ? "below" : "above") +
+          " it)</li>" +
+        "<li><strong>Modelled pressure:</strong> " + esc(po.net_gex_b) +
+          " billion dollars per 1% move</li>" +
+        "<li><strong>Call wall:</strong> " + money2(po.call_wall) + "</li>" +
+        "<li><strong>Put wall:</strong> " + money2(po.put_wall) + "</li>" +
+        "<li><strong>Chain coverage:</strong> " + num(po.contracts_used) +
+          " of " + num(po.chain_total) + " contracts</li>" +
+        "<li><strong>Dark pool share on " + esc(fmtDateShort(po.dix_date)) +
+          ":</strong> " + esc(po.dix_pct) + "%</li>" +
+        "<li><strong>This family's own word:</strong> " +
+          stanceHtml(po.stance) + "</li></ul>");
+    } else {
+      h += famBlock(defs.positioning, false, silentLine(
+        "Recorded for the three index funds only, and this name is not one of them."));
+    }
+
+    // Filings and positioning, lines kept separate
+    if (f.filings){
+      var fl = f.filings;
+      var lines = "";
+      Object.keys(fl.readings).forEach(function(k){
+        lines += "<li><strong>" + esc(k) + ":</strong> " +
+          esc(fl.readings[k]) + " out of 100</li>";
+      });
+      lines += "<li><strong>Company insider transactions on record:</strong> " +
+        num(fl.insider_transactions) + ", the latest filed " +
+        esc(fmtDateShort(fl.insider_latest)) + "</li>" +
+        "<li><strong>Shares sold short:</strong> " + esc(fl.si_pct) +
+        "% of the shares out, " + esc(fl.days_to_cover) +
+        " days to cover, from the settlement of " +
+        esc(fmtDateShort(fl.si_settlement)) + "</li>";
+      h += famBlock(defs.filings, true,
+        "<p>These lines are reported separately and on different dates, " +
+        "so they are kept as separate lines and never merged into one " +
+        "verdict.</p>" + '<ul class="lines">' + lines + "</ul>");
+    } else {
+      h += famBlock(defs.filings, false, silentLine(
+        "Filings and positioning readings are on file for 50 names, and this name is not one of them."));
+    }
+
+    // Company facts
+    if (f.facts){
+      h += famBlock(defs.facts, true, '<ul class="lines">' +
+        "<li><strong>Headline figures with a stored annual reading:</strong> " +
+          num(f.facts.figures_recorded) + " of " + num(f.facts.figures_total) + "</li>" +
+        (f.facts.freshest_filed ?
+          "<li><strong>Freshest filing behind them:</strong> " +
+          esc(fmtDateShort(f.facts.freshest_filed)) + "</li>" : "") +
+        "<li>The figures themselves are on the Filings Wire page.</li></ul>");
+    } else {
+      h += famBlock(defs.facts, false,
+        silentLine(DATA.family_silent_reasons.facts));
+    }
+
+    // News and events
+    if (f.news){
+      h += famBlock(defs.news, true, '<ul class="lines">' +
+        "<li><strong>Articles on record in the latest window:</strong> " +
+          num(f.news.articles) + "</li>" +
+        "<li><strong>Freshest article:</strong> " +
+          esc(fmtDateShort(f.news.freshest)) + "</li>" +
+        "<li><strong>Its headline:</strong> " + esc(f.news.headline) + "</li></ul>");
+    } else {
+      h += famBlock(defs.news, false,
+        silentLine(f.news_silent_reason || DATA.family_silent_reasons.news));
+    }
+    return h;
+  }
+
+  function chartBody(e){
+    var c = e.chart;
+    if (!c) return notOnRecord("no price history was published for this name.");
+    var h = '<ul class="lines">' +
+      "<li><strong>Last session on record for this name:</strong> " +
+        esc(fmtDateShort(c.last_date)) + "</li>" +
+      "<li><strong>Last closing price:</strong> " + money2(c.last_close) + "</li>" +
+      "<li><strong>Sessions on record:</strong> " + num(c.sessions) + "</li>";
+    if (c.avg50 != null)
+      h += "<li><strong>50-session average:</strong> $" +
+        c.avg50.toFixed(2) + "</li>";
+    else
+      h += "<li>No 50-session average for this name: the average counts 50 sessions and this name has " +
+        num(c.sessions) + " on record.</li>";
+    if (c.avg200 != null)
+      h += "<li><strong>200-session average:</strong> $" +
+        c.avg200.toFixed(2) + "</li>";
+    else
+      h += "<li>No 200-session average for this name: the average counts 200 sessions and this name has " +
+        num(c.sessions) + " on record.</li>";
+    if (c.trend)
+      h += "<li><strong>Trend, by the printed rule:</strong> " +
+        esc(c.trend) + "</li>";
+    else
+      h += "<li>No trend words for this name: the rule reads the close against both averages, and one of them is not on record.</li>";
+    function levels(lv, label){
+      if (!lv) return "";
+      return "<li><strong>Highest price over the last " + lv.window +
+        " sessions:</strong> " + money2(lv.high) + " on " +
+        esc(fmtDateShort(lv.high_date)) + "</li>" +
+        "<li><strong>Lowest price over the last " + lv.window +
+        " sessions:</strong> " + money2(lv.low) + " on " +
+        esc(fmtDateShort(lv.low_date)) + "</li>";
+    }
+    h += levels(c.levels20, "20");
+    h += levels(c.levels126, "126");
+    h += "</ul>";
+    if (c.label){
+      var l = c.label;
+      h += "<p><strong>Pattern label for the last session:</strong> " +
+        esc(l.label) + ": " + esc(l.name) + ". " +
+        esc(l.meaning) + "</p>";
+      if (l.shape)
+        h += "<p><strong>Shape named in the record:</strong> " +
+          esc(l.shape) + "</p>";
+      if (l.failed_2)
+        h += "<p><strong>Failed 2 flag in the record:</strong> " +
+          esc(l.failed_2) + "</p>";
+      if (l.completed && l.completed.length)
+        h += "<p><strong>Completed patterns in the record:</strong> " +
+          esc(l.completed.join("; ")) + "</p>";
+      if (l.sequence && l.sequence.length){
+        h += "<p><strong>Labels for the last " + l.sequence.length +
+          " sessions:</strong> " +
+          l.sequence.map(function(s){
+            return esc(s.label) + " (" + esc(fmtDateShort(s.date)) + ")";
+          }).join(", ") + "</p>";
+      }
+    } else {
+      h += '<div class="nodata">No pattern label is on record for this ' +
+        "name for the last session in the price history.</div>";
+    }
+    return h;
+  }
+
+  function insiderBody(e){
+    var s = e.insider;
+    if (!s) return notOnRecord("this name either was not among the 50 names checked or could not be matched to a company record, so it carries no insider summary.");
+    return '<ul class="lines">' +
+      "<li><strong>Insider activity reading:</strong> " +
+        esc(s.reading_out_of_100) + " out of 100</li>" +
+      "<li><strong>Open-market buys:</strong> " + num(s.buys.count) +
+        " (" + money(s.buys.value_usd) + ")</li>" +
+      "<li><strong>Open-market sells:</strong> " + num(s.sells.count) +
+        " (" + money(s.sells.value_usd) + ")</li>" +
+      "<li><strong>Open-market transactions in all:</strong> " +
+        num(s.open_transactions) + " of " + num(s.all_entries) +
+        " entries gathered</li>" +
+      "<li><strong>Latest filing date:</strong> " +
+        esc(fmtDateShort(s.latest_filing_date)) + "</li></ul>" +
+      "<p>The summaries are summaries: the records carry no list of " +
+      "individual trades, and no name is flagged for several insiders " +
+      "buying close together, because the records do not say who made " +
+      "each trade or on which day.</p>";
+  }
+
+  function squeezeBody(e){
+    var s = e.squeeze;
+    if (!s) return notOnRecord("short interest readings are on record for 20 of the 50 names gathered, and this name is not one of them.");
+    var h = '<ul class="lines">' +
+      "<li><strong>Shares sold short:</strong> " + esc(s.si_pct_of_float) +
+        "% of the shares available to trade" +
+        (s.above_si_bar ? ", at or above the published 15% bar" : "") +
+        "</li>" +
+      "<li><strong>Days to cover:</strong> " + esc(s.days_to_cover) + "</li>" +
+      "<li><strong>Shares sold short, in shares:</strong> " +
+        num(s.si_shares) + "</li>" +
+      "<li><strong>Shares available to trade:</strong> " +
+        num(s.float_shares) + "</li>" +
+      "<li><strong>Settlement behind this reading:</strong> " +
+        esc(fmtDateShort(s.settlement_date)) + "</li>";
+    if (s.si_change != null)
+      h += "<li><strong>Change in shares sold short since the settlement of " +
+        esc(fmtDateShort(s.prior_settlement_date)) + ":</strong> " +
+        (s.si_change >= 0 ? "+" : "") + (s.si_change * 100).toFixed(2) +
+        "%</li>";
+    h += "</ul>";
+    return h;
+  }
+
+  function volumeBody(e){
+    var v = e.volume;
+    if (!v) return notOnRecord("this name's volume on that session did not reach twice its own usual level, or it did not trade that day, so it is not on this list.");
+    return '<ul class="lines">' +
+      "<li><strong>Volume for the session:</strong> " + num(v.volume) +
+        " shares</li>" +
+      "<li><strong>Its usual level (average over its previous " +
+        esc(v.baseline_sessions) + " trading days):</strong> " +
+        num(v.usual_volume) + " shares</li>" +
+      "<li><strong>How many times its usual level it reached:</strong> " +
+        esc(v.multiple) + " times</li></ul>";
+  }
+
+  function earningsBody(e){
+    var n = e.earnings;
+    if (!n) return notOnRecord("no earnings report date is on record for this name on the calendar list.");
+    var move = (n.expected_move !== null && n.expected_move !== undefined)
+      ? '<li><strong>Priced expected move:</strong> ' + esc(n.expected_move) + "</li>"
+      : "";
+    return '<ul class="lines"><li><strong>Scheduled report date:</strong> ' +
+      esc(fmtDateLong(n.date)) + "</li>" + move + "</ul>" +
+      (move ? "" :
+      "<p>No priced expected move is on record for this name, so none " +
+      "is shown.</p>");
+  }
+
+  function filingsBody(e, sym){
+    var fl = e.filings;
+    if (!fl) return notOnRecord("no company's reported figures are on record for " + sym + ": the Filings Wire carries figures for " + num(DATA.filings_names_covered || 0) + " names, and this is not one of them.");
+    var h = '<ul class="lines">';
+    (fl.figures || []).forEach(function(fig){
+      if (fig.state !== "recorded" || !(fig.readings || []).length){
+        h += "<li><strong>" + esc(fig.label) + ":</strong> not on record for this company.</li>";
+        return;
+      }
+      var r = fig.readings[fig.readings.length - 1];
+      h += "<li><strong>" + esc(fig.label) + ":</strong> " +
+        (fig.unit === "shares" ? num(r.value) : money(r.value)) +
+        ", for the year ended " + esc(fmtDateShort(r.period_end)) +
+        ", filed " + esc(fmtDateShort(r.filed)) + ".</li>";
+    });
+    return h + "</ul>";
+  }
+  function holdersBody(sym){
+    return notOnRecord("the holdings reports on record (8,857 holders for the period ended June 30, 2026; the 20 largest are shown on their own page) name companies, not stock symbols, so no holding in them can be tied to " + sym + " from this record.");
+  }
+
+  var BODIES = {
+    scored: scoredBody,
+    families: familiesBody,
+    chart: chartBody,
+    insider: insiderBody,
+    squeeze: squeezeBody,
+    volume: volumeBody,
+    earnings: earningsBody,
+    filings: filingsBody,
+    holders: holdersBody
+  };
+
+  function render(sym){
+    var e = DATA.names[sym];
+    if (!e){ results.innerHTML = ""; return; }
+    var h = '<div class="report-head"><h2>' + esc(sym) + "</h2>" +
+      "<p><strong>" + esc(e.sections_with_reading) + " of " +
+      esc(DATA.sections_count) + " sections</strong> carry a reading for " +
+      esc(sym) + ". The rest say plainly that they are not on record for " +
+      "this name. Each section below keeps its own tool's words and its " +
+      "own date; nothing here is added together into one verdict.</p></div>";
+    DATA.sections.forEach(function(sec){
+      h += sectionShell(sec, BODIES[sec.id](e, sym));
+    });
+    results.innerHTML = h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      DATA = data;
+      var symbols = Object.keys(data.names || {}).sort();
+      if (!symbols.length || data.state !== "published"){
+        meta.textContent = "";
+        results.innerHTML = '<div class="nodata">No name has been published yet. When the records are published, this page will gather every published reading for the name you pick. Nothing is shown for a record that has not been made.</div>';
+        return;
+      }
+      document.getElementById("proving-tag").textContent = data.proving_state;
+      document.getElementById("proving-note").textContent = data.proving_note;
+      meta.textContent = num(data.names_count) + " names on record, " +
+        data.sections_count + " sections per report.";
+      symbols.forEach(function(sym){
+        var opt = document.createElement("option");
+        opt.value = sym;
+        opt.textContent = sym + " (" + data.names[sym].sections_with_reading +
+          " of " + data.sections_count + " sections)";
+        pickEl.appendChild(opt);
+      });
+      ["SPY", "QQQ", "IWM", "GO"].filter(function(s){
+        return data.names[s];
+      }).forEach(function(s){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = s;
+        b.addEventListener("click", function(){
+          pickEl.value = s;
+          render(s);
+        });
+        quickEl.appendChild(b);
+      });
+      var start = data.names[data.default_name] ? data.default_name : symbols[0];
+      pickEl.value = start;
+      pickEl.addEventListener("change", function(){ render(pickEl.value); });
+      receiptEl.textContent = "Receipt: " + data.receipt;
+      render(start);
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("The One-Page Report is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
