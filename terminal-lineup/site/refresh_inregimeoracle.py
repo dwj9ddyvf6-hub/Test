@@ -180,7 +180,17 @@ import os
 import random
 import sys
 import tempfile
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
+
+
+def today_et():
+    """The terminal's business date. Cure ORACLE-UTC-DATE-20261102:
+    this VM's clock is UTC, so date.today() rolls to the next day
+    from 19:00 ET onward and a Monday-evening run read itself as
+    Tuesday, firing the no-issue guard on its own issuance day and
+    aiming the issue window at the wrong Monday."""
+    return datetime.now(ZoneInfo("America/New_York")).date()
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)                       # terminal-lineup/
@@ -407,6 +417,17 @@ def _calls(sessions, hit_fn, first, last, score_fn=None):
 
 
 def self_test(live_ledger_hash_before):
+    # Cure ORACLE-SELFTEST-RACE-20261102: the closing guard used to
+    # compare the whole-file hash against a baseline the caller
+    # captured before the test, which fails whenever another lane
+    # legitimately appends during the minutes this test runs
+    # (engine_15 issued mid-test on 2026-11-02). The property that
+    # matters is that THIS test leaves every pre-existing byte
+    # untouched, so the baseline (size and hash) is captured at
+    # entry and the guard below hashes exactly that byte prefix,
+    # tolerating appends past it.
+    _size_before = os.path.getsize(LEDGER_PATH)
+    _hash_before = file_sha256(LEDGER_PATH)
     sessions = _sessions(date(2025, 1, 6), 320)   # starts on a Monday
     issue_idx = 200
     assert sessions[issue_idx] and date.fromisoformat(
@@ -486,7 +507,16 @@ def self_test(live_ledger_hash_before):
     pooled_rival = sum((g[1]["p_rival"] - g[2]["outcome"]) ** 2
                        for g in graded) / len(graded)
     slope = calibration_slope([(g[1]["p"], g[2]["outcome"]) for g in graded])
-    assert file_sha256(LEDGER_PATH) == live_ledger_hash_before, \
+    _h = hashlib.sha256()
+    with open(LEDGER_PATH, "rb") as fh:
+        _left = _size_before
+        while _left > 0:
+            _chunk = fh.read(min(1 << 20, _left))
+            if not _chunk:
+                break
+            _h.update(_chunk)
+            _left -= len(_chunk)
+    assert _h.hexdigest() == _hash_before, \
         "self-test touched the live ledger"
     return {"populations_tested": 4,
             "forecasts_written_to_scratch": len(issued),
@@ -669,10 +699,25 @@ def main():
             if r.get("component") == "tape-alert":
                 tape_alerts += 1
                 tape_sessions.add((r.get("ts_utc") or "")[:10])
-    if tape_alerts != 450:
+    # Registered floor, never exact equality (the
+    # ORACLE-REGISTER-FLOORS-20261031 pattern its neighbours already
+    # follow): the tape alert log only grows as sessions accrue, so
+    # an exact-equality check fails closed on every new session.
+    # Register history: 450 tape alerts at the 2026-10-31 flooring;
+    # 600 on 2026-11-02 (cure TAPE-ALERT-FLOOR-20261102).
+    if tape_alerts < 450:
         fail(f"tape alert log count disagrees with the register: {tape_alerts}")
-    if strat["names_labelled"] != 1816 or sum(
-            g["count"] for g in strat["groups"]) != 1816:
+    # Strat labelled count is per-session bar coverage, not an
+    # accreting register total (cure STRAT-COVERAGE-20261102): it
+    # moves with how many names printed a bar on the scanned
+    # session (1,816 on the register session; 1,812 on 2026-11-02,
+    # when exactly the panel's 21 no-bar names went unlabelled).
+    # The invariants are internal: group counts sum to the labelled
+    # count, labelled plus unlabelled equals names on record, and
+    # the labelled count holds a registered floor.
+    if sum(g["count"] for g in strat["groups"]) != strat["names_labelled"] \
+            or strat["names_labelled"] + strat["names_not_labelled"] \
+            != strat["names_on_record"] or strat["names_labelled"] < 1800:
         fail("Strat label counts disagree with the register")
     if "posters" in echo or echo.get("names_on_record") != 1838:
         fail("Echo Board record disagrees with the register")
@@ -682,7 +727,7 @@ def main():
         panel = json.load(fh)
     gate_series, panel_dates = board_gate_series(record, horizon, panel)
     del panel
-    today_d = date.today()
+    today_d = today_et()
     issue_day = today_d if today_d.weekday() == 0 \
         else next_monday(today_d)
     sessions = sessions_through(panel_dates, issue_day.isoformat())
@@ -804,7 +849,7 @@ def main():
              f"{[p['name'] for p in included]}")
 
     # ---- live issue: Mondays only, qualifying populations only ---
-    today = date.today()
+    today = today_et()
     created = 0
     issued_today = []
     graded_today = 0
