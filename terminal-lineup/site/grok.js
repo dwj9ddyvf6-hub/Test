@@ -595,7 +595,7 @@
     var all = (c.textContent || "").replace(/\s+/g, " ");
     var fm = all.match(/-?\$[\d,]+(\.\d+)?|-?\d[\d,]*\.\d+\s?%|-?\d[\d,]*\.\d+|-?\d[\d,]*\s?%/);
     if (fm) return fm[0].trim().slice(0, 40);
-    var im = all.replace(/\d{4}-\d{2}-\d{2}/g, " ").match(/(?<![\d.,/-])\d{1,6}(?![\d./-])/);
+    var im = all.replace(/\d{4}-\d{2}-\d{2}/g, " ").replace(/\b(?:19|20)\d\d\b/g, " ").match(/(?<![\d.,/-])\d{1,6}(?![\d./-])/);
     return im ? im[0] : "";
   }
   /* R3-AUDIT cure: insertAfterChildR3 inserts into card c after the
@@ -615,6 +615,16 @@
     Array.prototype.forEach.call(document.querySelectorAll(".card,.chartbox,.verdict,.panel,.sc,.hubcard"), function (c) {
       try {
       if (c.closest(".gb-fdlg,.gb-disc,.gb-comp") || c.hasAttribute("data-gb-full")) return;
+      /* AMAZING-CURE PARTIAL-CARDS (2026-11-02): a .verdict inside a
+         .group row, with no heading, table or chart of its own and
+         only a short status phrase ("Did not hold up"), is a chip on
+         a study row, not a card. The grammar pass stamped these
+         data-gb-partial and appended a footnote into the chip (26 on
+         replication-wire, 10 on survivors-wire, 8 on odds-cards in
+         the audit census). Chips are skipped (gb-chip-skip) and carry
+         no stamp; standalone verdict cards, which carry their own
+         heading or prose, still get the full grammar. */
+      if (c.classList.contains("verdict") && c.closest(".group") && !c.querySelector("h2,h3,h4,table,canvas,svg") && (c.textContent || "").trim().length < 120) { c.classList.add("gb-chip-skip"); c.removeAttribute("data-gb-full"); c.removeAttribute("data-gb-partial"); return; }
       if (!c.querySelector(":scope > .gb-sentence")) {
         var s = "";
         var pp = c.querySelector("p:not(.kicker):not(.gb-kicker):not(.gb-foot):not(.meta)");
@@ -708,6 +718,27 @@
       if (tr.closest(".gb-comp,.gb-fdlg")) return;
       var td = tr.querySelector("td"); if (td && (td.textContent || "").trim()) out.push({ el: td, host: tr });
     });
+    /* AMAZING-CURE DEFECT-C15-CARD-TARGETS (2026-11-02): the changed
+       pages render their producer identities in native shapes the R3
+       selector never reached, so true new rows stayed unbadged
+       (reversal-wire 0 of 285, board 1 of 20, holly-ideas 4 of 13,
+       correlation-web and tape-heatmap regressed to 0). The shapes
+       below are the ones those pages actually render, each verified
+       against the rendered DOM in this cure pass: native ranked rows
+       (.vk-rname), native name spans (.sym / .symbol), native entry
+       rows (.entry strong / .lab), chart-title headings (h2/h3, whose
+       rendered text extends the producer title after a colon, so
+       they match by prefix), and SVG text labels that lead with the
+       identity (correlation-web pair labels). Every shape is still
+       gated by the same identity rule: the label must be a producer
+       identity of the current session and absent from the baseline,
+       so widening the targets cannot resurrect the false positives
+       cured under AMAZING-C15-IDENTITY-20261102. */
+    Array.prototype.forEach.call(document.querySelectorAll(".vk-rrow .vk-rname"), function (n) { out.push({ el: n, host: n.closest(".vk-rrow") || n }); });
+    Array.prototype.forEach.call(document.querySelectorAll(".sym, .symbol"), function (n) { if (!n.closest(".gb-comp,.gb-fdlg")) out.push({ el: n, host: n }); });
+    Array.prototype.forEach.call(document.querySelectorAll(".entry strong, .entry .lab"), function (n) { out.push({ el: n, host: n.closest(".entry") || n }); });
+    Array.prototype.forEach.call(document.querySelectorAll("h2, h3"), function (n) { if (!n.closest(".gb-comp,.gb-fdlg,.gb-jump")) out.push({ el: n, host: n, prefix: 1 }); });
+    Array.prototype.forEach.call(document.querySelectorAll("svg text"), function (n) { out.push({ el: n, host: n, prefix: 1, svg: 1 }); });
     return out;
   }
   function newBadgesR2(data) {
@@ -729,10 +760,36 @@
          producer both ways: latest[lab] required, prior[lab] forbids. */
       var lRows = rec.latest_rows || rec.rows || [];
       var latest = {}; lRows.forEach(function (r) { latest[r] = 1; });
+      var newIds = lRows.filter(function (r) { return !prior[r]; });
+      /* AMAZING-CURE (2026-11-02): first occurrence per identity only.
+         A name rendered in two components (a native row and the
+         generic ranker, a heading and its chart) is one new row, so
+         it badges once; the badged set is seeded from badges already
+         on the page so the timed re-runs cannot badge a second
+         occurrence later. Prefix targets (headings, SVG labels)
+         match when the rendered text is the identity or extends it
+         after a colon or a space. */
+      var badged = {};
+      Array.prototype.forEach.call(document.querySelectorAll(".gb-badge.new"), function (b) {
+        var p = b.parentElement; if (!p) return;
+        var t = (p.textContent || "").trim().replace(/\s*NEW\s*$/, "");
+        newIds.forEach(function (id) { if (t === id || t.indexOf(id + ":") === 0 || t.indexOf(id + " ") === 0) badged[id] = 1; });
+      });
       var n = 0;
       badgeTargetsR3().forEach(function (tg) {
         var lab = (tg.el.textContent || "").trim().replace(/\s*NEW\s*$/, "");
-        if (lab && latest[lab] && !prior[lab] && !tg.host.querySelector(".gb-badge.new")) { var b = el("span", "gb-badge new", "NEW"); b.style.marginLeft = "6px"; tg.el.appendChild(b); n++; }
+        if (!lab || tg.host.querySelector(".gb-badge.new")) return;
+        var id = null;
+        if (latest[lab] && !prior[lab]) id = lab;
+        else if (tg.prefix) { for (var i = 0; i < newIds.length; i++) { if (lab.indexOf(newIds[i] + ":") === 0 || lab.indexOf(newIds[i] + " ") === 0) { id = newIds[i]; break; } } }
+        if (!id || badged[id]) return;
+        badged[id] = 1;
+        if (tg.svg) {
+          var ts = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+          ts.setAttribute("class", "gb-badge new"); ts.setAttribute("fill", "#177366"); ts.setAttribute("font-weight", "800");
+          ts.textContent = " NEW"; tg.el.appendChild(ts);
+        } else { var b = el("span", "gb-badge new", "NEW"); b.style.marginLeft = "6px"; tg.el.appendChild(b); }
+        n++;
       });
       if (n) { var comp = document.querySelector(".gb-comp") || document.querySelector(".card"); if (comp && !comp.querySelector(".gb-newnote")) comp.appendChild(el("p", "gb-foot gb-newnote", n + " row(s) are new since the stored prior session (" + bSess + ").")); }
     }
@@ -789,6 +846,12 @@
       svg.appendChild(bg); svg.appendChild(fg); svg.appendChild(tx); svg.appendChild(tb);
       card.appendChild(svg);
       card.appendChild(el("p", "gb-foot", "VIX for " + v.date + ": " + v.value.toFixed(2) + " (" + v.band + "). Bands: " + v.bands + ". Source: " + v.source + "."));
+      /* AMAZING-CURE DEFECT-VIXRING-NOINSERT (2026-11-02): the build
+         phase appended the SVG and footnote to this card but never
+         inserted the card into the document, so the ring never
+         rendered. placeComp(card) is the same insertion its sibling
+         moodStripR2 uses. */
+      placeComp(card);
     }).catch(function () {});
   }
   function moodStripR2() {
