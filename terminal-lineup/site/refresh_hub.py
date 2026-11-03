@@ -266,6 +266,15 @@ def restructure(hub):
     # prefix and swallow the rebuilt visual front on the next run.
     hub = re.sub(r'<section id="needs-attention">.*?</section>\n?',
                  "", hub, count=1, flags=re.S)
+    # The How-it-works link section (main's AMAZING block below) is
+    # producer-owned too: drop the previous run's here, before the
+    # section surgery below. Leaving it in is what orphaned the page
+    # (CLOSE-CURE 2026-11-02): the section sits before the Forecast
+    # Engines heading, so its own <h2> became the surgery's head_end
+    # and only its opening tag survived in the prefix, while main's
+    # old id-presence guard then refused to re-inject the anchor.
+    hub = re.sub(r'<section id="how-it-works-link">.*?</section>\n?',
+                 "", hub, count=1, flags=re.S)
     cards = re.findall(r"<article class=\"hubcard\".*?</article>",
                        hub, re.S)
     by_slug, order = {}, []
@@ -588,7 +597,12 @@ def main() -> int:
         out = out.replace("</body>", keys_script + "</body>", 1)
     # AMAZING Build (2026-11-02): the How-it-works explainer link,
     # marked and injected once, so every hub refresh keeps it.
-    if "how-it-works-link" not in out:
+    # CLOSE-CURE (2026-11-02): the guard keys on the ANCHOR, not the
+    # section id: the regression kept the id as a dangling opening
+    # tag while dropping the anchor, and an id guard read that as
+    # present. restructure() now strips the section as producer-
+    # owned, and this guard is the second line of defence.
+    if 'href="how-it-works/"' not in out:
         hiw = ('<section id="how-it-works-link"><h2>How this terminal works</h2>\n'
                '<p class="hubcount">Where the numbers come from, how each page is '
                'built, and how to read the dates on a page: '
