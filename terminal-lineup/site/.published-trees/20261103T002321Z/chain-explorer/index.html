@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chain Explorer: read a full options chain, strike by strike</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5; --strike-bg:#eef4fa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0}
+  .pickers{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 16px}
+  .pickers label{font-size:14px;font-weight:600;display:block;margin:0 0 5px}
+  .pickers select{font-size:16px;padding:9px 12px;border:1px solid var(--line);
+        border-radius:10px;background:var(--card);min-width:190px}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;overflow-x:auto}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .face{font-size:14.5px;color:var(--soft);margin:0 0 12px}
+  table{border-collapse:collapse;width:100%;font-size:14px;white-space:nowrap}
+  th,td{text-align:right;padding:5px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  td.strike,th.strike{text-align:center;font-weight:700;background:var(--strike-bg)}
+  tr:last-child td{border-bottom:none}
+  .notonrecord{color:var(--faint)}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Chain Explorer</h1>
+    <p class="job">One job: show a full options chain as it was recorded on a past trading day: every strike for the expiry you pick, with each call and put's open interest, volume and priced-in volatility, and greeks this page computes from those recorded figures.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the chain archive&hellip;</p>
+
+  <section class="note" id="greeks-note" hidden>
+    <h2>About the greeks on this page</h2>
+    <p id="greeks-note-text"></p>
+    <p style="margin-top:8px">Delta: how much the contract's price would move if the fund moved $1. Gamma: how fast that delta itself changes. Theta: how much value a day passing takes away, per day. Vega: how much the price would move if the priced-in volatility rose 1 point.</p>
+  </section>
+
+  <div class="pickers" id="pickers" hidden>
+    <div>
+      <label for="pick-underlying">Index fund</label>
+      <select id="pick-underlying"></select>
+    </div>
+    <div>
+      <label for="pick-snapshot">Snapshot day</label>
+      <select id="pick-snapshot"></select>
+    </div>
+    <div>
+      <label for="pick-expiry">Expiry day</label>
+      <select id="pick-expiry"></select>
+    </div>
+  </div>
+
+  <main id="main"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to all the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var noteEl = document.getElementById("greeks-note");
+  var noteText = document.getElementById("greeks-note-text");
+  var pickers = document.getElementById("pickers");
+  var selUnd = document.getElementById("pick-underlying");
+  var selSnap = document.getElementById("pick-snapshot");
+  var selExp = document.getElementById("pick-expiry");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+
+  /* Pricing math: the standard Black-Scholes formulas, European-style,
+     exactly as the Payoff Sketch on this site computes them.
+     Interest rate 4.5% a year, no dividends. Theta is per year in the
+     formula and shown per day; vega is per full (100-point) volatility
+     move in the formula and shown per 1 point. */
+  var RATE = 0.045, DIV = 0.0;
+  var SQRT2 = Math.sqrt(2.0);
+  function phi(x){ return Math.exp(-0.5*x*x)/Math.sqrt(2.0*Math.PI); }
+  function ncdf(x){ return 0.5*(1.0+erf(x/SQRT2)); }
+  function erf(x){
+    var s = x < 0 ? -1 : 1, ax = Math.abs(x);
+    var t = 1.0/(1.0+0.3275911*ax);
+    var y = 1.0 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - 0.284496736)*t + 0.254829592)*t*Math.exp(-ax*ax);
+    return s*y;
+  }
+  function d1(S,K,T,sig){
+    return (Math.log(S/K) + (RATE-DIV+0.5*sig*sig)*T)/(sig*Math.sqrt(T));
+  }
+  function bsOk(S,K,T,sig){ return S>0 && K>0 && sig>0 && T>0; }
+  function bsDelta(S,K,T,sig,isCall){
+    if (!bsOk(S,K,T,sig)) return null;
+    var n=ncdf(d1(S,K,T,sig)), q=Math.exp(-DIV*T);
+    return isCall ? q*n : q*(n-1.0);
+  }
+  function bsGamma(S,K,T,sig){
+    if (!bsOk(S,K,T,sig)) return null;
+    return phi(d1(S,K,T,sig))/(S*sig*Math.sqrt(T));
+  }
+  function bsTheta(S,K,T,sig,isCall){
+    if (!bsOk(S,K,T,sig)) return null;
+    var a=d1(S,K,T,sig), b=a-sig*Math.sqrt(T);
+    var q=Math.exp(-DIV*T), df=Math.exp(-RATE*T);
+    var first=-S*q*phi(a)*sig/(2.0*Math.sqrt(T));
+    return isCall ? first - RATE*K*df*ncdf(b) + DIV*S*q*ncdf(a)
+                  : first + RATE*K*df*ncdf(-b) - DIV*S*q*ncdf(-a);
+  }
+  function bsVega(S,K,T,sig){
+    if (!bsOk(S,K,T,sig)) return null;
+    return S*Math.exp(-DIV*T)*phi(d1(S,K,T,sig))*Math.sqrt(T);
+  }
+  /* Time to expiry in years, counted from the end of the snapshot day
+     (21:00 UTC on that day) to the end of the expiry day, with the same
+     one-day floor the recorded chain's own model uses. */
+  function tYears(snapshotDay, expiry){
+    var from = Date.parse(snapshotDay + "T21:00:00Z");
+    var to = Date.parse(expiry + "T21:00:00Z");
+    var days = (to - from)/86400000.0;
+    return Math.max(days, 1.0)/365.0;
+  }
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtNum(v){
+    return v == null ? null : Number(v).toLocaleString("en-US",{maximumFractionDigits:0});
+  }
+  function fmtMoney(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function cellNum(v){
+    return v == null ? '<span class="notonrecord">Not on record</span>' : esc(v);
+  }
+  function greekCells(spot, strike, T, side, isCall){
+    if (!side || side.iv == null){
+      return '<td colspan="4"><span class="notonrecord">Not computed: no priced-in volatility on record</span></td>';
+    }
+    var d = bsDelta(spot, strike, T, side.iv, isCall);
+    var g = bsGamma(spot, strike, T, side.iv);
+    var th = bsTheta(spot, strike, T, side.iv, isCall);
+    var vg = bsVega(spot, strike, T, side.iv);
+    if (d == null || g == null || th == null || vg == null){
+      return '<td colspan="4"><span class="notonrecord">Not computed</span></td>';
+    }
+    return "<td>" + d.toFixed(2) + "</td><td>" + g.toFixed(4) + "</td><td>" +
+      (th/365.0).toFixed(2) + "</td><td>" + (vg/100.0).toFixed(2) + "</td>";
+  }
+  function sideCells(side){
+    if (!side){
+      return '<td colspan="3"><span class="notonrecord">Not on record</span></td>';
+    }
+    return "<td>" + cellNum(fmtNum(side.oi)) + "</td><td>" +
+      cellNum(fmtNum(side.volume)) + "</td><td>" +
+      (side.iv == null ? '<span class="notonrecord">Not on record</span>'
+                       : (side.iv*100).toFixed(1) + "%") + "</td>";
+  }
+
+  function currentSnapshot(){
+    var u = (DATA.underlyings || []).filter(function(x){
+      return x.underlying === selUnd.value;
+    })[0];
+    if (!u) return null;
+    var s = (u.snapshots || []).filter(function(x){
+      return x.snapshot_day === selSnap.value;
+    })[0];
+    return s || null;
+  }
+
+  function renderChain(){
+    var snap = currentSnapshot();
+    if (!snap){
+      mainEl.innerHTML = '<div class="nodata">That snapshot is not on record.</div>';
+      return;
+    }
+    var exp = (snap.expiries || []).filter(function(x){
+      return x.expiry === selExp.value;
+    })[0];
+    if (!exp){
+      mainEl.innerHTML = '<div class="nodata">That expiry day is not on record in this snapshot.</div>';
+      return;
+    }
+    var T = tYears(snap.snapshot_day, exp.expiry);
+    var h = '<section class="group"><h2>' + esc(snap.underlying) +
+      " options chain</h2>";
+    h += '<p class="face">Snapshot day: ' + esc(fmtDateLong(snap.snapshot_day)) +
+      ". Expiry day: " + esc(fmtDateLong(exp.expiry)) + ". The fund's price " +
+      "level recorded with this snapshot: " + esc(fmtMoney(snap.spot)) + ". " +
+      esc(fmtNum(snap.contracts)) + " contracts were on record in the whole " +
+      "snapshot. This is a past day's chain, not a live one.</p>";
+    h += '<p class="face">This table is wide: scroll sideways inside it to reach the put side.</p><table><thead><tr>' +
+      "<th>Call open interest</th><th>Call volume</th><th>Call priced-in volatility</th>" +
+      "<th>Call delta, computed</th><th>Call gamma, computed</th><th>Call theta, computed</th><th>Call vega, computed</th>" +
+      '<th class="strike">Strike</th>' +
+      "<th>Put open interest</th><th>Put volume</th><th>Put priced-in volatility</th>" +
+      "<th>Put delta, computed</th><th>Put gamma, computed</th><th>Put theta, computed</th><th>Put vega, computed</th>" +
+      "</tr></thead><tbody>";
+    exp.strikes.forEach(function(row){
+      h += "<tr>" + sideCells(row.call) +
+        greekCells(snap.spot, row.strike, T, row.call, true) +
+        '<td class="strike">' + esc(fmtMoney(row.strike)) + "</td>" +
+        sideCells(row.put) +
+        greekCells(snap.spot, row.strike, T, row.put, false) + "</tr>";
+    });
+    h += "</tbody></table></section>";
+    mainEl.innerHTML = h;
+  }
+
+  function fillExpiries(){
+    var snap = currentSnapshot();
+    selExp.innerHTML = "";
+    if (!snap) return;
+    snap.expiries.forEach(function(e){
+      var o = document.createElement("option");
+      o.value = e.expiry;
+      o.textContent = fmtDateLong(e.expiry);
+      selExp.appendChild(o);
+    });
+    renderChain();
+  }
+  function fillSnapshots(){
+    var u = (DATA.underlyings || []).filter(function(x){
+      return x.underlying === selUnd.value;
+    })[0];
+    selSnap.innerHTML = "";
+    if (!u) return;
+    u.snapshots.slice().reverse().forEach(function(s){
+      var o = document.createElement("option");
+      o.value = s.snapshot_day;
+      o.textContent = fmtDateLong(s.snapshot_day);
+      selSnap.appendChild(o);
+    });
+    fillExpiries();
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      DATA = data;
+      var r = data.receipt || {};
+      if (typeof data.snapshots_on_record !== "number" || !data.checked){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No chain record has been ' +
+          'published yet.</div>';
+        return;
+      }
+      meta.textContent = "Checked " + fmtDateLong(data.checked) + ". Source: " +
+        data.source + ". " + (data.delay || "");
+      receiptEl.textContent = "Receipt: checked " +
+        fmtDateLong(r.checked || data.checked) + ". Source: " +
+        (r.source || data.source) + ". Coverage: " +
+        (r.coverage || data.coverage) + ".";
+      if (!data.snapshots_on_record || !(data.underlyings || []).length){
+        mainEl.innerHTML = '<div class="nodata">No chain snapshot is on ' +
+          'record yet: ' + esc(data.coverage || "the archive is empty") +
+          '. When the first snapshot is kept, you will be able to pick ' +
+          'its fund and expiry day here and read the whole chain, ' +
+          'strike by strike. Until then there is no honest chain to ' +
+          'show, so none is shown.</div>';
+        return;
+      }
+      noteText.textContent = data.greeks_note || "";
+      noteEl.hidden = false;
+      pickers.hidden = false;
+      data.underlyings.forEach(function(u){
+        if (!(u.snapshots || []).length) return;
+        var o = document.createElement("option");
+        o.value = u.underlying;
+        o.textContent = u.underlying;
+        selUnd.appendChild(o);
+      });
+      selUnd.addEventListener("change", fillSnapshots);
+      selSnap.addEventListener("change", fillExpiries);
+      selExp.addEventListener("change", renderChain);
+      fillSnapshots();
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The chain archive record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
