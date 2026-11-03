@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wall Lifetime Forecaster: how long the morning map's walls and flip level are likely to stand</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Wall Lifetime Forecaster</h1>
+    <p class="job">One job: say, before the fact, how likely each wall and flip level on the newest morning map is to be reached and broken through, and how long it is likely to stand.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest map card's forecasts&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function pct(p){return Math.round(p*1000)/10+"%";}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    var acc=data.accrual||{}, live=data.live||{}, hist=data.history||{};
+    var first=(live.names||[])[0]||{};
+    meta.textContent="Newest map card per index, published "+(first.published_at_utc?fmtShort(first.published_at_utc.slice(0,10)):"")+", graded against the trading days starting "+(first.session?fmtShort(first.session):"")+". Source: "+data.source+".";
+    showBanner("stale","This record is just getting started: "+acc.cards_of_record+" map cards are on record and "+acc.cards_graded+" have been graded so far, so almost every chance below comes from the starting estimate described on this page, not from a track record. The estimate is labelled wherever it is doing the work.");
+    var h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>Each morning map publishes three levels per index: a ceiling level above the price (the call wall), a floor level below it (the put wall), and a flip level where the day\'s push changes character. Other pages grade those levels after the fact. This one forecasts them before the fact: the chance each level is reached, the chance price closes through it, and how long it is likely to stand, over the next 1, 3, 5 and 10 trading days.</p><p>How the chances are built: a starting estimate that rises as a level gets closer, measured in expected daily moves, and rises further when the map\'s positioning is the amplifying kind (positioning that can speed a move up once it starts) rather than the dampening kind. Where the small graded record has anything to say, at the 1-day stretch, it is mixed in gently: the record counts for 6 and the starting estimate for 20, so the estimate still dominates today. At 3, 5 and 10 days the record has nothing yet, and those chances are the starting estimate alone, labelled as such. Levels that price has not reached yet are carried as still standing in every count, never dropped.</p></section>';
+
+    h+='<section class="card"><h2>The count so far</h2><p><span class="count">'+esc(acc.cards_of_record)+'</span> map cards on record ('+esc((acc.cards_per_index||{}).SPY||0)+' each for SPY, QQQ and IWM), <span class="count">'+esc(acc.cards_graded)+'</span> graded so far, on the way to <span class="count">'+esc(acc.target_per_index)+'</span> cards per index, the point where this tool\'s own record is big enough to judge. Those cards make '+esc(acc.episodes)+' level forecasts to check (three levels per card); '+esc(acc.episodes_resolved_1)+' have had their first trading day graded, and every one of the '+esc(acc.episodes)+' is still waiting at the 3, 5 and 10-day stretches.</p></section>';
+
+    (live.names||[]).forEach(function(n){
+      h+='<section class="card"><h2>'+esc(n.name)+'</h2><p class="sub">Price when the card was published: '+esc(n.spot)+'. Positioning on this card: '+esc(n.positioning_plain)+'. One expected daily move for this index is about '+esc(n.expected_move_price)+' points.</p>';
+      (n.levels||[]).forEach(function(l){
+        h+='<h3>'+esc(l.label)+': '+esc(l.price)+'</h3>';
+        if(l.distance_expected_moves===0){h+='<p class="sub">The price already stands at or past this level, so its chances start high.</p>';}
+        else{h+='<p class="sub">Distance from the price: about '+esc(l.distance_expected_moves)+' expected daily moves.</p>';}
+        h+='<table><tr><th>Stretch</th>'+(l.level!=="flip"?'<th>Chance it is reached</th>':'')+'<th>'+(l.level==="flip"?'Chance price crosses it and closes beyond it':'Chance price closes through it')+'</th></tr>';
+        (l.windows||[]).forEach(function(w){
+          h+='<tr><td><strong>Within '+esc(w.sessions)+' trading day'+(w.sessions>1?'s':'')+'</strong><br><span class="sub">Through '+fmtShort(w.through_session)+'.</span></td>';
+          if(l.level!=="flip"){h+='<td>'+pct(w.touch_p)+(w.touch_prior_only?' <span class="sub">(starting estimate only)</span>':' <span class="sub">(estimate, lightly mixed with the record)</span>')+'</td>';}
+          h+='<td>'+pct(w.break_p)+(w.break_prior_only?' <span class="sub">(starting estimate only)</span>':' <span class="sub">(estimate, lightly mixed with the record)</span>')+'</td></tr>';
+        });
+        h+='</table>';
+        h+='<p>Typical lifetime of this level: <strong>'+(l.median_lifetime_sessions?('about '+l.median_lifetime_sessions+' trading day'+(l.median_lifetime_sessions>1?'s':'')):'more than 60 trading days')+'</strong> <span class="sub">(from the starting estimate; the record is far too young to measure lifetimes yet).</span></p>';
+      });
+      var ff=n.first_failure||{};
+      h+='<h3>Which side gives way first, today?</h3><p>The call for the first trading day: <strong>'+(ff.call==="up"?"up, through the ceiling level first":ff.call==="down"?"down, through the floor level first":"neither side")+'</strong>. The split behind the call: up '+pct(ff.up_p||0)+', down '+pct(ff.down_p||0)+', neither '+pct(ff.neither_p||0)+'.</p>';
+      h+='</section>';
+    });
+
+    var p=hist.pooled||{};
+    function pair(a){return (a&&a.length===2)?(a[1]+' of '+a[0]):'0 of 0';}
+    h+='<section class="card"><h2>'+esc(hist.label||'History')+'</h2><p>History, graded after the fact under the same definitions the grading record has always used: a ceiling level counts as reached if the day\'s highest price came within 0.2% below it, and as broken if the day closed above it; the floor level is the mirror image; the flip level counts as crossed when the close ends on the other side of it from where the price stood when the card was published.</p><p>'+esc(hist.tests)+' graded tests so far. Counts only, because a percentage on this few tests would read as far more certain than it is:</p><table><tr><th>Level</th><th>Reached in its first day</th><th>Broken in its first day</th></tr>'
+      +'<tr><td>Ceiling level</td><td>'+pair(p.call_touch)+'</td><td>'+pair(p.call_break)+'</td></tr>'
+      +'<tr><td>Floor level</td><td>'+pair(p.put_touch)+'</td><td>'+pair(p.put_break)+'</td></tr>'
+      +'<tr><td>Flip level</td><td>Not counted as reached; it is graded on the close</td><td>Crossed and closed beyond: '+pair(p.flip_beyond)+'</td></tr></table>'
+      +'<p class="sub">Both ceiling-level breaks in the record are the small-company fund\'s, in its two graded tests. Six tests prove only that the grading works in public; they do not prove the levels hold.</p></section>';
+
+    h+='<section class="card"><h2>Three readings this page does not have yet</h2>'+(data.features_absent||[]).map(function(s){return '<p>'+esc(s)+'</p>';}).join("")+'</section>';
+
+    h+='<section class="card"><h2>The live record</h2><p><span class="count">'+esc(live.forecasts_recorded||0)+'</span> forecasts recorded before their trading days open, <span class="count">'+esc(live.forecasts_graded||0)+'</span> graded so far. Cards counted toward the 60-per-index mark: SPY '+esc((live.cards_counted_toward_target||{}).SPY||0)+', QQQ '+esc((live.cards_counted_toward_target||{}).QQQ||0)+', IWM '+esc((live.cards_counted_toward_target||{}).IWM||0)+'.</p><p>'+esc(data.kill_criterion)+'</p><p class="sub">'+esc(data.thin_rule)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","This page's data file could not be loaded, so no forecasts are shown. Nothing here is estimated or filled in by hand.");
+    meta.textContent="The forecast data is not available right now.";
+  });
+})();
+</script>
+</div>
+</body>
+</html>
