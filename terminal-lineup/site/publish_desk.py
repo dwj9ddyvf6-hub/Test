@@ -152,6 +152,91 @@ def build_data(feed):
 
 
 PANEL_PATH = HERE.parents[1] / "morgue" / "data_cache" / "board_bt_bars.json"
+JOURNAL_PATHS = (HERE.parents[1] / "muse-desk-v3" / "state"
+                 / "dispatcher.jsonl.1",
+                 HERE.parents[1] / "muse-desk-v3" / "state"
+                 / "dispatcher.jsonl")
+
+
+def closed_trades_from_journal(paths=JOURNAL_PATHS):
+    """Closed trades paired from the desk dispatcher's own fill
+    journal (GAP-7, 2026-11-02). Both journal generations are read
+    in order (the rotated .1 first, then the live file) and fills
+    are paired first in, first out per sleeve and symbol. A closed
+    trade is returned only when its opening fills are also in the
+    journal record; closing fills whose openings are not on record
+    (positions opened before the journal record or carried in from
+    the broker book) are counted in the returned meta, never given
+    an invented entry price. Trades are aggregated per closing
+    fill, with the volume-weighted average entry price."""
+    from collections import defaultdict, deque
+    fills = []
+    for path in paths:
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            continue
+        for line in lines:
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if rec.get("event") == "fill":
+                fills.append(rec)
+    fills.sort(key=lambda r: r["ts"])
+    lots = defaultdict(deque)
+    closed = {}
+    unpaired = 0
+    for idx, f in enumerate(fills):
+        key = (f.get("sleeve"), f["symbol"])
+        qty, px = float(f["qty"]), float(f["price"])
+        direction = 1 if f["side"] == "buy" else -1
+        intent = f.get("position_intent") or ""
+        is_close = intent.endswith("_to_close") or (
+            not intent and lots[key] and lots[key][0][0] != direction)
+        if not is_close:
+            lots[key].append([direction, qty, px, str(f["ts"])[:10]])
+            continue
+        remaining, paired = qty, 0.0
+        while remaining > 1e-9 and lots[key] \
+                and lots[key][0][0] != direction:
+            lot = lots[key][0]
+            take = min(remaining, lot[1])
+            pnl = (px - lot[2]) * take if lot[0] == 1 \
+                else (lot[2] - px) * take
+            agg = closed.setdefault(idx, {
+                "sleeve": key[0], "symbol": key[1], "qty": 0.0,
+                "entry_cost": 0.0, "pnl": 0.0, "exit_px": px,
+                "exit_date": str(f["ts"])[:10],
+                "side": "long" if lot[0] == 1 else "short",
+                "entry_first": lot[3], "entry_last": lot[3]})
+            agg["qty"] += take
+            agg["entry_cost"] += lot[2] * take
+            agg["pnl"] += pnl
+            agg["entry_last"] = lot[3]
+            lot[1] -= take
+            remaining -= take
+            paired += take
+            if lot[1] <= 1e-9:
+                lots[key].popleft()
+        if paired < qty - 1e-9:
+            unpaired += 1
+    trades = [{"sleeve": a["sleeve"], "symbol": a["symbol"],
+               "side": a["side"], "qty": a["qty"],
+               "entry_avg": round(a["entry_cost"] / a["qty"], 4),
+               "exit_px": a["exit_px"], "exit_date": a["exit_date"],
+               "entry_first": a["entry_first"],
+               "entry_last": a["entry_last"],
+               "pnl": round(a["pnl"], 2)}
+              for a in closed.values()]
+    trades.sort(key=lambda t: t["exit_date"])
+    meta = {"fills_scanned": len(fills),
+            "unpaired_close_fills": unpaired,
+            "source": "desk dispatcher journal fill events "
+                      "(state/dispatcher.jsonl.1 then "
+                      "state/dispatcher.jsonl), paired first in "
+                      "first out per sleeve and symbol"}
+    return trades, meta
 ATTRACTIONS_BEGIN = "<!-- AMAZING-ATTRACTIONS-BEGIN -->"
 ATTRACTIONS_END = "<!-- AMAZING-ATTRACTIONS-END -->"
 
@@ -175,6 +260,7 @@ def build_attractions(feed):
     equity = _num(account.get("equity"))
     start_cap = _num(packet.get("starting_capital"))
     bench = {}
+    small_caps = {}
     sessions = []
     try:
         panel = json.loads(PANEL_PATH.read_text(encoding="utf-8"))
@@ -187,8 +273,19 @@ def build_attractions(feed):
                                "pct": round((r[4] / base - 1) * 100, 3)}
                               for r in rows]
                 sessions = [r["date"] for r in bench[sym]]
+        # GAP-7 small caps: IWM rides the same panel and the same
+        # rule as SPY and QQQ, so the desk can be read against small
+        # caps over the identical window with no new data source.
+        rows = [r for r in panel.get("IWM") or []
+                if start_date and str(r[0]) >= start_date]
+        if rows:
+            base = rows[0][4]
+            small_caps["IWM"] = [{"date": str(r[0]),
+                                  "pct": round((r[4] / base - 1) * 100, 3)}
+                                 for r in rows]
     except Exception:
         bench = {}
+        small_caps = {}
     desk_pts = []
     if start_cap and equity and start_date:
         desk_pts = [{"date": start_date, "pct": 0.0},
@@ -225,13 +322,25 @@ def build_attractions(feed):
         row["money_assigned"] += _num(s.get("money_assigned")) or 0.0
         row["orders_placed"] += int(s.get("orders_placed") or 0)
     families = sorted(fams.values(), key=lambda r: (-r["total"], r["family"]))
+    # GAP-7 closed trades: paired from the desk's own fill journal.
+    try:
+        trades, trades_meta = closed_trades_from_journal()
+    except Exception:
+        trades, trades_meta = [], {"fills_scanned": 0,
+                                   "unpaired_close_fills": 0,
+                                   "source": "journal unreadable"}
     data = {"benchmarks_pct": bench, "sessions": sessions,
+            "small_caps_pct": small_caps,
+            "closed_trades": trades, "closed_trades_meta": trades_meta,
             "desk_pct_points": desk_pts, "positions_cost": positions,
             "families": families,
             "window": {"start": start_date,
                        "end": str(feed.get("generated_at") or "")[:10]},
             "sources": {"benchmarks": "board price panel daily closes "
                         "(morgue/data_cache/board_bt_bars.json)",
+                        "small_caps": "board price panel daily closes, "
+                        "IWM, same panel and window as SPY and QQQ",
+                        "closed_trades": trades_meta.get("source"),
                         "desk": "terminal_feed.json account equity vs "
                         "evidence_packet starting capital",
                         "positions": "terminal_feed.json account_positions "
@@ -276,6 +385,84 @@ def build_attractions(feed):
         out.append(f'<text x="{W-R-70}" y="{H-6}" font-size="12" fill="#5b7180">{_html.escape(all_dates[-1])}</text>')
         out.append("</svg>")
         return "".join(out)
+    # --- GAP-7: desk vs small caps chart (IWM line + desk points) ---
+    def _chart_small():
+        iwm = small_caps.get("IWM") or []
+        if not iwm:
+            return ""
+        dates = [p["date"] for p in iwm]
+        series = [("IWM", iwm, "#1c6e4e")]
+        if desk_pts:
+            series.append(("Desk", desk_pts, "#0b3b46"))
+        pts = [p["pct"] for _, v, _ in series for p in v]
+        lo, hi = min(pts + [0.0]), max(pts + [0.0])
+        span = (hi - lo) or 1.0
+        lo -= span * 0.1; hi += span * 0.1; span = hi - lo
+        W, H, L, R, T, B = 720, 240, 8, 8, 12, 22
+        di = {d: i for i, d in enumerate(dates)}
+        n = max(len(dates) - 1, 1)
+        def X(d):
+            i = di.get(d, n if d >= dates[-1] else 0)
+            return L + (W - L - R) * i / n
+        def Y(v):
+            return T + (H - T - B) * (hi - v) / span
+        out = [f'<svg viewBox="0 0 {W} {H}" width="100%" role="img" '
+               f'aria-label="Desk versus small caps (IWM), percent since '
+               f'{_html.escape(start_date)}">']
+        out.append(f'<line x1="{L}" y1="{Y(0):.1f}" x2="{W-R}" y2="{Y(0):.1f}" stroke="#cfe0da"/>')
+        for name, v, c in series:
+            if len(v) < 2:
+                continue
+            poly = " ".join(f"{X(p['date']):.1f},{Y(p['pct']):.1f}" for p in v)
+            out.append(f'<polyline fill="none" stroke="{c}" stroke-width="2.5" points="{poly}"/>')
+            last = v[-1]
+            out.append(f'<circle cx="{X(last["date"]):.1f}" cy="{Y(last["pct"]):.1f}" r="4" fill="{c}"/>')
+            out.append(f'<text x="{max(X(last["date"])-118, L):.1f}" y="{Y(last["pct"])-8:.1f}" font-size="14" font-weight="700" fill="{c}">{name} {last["pct"]:+.2f}%</text>')
+        out.append(f'<text x="{L}" y="{H-6}" font-size="12" fill="#5b7180">{_html.escape(dates[0])}</text>')
+        out.append(f'<text x="{W-R-70}" y="{H-6}" font-size="12" fill="#5b7180">{_html.escape(dates[-1])}</text>')
+        out.append("</svg>")
+        return "".join(out)
+    small_card = ""
+    if small_caps.get("IWM"):
+        small_card = (
+            '<section class="card"><div class="kicker">Small caps</div>'
+            '<h2>Desk vs small caps</h2>'
+            '<p class="muted">The same desk line read against small '
+            'company stocks, tracked by the IWM fund, over the same '
+            f'window from {_html.escape(start_date)}. The IWM line uses '
+            'daily closes from the same price panel as SPY and QQQ. '
+            'The desk line is the same two recorded equity readings '
+            'as the chart above.</p>' + _chart_small() + '</section>\n')
+    # --- GAP-7: closed trades log ----------------------------------
+    trade_rows = "".join(
+        f'<tr><td>{_html.escape(str(t["exit_date"]))}</td>'
+        f'<td>{_html.escape(str(t["symbol"]))}</td>'
+        f'<td>{_html.escape(str(t["sleeve"]))}</td>'
+        f'<td>{_html.escape(str(t["side"]))}</td><td>{t["qty"]:g}</td>'
+        f'<td>${t["entry_avg"]:,.2f}</td><td>${t["exit_px"]:,.2f}</td>'
+        f'<td>{"+" if t["pnl"] >= 0 else "-"}${abs(t["pnl"]):,.2f}</td></tr>'
+        for t in trades)
+    unpaired = trades_meta.get("unpaired_close_fills") or 0
+    closed_card = (
+        '<section class="card"><div class="kicker">Finished trades</div>'
+        '<h2>Closed trades</h2>'
+        '<p class="muted">Trades the desk has opened and closed, '
+        'paired from its own fill journal, first in first out. A '
+        'trade is listed only when both its opening and closing '
+        'fills are in the journal record. '
+        f'{unpaired} closing fills closed positions whose opening '
+        'fills are not in the journal record, so they are not '
+        'listed here: their entry prices are not on record.</p>'
+        + ('<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%">'
+           '<tr><th align="left">Closed</th><th align="left">Symbol</th>'
+           '<th align="left">Strategy</th><th align="left">Side</th>'
+           '<th align="left">Qty</th><th align="left">Entry avg</th>'
+           '<th align="left">Exit</th><th align="left">Gain</th></tr>'
+           + trade_rows + '</table></div>'
+           if trade_rows else
+           '<p class="muted">No trade has both its opening and '
+           'closing fills in the journal record yet.</p>')
+        + '</section>\n')
     tiles = "".join(
         f'<div style="display:inline-block;margin:0 8px 8px 0;padding:12px 14px;border-radius:12px;background:rgba(9,137,121,{0.25 + 0.65 * (p["share_pct"] / 100 if positions else 0):.2f});color:#082d36;min-width:150px">'
         f'<b>{_html.escape(str(p["symbol"]))}</b><br>{p["qty"]:g} held at ${p["avg_price"]:,.2f}<br>'
@@ -309,7 +496,8 @@ def build_attractions(feed):
         '<tr><th align="left">Group</th><th align="left">Total</th><th align="left">Ready</th>'
         '<th align="left">Waiting</th><th align="left">Paused</th><th align="left">Needs attention</th>'
         '<th align="left">Assigned</th><th align="left">Orders</th></tr>'
-        + fam_rows + '</table></div></section>\n' + ATTRACTIONS_END)
+        + fam_rows + '</table></div></section>\n'
+        + small_card + closed_card + ATTRACTIONS_END)
     return data, section
 
 
