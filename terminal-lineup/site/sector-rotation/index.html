@@ -248,5 +248,30 @@
     });
 })();
 </script>
+<script>
+/* AMAZING Build (2026-11-02): theme heatmap alongside the rotation
+   ranking, from this page's own data.json sectors only. Each tile is
+   one sector, shaded by its average change over the last 21 sessions,
+   with the 5 session figure printed beside it. */
+(function(){
+  fetch("data.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(data){
+    if(!data||!data.sectors||!data.sectors.length) return;
+    if(document.getElementById("theme-heatmap")) return;
+    var main=document.getElementById("main"); if(!main) return;
+    var sec=document.createElement("section"); sec.className="group"; sec.id="theme-heatmap";
+    var tiles=data.sectors.map(function(s){
+      var v=Number(s.avg_change_21_pct)||0;
+      var bg=v>=0?("rgba(29,122,58,"+(0.15+Math.min(Math.abs(v)/12,1)*0.55).toFixed(2)+")"):("rgba(176,58,46,"+(0.15+Math.min(Math.abs(v)/12,1)*0.55).toFixed(2)+")");
+      return '<div style="display:inline-block;margin:0 8px 8px 0;padding:12px 14px;border-radius:12px;background:'+bg+';min-width:160px">'
+        +'<b>'+String(s.sector).replace(/</g,"")+'</b><br>'
+        +(v>=0?"+":"")+v.toFixed(2)+'% over 21 sessions<br>'
+        +((Number(s.avg_change_5_pct)||0)>=0?"+":"")+(Number(s.avg_change_5_pct)||0).toFixed(2)+'% over 5 sessions<br>'
+        +s.names_counted+' stocks counted</div>';
+    }).join("");
+    sec.innerHTML='<h2>Theme heatmap</h2><p class="lede">One tile per sector, shaded by its average change over the last 21 sessions, from the same count as the ranking above. Green is a rise and red is a fall; the deeper the shade, the bigger the move.</p>'+tiles;
+    main.parentNode.insertBefore(sec, main.nextSibling);
+  }).catch(function(){});
+})();
+</script>
 </body>
 </html>
