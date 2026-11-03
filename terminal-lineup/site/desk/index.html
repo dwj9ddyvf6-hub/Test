@@ -1,71 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Your trading desk</title>
-<style>
- :root{--navy:#123247;--header:#0e3e52;--mint:#edf6f5;--ink:#0d2e41;--teal:#098979;--red:#b2595d;--amber:#b06000}
- *{box-sizing:border-box} body{font-family:system-ui,sans-serif;margin:0;background:var(--mint);color:var(--ink)}
- header{background:var(--header);color:#fff;padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center}
- header h1{font-size:1.4rem;margin:0;color:#fff;font-weight:800} .dot{width:10px;height:10px;border-radius:50%;background:var(--teal);display:inline-block;margin-right:.5rem}
- main{max-width:76rem;margin:0 auto;padding:1rem}
- .card{background:#fff;border:1px solid #d7e6e3;border-radius:20px;padding:1rem 1.2rem;margin:0 0 1rem}
- .kicker{color:var(--teal);text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;font-weight:700}
- h2{color:var(--navy);font-weight:800;margin:.3rem 0 .6rem} .muted{color:#5b7180}
- .census{display:flex;gap:1.2rem;flex-wrap:wrap;font-size:1.05rem} .census b{color:var(--navy);font-size:1.5rem}
- .row{display:flex;gap:.7rem;align-items:flex-start;border-top:1px solid #e3efed;padding:.55rem 0}
- .ind{width:12px;height:12px;border-radius:50%;margin-top:.3rem;flex:none}
- .fed{background:var(--teal)} .wait{background:#e0a100} .parked{background:#9aa7ad} .bad{background:var(--red)}
- .name{font-weight:700;color:var(--navy)} .meta{color:#5b7180;font-size:.88rem}
- .status-fed{color:var(--teal);font-weight:700}.status-wait{color:var(--amber);font-weight:700}.status-parked{color:#667}.status-bad{color:var(--red);font-weight:700}
-</style>
+<meta name="theme-color" content="#0c2937">
+<title>Strategy desk · Peer Breadth</title>
 <link rel="stylesheet" href="../shared.css">
 <link rel="stylesheet" href="../visual.css">
 <script src="../shared.js" defer></script>
+<style>
+:root{--desk-navy:#0c2937;--desk-deep:#102433;--desk-mint:#eef6f3;--desk-teal:#43cfaa;--desk-gold:#efb95a;--desk-coral:#ff887e;--desk-blue:#7d9ff7;--desk-ink:#183546;--desk-muted:#718795;--desk-line:#d9e6e2;--desk-panel:#fff;--desk-chart:#101c2a;--desk-grid:#26394a}
+*{box-sizing:border-box}body{margin:0;background:var(--desk-mint);color:var(--desk-ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:var(--desk-navy);color:#fff;padding:24px max(22px,calc((100vw - 1440px)/2));display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:92px}
+.brand{display:flex;align-items:center;gap:14px}.brand-mark{display:grid;grid-template-columns:repeat(3,7px);gap:4px;align-items:end;height:30px;padding:5px;border:1px solid #52717d;border-radius:8px}.brand-mark i{display:block;width:6px;border-radius:3px;background:var(--desk-teal)}.brand-mark i:nth-child(1){height:10px}.brand-mark i:nth-child(2){height:17px;background:var(--desk-gold)}.brand-mark i:nth-child(3){height:22px;background:var(--desk-coral)}
+.brand strong{display:block;font-size:17px;letter-spacing:.1em}.brand small{display:block;margin-top:2px;color:#8ba6b1;font:9px ui-monospace,monospace;letter-spacing:.18em}.stamp{max-width:320px;text-align:right;color:#9cb0b7;font:11px ui-monospace,monospace;line-height:1.7}
+main{max-width:1440px;margin:auto;padding:30px 24px 56px}.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end;margin-bottom:22px}.eyebrow{color:#168c78;font:10px ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;font-weight:700}.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.08;letter-spacing:-.04em;color:var(--desk-navy);margin:8px 0}.hero p{max-width:780px;color:#637b88;margin:0}.cycle-chip{align-self:center;border:1px solid #cbded8;background:#f8fbf9;border-radius:999px;padding:9px 13px;color:#356477;font:10px ui-monospace,monospace;white-space:nowrap}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.metric{background:var(--desk-panel);border:1px solid var(--desk-line);border-radius:14px;padding:16px 18px;box-shadow:0 5px 18px #173b3810}.metric span{display:block;color:#748895;font:9px ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}.metric strong{display:block;color:var(--desk-navy);font:700 30px/1.2 ui-monospace,monospace;margin-top:6px}.metric small{display:block;color:#8a9aa2;font-size:11px;margin-top:2px}
+.charts{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:14px}.panel{background:#fff;border:1px solid var(--desk-line);border-radius:16px;padding:18px;box-shadow:0 8px 25px #173b380a;min-width:0}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:13px}.panel-head h2{font-size:17px;letter-spacing:-.02em;color:var(--desk-navy);margin:3px 0}.panel-head p{font-size:12px;color:#7a8d97;margin:4px 0 0}.panel-tag{color:#168c78;font:9px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}.chart-surface{background:var(--desk-chart);border-radius:11px;padding:12px 14px 8px;overflow:hidden}.chart-surface svg{display:block;width:100%;height:auto}.chart-surface text{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.chart-note{color:#738894;font-size:11px;line-height:1.6;margin:10px 1px 0}
+.chart-column{display:grid;gap:14px}.family-panel{grid-row:span 2}.order-list{display:grid;gap:9px;margin-top:10px}.order-item{display:grid;grid-template-columns:minmax(90px,1fr) 2fr 28px;gap:10px;align-items:center;font-size:11px;color:#d7e2e9}.order-track{height:8px;border-radius:9px;background:#26394a;overflow:hidden}.order-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,var(--desk-teal),var(--desk-gold))}.order-count{text-align:right;color:#f7cb78;font:12px ui-monospace,monospace}.cadence-layout{display:grid;grid-template-columns:150px minmax(0,1fr);gap:15px;align-items:center}.cadence-chart{width:150px;height:150px}.cadence-legend{display:grid;gap:8px}.legend-row{display:grid;grid-template-columns:9px minmax(0,1fr) auto;align-items:center;gap:8px;color:#455f6d;font-size:11px}.legend-swatch{width:8px;height:8px;border-radius:2px}.legend-row b{color:#183546;font:11px ui-monospace,monospace}.evidence-line{display:grid;grid-template-columns:14px minmax(0,1fr) 14px;align-items:center;margin:18px 0 8px}.evidence-line i{width:10px;height:10px;background:var(--desk-teal);border:2px solid white;box-shadow:0 0 0 2px #43cfaa;border-radius:50%}.evidence-line i:last-child{background:var(--desk-coral);box-shadow:0 0 0 2px #ff887e}.evidence-line span{height:3px;background:linear-gradient(90deg,var(--desk-teal),#7d9ff7,var(--desk-coral))}.evidence-dates{display:flex;justify-content:space-between;color:#526f7d;font:10px ui-monospace,monospace}.benchmarks{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}.benchmarks span{padding:5px 8px;border-radius:5px;background:#edf6f3;color:#356477;font:10px ui-monospace,monospace}
+.roster{margin-top:14px}.roster-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}.roster-head h2{color:var(--desk-navy);font-size:18px;margin:0}.search{width:min(340px,100%);border:1px solid #ccddd9;border-radius:8px;padding:10px 12px;color:var(--desk-ink);background:#fbfdfc;font:inherit;font-size:13px}.table-wrap{max-height:600px;overflow:auto;border:1px solid #e1eae7;border-radius:9px}.roster table{width:100%;border-collapse:collapse;min-width:620px}.roster th{position:sticky;top:0;background:#f1f7f5;color:#708691;text-align:left;font:9px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;padding:11px 13px}.roster td{border-top:1px solid #e8efed;padding:10px 13px;color:#34505e;font-size:12px}.roster td:first-child{font-weight:650;color:#173849}.roster td:last-child{text-align:right;font:12px ui-monospace,monospace;color:#147f71}.family-pill{display:inline-block;background:#edf5f2;color:#3b6670;border-radius:99px;padding:3px 7px;font:10px ui-monospace,monospace}.empty{padding:30px;text-align:center;color:#7b8e97}.footer-note{text-align:center;color:#7b8e97;font-size:11px;margin:18px 0 0}
+@media(max-width:900px){.charts{grid-template-columns:minmax(0,1fr)}.family-panel{grid-row:auto}.chart-column{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){header{padding:17px 16px;min-height:76px}.stamp{font-size:9px;max-width:165px}main{padding:22px 13px 40px}.hero{grid-template-columns:1fr;align-items:start}.cycle-chip{justify-self:start}.metrics{gap:8px}.metric{padding:13px}.metric strong{font-size:24px}.metric span{font-size:8px}.charts{gap:10px}.chart-column{grid-template-columns:1fr}.panel{padding:13px;border-radius:12px}.panel-head{flex-wrap:wrap}.panel-head h2{font-size:15px}.cadence-layout{grid-template-columns:118px minmax(0,1fr);gap:9px}.cadence-chart{width:118px;height:118px}.legend-row{font-size:10px}.roster-head{align-items:stretch;flex-direction:column}.search{width:100%}.table-wrap{max-height:520px}}
+</style>
 </head>
 <body>
-<header><h1><span class="dot"></span>Your trading desk</h1><span id="updated">Loading the latest update…</span></header>
+<header><div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><div><strong>PEER BREADTH</strong><small>STRATEGY DESK</small></div></div><div class="stamp" id="updated">Loading the reported cycle…</div></header>
 <main>
-<div class="card"><div class="kicker">All strategies</div><h2 id="headline">Loading…</h2><div id="summary" class="census"></div><p class="muted">Groups below are sorted by the first part of each strategy name. That grouping is derived from the name, not a separate book the desk declares.</p></div>
-<div id="groups"></div>
+  <section class="hero"><div><div class="eyebrow">Engine activity · reported cycle</div><h1 id="headline">The strategy desk</h1><p>Explore the strategy roster, reported order activity, cadence mix, and evidence window. Every chart is built from fields in the published producer snapshot.</p></div><span class="cycle-chip" id="engine-version">Research outputs</span></section>
+  <section class="metrics" id="summary" aria-label="Cycle output metrics"></section>
+  <section class="charts" aria-label="Strategy output charts">
+    <article class="panel family-panel"><div class="panel-head"><div><div class="panel-tag">Roster composition</div><h2>Strategy engines by family</h2><p>Record count per displayed family; the family label follows the strategy ID.</p></div></div><div class="chart-surface" id="family-chart"></div><p class="chart-note" id="family-note"></p></article>
+    <div class="chart-column">
+      <article class="panel"><div class="panel-head"><div><div class="panel-tag">Reported activity</div><h2>Orders by family</h2><p>Order counts reported in this producer cycle.</p></div></div><div class="order-list" id="order-chart"></div><p class="chart-note">Counts are grouped by the same displayed family labels.</p></article>
+      <article class="panel"><div class="panel-head"><div><div class="panel-tag">Engine configuration</div><h2>Cadence mix</h2><p>How often the listed strategies are configured to run.</p></div></div><div class="cadence-layout"><div class="chart-surface cadence-chart" id="cadence-chart"></div><div class="cadence-legend" id="cadence-legend"></div></div></article>
+      <article class="panel"><div class="panel-head"><div><div class="panel-tag">Evidence window</div><h2>Reported cycle</h2><p>Producer evidence interval and named market benchmarks.</p></div></div><div class="evidence-line" aria-hidden="true"><i></i><span></span><i></i></div><div class="evidence-dates"><span id="period-start">—</span><span id="period-end">—</span></div><div class="benchmarks" id="benchmarks"></div><p class="chart-note" id="evidence-count"></p></article>
+    </div>
+  </section>
+  <section class="panel roster"><div class="roster-head"><div><div class="panel-tag">Engine inventory</div><h2>Strategy roster</h2></div><input class="search" id="strategy-search" type="search" placeholder="Find a strategy, family, or cadence" aria-label="Search strategies"></div><p class="chart-note">Search by the engine name, family, cadence, or session. Rows show configuration and reported activity.</p><div class="table-wrap"><table><thead><tr><th>Strategy</th><th>Family</th><th>Cadence</th><th>Session</th><th>Orders reported</th></tr></thead><tbody id="strategy-rows"></tbody></table><p class="empty" id="empty-results" hidden>No strategies match this search.</p></div></section>
+  <p class="footer-note">Data snapshot, not an order interface. Figures retain the producer cycle’s original timestamp.</p>
 </main>
 <script>
-const ind = {"Ready":"fed","Waiting for data":"wait","Paused":"parked","Needs attention":"bad"};
-const sc = {"Ready":"status-fed","Waiting for data":"status-wait","Paused":"status-parked","Needs attention":"status-bad"};
-function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
-async function refresh(){
-  try{
-    const r = await fetch("terminal_feed.json", {cache:"no-store"});
-    const f = await r.json();
-    document.getElementById("updated").textContent = "Updated " + new Date(f.generated_at).toLocaleString();
-    document.getElementById("headline").textContent = f.headline;
-    const s = f.summary;
-    document.getElementById("summary").innerHTML =
-      "<span><b>"+s.strategies_total+"</b> total</span><span><b>"+s.ready+"</b> ready</span><span><b>"+s.waiting_for_data+"</b> waiting for data</span><span><b>"+s.paused+"</b> paused</span>" +
-      "<span>"+s.orders_placed+" orders on the last check</span><span>$"+s.money_assigned_total.toLocaleString()+" assigned</span>";
-    const by = {};
-    (f.strategies||[]).forEach(x=>{(by[x.family||"other"]=by[x.family||"other"]||[]).push(x)});
-    document.getElementById("groups").innerHTML = Object.keys(by).sort().map(g=>{
-      const rows = by[g].map(x=>{
-        const bits=[];
-        if(x.cadence_label) bits.push(esc(x.cadence_label));
-        if(x.session) bits.push(esc(x.session==="rth"?"regular hours":x.session));
-        if(x.instrument) bits.push(esc(x.instrument));
-        if(x.declared_family) bits.push(esc(x.declared_family));
-        if(x.inputs&&x.inputs.length) bits.push("needs: "+esc(x.inputs.join(", ")));
-        if(x.missing&&x.missing.length) bits.push("missing: "+esc(x.missing.join(", ")));
-        const pos = x.open_positions&&x.open_positions.length ? x.open_positions.map(p=>esc(p.symbol)+" × "+esc(p.qty)).join(", ") : "no open positions";
-        return '<div class="row"><span class="ind '+(ind[x.status]||"parked")+'"></span><div><span class="name">'+esc(x.name)+'</span> · <span class="'+(sc[x.status]||"")+'">'+esc(x.status)+'</span><div class="meta">$'+Number(x.money_assigned).toLocaleString()+' assigned · '+pos+' · '+esc(x.last_action)+(bits.length?' · '+bits.join(" · "):"")+'</div></div></div>';
-      }).join("");
-      return '<section class="card"><div class="kicker">Group</div><h2>'+esc(g)+' ('+by[g].length+')</h2>'+rows+'</section>';
-    }).join("");
-  }catch(e){
-    document.getElementById("updated").textContent = "Could not load the latest update — trying again shortly.";
-  }
-}
-refresh();
-setInterval(refresh, 30000);
+const colors=['#43cfaa','#efb95a','#7d9ff7','#ff887e','#7ad4e6','#b59af7','#a8cb73','#ee9bc7','#82a1b3','#f28d5b','#8ecbb9','#d8db72'];
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const number=value=>Number(value||0).toLocaleString('en-US');
+const date=value=>{if(!value)return '—';const d=new Date(value);return Number.isFinite(+d)?d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}):'—'};
+function familyBars(rows){const shown=rows.slice(0,12),rest=rows.slice(12);if(rest.length)shown.push({family:`Other ${rest.length} families`,total:rest.reduce((s,x)=>s+x.total,0)});const width=900,row=34,height=shown.length*row+42,left=170,right=58,top=18,max=Math.max(1,...shown.map(x=>x.total)),plot=width-left-right;const ticks=4;const grid=Array.from({length:ticks+1},(_,i)=>{const x=left+plot*i/ticks;return `<line x1="${x}" y1="${top-7}" x2="${x}" y2="${height-21}" stroke="#26394a"/><text x="${x}" y="${height-4}" fill="#8193a0" font-size="10" text-anchor="middle">${Math.round(max*i/ticks)}</text>`}).join('');const bars=shown.map((x,i)=>{const y=top+i*row,w=Math.max(3,plot*x.total/max),color=colors[i%colors.length];return `<text x="${left-12}" y="${y+15}" fill="#d8e3e9" font-size="11" text-anchor="end">${esc(x.family)}</text><rect x="${left}" y="${y+3}" width="${plot}" height="15" rx="5" fill="#26394a"/><rect x="${left}" y="${y+3}" width="${w}" height="15" rx="5" fill="${color}"/><text x="${left+w+8}" y="${y+15}" fill="#f2f5f7" font-size="10">${number(x.total)}</text>`}).join('');return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Horizontal bars showing the number of strategies in each family"><title>Strategy engines by family</title><desc>Each bar counts published strategy records, ranked by family.</desc>${grid}${bars}</svg>`}
+function cadenceDonut(rows,total){const radius=54,circ=2*Math.PI*radius,cx=75,cy=75;let offset=0;const arcs=rows.map((x,i)=>{const len=circ*x.count/total;const node=`<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${colors[i%colors.length]}" stroke-width="18" stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"><title>${esc(x.cadence)}: ${number(x.count)} strategies</title></circle>`;offset+=len;return node}).join('');return `<svg viewBox="0 0 150 150" role="img" aria-label="Donut chart of strategy cadence settings"><title>Cadence mix</title><desc>Strategy count by configured run interval.</desc>${arcs}<text x="75" y="72" text-anchor="middle" fill="#f3f7f8" font-size="23" font-weight="700">${number(total)}</text><text x="75" y="91" text-anchor="middle" fill="#91a3ae" font-size="9">ENGINES</text></svg>`}
+let feed=null;
+async function refresh(){const response=await fetch('data.json',{cache:'no-store'});if(!response.ok)throw new Error('Desk data could not be loaded.');const data=await response.json();if(data.schema!=='PEER_BREADTH_PUBLIC_DESK_FEED_V2'||!Array.isArray(data.strategies)||!Array.isArray(data.sleeve_groups))throw new Error('The published desk snapshot has an unsupported format.');feed=data;render();}
+function render(){const f=feed,s=f.summary,ev=f.evidence_packet;document.getElementById('updated').textContent=`Snapshot generated ${new Date(f.generated_at).toLocaleString('en-US',{timeZone:'UTC',dateStyle:'medium',timeStyle:'short'})} UTC`;document.getElementById('headline').textContent=f.headline;document.getElementById('engine-version').textContent=f.engine_version;document.getElementById('summary').innerHTML=[[s.strategies_total,'Strategy records','Published in this cycle'],[f.sleeve_groups.length,'Families','Strategy ID group labels'],[s.orders_reported,'Orders reported','Producer cycle output'],[ev.benchmarks.length,'Benchmarks','Named evidence series']].map(([v,l,d])=>`<article class="metric"><span>${esc(l)}</span><strong>${number(v)}</strong><small>${esc(d)}</small></article>`).join('');document.getElementById('family-chart').innerHTML=familyBars(f.sleeve_groups);document.getElementById('family-note').textContent=`${number(f.sleeve_groups.length)} displayed family labels; the chart shows the 12 largest groups and combines the remainder.`;const active=f.family_order_counts;const max=Math.max(1,...active.map(x=>x.orders_reported));document.getElementById('order-chart').innerHTML=active.length?active.map((x,i)=>`<div class="order-item"><span>${esc(x.family)}</span><span class="order-track"><span class="order-fill" style="display:block;width:${100*x.orders_reported/max}%;background:${colors[i%colors.length]}"></span></span><b class="order-count">${number(x.orders_reported)}</b></div>`).join(''):'<p class="chart-note">No orders were reported in this cycle.</p>';document.getElementById('cadence-chart').innerHTML=cadenceDonut(f.cadence_counts,s.strategies_total);document.getElementById('cadence-legend').innerHTML=f.cadence_counts.slice(0,8).map((x,i)=>`<div class="legend-row"><span class="legend-swatch" style="background:${colors[i%colors.length]}"></span><span>${esc(x.cadence)}</span><b>${number(x.count)}</b></div>`).join('');document.getElementById('period-start').textContent=date(ev.period.start);document.getElementById('period-end').textContent=date(ev.period.end);document.getElementById('benchmarks').innerHTML=ev.benchmarks.map(x=>`<span>${esc(x)}</span>`).join('');document.getElementById('evidence-count').textContent=`${number(ev.orders_reported)} orders reported in this cycle.`;renderRows('');}
+function renderRows(query){const q=query.trim().toLowerCase();const rows=feed.strategies.filter(x=>(x.name+' '+x.family+' '+(x.cadence_label||'')+' '+(x.session||'')).toLowerCase().includes(q)).sort((a,b)=>b.orders_placed-a.orders_placed||a.name.localeCompare(b.name));document.getElementById('strategy-rows').innerHTML=rows.map(x=>`<tr><td>${esc(x.name)}</td><td><span class="family-pill">${esc(x.family)}</span></td><td>${esc(x.cadence_label||'—')}</td><td>${esc(x.session||'—')}</td><td>${number(x.orders_placed)}</td></tr>`).join('');document.getElementById('empty-results').hidden=rows.length>0;}
+document.getElementById('strategy-search').addEventListener('input',event=>renderRows(event.target.value));
+refresh().catch(error=>{document.getElementById('headline').textContent='Desk snapshot unavailable';document.getElementById('updated').textContent=error.message;});
 </script>
 </body>
 </html>
