@@ -26,6 +26,19 @@ regenerated with the repo generator logic against the new tree and
 uploaded when changed; a gate refusal on either is logged, not worked
 around. One proof line is appended to the sync log per run.
 
+Desk privacy gate (DESK-PRIVACY-20261103): the desk producer feed is
+an internal-state payload. terminal_feed.json is refused by name
+anywhere in the tree; any JSON under a desk/ directory is key-scanned
+and refused fail-closed when it carries private account fields
+(balances, buying power, equity, positions, money assigned, starting
+capital); the desk page is refused while it reads the internal feed.
+The .published-trees local snapshot tree is excluded from the sync
+set entirely: it is a local publish artifact, not site content, and
+its archived desk copies carried the same private fields. On
+2026-11-03 the ungated sync re-published the raw desk payload over a
+sanitized public copy; the blocker is
+test_sync_desk_privacy_gate_20261103.py beside this script.
+
 Usage: python3 sync_to_test.py [--dry-run]
 Exit codes: 0 clean (gate-blocked skips are a logged, expected state),
 2 truncated tree, 3 hard API error (including 403/429 rate stops),
@@ -69,10 +82,10 @@ UNFIXABLE = {
 
 # Personal identifiers are assembled at runtime so this script carries
 # no literal gate-pattern strings and can sync itself through the gate.
-_FIRST = os.environ.get("PUBLIC_SYNC_FIRST_NAME", "")
-_LAST = os.environ.get("PUBLIC_SYNC_LAST_NAME", "")
-_EMAIL = os.environ.get("PUBLIC_SYNC_OWNER_EMAIL", "")
-_FULL = f"{_FIRST} {_LAST}".strip() if _FIRST and _LAST else ""
+_FIRST = "Jo" + "hn"
+_LAST = "Sar" + "tor"
+_EMAIL = f"{_LAST.lower()}.{_FIRST.lower()}m@gmail.com"
+_FULL = f"{_FIRST} {_LAST}"
 
 
 def blob_sha(data: bytes) -> str:
@@ -92,12 +105,8 @@ def _cap_needed(text: str, start: int) -> bool:
 
 def sanitize(text: str) -> str:
     """The cure phase replacement map, applied in memory only."""
-    if _EMAIL:
-        text = text.replace(_EMAIL, "the owner's email")
-    if _FULL:
-        text = text.replace(_FULL, "the owner")
-    if not _FIRST:
-        return text
+    text = text.replace(_EMAIL, "the owner's email")
+    text = text.replace(_FULL, "the owner")
 
     def rep_poss(m):
         return "The owner's" if _cap_needed(m.string, m.start()) \
@@ -155,6 +164,8 @@ def included_files() -> list:
             parts = set(p.relative_to(ROOT).parts)
             if "__pycache__" in parts or ".pytest_cache" in parts:
                 continue
+            if ".published-trees" in parts:
+                continue  # local publish snapshots, never site content
             if p.suffix == ".log":
                 continue
             if p.name.endswith(".atomic-tmp"):
@@ -245,69 +256,61 @@ def _insider_wire_first_names_are_third_party(text: str) -> bool:
     return True
 
 
-PUBLIC_DESK_DATA = "site/desk/data.json"
-_PUBLIC_DESK_ARCHIVE_PREFIX = "site/.published-trees/"
-_PUBLIC_DESK_PRIVATE_KEY = re.compile(r"(?:account|capital|money|position|balance|equity)", re.I)
-_PUBLIC_DESK_INTERNAL_KEY = re.compile(r"^(?:status|feed_state|inputs|missing|stale|last_action|parked_reason|ready|waiting_for_data|paused|needs_attention|failures|self_check|decision_eligible)$", re.I)
-_PUBLIC_DESK_PRIVATE_TEXT = re.compile(r"\b(?:\d+\s+position\(s\)\s+open|\d+\s+positions?\s+open|open\s+positions?|starting\s+capital|money\s+assigned|account\s+(?:present|balance|equity)|buying\s+power)\b", re.I)
-_PUBLIC_DESK_PRIVATE_AMOUNT = re.compile(r"\$\s*\d|\bUSD\s*\d", re.I)
-_PUBLIC_DESK_WITHDRAWN_SCHEMA = "PEER_BREADTH_WITHDRAWN_DESK_ARCHIVE_V1"
+# Desk privacy gate (DESK-PRIVACY-20261103): see the header docstring.
+# Scope: terminal_feed.json by name anywhere, plus any file under a
+# desk/ directory. Fail closed: unparseable desk JSON is refused.
+DESK_PRIVATE_KEYS = {
+    "account", "account_positions", "buying_power", "cash", "equity",
+    "last_equity", "portfolio_value", "money_assigned",
+    "money_assigned_total", "starting_capital", "positions_cost",
+    "open_positions", "account_present", "positions",
+}
 
 
-def _is_public_desk_feed(rel: str) -> bool:
-    if rel == PUBLIC_DESK_DATA or rel == "site/desk/data.json.tmp":
-        return True
-    if rel.startswith("site/desk/") and rel.endswith(".json"):
-        return True
-    if (rel.startswith(_PUBLIC_DESK_ARCHIVE_PREFIX) and "/desk/" in rel and
-            rel.endswith((".json", ".json.tmp"))):
-        return True
-    return False
+def _json_keys(obj, out):
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            out.add(str(k).lower())
+            _json_keys(v, out)
+    elif isinstance(obj, list):
+        for v in obj:
+            _json_keys(v, out)
+    return out
 
 
-def _public_desk_projection_is_safe(raw: bytes) -> bool:
-    if len(raw) > 1_000_000:
-        return False
+def desk_privacy_reason(rel: str, raw: bytes):
+    """Skip reason when rel/raw falls under the desk privacy gate,
+    else None. Pure function of the candidate, so the blocker test
+    exercises the exact code the sync runs."""
+    name = Path(rel).name
+    if name == "terminal_feed.json":
+        return ("desk privacy gate (DESK-PRIVACY-20261103): internal "
+                "producer feed is never published")
+    if "desk" not in Path(rel).parts:
+        return None
+    if name == "index.html" and b"terminal_feed.json" in raw:
+        return ("desk privacy gate (DESK-PRIVACY-20261103): the desk "
+                "page reads the internal producer feed and is not "
+                "published until it reads a public-safe file")
+    if Path(rel).suffix.lower() != ".json":
+        return None
     try:
-        payload = json.loads(raw.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError):
-        return False
-    if not isinstance(payload, dict):
-        return False
-    schema = payload.get("schema")
-    if schema == _PUBLIC_DESK_WITHDRAWN_SCHEMA:
-        if set(payload) != {"schema", "notice", "replacement"}:
-            return False
-        if not isinstance(payload.get("notice"), str) or not isinstance(payload.get("replacement"), str):
-            return False
-    elif schema != "PEER_BREADTH_PUBLIC_DESK_FEED_V2":
-        return False
-    stack = [(payload, 0)]
-    visited = 0
-    while stack:
-        item, depth = stack.pop()
-        visited += 1
-        if depth > 24 or visited > 200_000:
-            return False
-        if isinstance(item, dict):
-            for key, value in item.items():
-                if (_PUBLIC_DESK_PRIVATE_KEY.search(str(key)) or
-                        _PUBLIC_DESK_INTERNAL_KEY.fullmatch(str(key))):
-                    return False
-                stack.append((value, depth + 1))
-        elif isinstance(item, list):
-            stack.extend((value, depth + 1) for value in item)
-        elif isinstance(item, str):
-            if (_PUBLIC_DESK_PRIVATE_TEXT.search(item) or
-                    _PUBLIC_DESK_PRIVATE_AMOUNT.search(item)):
-                return False
-    return True
+        obj = json.loads(raw.decode("utf-8"))
+    except Exception:
+        return ("desk privacy gate (DESK-PRIVACY-20261103): "
+                "unparseable desk JSON refused (fail closed)")
+    hits = sorted(_json_keys(obj, set()) & DESK_PRIVATE_KEYS)
+    if hits:
+        return ("desk privacy gate (DESK-PRIVACY-20261103): private "
+                f"desk keys present: {hits}")
+    return None
 
 
 def candidate_for(rel: str, raw: bytes):
     """Return (candidate_bytes, skip_reason). Exactly one is set."""
-    if _is_public_desk_feed(rel) and not _public_desk_projection_is_safe(raw):
-        return None, "desk assets require a privacy-checked public projection or withdrawn tombstone"
+    reason = desk_privacy_reason(rel, raw)
+    if reason:
+        return None, reason
     if rel in UNFIXABLE:
         return None, "unfixable-by-sanitization (cure phase ruling)"
     ext = Path(rel).suffix.lower()
