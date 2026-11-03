@@ -57,6 +57,13 @@
   .pair p{margin:2px 0}
   .pair .num, .pick .num{font-weight:700;color:var(--accent)}
   .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .pairsindex{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:16px 20px;margin:0 0 16px;font-size:15px}
+  .pairsindex h2{margin:0 0 6px;font-size:21px}
+  .pairsindex p{margin:4px 0 10px;color:var(--soft)}
+  .pairsindex table{border-collapse:collapse;width:100%}
+  .pairsindex td,.pairsindex th{padding:3px 10px 3px 0;text-align:left;vertical-align:top}
+  .pairsindex .num{font-weight:700;color:var(--accent)}
   footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
   footer p{margin:0 0 8px}
   a{color:var(--accent);font-weight:600}
@@ -92,6 +99,8 @@
   </div>
 
   <main id="results"></main>
+
+  <section class="pairsindex" id="pairsindex"></section>
 
   <footer>
     <p id="receipt"></p>
@@ -365,6 +374,41 @@
       });
   }
 
+  /* CLOSE-CURE (2026-11-02): the pairs index. The picker above only
+     renders the names a reader picks, so most names on record (and
+     every newly arrived name among them) rendered nowhere on load.
+     This section renders on load from this page's own data: every
+     name on record with its closest match, the same precomputed
+     twins the pick cards use. Nothing is added that the data does
+     not carry; a name with no twin at the floor says so. */
+  function renderPairsIndex(){
+    var host = document.getElementById("pairsindex");
+    if (!host || !DATA) return;
+    var syms = DATA.symbols || [];
+    var rows = syms.map(function(sym){
+      var twins = (DATA.twins || {})[sym] || [];
+      var first = '<td><span class="sym">' + esc(sym) + "</span></td>";
+      if (!twins.length){
+        return "<tr>" + first + "<td colspan=\"4\">No closest match " +
+          "is shown for this name: it does not share at least " +
+          DATA.min_overlap + " trading days in this window with any " +
+          "other name on record.</td></tr>";
+      }
+      var t = twins[0];
+      return "<tr>" + first + "<td>" + esc(t.symbol) + "</td>" +
+        '<td><span class="num">' + fmtNum(t.correlation) + "</span></td>" +
+        "<td>" + esc(t.label) + "</td>" +
+        "<td>" + num(t.shared_days) + " shared days</td></tr>";
+    });
+    host.innerHTML = "<h2>Every name on record, and the name it " +
+      "has moved with most</h2>" +
+      "<p>The full list behind the picker above, over the window " +
+      "this page uses: each name on record with the single name it " +
+      "has moved with most closely, from the same closest matches " +
+      "the pick cards use.</p>" +
+      "<table><tbody>" + rows.join("") + "</tbody></table>";
+  }
+
   function addName(raw){
     var sym = String(raw || "").trim().toUpperCase();
     if (!sym) return;
@@ -416,6 +460,7 @@
       }
       symbols.forEach(function(s, i){ IDX[s] = i; });
       renderDefs();
+      renderPairsIndex();
       meta.textContent = "Price history through " +
         fmtDateLong(data.session) + ". Source: " + data.source + ".";
       if (data.session !== lastCompletedSession()){
