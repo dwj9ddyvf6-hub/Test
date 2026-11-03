@@ -53,6 +53,25 @@
       }
     ]
   },
+  "closed_trades": [
+    {
+      "entry_avg": 14.2384,
+      "entry_first": "2026-10-27",
+      "entry_last": "2026-10-28",
+      "exit_date": "2026-10-30",
+      "exit_px": 13.59,
+      "pnl": 5987.73,
+      "qty": 9234.0,
+      "side": "short",
+      "sleeve": "aster_trader_donchian55",
+      "symbol": "CORZ"
+    }
+  ],
+  "closed_trades_meta": {
+    "fills_scanned": 2354,
+    "source": "desk dispatcher journal fill events (state/dispatcher.jsonl.1 then state/dispatcher.jsonl), paired first in first out per sleeve and symbol",
+    "unpaired_close_fills": 145
+  },
   "desk_pct_points": [
     {
       "date": "2026-10-26",
@@ -60,7 +79,7 @@
     },
     {
       "date": "2026-11-03",
-      "pct": 6.896
+      "pct": 6.894
     }
   ],
   "families": [
@@ -577,9 +596,9 @@
   ],
   "positions_cost": [
     {
-      "avg_price": 76786.176165983,
-      "cost": 4984.46,
-      "qty": 0.064913499,
+      "avg_price": 76624.109994471,
+      "cost": 4973.94,
+      "qty": 0.064913497,
       "share_pct": 99.95,
       "symbol": "BTCUSD"
     },
@@ -599,11 +618,41 @@
     "2026-10-30",
     "2026-11-02"
   ],
+  "small_caps_pct": {
+    "IWM": [
+      {
+        "date": "2026-10-26",
+        "pct": 0.0
+      },
+      {
+        "date": "2026-10-27",
+        "pct": 1.152
+      },
+      {
+        "date": "2026-10-28",
+        "pct": 1.552
+      },
+      {
+        "date": "2026-10-29",
+        "pct": 2.534
+      },
+      {
+        "date": "2026-10-30",
+        "pct": 0.845
+      },
+      {
+        "date": "2026-11-02",
+        "pct": 0.776
+      }
+    ]
+  },
   "sources": {
     "benchmarks": "board price panel daily closes (morgue/data_cache/board_bt_bars.json)",
+    "closed_trades": "desk dispatcher journal fill events (state/dispatcher.jsonl.1 then state/dispatcher.jsonl), paired first in first out per sleeve and symbol",
     "desk": "terminal_feed.json account equity vs evidence_packet starting capital",
     "families": "terminal_feed.json strategies and sleeve group counts",
-    "positions": "terminal_feed.json account_positions qty x avg_price (cost paid)"
+    "positions": "terminal_feed.json account_positions qty x avg_price (cost paid)",
+    "small_caps": "board price panel daily closes, IWM, same panel and window as SPY and QQQ"
   },
   "window": {
     "end": "2026-11-03",
