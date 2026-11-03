@@ -57,6 +57,20 @@ def acceptance(first_bars, gap_up):
     return loc if gap_up else 1.0 - loc
 
 
+def session_window(session):
+    """(start, end) ISO UTC strings for the first 30 minutes after
+    the 09:30 ET open of the given session date, DST-correct via
+    the session's own America/New_York offset."""
+    from zoneinfo import ZoneInfo
+    et = ZoneInfo("America/New_York")
+    y, m, d = (int(p) for p in session.split("-"))
+    start = datetime(y, m, d, 9, 30, tzinfo=et).astimezone(
+        timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    end = datetime(y, m, d, 10, 0, tzinfo=et).astimezone(
+        timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return start, end
+
+
 def main(argv):
     sys.path.insert(0, os.path.expanduser(
         "~/workspace/custom-skills/local-alpaca-paper/bin"))
@@ -74,8 +88,12 @@ def main(argv):
                 if pc > 0 and o > 0 and abs(o / pc - 1.0) >= GAP_FLOOR:
                     gap_names.append((sym, o > pc))
                 break
-    start = f"{session}T13:30:00Z"
-    end = f"{session}T14:00:00Z"
+    # Cure FIRST-MINUTES-DST-20261102: the window was hardcoded to
+    # 13:30-14:00Z, the open only under EDT; on the first EST
+    # session (2026-11-02) it read the 08:30-09:00 ET pre-market
+    # hour and recorded 361 of 1,265 gap names, against 99.6
+    # percent on the prior two sessions.
+    start, end = session_window(session)
     bars = {}
     token = None
     while True:
