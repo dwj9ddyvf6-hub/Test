@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earnings Drift Pane: what stocks did on their report days</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:16px;color:#23405e}
+  .def strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .group p strong{color:var(--ink);font-weight:600}
+  .big{font-size:19px;color:var(--ink)}
+  .big strong{font-size:26px}
+  table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:15px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line)}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  .thin{color:var(--faint);font-style:italic}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Earnings Drift Pane</h1>
+    <p class="job">One job: show what AAPL, MSFT and NVDA did on the days they reported earnings, over the price history on record.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the count&hellip;</p>
+
+  <div class="def"><strong>What counts:</strong> an earnings event is the day a company put its earnings results into its required public filing with the Securities and Exchange Commission. The move counted for each event is how much the stock's closing price changed from the close just before the report to the close of the first trading day on or after the filing.</div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p>How the count works: for each of the three names, the count takes up to the 12 most recent earnings reports in the price history on record and measures the report day's own move for each one, then pools all the reports together. A report whose stock closed exactly where it had closed before is counted as not ending higher.</p>
+    <p>What is not in this count yet: the count measures only each report day's own move. Moves over the 5 and 21 trading days after a report, a split of the results by each separate company, and a list of which companies report tonight or reported last night are not in this count, so none of them is shown.</p>
+    <p>Why a count might show no percentage: a count with fewer than 30 events shows its counts only. A percentage built on a handful of events reads as far more certain than it is, so it is left off until the count grows. Every published call and count from these tools is graded in public on <a href="../record/">The Record</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function pct1(f){
+    return (Number(f) * 100).toLocaleString("en-US",{minimumFractionDigits:1, maximumFractionDigits:1}) + "%";
+  }
+  function pct2(f){
+    var v = Number(f) * 100;
+    return (v > 0 ? "+" : "") + v.toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2}) + "%";
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.session) bits.push("Counted through: " + fmtDateLong(r.session));
+    if (r.published_at_utc) bits.push("Published " + fmtTimestamp(r.published_at_utc));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+  // The thin guard: every share on this page, the headline
+  // included, goes through here. A thin count (or a missing
+  // share) prints its counts and no percentage.
+  function sharePhrase(count, n, thin, share){
+    var base = num(count) + " of " + num(n) + " reports";
+    if (thin || share == null) return base;
+    return base + " (" + pct1(share) + ")";
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var n = Number(data.events || 0);
+      if (!n || data.state !== "graded"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No earnings count has been published yet. ' +
+          "When the count is published, this pane will show what AAPL, MSFT and NVDA did on " +
+          "their report days over the price history on record: how many of the counted reports " +
+          "ended higher, the average and middle move, and the spread of the moves, every " +
+          "percentage with the number of reports behind it printed next to it. Nothing is " +
+          "shown for a count that has not been made.</div>";
+        return;
+      }
+      var names = data.names || [];
+      var thin = !!data.thin;
+      meta.textContent = "Counted through " + fmtDateLong(data.as_of) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+
+      if (data.as_of < latestCompletedSession()){
+        showBanner("stale", "This count is out of date. It was counted through " +
+          fmtDateLong(data.as_of) + ", and a newer count has not been published yet. " +
+          "Treat it as the last published count, not today's.");
+      }
+
+      var h = '<section class="group"><h2>The count</h2>';
+      h += '<p class="receipt">Receipt: ' + receiptLine(data.receipt) + "</p>";
+      h += '<p class="big"><strong>' +
+        sharePhrase(data.positive, n, thin, data.share_positive) +
+        " ended higher</strong> on their report days</p>";
+      h += "<p>Those " + num(n) + " earnings reports were counted across " +
+        num(data.name_count) + " names (" + esc(names.join(", ")) + "), up to the " +
+        num(data.max_events_per_name) + " most recent reports per name (at most " +
+        num(data.max_events) + " reports in all), over the " +
+        num(data.lookback_days) + " days of price history on record when the study ran. " +
+        num(data.not_positive) + " of the " + num(n) + " reports did not end higher.</p>";
+      if (thin){
+        h += '<p class="thin">Too few events for a percentage: this count has ' +
+          num(n) + " reports, fewer than " + num(data.thin_threshold) +
+          ", so it shows its counts only.</p>";
+      }
+      h += "</section>";
+
+      if (!thin && data.mean != null){
+        var shareNot = n ? (Number(data.not_positive) / n) : null;
+        h += '<section class="group"><h2>The moves in full</h2>' +
+          "<p>Every figure below is measured over the same " + num(n) +
+          " reports, and every percentage carries its count.</p>" +
+          "<table><thead><tr><th></th>" +
+          '<th class="num">Figure</th><th class="num">Reports behind it</th>' +
+          "</tr></thead><tbody>";
+        h += "<tr><td>Ended higher</td>" +
+          '<td class="num"><strong>' + pct1(data.share_positive) + "</strong></td>" +
+          '<td class="num">' + num(data.positive) + " of " + num(n) + "</td></tr>";
+        h += "<tr><td>Did not end higher</td>" +
+          '<td class="num"><strong>' + pct1(shareNot) + "</strong></td>" +
+          '<td class="num">' + num(data.not_positive) + " of " + num(n) + "</td></tr>";
+        h += "<tr><td>Average move</td>" +
+          '<td class="num"><strong>' + pct2(data.mean) + "</strong></td>" +
+          '<td class="num">' + num(n) + " reports</td></tr>";
+        h += "<tr><td>Middle move (half the reports moved less, half moved more)</td>" +
+          '<td class="num"><strong>' + pct2(data.median) + "</strong></td>" +
+          '<td class="num">' + num(n) + " reports</td></tr>";
+        h += "<tr><td>Typical spread of the moves, either way</td>" +
+          '<td class="num"><strong>' + pct2(data.std).replace(/^\+/, "") + "</strong></td>" +
+          '<td class="num">' + num(n) + " reports</td></tr>";
+        h += "<tr><td>Steadiness score (the average move divided by the typical spread)</td>" +
+          '<td class="num"><strong>' +
+          Number(data.sharpe).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2}) +
+          "</strong></td>" +
+          '<td class="num">' + num(n) + " reports</td></tr>";
+        h += "</tbody></table></section>";
+      }
+      resultsEl.innerHTML = h;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The earnings count is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
