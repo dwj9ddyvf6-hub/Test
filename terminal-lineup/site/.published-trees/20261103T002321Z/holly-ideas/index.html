@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holly Ideas: the machine idea stream, only the names that passed every check</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .proving{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 16px;font-size:15px;color:#23405e}
+  .proving strong{color:var(--ink)}
+  .grading{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 22px;font-size:15px;color:#23405e}
+  .grading strong{color:var(--ink)}
+  .idea{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .idea .top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .idea .symbol{font-size:20px;font-weight:700}
+  .idea .sector{color:var(--soft);font-size:14.5px}
+  .idea .facts{margin-left:auto;font-size:14px;color:var(--soft);white-space:normal;overflow-wrap:anywhere;min-width:0}
+  .idea .facts strong{color:var(--ink)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:20px;
+       padding:0 8px;white-space:nowrap;color:var(--up);border:1px solid var(--up)}
+  .idea p{margin:6px 0;font-size:14.5px;color:var(--soft)}
+  .idea p strong{color:var(--ink);font-weight:600}
+  .idea .checks{margin:6px 0 0;padding-left:20px;font-size:14px;color:var(--soft)}
+  .idea .checks li{margin:2px 0}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Holly Ideas</h1>
+    <p class="job">One job: stream the machine's stock ideas for the newest trading day on record, and only the ideas a record on file actually produced: the names that passed every check on the Qualified Board that day, each with the checks that triggered it and the group's graded record attached.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest ideas&hellip;</p>
+
+  <div id="proving" class="proving" hidden></div>
+  <div id="grading" class="grading" hidden></div>
+  <main id="ideas"></main>
+
+  <footer>
+    <p>An idea here is a name on a list. It is there because the board's eight checks all passed it for that trading day, and for no other reason. The full board for the day, all 50 published names with the checks each one passed or missed, is on the <a href="../board/">Qualified Board</a>, and every published call with its grades is kept on <a href="../record/">The Record</a>.</p>
+    <p><a href="../">All the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var provingEl = document.getElementById("proving");
+  var gradingEl = document.getElementById("grading");
+  var ideasEl = document.getElementById("ideas");
+
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function ideaHTML(a, sessionLong){
+    var h = '<section class="idea"><div class="top">' +
+      '<span class="symbol">' + esc(a.symbol) + '</span>' +
+      (a.sector ? '<span class="sector">' + esc(a.sector) + '</span>' : '') +
+      ' <span class="tag">Passed every check</span>' +
+      '<span class="facts">Trading day: <strong>' + esc(sessionLong) + '</strong> &middot; ' +
+      'Closed at <strong>' + fmtPrice(a.close) + '</strong> &middot; ' +
+      'Board score <strong>' + Number(a.score).toFixed(1) + ' of 100</strong></span></div>';
+    h += '<p><strong>What triggered it:</strong> ' + esc(a.trigger) + '</p>';
+    h += '<ul class="checks">' + (a.checks || []).map(function(c){
+      return '<li>' + esc(c.name) + ': ' + esc(c.state_words) +
+        (c.score == null ? '' : ' (' + Number(c.score).toFixed(1) + ' of 100)') + '</li>';
+    }).join("") + '</ul>';
+    h += '<p>Checks in favor: <strong>' + esc(a.checks_in_favor) + ' of ' +
+      esc(a.checks_total) + '</strong>. The score rests on ' +
+      Number(a.data_behind_score_pct).toFixed(1) + '% of the measures behind it having data.</p>';
+    return h + '</section>';
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var ideas = data.ideas || [];
+      if (data.proving_state){
+        provingEl.innerHTML = "<strong>" + esc(data.proving_state) + ":</strong> " +
+          esc(data.proving_note) + " This stream carries that state until its record is graded further.";
+        provingEl.hidden = false;
+      }
+      if (data.grading_words){
+        gradingEl.innerHTML = "<strong>How these ideas are graded:</strong> " + esc(data.grading_words);
+        gradingEl.hidden = false;
+      }
+      if (!ideas.length){
+        meta.textContent = "";
+        ideasEl.innerHTML = '<div class="nodata">No ideas have been published yet. When a trading day\'s board is published, the names that passed every check appear here as that day\'s idea stream, each with the checks that triggered it.</div>';
+        return;
+      }
+      meta.textContent = "Ideas from the trading day of " + fmtDateLong(data.session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + "." +
+        " Receipt: " + data.receipt.coverage + ".";
+      if (data.session < latestCompletedSession()){
+        showBanner("stale", "This idea stream is out of date. It comes from the trading day of " +
+          fmtDateLong(data.session) + ", and a newer stream has not been published yet. " +
+          "Treat it as the last published stream, not today's.");
+      }
+      ideasEl.innerHTML = ideas.map(function(a){
+        return ideaHTML(a, fmtDateLong(data.session));
+      }).join("");
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The latest idea stream is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
