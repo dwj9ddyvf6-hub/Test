@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earnings Move Distribution: how big the next earnings move is likely to be</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  .scroll{max-height:560px;overflow:auto}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Earnings Move Distribution</h1>
+    <p class="job">One job: for every company about to report earnings, publish how big its move is likely to be, and grade each season against that promise.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the upcoming reports&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function fmtDay(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  function pct(v){return (Math.round(v*100)/100).toFixed(2)+"%";}
+  function signed(v){return (v>0?"+":v<0?"\u2212":"")+pct(Math.abs(v));}
+  function blendWords(v){
+    if(v.blend==="own_and_group")return "Half its own past reports ("+v.own_events+"), half its size group";
+    return "Its size group alone (only "+v.own_events+" of its own past reports on record; 8 are needed for its own half to count)";
+  }
+  function distCells(v){
+    var a=v.abs, s=v.signed, h="";
+    if(a&&a.typical_pct!=null){h+="<td><strong>"+pct(a.typical_pct)+"</strong></td><td>"+pct(a.low80_pct)+" to "+pct(a.high80_pct)+"</td>";}
+    else{h+="<td colspan=\"2\">Not recorded: "+esc(a?a.reason:"")+"</td>";}
+    if(s&&s.typical_pct!=null){h+="<td>"+signed(s.low80_pct)+" to "+signed(s.high80_pct)+"</td>";}
+    else{h+="<td>Not recorded: "+esc(s?s.reason:"")+"</td>";}
+    return h;
+  }
+  function nameRow(v,state){
+    return "<tr><td><strong>"+esc(v.symbol)+"</strong><br><span class=\"sub\">"+esc(v.tier_label)+"</span></td>"+distCells(v)
+      +"<td>Not recorded: no priced move on record</td><td>"+esc(state)+"<br><span class=\"sub\">"+esc(blendWords(v.abs))+ "</span></td></tr>";
+  }
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    var cal=data.calendar||{}, past=data.past_record||{}, nxt=data.next||{}, rest=data.rest||{}, miss=data.missed||{}, exc=data.exceedance||{}, hist=data.history||{}, live=data.live||{}, claim=data.claim||{};
+    meta.textContent="Upcoming reports from the calendar gathered "+fmtShort(cal.recorded_on)+". Ranges recorded at the close of "+fmtShort(data.decision_as_of)+". Source: "+data.source+".";
+    showBanner("stale","Still being proven. The calendar was gathered on "+fmtShort(cal.recorded_on)+" and is out of date by its own rule; its dates are used exactly as recorded. No priced expected move is on record for any name, so the bigger-than-priced chance is not recorded for anyone yet.");
+
+    var h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p class="claim">'+esc(claim.text)+'</p><p>'+esc(data.how_built)+'</p>'
+      +'<p>Behind every range: <span class="count">'+esc(past.total_reports)+'</span> past report days on record ('+esc(past.past_reports)+' stored past reports from '+esc(past.past_names)+' companies, plus '+esc(past.panel_reports)+' report days inside the recent price history). Of the '+esc(cal.dated)+' companies with a report date this season, '+esc(past.own_names_on_calendar)+' have any of their own past reports on record and '+esc(past.own_full_names)+' have the 8 or more needed for their own half to count.</p>'
+      +'<p class="sub">'+esc(past.vintage_note)+'</p><p class="sub">'+esc(cal.timing_note)+'</p><p class="sub">'+esc(cal.second_list_note)+'</p></section>';
+
+    var nn=nxt.names||[];
+    h+='<section class="card"><h2>Next reports: '+fmtDay(nxt.date)+'</h2><p>These <span class="count">'+esc(nxt.count)+'</span> reports are next. Their ranges were recorded at the close of '+fmtShort(nxt.decision_as_of)+', before their report day opens, and will be graded from the actual moves. "Typical move" is the middle past move; the 80 percent range is the range that held 8 of every 10 past moves like it. The 5-day range is centred on no drift: its middle is zero by construction.</p>'
+      +'<table><tr><th>Company</th><th>Typical earnings-day move</th><th>80 percent range for the day</th><th>80 percent range, 5 days after</th><th>Bigger than priced?</th><th>State</th></tr>'
+      +nn.map(function(v){return nameRow(v,"Recorded");}).join("")
+      +'</table></section>';
+
+    var rn=rest.names||[];
+    h+='<section class="card"><h2>The rest of the season</h2><p><span class="count">'+esc(rest.count)+'</span> more dated reports follow, through '+fmtShort(rn.length?rn[rn.length-1].date:"")+'. Each range below is built the same way and will be recorded at the close before its own report day; until then it is a preview, not part of the live record.</p>'
+      +'<div class="scroll"><table><tr><th>Company and report date</th><th>Typical earnings-day move</th><th>80 percent range for the day</th><th>80 percent range, 5 days after</th><th>Bigger than priced?</th><th>State</th></tr>'
+      +rn.map(function(v){var r=nameRow(v,"Waiting for the close before its report");return r.replace("<strong>"+esc(v.symbol)+"</strong>","<strong>"+esc(v.symbol)+"</strong> &middot; "+fmtShort(v.date));}).join("")
+      +'</table></div></section>';
+
+    var mn=miss.names||[];
+    h+='<section class="card"><h2>Counted, but not recorded: reports whose moment had passed</h2><p><span class="count">'+esc(miss.count)+'</span> dated reports in this season fall on or before '+fmtShort(data.issue_day)+', the day this engine first ran. The close before each of them had already passed, so no range could honestly be recorded before the fact. They stay in the season count, are never filled in afterwards, and are listed here:</p>'
+      +'<p>'+mn.map(function(m){return "<strong>"+esc(m.symbol)+"</strong> ("+fmtShort(m.date)+")";}).join(", ")+'.</p>'
+      +'<p>The calendar also carries <strong>'+esc(cal.no_date)+'</strong> names with no date scheduled ('+(cal.no_date_names||[]).map(esc).join(", ")+'). They are not scheduled reports; they stay in the count as no-date rows, so the season total is '+esc(live.season_all_names)+' names: '+esc(live.season_dated_names)+' dated and '+esc(cal.no_date)+' with no date.</p></section>';
+
+    h+='<section class="card"><h2>The bigger-than-priced chance: not recorded for anyone yet</h2><p>'+esc(exc.detail)+'</p></section>';
+
+    h+='<section class="card"><h2>Size groups behind the ranges</h2><table><tr><th>Group</th><th>Past report days (move size)</th><th>Past report days (full 5-day move)</th></tr>'
+      +(data.tiers||[]).map(function(t){return "<tr><td>"+esc(t.label)+"</td><td>"+esc(t.abs_events)+"</td><td>"+esc(t.signed_events)+"</td></tr>";}).join("")
+      +'</table><p class="sub">Groups come from the only size record on file, a list of which companies belong to the largest, mid-sized and smaller company lists. There is no dollar size record on file, so groups are list groups, never dollar sizes, and a company on none of the lists is its own group, never called small. A group part is not published below 30 past moves: that is why the mid-sized group\'s 5-day part (29 past moves) is not recorded for its companies.</p></section>';
+
+    var seasons=hist.seasons||[], pooled=hist.pooled||{}, sp=hist.signed_pooled||{};
+    h+='<section class="card"><h2>'+esc(hist.label)+'</h2>'
+      +'<table><tr><th>Season</th><th>Report days walked</th><th>Graded</th><th>Skipped (too little earlier history)</th><th>Inside the 80 percent range</th><th>Coverage</th></tr>'
+      +seasons.map(function(s){return "<tr><td>"+esc(s.season)+"</td><td>"+esc(s.events)+"</td><td>"+esc(s.graded)+"</td><td>"+esc(s.skipped)+"</td><td>"+esc(s.hits)+"</td><td>"+(s.coverage==null?"Counts only (fewer than 30 graded)":esc(Math.round(s.coverage*1000)/10)+"%")+"</td></tr>";}).join("")
+      +'</table><p>Across all seasons: <strong>'+esc(pooled.hits)+' of '+esc(pooled.graded)+'</strong> graded reports landed inside the range ('+esc(pooled.coverage==null?"":Math.round(pooled.coverage*1000)/10)+'% coverage), out of '+esc(pooled.events)+' report days walked. For the 5-day part, '+esc(sp.hits)+' of '+esc(sp.graded)+' graded reports landed inside their centred range ('+esc(sp.coverage==null?"":Math.round(sp.coverage*1000)/10)+'%).</p><p class="sub">'+esc(hist.note)+'</p></section>';
+
+    h+='<section class="card"><h2>The live record</h2><p><span class="count">'+esc(live.names_recorded)+'</span> companies recorded so far ('+esc(live.distribution_forecasts_recorded)+' range forecasts recorded before their report day, '+esc(live.not_recorded_rows)+' parts marked not recorded with their reasons), <span class="count">'+esc(live.forecasts_graded)+'</span> graded so far. The proving target is '+esc(live.target)+'.</p>'
+      +'<p>'+esc(data.kill_criterion)+'</p><p class="sub">'+esc(data.thin_rule)+'</p><p class="sub">'+esc(data.grading_note)+'</p>'
+      +'<p class="sub">The step arithmetic is checked on known numbers on every refresh: '+esc((data.self_test||{}).passed)+' of '+esc((data.self_test||{}).cases)+' checks passed.</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","This page's data file could not be loaded, so no counts are shown. Nothing here is estimated or filled in by hand.");
+    meta.textContent="The forecast data is not available right now.";
+  });
+})();
+</script>
+</div>
+</body>
+</html>
