@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How it works</title>
+<style>
+ :root{--navy:#123247;--header:#0e3e52;--mint:#edf6f5;--ink:#0d2e41;--teal:#098979}
+ *{box-sizing:border-box} body{font-family:system-ui,sans-serif;margin:0;background:var(--mint);color:var(--ink)}
+ header{background:var(--header);color:#fff;padding:1rem 1.5rem}
+ header h1{font-size:1.4rem;margin:0;color:#fff;font-weight:800}
+ main{max-width:52rem;margin:0 auto;padding:1rem}
+ .card{background:#fff;border:1px solid #d7e6e3;border-radius:20px;padding:1rem 1.2rem;margin:0 0 1rem}
+ .kicker{color:var(--teal);text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;font-weight:700}
+ h2{color:var(--navy);font-weight:800;margin:.3rem 0 .6rem}
+ a{color:var(--teal);font-weight:700}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<header><h1>How it works</h1></header>
+<main>
+<section class="card"><div class="kicker">Start here</div><h2>What this terminal is</h2>
+<p>This terminal is a set of pages about the stock market and about one paper trading desk. Paper trading means the desk places practice orders with practice money, so strategies can be tested in real market conditions without real money at stake. Every page answers one question, draws a chart of the thing it measures, and prints the date its numbers belong to.</p></section>
+
+<section class="card"><div class="kicker">The data</div><h2>Where the data comes from</h2>
+<p>Stock and index prices come from market data recorded on this system: daily closing prices for thousands of listed stocks, intraday prices for the big index funds, and options pricing collected during market hours. Company filings and insider transactions come from the public filings companies make with the regulator. The desk page reads the desk's own account snapshot: its cash, its equity, its open positions, and the state of each of its strategies, recorded at each check the desk runs.</p>
+<p>Nothing on any page is typed in by hand, and nothing is estimated to fill a gap. When a record does not exist, the page says so in plain words and shows what it does have.</p></section>
+
+<section class="card"><div class="kicker">The build</div><h2>How a page is built</h2>
+<p>Each page is built the same way. First, a small program gathers the records for that page's question and works out the figures, saving them in a data file with the date of the records printed inside it. Second, the page itself is a fixed layout: a heading that says what the page is for, the main figure, a chart of the subject, and cards for the supporting figures. Third, when the page opens in your browser, it reads its data file and fills the layout in. If the data file cannot be loaded, the page says that plainly instead of showing an empty chart.</p>
+<p>Pages are rebuilt on a schedule that matches their subject. Pages about the trading day are rebuilt around the trading day. Pages about slower records, like company filings, are rebuilt when those records change. The hub page is rebuilt whenever any page it links to changes, and it lists every page on the terminal.</p></section>
+
+<section class="card"><div class="kicker">Dates</div><h2>How to read the dates</h2>
+<p>Every date on a page is the date of the data itself: the trading session the prices came from, or the day the record was made. A page whose newest data is older than its normal schedule is marked stale, in those words, next to its date. A page never presents an old reading as a new one. When a row is new since the previous session, it carries a small NEW marker; rows that were already there do not.</p></section>
+
+<section class="card"><div class="kicker">The desk</div><h2>How the desk page works</h2>
+<p>The desk page compares the desk with the market over the same stretch of time, in percent. That comparison is the yardstick the desk is judged by: its percent change next to the percent change of the two big index funds over the identical window. The desk line joins the equity readings the desk has actually recorded, and says so. Open positions are shown as tiles sized by what was paid for them, because cost is what the record holds. Strategies are grouped into scorecards that show how many are ready, waiting for data, paused, or needing attention, and the money assigned to each group.</p></section>
+
+<section class="card"><div class="kicker">Market mood</div><h2>How to read Market Mood</h2>
+<p>The Market Mood page shows nine separate gauges, each measuring one part of market mood on its own scale, with the recipe for each gauge printed on its card. The gauges are shown side by side and are not added up into one headline number. A separate ring card shows the volatility index for its own date, on its own scale, beside the gauges.</p></section>
+
+<section class="card"><div class="kicker">Words</div><h2>Plain words used on these pages</h2>
+<p><b>Session:</b> one trading day. <b>Close:</b> the last price of a session. <b>Equity:</b> the total value of an account. <b>Assigned:</b> practice money set aside for a strategy. <b>Stale:</b> older than the page's normal schedule. <b>Graded:</b> a past forecast that has been checked against what actually happened.</p>
+<p><a href="../">Back to the hub</a></p></section>
+</main>
+</body>
+</html>
