@@ -37,18 +37,26 @@ class DeskPrivacySurfaceTests(unittest.TestCase):
     def test_blocks_active_temporary_and_archived_json(self):
         cases = (
             ("active", "terminal-lineup/site/desk/data.json"),
-            ("temporary", "terminal-lineup/site/desk/data.json.tmp"),
+            ("active temporary", "terminal-lineup/site/desk/data.json.tmp"),
             ("archived", "terminal-lineup/site/.published-trees/20300102/desk/data.json"),
+            ("archived temporary", "terminal-lineup/site/.published-trees/20300102/desk/data.json.tmp"),
         )
         for label, rel in cases:
             with self.subTest(route=label):
-                self.assertTrue(self.gate["desk_privacy_reason"](rel, self.payload))
+                reason = self.gate["desk_privacy_reason"](rel, self.payload)
+                self.assertTrue(reason and "privacy" in reason.lower())
 
     def test_malformed_temporary_json_fails_closed(self):
-        reason = self.gate["desk_privacy_reason"](
-            "terminal-lineup/site/desk/data.json.tmp", b"synthetic-invalid-json"
+        paths = (
+            "terminal-lineup/site/desk/data.json",
+            "terminal-lineup/site/desk/data.json.tmp",
+            "terminal-lineup/site/.published-trees/20300102/desk/data.json",
+            "terminal-lineup/site/.published-trees/20300102/desk/data.json.tmp",
         )
-        self.assertTrue(reason)
+        for rel in paths:
+            with self.subTest(route=rel.rsplit("/", 1)[-1]):
+                reason = self.gate["desk_privacy_reason"](rel, b"{ malformed")
+                self.assertTrue(reason and "unparseable desk JSON refused" in reason)
 
     def test_clean_safe_feed_remains_allowed(self):
         raw = json.dumps(
