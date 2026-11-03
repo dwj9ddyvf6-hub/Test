@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tape Heatmap: where the day's largest alert prints landed, by strike and expiry</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --empty:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card h2{margin:0 0 8px;font-size:18px}
+  .card p{margin:0 0 8px;font-size:15.5px}
+  .card p:last-child{margin-bottom:0}
+  .proving{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:14px 20px;margin:0 0 22px;font-size:15px;color:#23405e}
+  .proving strong{color:var(--ink)}
+  .picker{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+  .picker button{font-size:16px;font-weight:700;padding:8px 22px;border-radius:10px;
+    border:1px solid var(--line);background:var(--card);color:var(--soft);cursor:pointer}
+  .picker button.on{border-color:var(--accent);color:var(--accent);background:#eef4fb}
+  .totals{display:flex;flex-wrap:wrap;gap:8px 26px;background:var(--card);
+    border:1px solid var(--line);border-radius:14px;padding:14px 20px;margin:0 0 16px;
+    font-size:15px;color:var(--soft)}
+  .totals strong{color:var(--ink)}
+  .gridcard{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;margin:0 0 16px;overflow-x:auto}
+  .gridcard h3{margin:0 0 4px;font-size:19px}
+  .gridcard .sub{font-size:14px;color:var(--soft);margin:0 0 12px}
+  table{border-collapse:separate;border-spacing:3px}
+  th{font-size:12.5px;color:var(--soft);font-weight:600;padding:2px 6px;white-space:nowrap}
+  td{border-radius:7px;min-width:86px;height:44px;text-align:center;vertical-align:middle;
+     font-size:13px;font-weight:700;padding:4px 6px;cursor:pointer;white-space:nowrap}
+  td.empty{background:var(--empty);color:var(--faint);font-weight:400;cursor:default}
+  td.strike{background:none;color:var(--soft);font-weight:600;cursor:default;min-width:0;text-align:right}
+  .detail{background:#eef4fb;border:1px solid #bcd4ee;border-radius:10px;
+    padding:12px 16px;font-size:15px;margin:0 0 16px;display:none}
+  .detail.show{display:block}
+  .legend{font-size:14.5px;color:var(--soft)}
+  .legend .sw{display:inline-block;width:16px;height:16px;border-radius:4px;
+    vertical-align:-3px;margin:0 4px 0 10px}
+  .nodata{background:var(--empty);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Tape Heatmap</h1>
+    <p class="job">One job: show where the freshest trading day's largest unusual options prints landed, strike by expiry day, for SPY, QQQ and IWM, so you can see at a glance which strikes and expiry days pulled the big money.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest day&hellip;</p>
+
+  <section class="card">
+    <h2>What this grid is, in plain words</h2>
+    <p id="scope">Loading&hellip;</p>
+    <p id="emptywords"></p>
+  </section>
+
+  <div id="proving" class="proving" style="display:none"></div>
+
+  <div id="picker" class="picker" role="group" aria-label="Pick a fund"></div>
+  <div id="totals" class="totals" style="display:none"></div>
+  <div id="detail" class="detail" role="status"></div>
+  <div id="grids"></div>
+
+  <section class="card legend" id="legend" style="display:none">
+    <h2>How to read the shading</h2>
+    <p>Darker means more money in that cell, compared with the other cells in the same grid.
+    Calls<span class="sw" style="background:#bcd9f2"></span>lighter
+    <span class="sw" style="background:#0b5fa5"></span>darker, most money.
+    Puts<span class="sw" style="background:#f6d3ae"></span>lighter
+    <span class="sw" style="background:#b35c12"></span>darker, most money.
+    <span class="sw" style="background:#eef1f5;border:1px solid #dde4ec"></span>An empty cell means no alert print on record there. It does not mean nothing traded there: prints that were not among the session's largest alerts are not on this record. Tap or point at any shaded cell to see its exact figures.</p>
+  </section>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">All the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"),
+      scopeEl=document.getElementById("scope"), emptyEl=document.getElementById("emptywords"),
+      provingEl=document.getElementById("proving"), picker=document.getElementById("picker"),
+      totalsEl=document.getElementById("totals"), detailEl=document.getElementById("detail"),
+      gridsEl=document.getElementById("grids"), legendEl=document.getElementById("legend"),
+      receiptEl=document.getElementById("receipt");
+  var DATA=null, current=null;
+
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function money(v){return "$"+Number(v).toLocaleString("en-US",{maximumFractionDigits:0});}
+  function moneyShort(v){
+    if (v>=1e6) return "$"+(v/1e6).toFixed(2).replace(/\.?0+$/,"")+"M";
+    if (v>=1e3) return "$"+Math.round(v/1e3)+"K";
+    return money(v);
+  }
+  function fmtDateLong(iso){var d=new Date(iso+"T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtDateShort(iso){var d=new Date(iso+"T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short",day:"numeric",timeZone:"UTC"});}
+  function fmtTimestamp(iso){var d=new Date(iso); if(isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})+" ET";}
+  function sessionKey(d){var parts=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d); var m={};
+    parts.forEach(function(p){m[p.type]=p.value;}); return m.year+"-"+m.month+"-"+m.day;}
+  function latestCompletedSession(){var d=new Date(Date.now()-864e5);
+    for(;;){var key=sessionKey(d); var dow=new Date(key+"T12:00:00Z").getUTCDay();
+      if(dow>=1&&dow<=5) return key; d=new Date(d.getTime()-864e5);}}
+  function showBanner(kind,text){banner.className="banner show "+kind; banner.textContent=text;}
+
+  function shade(premium,max,kind){
+    var t=max>0?Math.sqrt(premium/max):0;
+    if (kind==="call"){
+      var r=Math.round(226-196*t), g=Math.round(240-145*t), b=Math.round(250-85*t);
+    } else {
+      var r=Math.round(252-71*t), g=Math.round(231-139*t), b=Math.round(196-178*t);
+    }
+    return {bg:"rgb("+r+","+g+","+b+")", fg:t>0.55?"#ffffff":"#17202b"};
+  }
+
+  function gridHTML(fund,side,key){
+    var label=key==="calls"?"Calls":"Puts";
+    var max=0; side.cells.forEach(function(c){ if(c.premium_usd>max) max=c.premium_usd; });
+    var byKey={}; side.cells.forEach(function(c){ byKey[c.strike+"|"+c.expiry]=c; });
+    var h='<section class="gridcard"><h3>'+esc(fund.symbol)+" "+label+"</h3>"+
+      '<p class="sub">Strike down the side, expiry day across the top. Each shaded cell shows the money in the largest alert prints on that strike and expiry day.</p><table><tr><th>Strike</th>';
+    side.expiries.forEach(function(e){ h+="<th>"+esc(fmtDateShort(e))+"</th>"; });
+    h+="</tr>";
+    side.strikes.forEach(function(s){
+      h+='<tr><td class="strike">'+Number(s).toLocaleString("en-US")+"</td>";
+      side.expiries.forEach(function(e){
+        var c=byKey[s+"|"+e];
+        if(!c){ h+='<td class="empty" aria-label="No alert print on record">&middot;</td>'; }
+        else{
+          var sh=shade(c.premium_usd,max,key==="calls"?"call":"put");
+          var title=esc(fund.symbol+" "+label.slice(0,-1).toLowerCase()+", "+Number(s).toLocaleString("en-US")+
+            " strike, expires "+fmtDateShort(e)+": "+money(c.premium_usd)+" in "+c.alerts+
+            (c.alerts===1?" alert print, ":" alert prints, ")+Number(c.contracts).toLocaleString("en-US")+" contracts");
+          h+='<td tabindex="0" style="background:'+sh.bg+";color:"+sh.fg+'" title="'+title+'" '+
+             'data-detail="'+title+'">'+moneyShort(c.premium_usd)+"</td>";
+        }
+      });
+      h+="</tr>";
+    });
+    h+="</table></section>";
+    return h;
+  }
+
+  function renderFund(sym){
+    current=sym;
+    var fund=null;
+    DATA.funds.forEach(function(f){ if(f.symbol===sym) fund=f; });
+    Array.prototype.forEach.call(picker.children,function(b){
+      b.className=b.textContent===sym?"on":""; });
+    if(!fund || !fund.alerts){
+      totalsEl.style.display="none"; gridsEl.innerHTML=
+        '<div class="nodata">No alert prints on record for this fund on this day.</div>';
+      return;
+    }
+    totalsEl.style.display="flex";
+    totalsEl.innerHTML=
+      "<span><strong>"+esc(sym)+"</strong> on "+esc(DATA.session_long)+"</span>"+
+      "<span>Alert prints on the grid: <strong>"+fund.alerts+"</strong></span>"+
+      "<span>Money in those alerts: <strong>"+money(fund.alert_premium_usd)+"</strong></span>"+
+      "<span>Contracts in those alerts: <strong>"+Number(fund.alert_contracts).toLocaleString("en-US")+"</strong></span>"+
+      "<span>Cells with prints: <strong>"+fund.cell_count+"</strong></span>"+
+      "<span>Full session total, every print looked at: <strong>"+money(fund.session_total_premium_usd)+"</strong> across "+Number(fund.prints_examined).toLocaleString("en-US")+" prints</span>"+
+      "<span>The grid's alerts are <strong>"+fund.alert_share_pct.toFixed(2)+"%</strong> of that full total</span>";
+    detailEl.className="detail"; detailEl.textContent="";
+    gridsEl.innerHTML=gridHTML(fund,fund.calls,"calls")+gridHTML(fund,fund.puts,"puts")+
+      '<section class="card"><h2>How complete is this day?</h2><p>'+esc(fund.completeness_words)+
+      ".</p></section>";
+    Array.prototype.forEach.call(gridsEl.querySelectorAll("td[data-detail]"),function(td){
+      function show(){ detailEl.className="detail show"; detailEl.textContent=td.getAttribute("data-detail")+"."; }
+      td.addEventListener("click",show); td.addEventListener("mouseover",show); td.addEventListener("focus",show);
+    });
+  }
+
+  fetch("data.json",{cache:"no-store"})
+    .then(function(res){ if(!res.ok) throw new Error("missing"); return res.json(); })
+    .then(function(data){
+      DATA=data;
+      if(!data.funds || !data.funds.length) throw new Error("empty");
+      scopeEl.textContent=data.scope_words;
+      emptyEl.textContent=data.empty_words;
+      provingEl.style.display="block";
+      provingEl.innerHTML="<strong>"+esc(data.proving_state)+".</strong> "+esc(data.proving_note);
+      meta.textContent="Trading day: "+data.session_long+" · Published "+fmtTimestamp(data.published_at_utc)+
+        " · Data behind it: "+data.source;
+      if (data.session < latestCompletedSession()){
+        showBanner("stale","This shows "+data.session_long+", the freshest trading day on record. A newer trading day has finished since, so treat this as the latest picture on record, not today's.");
+      }
+      data.funds.forEach(function(f){
+        var b=document.createElement("button"); b.textContent=f.symbol;
+        b.addEventListener("click",function(){ renderFund(f.symbol); });
+        picker.appendChild(b);
+      });
+      legendEl.style.display="block";
+      receiptEl.textContent=data.receipt.coverage+".";
+      renderFund(data.funds[0].symbol);
+    })
+    .catch(function(){
+      scopeEl.textContent="The latest day's grid is not on record right now.";
+      emptyEl.textContent="";
+      meta.textContent="";
+      showBanner("missing","No grid to show yet: the record behind this page has not arrived. Check back after the next trading day is recorded.");
+      gridsEl.innerHTML='<div class="nodata">Nothing to show yet.</div>';
+    });
+})();
+</script>
+</body>
+</html>
