@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Momentum Clock: how far each stock has risen or fallen, by window</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+    --prove-bg:#f3eefb; --prove-line:#c9b8ec; --prove-ink:#4a3572;
+    --up:#1d7a3a; --down:#b03a2e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .prove{background:var(--prove-bg);border:1px solid var(--prove-line);color:var(--prove-ink);
+       border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px}
+  .prove strong{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .picker{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:16px 20px;margin:0 0 16px;font-size:15.5px}
+  .picker .label{font-weight:600;margin-right:10px}
+  .picker button.choice{font-size:15px;padding:7px 16px;border:1px solid var(--accent);
+    border-radius:8px;background:#fff;color:var(--accent);font-weight:600;cursor:pointer;margin:2px 4px 2px 0}
+  .picker button.choice.on{background:var(--accent);color:#fff}
+  .picker .note{margin:10px 0 0;font-size:14.5px;color:var(--soft)}
+  .countline{font-size:16px;font-weight:600;margin:0 0 10px}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .shortbox{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:14px 20px;margin:14px 0 0;font-size:15px}
+  .shortbox p{margin:0 0 6px}
+  .shortbox p:last-child{margin-bottom:0}
+  .tablebox{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+  table{border-collapse:collapse;width:100%;min-width:720px;font-size:15px}
+  th,td{padding:9px 14px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);background:var(--bg)}
+  th:first-child,td:first-child{text-align:left}
+  th:nth-child(2),td:nth-child(2){text-align:left}
+  td.sym{font-weight:700}
+  td .sub{display:block;font-weight:400;font-size:12.5px;color:var(--faint);white-space:normal}
+  tr:last-child td{border-bottom:none}
+  .pos{color:var(--up)} .neg{color:var(--down)}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Momentum Clock</h1>
+    <p class="job">One job: show how far each stock&rsquo;s price has risen or fallen over a window of trading sessions you pick, ranked biggest rise first, worked out from the daily closing prices on record.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <div id="prove" class="prove" style="display:none"></div>
+  <p id="meta" class="meta">Loading the price history&hellip;</p>
+
+  <div class="def" id="defbox" style="display:none">
+    <p><strong>What the figure means:</strong> <span id="deftext"></span></p>
+    <p id="defshort"></p>
+  </div>
+
+  <div class="picker" id="picker" style="display:none">
+    <span class="label">Look back:</span>
+    <span id="choices"></span>
+    <p class="note">Every figure is worked out in your browser from the closing prices this page carries. Nothing you pick is sent anywhere.</p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var proveEl = document.getElementById("prove");
+  var meta = document.getElementById("meta");
+  var defEl = document.getElementById("defbox");
+  var defText = document.getElementById("deftext");
+  var defShort = document.getElementById("defshort");
+  var picker = document.getElementById("picker");
+  var choicesEl = document.getElementById("choices");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+  var WINDOW = 252;
+  var SPANS = {21: "about a trading month", 63: "about a trading quarter",
+               126: "about half a trading year", 252: "about a trading year"};
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function fmtDate(iso){
+    var months = ["January","February","March","April","May","June","July",
+                  "August","September","October","November","December"];
+    var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var p = String(iso).split("-");
+    var dt = new Date(Date.UTC(+p[0], +p[1]-1, +p[2]));
+    return days[dt.getUTCDay()] + ", " + months[dt.getUTCMonth()] + " " +
+           dt.getUTCDate() + ", " + dt.getUTCFullYear();
+  }
+  function money(v){
+    return "$" + Number(v).toLocaleString("en-US",
+      {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function pct(v){
+    return (v > 0 ? "+" : "") + v.toFixed(2) + "%";
+  }
+
+  function compute(window){
+    var rows = [], short = [];
+    var dates = DATA.dates;
+    Object.keys(DATA.bars).forEach(function(sym){
+      var entry = DATA.bars[sym];
+      var start = entry[0], closes = entry[1], n = closes.length;
+      if (n < window + 1){ short.push(sym); return; }
+      var last = closes[n-1];
+      var then = closes[n-1-window];
+      rows.push({
+        symbol: sym,
+        change: (last / then - 1) * 100,
+        last: last,
+        then: then,
+        thenDate: dates[start + n - 1 - window],
+        asOf: dates[start + n - 1],
+        endedEarly: (start + n - 1) < dates.length - 1,
+        sessions: n
+      });
+    });
+    rows.sort(function(a, b){
+      if (a.change !== b.change) return b.change - a.change;
+      return a.symbol < b.symbol ? -1 : (a.symbol > b.symbol ? 1 : 0);
+    });
+    short.sort();
+    return {rows: rows, short: short};
+  }
+
+  function render(){
+    var out = compute(WINDOW);
+    var rows = out.rows, short = out.short;
+    var html = '<p class="countline">' + rows.length.toLocaleString("en-US") +
+      ' of ' + DATA.names_on_record.toLocaleString("en-US") +
+      ' names on record ranked by their rise or fall over the last ' +
+      WINDOW + ' sessions (' + SPANS[WINDOW] + '), biggest rise first</p>';
+    if (!rows.length){
+      html += '<div class="nodata">No name on record has enough sessions ' +
+        'behind it for this window, so no list can be worked out.</div>';
+    } else {
+      html += '<div class="tablebox"><table><thead><tr>' +
+        '<th>Rank</th><th>Stock</th><th>Rise or fall, ' + WINDOW + ' sessions</th>' +
+        '<th>Last close</th><th>Close ' + WINDOW + ' sessions earlier</th>' +
+        '<th>Sessions on record</th></tr></thead><tbody>';
+      rows.forEach(function(r, i){
+        var sub = r.endedEarly ?
+          '<span class="sub">Last session on record ' + esc(fmtDate(r.asOf)) + '</span>' : "";
+        html += '<tr><td>' + (i + 1) + '</td>' +
+          '<td class="sym">' + esc(r.symbol) + sub + '</td>' +
+          '<td class="' + (r.change > 0 ? "pos" : (r.change < 0 ? "neg" : "")) + '">' +
+            pct(r.change) + '</td>' +
+          '<td>' + money(r.last) + '</td>' +
+          '<td>' + money(r.then) + '<span class="sub">' + esc(fmtDate(r.thenDate)) + '</span></td>' +
+          '<td>' + r.sessions + '</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    if (short.length){
+      html += '<div class="shortbox"><p><strong>Not on record for this window:</strong> ' +
+        short.length + (short.length === 1 ? ' name has' : ' names have') +
+        ' fewer than the ' + (WINDOW + 1) + ' closes this window needs, so no ' +
+        'figure is worked out for ' + (short.length === 1 ? 'it' : 'them') +
+        ' rather than a shortened one:</p><p>' +
+        short.map(esc).join(", ") + '</p></div>';
+    } else {
+      html += '<div class="shortbox"><p>Every name on record has the ' +
+        (WINDOW + 1) + ' closes this window needs, so no name is left out.</p></div>';
+    }
+    resultsEl.innerHTML = html;
+  }
+
+  function setWindow(v){
+    WINDOW = v;
+    var btns = choicesEl.querySelectorAll("button.choice");
+    for (var i = 0; i < btns.length; i++){
+      btns[i].classList.toggle("on", +btns[i].getAttribute("data-window") === v);
+    }
+    if (DATA) render();
+  }
+
+  function buildChoices(){
+    choicesEl.innerHTML = "";
+    DATA.windows.forEach(function(w){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "choice";
+      b.setAttribute("data-window", w);
+      b.textContent = w + " sessions";
+      b.addEventListener("click", function(){ setWindow(w); });
+      choicesEl.appendChild(b);
+    });
+  }
+
+  function showMissing(){
+    banner.textContent = "The price history is not available right now, " +
+      "so no list can be worked out. Please try again later.";
+    banner.className = "banner show missing";
+    meta.textContent = "";
+    resultsEl.innerHTML = "";
+  }
+
+  fetch("data.json").then(function(r){
+    if (!r.ok) throw new Error("fetch failed");
+    return r.json();
+  }).then(function(d){
+    if (!d || !d.bars || !d.dates || !Object.keys(d.bars).length){
+      resultsEl.innerHTML = '<div class="nodata">No price history has been ' +
+        'published yet, so no list can be worked out.</div>';
+      meta.textContent = "";
+      return;
+    }
+    DATA = d;
+    if (DATA.windows.indexOf(WINDOW) === -1) WINDOW = DATA.windows[0];
+  function proveNote(state, note){var s = String(state || ""), n = String(note || "");
+    if (s && n.toLowerCase().indexOf(s.toLowerCase()) === 0){
+      n = n.slice(s.length).replace(/^[:\s]+/, "");
+      n = n.charAt(0).toUpperCase() + n.slice(1);}
+    return n;}
+    proveEl.innerHTML = "<strong>" + esc(d.proving_state) + ":</strong> " +
+      esc(proveNote(d.proving_state, d.proving_note));
+    proveEl.style.display = "block";
+    meta.textContent = "Price history on record: " + d.history_sessions +
+      " trading days, " + fmtDate(d.history_from) + " to " +
+      fmtDate(d.history_to) + ". The last session in the history is " +
+      fmtDate(d.history_to) + ". Source: " + d.source + ".";
+    defText.textContent = d.definition;
+    var counts = {};
+    d.window_counts.forEach(function(c){ counts[c.sessions] = c; });
+    defShort.textContent = "A name needs at least one more close on record " +
+      "than the window it is measured over. For the 252-session window, " +
+      counts[252].ranked.toLocaleString("en-US") + " names have enough " +
+      "sessions behind them and " + counts[252].too_short + " do not; a " +
+      "name that is too short for a window shows as not on record for that " +
+      "window, listed under the table, rather than a figure worked out " +
+      "over fewer sessions. " + d.names_ended_early + " names stopped " +
+      "trading before the history's last session; their figures are dated " +
+      "to their own last session on their row.";
+    defEl.style.display = "block";
+    buildChoices();
+    picker.style.display = "block";
+    setWindow(WINDOW);
+    receiptEl.textContent = d.coverage;
+  }).catch(showMissing);
+})();
+</script>
+</body>
+</html>
