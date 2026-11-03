@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insider Wire: what company insiders bought and sold, in plain summaries</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0 0 8px}
+  .note p:last-child{margin-bottom:0}
+  .lookup{margin:0 0 18px}
+  .lookup label{font-size:15px;font-weight:600;display:block;margin:0 0 6px}
+  .lookup input{font-size:16px;padding:9px 12px;border:1px solid var(--line);
+        border-radius:10px;width:260px;max-width:100%;text-transform:uppercase}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .side{display:flex;flex-wrap:wrap;gap:6px 28px;margin:8px 0}
+  .side .lab{font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  .side .big{font-size:19px;font-weight:700}
+  .buy{color:var(--up)} .sell{color:var(--down)}
+  .facts{font-size:14.5px;color:var(--soft);margin:4px 0}
+  .facts strong{color:var(--ink);font-weight:600}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  table.trades{border-collapse:collapse;width:100%;margin:10px 0 4px;font-size:13.5px}
+  table.trades th{text-align:left;color:var(--faint);font-weight:600;
+    text-transform:uppercase;letter-spacing:.04em;font-size:12px;
+    border-bottom:1px solid var(--line);padding:4px 8px 4px 0}
+  table.trades td{border-bottom:1px solid var(--line);padding:4px 8px 4px 0;
+    color:var(--soft)}
+  table.trades td:first-child{color:var(--ink);white-space:nowrap}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Insider Wire</h1>
+    <p class="job">One job: show, for each name on record, what the people who run the company did with their own shares: each individual trade, who made it and when, with open-market buys and open-market sells kept separate.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the insider record&hellip;</p>
+
+  <section class="note">
+    <h2>What this page shows, in plain words</h2>
+    <p id="summary-note">Loading&hellip;</p>
+    <p id="cluster-note"></p>
+    <p id="reading-note"></p>
+  </section>
+
+  <div class="lookup">
+    <label for="pick">Look up a name</label>
+    <input id="pick" type="text" placeholder="Type a ticker, for example GO" autocomplete="off">
+  </div>
+  <p id="lookup-result" class="facts" hidden></p>
+
+  <main id="main"></main>
+
+  <footer>
+    <p id="receipt"></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var summaryNote = document.getElementById("summary-note");
+  var clusterNote = document.getElementById("cluster-note");
+  var readingNote = document.getElementById("reading-note");
+  var receiptEl = document.getElementById("receipt");
+  var pick = document.getElementById("pick");
+  var lookupResult = document.getElementById("lookup-result");
+  var allNames = [];
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtMoney(v){
+    return "$" + Number(v).toLocaleString("en-US",{maximumFractionDigits:0});
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function cardHTML(n, data){
+    if (n.state !== "summary" || !n.summary){
+      return '<section class="group"><h2>' + esc(n.symbol) + '</h2>' +
+        '<div class="nodata">Not on record: this name could not be matched to a ' +
+        'company record when the insider filings were gathered on ' +
+        esc(fmtDateLong(data.as_of)) + ', so it carries no insider summary. ' +
+        'That is an absence, not a zero: nothing here says its insiders bought ' +
+        'or sold nothing.</div></section>';
+    }
+    var s = n.summary;
+    var h = '<section class="group"><h2>' + esc(n.symbol) + '</h2>';
+    h += '<p class="receipt">Insider summary from filings filed ' +
+      esc(fmtDateLong(data.window_start)) + ' to ' + esc(fmtDateLong(data.as_of)) +
+      ' (the window on record) &middot; Latest filing on record: ' +
+      esc(fmtDateLong(s.latest_filing_date)) + '</p>';
+    h += '<div class="side">' +
+      '<div><span class="lab">Buys</span><br><span class="big buy">' + s.buys.count +
+      (s.buys.count === 1 ? ' buy' : ' buys') + '</span><br>' +
+      '<span class="facts">' + esc(fmtMoney(s.buys.value_usd)) + ' bought</span></div>' +
+      '<div><span class="lab">Sells</span><br><span class="big sell">' + s.sells.count +
+      (s.sells.count === 1 ? ' sell' : ' sells') + '</span><br>' +
+      '<span class="facts">' + esc(fmtMoney(s.sells.value_usd)) + ' sold</span></div></div>';
+    h += '<p class="facts"><strong>' + s.open_transactions + '</strong> open-market ' +
+      (s.open_transactions === 1 ? 'trade' : 'trades') + ' in the summary, out of ' +
+      '<strong>' + s.all_entries + '</strong> entries of every kind in the filings on ' +
+      'record. Entries that are not open-market buys or sells, such as grants and ' +
+      'option exercises, are counted only in that larger total.</p>';
+    if (s.reading_out_of_100 === null || s.reading_out_of_100 === undefined){
+      h += '<p class="facts">Reading: <strong>not enough on record</strong>. Fewer than ' +
+        'two open-market buys or sells are on record for this name, so no reading ' +
+        'out of 100 is shown.</p>';
+    } else {
+      h += '<p class="facts">Reading: <strong>' + esc(s.reading_out_of_100) +
+        ' out of 100</strong>, weighing the dollars bought against the dollars ' +
+        'sold above.</p>';
+    }
+    var cl = n.cluster;
+    if (cl && cl.state === "cluster_buying"){
+      h += '<p class="facts"><strong>Cluster buying flagged:</strong> ' +
+        esc(cl.insiders.length) + ' different insiders bought in the open market ' +
+        'between ' + esc(fmtDateLong(cl.window_start)) + ' and ' +
+        esc(fmtDateLong(cl.window_end)) + ' (' + esc(cl.purchases) +
+        (cl.purchases === 1 ? ' purchase' : ' purchases') + '): ' +
+        esc(cl.insiders.join(", ")) + '.</p>';
+    } else if (cl){
+      h += '<p class="facts">Cluster buying: <strong>checked, not flagged</strong>. ' +
+        'No 30-day window holds purchases by 3 or more different insiders for ' +
+        'this name.</p>';
+    }
+    var trades = n.trades || [];
+    if (trades.length){
+      h += '<table class="trades"><thead><tr><th>Day</th><th>Insider</th>' +
+        '<th>Role</th><th>Trade</th><th>Shares</th><th>Price</th></tr></thead><tbody>';
+      trades.forEach(function(t){
+        var kind = t.code === "P" ? "Buy" : (t.code === "S" ? "Sell" : "Code " + t.code);
+        h += '<tr><td>' + esc(t.date || "") + '</td><td>' + esc(t.insider || "") +
+          '</td><td>' + esc(t.role || "") + '</td><td>' + esc(kind) + '</td><td>' +
+          esc(Number(t.shares).toLocaleString("en-US")) + '</td><td>' +
+          esc(fmtMoney(t.price)) + '</td></tr>';
+      });
+      h += '</tbody></table>';
+    }
+    h += '</section>';
+    return h;
+  }
+  function render(data, filter){
+    var names = allNames.filter(function(n){
+      return !filter || n.symbol.indexOf(filter) === 0;
+    });
+    if (!names.length){
+      mainEl.innerHTML = '<div class="nodata">No name on this page starts with ' +
+        esc(filter) + '. The names on record are listed when the box is cleared.</div>';
+      return;
+    }
+    mainEl.innerHTML = names.map(function(n){ return cardHTML(n, data); }).join("");
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var names = data.names || [];
+      var totals = data.totals || {};
+      if (!names.length || !data.as_of || !data.window_start
+          || typeof totals.open_buys !== "number"){
+        meta.textContent = "";
+        summaryNote.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No insider summary has been ' +
+          'published yet. When the first gathered filings are stored, the ' +
+          'summaries appear here, one per name.</div>';
+        return;
+      }
+      allNames = names;
+      window.__data = data;
+      meta.textContent = "Gathered " + fmtDateLong(data.as_of) + ", from filings filed " +
+        fmtDateLong(data.window_start) + " to " + fmtDateLong(data.as_of) + ". Source: " +
+        data.source + ". Across the names on record: " + totals.open_buys +
+        " open-market buys and " + totals.open_sells + " open-market sells, kept separate.";
+      summaryNote.textContent = data.summary_note || "";
+      clusterNote.textContent = data.cluster_note || "";
+      readingNote.textContent = data.reading_note || "";
+      var r = data.receipt || {};
+      receiptEl.textContent = "Receipt: gathered " + fmtDateLong(r.gathered || data.as_of) +
+        ". Window: " + (r.window || data.window) + " (from " +
+        fmtDateLong(r.window_start || data.window_start) + "). Source: " +
+        (r.source || data.source) + ". Coverage: " + (r.coverage || data.coverage) + ".";
+      render(data, "");
+      pick.addEventListener("input", function(){
+        var q = pick.value.trim().toUpperCase();
+        lookupResult.hidden = true;
+        if (q){
+          var exact = allNames.filter(function(n){ return n.symbol === q; });
+          if (!exact.length && !allNames.some(function(n){ return n.symbol.indexOf(q) === 0; })){
+            lookupResult.hidden = false;
+            lookupResult.textContent = q + " is not on record: it is not one of the " +
+              totals.names_covered + " names checked when these filings were gathered, " +
+              "so it carries no insider summary here.";
+          }
+        }
+        render(data, q);
+      });
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The insider record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
