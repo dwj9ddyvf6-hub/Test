@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>State Analogue: past days most like today, and what the market did next</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .rule{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .rule h2{margin:0 0 8px;font-size:18px}
+  .rule p{margin:0 0 8px}
+  .rule p:last-child{margin-bottom:0}
+  .rule ul{margin:6px 0 8px;padding-left:20px}
+  .rule li{margin:5px 0}
+  .counter{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+           padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .counter h2{margin:0 0 6px;font-size:18px;color:var(--ink)}
+  .counter p{margin:0 0 6px}
+  .counter p:last-child{margin-bottom:0}
+  .counter strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .match{border-top:1px solid var(--line);padding:12px 0 6px}
+  .match .top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .match .when{font-weight:700;font-size:15.5px;white-space:nowrap}
+  .match .facts{margin-left:auto;font-size:14px;color:var(--soft);white-space:nowrap}
+  .match .facts strong{color:var(--ink)}
+  .match p{margin:4px 0;font-size:14.5px;color:var(--soft)}
+  .match p strong{color:var(--ink);font-weight:600}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  .dir-up{color:var(--up);font-weight:600}
+  .dir-down{color:var(--down);font-weight:600}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>State Analogue</h1>
+    <p class="job">One job: boil each trading day down to five measured readings, find the past days whose readings sat closest to today's, and show what the market did over the 21 trading days that followed those days.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the state record&hellip;</p>
+
+  <div id="counter" class="counter" hidden></div>
+  <main id="main"></main>
+
+  <section class="rule">
+    <h2>How a day is matched, in plain words</h2>
+    <p id="method">Loading the method&hellip;</p>
+    <p>The five readings that make up a day:</p>
+    <ul id="readings"></ul>
+  </section>
+
+  <footer>
+    <p>The history this tool matches against grows one trading day at a time, and a day's readings are stored only when they were really measured. When the count reaches the full number of days required, the matches and what followed them appear on this page in place of the count.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var counterEl = document.getElementById("counter");
+  var mainEl = document.getElementById("main");
+  var methodEl = document.getElementById("method");
+  var readingsEl = document.getElementById("readings");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function fmtPct(v){
+    var sign = v > 0 ? "+" : "";
+    return sign + Number(v).toFixed(2) + "%";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){ // YYYY-MM-DD in America/New_York
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5); // start from yesterday
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.session) bits.push("Trading day: " + fmtDateLong(r.session));
+    if (r.published_at_utc) bits.push("Published " + fmtTimestamp(r.published_at_utc));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+  function readingsList(readings, values){
+    return (readings || []).map(function(r, i){
+      var v = values && values[i];
+      var val = (v === null || v === undefined)
+        ? " <strong>Not on record yet.</strong>"
+        : " <strong>" + esc(v) + "</strong>";
+      return "<li><strong>" + esc(r.name) + ".</strong> " + esc(r.meaning) + val + "</li>";
+    }).join("");
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var counts = data.counts || {};
+      var recorded = counts.sessions_recorded;
+      var needed = counts.sessions_needed;
+      var remaining = counts.sessions_remaining;
+      if (typeof recorded !== "number" || typeof needed !== "number" || !data.as_of_session){
+        meta.textContent = "";
+        methodEl.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No state record has been published yet. ' +
+          'When the first day\'s readings are stored, the count appears here, and the ' +
+          'matches appear once enough days are on record.</div>';
+        return;
+      }
+      meta.textContent = "Freshest trading day on the record: " + fmtDateLong(data.as_of_session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+      methodEl.textContent = data.method || "";
+      readingsEl.innerHTML = readingsList(data.readings,
+        data.today ? data.today.values : null);
+
+      if (data.as_of_session < latestCompletedSession()){
+        showBanner("stale", "This record is out of date. Its freshest trading day is " +
+          fmtDateLong(data.as_of_session) + ", and a newer day has not been recorded yet. " +
+          "Treat it as the last recorded state, not today's.");
+      }
+
+      if (!data.floor_met){
+        counterEl.innerHTML = "<h2>The count toward the first matches</h2>" +
+          "<p><strong>" + recorded + " of the " + needed + " trading days</strong> of " +
+          "readings needed are on record so far, <strong>" + remaining + " to go</strong>.</p>" +
+          "<p>No matches are shown until all " + needed + " days are on record. A match " +
+          "drawn from fewer days would rest on too little history, so this page keeps the " +
+          "honest count instead of an answer the record cannot back yet.</p>";
+        counterEl.hidden = false;
+
+        var todayHTML = '<section class="group"><h2>Today\'s readings</h2>';
+        if (data.today && data.today.values){
+          todayHTML += '<p class="receipt">The freshest day\'s five readings, in plain words:</p>' +
+            '<div class="rule" style="border:none;padding:0;margin:0"><ul>' +
+            readingsList(data.readings, data.today.values) + '</ul></div>';
+        } else {
+          todayHTML += '<div class="nodata">Today\'s readings are not on record yet: no ' +
+            'trading day\'s readings have been stored so far, so there is nothing to match ' +
+            'today against and nothing to show here. When a day\'s readings are stored, ' +
+            'they appear here in plain words.</div>';
+        }
+        todayHTML += '<p class="receipt" style="margin-top:10px">Receipt: ' +
+          receiptLine(data.receipt) + '</p></section>';
+        mainEl.innerHTML = todayHTML;
+        return;
+      }
+
+      // Floor met: today's readings and the matched past days.
+      var matches = data.matches || [];
+      var h = '<section class="group"><h2>Today\'s readings</h2>' +
+        '<div class="rule" style="border:none;padding:0;margin:0"><ul>' +
+        readingsList(data.readings, data.today ? data.today.values : null) +
+        '</ul></div></section>';
+      h += '<section class="group"><h2>Past days most like today</h2>';
+      if (!matches.length){
+        h += '<div class="nodata">No matched days are on record for today.</div>';
+      } else {
+        h += '<p class="receipt">' + matches.length +
+          (matches.length === 1 ? ' matched day' : ' matched days') +
+          ', closest first.</p>';
+        h += matches.map(function(m){
+          var move = m.follow_move_pct;
+          var moveHTML = (move === null || move === undefined)
+            ? "What followed is not on record yet."
+            : 'Over the 21 trading days that followed, the market moved ' +
+              '<span class="' + (move >= 0 ? "dir-up" : "dir-down") + '">' +
+              fmtPct(move) + '</span> (of ' + m.follow_count + ' matched days with a ' +
+              'full 21 days after them).';
+          return '<div class="match"><div class="top">' +
+            '<span class="when">' + esc(fmtDateLong(m.session)) + '</span>' +
+            '<span class="facts">Similarity <strong>' + esc(m.similarity) +
+            '</strong></span></div><p>' + moveHTML + '</p></div>';
+        }).join("");
+      }
+      h += '<p class="receipt" style="margin-top:10px">Receipt: ' +
+        receiptLine(data.receipt) + '</p></section>';
+      mainEl.innerHTML = h;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The state record is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
