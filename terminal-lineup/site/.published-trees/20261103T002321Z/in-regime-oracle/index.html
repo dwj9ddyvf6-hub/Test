@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>In-Regime Oracle: whether a forecaster is about to have a good window</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.caution{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>In-Regime Oracle</h1>
+    <p class="job">One job: every Monday, stake a chance on whether each tracked group of forecasters is about to have a better next 21 trading days than its own last 126, using its own report card alone.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="As of the newest records, "+fmtShort(data.as_of)+". Source: "+data.source+".";
+    var h="";
+    h+='<section class="card"><h2>The idea</h2><p>'+esc(data.idea_words)+'</p></section>';
+
+    h+='<section class="card"><h2>How the chance is built</h2><p>'+esc(data.how_words)+'</p><p class="sub">'+esc(data.bar_words)+'</p></section>';
+
+    showBanner("caution", data.caution_words);
+
+    var c=data.census||{};
+    h+='<section class="card"><h2>The groups, and where each one stands</h2><p>'+esc(c.words)+'</p>';
+    h+='<table><tr><th>Group</th><th>Kind</th><th>Graded calls</th><th>State</th><th>Why</th></tr>';
+    (data.populations||[]).forEach(function(p){
+      h+='<tr><td>'+esc(p.name)+'<div class="sub">'+esc(p.detail_words)+'</div></td><td>'+esc(p.kind_words)+'</td><td><span class="count">'+esc(p.graded_calls)+'</span></td><td>'+esc(p.state_words)+'</td><td>'+esc(p.reason_words)+'</td></tr>';
+    });
+    h+='</table></section>';
+
+    h+='<section class="card"><h2>When chances are issued</h2><p>'+esc(data.cadence_words)+'</p><p>First issue: <strong>'+esc(fmtShort(data.first_issue_date))+'</strong>.</p></section>';
+
+    var lr=data.live_record||{};
+    h+='<section class="card"><h2>The live record</h2><p>'+esc(lr.words)+'</p><table><tr><th>Measure</th><th>Count</th></tr>'
+      +'<tr><td>Weekly windows issued</td><td>'+esc(lr.windows_issued)+'</td></tr>'
+      +'<tr><td>Windows graded so far</td><td>'+esc(lr.windows_graded)+' of '+esc(lr.target)+'</td></tr></table>'
+      +'<p class="sub">'+esc(data.thin_cell_words)+'</p></section>';
+
+    h+='<section class="card"><h2>What would retire this page</h2><p>'+esc(data.kill_words)+'</p><p class="sub">'+esc(data.proving_state)+': this page earns stronger words only from its own recorded results, never from anyone else\'s.</p></section>';
+
+    var st=data.self_test||{};
+    h+='<section class="card"><h2>The machinery, checked</h2><p class="sub">'+esc(st.words)+'</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","The newest record could not be loaded. Nothing on this page is estimated or filled in: when the record is missing, the page says so.");
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
