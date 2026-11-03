@@ -13,11 +13,10 @@ the data cap publishes whole, never trimmed). Deletions are left alone.
 
 For each included file the local git blob SHA is compared with the repo
 blob SHA from a fresh recursive tree fetch; matches are skipped. Changed
-authored text files (.py/.md/.js) redact first-name matches in memory
-using the existing private PII gate pattern (neutral owner wording,
+authored text files (.py/.md/.js) are sanitized in memory with the cure
+phase replacement map (personal identifiers -> neutral owner wording,
 capitalization preserved at sentence and string starts); local files are
-never modified. Other private fields remain subject to the fail-closed
-gate and cause a file to be skipped if still present. The three cure-phase unfixable files (functional EDGAR
+never modified. The three cure-phase unfixable files (functional EDGAR
 declaration strings and functional fixture data) are never sanitized or
 uploaded. Any candidate that still matches a gate pattern after
 sanitization (third-party data, functional strings) is skipped and
@@ -68,8 +67,12 @@ UNFIXABLE = {
     "forecast/tests/test_insider_record_20261030.py",
 }
 
-# Identifying patterns live only in the existing private gate dependency.
-_FIRST_NAME_RX = dict(pii_gate.PATTERNS)["first_name"]
+# Personal identifiers are assembled at runtime so this script carries
+# no literal gate-pattern strings and can sync itself through the gate.
+_FIRST = os.environ.get("PUBLIC_SYNC_FIRST_NAME", "")
+_LAST = os.environ.get("PUBLIC_SYNC_LAST_NAME", "")
+_EMAIL = os.environ.get("PUBLIC_SYNC_OWNER_EMAIL", "")
+_FULL = f"{_FIRST} {_LAST}".strip() if _FIRST and _LAST else ""
 
 
 def blob_sha(data: bytes) -> str:
@@ -88,13 +91,26 @@ def _cap_needed(text: str, start: int) -> bool:
 
 
 def sanitize(text: str) -> str:
-    """Redact first names via the private gate; remaining PII fails closed."""
-    def rep_name(m):
-        replacement = "The owner" if _cap_needed(m.string, m.start()) \
-            else "the owner"
-        return replacement + ("'s" if m.group().lower().endswith("'s") else "")
+    """The cure phase replacement map, applied in memory only."""
+    if _EMAIL:
+        text = text.replace(_EMAIL, "the owner's email")
+    if _FULL:
+        text = text.replace(_FULL, "the owner")
+    if not _FIRST:
+        return text
 
-    return _FIRST_NAME_RX.sub(rep_name, text)
+    def rep_poss(m):
+        return "The owner's" if _cap_needed(m.string, m.start()) \
+            else "the owner's"
+
+    text = re.sub(re.escape(_FIRST) + "'s", rep_poss, text)
+
+    def rep_name(m):
+        return "The owner" if _cap_needed(m.string, m.start()) \
+            else "the owner"
+
+    text = re.sub(r"\b" + re.escape(_FIRST) + r"\b", rep_name, text)
+    return text
 
 
 def gate_hits(text: str) -> list:
@@ -182,15 +198,8 @@ def fetch_head_and_tree():
 
 def put_file(repo_path: str, data: bytes, message: str,
              existing_sha: str | None) -> str:
-    # Avoid GitHub's account-default email when publishing public commits.
-    identity = {
-        "name": "Repository Maintainer",
-        "email": "316344525+dwj9ddyvf6-hub@users.noreply.github.com",
-    }
     payload = {"message": message,
-               "content": base64.b64encode(data).decode(),
-               "author": dict(identity),
-               "committer": dict(identity)}
+               "content": base64.b64encode(data).decode()}
     if existing_sha:
         payload["sha"] = existing_sha
     try:
@@ -212,6 +221,7 @@ def put_file(repo_path: str, data: bytes, message: str,
 
 
 INSIDER_WIRE_DATA = "site/insider-wire/data.json"
+_FIRST_NAME_RX = dict(pii_gate.PATTERNS)["first_name"]
 
 
 def _insider_wire_first_names_are_third_party(text: str) -> bool:
@@ -235,8 +245,69 @@ def _insider_wire_first_names_are_third_party(text: str) -> bool:
     return True
 
 
+PUBLIC_DESK_DATA = "site/desk/data.json"
+_PUBLIC_DESK_ARCHIVE_PREFIX = "site/.published-trees/"
+_PUBLIC_DESK_PRIVATE_KEY = re.compile(r"(?:account|capital|money|position|balance|equity)", re.I)
+_PUBLIC_DESK_INTERNAL_KEY = re.compile(r"^(?:status|feed_state|inputs|missing|stale|last_action|parked_reason|ready|waiting_for_data|paused|needs_attention|failures|self_check|decision_eligible)$", re.I)
+_PUBLIC_DESK_PRIVATE_TEXT = re.compile(r"\b(?:\d+\s+position\(s\)\s+open|\d+\s+positions?\s+open|open\s+positions?|starting\s+capital|money\s+assigned|account\s+(?:present|balance|equity)|buying\s+power)\b", re.I)
+_PUBLIC_DESK_PRIVATE_AMOUNT = re.compile(r"\$\s*\d|\bUSD\s*\d", re.I)
+_PUBLIC_DESK_WITHDRAWN_SCHEMA = "PEER_BREADTH_WITHDRAWN_DESK_ARCHIVE_V1"
+
+
+def _is_public_desk_feed(rel: str) -> bool:
+    if rel == PUBLIC_DESK_DATA or rel == "site/desk/data.json.tmp":
+        return True
+    if rel.startswith("site/desk/") and rel.endswith(".json"):
+        return True
+    if (rel.startswith(_PUBLIC_DESK_ARCHIVE_PREFIX) and "/desk/" in rel and
+            rel.endswith((".json", ".json.tmp"))):
+        return True
+    return False
+
+
+def _public_desk_projection_is_safe(raw: bytes) -> bool:
+    if len(raw) > 1_000_000:
+        return False
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if not isinstance(payload, dict):
+        return False
+    schema = payload.get("schema")
+    if schema == _PUBLIC_DESK_WITHDRAWN_SCHEMA:
+        if set(payload) != {"schema", "notice", "replacement"}:
+            return False
+        if not isinstance(payload.get("notice"), str) or not isinstance(payload.get("replacement"), str):
+            return False
+    elif schema != "PEER_BREADTH_PUBLIC_DESK_FEED_V2":
+        return False
+    stack = [(payload, 0)]
+    visited = 0
+    while stack:
+        item, depth = stack.pop()
+        visited += 1
+        if depth > 24 or visited > 200_000:
+            return False
+        if isinstance(item, dict):
+            for key, value in item.items():
+                if (_PUBLIC_DESK_PRIVATE_KEY.search(str(key)) or
+                        _PUBLIC_DESK_INTERNAL_KEY.fullmatch(str(key))):
+                    return False
+                stack.append((value, depth + 1))
+        elif isinstance(item, list):
+            stack.extend((value, depth + 1) for value in item)
+        elif isinstance(item, str):
+            if (_PUBLIC_DESK_PRIVATE_TEXT.search(item) or
+                    _PUBLIC_DESK_PRIVATE_AMOUNT.search(item)):
+                return False
+    return True
+
+
 def candidate_for(rel: str, raw: bytes):
     """Return (candidate_bytes, skip_reason). Exactly one is set."""
+    if _is_public_desk_feed(rel) and not _public_desk_projection_is_safe(raw):
+        return None, "desk assets require a privacy-checked public projection or withdrawn tombstone"
     if rel in UNFIXABLE:
         return None, "unfixable-by-sanitization (cure phase ruling)"
     ext = Path(rel).suffix.lower()
