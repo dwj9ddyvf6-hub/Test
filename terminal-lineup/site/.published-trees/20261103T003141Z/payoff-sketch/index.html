@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payoff Sketch: what an options position makes or loses at each price</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --up:#1d7a3a; --down:#b03a2e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card h2{margin:0 0 10px;font-size:20px}
+  label{font-size:13.5px;color:var(--soft);display:block;margin:0 0 3px}
+  input,select{font-size:15px;padding:7px 9px;border:1px solid var(--line);
+               border-radius:8px;background:#fff;color:var(--ink);width:100%}
+  .market{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  table{width:100%;border-collapse:collapse}
+  th{font-size:12.5px;color:var(--faint);text-align:left;font-weight:600;padding:0 6px 6px 0}
+  td{padding:0 6px 8px 0;vertical-align:top}
+  button{font-size:14px;font-weight:600;border:1px solid var(--accent);color:var(--accent);
+         background:#fff;border-radius:8px;padding:7px 14px;cursor:pointer}
+  button:disabled{opacity:.4;cursor:default}
+  button.remove{border-color:var(--line);color:var(--soft);padding:7px 10px}
+  .big{font-size:16.5px}
+  .big p{margin:0 0 8px}
+  .big p:last-child{margin-bottom:0}
+  .gain{color:var(--up);font-weight:700}
+  .loss{color:var(--down);font-weight:700}
+  .greeks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+  .greek{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .greek .name{font-size:14px;color:var(--soft);font-weight:600}
+  .greek .val{font-size:22px;font-weight:700;margin:2px 0}
+  .greek .means{font-size:13.5px;color:var(--soft);margin:0}
+  svg{width:100%;height:auto;display:block}
+  .small{font-size:13.5px;color:var(--faint)}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Payoff Sketch</h1>
+    <p class="job">Build any options position of up to four parts and see what it makes or loses at every stock price when it expires.</p>
+    <p class="free">Free: no paywall, no sign-up, no login, nothing for sale.</p>
+  </header>
+
+  <div class="card">
+    <h2>The stock right now</h2>
+    <div class="market">
+      <div><label for="spot">Stock price ($)</label>
+        <input id="spot" type="number" step="any" min="0" value="100"></div>
+      <div><label for="days">Days until the options expire</label>
+        <input id="days" type="number" step="any" min="0" value="30"></div>
+      <div><label for="vol">Volatility (%)</label>
+        <input id="vol" type="number" step="any" min="0" value="25"></div>
+    </div>
+    <p class="small">Volatility is how much the stock price usually swings, written as a yearly percent. If you are not sure, 25% is a middle-of-the-road guess for a large stock.</p>
+  </div>
+
+  <div class="card">
+    <h2>The parts of the position</h2>
+    <table aria-label="Position parts">
+      <thead><tr>
+        <th>Buy or sell</th><th>Call or put</th><th>Strike price ($)</th>
+        <th>Premium per share ($)</th><th>How many contracts</th><th></th>
+      </tr></thead>
+      <tbody id="legs"></tbody>
+    </table>
+    <button id="addLeg" type="button">Add another part</button>
+    <p class="small">Each contract covers 100 shares. The premium is what one share's worth of the option cost: money out if you buy, money in if you sell. A sample position is filled in so you can see how it works; change any number and the picture updates at once.</p>
+  </div>
+
+  <div class="card">
+    <h2>Profit and loss at expiry</h2>
+    <div id="chart"></div>
+    <p class="small">The line shows the whole position's profit or loss on the day the options expire, at each possible stock price. Dashed lines mark the break-even prices, where the position has made and lost nothing. The dotted line marks today's stock price.</p>
+  </div>
+
+  <div class="card big" id="summary"></div>
+
+  <div class="card">
+    <h2>What the position is worth today, and how it moves</h2>
+    <p class="big" id="valueLine"></p>
+    <div class="greeks" id="greeks"></div>
+    <p class="small">These four measures describe the whole position right now, at the stock price, days left, and volatility you entered above.</p>
+  </div>
+
+  <footer>
+    <p>These options are priced as European-style, valued at expiry: they count as settled only on the expiry day itself, with no early exercise. The today figures use the standard textbook pricing formula with a 4.5% interest rate and no dividends. Fees are not included.</p>
+    <p>Everything is worked out on this page, in your browser. Nothing you type is sent anywhere.</p>
+    <p><a href="../">Back to all the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* Pricing math: the standard Black-Scholes formulas, European-style.
+   Interest rate 4.5% a year, no dividends. Theta is per year in the
+   formula and shown per day; vega is per full (100-point) volatility
+   move in the formula and shown per 1 point. */
+var RATE = 0.045, DIV = 0.0, MULT = 100;
+var SQRT2 = Math.sqrt(2.0);
+
+function phi(x){ return Math.exp(-0.5*x*x)/Math.sqrt(2.0*Math.PI); }
+function ncdf(x){ return 0.5*(1.0+erf(x/SQRT2)); }
+function erf(x){
+  var s = x < 0 ? -1 : 1, ax = Math.abs(x);
+  var t = 1.0/(1.0+0.3275911*ax);
+  var y = 1.0 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - 0.284496736)*t + 0.254829592)*t*Math.exp(-ax*ax);
+  return s*y;
+}
+function d1(S,K,T,sig){
+  return (Math.log(S/K) + (RATE-DIV+0.5*sig*sig)*T)/(sig*Math.sqrt(T));
+}
+function bsOk(S,K,T,sig){ return S>0 && K>0 && sig>0 && T>0; }
+function bsPrice(S,K,T,sig,isCall){
+  if (T<=0 || sig<=0) return isCall ? Math.max(S-K,0) : Math.max(K-S,0);
+  var a=d1(S,K,T,sig), b=a-sig*Math.sqrt(T);
+  var q=Math.exp(-DIV*T), df=Math.exp(-RATE*T);
+  return isCall ? S*q*ncdf(a)-K*df*ncdf(b)
+                : K*df*ncdf(-b)-S*q*ncdf(-a);
+}
+function bsDelta(S,K,T,sig,isCall){
+  if (!bsOk(S,K,T,sig)) return 0;
+  var n=ncdf(d1(S,K,T,sig)), q=Math.exp(-DIV*T);
+  return isCall ? q*n : q*(n-1.0);
+}
+function bsGamma(S,K,T,sig){
+  if (!bsOk(S,K,T,sig)) return 0;
+  return phi(d1(S,K,T,sig))/(S*sig*Math.sqrt(T));
+}
+function bsTheta(S,K,T,sig,isCall){
+  if (!bsOk(S,K,T,sig)) return 0;
+  var a=d1(S,K,T,sig), b=a-sig*Math.sqrt(T);
+  var q=Math.exp(-DIV*T), df=Math.exp(-RATE*T);
+  var first=-S*q*phi(a)*sig/(2.0*Math.sqrt(T));
+  return isCall ? first - RATE*K*df*ncdf(b) + DIV*S*q*ncdf(a)
+                : first + RATE*K*df*ncdf(-b) - DIV*S*q*ncdf(-a);
+}
+function bsVega(S,K,T,sig){
+  if (!bsOk(S,K,T,sig)) return 0;
+  return S*Math.exp(-DIV*T)*phi(d1(S,K,T,sig))*Math.sqrt(T);
+}
+
+/* Expiry payoff: each part pays its value at expiry minus the premium
+   paid for it (or plus the premium received, when sold), times the
+   number of contracts times 100 shares. */
+function legSign(leg){ return leg.side === "buy" ? 1 : -1; }
+function pnlAt(legs, price){
+  var total=0;
+  for (var i=0;i<legs.length;i++){
+    var leg=legs[i];
+    var intrinsic = leg.type==="call" ? Math.max(price-leg.strike,0)
+                                      : Math.max(leg.strike-price,0);
+    total += legSign(leg)*(intrinsic-leg.premium)*leg.qty*MULT;
+  }
+  return total;
+}
+function slopeAbove(legs, price){
+  var s=0;
+  for (var i=0;i<legs.length;i++){
+    var leg=legs[i];
+    if (leg.type==="call" && price>=leg.strike) s += legSign(leg)*leg.qty*MULT;
+    else if (leg.type==="put" && price<leg.strike) s -= legSign(leg)*leg.qty*MULT;
+  }
+  return s;
+}
+function positionStats(legs){
+  var knotSet={0:true};
+  legs.forEach(function(l){ knotSet[l.strike]=true; });
+  var knots=Object.keys(knotSet).map(Number).sort(function(a,b){return a-b;});
+  var tailSlope=slopeAbove(legs, knots[knots.length-1]);
+  var atKnots=knots.map(function(k){ return [k, pnlAt(legs,k)]; });
+  var vals=atKnots.map(function(p){ return p[1]; });
+  var pts=atKnots.slice();
+  if (tailSlope!==0){
+    var reach=Math.max(knots[knots.length-1]*0.5, 100);
+    pts.push([knots[knots.length-1]+reach, pts[pts.length-1][1]+tailSlope*reach]);
+  }
+  var bes=[];
+  for (var i=0;i<pts.length-1;i++){
+    var x0=pts[i][0], y0=pts[i][1], x1=pts[i+1][0], y1=pts[i+1][1];
+    if (y0===0) bes.push(x0);
+    else if (y0*y1<0) bes.push(x0 - y0*(x1-x0)/(y1-y0));
+  }
+  if (pts[pts.length-1][1]===0) bes.push(pts[pts.length-1][0]);
+  bes = bes.map(function(b){ return Math.round(b*1e10)/1e10; })
+           .filter(function(b,i,a){ return a.indexOf(b)===i; })
+           .sort(function(a,b){return a-b;});
+  var netDebit=0;
+  legs.forEach(function(l){ netDebit += legSign(l)*l.premium*l.qty*MULT; });
+  return {
+    breakevens: bes,
+    maxPnl: tailSlope>0 ? null : Math.max.apply(null, vals),
+    minPnl: tailSlope<0 ? null : Math.min.apply(null, vals),
+    unboundedProfit: tailSlope>0,
+    unboundedLoss: tailSlope<0,
+    netDebit: netDebit
+  };
+}
+function positionGreeks(legs, S, T, sig){
+  var value=0, delta=0, gamma=0, theta=0, vega=0;
+  legs.forEach(function(l){
+    var isCall = l.type==="call", w = legSign(l)*l.qty*MULT;
+    value += w*bsPrice(S,l.strike,T,sig,isCall);
+    delta += w*bsDelta(S,l.strike,T,sig,isCall);
+    gamma += w*bsGamma(S,l.strike,T,sig);
+    theta += w*bsTheta(S,l.strike,T,sig,isCall)/365.0;
+    vega  += w*bsVega(S,l.strike,T,sig)/100.0;
+  });
+  return {value:value, delta:delta, gamma:gamma, theta:theta, vega:vega};
+}
+
+/* ---------- page ---------- */
+function num(id, fallback){
+  var v=parseFloat(document.getElementById(id).value);
+  return isFinite(v) ? v : fallback;
+}
+function money(v){
+  var a=Math.abs(v), s=a.toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:0});
+  if (Math.abs(a-Math.round(a))>0.004) s=a.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  return (v<0?"-$":"$")+s;
+}
+function price2(v){ return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function signed(v){
+  var a=Math.abs(v), s=a.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  return (v<0?"-$":"+$")+s;
+}
+
+var legsEl=document.getElementById("legs");
+function addLegRow(type, side, strike, premium, qty){
+  var tr=document.createElement("tr");
+  tr.innerHTML =
+    '<td><select class="l-side"><option value="buy">Buy</option><option value="sell">Sell</option></select></td>'+
+    '<td><select class="l-type"><option value="call">Call</option><option value="put">Put</option></select></td>'+
+    '<td><input class="l-strike" type="number" step="any" min="0"></td>'+
+    '<td><input class="l-premium" type="number" step="any" min="0"></td>'+
+    '<td><input class="l-qty" type="number" step="any" min="0"></td>'+
+    '<td><button type="button" class="remove" title="Remove this part">Remove</button></td>';
+  tr.querySelector(".l-type").value=type;
+  tr.querySelector(".l-side").value=side;
+  tr.querySelector(".l-strike").value=strike;
+  tr.querySelector(".l-premium").value=premium;
+  tr.querySelector(".l-qty").value=qty;
+  tr.querySelectorAll("input,select").forEach(function(el){ el.addEventListener("input", render); });
+  tr.querySelector(".remove").addEventListener("click", function(){
+    if (legsEl.rows.length>1){ tr.remove(); syncAdd(); render(); }
+  });
+  legsEl.appendChild(tr);
+  syncAdd();
+}
+function syncAdd(){
+  document.getElementById("addLeg").disabled = legsEl.rows.length>=4;
+}
+document.getElementById("addLeg").addEventListener("click", function(){
+  if (legsEl.rows.length<4){ addLegRow("call","buy",100,3,1); render(); }
+});
+function readLegs(){
+  var legs=[];
+  for (var i=0;i<legsEl.rows.length;i++){
+    var r=legsEl.rows[i];
+    var strike=parseFloat(r.querySelector(".l-strike").value);
+    var premium=parseFloat(r.querySelector(".l-premium").value);
+    var qty=parseFloat(r.querySelector(".l-qty").value);
+    legs.push({
+      type: r.querySelector(".l-type").value,
+      side: r.querySelector(".l-side").value,
+      strike: isFinite(strike)&&strike>0 ? strike : 0,
+      premium: isFinite(premium)&&premium>0 ? premium : 0,
+      qty: isFinite(qty)&&qty>0 ? qty : 0
+    });
+  }
+  return legs.filter(function(l){ return l.strike>0 && l.qty>0; });
+}
+
+function drawChart(legs, spot, stats){
+  var maxStrike=0;
+  legs.forEach(function(l){ maxStrike=Math.max(maxStrike,l.strike); });
+  var hi=Math.max(maxStrike*1.5, spot*1.2, 10);
+  var N=240, pts=[];
+  var yMin=Infinity, yMax=-Infinity;
+  for (var i=0;i<=N;i++){
+    var x=hi*i/N, y=pnlAt(legs,x);
+    pts.push([x,y]);
+    if (y<yMin) yMin=y; if (y>yMax) yMax=y;
+  }
+  if (yMin>0) yMin=0; if (yMax<0) yMax=0;
+  if (yMax-yMin<1){ yMax+=0.5; yMin-=0.5; }
+  var pad=(yMax-yMin)*0.08; yMax+=pad; yMin-=pad;
+  var W=960, H=420, L=78, R=16, T=16, B=40;
+  function X(x){ return L+(x/hi)*(W-L-R); }
+  function Y(y){ return T+(yMax-y)/(yMax-yMin)*(H-T-B); }
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Profit and loss chart at expiry">';
+  s+='<line x1="'+L+'" y1="'+Y(0)+'" x2="'+(W-R)+'" y2="'+Y(0)+'" stroke="#7c8b9d" stroke-width="1.5"/>';
+  s+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'" stroke="#dde4ec" stroke-width="1.5"/>';
+  [yMax-pad, 0, yMin+pad].forEach(function(v){
+    s+='<text x="'+(L-8)+'" y="'+(Y(v)+4)+'" text-anchor="end" font-size="13" fill="#4a5a6d">'+money(v)+'</text>';
+  });
+  [0, hi/2, hi].forEach(function(v){
+    s+='<text x="'+X(v)+'" y="'+(H-B+22)+'" text-anchor="middle" font-size="13" fill="#4a5a6d">'+price2(v)+'</text>';
+  });
+  s+='<text x="'+(W-R)+'" y="'+(H-4)+'" text-anchor="end" font-size="12.5" fill="#7c8b9d">stock price at expiry</text>';
+  if (spot>0 && spot<=hi){
+    s+='<line x1="'+X(spot)+'" y1="'+T+'" x2="'+X(spot)+'" y2="'+(H-B)+'" stroke="#0b5fa5" stroke-width="1.5" stroke-dasharray="2 4"/>';
+    s+='<text x="'+X(spot)+'" y="'+(T+12)+'" text-anchor="middle" font-size="12.5" fill="#0b5fa5">today '+price2(spot)+'</text>';
+  }
+  stats.breakevens.forEach(function(b){
+    if (b<=hi){
+      s+='<line x1="'+X(b)+'" y1="'+T+'" x2="'+X(b)+'" y2="'+(H-B)+'" stroke="#b03a2e" stroke-width="1.5" stroke-dasharray="6 4"/>';
+      s+='<circle cx="'+X(b)+'" cy="'+Y(0)+'" r="5" fill="#b03a2e"/>';
+      s+='<text x="'+X(b)+'" y="'+(H-B+22)+'" text-anchor="middle" font-size="13" font-weight="700" fill="#b03a2e">'+price2(b)+'</text>';
+    }
+  });
+  var d="";
+  pts.forEach(function(p,i){ d+=(i===0?"M":"L")+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1)+" "; });
+  s+='<path d="'+d+'" fill="none" stroke="#17202b" stroke-width="2.5"/>';
+  s+='</svg>';
+  document.getElementById("chart").innerHTML=s;
+}
+
+function render(){
+  var legs=readLegs();
+  var spot=Math.max(num("spot",0),0);
+  var days=Math.max(num("days",0),0);
+  var volPct=Math.max(num("vol",0),0);
+  var summary=document.getElementById("summary");
+  if (!legs.length){
+    summary.innerHTML="<p>Add at least one part with a strike price and a number of contracts to see the sketch.</p>";
+    document.getElementById("chart").innerHTML="";
+    document.getElementById("valueLine").textContent="";
+    document.getElementById("greeks").innerHTML="";
+    return;
+  }
+  var stats=positionStats(legs);
+  drawChart(legs, spot, stats);
+  var lines=[];
+  if (stats.unboundedProfit) lines.push('<p>Most you can make: <span class="gain">unlimited</span>. The higher the stock goes, the more this position makes, with no cap.</p>');
+  else lines.push('<p>Most you can make: <span class="gain">'+money(stats.maxPnl)+'</span>.</p>');
+  if (stats.unboundedLoss) lines.push('<p>Most you can lose: <span class="loss">unlimited</span>. The further the stock moves against this position, the more it loses, with no floor.</p>');
+  else lines.push('<p>Most you can lose: <span class="loss">'+money(Math.abs(stats.minPnl))+'</span>.</p>');
+  if (stats.breakevens.length){
+    lines.push("<p>Break-even at expiry: <strong>"+stats.breakevens.map(price2).join("</strong> and <strong>")+"</strong>. At "+(stats.breakevens.length>1?"those prices":"that price")+" the position has made and lost nothing.</p>");
+  } else {
+    lines.push("<p>There is no break-even price: at expiry this position is on the same side of zero at every stock price.</p>");
+  }
+  if (stats.netDebit>0) lines.push("<p>Setting it up costs <strong>"+money(stats.netDebit)+"</strong> before fees: that is the premiums paid minus the premiums received.</p>");
+  else if (stats.netDebit<0) lines.push("<p>Setting it up brings in <strong>"+money(-stats.netDebit)+"</strong> before fees: that is the premiums received minus the premiums paid.</p>");
+  else lines.push("<p>Setting it up costs nothing in premiums: what you pay and what you receive cancel out.</p>");
+  lines.push('<p class="small">If it expired right now, at today\'s stock price of '+price2(spot)+', this position would settle for <strong>'+money(pnlAt(legs,spot))+'</strong>. The full picture at expiry is the chart above.</p>');
+  summary.innerHTML=lines.join("");
+
+  var T=days/365.0, sig=volPct/100.0;
+  var g=positionGreeks(legs, spot, T, sig);
+  document.getElementById("valueLine").innerHTML=
+    "Value today: <strong>"+money(g.value)+"</strong>. That is what the whole position is worth on these numbers. A minus sign means closing it would cost that much.";
+  var cards=[
+    ["Delta", signed(g.delta), "How much the position's value changes if the stock moves $1, before anything else changes."],
+    ["Gamma", signed(g.gamma), "How much the delta itself changes if the stock moves $1. Big gamma means the position speeds up or slows down fast."],
+    ["Theta", signed(g.theta), "How much the position's value changes as one day passes, if nothing else moves. Usually a cost for buyers, a gain for sellers."],
+    ["Vega", signed(g.vega), "How much the position's value changes if volatility moves 1 point, if nothing else moves."]
+  ];
+  document.getElementById("greeks").innerHTML=cards.map(function(c){
+    return '<div class="greek"><div class="name">'+c[0]+'</div><div class="val">'+c[1]+'</div><p class="means">'+c[2]+'</p></div>';
+  }).join("");
+}
+
+["spot","days","vol"].forEach(function(id){
+  document.getElementById(id).addEventListener("input", render);
+});
+/* Sample position loaded on first open: buy the $100 call for $3.00,
+   sell the $110 call for $1.00. A classic bet that the stock rises
+   a little: at most $800 made, at most $200 lost, break-even $102. */
+addLegRow("call","buy",100,3,1);
+addLegRow("call","sell",110,1,1);
+render();
+</script>
+</body>
+</html>
