@@ -5,17 +5,18 @@ Mirrors the included-file set of the original one-time save: site/**,
 forecast/** (minus the live ledger), specs/**, oracle/**, records/**,
 root Markdown files and root workflow scripts, under the repo prefix
 terminal-lineup/. Excluded: the deep_store and psychology-engine trees,
-caches, log files, lane state, runtime artifacts, data.json files over
-5 MB, and any file over 5 MB. Deletions are left alone.
+caches, log files, lane state, runtime artifacts, and any file over
+5 MB, except data.json, whose cap is 50 MB (R3 cure, 2026-11-02: the
+5 MB cap silently unpublished eight pages whose subject IS their
+data.json; the pages fetch that file by name, so a data.json under
+the data cap publishes whole, never trimmed). Deletions are left alone.
 
 For each included file the local git blob SHA is compared with the repo
 blob SHA from a fresh recursive tree fetch; matches are skipped. Changed
-authored text files (.py/.md/.js) redact first-name matches in memory
-using the existing private PII gate pattern (neutral owner wording,
+authored text files (.py/.md/.js) are sanitized in memory with the cure
+phase replacement map (personal identifiers -> neutral owner wording,
 capitalization preserved at sentence and string starts); local files are
-never modified. Other private fields, including surnames and email
-addresses, remain subject to the fail-closed gate and cause a file to be
-skipped if still present. The three cure-phase unfixable files (functional EDGAR
+never modified. The three cure-phase unfixable files (functional EDGAR
 declaration strings and functional fixture data) are never sanitized or
 uploaded. Any candidate that still matches a gate pattern after
 sanitization (third-party data, functional strings) is skipped and
@@ -27,7 +28,8 @@ around. One proof line is appended to the sync log per run.
 
 Usage: python3 sync_to_test.py [--dry-run]
 Exit codes: 0 clean (gate-blocked skips are a logged, expected state),
-2 truncated tree, 3 hard API error (including 403/429 rate stops).
+2 truncated tree, 3 hard API error (including 403/429 rate stops),
+4 zero-byte guard refusal (nothing published, file named).
 """
 
 from __future__ import annotations
@@ -57,6 +59,7 @@ PREFIX = "terminal-lineup/"
 SYNC_LOG = Path(os.path.expanduser(
     "~/workspace/research_notes/test-repo-index-20261031/SYNC-LOG.md"))
 FIVE_MB = 5 * 1024 * 1024
+DATA_JSON_CAP = 50 * 1024 * 1024  # R3 cure: see header docstring
 AUTHORED_EXTS = {".py", ".md", ".js"}
 UNFIXABLE = {
     "site/build_xbrl_route.py",
@@ -64,8 +67,12 @@ UNFIXABLE = {
     "forecast/tests/test_insider_record_20261030.py",
 }
 
-# Identifying patterns live only in the existing private gate dependency.
-_FIRST_NAME_RX = dict(pii_gate.PATTERNS)["first_name"]
+# Personal identifiers are assembled at runtime so this script carries
+# no literal gate-pattern strings and can sync itself through the gate.
+_FIRST = os.environ.get("PUBLIC_SYNC_FIRST_NAME", "")
+_LAST = os.environ.get("PUBLIC_SYNC_LAST_NAME", "")
+_EMAIL = os.environ.get("PUBLIC_SYNC_OWNER_EMAIL", "")
+_FULL = f"{_FIRST} {_LAST}".strip() if _FIRST and _LAST else ""
 
 
 def blob_sha(data: bytes) -> str:
@@ -84,17 +91,55 @@ def _cap_needed(text: str, start: int) -> bool:
 
 
 def sanitize(text: str) -> str:
-    """Redact first names via the private gate; remaining PII fails closed."""
-    def rep_name(m):
-        replacement = "The owner" if _cap_needed(m.string, m.start()) \
-            else "the owner"
-        return replacement + ("'s" if m.group().lower().endswith("'s") else "")
+    """The cure phase replacement map, applied in memory only."""
+    if _EMAIL:
+        text = text.replace(_EMAIL, "the owner's email")
+    if _FULL:
+        text = text.replace(_FULL, "the owner")
+    if not _FIRST:
+        return text
 
-    return _FIRST_NAME_RX.sub(rep_name, text)
+    def rep_poss(m):
+        return "The owner's" if _cap_needed(m.string, m.start()) \
+            else "the owner's"
+
+    text = re.sub(re.escape(_FIRST) + "'s", rep_poss, text)
+
+    def rep_name(m):
+        return "The owner" if _cap_needed(m.string, m.start()) \
+            else "the owner"
+
+    text = re.sub(r"\b" + re.escape(_FIRST) + r"\b", rep_name, text)
+    return text
 
 
 def gate_hits(text: str) -> list:
     return [name for name, rx in pii_gate.PATTERNS if rx.search(text)]
+
+
+def zero_byte_violations(changed: list, repo_sizes: dict) -> list:
+    """Zero-byte publish guard (HUB-BLANK-20261102 cure).
+
+    changed is [(rel, candidate_bytes)]; repo_sizes maps repo path
+    -> current blob size. Returns one named violation per candidate
+    that must never be published: (a) any zero-byte .html page file
+    outright, and (b) any zero-byte file whose repo version is
+    non-empty (a shrink-to-zero of published content). On
+    2026-11-02 a writer killed mid-write truncated the hub to
+    0 bytes and the unguarded sync published the empty file."""
+    violations = []
+    for rel, cand in changed:
+        if len(cand) != 0:
+            continue
+        if rel.lower().endswith(".html"):
+            violations.append(
+                f"{rel}: zero-byte .html page refused outright")
+        elif repo_sizes.get(PREFIX + rel, 0) > 0:
+            violations.append(
+                f"{rel}: zero-byte candidate would shrink the "
+                f"non-empty repo version "
+                f"({repo_sizes[PREFIX + rel]} bytes) to zero")
+    return violations
 
 
 def included_files() -> list:
@@ -112,6 +157,8 @@ def included_files() -> list:
                 continue
             if p.suffix == ".log":
                 continue
+            if p.name.endswith(".atomic-tmp"):
+                continue  # refresh_hub atomic-write temp, never publish
             if p.name == "lane_state.json":
                 continue
             if p.name in (".live-server.pid", "live-server.log",
@@ -119,9 +166,9 @@ def included_files() -> list:
                 continue
             if rel == "forecast/ledger.jsonl":
                 continue
-            if p.name == "data.json" and size > FIVE_MB:
+            if p.name == "data.json" and size > DATA_JSON_CAP:
                 continue
-            if size > FIVE_MB:
+            if p.name != "data.json" and size > FIVE_MB:
                 continue
             included.append(rel)
 
@@ -151,8 +198,15 @@ def fetch_head_and_tree():
 
 def put_file(repo_path: str, data: bytes, message: str,
              existing_sha: str | None) -> str:
+    # Avoid GitHub's account-default email when publishing public commits.
+    identity = {
+        "name": "Repository Maintainer",
+        "email": "316344525+dwj9ddyvf6-hub@users.noreply.github.com",
+    }
     payload = {"message": message,
-               "content": base64.b64encode(data).decode()}
+               "content": base64.b64encode(data).decode(),
+               "author": dict(identity),
+               "committer": dict(identity)}
     if existing_sha:
         payload["sha"] = existing_sha
     try:
@@ -173,8 +227,80 @@ def put_file(repo_path: str, data: bytes, message: str,
     return resp.get("content", {}).get("sha")
 
 
+INSIDER_WIRE_DATA = "site/insider-wire/data.json"
+_FIRST_NAME_RX = dict(pii_gate.PATTERNS)["first_name"]
+
+
+def _insider_wire_first_names_are_third_party(text: str) -> bool:
+    """True only when every first_name occurrence in the insider-wire
+    data sits inside a multiword proper name (a capitalised name token
+    adjacent within the same quoted string), i.e. a third-party
+    insider's full name on a public SEC filing, never a standalone
+    reference. Any other shape fails closed."""
+    for m in _FIRST_NAME_RX.finditer(text):
+        lo = text.rfind('"', 0, m.start())
+        hi = text.find('"', m.end())
+        if lo < 0 or hi < 0:
+            return False
+        value = text[lo + 1:hi]
+        tokens = [t for t in re.split(r"[^A-Za-z.'-]+", value) if t]
+        if len(tokens) < 2:
+            return False
+        if not any(t[0].isupper() and not _FIRST_NAME_RX.search(t)
+                   for t in tokens):
+            return False
+    return True
+
+
+PUBLIC_DESK_DATA = "site/desk/data.json"
+_PUBLIC_DESK_ARCHIVE_PREFIX = "site/.published-trees/"
+_PUBLIC_DESK_PRIVATE_KEY = re.compile(r"(?:account|capital|money|position|balance|equity)", re.I)
+_PUBLIC_DESK_INTERNAL_KEY = re.compile(r"^(?:status|feed_state|inputs|missing|stale|last_action|parked_reason|ready|waiting_for_data|paused|needs_attention|failures|self_check|decision_eligible)$", re.I)
+_PUBLIC_DESK_PRIVATE_TEXT = re.compile(r"\b(?:\d+\s+position\(s\)\s+open|\d+\s+positions?\s+open|open\s+positions?|starting\s+capital|money\s+assigned|account\s+(?:present|balance|equity)|buying\s+power)\b", re.I)
+_PUBLIC_DESK_PRIVATE_AMOUNT = re.compile(r"\$\s*\d|\bUSD\s*\d", re.I)
+
+
+def _is_public_desk_feed(rel: str) -> bool:
+    return (rel == PUBLIC_DESK_DATA or
+            (rel.startswith(_PUBLIC_DESK_ARCHIVE_PREFIX) and
+             rel.endswith("/desk/data.json")))
+
+
+def _public_desk_projection_is_safe(raw: bytes) -> bool:
+    if len(raw) > 1_000_000:
+        return False
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    if not isinstance(payload, dict) or payload.get("schema") != "PEER_BREADTH_PUBLIC_DESK_FEED_V2":
+        return False
+    stack = [(payload, 0)]
+    visited = 0
+    while stack:
+        item, depth = stack.pop()
+        visited += 1
+        if depth > 24 or visited > 200_000:
+            return False
+        if isinstance(item, dict):
+            for key, value in item.items():
+                if (_PUBLIC_DESK_PRIVATE_KEY.search(str(key)) or
+                        _PUBLIC_DESK_INTERNAL_KEY.fullmatch(str(key))):
+                    return False
+                stack.append((value, depth + 1))
+        elif isinstance(item, list):
+            stack.extend((value, depth + 1) for value in item)
+        elif isinstance(item, str):
+            if (_PUBLIC_DESK_PRIVATE_TEXT.search(item) or
+                    _PUBLIC_DESK_PRIVATE_AMOUNT.search(item)):
+                return False
+    return True
+
+
 def candidate_for(rel: str, raw: bytes):
     """Return (candidate_bytes, skip_reason). Exactly one is set."""
+    if _is_public_desk_feed(rel) and not _public_desk_projection_is_safe(raw):
+        return None, "desk feed requires a privacy-checked V2 public projection"
     if rel in UNFIXABLE:
         return None, "unfixable-by-sanitization (cure phase ruling)"
     ext = Path(rel).suffix.lower()
@@ -189,8 +315,19 @@ def candidate_for(rel: str, raw: bytes):
             if hits:
                 return None, f"gate patterns remain after sanitization: {hits}"
             return cand.encode("utf-8"), None
-    hits = gate_hits(raw.decode("utf-8", errors="replace"))
+    text = raw.decode("utf-8", errors="replace")
+    hits = gate_hits(text)
     if hits:
+        # Eighth one-file gate exception (pii_gate.FILE_EXCEPTIONS,
+        # 2026-11-02): insider-wire's data.json is third-party public
+        # SEC Form 4 data whose only hit is first_name, each time as
+        # part of a third-party insider's full name. The waiver here
+        # mirrors the gate's: this exact file, first_name only, and
+        # only while every occurrence is a multiword proper name and
+        # no other pattern hits. Anything else still skips.
+        if (rel == INSIDER_WIRE_DATA and hits == ["first_name"]
+                and _insider_wire_first_names_are_third_party(text)):
+            return raw, None
         return None, f"gate patterns in non-authored file: {hits}"
     return raw, None
 
@@ -232,6 +369,18 @@ def main(argv=None) -> int:
                 continue
             changed.append((rel, cand))
 
+        # Zero-byte guard (HUB-BLANK-20261102): checked over the
+        # whole changed set BEFORE any upload, so a refused publish
+        # publishes nothing and fails loud with the file named.
+        repo_sizes = {p: e.get("size", 0) for p, e in blobs.items()}
+        violations = zero_byte_violations(changed, repo_sizes)
+        if violations:
+            for v in violations:
+                print(f"GUARD REFUSAL: {v}", flush=True)
+            summary["guard_violations"] = violations
+            print(json.dumps(summary, indent=1))
+            return 4
+
         print(f"census: {len(changed)} changed, "
               f"{summary['skipped_unchanged']} unchanged, "
               f"{len(summary['skipped_gate'])} gate-skipped", flush=True)
@@ -269,6 +418,10 @@ def main(argv=None) -> int:
         for repo_path, data, key in (
                 ("INDEX.json", idx_json, "index_json"),
                 ("INDEX.md", idx_md, "index_md")):
+            if len(data) == 0:
+                print(f"GUARD REFUSAL: {repo_path}: zero-byte "
+                      f"generated index refused", flush=True)
+                return 4
             if repo_shas2.get(repo_path) == blob_sha(data):
                 summary[key] = "unchanged"
                 continue
