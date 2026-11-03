@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calibration League: predicting how honest each forecaster's confidence is about to be</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.caution{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:20px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Calibration League</h1>
+    <p class="job">One job: predict, a month ahead, how far each forecaster's stated confidence is about to miss what actually happens, and be graded on the prediction.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>\"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  function sgn(x){return (x>0?"+":"")+Number(x).toFixed(1);}
+  function pct(x){return x==null?"\u2014":Number(x).toFixed(1)+"%";}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="As of the newest records, "+fmtShort(data.as_of)+". Source: "+data.source+".";
+    var h="";
+    h+='<section class="card"><h2>The idea</h2><p>'+esc(data.idea_words)+'</p></section>';
+
+    h+='<section class="card"><h2>The one measure</h2><p>'+esc(data.error_words)+'</p><p class="sub">'+esc(data.how_words)+'</p></section>';
+
+    showBanner("caution", data.round_state_words);
+
+    h+='<section class="card"><h2>The entrants, and the coming November round</h2>'
+      +'<p>The error so far is measured from each entrant\'s own published history, with the count behind it printed. The coming range is the range this page will stake on that entrant\'s error over its next 60 graded forecasts: not staked yet, written to the public record at the close of '+esc(fmtShort(data.first_decision_as_of))+'.</p>'
+      +'<table><tr><th>Entrant and its stated claim</th><th>Error so far</th><th>Coming range for its next-60 error</th><th>Standing</th></tr>';
+    (data.entrants||[]).forEach(function(e){
+      var meas;
+      if(e.id==="vendor_band"||e.id==="vendor_pop"){
+        meas='From the earlier study that measured it: said '+pct(e.stated_pct)+', it happened '+pct(e.realised_pct)+', an error of <span class="count">'+sgn(e.error_pts)+' points</span>.';
+        if(e.id==="vendor_pop") meas='From the earlier study that measured it: said '+pct(e.stated_pct)+', it happened between 87.6% and 90.3% of the time, running 12 to 15 points low; the league carries the middle of that, <span class="count">+13.5 points</span>.';
+      } else if(e.prior_based){
+        meas='No graded forecast anywhere yet. The earlier study of its method measured said '+pct(e.stated_pct)+' against '+pct(e.realised_pct)+' happening, an error of <span class="count">'+sgn(e.error_pts)+' points</span>, and that starting figure is what its range is built on.';
+      } else if(!e.forecastable){
+        meas='No graded forecast anywhere: the count behind its error so far is <span class="count">0</span>, and no earlier study supplies a starting figure for its method.';
+      } else {
+        meas='Over '+Number(e.graded_count).toLocaleString("en-US")+' graded forecasts in its published history: it said '+pct(e.stated_pct)+' on average, it happened '+pct(e.realised_pct)+' of the time, an error of <span class="count">'+sgn(e.error_pts)+' points</span>.';
+      }
+      if(e.live_recorded!=null) meas+='<div class="sub">In the live public record: '+e.live_recorded+' forecasts recorded, '+e.live_graded+' graded so far.</div>';
+      var iv;
+      if(e.interval){
+        iv='Its error is predicted to land between <strong>'+sgn(e.interval.err_low_pts)+' and '+sgn(e.interval.err_high_pts)+' points</strong> (that is, its event happening between '+pct(e.interval.rate_low_pct)+' and '+pct(e.interval.rate_high_pct)+' of the time), a range '+Number(e.interval.width_pts).toFixed(1)+' points wide.';
+      } else {
+        iv='<strong>No range staked for this round.</strong> It is listed openly with its count of zero, never dropped quietly.';
+      }
+      h+='<tr><td><strong>'+esc(e.name)+'</strong><div class="sub">'+esc(e.claim_words)+'</div><div class="sub">Kind of evidence: '+esc(e.family_words)+'.</div></td>'
+        +'<td>'+meas+'</td><td>'+iv+'</td><td>'+esc(e.eligibility_words)+'</td></tr>';
+    });
+    h+='</table></section>';
+
+    h+='<section class="card"><h2>The predicted ranking</h2><p>'+esc(data.ranking_words)+'</p>'
+      +'<p>By kind of evidence, counted once each: <strong>'+(data.family_ranking||[]).map(function(f){return esc(f.family_words)+" (middle predicted error "+sgn(f.median_abs_error_pts).replace("+","")+" points)";}).join(", ")+'</strong>.</p>'
+      +'<p>Entrant by entrant, smallest predicted error first: <strong>'+(data.ranking_names||[]).map(function(n,i){return (i+1)+". "+esc(n);}).join(", ")+'</strong>. The Per-Name Self-Analogue is unranked: no range is staked for it this round. When the 60s land, this ranking is graded by how well its order matches the real order.</p></section>';
+
+    var lr=data.live_record||{};
+    h+='<section class="card"><h2>The monthly rounds</h2><p>'+esc(data.cadence_words)+'</p>'
+      +'<p>First issue: the November 2026 round, written to the record before the month opens on <strong>'+esc(fmtShort(data.first_issue_date))+'</strong>.</p></section>';
+
+    h+='<section class="card"><h2>This league\'s own live record</h2><p>'+esc(lr.words)+'</p>'
+      +'<table><tr><th>Measure</th><th>Count</th></tr>'
+      +'<tr><td>Monthly rounds issued</td><td>'+esc(lr.rounds_issued)+' of '+esc(lr.target_rounds)+'</td></tr>'
+      +'<tr><td>Ranges recorded in the public record</td><td>'+esc(lr.league_forecasts_recorded)+'</td></tr>'
+      +'<tr><td>Ranges graded so far</td><td>'+esc(lr.intervals_graded)+'</td></tr></table>'
+      +'<p class="sub">'+esc(data.thin_cell_words)+'</p></section>';
+
+    h+='<section class="card"><h2>What would retire this page</h2><p>'+esc(data.kill_words)+'</p><p class="sub">'+esc(data.proving_state)+': this page earns stronger words only from its own recorded results, never from anyone else\'s.</p></section>';
+
+    var st=data.self_test||{};
+    h+='<section class="card"><h2>The machinery, checked</h2><p class="sub">Before this page published, its whole path was run end to end on made-up records in a throwaway copy of the public record: a made-up entrant with 60 graded forecasts (40 of 60 landing inside its band) produced the exact error the arithmetic promises ('+sgn(st.synthetic_realised_error_pts)+' points), the league\'s ranges and ranking were written and then graded there, and the live record was checked untouched afterwards.</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","The newest record could not be loaded. Nothing on this page is estimated or filled in: when the record is missing, the page says so.");
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
