@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pattern Draw: the recorded pattern labels, drawn on the chart</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+    --prove-bg:#f3eefb; --prove-line:#c9b8ec; --prove-ink:#4a3572;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .prove{background:var(--prove-bg);border:1px solid var(--prove-line);color:var(--prove-ink);
+       border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px}
+  .prove strong{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .picker{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:16px 20px;margin:0 0 16px;font-size:15.5px}
+  .picker label{font-weight:600;margin-right:8px}
+  .picker input[type=text]{font-size:16px;padding:6px 10px;border:1px solid var(--line);
+               border-radius:8px;background:#fff;color:var(--ink);width:10em;
+               text-transform:uppercase}
+  .picker button.go{font-size:15px;padding:7px 16px;border:1px solid var(--accent);
+    border-radius:8px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  .picker .note{margin:10px 0 0;font-size:14.5px;color:var(--soft)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card h2{margin:0 0 6px;font-size:22px}
+  .card p{margin:4px 0;font-size:15.5px;color:var(--soft)}
+  .card p strong{color:var(--ink)}
+  .tag{display:inline-block;background:#eef4fb;border:1px solid #bcd4ee;color:#23405e;
+       border-radius:999px;padding:1px 9px;font-size:13px;margin:1px 2px 1px 0;white-space:nowrap}
+  .tag.shape{background:#fdf3e0;border-color:#e8c57c;color:#6b4e12}
+  .tag.failed{background:#fdeeec;border-color:#e5a49c;color:#7a2a20}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .chartbox{overflow-x:auto}
+  svg.chart{min-width:640px;width:100%;height:auto;display:block}
+  .legend{font-size:13.5px;color:var(--soft);margin:8px 0 0}
+  .legend span{margin-right:14px;white-space:nowrap}
+  .sw{display:inline-block;width:18px;height:0;border-top:3px solid #17202b;vertical-align:middle;margin-right:5px}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#0b5fa5;vertical-align:middle;margin-right:5px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  .scroll{overflow-x:auto}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Pattern Draw</h1>
+    <p class="job">One job: pick a stock and see its recorded pattern labels drawn on its daily closing-price chart, each label sitting on the session it was recorded for.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <div id="prove" class="prove" style="display:none"></div>
+  <p id="meta" class="meta">Loading the records&hellip;</p>
+
+  <div class="def" id="defbox" style="display:none"></div>
+
+  <div class="picker">
+    <form id="pickform">
+      <label for="sym">Stock:</label>
+      <input id="sym" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Like SPY" maxlength="12" list="names">
+      <datalist id="names"></datalist>
+      <button class="go" type="submit">Draw it</button>
+    </form>
+    <p class="note">The chart and its markers are drawn in your browser from the records this page carries. The name you pick stays in this browser and is never sent anywhere.</p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var proveEl = document.getElementById("prove");
+  var meta = document.getElementById("meta");
+  var defEl = document.getElementById("defbox");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var form = document.getElementById("pickform");
+  var symInput = document.getElementById("sym");
+  var namesEl = document.getElementById("names");
+  var DATA = null;
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"long", day:"numeric",
+      year:"numeric", timeZone:"UTC"});
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function labelWord(lab){
+    if (lab === "2u") return "2-up";
+    if (lab === "2d") return "2-down";
+    return String(lab);
+  }
+
+  // The whole drawing, worked out from the shipped records only.
+  // One marker per recorded label, at that label's own session:
+  // the marker's date, label and closing price all come out of
+  // this function, and no marker is made for a session the
+  // record does not cover or past the freshest recorded session.
+  function computeDraw(data, sym){
+    var entry = data.bars && data.bars[sym];
+    if (!entry) return {state:"not-on-record", symbol:sym};
+    var start = entry[0], closes = entry[1];
+    var dates = [];
+    for (var i = 0; i < closes.length; i++) dates.push(data.dates[start + i]);
+    var rec = (data.labels && data.labels[sym]) || null;
+    var markers = [];
+    if (rec && rec.sequence){
+      var pos = {};
+      dates.forEach(function(d, i){ pos[d] = i; });
+      rec.sequence.forEach(function(s){
+        if (!(s.date in pos)) return;
+        if (s.date > data.session) return;
+        var i = pos[s.date];
+        markers.push({date:s.date, label:s.label, index:i, close:closes[i]});
+      });
+    }
+    return {
+      state:"ok", symbol:sym, sessions:closes.length,
+      firstDate:dates[0], lastDate:dates[dates.length - 1],
+      lastClose:closes[closes.length - 1],
+      closes:closes, dates:dates,
+      record:rec, markers:markers,
+      labelled: !!rec
+    };
+  }
+
+  function chartSvg(r){
+    var W = 960, H = 360, PL = 8, PR = 70, PT = 30, PB = 24;
+    var iw = W - PL - PR, ih = H - PT - PB;
+    var lo = Math.min.apply(null, r.closes), hi = Math.max.apply(null, r.closes);
+    var pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad;
+    var n = r.closes.length;
+    function X(i){ return PL + (n === 1 ? iw / 2 : iw * i / (n - 1)); }
+    function Y(v){ return PT + ih * (hi - v) / (hi - lo); }
+    var d = "";
+    for (var i = 0; i < n; i++){
+      d += (i ? " L" : "M") + X(i).toFixed(1) + " " + Y(r.closes[i]).toFixed(1);
+    }
+    var s = '<svg class="chart" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Chart of daily closing prices with the recorded pattern labels marked at their own sessions">';
+    s += '<text x="' + PL + '" y="16" font-size="12.5" fill="#7c8b9d">' +
+      esc(fmtPrice(hi - pad)) + " at the top, " + esc(fmtPrice(lo + pad)) + " at the bottom</text>";
+    s += '<path d="' + d + '" fill="none" stroke="#17202b" stroke-width="1.8"/>';
+    r.markers.forEach(function(m, k){
+      var above = (k % 2 === 0);
+      var cx = X(m.index), cy = Y(m.close);
+      var ty = above ? cy - 14 : cy + 24;
+      s += '<line x1="' + cx.toFixed(1) + '" x2="' + cx.toFixed(1) +
+        '" y1="' + cy.toFixed(1) + '" y2="' + (above ? cy - 8 : cy + 8).toFixed(1) +
+        '" stroke="#0b5fa5" stroke-width="1.4"/>';
+      s += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) +
+        '" r="5" fill="#0b5fa5"/>';
+      s += '<text x="' + cx.toFixed(1) + '" y="' + ty.toFixed(1) +
+        '" font-size="13" font-weight="700" fill="#0b5fa5" text-anchor="middle">' +
+        esc(labelWord(m.label)) + "</text>";
+    });
+    if (r.markers.length){
+      var last = r.markers[r.markers.length - 1];
+      s += '<text x="' + (W - PR + 6) + '" y="' + (Y(last.close) + 4).toFixed(1) +
+        '" font-size="12" fill="#0b5fa5">' + esc(fmtPrice(last.close)) + "</text>";
+    }
+    s += '<text x="' + PL + '" y="' + (H - 6) + '" font-size="12.5" fill="#7c8b9d">' +
+      esc(fmtDateShort(r.firstDate)) + "</text>";
+    s += '<text x="' + (W - PR) + '" y="' + (H - 6) + '" font-size="12.5" fill="#7c8b9d" text-anchor="end">' +
+      esc(fmtDateShort(r.lastDate)) + "</text>";
+    s += "</svg>";
+    s += '<p class="legend"><span><span class="sw"></span>Daily close</span>' +
+      '<span><span class="dot"></span>Recorded label, drawn on its own session</span></p>';
+    return s;
+  }
+
+  function render(sym){
+    var r = computeDraw(DATA, sym);
+    if (r.state === "not-on-record"){
+      resultsEl.innerHTML = '<div class="card"><h2>' + esc(sym) + "</h2>" +
+        '<div class="nodata">' + esc(sym) + " is not on record. The price history on record carries the " +
+        num(DATA.names_on_record) + " stocks in the daily scoring run, " +
+        esc(fmtDateShort(DATA.history_from)) + " to " + esc(fmtDateShort(DATA.history_to)) +
+        ". A name outside that run has no chart here.</div></div>";
+      return;
+    }
+    var h = '<div class="card"><h2>' + esc(r.symbol) + "</h2>";
+    h += "<p>Last session on record: <strong>" + esc(fmtDateLong(r.lastDate)) +
+      "</strong>. Last close: <strong>" + esc(fmtPrice(r.lastClose)) + "</strong>, on the " +
+      num(r.sessions) + " sessions of this name on record, from " +
+      esc(fmtDateShort(r.firstDate)) + ".</p>";
+    h += '<div class="chartbox">' + chartSvg(r) + "</div>";
+    if (!r.labelled){
+      h += '<div class="nodata">No labels on record for ' + esc(r.symbol) +
+        ": the label record covers " + num(DATA.names_labelled) + " of the " +
+        num(DATA.names_on_record) + " names on record, and this name is one of the " +
+        num(DATA.names_not_labelled) + " it does not cover. The chart above is drawn " +
+        "from its prices alone, with no marker added.</div>";
+    }
+    h += "</div>";
+
+    if (r.labelled){
+      var meanings = DATA.label_meanings || {};
+      h += '<div class="card"><h2>What is drawn</h2>';
+      h += "<p>One marker for each session the record covers for this name: its last " +
+        num(DATA.sequence_sessions) + " sessions on record, oldest first. Each marker " +
+        "sits on that session's closing price and carries the label recorded for that session.</p>";
+      h += '<div class="scroll"><table><thead><tr><th>Session</th><th>Label drawn</th>' +
+        "<th>Close that session</th><th>What the label means</th></tr></thead><tbody>";
+      r.markers.forEach(function(m){
+        var mm = meanings[m.label] || {};
+        h += "<tr><td>" + esc(fmtDateShort(m.date)) + "</td><td><strong>" +
+          esc(labelWord(m.label)) + "</strong>" +
+          (mm.name ? " &middot; " + esc(mm.name) : "") + "</td><td>" +
+          esc(fmtPrice(m.close)) + "</td><td>" + esc(mm.meaning || "") +
+          "</td></tr>";
+      });
+      h += "</tbody></table></div>";
+      var rec = r.record;
+      var tags = "";
+      if (rec.shape) tags += '<span class="tag shape">Shape on ' +
+        esc(fmtDateShort(DATA.session)) + ": " + esc(rec.shape) + "</span>";
+      if (rec.failed_2) tags += '<span class="tag failed">Flag on ' +
+        esc(fmtDateShort(DATA.session)) + ": " + esc(rec.failed_2) + "</span>";
+      if (rec.colour) tags += '<span class="tag">On ' + esc(fmtDateShort(DATA.session)) +
+        " the day closed " +
+        (rec.colour === "green" ? "above" : rec.colour === "red" ? "below" : "exactly at") +
+        " its open (" + esc(rec.colour) + ")</span>";
+      if (tags) h += "<p>" + tags + "</p>";
+      h += "</div>";
+
+      h += '<div class="card"><h2>Completed patterns</h2>';
+      if (rec.completed && rec.completed.length){
+        h += "<p>The record counts these patterns as finished for " + esc(r.symbol) +
+          " on <strong>" + esc(fmtDateLong(DATA.session)) + "</strong>, the freshest " +
+          "session on record:</p><p>";
+        rec.completed.forEach(function(c){
+          h += '<span class="tag">' + esc(c) + "</span>";
+        });
+        h += "</p>";
+      } else {
+        h += '<div class="nodata">No completed pattern is on record for ' + esc(r.symbol) +
+          " on " + esc(fmtDateShort(DATA.session)) + ". Across all names, the record " +
+          "counts " + num(DATA.completed_patterns_count) + " completed patterns over " +
+          num(DATA.completed_names_count) + " names for that session.</div>";
+      }
+      h += "<p>" + esc(DATA.levels_note) + "</p></div>";
+    }
+    resultsEl.innerHTML = h;
+  }
+
+  function renderDefs(){
+    var m = DATA.label_meanings || {};
+    var w = DATA.words || {};
+    var h = "<p><strong>The labels, in the record's own words:</strong></p>";
+    ["1", "2u", "2d", "3"].forEach(function(k){
+      if (!m[k]) return;
+      h += "<p><strong>" + esc(labelWord(k)) + " &middot; " + esc(m[k].name) +
+        ":</strong> " + esc(m[k].meaning) + "</p>";
+    });
+    h += "<p><strong>The run of labels:</strong> " + esc(w.sequence || "") + "</p>";
+    h += "<p><strong>Shapes:</strong> " + esc(w.hammer || "") + " " + esc(w.shooter || "") + "</p>";
+    h += "<p><strong>Failed 2s:</strong> " + esc(w.failed_2u || "") + " " + esc(w.failed_2d || "") + "</p>";
+    h += "<p><strong>Completed patterns:</strong> " + esc(w.completed || "") + "</p>";
+    h += "<p><strong>Closed:</strong> " + esc(w.colour || "") + "</p>";
+    h += "<p><strong>Markings do not move:</strong> " + esc(DATA.nonrepaint || "") + "</p>";
+    h += "<p><strong>Levels:</strong> " + esc(DATA.levels_note || "") + "</p>";
+    defEl.innerHTML = h;
+    defEl.style.display = "block";
+  }
+
+  function init(){
+    proveEl.style.display = "block";
+  function proveNote(state, note){var s = String(state || ""), n = String(note || "");
+    if (s && n.toLowerCase().indexOf(s.toLowerCase()) === 0){
+      n = n.slice(s.length).replace(/^[:\s]+/, "");
+      n = n.charAt(0).toUpperCase() + n.slice(1);}
+    return n;}
+    proveEl.innerHTML = "<strong>" + esc(DATA.proving_state) + "</strong> " + esc(proveNote(DATA.proving_state, DATA.proving_note));
+    meta.textContent = "Price history on record: " + num(DATA.history_sessions) +
+      " trading days, " + fmtDateShort(DATA.history_from) + " to " + fmtDateShort(DATA.history_to) +
+      ". Last session: " + fmtDateLong(DATA.history_to) +
+      ". Labels on record for " + num(DATA.names_labelled) + " of " +
+      num(DATA.names_on_record) + " names. Source: " + DATA.source + ".";
+    renderDefs();
+    var names = Object.keys(DATA.bars).sort();
+    namesEl.innerHTML = names.map(function(s){
+      return '<option value="' + esc(s) + '"></option>';
+    }).join("");
+    receiptEl.textContent = DATA.coverage + " Source: " + DATA.source + ".";
+    symInput.value = "A";
+    render("A");
+  }
+
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var sym = symInput.value.trim().toUpperCase();
+    if (!sym || !DATA) return;
+    symInput.value = sym;
+    render(sym);
+  });
+
+  fetch("data.json").then(function(resp){
+    if (!resp.ok) throw new Error("bad response");
+    return resp.json();
+  }).then(function(data){
+    if (!data || data.state !== "published" || !data.bars ||
+        !Object.keys(data.bars).length){
+      meta.textContent = "";
+      resultsEl.innerHTML = '<div class="nodata">No name has been published yet. ' +
+        "When the labels and the price history are published, the drawings will " +
+        "appear here. Nothing is shown for a record that has not been made.</div>";
+      return;
+    }
+    DATA = data;
+    init();
+  }).catch(function(){
+    meta.textContent = "";
+    showBanner("missing", "The records are not available right now, so no drawing can be shown. Nothing has been estimated to fill the gap.");
+  });
+
+  window.PatternDraw = { computeDraw: computeDraw };
+})();
+</script>
+</body>
+</html>
