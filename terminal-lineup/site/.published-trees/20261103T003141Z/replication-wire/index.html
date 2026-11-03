@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Replication Wire: which trading claims held up when they were re-tested</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --ok-bg:#e9f5ec; --ok-line:#9cc7a5; --ok-ink:#1e5c31;
+    --part-bg:#fdf3e0; --part-line:#e8c57c; --part-ink:#6b4e12;
+    --no-bg:#fdeeec; --no-line:#e5a49c; --no-ink:#7a2a20;
+    --yet-bg:#eef1f5; --yet-line:#c3cedb; --yet-ink:#43536a;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .counts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+  .count{border-radius:10px;padding:10px 14px;font-size:15px;border:1px solid var(--line);background:var(--card)}
+  .count strong{font-size:19px}
+  .count.held{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
+  .count.partly{background:var(--part-bg);border-color:var(--part-line);color:var(--part-ink)}
+  .count.didnot{background:var(--no-bg);border-color:var(--no-line);color:var(--no-ink)}
+  .count.notyet{background:var(--yet-bg);border-color:var(--yet-line);color:var(--yet-ink)}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+  .filters button{font:inherit;font-size:14.5px;padding:7px 14px;border-radius:999px;
+    border:1px solid var(--line);background:var(--card);color:var(--soft);cursor:pointer}
+  .filters button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .how{font-size:14.5px;color:var(--soft);max-width:46em;margin:0 0 20px}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 6px;font-size:19px;line-height:1.35}
+  .verdict{display:inline-block;border-radius:999px;padding:2px 11px;font-size:13.5px;
+           font-weight:600;margin:0 0 10px;border:1px solid}
+  .verdict.held{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
+  .verdict.partly{background:var(--part-bg);border-color:var(--part-line);color:var(--part-ink)}
+  .verdict.did_not{background:var(--no-bg);border-color:var(--no-line);color:var(--no-ink)}
+  .verdict.not_yet{background:var(--yet-bg);border-color:var(--yet-line);color:var(--yet-ink)}
+  .verdict.untestable{background:var(--yet-bg);border-color:var(--yet-line);color:var(--yet-ink)}
+  .gate{border-top:1px solid var(--line);padding:8px 0 2px;margin-top:8px;font-size:15px}
+  .gate .name{font-weight:600;color:var(--accent);font-size:13.5px;
+              text-transform:uppercase;letter-spacing:.04em;display:block}
+  .gate p{margin:2px 0 4px;color:var(--soft)}
+  .gate p strong{color:var(--ink);font-weight:600}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Replication Wire</h1>
+    <p class="job">One job: every trading claim we have re-tested, with the verdict, the study behind it, and its numbers.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the wire&hellip;</p>
+  <div id="counts" class="counts"></div>
+  <div id="filters" class="filters"></div>
+  <p class="how">How to read a verdict: <strong>held up</strong> means the re-test found what the claim said. <strong>Partly held up</strong> means part of it survived and part did not, or the evidence is real but early or narrow. <strong>Did not hold up</strong> means the re-test found against it. <strong>Not yet tested</strong> means no finished study stands behind the claim yet, and the entry says why. <strong>Cannot be tested on the records on hand</strong> means the record that could decide the claim does not exist here, and the entry names that missing record. Where a study reports a strength score (a t value), 2.0 is the usual bar for calling a result real rather than chance.</p>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var countsEl = document.getElementById("counts");
+  var filtersEl = document.getElementById("filters");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var ALL = [];
+  var current = "all";
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function fmtTs(iso){
+    if (!iso) return null;
+    var d = new Date(iso);
+    return d.toLocaleString("en-US",{month:"short", day:"numeric", year:"numeric",
+      hour:"numeric", minute:"2-digit", timeZone:"UTC", timeZoneName:"short"});
+  }
+  function gate(name, text){
+    return '<div class="gate"><span class="name">' + esc(name) + "</span><p>" + esc(text) + "</p></div>";
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function render(){
+    var list = ALL.filter(function(c){ return current === "all" || c.verdict === current; });
+    if (!list.length){
+      resultsEl.innerHTML = '<div class="nodata">No claim on the wire carries this verdict yet.</div>';
+      return;
+    }
+    var h = "";
+    list.forEach(function(c){
+      h += '<section class="group"><h2>' + esc(c.claim) + "</h2>";
+      h += '<span class="verdict ' + esc(c.verdict) + '">' + esc(c.verdict_words) + "</span>";
+      h += gate("Who made the claim", c.maker);
+      h += gate("The study", c.study);
+      h += gate("Sample", c.sample);
+      h += gate("What the study found", c.result);
+      h += gate("When", c.when);
+      if (c.note){
+        h += gate("Note", c.note);
+      }
+      h += "</section>";
+    });
+    resultsEl.innerHTML = h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var claims = data.claims || [];
+      var counts = data.counts || {};
+      if (!claims.length || data.state !== "published"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No replication record has been published yet. ' +
+          "When a claim has been re-tested and written up, it will appear here with its study " +
+          "and its numbers. Nothing is shown for a study that has not been done.</div>";
+        return;
+      }
+      ALL = claims;
+      meta.textContent = counts.total + " claims re-tested or checked so far. Source: " + data.source + ".";
+      countsEl.innerHTML =
+        '<span class="count"><strong>' + counts.total + '</strong> claims on the wire</span>' +
+        '<span class="count held"><strong>' + counts.held + '</strong> of ' + counts.total + ' held up</span>' +
+        '<span class="count partly"><strong>' + counts.partly + '</strong> of ' + counts.total + ' partly held up</span>' +
+        '<span class="count didnot"><strong>' + counts.did_not + '</strong> of ' + counts.total + ' did not hold up</span>' +
+        '<span class="count notyet"><strong>' + counts.not_yet + '</strong> of ' + counts.total + ' not yet tested</span>' +
+        '<span class="count notyet"><strong>' + (counts.untestable || 0) + '</strong> of ' + counts.total + ' cannot be tested on the records on hand</span>';
+      var defs = [["all","All verdicts"],["held","Held up"],["partly","Partly held up"],
+                  ["did_not","Did not hold up"],["not_yet","Not yet tested"],
+                  ["untestable","Cannot be tested on the records on hand"]];
+      var fh = "";
+      defs.forEach(function(d){
+        fh += '<button type="button" data-v="' + d[0] + '"' +
+          (d[0] === "all" ? ' class="on"' : "") + ">" + d[1] + "</button>";
+      });
+      filtersEl.innerHTML = fh;
+      var btns = filtersEl.querySelectorAll("button");
+      for (var i = 0; i < btns.length; i++){
+        btns[i].addEventListener("click", function(){
+          current = this.getAttribute("data-v");
+          for (var j = 0; j < btns.length; j++){
+            btns[j].className = btns[j] === this ? "on" : "";
+          }
+          render();
+        });
+      }
+      render();
+      receiptEl.textContent = "Receipt: this page is built from " + data.source.charAt(0).toLowerCase() +
+        data.source.slice(1) + ". The live grading record behind two of its entries was run " +
+        fmtTs(data.grading_run_at) + ". Every other entry is read from the finished study named on it.";
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Replication Wire is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
