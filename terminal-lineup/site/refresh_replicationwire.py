@@ -532,11 +532,11 @@ def build():
         "An options-tape vendor tag, rebuilt by us",
         "untestable",
         "Our recording of every options print on the three index funds, checked for golden sweeps",
-        "5 recorded trading days so far on the index tape record, freshest session October 30, 2026, with two golden prints found",
-        "Cannot be tested on the records on hand: two golden prints stand on the recorded sessions, but neither has the following sessions a grade needs, so there is nothing gradeable yet. The missing record is the rest of the tape its own decision rule requires: 25 more recorded sessions to reach 30, with the decision date already set at December 8, 2026. Until a golden print's following sessions exist, no verdict either way is possible.",
-        "Recording started October 2026; tape record recounted October 30, 2026",
+        "6 recorded trading days so far on the index tape record, freshest session November 2, 2026, with two golden prints found",
+        "Cannot be tested on the records on hand: two golden prints stand on the recorded sessions, but neither has the following sessions a grade needs, so there is nothing gradeable yet. The missing record is the rest of the tape its own decision rule requires: 24 more recorded sessions to reach 30, with the decision date already set at December 8, 2026. Until a golden print's following sessions exist, no verdict either way is possible.",
+        "Recording started October 2026; tape record recounted November 2, 2026",
         [("terminal-lineup/site/golden-sweep-wire/data.json",
-          ["\"golden_prints\": 2", "\"sessions_recorded\": 5",
+          ["\"golden_prints\": 2", "\"sessions_recorded\": 6",
            "\"decision_date\": \"2026-12-08\""])]))
 
     # 26 The router's record. RC-13 pass, 2026-10-30:
