@@ -151,6 +151,168 @@ def build_data(feed):
     return data
 
 
+PANEL_PATH = HERE.parents[1] / "morgue" / "data_cache" / "board_bt_bars.json"
+ATTRACTIONS_BEGIN = "<!-- AMAZING-ATTRACTIONS-BEGIN -->"
+ATTRACTIONS_END = "<!-- AMAZING-ATTRACTIONS-END -->"
+
+
+def build_attractions(feed):
+    """AMAZING Build (2026-11-02): the GrokBot-standard desk attractions,
+    from our real data only. Benchmark closes come from the board price
+    panel on this box (the same panel the session-quality builder
+    reads); the desk line carries only the equity readings the snapshot
+    itself records (epoch start and the latest cycle), never an
+    interpolated path. Positions carry qty and average price from
+    account_positions, so heatmap tiles are sized by cost paid, not by
+    an invented current value. Strategy scorecards are operational
+    (status counts, money assigned, orders placed) because the feed
+    carries no per-strategy return series and none is invented."""
+    import html as _html
+    account = feed.get("account") or {}
+    packet = feed.get("evidence_packet") or {}
+    period = packet.get("period") or {}
+    start_date = str(period.get("start") or "")[:10]
+    equity = _num(account.get("equity"))
+    start_cap = _num(packet.get("starting_capital"))
+    bench = {}
+    sessions = []
+    try:
+        panel = json.loads(PANEL_PATH.read_text(encoding="utf-8"))
+        for sym in ("SPY", "QQQ"):
+            rows = [r for r in panel.get(sym) or []
+                    if start_date and str(r[0]) >= start_date]
+            if rows:
+                base = rows[0][4]
+                bench[sym] = [{"date": str(r[0]),
+                               "pct": round((r[4] / base - 1) * 100, 3)}
+                              for r in rows]
+                sessions = [r["date"] for r in bench[sym]]
+    except Exception:
+        bench = {}
+    desk_pts = []
+    if start_cap and equity and start_date:
+        desk_pts = [{"date": start_date, "pct": 0.0},
+                    {"date": str(feed.get("generated_at") or "")[:10],
+                     "pct": round((equity / start_cap - 1) * 100, 3)}]
+    positions = []
+    total_cost = 0.0
+    for pos in feed.get("account_positions") or []:
+        qty, avg = _num(pos.get("qty")), _num(pos.get("avg_price"))
+        if pos.get("symbol") and qty is not None and avg is not None:
+            cost = abs(qty * avg)
+            total_cost += cost
+            positions.append({"symbol": pos["symbol"], "qty": qty,
+                              "avg_price": avg, "cost": round(cost, 2)})
+    for p in positions:
+        p["share_pct"] = round(p["cost"] / total_cost * 100, 2) if total_cost else 0.0
+    fams = {}
+    for s in feed.get("strategies") or []:
+        fam = s.get("family") or "other"
+        row = fams.setdefault(fam, {"family": fam, "total": 0, "ready": 0,
+                                    "waiting_for_data": 0, "paused": 0,
+                                    "needs_attention": 0,
+                                    "money_assigned": 0.0, "orders_placed": 0})
+        row["total"] += 1
+        st = s.get("status")
+        if st == "Ready":
+            row["ready"] += 1
+        elif st == "Waiting for data":
+            row["waiting_for_data"] += 1
+        elif st == "Paused":
+            row["paused"] += 1
+        elif st == "Needs attention":
+            row["needs_attention"] += 1
+        row["money_assigned"] += _num(s.get("money_assigned")) or 0.0
+        row["orders_placed"] += int(s.get("orders_placed") or 0)
+    families = sorted(fams.values(), key=lambda r: (-r["total"], r["family"]))
+    data = {"benchmarks_pct": bench, "sessions": sessions,
+            "desk_pct_points": desk_pts, "positions_cost": positions,
+            "families": families,
+            "window": {"start": start_date,
+                       "end": str(feed.get("generated_at") or "")[:10]},
+            "sources": {"benchmarks": "board price panel daily closes "
+                        "(morgue/data_cache/board_bt_bars.json)",
+                        "desk": "terminal_feed.json account equity vs "
+                        "evidence_packet starting capital",
+                        "positions": "terminal_feed.json account_positions "
+                        "qty x avg_price (cost paid)",
+                        "families": "terminal_feed.json strategies and "
+                        "sleeve group counts"}}
+    # --- lead chart SVG (percent, same window) ---
+    def _chart():
+        series = [(k, v, c) for k, v, c in
+                  (("SPY", bench.get("SPY") or [], "#b06000"),
+                   ("QQQ", bench.get("QQQ") or [], "#7a4fa3"))]
+        if desk_pts:
+            series.append(("Desk", desk_pts, "#0b3b46"))
+        pts = [p["pct"] for _, v, _ in series for p in v]
+        if not pts:
+            return ""
+        lo, hi = min(pts + [0.0]), max(pts + [0.0])
+        span = (hi - lo) or 1.0
+        lo -= span * 0.1; hi += span * 0.1; span = hi - lo
+        W, H, L, R, T, B = 720, 240, 8, 8, 12, 22
+        all_dates = sessions or [desk_pts[0]["date"], desk_pts[-1]["date"]]
+        di = {d: i for i, d in enumerate(all_dates)}
+        n = max(len(all_dates) - 1, 1)
+        def X(d):
+            i = di.get(d, n if d >= all_dates[-1] else 0)
+            return L + (W - L - R) * i / n
+        def Y(v):
+            return T + (H - T - B) * (hi - v) / span
+        out = [f'<svg viewBox="0 0 {W} {H}" width="100%" role="img" '
+               f'aria-label="Desk versus SPY and QQQ, percent since '
+               f'{_html.escape(start_date)}">']
+        out.append(f'<line x1="{L}" y1="{Y(0):.1f}" x2="{W-R}" y2="{Y(0):.1f}" stroke="#cfe0da"/>')
+        for name, v, c in series:
+            if len(v) < 2:
+                continue
+            poly = " ".join(f"{X(p['date']):.1f},{Y(p['pct']):.1f}" for p in v)
+            out.append(f'<polyline fill="none" stroke="{c}" stroke-width="2.5" points="{poly}"/>')
+            last = v[-1]
+            out.append(f'<circle cx="{X(last["date"]):.1f}" cy="{Y(last["pct"]):.1f}" r="4" fill="{c}"/>')
+            out.append(f'<text x="{max(X(last["date"])-118, L):.1f}" y="{Y(last["pct"])-8:.1f}" font-size="14" font-weight="700" fill="{c}">{name} {last["pct"]:+.2f}%</text>')
+        out.append(f'<text x="{L}" y="{H-6}" font-size="12" fill="#5b7180">{_html.escape(all_dates[0])}</text>')
+        out.append(f'<text x="{W-R-70}" y="{H-6}" font-size="12" fill="#5b7180">{_html.escape(all_dates[-1])}</text>')
+        out.append("</svg>")
+        return "".join(out)
+    tiles = "".join(
+        f'<div style="display:inline-block;margin:0 8px 8px 0;padding:12px 14px;border-radius:12px;background:rgba(9,137,121,{0.25 + 0.65 * (p["share_pct"] / 100 if positions else 0):.2f});color:#082d36;min-width:150px">'
+        f'<b>{_html.escape(str(p["symbol"]))}</b><br>{p["qty"]:g} held at ${p["avg_price"]:,.2f}<br>'
+        f'${p["cost"]:,.2f} paid ({p["share_pct"]:.1f}% of cost)</div>'
+        for p in positions) or '<p class="muted">No open positions in the latest snapshot.</p>'
+    fam_rows = "".join(
+        f'<tr><td>{_html.escape(str(f["family"]))}</td><td>{f["total"]}</td>'
+        f'<td>{f["ready"]}</td><td>{f["waiting_for_data"]}</td><td>{f["paused"]}</td>'
+        f'<td>{f["needs_attention"]}</td><td>${f["money_assigned"]:,.0f}</td>'
+        f'<td>{f["orders_placed"]}</td></tr>' for f in families)
+    section = (
+        ATTRACTIONS_BEGIN + "\n"
+        '<section class="card"><div class="kicker">The yardstick</div>'
+        '<h2>Desk vs SPY and QQQ</h2>'
+        f'<p class="muted">Percent change over the same window, from {_html.escape(start_date)} '
+        'to the latest snapshot. The index lines use daily closes. The desk line joins the two '
+        'equity readings the snapshot itself records, at the start of the current capital period '
+        'and at the latest check. Nothing between those two readings is on record, so nothing '
+        'between them is drawn.</p>' + _chart() + '</section>\n'
+        '<section class="card"><div class="kicker">Open positions</div>'
+        '<h2>Open positions heatmap</h2>'
+        '<p class="muted">One tile per open position, sized and shaded by the share of the '
+        'total cost paid for open positions. Cost is quantity times the average price paid, '
+        'from the latest snapshot.</p>' + tiles + '</section>\n'
+        '<section class="card"><div class="kicker">Strategy scorecards</div>'
+        '<h2>Breakdown by strategy group</h2>'
+        '<p class="muted">How each group of strategies stands on the latest check: how many '
+        'there are, how many are ready, waiting for data, paused, or needing attention, the '
+        'money assigned to the group, and orders placed on the last check.</p>'
+        '<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%">'
+        '<tr><th align="left">Group</th><th align="left">Total</th><th align="left">Ready</th>'
+        '<th align="left">Waiting</th><th align="left">Paused</th><th align="left">Needs attention</th>'
+        '<th align="left">Assigned</th><th align="left">Orders</th></tr>'
+        + fam_rows + '</table></div></section>\n' + ATTRACTIONS_END)
+    return data, section
+
+
 def publish():
     dest = HERE / "desk"
     dest.mkdir(exist_ok=True)
@@ -191,6 +353,24 @@ def publish():
         page_path.write_text(page, encoding="utf-8")
     feed = json.loads((dest / "terminal_feed.json").read_text(
         encoding="utf-8"))
+    # AMAZING attractions on the published copy (built above from the
+    # copied snapshot and the board panel; idempotent via markers).
+    try:
+        attractions, section = build_attractions(feed)
+        (dest / "attractions.json").write_text(
+            json.dumps(attractions, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8")
+        page = page_path.read_text(encoding="utf-8")
+        if ATTRACTIONS_BEGIN in page:
+            pre, rest = page.split(ATTRACTIONS_BEGIN, 1)
+            _, post = rest.split(ATTRACTIONS_END, 1)
+            page = pre + section + post
+        elif "</main>" in page:
+            page = page.replace("</main>", section + "\n</main>", 1)
+        page_path.write_text(page, encoding="utf-8")
+    except Exception as exc:
+        print(f"FAIL: desk attractions build failed: {exc}")
+        return 1
     data = build_data(feed)
     (dest / "data.json").write_text(
         json.dumps(data, indent=2, sort_keys=True) + "\n",
