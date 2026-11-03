@@ -280,6 +280,20 @@ The active REA scope denominator is 100 passes / 86 families
 for the 14 extra passes). The 99-pass and 94-complete figures are
 dated predecessors, kept in the record as such, not current counts.
 
+## Addendum (2026-11-03, adoption-implementation): terminal build standard, three tacit rules codified
+
+### T. Write on the side, swap atomically, refuse to ship empty (T-93)
+
+The cross-system general rule, now standing terminal law: no publisher ships an artifact it has not size-checked. Every writer builds to a temp file on the side and swaps atomically (os.replace); every publisher refuses to ship a zero-byte artifact or a zero-byte shrink, exits before upload, and names the file, with a test proving the refusal bites. The instances already codified (refresh_hub.py, sync_to_test.py, blocker test_sync_guard.py) are the proof this rule is load-bearing; this section makes the general rule binding on every future publisher, not only those two.
+
+### U. No figure, no headline (T-143)
+
+A card headline exists only when a real figure exists to headline. Where no figure exists, the card says so honestly (the partial state) rather than manufacturing a number, a placeholder, or a qualitative headline dressed as a figure. Proven as a class across the replication rounds: 2,540 complete, 26 honestly partial.
+
+### V. Count the estate by family, never conflate sources (T-150)
+
+Estate counts are reported by family and never blended: engines, tools, and tool pages are different counts, and sleeve counts come from the live config as their own family. A report that blends families manufactures phantom gaps and phantom completeness and fails this standard. Each figure in a census names its family and its source in the same sentence.
+
 ## Standing note on proof
 
 Per InfinityBlade and Evaluation §7's proof standard: an adoption in
