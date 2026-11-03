@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio Builder: the basket the latest qualified snapshot builds</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --up:#1d7a3a; --down:#b03a2e; --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card p{margin:0 0 8px;font-size:16px}
+  .card p:last-child{margin-bottom:0}
+  .card .small{font-size:14.5px;color:var(--soft)}
+  .card h2{font-size:18px;margin:0 0 10px}
+  .gate{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}
+  .gate:first-of-type{border-top:0}
+  .gate .mark{font-weight:700;white-space:nowrap}
+  .gate .mark.pass{color:var(--up)}
+  .gate .mark.fail{color:var(--down)}
+  .gate .detail{font-size:14.5px;color:var(--soft)}
+  .countline{font-size:17px;font-weight:700;margin:20px 0 6px}
+  .name{border-top:1px solid var(--line);padding:10px 0 4px}
+  .name:first-child{border-top:0}
+  .name .top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+  .name .sym{font-size:16.5px;font-weight:700}
+  .name .sector{color:var(--soft);font-size:14px}
+  .name .facts{margin-left:auto;font-size:14px;color:var(--soft);white-space:nowrap}
+  .name .facts strong{color:var(--ink)}
+  .mix{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .mix .cell{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .mix .cell .s{font-weight:700;font-size:15px}
+  .mix .cell .v{font-size:20px;font-weight:700;margin:2px 0 0}
+  .mix .cell .n{font-size:13.5px;color:var(--soft)}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  .nodata p{margin:0 0 8px}
+  .nodata p:last-child{margin-bottom:0}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+  @media (max-width:640px){.mix{grid-template-columns:1fr}.name .facts{white-space:normal;margin-left:0}}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Portfolio Builder</h1>
+    <p class="job">One job: build one equal-weight basket from the stocks that passed every check in the most recent scored snapshot, and show every member, its weight, and the basket's sector mix.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy. Nothing is saved anywhere.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest snapshot&hellip;</p>
+
+  <div id="paper" class="card">
+    <p class="small">The weights below are the construction rule's weights, shown in full so anyone can check them. The basket is rebuilt only when a new snapshot exists whose names passed every check and which passes the two gates below. Between snapshots, nothing changes and no member is added or removed by hand.</p>
+  </div>
+
+  <section id="gatesCard" class="card" hidden>
+    <h2>The two gates this snapshot had to pass</h2>
+    <div id="gates"></div>
+  </section>
+
+  <main id="results"></main>
+
+  <footer>
+    <p>How the basket is built: start with the names that passed every check in the snapshot. Group them by sector and rank the sectors by the average score of their passing names. Take the top five sectors, and in each one take up to the five highest-scoring passing names. Every member then carries the same weight: the whole basket divided equally. A sector with fewer than five passing names contributes only the names it has; no substitute is pulled in from another sector. Weights are rounded to two decimals, so the printed weights may add up to a hair under or over 100%.</p>
+    <p>What passing every check takes: the name trades more than 500,000 shares and more than $5 million a day on average, its typical daily move is at least 2%, its price is not sitting more than 2% below its 50-day or 200-day average line, its trend is in an early stage (stage 1 or 2), at least 5 of the 8 checks line up in its favor, its combined score reaches 65, and at least 70% of the measures behind its score had real data behind them. Every name in the snapshot, with each check shown, is on the <a href="../board/">Qualified Board</a>, and you can filter the whole scored day yourself on <a href="../screener/">The Screener</a>.</p>
+    <p>This page never invents members. If the freshest snapshot is too old or does not declare that it is complete, the page says so and shows no basket, rather than building one on a snapshot that cannot be trusted.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var gatesCard = document.getElementById("gatesCard");
+  var gatesEl = document.getElementById("gates");
+  var resultsEl = document.getElementById("results");
+
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function renderGates(data){
+    if (!data.gates || !data.gates.length) return;
+    gatesEl.innerHTML = data.gates.map(function(g){
+      return '<div class="gate"><span class="mark ' + (g.passed ? "pass" : "fail") + '">' +
+        esc(g.name) + ": " + (g.passed ? "passed" : "failed") + '</span>' +
+        '<span class="detail">' + esc(g.detail) + "</span></div>";
+    }).join("");
+    gatesCard.hidden = false;
+  }
+  function memberHTML(m){
+    return '<div class="name"><div class="top">' +
+      '<span class="sym">' + esc(m.symbol) + '</span>' +
+      '<span class="sector">' + esc(m.sector) + '</span>' +
+      '<span class="facts">Weight <strong>' + Number(m.weight_pct).toFixed(2) +
+      '%</strong> &middot; Score <strong>' + Number(m.score).toFixed(1) +
+      ' of 100</strong> &middot; Closed at ' + fmtPrice(m.close) + "</span></div></div>";
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      renderGates(data);
+      meta.textContent = "Snapshot trading day: " + fmtDateLong(data.session) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+      var members = data.members || [];
+      if (data.status !== "built" || !members.length){
+        var reasons = (data.refusal_reasons || []).map(function(r){
+          return "<p>" + esc(r) + "</p>";
+        }).join("");
+        resultsEl.innerHTML = '<div class="nodata"><p><strong>A basket cannot be built ' +
+          'from this snapshot.</strong></p>' + reasons +
+          "<p>No members are shown, because showing names from a snapshot that " +
+          "failed a gate would be inventing a basket. When a newer snapshot " +
+          "passes both gates, the basket built from it will appear here.</p></div>";
+        return;
+      }
+      if (data.session < latestCompletedSession()){
+        showBanner("stale", "This basket is out of date. It was built from the trading day of " +
+          fmtDateLong(data.session) + ", the most recent snapshot, and a newer " +
+          "snapshot has not been published yet. Treat it as the last built basket, not today's.");
+      }
+      var mix = (data.sector_mix || []).map(function(s){
+        return '<div class="cell"><div class="s">' + esc(s.sector) + '</div>' +
+          '<div class="v">' + Number(s.share_pct).toFixed(1) + '%</div>' +
+          '<div class="n">' + s.members + (s.members === 1 ? " member" : " members") +
+          " of the basket</div></div>";
+      }).join("");
+      var bySector = "";
+      (data.sector_mix || []).forEach(function(s){
+        var rows = members.filter(function(m){ return m.sector === s.sector; });
+        bySector += '<section class="card"><h2>' + esc(s.sector) + "</h2>" +
+          rows.map(memberHTML).join("") + "</section>";
+      });
+      resultsEl.innerHTML =
+        '<p class="countline">' + members.length + ' members, each at ' +
+        Number(members[0].weight_pct).toFixed(2) + '%</p>' +
+        '<section class="card"><h2>Sector mix</h2><div class="mix">' + mix +
+        "</div></section>" + bySector +
+        '<section class="card"><p class="small">Built from the snapshot of ' +
+        fmtDateLong(data.session) + ": " +
+        data.counts.names_checked.toLocaleString("en-US") + " names checked, " +
+        data.counts.names_scored.toLocaleString("en-US") + " scored, " +
+        data.counts.passed_every_check_all + " passed every check, and the " +
+        "construction above picked " + members.length + " of them across " +
+        data.counts.sectors_in_basket + " sectors.</p></section>";
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The latest snapshot is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
