@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gamma Ladder: every listed strike's pull on price, strongest first</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+    --prove-bg:#f3eefb; --prove-line:#c9b8ec; --prove-ink:#4a3572;
+    --pos:#1d7a4f; --neg:#b03a2e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .prove{background:var(--prove-bg);border:1px solid var(--prove-line);color:var(--prove-ink);
+       border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px}
+  .prove strong{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .fund{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 18px}
+  .fund h2{margin:0 0 4px;font-size:24px}
+  .fund .figwords{background:#eef4fb;border:1px solid #bcd4ee;border-radius:10px;
+        padding:12px 14px;font-size:15px;color:#23405e;margin:0 0 14px}
+  .levels{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
+  .level{border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:14.5px;background:#fbfcfe}
+  .level .k{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint)}
+  .level .v{font-weight:700;font-size:16px}
+  .level .s{color:var(--soft);font-size:13px}
+  .overall{font-size:15.5px;margin:10px 0 4px}
+  .overall .means{color:var(--soft);font-size:14.5px}
+  .coverage{font-size:13.5px;color:var(--faint);margin:0 0 12px}
+  table.ladder{width:100%;border-collapse:collapse;font-size:15px}
+  table.ladder th{text-align:left;font-size:12.5px;text-transform:uppercase;
+        letter-spacing:.05em;color:var(--faint);padding:6px 8px;border-bottom:2px solid var(--line)}
+  table.ladder td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+  td.rank{color:var(--faint);width:34px}
+  td.strike{font-weight:700;white-space:nowrap}
+  td.pull{font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+  th.pull{text-align:right}
+  td.bar{width:34%}
+  .barfill{height:12px;border-radius:6px;background:var(--neg)}
+  .barfill.plus{background:var(--pos)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;
+       padding:1px 8px;margin-left:8px;background:#fdf3e0;border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .rest{color:var(--soft);font-size:14.5px;margin:12px 0 0}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Gamma Ladder</h1>
+    <p class="job">One job: show every strike the Morning Map's positioning record lists for SPY, QQQ and IWM as a ladder rung, ranked by how strongly that strike pulls on price, strongest first.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <div id="prove" class="prove" style="display:none"></div>
+  <p id="meta" class="meta">Loading the records&hellip;</p>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../morning-map/">Morning Map</a> &middot; <a href="../expiry-pin-watch/">Expiry Pin Watch</a> &middot; <a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var proveEl = document.getElementById("prove");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var DATA = null;
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",
+      {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtStrike(v){
+    return Number(v).toLocaleString("en-US",
+      {minimumFractionDigits:0, maximumFractionDigits:2});
+  }
+  function fmtMoney(v){
+    var sign = v < 0 ? "-" : "+";
+    return sign + "$" + Math.abs(Number(v)).toLocaleString("en-US",
+      {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function todayKey(){
+    var parts = new Intl.DateTimeFormat("en-US",
+      {timeZone:"America/New_York", year:"numeric", month:"2-digit",
+       day:"2-digit"}).formatToParts(new Date());
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function lastCompletedSession(){
+    var d = new Date(todayKey() + "T12:00:00Z");
+    do { d.setUTCDate(d.getUTCDate() - 1); }
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+    return d.toISOString().slice(0, 10);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  function levelChip(label, value, sub){
+    return '<div class="level"><span class="k">' + esc(label) +
+      '</span><span class="v">' + esc(value) + '</span>' +
+      (sub ? ' <span class="s">' + esc(sub) + '</span>' : "") +
+      "</div>";
+  }
+
+  function renderFund(f){
+    var modeWord = f.positioning_mode === "amplifying" ? "Amplifying" :
+      f.positioning_mode === "dampening" ? "Dampening" : "Roughly neutral";
+    var means = f.positioning_mode === "amplifying"
+      ? "Dealers are positioned so that their hedging tends to push the price further in whatever direction it is already moving."
+      : f.positioning_mode === "dampening"
+      ? "Dealers are positioned so that their hedging tends to pull the price back when it moves."
+      : "Dealer hedging is roughly balanced, so it is not expected to push moves much either way.";
+    var h = '<section class="fund"><h2>' + esc(f.symbol) + "</h2>";
+    h += '<p class="figwords">' + esc(DATA.figure_words) + "</p>";
+    h += '<div class="levels">';
+    h += levelChip("Last price", fmtPrice(f.spot), "");
+    h += levelChip("Call wall", fmtPrice(f.call_wall),
+      "the level above with the most pull stacked up");
+    h += levelChip("Put wall", fmtPrice(f.put_wall),
+      "the level below with the most pull stacked up");
+    h += levelChip("Flip level", fmtPrice(f.flip),
+      Math.abs(Number(f.flip_distance_pct)).toFixed(2) + "% " +
+      esc(f.flip_side) + " the last price");
+    h += "</div>";
+    h += '<p class="overall">Overall pull: <strong>' +
+      fmtMoney(f.positioning_net) + " per 1% move</strong> (" +
+      esc(modeWord) + '). <span class="means">' + esc(means) +
+      "</span></p>";
+    h += '<p class="coverage">Worked out from ' + esc(f.coverage) +
+      ".</p>";
+    var maxAbs = 0;
+    f.rungs.forEach(function(r){ maxAbs = Math.max(maxAbs, Math.abs(r.pull)); });
+    h += '<table class="ladder"><thead><tr><th>#</th><th>Strike</th>' +
+      '<th>Pull on price</th><th class="pull">Figure</th></tr></thead><tbody>';
+    f.rungs.forEach(function(r, i){
+      var tags = "";
+      if (Number(r.strike) === Number(f.call_wall)) tags += '<span class="tag">call wall</span>';
+      if (Number(r.strike) === Number(f.put_wall)) tags += '<span class="tag">put wall</span>';
+      var w = maxAbs ? Math.max(2, Math.round(100 * Math.abs(r.pull) / maxAbs)) : 0;
+      h += "<tr><td class=\"rank\">" + (i + 1) + "</td>" +
+        '<td class="strike">' + esc(fmtStrike(r.strike)) + tags + "</td>" +
+        '<td class="bar"><div class="barfill' + (r.pull >= 0 ? " plus" : "") +
+        '" style="width:' + w + '%"></div></td>' +
+        '<td class="pull">' + esc(fmtMoney(r.pull)) + "</td></tr>";
+    });
+    h += "</tbody></table>";
+    h += '<p class="rest">' + esc(DATA.rest_words) + "</p>";
+    h += "</section>";
+    return h;
+  }
+
+  function render(){
+    var funds = (DATA.funds || []).filter(function(f){
+      return (f.rungs || []).length;
+    });
+    if (!funds.length){
+      resultsEl.innerHTML = '<div class="nodata">No ladder has ' +
+        "been published yet. When the Morning Map's positioning " +
+        "record is published, each fund's ladder will be listed " +
+        "here. Nothing is shown for a record that has not been " +
+        "made.</div>";
+      return;
+    }
+    resultsEl.innerHTML = funds.map(renderFund).join("");
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      DATA = data;
+      if (!data.session || data.state !== "published" ||
+          !(data.funds || []).length){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No ladder has ' +
+          "been published yet. When the Morning Map's positioning " +
+          "record is published, each fund's ladder will be listed " +
+          "here. Nothing is shown for a record that has not been " +
+          "made.</div>";
+        return;
+      }
+      proveEl.innerHTML = "<strong>" + esc(data.proving_state) +
+        "</strong><br>" + esc(data.proving_note);
+      proveEl.style.display = "";
+      meta.textContent = "Positioning for the trading day of " +
+        fmtDateLong(data.session) + ". Source: " + data.source + ".";
+      if (data.session !== lastCompletedSession()){
+        showBanner("stale", "This ladder is for " +
+          fmtDateLong(data.session) + ", which is not the most " +
+          "recent completed trading day. It is the freshest day " +
+          "in the Morning Map's published record; treat it as " +
+          "the last published ladder, not today's.");
+      }
+      receiptEl.textContent = "Receipt: " + data.coverage + ".";
+      render();
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Gamma Ladder is not available " +
+        "right now. The data file for this page could not be " +
+        "loaded, so there is nothing honest to show. Please " +
+        "check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
