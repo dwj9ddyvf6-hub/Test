@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opening Range Pane: what usually follows a break of the first hour's range</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:16px;color:#23405e}
+  .def strong{color:var(--ink)}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .receipt{font-size:13px;color:var(--faint);margin:0 0 6px}
+  .group p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .group p strong{color:var(--ink);font-weight:600}
+  .big{font-size:19px;color:var(--ink)}
+  .big strong{font-size:26px}
+  table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:15px}
+  th,td{text-align:left;padding:7px 8px;border-top:1px solid var(--line)}
+  th{color:var(--soft);font-weight:600;border-top:none}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  .thin{color:var(--faint);font-style:italic}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Opening Range Pane</h1>
+    <p class="job">One job: show what the rest of the day usually did after price broke out of the first hour's trading range, over the price history on record.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the count&hellip;</p>
+
+  <div class="def"><strong>What counts:</strong> the opening range is the highest and lowest price of the first hour of trading (9:30 to 10:30 in the morning, New York time), a break is counted the first time price trades above that high or below that low at any point in the rest of the day (just touching the level does not count), and the outcomes counted are whether the rest of the day broke one side of the range, both sides, or neither, plus how far past the range price travelled on days it broke.</div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p>How the count works: every completed trading day in the history on record was checked for each of the three names. A break is counted the moment price trades past the range, even if price later comes back inside it. The count does not record whether a break held, where the day closed, or whether the breaks were up or down, so none of that is shown here. The three names are counted together, the way the count was made.</p>
+    <p>Why some rows could show no percentage: a row with fewer than 30 events shows its counts only. A percentage built on a handful of events reads as far more certain than it is, so it is left off until the count grows. Every published call and count from these tools is graded in public on <a href="../record/">The Record</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function pct(f){
+    return (Number(f) * 100).toLocaleString("en-US",{minimumFractionDigits:1, maximumFractionDigits:1}) + "%";
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function sessionKey(d){
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5);
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.session) bits.push("Counted through: " + fmtDateLong(r.session));
+    if (r.published_at_utc) bits.push("Published " + fmtTimestamp(r.published_at_utc));
+    if (r.source) bits.push("Data behind it: " + r.source);
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+  function shareHTML(freq, thin, count, n, noun){
+    if (thin || freq == null)
+      return '<span class="thin">Too few events for a percentage</span>';
+    return "<strong>" + pct(freq) + "</strong> (" + num(count) + " of " + num(n) + " " + noun + ")";
+  }
+  function outcomeRow(label, count, freq, thin, n){
+    return "<tr><td>" + esc(label) + '</td><td class="num">' + num(count) +
+      '</td><td class="num">' + shareHTML(freq, thin, count, n, "days") + "</td></tr>";
+  }
+  function windowHTML(w, data){
+    var h = '<section class="group"><h2>' + esc(w.label) + "</h2>";
+    h += "<p>Out of " + num(w.n) + " trading days counted:</p>";
+    h += "<table><thead><tr><th>What the rest of the day did</th>" +
+      '<th class="num">Days</th><th class="num">Share of days</th></tr></thead><tbody>';
+    h += outcomeRow("Broke one side of the range", w.break_one_side,
+                    w.break_one_side_frequency, w.break_one_side_thin, w.n);
+    h += outcomeRow("Broke both sides of the range", w.break_both,
+                    w.break_both_frequency, w.break_both_thin, w.n);
+    h += outcomeRow("Broke neither side", w.no_break,
+                    w.no_break_frequency, w.no_break_thin, w.n);
+    h += "</tbody></table>";
+    h += "<p><strong>How far it went:</strong> on the " + num(w.breaking_days) +
+      " days that broke at least one side, how far price travelled past the range " +
+      "at its furthest, measured against the width of the range itself:</p>";
+    h += "<table><thead><tr><th>Furthest travel past the range</th>" +
+      '<th class="num">Days</th><th class="num">Share of breaking days</th></tr></thead><tbody>';
+    (w.extensions || []).forEach(function(e){
+      h += "<tr><td>" + esc(e.label) + '</td><td class="num">' + num(e.hits) +
+        '</td><td class="num">' +
+        shareHTML(e.frequency, e.thin, e.hits, e.n, "breaking days") + "</td></tr>";
+    });
+    h += "</tbody></table></section>";
+    return h;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var windows = data.windows || [];
+      var headline = null;
+      windows.forEach(function(w){ if (w.headline) headline = w; });
+      if (!windows.length || !headline || data.state !== "graded"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No opening range count has been published yet. ' +
+          "When the count over the price history on record is published, it appears here " +
+          "with every count next to its percentage. Nothing is shown for a count that " +
+          "has not been made.</div>";
+        return;
+      }
+      var names = data.names || [];
+      meta.textContent = "Counted through " + fmtDateLong(data.as_of) +
+        ". Published " + fmtTimestamp(data.published_at_utc) + ". Source: " + data.source + ".";
+
+      if (data.as_of < latestCompletedSession()){
+        showBanner("stale", "This count is out of date. It was counted through " +
+          fmtDateLong(data.as_of) + ", and a newer count has not been published yet. " +
+          "Treat it as the last published count, not today's.");
+      }
+
+      var h = '<section class="group"><h2>The headline count: the first hour</h2>';
+      h += '<p class="receipt">Receipt: ' + receiptLine(data.receipt) + "</p>";
+      function headlineShare(count, freq, thin){
+        var base = num(count) + " of " + num(headline.n) + " days";
+        if (thin || freq == null) return base;
+        return base + " (" + pct(freq) + ")";
+      }
+      var headlineThin = headline.break_one_side_thin || headline.break_both_thin ||
+        headline.no_break_thin || headline.break_one_side_frequency == null ||
+        headline.break_both_frequency == null || headline.no_break_frequency == null;
+      h += '<p class="big"><strong>' +
+        headlineShare(headline.break_one_side, headline.break_one_side_frequency, headline.break_one_side_thin) +
+        " broke one side</strong> " +
+        "of the first hour's range and never the other; " +
+        headlineShare(headline.break_both, headline.break_both_frequency, headline.break_both_thin) +
+        " broke both sides, and " +
+        headlineShare(headline.no_break, headline.no_break_frequency, headline.no_break_thin) +
+        " broke neither." +
+        (headlineThin ? ' <span class="thin">Too few events for a percentage</span>' : "") +
+        "</p>";
+      h += "<p>Those " + num(headline.n) + " trading days were counted across " +
+        num(data.name_count) + " names (" + esc(names.join(", ")) + ") over the " +
+        num(data.lookback_days) + " days of price history on record when the study ran" +
+        (data.days_per_name
+          ? ", " + num(data.days_per_name) + " trading days per name"
+          : "") +
+        ".</p></section>";
+
+      windows.forEach(function(w){ h += windowHTML(w, data); });
+      resultsEl.innerHTML = h;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The opening range count is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
