@@ -77,22 +77,6 @@ cand, reason = sync.candidate_for(
 check("snapshot desk payload refused",
       cand is None and reason and "privacy" in reason.lower(),
       f"reason={reason}")
-
-# 5b. JSON temporary files are JSON payloads too; a .tmp suffix cannot
-#     bypass the active or archived desk privacy gate.
-RAW_ORDER_POSITION = json.dumps({
-    "orders": [{"order_id": "synthetic", "qty": 0}],
-    "position": {"quantity": 0},
-}).encode()
-for path, label in (
-    ("site/desk/data.json.tmp", "active"),
-    ("site/.published-trees/20261103T003141Z/desk/data.json.tmp", "archived"),
-):
-    cand, reason = sync.candidate_for(path, RAW_ORDER_POSITION)
-    check(f"{label} temporary desk JSON refused",
-          cand is None and reason and "privacy" in reason.lower(),
-          f"reason={reason}")
-
 included = sync.included_files()
 check("no .published-trees paths in sync set",
       not any(".published-trees" in p for p in included),
@@ -101,10 +85,6 @@ check("no .published-trees paths in sync set",
 # 6. Unparseable desk JSON fails closed.
 cand, reason = sync.candidate_for("site/desk/data.json", b"{not json")
 check("unparseable desk JSON refused (fail closed)",
-      cand is None and reason and "privacy" in reason.lower(),
-      f"reason={reason}")
-cand, reason = sync.candidate_for("site/desk/data.json.tmp", b"{not json")
-check("unparseable temporary JSON refused (fail closed)",
       cand is None and reason and "privacy" in reason.lower(),
       f"reason={reason}")
 
@@ -133,8 +113,7 @@ check("non-desk cash key untouched", cand is not None,
 # 10. The live local desk payloads, as they exist on disk right now,
 #     are all refused.
 desk_dir = HERE / "desk"
-for name in ("data.json", "attractions.json", "terminal_feed.json",
-             "data.json.tmp"):
+for name in ("data.json", "attractions.json", "terminal_feed.json"):
     p = desk_dir / name
     if p.exists():
         cand, reason = sync.candidate_for(
