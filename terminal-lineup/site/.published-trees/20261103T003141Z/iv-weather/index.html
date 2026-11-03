@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IV Weather: is a stock's implied volatility cheap or rich for that name?</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --old-bg:#fdf6e3; --old-line:#e3cf8a; --old-ink:#6b5510;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.old{background:var(--old-bg);border:1px solid var(--old-line);color:var(--old-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0 0 8px}
+  .note p:last-child{margin-bottom:0}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;overflow-x:auto}
+  .group h2{margin:0 0 4px;font-size:21px}
+  .group .face{font-size:14.5px;color:var(--soft);margin:0 0 12px;max-width:60em}
+  table{border-collapse:collapse;width:100%;font-size:14px;white-space:nowrap}
+  th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  td.num,th.num{text-align:right}
+  tr:last-child td{border-bottom:none}
+  .sym{font-weight:700}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>IV Weather</h1>
+    <p class="job">One job: for each stock on record, show its latest implied volatility reading and where that reading sits in the stock's own recorded history, so you can see whether its options are priced cheap or rich for that name.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the volatility readings&hellip;</p>
+
+  <section class="note" id="how" hidden>
+    <h2>How to read this page</h2>
+    <p>Implied volatility is the yearly move the options market is pricing into a stock, shown as a percentage. Each name below shows its latest recorded reading, the date of that reading, how many readings are on record for it, and the low-to-high range of those readings.</p>
+    <p>Where a reading sits is said in plain words from that range: high means the latest reading is in the top quarter of its own recorded range, low means the bottom quarter, and middle means between those quarters. High is the rich end for that name and low is the cheap end, as far as its own short recorded history goes. The counts of readings below and above the latest one are printed beside it.</p>
+    <p id="percentile-note"></p>
+    <p id="term-note"></p>
+  </section>
+
+  <main id="main"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to all the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var howEl = document.getElementById("how");
+  var pctNote = document.getElementById("percentile-note");
+  var termNote = document.getElementById("term-note");
+  var receiptEl = document.getElementById("receipt");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtPct(v){
+    return Number(v).toLocaleString("en-US",{minimumFractionDigits:1, maximumFractionDigits:2}) + "%";
+  }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function positionSentence(n){
+    if (n.position === "the same at every reading"){
+      return "The same at every one of its readings";
+    }
+    var word = n.position.charAt(0).toUpperCase() + n.position.slice(1);
+    return word + ": " + n.readings_below + " of its " + n.readings +
+      (n.readings === 1 ? " reading was" : " readings were") +
+      " lower and " + n.readings_above + " higher";
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var groups = (data.groups || []).filter(function(g){
+        return (g.names || []).length;
+      });
+      if (!data.freshest_date || !groups.length){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No volatility readings ' +
+          'are on record yet. When the first readings are recorded, ' +
+          'each name will show its latest reading here, with the ' +
+          'date and the count of readings behind it.</div>';
+        return;
+      }
+      meta.textContent = "Newest reading on record: " +
+        fmtDateLong(data.freshest_date) + ". Readings on record run from " +
+        fmtDateLong(data.oldest_date) + " to " +
+        fmtDateLong(data.freshest_date) + ", for " + data.distinct_names +
+        " different names. Source: " + data.source + ".";
+      var today = new Date();
+      var todayIso = today.getFullYear() + "-" +
+        String(today.getMonth() + 1).padStart(2, "0") + "-" +
+        String(today.getDate()).padStart(2, "0");
+      if (data.freshest_date < todayIso){
+        showBanner("old", "These readings are not current: the newest " +
+          "reading on record is from " + fmtDateLong(data.freshest_date) +
+          ", and no newer reading has been recorded since.");
+      }
+      pctNote.textContent = data.percentile_note || "";
+      termNote.textContent = data.term_structure_note || "";
+      howEl.hidden = false;
+
+      var h = "";
+      groups.forEach(function(g){
+        h += '<section class="group"><h2>' + esc(g.heading) + "</h2>";
+        h += '<p class="face">' + esc(g.kind) + "</p>";
+        h += "<table><thead><tr>" +
+          "<th>Name</th><th class=\"num\">Latest reading</th>" +
+          "<th>Reading date</th><th class=\"num\">Readings on record</th>" +
+          "<th class=\"num\">Its own recorded range</th>" +
+          "<th>Where the latest reading sits</th>" +
+          (g.names[0] && g.names[0].expiry_days != null
+            ? "<th class=\"num\">Days to expiry at the latest reading</th>" : "") +
+          "</tr></thead><tbody>";
+        g.names.forEach(function(n){
+          h += "<tr>" +
+            '<td class="sym">' + esc(n.symbol) + "</td>" +
+            '<td class="num">' + esc(fmtPct(n.iv_percent)) + "</td>" +
+            "<td>" + esc(fmtDateLong(n.date)) + "</td>" +
+            '<td class="num">' + esc(n.readings) + "</td>" +
+            '<td class="num">' + esc(fmtPct(n.low_percent)) + " to " +
+              esc(fmtPct(n.high_percent)) + "</td>" +
+            "<td>" + esc(positionSentence(n)) + "</td>" +
+            (n.expiry_days != null
+              ? '<td class="num">' + esc(n.expiry_days) + "</td>" : "") +
+            "</tr>";
+        });
+        h += "</tbody></table>";
+        if ((g.names_skipped || []).length){
+          h += '<p class="face" style="margin-top:10px">Not on record in ' +
+            "this group: " + esc(g.names_skipped.join(", ")) +
+            " (no option contracts were found for it, so it has no " +
+            "reading).</p>";
+        }
+        h += "</section>";
+      });
+      mainEl.innerHTML = h;
+
+      receiptEl.textContent = "Receipt: newest reading " +
+        fmtDateLong(data.freshest_date) + "; " + data.distinct_names +
+        " different names on record across " + groups.length +
+        " groups (" + groups.map(function(g){
+          return g.names.length + " names";
+        }).join(", ") + "). Source: " + data.source + ".";
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The volatility readings are not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
