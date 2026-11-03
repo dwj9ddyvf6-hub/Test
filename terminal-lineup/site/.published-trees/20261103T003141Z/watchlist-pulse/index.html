@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watchlist Pulse: your own list of names, each with its evidence at a glance</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .def{background:#eef4fb;border:1px solid #bcd4ee;border-radius:14px;
+       padding:16px 20px;margin:0 0 22px;font-size:15.5px;color:#23405e}
+  .def p{margin:0 0 8px}
+  .def p:last-child{margin-bottom:0}
+  .adder{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:16px 20px;margin:0 0 16px;font-size:15.5px}
+  .adder label{font-weight:600;margin-right:10px}
+  .adder input{font-size:16px;padding:6px 10px;border:1px solid var(--line);
+               border-radius:8px;background:#fff;color:var(--ink);width:10em;
+               text-transform:uppercase}
+  .adder button.add{font-size:15px;padding:7px 16px;border:1px solid var(--accent);
+    border-radius:8px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  .adder .note{margin:10px 0 0;font-size:14.5px;color:var(--soft)}
+  .empty{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .empty p{margin:4px 0}
+  .empty .quick button, .pulse .remove{font-size:14.5px;padding:3px 12px;margin:0 4px 4px 0;
+    border:1px solid var(--line);border-radius:999px;background:#fff;
+    color:var(--accent);font-weight:600;cursor:pointer}
+  .pulse{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:14px 20px;margin:0 0 12px}
+  .pulse .top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .pulse h2{margin:0;font-size:21px}
+  .pulse .count{font-weight:600;color:var(--accent)}
+  .pulse .session{font-size:13.5px;color:var(--faint)}
+  .pulse .remove{margin-left:auto}
+  .pulse p{margin:4px 0;font-size:15px;color:var(--soft)}
+  .pulse p strong{color:var(--ink);font-weight:600}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Watchlist Pulse</h1>
+    <p class="job">One job: keep your own list of names here and see, for each one, how many kinds of evidence speak for it and what they say, at a glance.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the records&hellip;</p>
+
+  <div class="def">
+    <p><strong>Your list stays yours:</strong> the names you add are saved only in this browser, on this machine. They are never sent anywhere, and there is no account to sign into. Clear your browser's saved site data and the list is gone.</p>
+    <p><strong>What a pulse line shows:</strong> how many of the six kinds of evidence, called families, speak for the name, and what each speaking family says in plain words. The families are price and trading history, options prints, modelled options positioning, filings and positioning, company facts, and news and events. The filings family speaks in facts, not a direction. For the full read on one name, family by family, use <a href="../second-opinion/">The Second Opinion</a>.</p>
+  </div>
+
+  <div class="adder">
+    <form id="addform">
+      <label for="sym">Add a name:</label>
+      <input id="sym" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Type a ticker, like AAPL" maxlength="12">
+      <button class="add" type="submit">Add</button>
+    </form>
+    <p class="note" id="addnote">Type the ticker letters for a stock or fund and press Add. Adding the same name twice keeps it once.</p>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "watchlist-pulse-names";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var resultsEl = document.getElementById("results");
+  var receiptEl = document.getElementById("receipt");
+  var form = document.getElementById("addform");
+  var input = document.getElementById("sym");
+  var note = document.getElementById("addnote");
+  var DATA = null;
+  var BY = {};
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function num(x){ return Number(x).toLocaleString("en-US"); }
+  function money(x){
+    return "$" + Number(x).toLocaleString("en-US",
+      {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function moneyM(x){
+    var v = Number(x) / 1e6;
+    var s = Math.abs(v).toLocaleString("en-US",
+      {minimumFractionDigits:1, maximumFractionDigits:1});
+    return (v < 0 ? "-$" : "$") + s + " million";
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric",
+      month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtDateShort(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{month:"short", day:"numeric",
+      year:"numeric", timeZone:"UTC"});
+  }
+  function fmtTs(iso){
+    var d = new Date(iso);
+    return d.toLocaleString("en-US",{month:"short", day:"numeric",
+      year:"numeric", hour:"numeric", minute:"2-digit",
+      timeZone:"UTC", timeZoneName:"short"});
+  }
+  function todayKey(){
+    var parts = new Intl.DateTimeFormat("en-US",
+      {timeZone:"America/New_York", year:"numeric", month:"2-digit",
+       day:"2-digit"}).formatToParts(new Date());
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function lastCompletedSession(){
+    var d = new Date(todayKey() + "T12:00:00Z");
+    do { d.setUTCDate(d.getUTCDate() - 1); }
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6);
+    return d.toISOString().slice(0, 10);
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function loadList(){
+    try {
+      var raw = localStorage.getItem(KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) return [];
+      return arr.filter(function(s){
+        return typeof s === "string" && s;
+      }).map(function(s){ return s.toUpperCase(); });
+    } catch (e) { return []; }
+  }
+  function saveList(list){
+    try { localStorage.setItem(KEY, JSON.stringify(list)); }
+    catch (e) { /* the list still shows for this visit */ }
+  }
+
+  function pulseLine(sym){
+    var n = BY[sym];
+    var h = '<section class="pulse"><div class="top"><h2>' + esc(sym) +
+      "</h2>";
+    if (!n){
+      h += '<span class="session">Record behind this page: ' +
+        fmtDateLong(DATA.session) + "</span>" +
+        '<button class="remove" type="button" data-sym="' + esc(sym) +
+        '">Remove</button></div>' +
+        "<p><strong>Not on record.</strong> No evidence record is " +
+        "kept for this name, so there is no pulse to show for it. " +
+        "It stays on your list, and if a record is published for " +
+        "it later, its pulse will appear here.</p></section>";
+      return h;
+    }
+    h += '<span class="count">' + n.families_speaking + " of " +
+      DATA.families_total + " families speaking</span>" +
+      '<span class="session">From the session of ' +
+      fmtDateLong(DATA.session) + "</span>" +
+      '<button class="remove" type="button" data-sym="' + esc(sym) +
+      '">Remove</button></div>';
+
+    if (!n.families_speaking){
+      h += "<p><strong>No family has anything on record for this " +
+        "name.</strong> " + esc(n.price_silent_reason || "") + "</p>";
+    }
+    if (n.price){
+      var p = n.price;
+      h += "<p><strong>Price and trading history</strong> points " +
+        "<strong>" + esc(p.stance) + "</strong>: closed at " +
+        "<strong>" + money(p.close) + "</strong>, scored <strong>" +
+        Number(p.score).toFixed(1) + " of 100</strong>, with " +
+        "<strong>" + p.confirming + " of " + p.checks_total +
+        " checks</strong> in its favor, and it " +
+        (p.qualified ? "<strong>passed every check</strong>."
+                     : "did not pass every check.") + "</p>";
+    }
+    if (n.prints){
+      var t = n.prints;
+      h += "<p><strong>Options prints</strong> point <strong>" +
+        esc(t.stance) + "</strong>: <strong>" + num(t.prints) +
+        " prints</strong> on the day, " + moneyM(t.total_premium) +
+        " in total, with the money leaning to the " +
+        (t.net_premium < 0 ? "selling" : t.net_premium > 0 ? "buying"
+                                                           : "neither") +
+        " side (net " + moneyM(t.net_premium) + ").</p>";
+    }
+    if (n.positioning){
+      var g = n.positioning;
+      h += "<p><strong>Modelled options positioning</strong> points " +
+        "<strong>" + esc(g.stance) + "</strong>: the price, at " +
+        "<strong>" + money(g.spot) + "</strong>, sits <strong>" +
+        (g.below_flip ? "below" : "above") + "</strong> the flip " +
+        "level of <strong>" + money(g.flip) + "</strong>.</p>";
+    }
+    if (n.filings){
+      var f = n.filings;
+      var bits = [];
+      Object.keys(f.readings || {}).forEach(function(k){
+        bits.push(esc(k) + " <strong>" +
+          Number(f.readings[k]).toFixed(1) + " of 100</strong>");
+      });
+      if (f.insider_transactions){
+        bits.push("company insiders: <strong>" +
+          num(f.insider_transactions) +
+          " transactions</strong> on file, the latest filed " +
+          fmtDateShort(f.insider_latest));
+      }
+      if (f.si_pct != null){
+        bits.push("shares sold short: <strong>" +
+          Number(f.si_pct).toFixed(2) +
+          "% of the shares out</strong>, " +
+          Number(f.days_to_cover).toFixed(2) +
+          " days to cover, from the settlement of " +
+          fmtDateShort(f.si_settlement));
+      }
+      h += "<p><strong>Filings and positioning</strong> speak in " +
+        "facts, not a direction: " + bits.join("; ") +
+        ". Filings dated " + fmtDateShort(DATA.filings_as_of) +
+        ".</p>";
+    }
+    var dir = n.directional || [];
+    if (dir.length > 1){
+      var same = dir.every(function(s){ return s === dir[0]; });
+      h += "<p>" + (same
+        ? "The families that carry a direction <strong>all point " +
+          esc(dir[0]) + "</strong>."
+        : "The families that carry a direction <strong>do not all " +
+          "agree</strong>: " + dir.map(esc).join(", ") + ".") + "</p>";
+    }
+    h += "</section>";
+    return h;
+  }
+
+  function render(){
+    var list = loadList();
+    if (!DATA) return;
+    if (!list.length){
+      var ex = (DATA.examples || []).filter(function(s){ return BY[s]; });
+      var h = '<section class="empty"><p><strong>Your list is ' +
+        "empty.</strong> Add the names you follow above, and each " +
+        "one gets a pulse line here: how many kinds of evidence " +
+        "speak for it and what they say.</p>";
+      if (ex.length){
+        h += '<p class="quick">Start with an example: ';
+        ex.forEach(function(s){
+          h += '<button type="button" data-add="' + esc(s) + '">' +
+            esc(s) + "</button>";
+        });
+        h += "</p>";
+      }
+      h += "</section>";
+      resultsEl.innerHTML = h;
+    } else {
+      resultsEl.innerHTML = list.map(pulseLine).join("");
+    }
+    Array.prototype.forEach.call(
+      resultsEl.querySelectorAll("[data-add]"), function(b){
+        b.addEventListener("click", function(){
+          addName(b.getAttribute("data-add"));
+        });
+      });
+    Array.prototype.forEach.call(
+      resultsEl.querySelectorAll("[data-sym]"), function(b){
+        b.addEventListener("click", function(){
+          var list2 = loadList().filter(function(s){
+            return s !== b.getAttribute("data-sym");
+          });
+          saveList(list2);
+          render();
+        });
+      });
+  }
+
+  function addName(raw){
+    var sym = String(raw || "").trim().toUpperCase();
+    if (!sym) return;
+    var list = loadList();
+    if (list.indexOf(sym) === -1){
+      list.push(sym);
+      saveList(list);
+      note.textContent = BY[sym]
+        ? sym + " is on your list."
+        : sym + " is on your list. It has no record, so its line " +
+          "says so plainly.";
+    } else {
+      note.textContent = sym + " is already on your list.";
+    }
+    input.value = "";
+    render();
+  }
+
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    addName(input.value);
+  });
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      DATA = data;
+      var names = data.names || [];
+      if (!names.length || data.state !== "published"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">No name has ' +
+          "been published yet. When the records are published, " +
+          "your list will show a pulse line for every name on " +
+          "record. Nothing is shown for a record that has not " +
+          "been made.</div>";
+        return;
+      }
+      names.forEach(function(n){ BY[n.symbol] = n; });
+      meta.textContent = "Records from the session of " +
+        fmtDateLong(data.session) + ". Source: " + data.source + ".";
+      if (data.session !== lastCompletedSession()){
+        showBanner("stale", "These records are from " +
+          fmtDateLong(data.session) + ", which is not the most " +
+          "recent completed trading day. Treat them as the last " +
+          "published records, not today's.");
+      }
+      receiptEl.textContent = "Receipt: " +
+        num(data.coverage.names_on_record) + " names on record " +
+        "for the session of " + fmtDateLong(data.session) +
+        "; scored day published " +
+        fmtTs(data.board_published_at_utc) + "; filings dated " +
+        fmtDateShort(data.filings_as_of) + ".";
+      render();
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Watchlist Pulse is not available " +
+        "right now. The data file for this page could not be " +
+        "loaded, so there is nothing honest to show. Please check " +
+        "back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
