@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Touch Surface: the chance price reaches a level, graded in public</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  section.card h3{margin:16px 0 6px;font-size:16.5px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .ours{font-size:19px;font-weight:700}
+  .old{color:var(--soft);font-size:13.5px}
+  .lvl{color:var(--soft);font-size:13.5px}
+  .claim{font-size:17px;font-weight:600}
+  .count{font-size:22px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Touch Surface</h1>
+    <p class="job">One job: state the chance that SPY and QQQ actually reach a price level, as a number this page is graded against.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest touch chances&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function price(v){return "$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function fmtDate(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric",timeZone:"UTC"});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  var ROWS=[["up",0.5,"Up 0.5 expected moves"],["up",1.0,"Up 1 expected move"],["up",1.5,"Up 1.5 expected moves"],["down",0.5,"Down 0.5 expected moves"],["down",1.0,"Down 1 expected move"],["down",1.5,"Down 1.5 expected moves"],["either",0.5,"Either side, 0.5 expected moves"],["either",1.0,"Either side, 1 expected move"],["either",1.5,"Either side, 1.5 expected moves"]];
+  function cellFor(cells,sym,hor,side,dist){return cells.filter(function(c){return c.horizon===hor&&c.side===side&&c.distance===dist;})[0];}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="Chances measured from the closing prices of "+fmtDate(data.as_of_session)+", for the trading days starting "+fmtShort(data.next_session)+". Source: "+data.source;
+    showBanner("stale","These chances are the newest ones on record. They are measured from the close of "+fmtDate(data.as_of_session)+", the last trading day in the price history on record, so treat them as the latest published forecast, made before the next trading day opens.");
+    var h="";
+    h+='<section class="card"><h2>State: still being proven</h2><p>This engine is new. Its live record starts today, and it earns stronger language only from that record as it grows. The history further down is a study of past days, not a live record.</p></section>';
+
+    h+='<section class="card"><h2>How to read these chances</h2><p>An expected move is the size of move the Corrected Band Engine prices for that stretch of days: its middle band, the one meant to contain about 68 of every 100 closes. A level at 1 expected move up is that band&rsquo;s top edge. &ldquo;Touch&rdquo; means the day&rsquo;s high or low actually reaches the level at any point in the stretch. It says nothing about where price ends the stretch, or which side is reached first.</p><p>Each chance is built mostly from what actually happened on earlier days like this one: the same fund, the same distance, and a similar recent mood, calm or jumpy, with a smaller part from a simple no-drift price-walk calculation. Under each chance sits the number an older, widely used formula gives for the same level. That old formula was measured on past days and found to overstate the chance by 13 to 30 points at 1 expected move either side, so it is shown for comparison only. It is never the number this page stands behind.</p><p>'+esc((data.live.positioning_split||{}).note||"")+"</p></section>";
+
+    (data.live.names||[]).forEach(function(n){
+      h+='<section class="card"><h2>'+esc(n.name)+'</h2><p class="sub">Measured from the close of '+fmtShort(n.close_date)+": <strong>"+price(n.close)+"</strong>.</p>";
+      h+="<table><tr><th>Level</th><th>Within 1 trading day</th><th>Within 5 trading days</th><th>Within 21 trading days</th></tr>";
+      ROWS.forEach(function(row){
+        var side=row[0], dist=row[1];
+        h+="<tr><td><strong>"+esc(row[2])+"</strong></td>";
+        [1,5,21].forEach(function(hor){
+          var c=cellFor(n.cells,n.symbol,hor,side,dist);
+          if(!c){h+="<td></td>";return;}
+          var lvl=(side==="either")?price(c.level_down)+" / "+price(c.level_up):price(c.level);
+          h+='<td><span class="ours">'+esc(c.p_pct)+'%</span><br><span class="lvl">level '+lvl+'</span><br><span class="old">old formula: '+esc(c.benchmark_pct)+"%</span></td>";
+        });
+        h+="</tr>";
+      });
+      h+="</table></section>";
+    });
+
+    var hist=data.history||{};
+    var pooled=hist.pooled||{};
+    h+='<section class="card"><h2>History, not live forecasts</h2><p>'+esc(hist.note||"")+'</p><p class="sub">History covered: '+fmtShort(hist.span_start)+" to "+fmtShort(hist.span_end)+" ("+esc(hist.sessions)+" trading days on record; the study days run from "+fmtShort(hist.evaluation_start)+" so each day&rsquo;s chances could rest on enough earlier days). Chances are graded with a score, called a Brier score, that averages the squared gap between the stated chance and what happened, so lower is better and a perfect score is 0. Across all "+esc(pooled.graded)+" graded study cases, this method scored <strong>"+esc(pooled.brier_ours)+"</strong> and the old formula scored <strong>"+esc(pooled.brier_benchmark)+"</strong> on the same days. In some cells below the old formula scored better; those cells are shown as they are.</p>";
+    ["SPY","QQQ"].forEach(function(sym){
+      h+="<h3>"+sym+"</h3><table><tr><th>Level</th><th>1 day</th><th>5 days</th><th>21 days</th></tr>";
+      ROWS.forEach(function(row){
+        var side=row[0], dist=row[1];
+        h+="<tr><td><strong>"+esc(row[2])+"</strong></td>";
+        [1,5,21].forEach(function(hor){
+          var c=(hist.cells||[]).filter(function(x){return x.symbol===sym&&x.horizon===hor&&x.side===side&&x.distance===dist;})[0];
+          if(!c){h+="<td></td>";return;}
+          if(c.brier_ours==null){h+="<td>"+esc(c.graded)+" graded, too few to score</td>";return;}
+          h+="<td>ours "+esc(c.brier_ours)+" vs old "+esc(c.brier_benchmark)+"<br><span class='old'>touched "+esc(c.realised_pct)+"% of "+esc(c.graded)+" days; we said "+esc(c.mean_forecast_pct)+"% on average</span></td>";
+        });
+        h+="</tr>";
+      });
+      h+="</table>";
+    });
+    h+="<p class='sub'>A cell with fewer than 30 graded cases shows its count only, with no score. Every history cell above clears that bar; the live cells below do not yet.</p></section>";
+
+    h+='<section class="card"><h2>The live record</h2><p class="count">'+esc(data.live.issue_days)+" of "+esc(data.live.proving_target_sessions)+" live forecast days</p><p>Individual touch forecasts recorded before the days they cover: "+esc(data.live.forecasts_recorded)+". Graded so far: "+esc(data.live.forecasts_graded)+", because none of the days they cover has happened yet in the price history on record.</p><p class='claim'>When this record is graded, each forecast counts, touched or not, and each is scored against the old formula&rsquo;s number on the same day.</p><p>"+esc(data.kill_criterion)+"</p></section>";
+
+    main.innerHTML=h;
+  }).catch(function(){
+    meta.textContent="";
+    showBanner("missing","The latest touch chances are not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+  });
+})();
+</script>
+</body>
+</html>
