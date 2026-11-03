@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breadth Meter: how many stocks are rising with the market</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --good:#1d7a3a; --bad:#b03a2e;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --stale-bg:#fdf6e3; --stale-line:#e3cf8a; --stale-ink:#6b5510;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.stale{background:var(--stale-bg);border:1px solid var(--stale-line);color:var(--stale-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px;font-size:15.5px}
+  .note h2{margin:0 0 8px;font-size:18px}
+  .note p{margin:0 0 8px}
+  .note p:last-child{margin:0}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 8px;font-size:21px}
+  .dials{display:flex;flex-wrap:wrap;gap:12px}
+  .dial{flex:1 1 240px;text-align:center;padding:6px 4px}
+  .dial h3{font-size:15.5px;margin:0 0 2px}
+  .dial svg{width:190px;max-width:100%;height:auto}
+  .dial .big{font-size:34px;font-weight:700;letter-spacing:-.01em;margin:6px 0 0}
+  .dial .btrack{position:relative;height:18px;background:var(--nodata-bg);border-radius:6px;margin:10px 0 4px}
+  .dial .bfill{position:absolute;left:0;top:4px;height:10px;border-radius:5px}
+  .dial .btick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+  .dial .bscale{display:flex;justify-content:space-between;font-size:16px;color:var(--soft)}
+  .dial .facts{font-size:14px;color:var(--soft);margin:4px 0 0}
+  .versus{font-size:15.5px;margin:10px 0 0;text-align:center}
+  .versus b.up{color:var(--good)} .versus b.down{color:var(--bad)}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{text-align:right;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  th{font-size:12.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  .scroll{overflow-x:auto}
+  .nodata{background:var(--nodata-bg);border-radius:10px;padding:14px 16px;font-size:15px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Breadth Meter</h1>
+    <p class="job">One job: show how healthy the market is under the surface: how many of the counted stocks are above their own recent average prices, and how many rose on the day.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the breadth reading&hellip;</p>
+
+  <main id="main"></main>
+
+  <section class="note">
+    <h2>What each reading means</h2>
+    <p id="def-50">Loading&hellip;</p>
+    <p id="def-200"></p>
+    <p id="def-adv"></p>
+    <p id="def-universe"></p>
+  </section>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">All the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var mainEl = document.getElementById("main");
+  var receiptEl = document.getElementById("receipt");
+
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtPct(v){ return Number(v).toFixed(1); }
+  function fmtNum(v){ return Number(v).toLocaleString("en-US"); }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function lastCompletedSession(){
+    var now = new Date(new Date().toLocaleString("en-US",{timeZone:"America/New_York"}));
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    d.setDate(d.getDate() - 1);
+    while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1);
+    var m = String(d.getMonth() + 1), day = String(d.getDate());
+    return d.getFullYear() + "-" + (m.length < 2 ? "0" + m : m) + "-" + (day.length < 2 ? "0" + day : day);
+  }
+  // Indicator cure (2026-10-31, spec 14.2): a linear bullet, not a
+  // semicircle dial. The share rides bar length on a 0 to 100 scale,
+  // the halfway point is ticked, and the exact share prints under it.
+  function sparkSvg(series){
+    var vals = (series || []).filter(function(v){ return typeof v === "number" && isFinite(v); });
+    if (vals.length < 2) return "";
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals); if (hi === lo) hi = lo + 1;
+    var pts = vals.map(function(v, i){ return (3 + i / (vals.length - 1) * 214).toFixed(1) + "," + (37 - (v - lo) / (hi - lo) * 34).toFixed(1); }).join(" ");
+    return '<svg viewBox="0 0 220 40" role="img" aria-label="Recent sessions trend" style="width:220px;max-width:100%;height:auto;display:block;margin:4px auto 0"><polyline points="' + pts + '" fill="none" stroke="#0b5fa5" stroke-width="2"/></svg>';
+  }
+  function dial(title, pctValue, facts, color, series){
+    var pct = Math.max(0, Math.min(100, Number(pctValue)));
+    return '<div class="dial"><h3>' + esc(title) + '</h3>' +
+      '<div class="btrack"><span class="bfill" style="width:' + pct.toFixed(1) + '%;background:' + color + '"></span>' +
+      '<span class="btick" style="left:50%"></span></div>' +
+      '<div class="bscale"><span>0%</span><span>50%</span><span>100%</span></div>' +
+      '<p class="big">' + esc(fmtPct(pctValue)) + '%</p>' + sparkSvg(series) +
+      '<p class="facts">' + facts + '</p></div>';
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var defs = data.definitions || {};
+      document.getElementById("def-50").textContent = defs.above_50 || "";
+      document.getElementById("def-200").textContent = defs.above_200 || "";
+      document.getElementById("def-adv").textContent = defs.advancing || "";
+      document.getElementById("def-universe").textContent = defs.universe || "";
+      var h = data.headline;
+      if (!h || typeof h.above_50_pct !== "number" || !data.session){
+        meta.textContent = "";
+        mainEl.innerHTML = '<div class="nodata">No breadth reading has been ' +
+          'published yet.</div>';
+        return;
+      }
+      if (data.session < lastCompletedSession()){
+        showBanner("stale", "This reading is from " + fmtDateLong(data.session) +
+          ", which is not the most recent completed trading session. The price " +
+          "history on record ends with that session, and the reading is shown " +
+          "as it stands.");
+      }
+      meta.textContent = "Trading session: " + fmtDateLong(data.session) +
+        ". Source: " + data.source + ". Price history on record: " + fmtNum(data.history_sessions_on_record) +
+        " trading sessions (" + fmtDateLong(data.history_from) +
+        " to " + fmtDateLong(data.history_to) + ").";
+      receiptEl.textContent = "Receipt: session " +
+        fmtDateLong(data.session) + ". Source: " + data.source +
+        ". Coverage: " + data.coverage + ".";
+
+      var u = data.universe || {};
+      var out = "";
+      out += '<section class="group"><h2>The dial for ' +
+        esc(fmtDateLong(data.session)) + '</h2>' +
+        '<p class="facts" style="font-size:14.5px;color:var(--soft);margin:0 0 8px">' +
+        esc(u.words || "") + '.</p><div class="dials">';
+      out += dial("Above their 50-session average", h.above_50_pct,
+        esc(fmtNum(h.above_50)) + " of the " + esc(fmtNum(h.counted_50)) +
+        " counted stocks closed above it", "#0b5fa5",
+        (data.history || []).map(function(x){ return x.above_50_pct; }).concat([h.above_50_pct]));
+      out += dial("Above their 200-session average", h.above_200_pct,
+        esc(fmtNum(h.above_200)) + " of the " + esc(fmtNum(h.counted_200)) +
+        " counted stocks closed above it", "#5b4a9e",
+        (data.history || []).map(function(x){ return x.above_200_pct; }).concat([h.above_200_pct]));
+      out += dial("Rose on the day", h.advancers_pct,
+        esc(fmtNum(h.advancers)) + " of the " + esc(fmtNum(h.traded)) +
+        " stocks that traded rose", "#1d7a3a",
+        (data.history || []).map(function(x){ return x.advancers_pct; }).concat([h.advancers_pct]));
+      out += '</div><p class="versus"><b class="up">' +
+        esc(fmtNum(h.advancers)) + ' rose</b> against <b class="down">' +
+        esc(fmtNum(h.decliners)) + ' fell</b>, with ' +
+        esc(fmtNum(h.unchanged)) + ' unchanged, out of ' +
+        esc(fmtNum(h.traded)) + ' stocks that traded on ' +
+        esc(fmtDateLong(data.session)) + '.</p></section>';
+
+      if ((data.history || []).length){
+        out += '<section class="group"><h2>Recent sessions</h2><div class="scroll">' +
+          '<table><thead><tr><th>Trading session</th>' +
+          '<th>Above 50-session average</th><th>Above 200-session average</th>' +
+          '<th>Rose</th><th>Fell</th><th>Stocks that traded</th>' +
+          '</tr></thead><tbody>';
+        data.history.slice().reverse().forEach(function(s){
+          out += '<tr><td>' + esc(fmtDateLong(s.session)) + '</td><td>' +
+            esc(fmtNum(s.above_50)) + ' of ' + esc(fmtNum(s.counted_50)) +
+            ' · ' + esc(fmtPct(s.above_50_pct)) + '%</td><td>' +
+            esc(fmtNum(s.above_200)) + ' of ' + esc(fmtNum(s.counted_200)) +
+            ' · ' + esc(fmtPct(s.above_200_pct)) + '%</td><td>' +
+            esc(fmtNum(s.advancers)) + '</td><td>' +
+            esc(fmtNum(s.decliners)) + '</td><td>' +
+            esc(fmtNum(s.traded)) + '</td></tr>';
+        });
+        out += '</tbody></table></div></section>';
+      }
+
+      mainEl.innerHTML = out;
+    })
+    .catch(function(){
+      meta.textContent = "";
+      document.getElementById("def-50").textContent = "";
+      showBanner("missing", "The breadth reading is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
