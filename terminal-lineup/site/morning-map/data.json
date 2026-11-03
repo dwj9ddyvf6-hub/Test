@@ -24,13 +24,13 @@
         "missing_reason": null,
         "source": "morgue-feed.json clocks.ingestion_time",
         "state": "present",
-        "value": "2026-11-02T13:51:36.356645+00:00"
+        "value": "2026-11-02T22:02:09.019616+00:00"
       },
       "publishedAt": {
         "missing_reason": null,
         "source": "morgue-feed.json clocks.publication_time",
         "state": "present",
-        "value": "2026-11-02T13:51:36.356645+00:00"
+        "value": "2026-11-02T22:02:09.019616+00:00"
       }
     },
     "computed_at": {
@@ -61,13 +61,14 @@
       "missing_reason": null,
       "source": "map_card.json dix_date / feed as_of_session (a session date, not an instant)",
       "state": "present",
-      "value": "2026-10-30"
+      "value": "2026-11-02"
     },
     "decision_eligibility": {
       "blockers": [
         "clocks.eventAt: absent (the feed aggregates a session's cards; its event time is the session date in as_of_session, not a recorded instant)",
         "clocks.availableAt: absent (first availability is modelled per lane (SEC filing acceptance, SqueezeMetrics VISIBLE_AT), not at the aggregate feed level)",
         "clocks.decisionAt: absent (the feed's as-of is a session date (as_of_session), not a timezone-qualified decision instant)",
+        "freshness: not fresh (session 2026-11-02 vs last completed session 2026-10-30 before publication date 2026-11-02 (America/New_York))",
         "dark_pool_constituents.QQQ: absent, not zero (The combined reading across the stocks inside this index is only calculated for SPY right now, so there is no figure to show here yet.)",
         "dark_pool_constituents.IWM: absent, not zero (The combined reading across the stocks inside this index is only calculated for SPY right now, so there is no figure to show here yet.)",
         "grading_horizon: partial (constituent grading state is not present for every index)",
@@ -79,8 +80,8 @@
     },
     "emitter": "Morning Map",
     "freshness": {
-      "detail": "session 2026-10-30 vs last completed session 2026-10-30 before publication date 2026-11-02 (America/New_York)",
-      "state": "fresh"
+      "detail": "session 2026-11-02 vs last completed session 2026-10-30 before publication date 2026-11-02 (America/New_York)",
+      "state": "stale"
     },
     "grading_horizon": {
       "per_index": {
@@ -108,23 +109,19 @@
       "missing_reason": null,
       "source": "morgue-feed.json clocks.publication_time",
       "state": "present",
-      "value": "2026-11-02T13:51:36.356645+00:00"
+      "value": "2026-11-02T22:02:09.019616+00:00"
     },
     "source_session": {
       "missing_reason": null,
       "source": "morgue-feed.json as_of_session, cross-checked map_card.json dix_date",
       "state": "present",
-      "value": "2026-10-30"
+      "value": "2026-11-02"
     },
     "verified_availability_refs": []
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its current reading is from 2026-10-30. No study record is on file for this page; what it shows is its current reading, updated on its normal schedule.",
-    "summary": "Before the market opens, show where options positioning is likely to speed moves up or slow them down for SPY, QQQ and IWM, and how much dark pool selling pressure is underneath."
-  },
   "feed": "morgue_feed",
-  "feed_generated_at_utc": "2026-11-02T13:51:36.356645+00:00",
+  "feed_generated_at_utc": "2026-11-02T22:02:09.019616+00:00",
   "generated_at_utc": "2026-11-02T13:51:33.708860+00:00",
   "indexes": [
     {
@@ -132,7 +129,7 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "6,571 of 8,152 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
@@ -159,11 +156,11 @@
         "value": 52.2
       },
       "flip": {
-        "distance_pct": 2.1,
+        "distance_pct": 2.59,
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "6,571 of 8,152 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "side": "above",
@@ -175,7 +172,7 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "6,571 of 8,152 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
@@ -185,14 +182,14 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "6,571 of 8,152 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
         "value": 750.0
       },
       "snapshot_spot": 760.34,
-      "spot": 755.72,
+      "spot": 752.1,
       "spot_basis": "session close from the price panel on record (board_bt_bars.json), the same close every panel tool publishes for the session",
       "state": "ok",
       "symbol": "SPY"
@@ -202,7 +199,7 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "5,696 of 6,778 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
@@ -224,11 +221,11 @@
         "value": 50.4
       },
       "flip": {
-        "distance_pct": 4.55,
+        "distance_pct": 5.99,
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "5,696 of 6,778 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "side": "above",
@@ -240,7 +237,7 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "5,696 of 6,778 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
@@ -250,14 +247,14 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "5,696 of 6,778 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
         "value": 680.0
       },
       "snapshot_spot": 698.1,
-      "spot": 690.49,
+      "spot": 681.09,
       "spot_basis": "session close from the price panel on record (board_bt_bars.json), the same close every panel tool publishes for the session",
       "state": "ok",
       "symbol": "QQQ"
@@ -267,7 +264,7 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "2,505 of 3,199 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
@@ -289,11 +286,11 @@
         "value": 55.5
       },
       "flip": {
-        "distance_pct": 4.74,
+        "distance_pct": 4.81,
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "2,505 of 3,199 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "side": "above",
@@ -305,7 +302,7 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "2,505 of 3,199 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
@@ -315,14 +312,14 @@
         "receipt": {
           "as_of": "2026-11-02T13:51:33.708860+00:00",
           "coverage": "2,505 of 3,199 contracts counted",
-          "session": "2026-10-30",
+          "session": "2026-11-02",
           "source": "Options open interest (Alpaca) with the published gamma exposure formula; modelled from dealer positioning, not directly observed"
         },
         "state": "ok",
         "value": 270.0
       },
       "snapshot_spot": 282.0,
-      "spot": 279.33,
+      "spot": 279.14,
       "spot_basis": "session close from the price panel on record (board_bt_bars.json), the same close every panel tool publishes for the session",
       "state": "ok",
       "symbol": "IWM"
@@ -335,77 +332,7 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "record_surface": {
-    "calibration_record": null,
-    "current_reading": {
-      "as_of": "2026-10-30",
-      "keys_present": [
-        "contract",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "feed_generated_at_utc",
-        "generated_at_utc",
-        "indexes",
-        "price_basis",
-        "provenance",
-        "record_surface",
-        "session",
-        "session_history",
-        "source",
-        "tool"
-      ]
-    },
-    "feed": "morgue_feed",
-    "label": "Study record",
-    "live_accrual": null,
-    "missing": {
-      "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "morgue_feed",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [],
-      "total_items_counted": 0
-    },
-    "subject_charts": [
-      {
-        "items": [
-          {
-            "current": 755.72,
-            "high": 800.0,
-            "label": "SPY",
-            "low": 750.0,
-            "mid": 771.5770532931535
-          },
-          {
-            "current": 690.49,
-            "high": 725.0,
-            "label": "QQQ",
-            "low": 680.0,
-            "mid": 721.8952962646692
-          },
-          {
-            "current": 279.33,
-            "high": 290.0,
-            "label": "IWM",
-            "low": 270.0,
-            "mid": 292.57936219353485
-          }
-        ],
-        "kind": "band",
-        "label": "Each index's put wall to call wall for the session on record, the flip level ticked and the spot dotted. Past maps were not kept; the record accrues from this session forward.",
-        "title": "The morning levels on record, this session"
-      }
-    ],
-    "version": 1
-  },
-  "session": "2026-10-30",
+  "session": "2026-11-02",
   "session_history": [
     {
       "session": "2026-10-30",
@@ -429,6 +356,32 @@
           "flip": 292.57936219353485,
           "put_wall": 270.0,
           "spot": 279.33,
+          "symbol": "IWM"
+        }
+      ]
+    },
+    {
+      "session": "2026-11-02",
+      "values": [
+        {
+          "call_wall": 800.0,
+          "flip": 771.5770532931535,
+          "put_wall": 750.0,
+          "spot": 752.1,
+          "symbol": "SPY"
+        },
+        {
+          "call_wall": 725.0,
+          "flip": 721.8952962646692,
+          "put_wall": 680.0,
+          "spot": 681.09,
+          "symbol": "QQQ"
+        },
+        {
+          "call_wall": 290.0,
+          "flip": 292.57936219353485,
+          "put_wall": 270.0,
+          "spot": 279.14,
           "symbol": "IWM"
         }
       ]
