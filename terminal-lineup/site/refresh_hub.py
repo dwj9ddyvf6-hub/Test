@@ -586,6 +586,18 @@ def main() -> int:
             "})();\n"
             "</script>\n")
         out = out.replace("</body>", keys_script + "</body>", 1)
+    # AMAZING Build (2026-11-02): the How-it-works explainer link,
+    # marked and injected once, so every hub refresh keeps it.
+    if "how-it-works-link" not in out:
+        hiw = ('<section id="how-it-works-link"><h2>How this terminal works</h2>\n'
+               '<p class="hubcount">Where the numbers come from, how each page is '
+               'built, and how to read the dates on a page: '
+               '<a href="how-it-works/">How it works</a>.</p></section>\n')
+        anchor = '<h2 id="forecast-engines">'
+        if anchor in out:
+            out = out.replace(anchor, hiw + anchor, 1)
+        else:
+            failures.append("forecast engines heading not found for how-it-works link")
     if failures:
         print("FAILURES: " + "; ".join(failures))
         return 1
