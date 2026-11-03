@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morning Map: the pre-open positioning picture for SPY, QQQ and IWM</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --warn-bg:#fdf3e0; --warn-line:#e8c57c; --warn-ink:#6b4e12;
+    --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --nodata-bg:#eef1f5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.stale{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h2{margin:0;font-size:24px}
+  .card .spot{color:var(--soft);font-size:14.5px;margin:2px 0 14px}
+  .fig{border-top:1px solid var(--line);padding:12px 0 4px}
+  .fig:first-of-type{border-top:none}
+  .fig .label{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .fig .value{font-size:21px;font-weight:700;margin:2px 0}
+  .fig .value .sub{font-size:14px;font-weight:600;color:var(--soft)}
+  .fig .means{font-size:14.5px;color:var(--soft);margin:0 0 6px}
+  .fig .receipt{font-size:12.5px;color:var(--faint);margin:0 0 8px}
+  .fig.nodata{background:var(--nodata-bg);border-radius:10px;padding:12px;margin-top:12px}
+  .fig.nodata .value{font-size:16px}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Morning Map</h1>
+    <p class="job">One job: before the market opens, show where options positioning is likely to speed moves up or slow them down for SPY, QQQ and IWM, and how much dark pool selling pressure is underneath.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the latest map&hellip;</p>
+  <main id="cards" class="grid"></main>
+
+  <footer>
+    <p>Every figure on this page shows where it came from, when it was made, and how much data went into it. Positioning figures are worked out from the options dealers are holding; they are a model of that positioning, not a direct observation. A reading that is not available yet says so plainly instead of showing a made-up number.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var cardsEl = document.getElementById("cards");
+
+  function fmtPrice(v){
+    return "$" + Number(v).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtBillions(v){
+    var b = Math.abs(v) / 1e9;
+    return "$" + b.toFixed(2) + " billion";
+  }
+  function fmtDateLong(iso){
+    var d = new Date(iso + "T12:00:00Z");
+    return d.toLocaleDateString("en-US",{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:"UTC"});
+  }
+  function fmtTimestamp(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toLocaleString("en-US",{timeZone:"America/New_York",
+      weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) + " ET";
+  }
+  function sessionKey(d){ // YYYY-MM-DD in America/New_York
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",
+      year:"numeric", month:"2-digit", day:"2-digit"}).formatToParts(d);
+    var m = {};
+    parts.forEach(function(p){ m[p.type] = p.value; });
+    return m.year + "-" + m.month + "-" + m.day;
+  }
+  function latestCompletedSession(){
+    var d = new Date(Date.now() - 864e5); // start from yesterday
+    for (;;){
+      var key = sessionKey(d);
+      var dow = new Date(key + "T12:00:00Z").getUTCDay();
+      if (dow >= 1 && dow <= 5) return key;
+      d = new Date(d.getTime() - 864e5);
+    }
+  }
+  function receiptLine(r){
+    if (!r) return "";
+    var bits = [];
+    if (r.source) bits.push("Source: " + r.source);
+    if (r.session) bits.push("Trading day: " + fmtDateLong(r.session));
+    if (r.as_of) bits.push("Made: " + fmtTimestamp(r.as_of));
+    if (r.coverage) bits.push("Coverage: " + r.coverage);
+    return bits.join(" &middot; ");
+  }
+  function figHTML(label, valueHTML, means, receipt){
+    return '<section class="fig"><div class="label">' + label + '</div>' +
+      '<div class="value">' + valueHTML + '</div>' +
+      '<p class="means">' + means + '</p>' +
+      (receipt ? '<p class="receipt">' + receiptLine(receipt) + '</p>' : '') +
+      '</section>';
+  }
+  function noDataHTML(label, reason){
+    return '<section class="fig nodata"><div class="label">' + label + '</div>' +
+      '<div class="value">Not available yet</div>' +
+      '<p class="means">' + (reason || "This reading was not in the latest published data.") + '</p></section>';
+  }
+
+  function renderIndex(ix){
+    if (!ix || ix.state === "no_data"){
+      return '<article class="card"><h2>' + (ix ? ix.symbol : "?") + '</h2>' +
+        '<section class="fig nodata"><div class="value">Not available yet</div>' +
+        '<p class="means">' + ((ix && ix.reason) || "No map was published for this index in the latest data.") +
+        '</p></section></article>';
+    }
+    var h = '<article class="card"><h2>' + ix.symbol + '</h2>';
+    h += '<p class="spot">Last price used: ' + fmtPrice(ix.spot) + '</p>';
+
+    var p = ix.positioning;
+    if (p.state === "ok"){
+      var modeWord = p.mode === "amplifying" ? "Amplifying" :
+                     p.mode === "dampening" ? "Dampening" : "Roughly neutral";
+      var means = p.mode === "amplifying"
+        ? "Dealers are positioned so that their hedging tends to push the price further in whatever direction it is already moving. Moves can get bigger and faster than usual."
+        : p.mode === "dampening"
+        ? "Dealers are positioned so that their hedging tends to pull the price back when it moves. That usually keeps moves smaller and calmer."
+        : "Dealer hedging is roughly balanced, so it is not expected to push moves much either way.";
+      h += figHTML("Overall positioning", modeWord +
+        ' <span class="sub">' + fmtBillions(p.value) + " per 1% move</span>", means, p.receipt);
+    } else {
+      h += noDataHTML("Overall positioning", p.reason);
+    }
+
+    var cw = ix.call_wall;
+    h += cw.state === "ok"
+      ? figHTML("Call wall", fmtPrice(cw.value),
+          "The price above with the most call options stacked up. Rallies often slow down or stall as they get close to it.", cw.receipt)
+      : noDataHTML("Call wall", cw.reason);
+
+    var pw = ix.put_wall;
+    h += pw.state === "ok"
+      ? figHTML("Put wall", fmtPrice(pw.value),
+          "The price below with the most put options stacked up. Drops often slow down or stall as they get close to it.", pw.receipt)
+      : noDataHTML("Put wall", pw.reason);
+
+    var f = ix.flip;
+    if (f.state === "ok"){
+      var distTxt = (f.distance_pct !== null && f.distance_pct !== undefined)
+        ? Math.abs(f.distance_pct).toFixed(2) + "% " + f.side + " the last price"
+        : "distance from the last price not available";
+      h += figHTML("Flip level", fmtPrice(f.value) + ' <span class="sub">' + distTxt + '</span>',
+        "The price where dealer hedging flips from calming moves down to amplifying them. Above this level moves tend to be amplified; below it, calmer. Watch which side of it the price is on.", f.receipt);
+    } else {
+      h += noDataHTML("Flip level", f.reason);
+    }
+
+    var de = ix.dark_pool_etf;
+    h += de.state === "ok"
+      ? figHTML("Dark pool pressure in the fund", de.value.toFixed(1) + "%",
+          "Out of every 100 shares of this fund traded off-exchange in dark pools, about " + Math.round(de.value) + " were short sales. That is the selling pressure building out of sight; readings in the mid-40s are typical.", de.receipt)
+      : noDataHTML("Dark pool pressure in the fund", de.reason);
+
+    var dc = ix.dark_pool_constituents;
+    h += dc.state === "ok"
+      ? figHTML("Dark pool pressure in the stocks inside", dc.value.toFixed(1) + "%",
+          "The same dark pool short-sale measure, averaged across the individual stocks inside this index and weighted by how much each one traded. It looks through the fund to the pressure in the stocks themselves.", dc.receipt)
+      : noDataHTML("Dark pool pressure in the stocks inside", dc.reason);
+
+    h += '</article>';
+    return h;
+  }
+
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      meta.textContent = "Map for the trading day of " + fmtDateLong(data.session) +
+        ". Published " + fmtTimestamp(data.generated_at_utc) + ". Source: " + data.source + ".";
+      if (data.session < latestCompletedSession()){
+        showBanner("stale", "This map is out of date. It shows the trading day of " +
+          fmtDateLong(data.session) + ", and a newer map has not been published yet. " +
+          "Treat these levels as last known, not current.");
+      }
+      cardsEl.innerHTML = data.indexes.map(renderIndex).join("");
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The latest map is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next morning update.");
+    });
+})();
+</script>
+</body>
+</html>
