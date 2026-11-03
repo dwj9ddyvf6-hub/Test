@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Greeks Sketch: what one option is worth and how its price moves</title>
+<style>
+  :root{
+    --ink:#17202b; --soft:#4a5a6d; --faint:#7c8b9d;
+    --line:#dde4ec; --bg:#f5f7fa; --card:#ffffff;
+    --accent:#0b5fa5; --up:#1d7a3a; --down:#b03a2e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:18px 20px;margin:0 0 16px}
+  .card h2{margin:0 0 10px;font-size:20px}
+  label{font-size:13.5px;color:var(--soft);display:block;margin:0 0 3px}
+  input,select{font-size:15px;padding:7px 9px;border:1px solid var(--line);
+               border-radius:8px;background:#fff;color:var(--ink);width:100%}
+  .inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .big{font-size:16.5px}
+  .big p{margin:0 0 8px}
+  .big p:last-child{margin-bottom:0}
+  .greeks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+  .greek{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .greek .name{font-size:14px;color:var(--soft);font-weight:600}
+  .greek .val{font-size:22px;font-weight:700;margin:2px 0}
+  .greek .means{font-size:13.5px;color:var(--soft);margin:0}
+  .small{font-size:13.5px;color:var(--faint)}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<script src="../shared.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Greeks Sketch</h1>
+    <p class="job">Set up one option and see what it is worth, and the four measures that say how its price moves.</p>
+    <p class="free">Free: no paywall, no sign-up, no login, nothing for sale.</p>
+  </header>
+
+  <div class="card">
+    <h2>The option</h2>
+    <div class="inputs">
+      <div><label for="spot">Stock price ($)</label>
+        <input id="spot" type="number" step="any" min="0" value="100"></div>
+      <div><label for="strike">Strike price ($)</label>
+        <input id="strike" type="number" step="any" min="0" value="100"></div>
+      <div><label for="type">Call or put</label>
+        <select id="type">
+          <option value="call">Call</option>
+          <option value="put">Put</option>
+        </select></div>
+      <div><label for="days">Days until it expires</label>
+        <input id="days" type="number" step="any" min="0" value="30"></div>
+      <div><label for="vol">Volatility (% per year)</label>
+        <input id="vol" type="number" step="any" min="0" value="25"></div>
+      <div><label for="rate">Interest rate (% per year)</label>
+        <input id="rate" type="number" step="any" value="4.5"></div>
+      <div><label for="div">Dividend yield (% per year)</label>
+        <input id="div" type="number" step="any" value="0"></div>
+    </div>
+    <p class="small">Volatility is how much the stock price usually swings, written as a yearly percent. If you are not sure, 25% is a middle-of-the-road guess for a large stock. The interest rate and dividend yield are yearly percents too, and they are part of the price: change them and the figures below change. A stock that pays no dividend has a dividend yield of 0.</p>
+  </div>
+
+  <div class="card">
+    <h2>What this option is worth, and how its price moves</h2>
+    <p class="big" id="priceLine"></p>
+    <div class="greeks" id="greeks"></div>
+    <div id="curveBox" style="margin-top:16px"></div>
+    <p class="small">Every figure is for one option on one share. One contract covers 100 shares, so multiply by 100 for a full contract.</p>
+  </div>
+
+  <footer>
+    <p>These options are priced as European-style, settled only on the expiry day itself, with no early exercise, using the standard option pricing formulas. A year counts as 365 calendar days. The time measure is per day, and the volatility measure is per 1 point of volatility. The interest rate and dividend yield in the price are the yearly percents you set above.</p>
+    <p>Everything is worked out on this page, in your browser. Nothing you type is sent anywhere.</p>
+    <p><a href="../">Back to all the free tools</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* Pricing math: the standard option pricing formulas, European-style,
+   with a continuous dividend yield. Theta comes out of the formula per
+   year and is shown per day; vega comes out per full (100-point)
+   volatility move and is shown per 1 point. At zero days left or zero
+   volatility the price is what the option would settle for right now
+   and the four measures are zero. */
+function ncdf(x){
+  var ax=Math.abs(x);
+  if (ax>=8) return x<0 ? 0 : 1;
+  var t=1.0/(1.0+0.2316419*ax);
+  var density=Math.exp(-0.5*ax*ax)/Math.sqrt(2.0*Math.PI);
+  var tail=density*t*(0.319381530 + t*(-0.356563782 + t*(1.781477937 + t*(-1.821255978 + t*1.330274429))));
+  return x<0 ? tail : 1.0-tail;
+}
+function phi(x){ return Math.exp(-0.5*x*x)/Math.sqrt(2.0*Math.PI); }
+
+function model(S,K,days,volPct,ratePct,divPct,isCall){
+  if (days<=0 || volPct<=0){
+    return { price: isCall ? Math.max(S-K,0) : Math.max(K-S,0),
+             delta:0, gamma:0, theta:0, vega:0 };
+  }
+  var T=days/365.0, sig=volPct/100.0, r=ratePct/100.0, q=divPct/100.0;
+  var rootT=Math.sqrt(T);
+  var d1=(Math.log(S/K) + (r-q+0.5*sig*sig)*T)/(sig*rootT);
+  var d2=d1 - sig*rootT;
+  var density=phi(d1);
+  var discSpot=S*Math.exp(-q*T), discStrike=K*Math.exp(-r*T);
+  var price = isCall ? discSpot*ncdf(d1) - discStrike*ncdf(d2)
+                     : discStrike*ncdf(-d2) - discSpot*ncdf(-d1);
+  var delta = Math.exp(-q*T)*(isCall ? ncdf(d1) : ncdf(d1)-1.0);
+  var gamma = Math.exp(-q*T)*density/(S*sig*rootT);
+  var vega = discSpot*density*rootT/100.0;
+  var thetaAnnual = isCall
+    ? -(discSpot*density*sig)/(2.0*rootT) + q*discSpot*ncdf(d1) - r*discStrike*ncdf(d2)
+    : -(discSpot*density*sig)/(2.0*rootT) - q*discSpot*ncdf(-d1) + r*discStrike*ncdf(-d2);
+  return { price: Math.max(0,price), delta:delta, gamma:gamma,
+           theta: thetaAnnual/365.0, vega:vega };
+}
+
+/* ---------- page ---------- */
+function num(id, fallback){
+  var v=parseFloat(document.getElementById(id).value);
+  return isFinite(v) ? v : fallback;
+}
+function price2(v){ return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function signedMoney4(v){
+  var s=Math.abs(v).toLocaleString("en-US",{minimumFractionDigits:4,maximumFractionDigits:4});
+  return (v<0?"-$":"+$")+s;
+}
+function signed4(v){
+  var s=Math.abs(v).toLocaleString("en-US",{minimumFractionDigits:4,maximumFractionDigits:4});
+  return (v<0?"-":"+")+s;
+}
+
+function render(){
+  var S=num("spot",0), K=num("strike",0);
+  var days=Math.max(num("days",0),0);
+  var volPct=Math.max(num("vol",0),0);
+  var ratePct=num("rate",4.5), divPct=num("div",0);
+  var isCall=document.getElementById("type").value==="call";
+  var priceLine=document.getElementById("priceLine");
+  var greeksEl=document.getElementById("greeks");
+  if (!(S>0) || !(K>0)){
+    priceLine.textContent="Enter a stock price and a strike price above zero to see the figures.";
+    greeksEl.innerHTML="";
+    var cb=document.getElementById("curveBox"); if(cb) cb.innerHTML="";
+    return;
+  }
+  var m=model(S,K,days,volPct,ratePct,divPct,isCall);
+  priceLine.innerHTML="Model price: <strong>"+price2(m.price)+"</strong> for one option on one share, on the numbers you set above.";
+  var cards=[
+    ["Delta", signedMoney4(m.delta), "How much the option's price moves if the stock moves $1, before anything else changes."],
+    ["Gamma", signed4(m.gamma), "How fast the delta itself changes if the stock moves $1. Bigger gamma means the price movement speeds up or slows down faster."],
+    ["Theta", signedMoney4(m.theta), "What one day passing costs the option, in dollars per day, if nothing else moves."],
+    ["Vega", signedMoney4(m.vega), "What 1 point of volatility is worth, in dollars, if nothing else moves."]
+  ];
+  greeksEl.innerHTML=cards.map(function(c){
+    return '<div class="greek"><div class="name">'+c[0]+'</div><div class="val">'+c[1]+'</div><p class="means">'+c[2]+'</p></div>';
+  }).join("");
+  drawCurve(S,K,days,volPct,ratePct,divPct,isCall);
+}
+
+function drawCurve(S,K,days,volPct,ratePct,divPct,isCall){
+  var box=document.getElementById("curveBox");
+  if(!box) return;
+  var lo=K*0.5, hi=K*1.5, W=640, H=180, pad=28, pts=[], i, spot, v;
+  for(i=0;i<=40;i++){
+    spot=lo+(hi-lo)*i/40;
+    v=model(spot,K,days,volPct,ratePct,divPct,isCall).price;
+    pts.push([spot,v]);
+  }
+  var yHi=Math.max.apply(null,pts.map(function(p){return p[1];}));
+  if(!(yHi>0)) yHi=1;
+  function X(x){ return pad+(x-lo)/(hi-lo)*(W-pad*2); }
+  function Y(y){ return H-pad-(y/yHi)*(H-pad*2); }
+  var d=pts.map(function(p,i){ return (i?"L":"M")+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1); }).join(" ");
+  box.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto" role="img" aria-label="option price curve">'
+    +'<path d="'+d+'" fill="none" stroke="#0b5fa5" stroke-width="2"></path>'
+    +'<line x1="'+X(K)+'" y1="'+pad+'" x2="'+X(K)+'" y2="'+(H-pad)+'" stroke="#17202b" stroke-width="1.5"></line>'
+    +'<circle cx="'+X(S)+'" cy="'+Y(model(S,K,days,volPct,ratePct,divPct,isCall).price)+'" r="4" fill="#0b5fa5"></circle>'
+    +'<text x="'+pad+'" y="'+(H-6)+'" font-size="11" fill="#7c8b9d">Stock at '+price2(lo)+'</text>'
+    +'<text x="'+(W-pad-110)+'" y="'+(H-6)+'" font-size="11" fill="#7c8b9d">Stock at '+price2(hi)+'</text>'
+    +'<text x="'+(X(K)+4)+'" y="'+(pad+4)+'" font-size="11" fill="#7c8b9d">Strike '+price2(K)+'</text></svg>'
+    +'<p style="font-size:14.5px;color:#4a5a6d;margin:10px 0 0">What the option would be worth at each stock price, on the numbers you set above. The dot is the stock price you entered, and the line marks the strike.</p>';
+}
+
+["spot","strike","type","days","vol","rate","div"].forEach(function(id){
+  document.getElementById(id).addEventListener("input", render);
+  document.getElementById(id).addEventListener("change", render);
+});
+render();
+</script>
+</body>
+</html>
