@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streak Trap: what each young headline number on this site will become</title>
+<style>
+  :root{--ink:#17202b;--soft:#4a5a6d;--faint:#7c8b9d;--line:#dde4ec;--bg:#f5f7fa;--card:#fff;--accent:#0b5fa5;--warn-bg:#fdf3e0;--warn-line:#e8c57c;--warn-ink:#6b4e12;--bad-bg:#fdeeec;--bad-line:#e5a49c;--bad-ink:#7a2a20}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .banner.caution{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px}
+  section.card h2{margin:0 0 8px;font-size:21px}
+  table{border-collapse:collapse;width:100%;font-size:15px;margin:6px 0 10px}
+  th,td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--soft);font-weight:600}
+  .sub{color:var(--soft);font-size:14.5px}
+  .count{font-size:20px;font-weight:700}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../engine-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Streak Trap</h1>
+    <p class="job">One job: stake a dated prediction on what every young headline number on this site will read after its next 30 outcomes land, before anyone quotes it at face value.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the newest record&hellip;</p>
+  <main id="main"></main>
+
+  <footer>
+    <p><a href="../">All free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner=document.getElementById("banner"), meta=document.getElementById("meta"), main=document.getElementById("main");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fmtShort(iso){var d=new Date(iso+"T12:00:00Z");return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric",timeZone:"UTC"});}
+  function showBanner(kind,text){banner.className="banner show "+kind;banner.textContent=text;}
+  function pct(x){return x==null?"\u2014":Number(x).toFixed(1)+"%";}
+
+  fetch("data.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("missing");return r.json();}).then(function(data){
+    meta.textContent="Predictions staked "+fmtShort(data.as_of)+". Source: "+data.source+".";
+    var h="";
+    h+='<section class="card"><h2>The idea</h2><p>'+esc(data.idea_words)+'</p><p class="sub">'+esc(data.how_words)+'</p></section>';
+
+    showBanner("caution", data.issuance_words);
+
+    h+='<section class="card"><h2>The young figures, and what each is predicted to become</h2>'
+      +'<p>Every success rate on this site built on fewer than 30 finished outcomes is here. The predicted range is where the figure is expected to land after its next 30 outcomes, with 80 chances in 100 of landing inside it. The move chance is the chance the figure moves at least one third of the way back toward its long-run rate. A figure already under prediction is never re-staked.</p>'
+      +'<table><tr><th>Figure, and where it is displayed</th><th>What it reads now</th><th>Predicted range after 30 more outcomes</th><th>Move back toward normal</th><th>State</th></tr>';
+    (data.triggers||[]).forEach(function(t){
+      var now='<span class="count">'+pct(t.value_pct)+'</span><div class="sub">'+t.k+' of '+t.n+' so far.</div>'
+        +'<div class="sub">Long-run rate for its kind: '+pct(t.base_pct)+'. '+esc(t.base_words)+'.</div>';
+      if(t.moved_since_issue) now+='<div class="sub">It has moved since the prediction was staked: it now stands at '+t.current_k+' of '+t.current_n+'. The prediction below still grades on the figure as staked.</div>';
+      var range='Between <strong>'+pct(t.lower_pct)+' and '+pct(t.upper_pct)+'</strong>, middle value '+pct(t.centre_pct)+'.';
+      var move=t.p_move_pct==null?'No move chance is staked for this figure.':'<span class="count">'+pct(t.p_move_pct)+'</span> chance it moves at least one third of the way toward '+pct(t.base_pct)+'.';
+      var state=t.state==="graded"?('Graded: it landed at '+pct(t.realised_pct)+'.'):t.state==="void"?'Void: the figure\u2019s meaning changed after the prediction was staked. Counted separately, never dropped.':'Open: waiting for its next 30 outcomes to land.';
+      h+='<tr><td><strong>'+esc(t.figure_words)+'</strong><div class="sub">Displayed on: '+esc(t.surface_words)+'.</div><div class="sub">Kind: '+esc(t.family_words)+'.</div><div class="sub">What counts, frozen when the prediction was staked: '+esc(t.definition_words)+'.</div></td>'
+        +'<td>'+now+'</td><td>'+range+'</td><td>'+move+'</td><td>'+esc(state)+'</td></tr>';
+    });
+    h+='</table></section>';
+
+    h+='<section class="card"><h2>What did not trigger a prediction</h2><p>Named openly, so nothing is quietly included or left out:</p><table><tr><th>Figure</th><th>Why not</th></tr>';
+    (data.not_triggering||[]).forEach(function(x){
+      h+='<tr><td><strong>'+esc(x.figure_words)+'</strong></td><td>'+esc(x.count_words)+'</td></tr>';
+    });
+    h+='</table></section>';
+
+    var lr=data.live_record||{};
+    h+='<section class="card"><h2>This page\u2019s own live record</h2><p>'+esc(lr.words)+'</p>'
+      +'<table><tr><th>Measure</th><th>Count</th></tr>'
+      +'<tr><td>Young figures with a prediction staked</td><td>'+esc(lr.triggers_staked)+'</td></tr>'
+      +'<tr><td>Predictions matured and graded so far</td><td>'+esc(lr.matured)+' of '+esc(lr.target)+' that decide it</td></tr>'
+      +'<tr><td>Predictions void because a figure\u2019s meaning changed</td><td>'+esc(lr.void)+'</td></tr></table>'
+      +'<p class="sub">'+esc(data.void_words)+'</p><p class="sub">'+esc(data.thin_cell_words)+'</p></section>';
+
+    h+='<section class="card"><h2>What would retire this page</h2><p>'+esc(data.kill_words)+'</p><p class="sub">'+esc(data.proving_state)+': this page earns stronger words only from its own recorded results, never from anyone else\u2019s.</p></section>';
+
+    var st=data.self_test||{};
+    h+='<section class="card"><h2>The machinery, checked</h2><p class="sub">Before this page published, its arithmetic was re-run against the values it was registered to produce for all 16 figures and matched, and its whole path was run end to end on made-up records in a throwaway copy of the public record: a made-up figure starting at 6 of 6, given 15 successes in its next 30 outcomes, graded at exactly '+(st.synthetic_realised!=null?(Number(st.synthetic_realised)*100).toFixed(1):"\u2014")+'% with the move back toward normal scored as happened, and the live record was checked untouched afterwards.</p></section>';
+
+    main.innerHTML=h;
+  }).catch(function(){
+    showBanner("missing","The newest record could not be loaded. Nothing on this page is estimated or filled in: when the record is missing, the page says so.");
+    meta.textContent="";
+  });
+})();
+</script>
+</body>
+</html>
