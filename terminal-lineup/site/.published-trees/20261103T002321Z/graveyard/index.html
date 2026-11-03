@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Graveyard: trading claims that were tested and did not hold up</title>
+<style>
+  :root{
+    --ink:#232a33; --soft:#55626f; --faint:#8593a1;
+    --line:#dde1e7; --bg:#f4f4f2; --card:#ffffff;
+    --accent:#0b5fa5; --bad-bg:#fdeeec; --bad-line:#e5a49c; --bad-ink:#7a2a20;
+    --stone:#eceae6; --stone-line:#cfcabf;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+  header h1{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+  header .job{font-size:17px;color:var(--soft);margin:0 0 4px;max-width:44em}
+  header .free{font-size:15px;font-weight:600;color:var(--accent);margin:0 0 18px}
+  .banner{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:15px;display:none}
+  .banner.show{display:block}
+  .banner.missing{background:var(--bad-bg);border:1px solid var(--bad-line);color:var(--bad-ink)}
+  .meta{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+  .counts{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+  .count{border-radius:10px;padding:10px 14px;font-size:15px;border:1px solid var(--line);background:var(--card)}
+  .count strong{font-size:19px}
+  .count.buried{background:var(--stone);border-color:var(--stone-line);color:var(--ink)}
+  .how{font-size:14.5px;color:var(--soft);max-width:46em;margin:0 0 20px}
+  .group{background:var(--card);border:1px solid var(--line);border-radius:14px;
+         padding:18px 20px;margin:0 0 16px}
+  .group h2{margin:0 0 6px;font-size:19px;line-height:1.35}
+  .stone{display:inline-block;border-radius:6px;padding:2px 11px;font-size:13.5px;
+         font-weight:600;margin:0 0 10px;background:var(--stone);
+         border:1px solid var(--stone-line);color:var(--soft)}
+  .gate{border-top:1px solid var(--line);padding:8px 0 2px;margin-top:8px;font-size:15px}
+  .gate .name{font-weight:600;color:var(--accent);font-size:13.5px;
+              text-transform:uppercase;letter-spacing:.04em;display:block}
+  .gate p{margin:2px 0 4px;color:var(--soft)}
+  .gate p strong{color:var(--ink);font-weight:600}
+  .nodata{background:var(--stone);border-radius:10px;padding:14px 16px;font-size:15px;margin:0 0 10px}
+  .notburied{background:var(--card);border:1px solid var(--line);border-radius:14px;
+             padding:18px 20px;margin:26px 0 16px}
+  .notburied h2{margin:0 0 6px;font-size:21px}
+  .notburied h3{margin:18px 0 4px;font-size:16.5px}
+  .notburied p{color:var(--soft);font-size:15px;margin:0 0 6px;max-width:46em}
+  .notburied ul{margin:0;padding-left:20px}
+  .notburied li{margin:5px 0;font-size:15px;color:var(--soft)}
+  .notburied li strong{color:var(--ink);font-weight:600}
+  footer{margin-top:26px;font-size:13.5px;color:var(--faint);max-width:60em}
+  footer p{margin:0 0 8px}
+  a{color:var(--accent);font-weight:600}
+</style>
+<link rel="stylesheet" href="../shared.css">
+<link rel="stylesheet" href="../visual.css">
+<script src="../shared.js" defer></script>
+<script src="../visual.js" defer></script>
+<script src="../tool-visual.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Graveyard</h1>
+    <p class="job">One job: the trading claims that were tested and did not hold up, each kept here as a plain record of what was claimed, what the test found, and what it cost.</p>
+    <p class="free">Free. No account, no sign-up, nothing to buy.</p>
+  </header>
+  <div class="chartbox" id="vkHost"></div>
+
+  <div id="banner" class="banner" role="status"></div>
+  <p id="meta" class="meta">Loading the graveyard&hellip;</p>
+  <div id="counts" class="counts"></div>
+  <p class="how">A claim is buried here only when a finished study, with numbers, found against it. Each record below states the claim as it was made, who made it, the test that checked it, the test's sample, the numbers that decided it, and when it was buried. Claims that partly held up, claims that held up, and claims no finished study has tested yet are not buried; they are named further down, and their full record lives on the <a href="../replication-wire/">Replication Wire</a>.</p>
+
+  <main id="results"></main>
+  <section id="notburied"></section>
+
+  <footer>
+    <p id="receipt"></p>
+    <p><a href="../">Back to the free market tools</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var banner = document.getElementById("banner");
+  var meta = document.getElementById("meta");
+  var countsEl = document.getElementById("counts");
+  var resultsEl = document.getElementById("results");
+  var notEl = document.getElementById("notburied");
+  var receiptEl = document.getElementById("receipt");
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];
+    });
+  }
+  function fmtTs(iso){
+    if (!iso) return null;
+    var d = new Date(iso);
+    return d.toLocaleString("en-US",{month:"short", day:"numeric", year:"numeric",
+      hour:"numeric", minute:"2-digit", timeZone:"UTC", timeZoneName:"short"});
+  }
+  function gate(name, text){
+    return '<div class="gate"><span class="name">' + esc(name) + "</span><p>" + esc(text) + "</p></div>";
+  }
+  function showBanner(kind, text){
+    banner.className = "banner show " + kind;
+    banner.textContent = text;
+  }
+  function nbList(title, intro, items){
+    if (!items || !items.length) return "";
+    var h = "<h3>" + esc(title) + "</h3><p>" + esc(intro) + "</p><ul>";
+    items.forEach(function(e){
+      h += "<li><strong>" + esc(e.claim) + "</strong> " + esc(e.maker) + ". " +
+           esc(e.verdict_words) + ". " + esc(e.when) + ".</li>";
+    });
+    return h + "</ul>";
+  }
+
+  fetch("data.json", {cache:"no-store"})
+    .then(function(res){
+      if (!res.ok) throw new Error("missing");
+      return res.json();
+    })
+    .then(function(data){
+      var buried = data.buried || [];
+      var counts = data.counts || {};
+      if (!buried.length || data.state !== "published"){
+        meta.textContent = "";
+        resultsEl.innerHTML = '<div class="nodata">Nothing is buried here yet. ' +
+          "A claim is buried only when a finished study with numbers has found against it, " +
+          "and no such record has been published yet. Nothing is shown for a study that has not been done.</div>";
+        return;
+      }
+      meta.textContent = counts.buried + " of the " + counts.checked_total +
+        " claims checked so far are buried here. Source: " + data.source + ".";
+      countsEl.innerHTML =
+        '<span class="count buried"><strong>' + counts.buried + '</strong> buried here</span>' +
+        '<span class="count"><strong>' + counts.checked_total + '</strong> claims checked in total</span>' +
+        '<span class="count"><strong>' + counts.partly + '</strong> partly held up, not buried</span>' +
+        '<span class="count"><strong>' + counts.held + '</strong> held up, not buried</span>' +
+        '<span class="count"><strong>' + counts.not_yet + '</strong> not yet tested, not buried</span>' +
+        '<span class="count"><strong>' + (counts.untestable || 0) + '</strong> cannot be tested on the records on hand, not buried</span>';
+      var h = "";
+      buried.forEach(function(b){
+        h += '<section class="group"><h2>' + esc(b.claim) + "</h2>";
+        h += '<span class="stone">Did not hold up</span>';
+        h += gate("Who made the claim", b.maker);
+        h += gate("The test", b.study);
+        h += gate("Sample", b.sample);
+        h += gate("What the test found", b.result);
+        h += gate("Buried", b.when);
+        if (b.note){
+          h += gate("Note", b.note);
+        }
+        h += "</section>";
+      });
+      resultsEl.innerHTML = h;
+      var nb = data.not_buried || {};
+      var nh = '<div class="notburied"><h2>Not buried here</h2>' +
+        "<p>These claims are not in the ground, and this page does not treat them as if they were. " +
+        "Each one's full record, with its study and its numbers, lives on the " +
+        '<a href="../replication-wire/">Replication Wire</a>.</p>';
+      nh += nbList("Partly held up",
+        "Part of each of these survived its test, or the evidence behind it is real but early or narrow. Parked and partly-proven claims stay above ground.",
+        nb.partly);
+      nh += nbList("Held up",
+        "Each of these passed the check it was given. What was checked is a calculation, and the record on the Wire says exactly that.",
+        nb.held);
+      nh += nbList("Not yet tested",
+        "No finished study stands behind any of these yet. Untested is not the same as disproven, so none of them is buried.",
+        nb.not_yet);
+      nh += nbList("Cannot be tested on the records on hand",
+        "The record that could decide each of these does not exist here, and its Wire entry names that missing record. Untestable is not the same as disproven, so none of them is buried.",
+        nb.untestable);
+      nh += "</div>";
+      notEl.innerHTML = nh;
+      receiptEl.textContent = "Receipt: this page is built from " + data.source.charAt(0).toLowerCase() +
+        data.source.slice(1) + ". The grading record behind the Wire was run " +
+        fmtTs(data.wire_grading_run_at) + ". A burial appears here only when the Wire's verdict for the claim is did not hold up.";
+    })
+    .catch(function(){
+      meta.textContent = "";
+      showBanner("missing", "The Graveyard is not available right now. The data file for this page could not be loaded, so there is nothing honest to show. Please check back after the next update.");
+    });
+})();
+</script>
+</body>
+</html>
