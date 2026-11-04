@@ -324,7 +324,12 @@ def build():
     # published names, and the counts below), counted from the
     # file on this run. The day's character is unchanged from
     # the prior census day: same counts, same no_data check.
-    if board.get("session") != "2026-10-30":
+    # Census re-taken 2026-11-04 (terminal full census): the
+    # freshest day has advanced to 2026-11-03; counted from the
+    # file on this run, the character is unchanged again (1838
+    # checked, 50 published, big-investors check no_data for
+    # all 50 published names).
+    if board.get("session") != "2026-11-03":
         return fail("board session disagreement")
     big_inv_states = []
 
@@ -366,8 +371,10 @@ def build():
     # Census re-taken 2026-10-31 (terminal audit round 1):
     # Second Opinion's freshest day advanced to 2026-10-30
     # alongside the Board; its coverage counts below are
-    # unchanged.
-    if sop.get("session") != "2026-10-30":
+    # unchanged. Re-taken 2026-11-04: freshest day 2026-11-03,
+    # coverage counts counted from the file on this run and
+    # unchanged (1838 on record, 5 no-family, 5 too-little-data).
+    if sop.get("session") != "2026-11-03":
         return fail("second-opinion session disagreement")
     cov = sop["coverage"]
     if cov["names_on_record"] != 1838 or cov["no_family"] != 5 or cov["too_little_data"] != 5:
@@ -397,8 +404,14 @@ def build():
     # history now carries four sessions (2026-10-29 joined, on
     # which the combined group DID form on QQQ), and the freshest
     # tape session is 2026-10-30, on which it did not form.
+    # Census re-taken 2026-11-04 (terminal full census): the
+    # history now carries six sessions (2026-10-30 and 2026-11-02
+    # joined, neither fired), the freshest tape session is
+    # 2026-11-03, on which it did not form, and the live record
+    # stands at 16 forecasts recorded, counted from the file on
+    # this run.
     if sorted(ib_hist) != ["2026-10-26", "2026-10-27", "2026-10-28",
-                           "2026-10-29"]:
+                           "2026-10-29", "2026-10-30", "2026-11-02"]:
         return fail("intake-bias history sessions disagreement")
     if ib_hist["2026-10-26"]["fired"] is not True or ib_hist["2026-10-26"]["interaction"] != ["SPY"]:
         return fail("intake-bias 2026-10-26 disagreement: its own record "
@@ -410,11 +423,15 @@ def build():
     if ib_hist["2026-10-29"]["fired"] is not True or ib_hist["2026-10-29"]["interaction"] != ["QQQ"]:
         return fail("intake-bias 2026-10-29 disagreement: its own record "
                     "shows the combined group formed that day")
+    if ib_hist["2026-10-30"]["fired"] is not False or ib_hist["2026-10-30"]["interaction"] != []:
+        return fail("intake-bias 2026-10-30 disagreement")
+    if ib_hist["2026-11-02"]["fired"] is not False or ib_hist["2026-11-02"]["interaction"] != []:
+        return fail("intake-bias 2026-11-02 disagreement")
     ib_today = ib["today"]
-    if ib_today.get("session") != "2026-10-30" or ib_today["fired"] is not False \
+    if ib_today.get("session") != "2026-11-03" or ib_today["fired"] is not False \
             or ib_today["interaction"] != []:
         return fail("intake-bias freshest session disagreement")
-    if ib["live"]["interaction_fires"] != 1 or ib["live"]["forecasts_recorded"] != 10:
+    if ib["live"]["interaction_fires"] != 1 or ib["live"]["forecasts_recorded"] != 16:
         return fail("intake-bias live record disagreement")
 
     # Decision days, per the registered construction. Each entry:
@@ -430,6 +447,13 @@ def build():
     # files on this run). Intake-Bias history retains its own
     # sessions, and its freshest day (2026-10-30) it did not
     # fire, so it abstained.
+    # Re-assembled again 2026-11-04 (terminal full census) on
+    # the same rule: the Board and Second Opinion freshest day
+    # is now 2026-11-03, so their 2026-10-30 claim is dropped
+    # (no longer on record for them) and 2026-11-03 joins with
+    # the same audited character; Intake-Bias days 2026-10-30
+    # and 2026-11-02 join from its own retained history, on
+    # neither of which it fired, so it abstained on both.
     decision_days = [
         {"day": "2026-10-16", "active": ["The Router"],
          "abstained": ["The Router"], "defect_excluded": [],
@@ -457,6 +481,16 @@ def build():
          "defect_excluded": ["Golden Sweep Wire"],
          "missing_data_notes": []},
         {"day": "2026-10-30",
+         "active": ["Intake-Bias Reversal"],
+         "abstained": ["Intake-Bias Reversal"],
+         "defect_excluded": ["Golden Sweep Wire"],
+         "missing_data_notes": []},
+        {"day": "2026-11-02",
+         "active": ["Intake-Bias Reversal"],
+         "abstained": ["Intake-Bias Reversal"],
+         "defect_excluded": ["Golden Sweep Wire"],
+         "missing_data_notes": []},
+        {"day": "2026-11-03",
          "active": ["Qualified Board", "Second Opinion",
                     "Intake-Bias Reversal"],
          "abstained": ["Intake-Bias Reversal"],
