@@ -311,6 +311,40 @@ def em21_pct(closes, i):
     return vol * math.sqrt(21 / 252.0) * K21 * 100.0
 
 
+def band_em_cross_check(closes, pos, band_session, theirs,
+                        guard_factor):
+    """The Engine 1 band cross-check, like-for-like
+    (COMPLETION-CLOCK-L2L-20261104): our 21-session expected
+    move computed at the band's OWN session, the last close
+    Engine 1's published band was computed from, never at the
+    panel's freshest session. The two figures are only the
+    same quantity when they are measured at the same close;
+    comparing our freshest-panel figure against a band issued
+    one session earlier refuses a healthy record whenever the
+    runner reaches this engine before Engine 1 (alphabetical
+    slug order does exactly that), which is how the 2026-11-03
+    refresh failed this check at 2.9868 against 5.1376 while
+    the like-for-like pair agreed exactly. Returns
+    (ours_pct, None) on agreement or (None, error) naming the
+    disagreement."""
+    if theirs is None:
+        return None, ("Engine 1's published band carries no "
+                      "21-session 68% half width for the name")
+    if band_session is None or band_session not in pos:
+        return None, (f"Engine 1's band session "
+                      f"({band_session}) is not a session the "
+                      "panel carries, so the like-for-like "
+                      "comparison cannot be made")
+    mine = em21_pct(closes, pos[band_session])
+    if mine is None or abs(mine - theirs / guard_factor) > 0.01:
+        return None, (f"the 21-session expected move at the "
+                      f"band's own session {band_session} "
+                      f"({mine}) disagrees with Engine 1's "
+                      f"published band ({theirs}, guard factor "
+                      f"{guard_factor})")
+    return mine, None
+
+
 # ---- deep-reset composite (Engine 25's exact coded form) ------------------
 def down_volumes(closes, vols):
     out = [0.0]
@@ -660,22 +694,24 @@ def build():
     if _guard.get("band_widen_factor"):
         guard_factor = float(_guard["band_widen_factor"])
     em_check = {}
+    band_session = bands.get("as_of_session")
     for sym in ("SPY", "QQQ"):
-        i = spy_pos[freshest] if sym == "SPY" else None
         rows = panel[sym]
         j = len(rows) - 1
         if rows[j][0] != freshest:
             return fail(f"{sym}'s freshest session is not the "
                         "panel's freshest session")
-        mine = em21_pct(closes[sym], j)
-        theirs = band_half.get(sym)
-        if theirs is None or mine is None \
-                or abs(mine - theirs / guard_factor) > 0.01:
-            return fail(f"the 21-session expected move for {sym} "
-                        "disagrees with Engine 1's published band")
+        pos = spy_pos if sym == "SPY" else {
+            r[0]: k for k, r in enumerate(rows)}
+        mine, err = band_em_cross_check(
+            closes[sym], pos, band_session, band_half.get(sym),
+            guard_factor)
+        if err is not None:
+            return fail(f"for {sym}: {err}")
         em_check[sym] = {"ours_pct": round(mine, 4),
-                         "engine1_pct": theirs,
-                         "engine1_guard_widen_factor": guard_factor}
+                         "engine1_pct": band_half[sym],
+                         "engine1_guard_widen_factor": guard_factor,
+                         "compared_at_session": band_session}
 
     # ---- market state labels (Engine 2's verbatim rule on SPY) -------------
     spy_sq = sq_log_returns(closes["SPY"])
