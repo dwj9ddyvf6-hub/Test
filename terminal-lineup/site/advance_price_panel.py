@@ -21,6 +21,18 @@ completed_session.py; terminal audit cure, 2026-10-31). The old
 default, yesterday in America/New_York, made every post-close run
 advance only through the prior session, so panel-fed engines
 published one session behind the rest of the terminal every day.
+
+Cure PANEL-LAGGARD-GAP-20261104: the fetch window used to start the
+day after the panel's NEWEST symbol date, so a symbol whose newest
+bar lagged the panel (SUPN, halted with zero trades on 2026-11-02,
+whose zero bar Alpaca published late) never had its missing session
+fetched once the panel moved past it, and the hole then blocked
+every continuity-gated consumer (Momentum Clock refused to publish).
+The window now starts after the OLDEST symbol date, bounded to 21
+days before the through date so a long-dead symbol cannot widen it
+without limit, and fetched rows merge in date order, inserting any
+session the symbol is missing inside the window (a halted session's
+zero bar is a real bar: flat OHLC at the prior close, volume 0).
 """
 import json
 import os
@@ -84,20 +96,40 @@ def fetch_bars(symbols, start_iso, end_iso):
 
 
 def advance(panel, fetched):
-    """Append fetched sessions strictly after each symbol's last
-    stored date. Returns (appended_per_symbol, missing_symbols)."""
+    """Merge fetched sessions the symbol does not already hold, in
+    date order: sessions after its last stored date append, and a
+    missing interior session (a halted day whose bar was published
+    late) is inserted where it belongs. Returns
+    (appended_per_symbol, missing_symbols)."""
     appended = {}
     missing = []
     for sym, rows in panel.items():
-        last = rows[-1][0] if rows else None
+        have = {r[0] for r in rows}
         new = [fetched[sym][d] for d in sorted(fetched.get(sym, {}))
-               if last is None or d > last]
+               if d not in have]
         if new:
             rows.extend(new)
+            rows.sort(key=lambda r: r[0])
             appended[sym] = [r[0] for r in new]
         else:
             missing.append(sym)
     return appended, missing
+
+
+def classify_advance(appended, fetched):
+    """Decide the lane's verdict after a merge attempt
+    (PANEL-LAGGARD-DEADNAMES-20261104). "advanced": at least one held
+    gap was filled. "noop": the source served bars in the window but
+    none were new; every still-lagging symbol is one the source
+    itself serves no newer bar for (a name that stopped trading
+    keeps its last date forever, and that must not fail the lane).
+    "fail": the fetch returned nothing at all, which is the broken
+    fetch the original guard existed to catch."""
+    if appended:
+        return "advanced"
+    if sum(len(v) for v in fetched.values()) == 0:
+        return "fail"
+    return "noop"
 
 
 def main():
@@ -112,17 +144,32 @@ def main():
         panel = json.load(fh)
     last_dates = sorted({rows[-1][0] for rows in panel.values() if rows})
     panel_last = last_dates[-1]
-    if panel_last >= through:
+    panel_first_lag = last_dates[0]
+    if panel_first_lag >= through:
         print(f"panel already at {panel_last}; nothing to advance")
         return 0
-    start = (date.fromisoformat(panel_last) + timedelta(days=1)).isoformat()
+    # PANEL-LAGGARD-GAP-20261104: start after the OLDEST symbol's
+    # last date so lagging symbols are re-fetched, bounded to 21
+    # days before the through date.
+    start_floor = (date.fromisoformat(through) - timedelta(days=21)).isoformat()
+    start = max((date.fromisoformat(panel_first_lag) + timedelta(days=1)).isoformat(),
+                start_floor)
     end = (date.fromisoformat(through) + timedelta(days=1)).isoformat()
     fetched = fetch_bars(sorted(panel), start, end)
     appended, missing = advance(panel, fetched)
-    if not appended:
+    verdict = classify_advance(appended, fetched)
+    if verdict == "fail":
         print(f"FAIL: no new bars fetched for {start}..{through}; "
               f"panel left at {panel_last}", file=sys.stderr)
         return 1
+    if verdict == "noop":
+        lagging = sorted((rows[-1][0], sym) for sym, rows in panel.items()
+                         if rows and rows[-1][0] < through)
+        print(f"panel already current through {through} for every "
+              f"symbol the source serves; {len(lagging)} symbols hold "
+              f"no bar after their last date and none was served: "
+              + ", ".join(f"{sym} {d}" for d, sym in lagging))
+        return 0
     from forecast.grading import validate_bars_payload
     problems = validate_bars_payload(panel)
     if problems:
