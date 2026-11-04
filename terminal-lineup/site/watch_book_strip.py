@@ -109,8 +109,15 @@ def run(cmd, timeout):
     try:
         out = subprocess.run(cmd, capture_output=True, text=True,
                              timeout=timeout, cwd=str(HERE))
-        tail = (out.stdout or "").strip().splitlines()
-        return out.returncode, (tail[-1] if tail else "")
+        lines = (out.stdout or "").strip().splitlines()
+        tail = ""
+        for line in reversed(lines):
+            if line.startswith("- ") or line.startswith("census:"):
+                tail = line
+                break
+        if not tail and lines:
+            tail = lines[-1]
+        return out.returncode, tail
     except Exception as exc:
         return 99, "watcher could not run %s: %s" % (
             cmd[1] if len(cmd) > 1 else cmd[0], exc)
