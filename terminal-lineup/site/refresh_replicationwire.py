@@ -526,17 +526,20 @@ def build():
     # own page record; its pre-registered decision needs 30
     # recorded sessions and 5 stand, with 2 golden prints now on
     # the record, so the claim stays untestable today with the
-    # missing record named.
+    # missing record named. Recounted again 2026-11-04 (census
+    # pass): 7 sessions recorded, freshest 2026-11-03, still 2
+    # golden prints; the accruing session count is the only pin
+    # that moved, the established re-take for this claim.
     claims.append(claim(
         "Golden sweep prints, a sweep at least as large as its contract's whole open interest with at least $1 million in it, are a signal worth following.",
         "An options-tape vendor tag, rebuilt by us",
         "untestable",
         "Our recording of every options print on the three index funds, checked for golden sweeps",
-        "6 recorded trading days so far on the index tape record, freshest session November 2, 2026, with two golden prints found",
-        "Cannot be tested on the records on hand: two golden prints stand on the recorded sessions, but neither has the following sessions a grade needs, so there is nothing gradeable yet. The missing record is the rest of the tape its own decision rule requires: 24 more recorded sessions to reach 30, with the decision date already set at December 8, 2026. Until a golden print's following sessions exist, no verdict either way is possible.",
-        "Recording started October 2026; tape record recounted November 2, 2026",
+        "7 recorded trading days so far on the index tape record, freshest session November 3, 2026, with two golden prints found",
+        "Cannot be tested on the records on hand: two golden prints stand on the recorded sessions, but neither has the following sessions a grade needs, so there is nothing gradeable yet. The missing record is the rest of the tape its own decision rule requires: 23 more recorded sessions to reach 30, with the decision date already set at December 8, 2026. Until a golden print's following sessions exist, no verdict either way is possible.",
+        "Recording started October 2026; tape record recounted November 4, 2026",
         [("terminal-lineup/site/golden-sweep-wire/data.json",
-          ["\"golden_prints\": 2", "\"sessions_recorded\": 6",
+          ["\"golden_prints\": 2", "\"sessions_recorded\": 7",
            "\"decision_date\": \"2026-12-08\""])]))
 
     # 26 The router's record. RC-13 pass, 2026-10-30:
