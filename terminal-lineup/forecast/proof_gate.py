@@ -249,13 +249,14 @@ def compute_name_proof(symbol, closes, rule):
     }
 
 
-def compute_proof_universe(closes_by_symbol, rule):
-    """A full scan: per name proof, then BH correction across
-    the scanned universe before any name may print SUPPORTED.
-    Returns {symbol: result} with q-values stamped and the
-    downgrade applied."""
-    results = {sym: compute_name_proof(sym, closes, rule)
-               for sym, closes in sorted(closes_by_symbol.items())}
+def apply_bh_correction(results, rule):
+    """The universe correction over a {symbol: result} mapping,
+    in place: BH q-values stamped and the SUPPORTED downgrade
+    applied. Factored out of compute_proof_universe
+    (PROOFGATE-STREAM-20261104) so a streaming scan that
+    computes each name as its data arrives applies the exact
+    same correction as the in-memory scan; the correction
+    family is the whole scanned universe either way."""
     alpha = float(rule["multiple_testing"]["alpha"])
     # The correction family is the whole scanned universe, as
     # the frozen rule states: a name with no episodes carries
@@ -276,6 +277,16 @@ def compute_proof_universe(closes_by_symbol, rule):
                 "the scanned universe; SUPPORTED is refused until "
                 "the name's own record clears the correction")
     return results
+
+
+def compute_proof_universe(closes_by_symbol, rule):
+    """A full scan: per name proof, then BH correction across
+    the scanned universe before any name may print SUPPORTED.
+    Returns {symbol: result} with q-values stamped and the
+    downgrade applied."""
+    results = {sym: compute_name_proof(sym, closes, rule)
+               for sym, closes in sorted(closes_by_symbol.items())}
+    return apply_bh_correction(results, rule)
 
 
 def display_state(result):
