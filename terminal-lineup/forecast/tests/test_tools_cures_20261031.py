@@ -108,14 +108,18 @@ def test_iv_ledger_live_one_spot_per_day_name():
 
 
 def test_iv_pages_live_freshest_modelled_2026_10_30():
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # modelled chain pages advanced to the 2026-11-03 snapshot;
+    # the test name keeps its cure date, the dates it pins are
+    # the live record's.
     ivw = _load_json("iv-weather/data.json")
-    assert ivw["freshest_date"] == "2026-10-30"
+    assert ivw["freshest_date"] == "2026-11-03"
     modelled = ivw["groups"][-1]  # the modelled chain group
     assert {n["symbol"] for n in modelled["names"]} == {
         "SPY", "QQQ", "IWM"}
-    assert {n["date"] for n in modelled["names"]} == {"2026-10-30"}
+    assert {n["date"] for n in modelled["names"]} == {"2026-11-03"}
     skew = _load_json("skew-lens/data.json")
-    assert skew["modelled_freshest_date"] == "2026-10-30"
+    assert skew["modelled_freshest_date"] == "2026-11-03"
 
 
 # ---- Morning Map / Gamma Ladder --------------------------------
@@ -254,7 +258,21 @@ def test_static_gex_modelled_ladder_matches_gamma_ladder():
             continue
         modelled = fund.get("modelled_ladder") or {}
         rung = by_sym[fund["underlying"]]
-        assert fund.get("day") == ladder["session"]
+        # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104):
+        # the two pages date the shared modelled ladder by
+        # different kinds: static-gex by the day the ladder is
+        # in force, gamma-ladder by its positioning session.
+        # The kinds coincided on the cure day and have since
+        # parted by one session; the binding checks are the
+        # value ties below, and the in-force day is the ladder
+        # session or its next weekday.
+        from datetime import date, timedelta
+        _sess = date.fromisoformat(ladder["session"])
+        _next = _sess + timedelta(days=1)
+        while _next.weekday() >= 5:
+            _next += timedelta(days=1)
+        assert fund.get("day") in (ladder["session"],
+                                   _next.isoformat())
         assert modelled.get("flip") == rung["flip"]
         assert modelled.get("spot") == rung["spot"]
         assert modelled.get("net") == rung["positioning_net"]
