@@ -11,12 +11,24 @@ own scan: its counts are copied, never recomputed from names. The
 one figure this builder computes itself is the recount of the
 gate's forward record in the forecast ledger: the Engine 19
 forecast rows carrying the gate's forward quantity, counted per
-distinct name. Publication fails closed when that recount differs
-from the number of forward records the gate says are on record,
-when the gate does not name the consuming engine, when the gate
-file is missing, or when the gate is dated after the page that
-would carry it (a gate from the future means the page is stale,
-not fresh).
+distinct name. Publication fails closed when the gate does not
+name the consuming engine, when the gate file is missing, or when
+the gate is dated after the page that would carry it (a gate from
+the future means the page is stale, not fresh).
+
+The recount comparison is a floor, not an exact equality
+(PROOFGATE-HARDEN-20261104). The gate file is a snapshot the gate
+lane publishes after its appends; the ledger is append only and
+keeps moving: a scan in flight, or a completed scan whose gate
+file republication was interrupted, leaves the ledger AHEAD of
+the snapshot (the 2026-11-02 instance: an append interrupted
+after 271 of 15,815 names left the recount 271 above the gate's
+published count, and the exact-equality check failed the
+consuming pages closed on a healthy record). So the block
+refuses only when the recount falls BELOW what the gate says is
+on record (rows the gate vouches for are missing: a lost or
+rewritten record), and when the ledger is ahead it says so on
+the page and in the block's figures instead of refusing.
 
 Count semantics (cured 2026-10-30, RC-05): the gate's
 forward_ledger.created is the cumulative count of distinct names
@@ -118,20 +130,25 @@ def build_proof_gate_block(site_dir, engine_id, page_as_of, ledger_path):
             "to embed a gate whose figures disagree with "
             "themselves.")
     recounted, total_rows = recount_forward_rows(ledger_path)
-    if recounted != created:
+    if recounted < created:
         raise ProofGateError(
             f"the proof gate says {created} forward records are "
-            f"on record but the forecast ledger holds "
+            f"on record but the forecast ledger holds only "
             f"{recounted} distinct Engine 19 names with forward "
-            "rows of its quantity; refusing to publish a gate "
-            "block that does not recount.")
+            "rows of its quantity; rows the gate vouches for "
+            "are missing, so refusing to publish a gate block "
+            "that does not recount.")
+    ahead_names = recounted - created
     ledger_rows = forward.get("ledger_rows")
-    if ledger_rows is not None and ledger_rows != total_rows:
-        raise ProofGateError(
-            f"the proof gate says {ledger_rows} forward rows are "
-            f"on the ledger but the recount finds {total_rows}; "
-            "refusing to publish a gate block that does not "
-            "recount.")
+    ahead_rows = 0
+    if ledger_rows is not None:
+        if total_rows < ledger_rows:
+            raise ProofGateError(
+                f"the proof gate says {ledger_rows} forward rows "
+                f"are on the ledger but the recount finds only "
+                f"{total_rows}; refusing to publish a gate block "
+                "that does not recount.")
+        ahead_rows = total_rows - ledger_rows
     duplicate_rows = total_rows - recounted
     supported = by_state.get("SUPPORTED", 0)
     words = (
@@ -157,6 +174,15 @@ def build_proof_gate_block(site_dir, engine_id, page_as_of, ledger_path):
             "the record is append only, every row stays on "
             "it, and every count on this page counts each name "
             "once.")
+    if ahead_names:
+        words += (
+            f" The forward record has also grown since the "
+            f"gate last published its own count: {ahead_names} "
+            "more "
+            + ("name has" if ahead_names == 1 else "names have")
+            + " been written to it by a later scan, and "
+            "they join the gate's count when the gate next "
+            "publishes.")
     return {
         "source_as_of": gate_as_of,
         "names_scanned": names_scanned,
@@ -166,5 +192,7 @@ def build_proof_gate_block(site_dir, engine_id, page_as_of, ledger_path):
         "ledger_rows_recounted": recounted,
         "ledger_rows_total": total_rows,
         "ledger_duplicate_rows": duplicate_rows,
+        "ledger_ahead_names": ahead_names,
+        "ledger_ahead_rows": ahead_rows,
         "words": words,
     }
