@@ -14,8 +14,8 @@
   },
   "calibration_attestation": {
     "attestation": {
-      "basis": "142 graded forecasts of 307 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-      "forecasts_recorded": 307,
+      "basis": "142 graded forecasts of 370 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 370,
       "graded_forecasts": 142,
       "recorded_on": "2026-11-04",
       "status": "not_attested"
@@ -39,6 +39,10 @@
     "2026-11-03"
   ],
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: probability and timing, over 1, 3, 5 and 10 sessions; same-session. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 60 cards per index, its 5-session touch calibration error exceeds 10 points or its break Brier is no better than the unconditional break rate. It counts as proven at 60 cards per index.",
+    "summary": "Say, before the fact, how likely each wall and flip level on the newest morning map is to be reached and broken through, and how long it is likely to stand."
+  },
   "features_absent": [
     "The overnight gap's share of the distance: the card record carries no session open for a card's grading session, so this reading is absent, not estimated.",
     "Days to the biggest expiry: the cards carry no expiry breakdown, so this reading is absent, not estimated.",
@@ -1429,8 +1433,154 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "published_at_utc": "2026-11-03T21:57:18.720822+00:00",
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "142 graded forecasts of 370 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 370,
+        "graded_forecasts": 142,
+        "recorded_on": "2026-11-04",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_08",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-11-03",
+      "keys_present": [
+        "accrual",
+        "calibration_attestation",
+        "card_sessions",
+        "execution_pricing",
+        "explanation",
+        "features_absent",
+        "feed",
+        "history",
+        "kill_criterion",
+        "live",
+        "price_basis",
+        "provenance",
+        "published_at_utc",
+        "record_surface",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_rule",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_08",
+      "forecasts": 370,
+      "grades": 142,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 370 forecasts are on record and 142 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 82,
+          "path": "/history"
+        },
+        {
+          "items": 72,
+          "path": "/history/episodes"
+        },
+        {
+          "items": 10,
+          "path": "/history/pooled"
+        }
+      ],
+      "total_items_counted": 164
+    },
+    "version": 1
+  },
   "source": "The published morning map cards on record and the public grading of those cards against the completed trading sessions that followed them",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Expected move in dollars per index name.",
+      "rows": [
+        {
+          "name": "SPY (the big S&P 500 fund)",
+          "score": 4.66
+        },
+        {
+          "name": "QQQ (the big Nasdaq-100 fund)",
+          "score": 8.9
+        },
+        {
+          "name": "IWM (the big small-company fund)",
+          "score": 1.86
+        }
+      ],
+      "source": "live.names[].expected_move_price",
+      "title": "Expected move per index, dollars"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Share of episodes whose level was touched in one session, per index and level.",
+      "rows": [
+        {
+          "name": "IWM call_wall",
+          "score": 37.5
+        },
+        {
+          "name": "IWM flip",
+          "score": 0.0
+        },
+        {
+          "name": "IWM put_wall",
+          "score": 0.0
+        },
+        {
+          "name": "QQQ call_wall",
+          "score": 12.5
+        },
+        {
+          "name": "QQQ flip",
+          "score": 0.0
+        },
+        {
+          "name": "QQQ put_wall",
+          "score": 50.0
+        },
+        {
+          "name": "SPY call_wall",
+          "score": 0.0
+        },
+        {
+          "name": "SPY flip",
+          "score": 0.0
+        },
+        {
+          "name": "SPY put_wall",
+          "score": 12.5
+        }
+      ],
+      "source": "history.episodes[].touched_1 share",
+      "title": "Levels touched within one session, percent"
+    },
+    "version": 1
+  },
   "thin_rule": "Below 30 graded, counts only: no percentage and no score is drawn from a handful of tests.",
   "tool": "Wall Lifetime Forecaster"
 }
