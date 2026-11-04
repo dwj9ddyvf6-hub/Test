@@ -995,7 +995,7 @@
       "ZION",
       "ZWS"
     ],
-    "priced_moves_on_record": 520,
+    "priced_moves_on_record": 519,
     "recorded_at": "2026-11-03T23:49:16Z",
     "recorded_on": "2026-11-03",
     "second_list_note": "A second list of upcoming dates disagrees with the calendar on a few names. It never governs an upcoming report here; the calendar does. Days from that second list that already sit inside the price history are counted only as past observations in the group history.",
@@ -1026,8 +1026,8 @@
   },
   "decision_as_of": "2026-11-03",
   "exceedance": {
-    "detail": "A per name priced move record now exists (520 upcoming reporters priced from stored at the money straddle quotes, priced_moves.py). Each priced name's bigger than priced chance is recorded on its own block as the share of its group pool past moves bigger than that priced move. Names with no priced move on record stay not_recorded, named per name.",
-    "priced_moves_on_record": 520,
+    "detail": "A per name priced move record now exists (519 upcoming reporters priced from stored at the money straddle quotes, priced_moves.py). Each priced name's bigger than priced chance is recorded on its own block as the share of its group pool past moves bigger than that priced move. Names with no priced move on record stay not_recorded, named per name.",
+    "priced_moves_on_record": 519,
     "state": "recorded"
   },
   "execution_pricing": false,
@@ -1080,13 +1080,13 @@
     "state": "recorded_market_sector"
   },
   "fe17_centre": {
-    "detail": "FE17's blend (0.60 of the priced implied move plus 0.40 of the historical event move, adjusted for dispersion and timing quality) is registered as this engine's centre, and it takes over on each name whose inputs exist. All three inputs are on record: a per name priced move record (520 upcoming reporters priced from stored at the money straddle quotes), a report timing record from the earnings record lane (736 names with a timing quality), and a dispersion record (1601 names). The dispersion input is forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names, carried by the earnings record. It is not cross analyst estimate dispersion, which no free source carries; the two quantities are different and neither is renamed into the other. The registered definition originally named cross analyst estimate dispersion as this input. By the registry amendment of 2026-10-30, made under the owner's decision delegated to Midna that day, the registered dispersion input is the forecast error dispersion on record, adopted under its own true name. A name missing any other input keeps the historical middle as its centre, labelled as such, with the missing input named.",
+    "detail": "FE17's blend (0.60 of the priced implied move plus 0.40 of the historical event move, adjusted for dispersion and timing quality) is registered as this engine's centre, and it takes over on each name whose inputs exist. All three inputs are on record: a per name priced move record (519 upcoming reporters priced from stored at the money straddle quotes), a report timing record from the earnings record lane (736 names with a timing quality), and a dispersion record (1601 names). The dispersion input is forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names, carried by the earnings record. It is not cross analyst estimate dispersion, which no free source carries; the two quantities are different and neither is renamed into the other. The registered definition originally named cross analyst estimate dispersion as this input. By the registry amendment of 2026-10-30, made under the owner's decision delegated to Midna that day, the registered dispersion input is the forecast error dispersion on record, adopted under its own true name. A name missing any other input keeps the historical middle as its centre, labelled as such, with the missing input named.",
     "dispersion_definition": "forecast error dispersion: sd of the name's own prior forecast errors, z scored across reporting names. Not cross analyst dispersion.",
     "dispersion_input": "forecast_error_dispersion",
     "missing": [],
     "names_with_dispersion_on_record": 1601,
     "names_with_timing": 736,
-    "priced_moves_on_record": 520,
+    "priced_moves_on_record": 519,
     "state": "inputs_recorded"
   },
   "fe18_pead": {
@@ -39575,14 +39575,13 @@
         },
         "date": "2026-11-17",
         "exceedance": {
-          "pool_moves": 171,
-          "priced_move_pct": 8.641,
-          "share_bigger_than_priced": 0.1053,
-          "state": "recorded"
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
         },
         "fe17_centre": {
           "centre_pct": null,
           "missing": [
+            "implied_move",
             "timing_quality"
           ],
           "state": "not_recorded"
@@ -39598,7 +39597,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 8.641,
+        "priced_move_pct": null,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
