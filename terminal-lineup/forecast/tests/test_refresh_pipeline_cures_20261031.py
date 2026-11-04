@@ -119,10 +119,11 @@ def test_abstention_reissue_voids_and_valid_basis():
     # the valid basis, never the raw row count.
     assert 'mine.get("forecasts_valid"' in src
     assert '"forecasts_voided"' in src
-    # The census pins stand at the re-taken 2026-10-30 session
-    # for both rolling publishers.
-    assert 'board.get("session") != "2026-10-30"' in src
-    assert 'sop.get("session") != "2026-10-30"' in src
+    # The census pins stand at the re-taken session for both
+    # rolling publishers (re-taken 2026-11-04 in the terminal
+    # full census: 2026-11-03; SUITE-TRIAGE-REPIN-20261104).
+    assert 'board.get("session") != "2026-11-03"' in src
+    assert 'sop.get("session") != "2026-11-03"' in src
 
 
 def test_runner_regenerates_attestations_after_grading():
