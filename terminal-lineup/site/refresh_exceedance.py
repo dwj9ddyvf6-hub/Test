@@ -270,49 +270,6 @@ def count_check(todays_rows, declared_subjects):
     return ok, len(pairs), superseded, parallel
 
 
-def superseded_block(superseded_subjects, parallel_subjects,
-                     voided_subjects):
-    """The page's same-session republication block.
-
-    EXCEEDANCE-NOTE-VOID-20261104: the note used to promise that
-    every earlier-run row "stays on the record and will be
-    graded". That stopped being true when a same-session
-    publication was voided on the ledger (the SUPN triple of
-    2026-11-03, voided under the Q1 gap-destiny precedent after
-    the name's missing price bar was filled): voided rows stay
-    visible on the record under their void and are never
-    graded. When any of this session's earlier publications
-    stand voided, the block names the subjects and the note
-    says exactly that in plain words; with no voids the
-    original wording stands unchanged."""
-    note = ("Forecast rows published by an earlier run of this "
-            "same session stay on the record and will be graded; "
-            "they are not part of the live set above. Subjects "
-            "lists the names that qualified in an earlier run "
-            "only; parallel subjects are names whose declared "
-            "outcomes moved between runs, so both publications "
-            "stand on the record.")
-    if voided_subjects:
-        note = ("Forecast rows published by an earlier run of "
-                "this same session stay on the record; they are "
-                "not part of the live set above. Subjects lists "
-                "the names that qualified in an earlier run "
-                "only; parallel subjects are names whose "
-                "declared outcomes moved between runs. One "
-                "earlier publication was later voided on the "
-                "record and will not be graded: "
-                + ", ".join(voided_subjects)
-                + ", whose first figures were built from an "
-                "incomplete price history and replaced. The "
-                "voided rows stay visible on the record under "
-                "their void; the replacement publication in "
-                "the live set above is the one that stands.")
-    return {"subjects": superseded_subjects,
-            "parallel_subjects": parallel_subjects,
-            "voided_subjects": voided_subjects,
-            "note": note}
-
-
 def quantile(vals, q):
     s = sorted(vals)
     pos = q * (len(s) - 1)
@@ -790,21 +747,6 @@ def build():
         1 for r in rows if r.get("type") == "forecast"
         and r.get("engine_id") == ENGINE_ID and r["subject"] in INDEXES)
 
-    # EXCEEDANCE-NOTE-VOID-20261104: subjects whose earlier
-    # same-session publication stands voided on the ledger
-    # (correction rows naming this engine's forecast rows for
-    # this as-of session), so the republication block below can
-    # name them instead of promising they will be graded.
-    by_id = {r.get("row_id"): r for r in rows}
-    voided_subjects = sorted({
-        orig.get("subject")
-        for r in rows if r.get("type") == "correction"
-        for orig in [by_id.get(r.get("corrects_row_id"))]
-        if orig and orig.get("engine_id") == ENGINE_ID
-        and (orig.get("lineage") or {}).get("clocks", {})
-        .get("decision_as_of") == as_of
-        and orig.get("subject")})
-
     data = {
         "tool": "Exceedance Forecaster",
         "state": "proving",
@@ -843,9 +785,17 @@ def build():
             "indexes": live_indexes,
             "names": live_names,
             "names_qualifying": len(live_names),
-            "superseded_same_session": superseded_block(
-                superseded_subjects, parallel_subjects,
-                voided_subjects),
+            "superseded_same_session": {
+                "subjects": superseded_subjects,
+                "parallel_subjects": parallel_subjects,
+                "note": ("Forecast rows published by an earlier run "
+                         "of this same session stay on the record "
+                         "and will be graded; they are not part of "
+                         "the live set above. Subjects lists the "
+                         "names that qualified in an earlier run "
+                         "only; parallel subjects are names whose "
+                         "declared outcomes moved between runs, so "
+                         "both publications stand on the record.")},
             "names_checked": len(panel),
             "excluded_total": total_excluded,
             "excluded": {
