@@ -1,10 +1,10 @@
 {
   "calendar": {
-    "dated": 934,
+    "dated": 849,
     "names_on_record": 1838,
-    "no_date": 904,
-    "priced_moves_on_record": 603,
-    "recorded_on": "2026-11-02",
+    "no_date": 989,
+    "priced_moves_on_record": 592,
+    "recorded_on": "2026-11-03",
     "stale_note": "The calendar was gathered on October 12, 2026, more than a week before the newest map session, so by its own page's rule it is old. Its dates are shown as recorded, and any date that has slipped will be caught when the calendar is next gathered.",
     "timing_note": "The calendar carries no report timing, nothing about whether a report lands before the open or after the close. Until a record carries timing, the report date itself is counted as the earnings day. That is a named gap in the record, not a fact about the companies."
   },
@@ -25,6 +25,10 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution, over the earnings session (events within 5 sessions). It is graded on how often its stated ranges contain what actually happens, checked against the width of those ranges. It would be ended if after 60 events, the exceedance confidence interval includes 50 percent or the median ratio is below 1.0. It counts as proven at 60 events.",
+    "summary": "Forecast how big an earnings-day move will be when market positioning is set to amplify it, and never which way it will go."
+  },
   "feed": "tastytrade_chain_snapshot",
   "forecast": {
     "claim": "For a stock in the index that reports earnings within the next 5 trading days while dealer positioning for the whole index is negative, the size of its earnings-day move, whichever way it goes, will be bigger than the move the options market priced in for at least 55 out of every 100 such reports, and the middle report's actual move will be at least 1.10 times its priced move.",
@@ -54,7 +58,7 @@
     "tagged_names_on_record": 1503
   },
   "missing_input": {
-    "detail": "The calendar's priced-move field is empty for all 934 dated names. The chain store that could carry a per-stock priced move holds 98 snapshots. The expected-move page covers the index funds only and is not a per-stock earnings price. The per-stock volatility record holds a volatility level, not a priced move, and a level is never turned into a priced move here. The first record that carries a real priced move for a coming report, for example the first stored per-stock option chain, lets this engine record forecasts unchanged.",
+    "detail": "The calendar's priced-move field is empty for all 849 dated names. The chain store that could carry a per-stock priced move holds 98 snapshots. The expected-move page covers the index funds only and is not a per-stock earnings price. The per-stock volatility record holds a volatility level, not a priced move, and a level is never turned into a priced move here. The first record that carries a real priced move for a coming report, for example the first stored per-stock option chain, lets this engine record forecasts unchanged.",
     "name": "the priced expected move for each report",
     "state": "absent"
   },
@@ -237,18 +241,174 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "published_at_utc": "2026-11-03T13:51:16.691421+00:00",
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (1240 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 1240,
+        "graded_forecasts": 0,
+        "recorded_on": "2026-11-03",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_11",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-11-03",
+      "keys_present": [
+        "calendar",
+        "calibration_attestation",
+        "execution_pricing",
+        "feed",
+        "forecast",
+        "grading_note",
+        "history",
+        "kill_criterion",
+        "live",
+        "membership",
+        "missing_input",
+        "options_gate",
+        "panel_last_session",
+        "positioning",
+        "price_basis",
+        "provenance",
+        "published_at_utc",
+        "self_test",
+        "source",
+        "state",
+        "thin_rule",
+        "tool",
+        "waiting",
+        "window",
+        "worked_example"
+      ]
+    },
+    "feed": "tastytrade_chain_snapshot",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_11",
+      "forecasts": 1772,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 1772 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "tastytrade_chain_snapshot",
+      "price_basis": "snapshot",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 0,
+          "path": "/history"
+        }
+      ],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
   "self_test": {
     "cases": 4,
     "passed": 4
   },
   "source": "The scheduled earnings calendar gathered on October 12, 2026, and the morning market map's index-wide positioning record",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Positioning dollars per 1 percent move, per event name.",
+      "rows": [
+        {
+          "name": "ADM",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "ADT",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "ADUS",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "AES",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "AFG",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "AIG",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "AIZ",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "ALAB",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "ALKS",
+          "score": -10523388737.221846
+        },
+        {
+          "name": "AMD",
+          "score": -10523388737.221846
+        }
+      ],
+      "source": "window.events[].positioning_value_usd_per_1pct",
+      "title": "Positioning pressure behind each coming report"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Actual move percent per worked event, priced beside it. Labelled worked example on the page.",
+      "rows": [
+        {
+          "coverage": "priced 4.0 percent",
+          "name": "event 1",
+          "score": 5.0
+        },
+        {
+          "coverage": "priced 5.0 percent",
+          "name": "event 2",
+          "score": 4.0
+        },
+        {
+          "coverage": "priced 3.0 percent",
+          "name": "event 3",
+          "score": 3.6
+        },
+        {
+          "coverage": "priced 6.0 percent",
+          "name": "event 4",
+          "score": 6.6
+        }
+      ],
+      "source": "worked_example.events[].actual_move_pct",
+      "title": "Worked example: actual against priced move"
+    },
+    "version": 1
+  },
   "thin_rule": "Below 30 graded events in either group, counts only: no share and no middle ratio is drawn from a handful of reports.",
   "tool": "Gamma-Pressure Earnings Trap",
   "waiting": true,
   "window": {
     "after_session": "2026-11-02",
-    "count": 598,
+    "count": 592,
     "events": [
       {
         "date": "2026-11-03",
@@ -319,20 +479,6 @@
         "priced_move_pct": "5.2%",
         "priced_move_state": "on record",
         "symbol": "AFG"
-      },
-      {
-        "date": "2026-11-03",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "35.7%",
-        "priced_move_state": "on record",
-        "symbol": "AHCO"
       },
       {
         "date": "2026-11-03",
@@ -512,20 +658,6 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.2%",
-        "priced_move_state": "on record",
-        "symbol": "AROC"
-      },
-      {
-        "date": "2026-11-03",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
         "priced_move_pct": "8.3%",
         "priced_move_state": "on record",
         "symbol": "ASH"
@@ -627,20 +759,6 @@
         "priced_move_pct": "10.3%",
         "priced_move_state": "on record",
         "symbol": "CPNG"
-      },
-      {
-        "date": "2026-11-03",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
-        "symbol": "CRVL"
       },
       {
         "date": "2026-11-03",
@@ -1128,20 +1246,6 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "12.2%",
-        "priced_move_state": "on record",
-        "symbol": "LGIH"
-      },
-      {
-        "date": "2026-11-03",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
         "priced_move_pct": "7.1%",
         "priced_move_state": "on record",
         "symbol": "LPX"
@@ -1159,20 +1263,6 @@
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "LTC"
-      },
-      {
-        "date": "2026-11-03",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "11.8%",
-        "priced_move_state": "on record",
-        "symbol": "MARA"
       },
       {
         "date": "2026-11-03",
@@ -1243,20 +1333,6 @@
         "priced_move_pct": "9.6%",
         "priced_move_state": "on record",
         "symbol": "MTDR"
-      },
-      {
-        "date": "2026-11-03",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "6.0%",
-        "priced_move_state": "on record",
-        "symbol": "MZTI"
       },
       {
         "date": "2026-11-03",
@@ -1775,20 +1851,6 @@
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "VRNS"
-      },
-      {
-        "date": "2026-11-03",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.9%",
-        "priced_move_state": "on record",
-        "symbol": "VSNT"
       },
       {
         "date": "2026-11-03",
@@ -2685,20 +2747,6 @@
         "priced_move_pct": "5.4%",
         "priced_move_state": "on record",
         "symbol": "EMR"
-      },
-      {
-        "date": "2026-11-04",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.0%",
-        "priced_move_state": "on record",
-        "symbol": "ENVX"
       },
       {
         "date": "2026-11-04",
@@ -4113,20 +4161,6 @@
         "priced_move_pct": "12.0%",
         "priced_move_state": "on record",
         "symbol": "RVMD"
-      },
-      {
-        "date": "2026-11-04",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.5%",
-        "priced_move_state": "on record",
-        "symbol": "RXRX"
       },
       {
         "date": "2026-11-04",
@@ -6070,6 +6104,20 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "HUBG"
+      },
+      {
+        "date": "2026-11-05",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-02",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -10523388737.221846,
         "priced_move_pct": "11.8%",
         "priced_move_state": "on record",
         "symbol": "IBP"
@@ -6238,6 +6286,20 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "KTB"
+      },
+      {
+        "date": "2026-11-05",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-02",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -10523388737.221846,
         "priced_move_pct": "5.6%",
         "priced_move_state": "on record",
         "symbol": "LAMR"
@@ -6283,20 +6345,6 @@
         "priced_move_pct": "13.5%",
         "priced_move_state": "on record",
         "symbol": "LFST"
-      },
-      {
-        "date": "2026-11-05",
-        "governing_basis": "its own index",
-        "governing_index": "SPY",
-        "in_sp500": true,
-        "membership": "S&P 500 constituent on the list on record",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.6%",
-        "priced_move_state": "on record",
-        "symbol": "LITE"
       },
       {
         "date": "2026-11-05",
@@ -7011,20 +7059,6 @@
         "priced_move_pct": "12.2%",
         "priced_move_state": "on record",
         "symbol": "SHAK"
-      },
-      {
-        "date": "2026-11-05",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-02",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "27.9%",
-        "priced_move_state": "on record",
-        "symbol": "SHAZ"
       },
       {
         "date": "2026-11-05",
@@ -8310,6 +8344,20 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "MARA"
+      },
+      {
+        "date": "2026-11-09",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-02",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -10523388737.221846,
         "priced_move_pct": "21.8%",
         "priced_move_state": "on record",
         "symbol": "MNDY"
@@ -8355,6 +8403,20 @@
         "priced_move_pct": "12.2%",
         "priced_move_state": "on record",
         "symbol": "NOVT"
+      },
+      {
+        "date": "2026-11-09",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-02",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -10523388737.221846,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "NPK"
       },
       {
         "date": "2026-11-09",
@@ -8562,6 +8624,20 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "TGTX"
+      },
+      {
+        "date": "2026-11-09",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-02",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -10523388737.221846,
         "priced_move_pct": "16.3%",
         "priced_move_state": "on record",
         "symbol": "TTD"
@@ -8623,7 +8699,7 @@
         "symbol": "ZETA"
       }
     ],
-    "forecasts_recorded_today": 532,
+    "forecasts_recorded_today": 0,
     "reason_none": "Every report in the window has its date, its membership and its positioning state on record. What none of them has is a priced expected move, so no forecast could be recorded for any of them. Zero is the count, not a gap in the page.",
     "sessions": [
       "2026-11-03",
@@ -8632,7 +8708,7 @@
       "2026-11-06",
       "2026-11-09"
     ],
-    "sp500_count": 133
+    "sp500_count": 132
   },
   "worked_example": {
     "events": [
