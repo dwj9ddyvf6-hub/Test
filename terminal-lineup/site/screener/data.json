@@ -7,6 +7,10 @@
     "passed_every_check_all": 52
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its current reading is from 2026-11-03. On its live record it counts 1838 names checked, 1833 names scored, 1498 names with sector on record, 5 not enough data. No study record is on file for this page; what it shows is its current reading, updated on its normal schedule.",
+    "summary": "Take every stock from the most recent scored trading day and show only the ones that match the plain conditions you pick."
+  },
   "feed": "forecast_ledger",
   "indexes": [
     "S&P 500",
@@ -20186,6 +20190,56 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "published_at_utc": "2026-11-03T21:53:51.838176+00:00",
+  "record_surface": {
+    "calibration_record": null,
+    "current_reading": {
+      "as_of": "2026-11-03",
+      "keys_present": [
+        "counts",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "indexes",
+        "names",
+        "price_basis",
+        "provenance",
+        "published_at_utc",
+        "record_surface",
+        "sectors",
+        "session",
+        "source",
+        "subject_chart",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "counts": {
+        "names_checked": 1838,
+        "names_scored": 1833,
+        "names_with_sector_on_record": 1498,
+        "not_enough_data": 5,
+        "passed_every_check_all": 52
+      },
+      "source": "this page's own counts"
+    },
+    "missing": {
+      "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
   "sectors": [
     "Communication Services",
     "Consumer Discretionary",
@@ -20201,5 +20255,112 @@
   ],
   "session": "2026-11-03",
   "source": "Daily price and trading history for each stock, plus public filings on the positions big investors report, combined into the same eight checks for every name; each name's sector and index come from the published lists of the stocks that make up those indexes",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Each top name's screener score, its close beside it.",
+      "rows": [
+        {
+          "coverage": "close 30.95, 4 of 8 checks in favour",
+          "name": "WBD",
+          "score": 73.8
+        },
+        {
+          "coverage": "close 21.95, 5 of 8 checks in favour",
+          "name": "PEB",
+          "score": 73.3
+        },
+        {
+          "coverage": "close 126.55, 6 of 8 checks in favour",
+          "name": "ADUS",
+          "score": 72.8
+        },
+        {
+          "coverage": "close 973.36, 5 of 8 checks in favour",
+          "name": "REGN",
+          "score": 72.5
+        },
+        {
+          "coverage": "close 14.52, 5 of 8 checks in favour",
+          "name": "DRH",
+          "score": 72.4
+        },
+        {
+          "coverage": "close 34.74, 5 of 8 checks in favour",
+          "name": "KDP",
+          "score": 72.0
+        },
+        {
+          "coverage": "close 410.57, 6 of 8 checks in favour",
+          "name": "EG",
+          "score": 71.4
+        },
+        {
+          "coverage": "close 36.1, 5 of 8 checks in favour",
+          "name": "FIZZ",
+          "score": 71.3
+        },
+        {
+          "coverage": "close 82.2, 4 of 8 checks in favour",
+          "name": "BKH",
+          "score": 71.0
+        },
+        {
+          "coverage": "close 72.31, 5 of 8 checks in favour",
+          "name": "EXEL",
+          "score": 71.0
+        },
+        {
+          "coverage": "close 171.12, 5 of 8 checks in favour",
+          "name": "PCTY",
+          "score": 71.0
+        },
+        {
+          "coverage": "close 48.96, 5 of 8 checks in favour",
+          "name": "VRNS",
+          "score": 71.0
+        }
+      ],
+      "source": "names[].score",
+      "title": "The screened names themselves, by score"
+    },
+    "record": {
+      "buckets": [
+        {
+          "label": "10-19",
+          "value": 5
+        },
+        {
+          "label": "20-29",
+          "value": 132
+        },
+        {
+          "label": "30-39",
+          "value": 312
+        },
+        {
+          "label": "40-49",
+          "value": 347
+        },
+        {
+          "label": "50-59",
+          "value": 475
+        },
+        {
+          "label": "60-69",
+          "value": 537
+        },
+        {
+          "label": "70-79",
+          "value": 25
+        }
+      ],
+      "kind": "distribution",
+      "label": "How this session's scores spread across score bands, all scored names.",
+      "source": "names[].score distribution",
+      "title": "Scores across the screened names"
+    },
+    "version": 1
+  },
   "tool": "The Screener"
 }
