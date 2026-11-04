@@ -81,30 +81,76 @@ def build(closes_by_symbol, rule):
     return PG.compute_proof_universe(closes_by_symbol, rule)
 
 
-def load_panel_closes(path, max_names=None):
-    """Stream the DEEP panel symbol by symbol, keeping only
-    closes. The panel is 413 MB of JSON; loading it whole builds
-    several GB of row lists and was OOM killed on this box in
-    the build pass, so the file is read as one text and each
-    symbol's array is sliced and parsed on its own (top level
-    keys are the only `"<name>": [` occurrences in the file:
-    bar dates are quoted but never followed by a colon bracket).
-    Returns ({symbol: [closes]}, freshest_session)."""
+def _iter_panel_segments(path, chunk_size=1 << 23):
+    """Yield (symbol, rows) for each top level array in the
+    panel file, streaming: the file is read in chunks, consumed
+    bytes are dropped as segments are yielded, and only one
+    symbol's segment is ever held beside the chunk buffer. A
+    segment ends at the first "]]" after its start (a row's
+    closing bracket followed by the array's), the same
+    terminator the panel's own sidecar builder uses; an empty
+    array yields no rows. Separators between symbols are not
+    assumed uniform."""
     import re
-    with open(path, "r", encoding="utf-8") as fh:
-        text = fh.read()
-    matches = list(re.finditer(r'"([^"]+)": \[', text))
-    decoder = json.JSONDecoder()
+    header = re.compile(rb'"([^"]+)": \[')
+    buf = b""
+    eof = False
+    with open(path, "rb") as fh:
+        def refill():
+            nonlocal buf, eof
+            nxt = fh.read(chunk_size)
+            if nxt:
+                buf += nxt
+            else:
+                eof = True
+
+        while True:
+            m = header.search(buf)
+            if m is None:
+                if eof:
+                    return
+                # Keep a tail a header could straddle.
+                buf = buf[-64:]
+                refill()
+                continue
+            symbol = m.group(1).decode("utf-8")
+            start = m.end() - 1  # the '[' itself
+            if buf[start + 1:start + 2] == b"]":
+                yield symbol, []
+                buf = buf[start + 2:]
+                continue
+            idx = buf.find(b"]]", start)
+            while idx < 0:
+                if eof:
+                    raise ValueError(
+                        f"panel array terminator not found "
+                        f"for {symbol}")
+                refill()
+                idx = buf.find(b"]]", start)
+            rows = json.loads(buf[start:idx + 2].decode("utf-8"))
+            yield symbol, rows
+            buf = buf[idx + 2:]
+
+
+def load_panel_closes(path, max_names=None):
+    """Read the DEEP panel symbol by symbol, keeping only
+    closes, with bounded memory (PROOFGATE-STREAM-20261104).
+
+    The panel is 1.14 GB of JSON. The first form of this loader
+    held the whole file as one text (fh.read()) and sliced each
+    symbol's array out of it; that resident text, on top of the
+    closes map and the ledger work below, is what the OOM
+    killer took on three runs (exit -9, RSS observed 2.45 GB).
+    A memory map does not bound a full-universe scan either:
+    this scan touches every symbol, so every mapped page is
+    faulted in. The lane therefore streams the file in chunks
+    (_iter_panel_segments): resident panel memory is one chunk
+    plus one symbol's rows, and the only panel-sized thing held
+    is the closes map the scan itself consumes.
+    Returns ({symbol: [closes]}, freshest_session)."""
     closes_by_symbol = {}
     freshest = None
-    for match in matches:
-        symbol = match.group(1)
-        # Parse exactly one value at the array start and ignore
-        # whatever separator follows: the panel's separators are
-        # not uniform (the first symbol boundary carries no space
-        # after its comma, later ones do), and fixed offset
-        # slicing broke on both forms during the build pass.
-        rows, _end = decoder.raw_decode(text, match.end() - 1)
+    for symbol, rows in _iter_panel_segments(path):
         if not rows:
             continue
         closes_by_symbol[symbol] = [float(r[4]) for r in rows]
@@ -116,7 +162,7 @@ def load_panel_closes(path, max_names=None):
     return closes_by_symbol, freshest
 
 
-def recount_forward_record():
+def recount_forward_record(engine_id):
     """Cumulative forward record on the ledger, per distinct name.
 
     The published forward_ledger counts are cumulative (cured
@@ -128,6 +174,16 @@ def recount_forward_record():
     record keeps (19 names were written twice when the full
     scan's Benjamini-Hochberg correction changed their values
     against the first partial scan's rows).
+
+    Filter alignment (PROOFGATE-HARDEN-20261104): the recount
+    filters on the frozen rule's ledger engine as well as the
+    quantity, exactly as the consuming pages' own recount does
+    (proof_gate_block.recount_forward_rows). The two recounts
+    of the same record must be the same recount; before this
+    alignment this one counted any engine's rows carrying the
+    quantity, so a second engine writing the quantity would
+    have set the gate's published count and the pages' recount
+    against each other.
     """
     subjects = set()
     rows = 0
@@ -139,6 +195,7 @@ def recount_forward_record():
                     continue
                 row = json.loads(line)
                 if row.get("type") == "forecast" \
+                        and row.get("engine_id") == engine_id \
                         and row.get("quantity") == PG.FORWARD_QUANTITY:
                     rows += 1
                     subjects.add(row.get("subject"))
@@ -216,12 +273,13 @@ def main(argv=None):
     results = build(closes_by_symbol, rule)
     horizon_close = forward_close_date(
         as_of, int(rule["forward_check"]["horizon_sessions"]))
+    ledger_engine = rule["forward_check"]["ledger_engine_id"]
     ledger_counts = dict(
-        recount_forward_record(), created_this_run=0, duplicates=0,
-        skipped=no_ledger)
+        recount_forward_record(ledger_engine), created_this_run=0,
+        duplicates=0, skipped=no_ledger)
     if not no_ledger:
         led = Ledger(LEDGER_PATH, registry=reg)
-        if not led.verify_chain():
+        if not led.verify_chain_streaming():
             fail("forecast ledger hash chain does not verify")
         clocks = {c: as_of for c in (
             "event_time", "publication_time", "first_available_time",
@@ -234,7 +292,7 @@ def main(argv=None):
             led, results=results, issued_ts=as_of,
             horizon_open=as_of, horizon_close=horizon_close,
             lineage=lineage, rule=rule)
-        cumulative = recount_forward_record()
+        cumulative = recount_forward_record(ledger_engine)
         ledger_counts = {"created": cumulative["created"],
                          "created_this_run": created,
                          "duplicates": duplicates,
