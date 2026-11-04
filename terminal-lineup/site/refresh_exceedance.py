@@ -242,6 +242,26 @@ def expected_published_edges(close, half, guard_factor):
             round(close * (1.0 + widened), 2))
 
 
+def count_check(todays_rows, declared_subjects):
+    """EXCEEDANCE-RERUN-COUNT-20261104: split one session's ledger
+    forecast rows for this engine into this run's declared set and
+    same-session rows left by an earlier run of the same session.
+    Returns (ok, declared_count, superseded_subjects): ok when every
+    declared subject carries exactly 3 rows (one per quantity);
+    superseded subjects are named, never counted against the run."""
+    declared = [r for r in todays_rows
+                if r.get("subject") in declared_subjects]
+    superseded = sorted({r.get("subject") for r in todays_rows
+                         if r.get("subject") not in declared_subjects})
+    per_subject = {}
+    for r in declared:
+        per_subject[r.get("subject")] = \
+            per_subject.get(r.get("subject"), 0) + 1
+    ok = (len(declared) == 3 * len(declared_subjects)
+          and all(v == 3 for v in per_subject.values()))
+    return ok, len(declared), superseded
+
+
 def quantile(vals, q):
     s = sorted(vals)
     pos = q * (len(s) - 1)
@@ -678,10 +698,30 @@ def build():
               if r.get("type") == "forecast"
               and r.get("engine_id") == ENGINE_ID
               and r["lineage"]["clocks"]["decision_as_of"] == as_of]
-    if len(todays) != 3 * len(qualifying):
-        return fail(f"ledger count disagreement: {len(todays)} live "
-                    f"forecasts for the as-of session, expected "
+    # EXCEEDANCE-RERUN-COUNT-20261104: the exact-count check used to
+    # demand the ledger hold exactly this run's set for the session.
+    # The ledger is append-only and declared appends are idempotent,
+    # so a legitimate same-session re-run whose qualifying set shrank
+    # (the 2026-11-03 session was published by the scheduled run from
+    # a price panel that still had the SUPN hole, then re-run after
+    # the PANEL-LAGGARD-GAP cure filled it: 1,798 subjects on record
+    # vs 1,797 qualifying) failed forever at 5,394 vs 5,391. The
+    # check now proves this run's own declared rows all landed, and
+    # same-session rows for subjects outside this run's set are
+    # named as superseded on the page, never silently dropped: they
+    # were genuinely published and stay on the record to be graded.
+    count_ok, mine_today, superseded_subjects = count_check(
+        todays, {e["symbol"] for e in qualifying})
+    if not count_ok:
+        return fail(f"ledger count disagreement: {mine_today} live "
+                    f"forecasts for the as-of session from this "
+                    f"run's declared set, expected "
                     f"{3 * len(qualifying)}")
+    if superseded_subjects:
+        print(f"note: {3 * len(superseded_subjects)} same-session "
+              f"forecast rows from an earlier run of this session "
+              f"stay on the record for subjects not qualifying in "
+              f"this run: {', '.join(superseded_subjects)}")
     issue_days = len({
         r["lineage"]["clocks"]["decision_as_of"]
         for r in rows
@@ -728,6 +768,14 @@ def build():
             "indexes": live_indexes,
             "names": live_names,
             "names_qualifying": len(live_names),
+            "superseded_same_session": {
+                "subjects": superseded_subjects,
+                "rows": 3 * len(superseded_subjects),
+                "note": ("Forecast rows published by an earlier run "
+                         "of this same session for names that do not "
+                         "qualify in the latest run stay on the "
+                         "record and will be graded; they are not "
+                         "part of the live set above.")},
             "names_checked": len(panel),
             "excluded_total": total_excluded,
             "excluded": {
