@@ -11,6 +11,10 @@ reading was always drawn as current.
 The reading date is the date of the page's own reading, resolved from
 the page's data in this order (first plausible date wins):
 
+  freshest_filed on a filings-shaped page (repair 2026-11-04,
+  FILINGS-WIRE-READING-DATE-20261104: the lane's as_of/checked stamps
+  say when it last LOOKED; the reading is the freshest filing on
+  record, and a check that found nothing new does not move it),
   record_surface.current_reading.as_of (when already enriched),
   as_of_session, session, as_of, freshest_session, freshest_date,
   modelled_freshest_date, precomputed_freshest_date,
@@ -56,6 +60,19 @@ def reading_date(data):
     """The page data's own reading date, or None. Never file mtime."""
     if not isinstance(data, dict):
         return None
+    # Repair 2026-11-04 (FILINGS-WIRE-READING-DATE-20261104): a
+    # filings-shaped page (top-level freshest_filed, no session of
+    # its own) carries two dates: the lane's check stamp (as_of /
+    # checked) and the freshest filing actually on record. The
+    # reading date is the freshest filing. This precedes the
+    # record-surface stamp on purpose: that stamp is derived from
+    # this resolver, and a stamp minted by the check-date reading
+    # must not outrank the data's own content date forever.
+    if data.get("freshest_filed") and not data.get("session") \
+            and not data.get("as_of_session"):
+        d = parse_date(data.get("freshest_filed"))
+        if d is not None:
+            return d
     rs = data.get("record_surface")
     if isinstance(rs, dict):
         cr = rs.get("current_reading")
