@@ -283,7 +283,18 @@ def build():
     if os.path.exists(FEED_PATH):
         feed_doc = load_json(FEED_PATH)
     feed_map = {e.get("symbol"): e for e in feed_doc.get("map", [])}
-    session = feed_doc.get("as_of_session") or card_doc.get("dix_date")
+    # MAP-SESSION-DIX-20261104: this page's session is the
+    # positioning card's data session (the close its open interest
+    # and dark reading describe), as the Agent Debate cure of
+    # 2026-10-31 documents. Taking the feed's as_of_session first
+    # broke that invariant once the Board began publishing same-day
+    # post-close (BOARD-POSTCLOSE-20261031): the feed's as-of is the
+    # Board's session, one session ahead of the card's data, so the
+    # Map claimed a session its own card did not carry and every
+    # consumer gated on the card session (Gamma Ladder, Agent
+    # Debate) refused to publish. The card's dix_date is the data
+    # session; the feed's as-of is only the fallback.
+    session = card_doc.get("dix_date") or feed_doc.get("as_of_session")
 
     # Spot basis cure (MAP-SPOT-BASIS-20261031): the card's spot
     # is a live quote taken at build time (a pre-open build mixes
