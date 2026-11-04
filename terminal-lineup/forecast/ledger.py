@@ -372,6 +372,43 @@ class Ledger:
             prev = row["row_hash"]
         return True
 
+    def verify_chain_streaming(self):
+        """verify_chain() with bounded memory
+        (PROOFGATE-STREAM-20261104): the file is read one line
+        at a time and only the previous row's hash is held, so
+        verifying a ledger of any size costs one parsed row of
+        resident memory instead of the whole parsed ledger.
+        Same verdicts as verify_chain() on the same file: a
+        missing file verifies as an empty ledger, an invalid
+        JSON line raises LedgerError, and any broken link
+        returns False. Callers that verify before appending in
+        a memory-tight process use this form; the append path's
+        own re-verification is unchanged."""
+        if self._stat() is None:
+            return True
+        prev = ""
+        with open(self.path, "r", encoding="utf-8") as fh:
+            for i, line in enumerate(fh, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise LedgerError(
+                        f"ledger line {i} is not valid JSON "
+                        f"(possible rewrite/corruption): {exc}")
+                body = {k: v for k, v in row.items()
+                        if k not in ("row_hash", "prev_hash",
+                                     "row_id")}
+                expect = hashlib.sha256(
+                    (prev + _canonical(body)).encode()).hexdigest()
+                if row.get("prev_hash") != prev \
+                        or row.get("row_hash") != expect:
+                    return False
+                prev = row["row_hash"]
+        return True
+
     def _append(self, row):
         rows = self.rows()
         stat = self._stat()
