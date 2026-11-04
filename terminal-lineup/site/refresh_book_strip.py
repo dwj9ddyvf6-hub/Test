@@ -415,7 +415,42 @@ def _pick(d, *keys):
     return None
 
 
-def position_rows(ledger, now):
+def _opening_fill(ledger, position, symbol):
+    """The fill that opened this position, from the ledger's own
+    fills: the fill carrying the position's decision id when there
+    is one, else the first buy fill in the position's symbol."""
+    fills = ledger.get("fills") or []
+    if not isinstance(fills, list):
+        return None
+    did = _pick(position, "decision_id", "decision", "journal_id")
+    first_buy = None
+    for fl in fills:
+        if not isinstance(fl, dict):
+            continue
+        if str(_pick(fl, "symbol", "ticker")) != str(symbol):
+            continue
+        if did and fl.get("decision_id") == did:
+            return fl
+        if first_buy is None and \
+                (fl.get("side") or "").lower().startswith("b"):
+            first_buy = fl
+    return first_buy
+
+
+def _journal_invalidation(entries, decision_id):
+    """The invalidation written on the journal entry that opened
+    the position (its J-id), read the way live_cards reads a
+    card's: the number after "below" in its Invalidation field."""
+    if not decision_id:
+        return None
+    for e in entries or ():
+        if e.get("id") == decision_id:
+            return _first_number_after(
+                _field(e["fields"], "Invalidation"), "below")
+    return None
+
+
+def position_rows(ledger, entries, now):
     raw = ledger.get("positions") or []
     items = []
     if isinstance(raw, dict):
@@ -429,10 +464,29 @@ def position_rows(ledger, now):
         if not symbol:
             continue
         shares = _pick(p, "shares", "qty", "quantity")
+        # The ledger's position records name these fields in the
+        # book's own schema (entry_fill, invalidation_close_below);
+        # a record that does not restate them is completed from
+        # the opening fill and the journal entry that opened it.
         entry_price = _pick(p, "entry_price", "avg_entry_price",
-                            "fill_price", "price")
+                            "entry_fill", "fill_price", "price")
         entry_date = _pick(p, "entry_date", "date", "opened")
-        invalidation = _pick(p, "invalidation", "stop")
+        invalidation = _pick(p, "invalidation",
+                             "invalidation_close_below", "stop")
+        if entry_price is None or entry_date is None:
+            fill = _opening_fill(ledger, p, symbol)
+            if fill is not None:
+                if entry_price is None:
+                    entry_price = _pick(fill, "fill_price", "price")
+                if entry_date is None:
+                    ts = _pick(fill, "date", "bar_ts",
+                               "decision_ts", "datetime")
+                    if ts:
+                        entry_date = str(ts)[:10]
+        if invalidation is None:
+            invalidation = _journal_invalidation(
+                entries, _pick(p, "decision_id", "decision",
+                               "journal_id"))
         mark, mark_as_of = mark_for(str(symbol), now)
         row = {
             "symbol": str(symbol), "shares": shares,
@@ -460,8 +514,14 @@ def position_rows(ledger, now):
         else:
             line += " A current price could not be fetched, so no " \
                     "mark is shown."
+        if not entry_price:
+            line += " Its entry price is not in the book's " \
+                    "record, so no gain or loss is shown."
         if invalidation:
             line += " Out on a close below %s." % price(invalidation)
+        else:
+            line += " No exit line is recorded in the book's " \
+                    "record for this position."
         row["line"] = line
         rows.append(row)
     return rows
@@ -493,7 +553,7 @@ def build_state(now: datetime) -> dict:
         str(ledger.get("inception", "2026-10-30"))[:10])
     starting = float(ledger.get("starting_equity") or 100000.0)
     cash = float(ledger.get("cash") or 0.0)
-    positions = position_rows(ledger, now)
+    positions = position_rows(ledger, entries, now)
     if positions and all(p["mark"] for p in positions):
         equity = cash + sum(float(p["shares"]) * float(p["mark"])
                             for p in positions)
