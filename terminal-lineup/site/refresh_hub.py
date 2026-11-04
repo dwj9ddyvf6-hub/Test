@@ -111,6 +111,50 @@ def parse_date(value):
         return None
 
 
+def _collection_figures(slug: str, card: str) -> str:
+    """Recompute a collection card's own figures from its page's
+    data file (cure HUB-NOTE-FIGURES-20261104).
+
+    The D-HUB cure recomputed chips and as-of dates on every run,
+    but a card's jobline and full note carried their figures
+    verbatim from the day they were authored: the Short Volume
+    Ledger card went on stating 723 days on record, a span
+    ending October 30, 2026 and a check date of October 31 while
+    its own page's data counted 743 days through November 2,
+    checked November 3. A card whose data file carries a counted
+    days_on_record, a coverage span and a checked date has those
+    figures recomputed here on every hub run; a card without
+    them is left exactly as authored."""
+    if "days on record" not in card:
+        return card
+    path = HERE / slug / "data.json"
+    if not path.exists():
+        return card
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+    except Exception:
+        return card
+    days = data.get("days_on_record")
+    cov = data.get("coverage") or ""
+    m = re.search(r"from (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})"
+                  r", covering ([\d,]+) stock", cov)
+    checked = parse_date(data.get("checked"))
+    if not isinstance(days, int) or not m or checked is None:
+        return card
+    card = re.sub(r"[\d,]+ days on record",
+                  f"{days:,} days on record", card)
+    tail = (f"from {plain_date(parse_date(m.group(1)))} to "
+            f"{plain_date(parse_date(m.group(2)))}, covering "
+            f"{int(m.group(3).replace(',', '')):,} stocks, checked "
+            f"{plain_date(checked)}")
+    card = re.sub(r"from [A-Z][a-z]+ \d{1,2}, \d{4} to "
+                  r"[A-Z][a-z]+ \d{1,2}, \d{4}, covering [\d,]+ "
+                  r"stocks, checked [A-Z][a-z]+ \d{1,2}, \d{4}",
+                  tail, card)
+    return card
+
+
 def headline_date(slug: str):
     """The page's canonical reading date (freshness.py), or None.
 
@@ -482,6 +526,7 @@ def main() -> int:
                         '<span class="updated">No reading date '
                         'on record</span>',
                         new_card, count=1)
+        new_card = _collection_figures(slug, new_card)
         chip = re.search(r'class="chip ([a-z]+)"', new_card)
         if chip and chip.group(1) in counts:
             counts[chip.group(1)] += 1
