@@ -4,7 +4,7 @@ Start here. This file is the map of the whole repository for a reader (human or 
 
 Total files indexed: 8206
 
-Indexed commit: `075ec4fde30eea34c4d3543597792226007bb869`. Generated at: 2026-11-04T12:51:47Z. Total size of indexed files (self entries excluded, their sizes are null): 1071396146 bytes.
+Indexed commit: `1337eb8ab4f53fb02a5d9b591ff5ac8d1efe1f68`. Generated at: 2026-11-04T13:13:30Z. Total size of indexed files (self entries excluded, their sizes are null): 1071426749 bytes.
 
 ## What this repository is
 
@@ -48,7 +48,7 @@ A public library of trading strategies and the desk software around them: strate
 | research | 10 | 16995531 | Standalone research works: the technical analysis study and practice archive, and the master trader study, in Markdown, PDF, DOCX and ZIP forms. |
 | sleeves | 571 | 5590107 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
 | strategies | 270 | 528108 | Strategy cards: one card per catalogued strategy (269 cards), grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json. |
-| terminal-lineup | 3137 | 888805611 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
+| terminal-lineup | 3137 | 888836214 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
 | tests | 9 | 105111 | Repository-level regression blocker tests. |
 | tools | 2 | 649 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
 
@@ -107,7 +107,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`075ec4fde30eea34c4d3543597792226007bb869`) is listed in INDEX.json: 8206 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`1337eb8ab4f53fb02a5d9b591ff5ac8d1efe1f68`) is listed in INDEX.json: 8206 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
