@@ -67,11 +67,14 @@ running this script twice produces the same file.
 Usage: python3 refresh_earningsdrift.py
 """
 
+import http.client
 import json
 import math
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 from datetime import datetime, timedelta
 
@@ -109,10 +112,42 @@ def load_json(path):
         return json.load(fh)
 
 
-def _get_json(url):
-    req = urllib.request.Request(url, headers=EDGAR_UA)
-    with urllib.request.urlopen(req, timeout=60) as fh:
-        return json.loads(fh.read().decode())
+TRANSIENT_FETCH_ERRORS = (http.client.IncompleteRead,
+                          http.client.RemoteDisconnected,
+                          ConnectionError, TimeoutError,
+                          urllib.error.URLError)
+
+
+def _get_json(url, attempts=3, _urlopen=None, _sleep=None):
+    """GET one JSON document from EDGAR, with a bounded retry
+    (EARNINGS-DRIFT-RETRY-20261104).
+
+    The 2026-11-03 refresh failed outright when EDGAR truncated
+    one chunked response mid-transfer (IncompleteRead, 0 bytes):
+    a transient transport event the same refresher walked past
+    on its next run. A single attempt turns that class into a
+    failed lane; an unbounded retry turns it into a hang. This
+    is the bounded middle: transport failures only (a truncated
+    or reset connection, a timeout, a connection level error)
+    are retried, up to `attempts` total tries with a short
+    growing pause; a response that arrives and is not JSON, and
+    the final transport failure after the bound, raise exactly
+    as a single attempt would have, and the caller fails by
+    name. Bounded means bounded: three tries, then the failure
+    is the failure."""
+    opener = _urlopen or urllib.request.urlopen
+    sleep = _sleep or time.sleep
+    last = None
+    for n in range(attempts):
+        try:
+            req = urllib.request.Request(url, headers=EDGAR_UA)
+            with opener(req, timeout=60) as fh:
+                return json.loads(fh.read().decode())
+        except TRANSIENT_FETCH_ERRORS as exc:
+            last = exc
+            if n < attempts - 1:
+                sleep(2 * (n + 1))
+    raise last
 
 
 def fetch_event_dates(symbol):
