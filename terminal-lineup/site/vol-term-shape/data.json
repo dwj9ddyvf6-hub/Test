@@ -1,9 +1,9 @@
 {
-  "as_of_session": "2026-11-02",
+  "as_of_session": "2026-11-03",
   "calibration_attestation": {
     "attestation": {
-      "basis": "2 graded forecasts of 32 recorded on the ledger (mean scores: crps_approx 0.0910, pinball@0.25 0.0339, pinball@0.5 0.0510, pinball@0.75 0.0516); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-      "forecasts_recorded": 32,
+      "basis": "2 graded forecasts of 40 recorded on the ledger (mean scores: crps_approx 0.0910, pinball@0.25 0.0339, pinball@0.5 0.0510, pinball@0.75 0.0516); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 40,
       "graded_forecasts": 2,
       "recorded_on": "2026-11-04",
       "status": "not_attested"
@@ -79,27 +79,27 @@
         "symbol": "SPY"
       },
       {
-        "at_or_below": 6,
-        "coverage_pct": 18.8,
-        "graded": 32,
+        "at_or_below": 7,
+        "coverage_pct": 21.2,
+        "graded": 33,
         "horizon": 63,
         "percentile": 25,
         "stated_pct": 25,
         "symbol": "SPY"
       },
       {
-        "at_or_below": 15,
-        "coverage_pct": 46.9,
-        "graded": 32,
+        "at_or_below": 16,
+        "coverage_pct": 48.5,
+        "graded": 33,
         "horizon": 63,
         "percentile": 50,
         "stated_pct": 50,
         "symbol": "SPY"
       },
       {
-        "at_or_below": 22,
-        "coverage_pct": 68.8,
-        "graded": 32,
+        "at_or_below": 23,
+        "coverage_pct": 69.7,
+        "graded": 33,
         "horizon": 63,
         "percentile": 75,
         "stated_pct": 75,
@@ -160,27 +160,27 @@
         "symbol": "QQQ"
       },
       {
-        "at_or_below": 4,
-        "coverage_pct": 12.5,
-        "graded": 32,
+        "at_or_below": 5,
+        "coverage_pct": 15.2,
+        "graded": 33,
         "horizon": 63,
         "percentile": 25,
         "stated_pct": 25,
         "symbol": "QQQ"
       },
       {
-        "at_or_below": 12,
-        "coverage_pct": 37.5,
-        "graded": 32,
+        "at_or_below": 13,
+        "coverage_pct": 39.4,
+        "graded": 33,
         "horizon": 63,
         "percentile": 50,
         "stated_pct": 50,
         "symbol": "QQQ"
       },
       {
-        "at_or_below": 25,
-        "coverage_pct": 78.1,
-        "graded": 32,
+        "at_or_below": 26,
+        "coverage_pct": 78.8,
+        "graded": 33,
         "horizon": 63,
         "percentile": 75,
         "stated_pct": 75,
@@ -189,7 +189,7 @@
     ],
     "label": "History, not live forecasts",
     "note": "Worked out week by week over the price history on record: each week's bands were built only from earlier weeks whose results were already known by then, then checked against what actually happened. Weeks are counted every 5 trading days, so the longer stretches overlap each other and the counts are not separate independent cases. These are study figures from the past, not the live record above.",
-    "sessions": 405,
+    "sessions": 406,
     "shape_cells": [
       {
         "brier": 0.2547,
@@ -206,7 +206,7 @@
         "symbol": "QQQ"
       }
     ],
-    "span_end": "2026-11-02",
+    "span_end": "2026-11-03",
     "span_start": "2025-03-25",
     "study_record": {
       "note": "The earlier study this engine is built from found that how much prices have been moving is the strongest guide to how much they will move next, across every stretch it tested. That is the study's result, from its own longer history. It is the reason this engine exists; it is not this engine's result."
@@ -215,60 +215,60 @@
   "kill_criterion": "This tool is retired if, after 52 weekly sets of forecasts have been graded, the share of times actual movement landed at or below a stated percentile misses that percentile's rate by more than 10 points at two or more of the three stretches (5, 21 and 63 trading days).",
   "live": {
     "forecasts_graded": 2,
-    "forecasts_recorded": 32,
+    "forecasts_recorded": 40,
     "implied_prior": {
       "first_date": "2024-11-04",
-      "last_close": 21.15,
-      "last_date": "2026-11-02",
-      "note": "The design for this page calls for the volatility priced into options, corrected by the measured 0.87 factor, to guide the level of these bands. That priced series is not on record in a usable form: the index file holds 23 daily closes, September 21 to October 21, 2026, for the S&P 500 only, and nothing at all for QQQ. Twenty-three days cannot set a level for a record that runs 405 trading days, so the correction is not applied and these bands are built from actual past movement alone.",
-      "readings": 502,
+      "last_close": 20.83,
+      "last_date": "2026-11-03",
+      "note": "The design for this page calls for the volatility priced into options, corrected by the measured 0.87 factor, to guide the level of these bands. That priced series is not on record in a usable form: the index file holds 23 daily closes, September 21 to October 21, 2026, for the S&P 500 only, and nothing at all for QQQ. Twenty-three days cannot set a level for a record that runs 406 trading days, so the correction is not applied and these bands are built from actual past movement alone.",
+      "readings": 503,
       "state": "absent"
     },
     "kill_target_cohorts": 52,
     "names": [
       {
-        "close": 752.1,
-        "close_date": "2026-11-02",
+        "close": 754.35,
+        "close_date": "2026-11-03",
         "horizons": [
           {
-            "horizon_close": "2026-11-09",
-            "p25": 0.072572,
-            "p25_pct": 7.3,
-            "p50": 0.104673,
-            "p50_pct": 10.5,
-            "p75": 0.134458,
-            "p75_pct": 13.4,
+            "horizon_close": "2026-11-10",
+            "p25": 0.067526,
+            "p25_pct": 6.8,
+            "p50": 0.097395,
+            "p50_pct": 9.7,
+            "p75": 0.125108,
+            "p75_pct": 12.5,
             "sessions": 5,
             "training_cohorts": 76
           },
           {
-            "horizon_close": "2026-12-01",
-            "p25": 0.082545,
-            "p25_pct": 8.3,
-            "p50": 0.113682,
-            "p50_pct": 11.4,
-            "p75": 0.149249,
-            "p75_pct": 14.9,
+            "horizon_close": "2026-12-02",
+            "p25": 0.076806,
+            "p25_pct": 7.7,
+            "p50": 0.105777,
+            "p50_pct": 10.6,
+            "p75": 0.138871,
+            "p75_pct": 13.9,
             "sessions": 21,
             "training_cohorts": 73
           },
           {
-            "horizon_close": "2027-01-28",
-            "p25": 0.085722,
-            "p25_pct": 8.6,
-            "p50": 0.116257,
-            "p50_pct": 11.6,
-            "p75": 0.160939,
-            "p75_pct": 16.1,
+            "horizon_close": "2027-01-29",
+            "p25": 0.079195,
+            "p25_pct": 7.9,
+            "p50": 0.104724,
+            "p50_pct": 10.5,
+            "p75": 0.147926,
+            "p75_pct": 14.8,
             "sessions": 63,
-            "training_cohorts": 64
+            "training_cohorts": 65
           }
         ],
         "name": "SPY (the big S&P 500 fund)",
-        "recent_movement_pct": 11.4,
+        "recent_movement_pct": 10.6,
         "shape": {
           "bucket_cohorts": 26,
-          "horizon_close": "2026-12-01",
+          "horizon_close": "2026-12-02",
           "overall_training_pct": 54.8,
           "p": 0.4774,
           "p_pct": 47.7,
@@ -276,52 +276,52 @@
           "training_cohorts": 73
         },
         "symbol": "SPY",
-        "trailing_month_pct": 11.3,
-        "trailing_week_pct": 14.2
+        "trailing_month_pct": 11.1,
+        "trailing_week_pct": 13.8
       },
       {
-        "close": 681.09,
-        "close_date": "2026-11-02",
+        "close": 685.28,
+        "close_date": "2026-11-03",
         "horizons": [
           {
-            "horizon_close": "2026-11-09",
-            "p25": 0.164859,
-            "p25_pct": 16.5,
-            "p50": 0.228614,
-            "p50_pct": 22.9,
-            "p75": 0.289827,
-            "p75_pct": 29.0,
+            "horizon_close": "2026-11-10",
+            "p25": 0.144398,
+            "p25_pct": 14.4,
+            "p50": 0.20024,
+            "p50_pct": 20.0,
+            "p75": 0.253855,
+            "p75_pct": 25.4,
             "sessions": 5,
             "training_cohorts": 76
           },
           {
-            "horizon_close": "2026-12-01",
-            "p25": 0.187856,
-            "p25_pct": 18.8,
-            "p50": 0.251674,
-            "p50_pct": 25.2,
-            "p75": 0.318776,
-            "p75_pct": 31.9,
+            "horizon_close": "2026-12-02",
+            "p25": 0.16454,
+            "p25_pct": 16.5,
+            "p50": 0.220438,
+            "p50_pct": 22.0,
+            "p75": 0.279211,
+            "p75_pct": 27.9,
             "sessions": 21,
             "training_cohorts": 73
           },
           {
-            "horizon_close": "2027-01-28",
-            "p25": 0.195404,
-            "p25_pct": 19.5,
-            "p50": 0.256776,
-            "p50_pct": 25.7,
-            "p75": 0.385859,
-            "p75_pct": 38.6,
+            "horizon_close": "2027-01-29",
+            "p25": 0.167332,
+            "p25_pct": 16.7,
+            "p50": 0.219295,
+            "p50_pct": 21.9,
+            "p75": 0.335805,
+            "p75_pct": 33.6,
             "sessions": 63,
-            "training_cohorts": 64
+            "training_cohorts": 65
           }
         ],
         "name": "QQQ (the big Nasdaq-100 fund)",
-        "recent_movement_pct": 25.3,
+        "recent_movement_pct": 22.2,
         "shape": {
           "bucket_cohorts": 26,
-          "horizon_close": "2026-12-01",
+          "horizon_close": "2026-12-02",
           "overall_training_pct": 52.1,
           "p": 0.5089,
           "p_pct": 50.9,
@@ -329,22 +329,22 @@
           "training_cohorts": 73
         },
         "symbol": "QQQ",
-        "trailing_month_pct": 23.1,
-        "trailing_week_pct": 30.4
+        "trailing_month_pct": 23.0,
+        "trailing_week_pct": 29.4
       }
     ],
     "per_name": {
       "fresh_readings_needed": 20,
-      "freshest_date": "2026-11-02",
+      "freshest_date": "2026-11-03",
       "fullest_readings": 12,
       "names_on_record": 63,
-      "note": "Bands for single stocks are not published. The record of priced volatility for single stocks is current to 2026-11-02 and holds 63 names with at most 12 readings each. This engine needs 20 fresh readings for a name before it will publish a band for that name, so the single-stock part of this page is still building its history.",
+      "note": "Bands for single stocks are not published. The record of priced volatility for single stocks is current to 2026-11-03 and holds 63 names with at most 12 readings each. This engine needs 20 fresh readings for a name before it will publish a band for that name, so the single-stock part of this page is still building its history.",
       "oldest_date": "2026-10-02",
       "state": "history_building"
     },
-    "weekly_cohorts_recorded": 4
+    "weekly_cohorts_recorded": 5
   },
-  "next_session": "2026-11-03",
+  "next_session": "2026-11-04",
   "price_basis": "close",
   "provenance": {
     "execution_pricing": false,
@@ -355,8 +355,8 @@
   "record_surface": {
     "calibration_record": {
       "attestation": {
-        "basis": "2 graded forecasts of 32 recorded on the ledger (mean scores: crps_approx 0.0910, pinball@0.25 0.0339, pinball@0.5 0.0510, pinball@0.75 0.0516); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 32,
+        "basis": "2 graded forecasts of 40 recorded on the ledger (mean scores: crps_approx 0.0910, pinball@0.25 0.0339, pinball@0.5 0.0510, pinball@0.75 0.0516); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 40,
         "graded_forecasts": 2,
         "recorded_on": "2026-11-04",
         "status": "not_attested"
@@ -370,12 +370,11 @@
       "zero_forecast_state": null
     },
     "current_reading": {
-      "as_of": "2026-11-02",
+      "as_of": "2026-11-03",
       "keys_present": [
         "as_of_session",
         "calibration_attestation",
         "execution_pricing",
-        "explanation",
         "feed",
         "history",
         "kill_criterion",
@@ -383,10 +382,8 @@
         "next_session",
         "price_basis",
         "provenance",
-        "record_surface",
         "source",
         "state",
-        "subject_chart",
         "thin_cell_rule",
         "tool"
       ]
@@ -396,12 +393,12 @@
     "live_accrual": {
       "corrections": 0,
       "engine": "engine_07",
-      "forecasts": 32,
+      "forecasts": 40,
       "grades": 2,
       "source": "forecast/ledger.jsonl (counted)"
     },
     "missing": {
-      "what_and_when": "More live grades are still to come: 32 forecasts are on record and 2 are graded so far. The rest arrive after each following session close."
+      "what_and_when": "More live grades are still to come: 40 forecasts are on record and 2 are graded so far. The rest arrive after each following session close."
     },
     "provenance": {
       "execution_pricing": false,
@@ -433,7 +430,7 @@
     },
     "version": 1
   },
-  "source": "Daily closing prices for SPY and QQQ from the price history on record (405 trading days, 2025-03-25 to 2026-11-02). The volatility priced into S&P 500 options is on record for only 23 days, September 21 to October 21, 2026, and no such series for QQQ is on record, so no priced level is used in these numbers.",
+  "source": "Daily closing prices for SPY and QQQ from the price history on record (406 trading days, 2025-03-25 to 2026-11-03). The volatility priced into S&P 500 options is on record for only 23 days, September 21 to October 21, 2026, and no such series for QQQ is on record, so no priced level is used in these numbers.",
   "state": "proving",
   "subject_chart": {
     "lead": {
@@ -486,15 +483,15 @@
         },
         {
           "name": "SPY 63d stated 25%",
-          "score": 18.8
+          "score": 21.2
         },
         {
           "name": "SPY 63d stated 50%",
-          "score": 46.9
+          "score": 48.5
         },
         {
           "name": "SPY 63d stated 75%",
-          "score": 68.8
+          "score": 69.7
         },
         {
           "name": "QQQ 5d stated 25%",
