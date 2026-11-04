@@ -125,7 +125,8 @@ def _collection_figures(slug: str, card: str) -> str:
     days_on_record, a coverage span and a checked date has those
     figures recomputed here on every hub run; a card without
     them is left exactly as authored."""
-    if "days on record" not in card:
+    if "days on record" not in card \
+            and "recorded days it needs" not in card:
         return card
     path = HERE / slug / "data.json"
     if not path.exists():
@@ -135,6 +136,30 @@ def _collection_figures(slug: str, card: str) -> str:
             data = json.load(fh)
     except Exception:
         return card
+    # Accruing-history cards (the State Analogue card): the
+    # figline and the full note carry the recorded-days count
+    # and the session of the latest recorded day, authored the
+    # day the count stood at 1; the page's own data has counted
+    # more sessions since, so the card disagreed with the page
+    # it points at. Recompute both figures from the page's own
+    # counts on every run (HUB-ANALOGUE-FIGURES-20261104, the
+    # same class as the collection cure below).
+    if "recorded days it needs" in card:
+        counts = data.get("counts") or {}
+        rec = counts.get("sessions_recorded")
+        need = counts.get("sessions_needed")
+        as_of = parse_date(data.get("as_of_session"))
+        if isinstance(rec, int) and isinstance(need, int) \
+                and as_of is not None:
+            card = re.sub(
+                r"[\d,]+ of the [\d,]+ recorded days it needs",
+                f"{rec} of the {need} recorded days it needs",
+                card)
+            card = re.sub(
+                r"\(the \d{4}-\d{2}-\d{2} session\)",
+                f"(the {as_of.isoformat()} session)", card)
+        if "days on record" not in card:
+            return card
     days = data.get("days_on_record")
     cov = data.get("coverage") or ""
     m = re.search(r"from (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})"
