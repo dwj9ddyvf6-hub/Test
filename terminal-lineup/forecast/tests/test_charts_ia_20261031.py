@@ -112,7 +112,19 @@ def test_desk_publish_copy_matches_source():
     # terminal surface and untouched). The expected page is the
     # source with exactly that documented transform applied.
     expected = (src / "index.html").read_text().replace(" — ", ": ")
-    assert published.replace(DESK_WIRING, "", 1) == expected, \
+    # Third documented transform (SUITE-TRIAGE-REPIN-20261104):
+    # the producer also injects its AMAZING-ATTRACTIONS block
+    # (the yardstick chart, positions heatmap, strategy
+    # scorecards, small-caps chart and closed trades, built
+    # from the copied snapshot) between its own markers. The
+    # block is data-driven, so the byte comparison removes it
+    # whole; everything outside the markers must still match
+    # the source byte for byte.
+    stripped = re.sub(
+        r"<!-- AMAZING-ATTRACTIONS-BEGIN -->.*?"
+        r"<!-- AMAZING-ATTRACTIONS-END -->\n?", "",
+        published.replace(DESK_WIRING, "", 1), flags=re.S)
+    assert stripped == expected, \
         "page content changed beyond wiring and the em-dash scrub"
 
 
@@ -216,8 +228,14 @@ def test_market_mood_gauge_dials_values_unchanged():
     # regime word leads, the gauges' own spread is stated, and the
     # composite survives as one labelled median line with the oldest
     # gauge reading it rests on. Values are unchanged.
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # owner's later ruling took the composite value off the page
+    # entirely; the generator records it in the engine's history
+    # file and states the ruling on the page. The pin stands on
+    # that ruled contract.
     assert f'<p class="bignum">{comp}</p>' not in html
-    assert f"Composite percentile {comp}: the median of the" in html
+    assert f"Composite percentile {comp}:" not in html
+    assert "no single composite headline" in html
     assert "oldest gauge reading" in html
     assert "The gauges spread from" in html
     pipe = (WORKSPACE / "terminal-lineup" / "psychology-engine"
@@ -907,6 +925,37 @@ def _check_page(slug):
         all_exp.sort(key=lambda kv: -abs(kv[1]))
         assert got_list == sorted(all_exp[:14]), slug
         return
+    if slug == "chain-explorer":
+        # Two snapshot charts (SUITE-TRIAGE-REPIN-20261104): each
+        # plots its own snapshot day's per-strike open interest,
+        # and the same strike carries different interest on
+        # different days, so the comparison is per chart, keyed
+        # by the day in the chart's title. The flat name-keyed
+        # comparison merged the two days and indicted the older
+        # chart with the newer day's figures.
+        u = data["underlyings"][0]
+        by_day = {}
+        for snap in u["snapshots"][-2:]:
+            by = {}
+            for ex in snap["expiries"]:
+                for st in ex["strikes"]:
+                    oi = sum((st[s] or {}).get("oi") or 0
+                             for s in ("call", "put"))
+                    if oi > 0:
+                        by[f"Strike {st['strike']}"] = \
+                            by.get(f"Strike {st['strike']}", 0) + oi
+            by_day[snap.get("snapshot_day") or snap.get("date")] = by
+        assert charts, "chain-explorer: no subject charts"
+        for c in charts:
+            day = (c.get("title") or "").rsplit(" ", 1)[-1]
+            exp = by_day.get(day)
+            assert exp is not None, \
+                f"chain-explorer: chart day {day} not on record"
+            for r in c.get("rows") or []:
+                assert exp.get(r["name"]) == r["score"], \
+                    f"chain-explorer {day}: plotted {r['name']}=" \
+                    f"{r['score']}, data says {exp.get(r['name'])}"
+        return
     if slug in _RANKED_SLUGS:
         got = _rows_by_name(charts)
         exp = _expected_ranked(slug, data)
@@ -1147,15 +1196,44 @@ def _check_module_subject(slug, lead_vals, record_vals):
     assert "build_subject_chart" in gen
 
 
+def _kept_sessions(data):
+    """Mirror of record_surface._kept_sessions: the page's kept
+    session_history, deduped by session date with the latest
+    entry winning, oldest first."""
+    by_session = {}
+    for entry in data.get("session_history") or []:
+        if isinstance(entry, dict) and entry.get("session"):
+            by_session[str(entry["session"])] = entry
+    return [by_session[k] for k in sorted(by_session)]
+
+
 def test_subject_agent_debate_chart():
     d = _d("agent-debate")
     vals = [f["count_rising"] - f["count_falling"] for f in d["funds"]]
-    _check_module_subject("agent-debate", vals, vals)
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # record chart's design (record_surface, Wave 3 Item F) is
+    # the current session's picture while one session is kept,
+    # and the kept sessions' pictures once more than one is:
+    # the record has since accrued past its first day.
+    kept = _kept_sessions(d)
+    if len(kept) > 1:
+        rec = [(v.get("rising") or 0) - (v.get("falling") or 0)
+               for e in kept[-8:] for v in e.get("values") or []]
+    else:
+        rec = vals
+    _check_module_subject("agent-debate", vals, rec)
 
 
 def test_subject_echo_board_chart():
     d = _d("echo-board")
     vals = [n["families_speaking"] for n in d["names"]]
+    if not vals:
+        # Zero-agreement board (ECHO-BOARD-ZERO-PUBLISH-20261104):
+        # a true zero publishes with no subject chart at all;
+        # the chart builder returns None for an empty series by
+        # its own design, and no count chart is substituted.
+        assert d.get("subject_chart") is None
+        return
     _check_module_subject("echo-board", vals, vals)
 
 
@@ -1198,7 +1276,17 @@ def test_subject_family_fracture_chart():
 def test_subject_gamma_ladder_chart():
     d = _d("gamma-ladder")
     vals = [r["pull"] for r in d["funds"][0]["rungs"]]
-    _check_module_subject("gamma-ladder", vals, vals)
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # record chart's design (record_surface, Wave 3 Item F) is
+    # the current ladder while one session is kept, and the
+    # last four kept sessions' ladders once more are kept.
+    kept = _kept_sessions(d)
+    if len(kept) > 1:
+        rec = [r.get("pull") for e in kept[-4:]
+               for r in (e.get("values") or {}).get("rungs") or []]
+    else:
+        rec = vals
+    _check_module_subject("gamma-ladder", vals, rec)
 
 
 def test_subject_ai_chart_read_chart():
