@@ -17,6 +17,14 @@ ready(function () {
     b.appendChild(el("span", null, "Master Terminal"));
     var a1 = el("a", null, "Combined terminal"); a1.href = "../"; b.appendChild(a1);
     var a2 = el("a", null, "Engines and Tools"); a2.href = "../terminal-lineup/site/"; b.appendChild(a2);
+    /* Code links (2026-11-04): the three public repositories behind this
+       terminal, in the master bar beside the terminal links. */
+    [["InfinityBlade", "https://github.com/dwj9ddyvf6-hub/InfinityBlade-Engineering-Doctrine"],
+     ["Edge", "https://github.com/dwj9ddyvf6-hub/Edge"],
+     ["Test", "https://github.com/dwj9ddyvf6-hub/Test"]].forEach(function (pair) {
+      var a = el("a", null, pair[0]); a.href = pair[1];
+      a.target = "_blank"; a.rel = "noopener"; b.appendChild(a);
+    });
     var fb = el("button", "gb-mfind-btn", "Find ( / )"); fb.type = "button"; b.appendChild(fb);
     document.body.insertBefore(b, document.body.firstChild);
     fb.addEventListener("click", openFinder);
