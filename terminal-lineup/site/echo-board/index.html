@@ -116,7 +116,7 @@
   fetch("data.json",{cache:"no-store"})
     .then(function(res){ if(!res.ok) throw new Error("missing"); return res.json(); })
     .then(function(data){
-      if(!data.names || !data.names.length || !data.coverage)
+      if(!data.names || !data.coverage)
         throw new Error("empty");
       agreeEl.textContent=data.agreement_words;
       provingEl.style.display="block";
@@ -138,6 +138,10 @@
       countedEl.textContent=data.counted_words;
 
       var h="";
+      if(!data.names.length){
+        h='<div class="nodata">'+esc(data.zero_words ||
+          "No name on this record has two or more families pointing the same way, so the board is empty for this trading day.")+'</div>';
+      }
       data.names.forEach(function(n){
         h+='<section class="namecard"><h2>'+esc(n.symbol)+"</h2>"+
           '<p class="agree">Agreement: <strong>'+num(n.readings.length)+
