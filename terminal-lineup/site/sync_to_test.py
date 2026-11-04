@@ -28,8 +28,8 @@ around. One proof line is appended to the sync log per run.
 
 Desk privacy gate (DESK-PRIVACY-20261103): the desk producer feed is
 an internal-state payload. terminal_feed.json is refused by name
-anywhere in the tree; any JSON under a desk/ directory is key-scanned
-and refused fail-closed when it carries private account fields
+anywhere in the tree; any JSON or *.json.tmp under a desk/ directory
+is key-scanned and refused fail-closed when it carries private account fields
 (balances, buying power, equity, positions, money assigned, starting
 capital); the desk page is refused while it reads the internal feed.
 The .published-trees local snapshot tree is excluded from the sync
@@ -260,10 +260,15 @@ def _insider_wire_first_names_are_third_party(text: str) -> bool:
 # Scope: terminal_feed.json by name anywhere, plus any file under a
 # desk/ directory. Fail closed: unparseable desk JSON is refused.
 DESK_PRIVATE_KEYS = {
-    "account", "account_positions", "buying_power", "cash", "equity",
-    "last_equity", "portfolio_value", "money_assigned",
-    "money_assigned_total", "starting_capital", "positions_cost",
-    "open_positions", "account_present", "positions",
+    "account", "account_id", "account_positions", "account_present",
+    "balance", "buying_power", "cash", "cash_balance", "cost_basis",
+    "equity", "fill_id", "fills", "last_equity", "market_value",
+    "money_assigned", "money_assigned_total", "open_orders",
+    "open_positions", "order_id", "orders", "pnl", "portfolio_value",
+    "position", "position_id", "position_qty", "position_value",
+    "positions", "positions_cost", "position_size", "qty", "quantity",
+    "realized_pnl", "shares", "starting_capital", "trade", "trade_id",
+    "trades", "execution", "executions", "unrealized_pnl",
 }
 
 
@@ -292,7 +297,11 @@ def desk_privacy_reason(rel: str, raw: bytes):
         return ("desk privacy gate (DESK-PRIVACY-20261103): the desk "
                 "page reads the internal producer feed and is not "
                 "published until it reads a public-safe file")
-    if Path(rel).suffix.lower() != ".json":
+    # Some producers stage JSON as ``*.json.tmp`` before atomic rename.
+    # Treat that temporary suffix as JSON too, or an unsafe intermediate can
+    # bypass the desk gate while remaining in the sync set.
+    lower_name = name.lower()
+    if not (lower_name.endswith(".json") or lower_name.endswith(".json.tmp")):
         return None
     try:
         obj = json.loads(raw.decode("utf-8"))
