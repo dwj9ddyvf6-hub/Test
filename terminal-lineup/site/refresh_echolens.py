@@ -86,7 +86,14 @@ OUT_PATH = os.path.join(HERE, "echo-lens", "data.json")
 ECHO_STORE_DIR = os.path.expanduser(
     "~/workspace/morgue/state/morgue/echo")
 
-VERDICT_WORDS = {"SETUP", "WATCH", "TRAP", "NO TRADE"}
+# ECHO-ASTAR-VERDICT-20261104: the method's own algorithm
+# (femto-lean/core/echo_lens.py echo_read, the single source of
+# truth for the method) grades its highest-conviction setups
+# "A*", above SETUP. This page's vocabulary predates that grade
+# reaching the record: the first A* reading (RNST, panel session
+# 2026-11-02) made the page refuse every run. The vocabulary now
+# carries the method's full verdict set as the algorithm emits it.
+VERDICT_WORDS = {"A*", "SETUP", "WATCH", "TRAP", "NO TRADE"}
 
 EXPECTED_FAMILIES = {"price", "prints", "positioning", "filings",
                      "facts", "news"}
@@ -303,7 +310,7 @@ def build():
                 verdict_counts.get(r["verdict"], 0) + 1
         tally = ", ".join(
             f"{num(verdict_counts[k])} {k.lower()}"
-            for k in ("SETUP", "WATCH", "TRAP", "NO TRADE")
+            for k in ("A*", "SETUP", "WATCH", "TRAP", "NO TRADE")
             if k in verdict_counts)
         coverage_words = (
             f"This lens covers {num(len(readings))} of the "
