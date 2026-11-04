@@ -34,11 +34,27 @@ def test_d1_pipeline_never_prints_none_percentile():
 def test_g2_market_mood_is_gauges_not_table_only():
     mm = (SITE / "market-mood" / "index.html").read_text()
     assert "gauge-band" in mm and "gauge-marker" in mm
-    for v in ("30.1", "22.82", "92.57", "32.92", "19.42"):
-        assert v in mm, v
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # cure-day literals were that day's gauge values (and the
+    # composite, which the owner's later ruling removed from
+    # the page entirely). The durable check is that every
+    # gauge value the page's own data carries is printed on
+    # the page.
+    import json as _json
+    _d = _json.loads((SITE / "market-mood" / "data.json").read_text())
+    for _g in _d["state"]["gauges"].values():
+        if _g.get("value") is not None:
+            assert str(_g["value"]) in mm, _g["value"]
     # shared.css loads after inline style (standard order restored)
     assert mm.index("<style>") < mm.index("shared.css")
 
 def test_d2_band_geometry_reserves_label_column():
     js = (SITE / "visual.js").read_text()
-    assert "plotL = 185" in js and 'text-anchor="end"' in js
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # FolioTend label column (plotL = 185) was superseded by
+    # the WEEK-READINESS-R2-20261102-F overlap cure, which
+    # moved the row label onto its own line above the bar and
+    # gave the bar the full plot width, so no bar can touch a
+    # label. The pin now stands on that cure's geometry.
+    assert "WEEK-READINESS-R2-20261102-F" in js
+    assert "plotL = 0" in js and 'text-anchor="end"' in js
