@@ -7,8 +7,8 @@
   "as_of": "2026-11-03",
   "calibration_attestation": {
     "attestation": {
-      "basis": "2 graded forecasts of 7 recorded on the ledger (mean scores: abs_error 0.0133, brier 0.1132, log_loss 0.4101, signed_error -0.0133); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-      "forecasts_recorded": 7,
+      "basis": "2 graded forecasts of 10 recorded on the ledger (mean scores: abs_error 0.0133, brier 0.1132, log_loss 0.4101, signed_error -0.0133); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 10,
       "graded_forecasts": 2,
       "recorded_on": "2026-11-04",
       "status": "not_attested"
@@ -49,6 +49,10 @@
     "words": "On the same mornings, for each of the three index funds, two more forecasts are written down: the chance the close lands more than half an expected move away from the pin, and the predicted distance from the close to the pin, in percent. An expected move is the typical one-day move the first forecast engine on this site works out for each fund."
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution and probability, over weekly expiry session. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 52 weeks, the two arms' in-band rates are statistically indistinguishable. It counts as proven at 52 weeks.",
+    "summary": "Forecast whether the expiry pin holds, given the dealer's book, instead of publishing the pin level as if naming it were the forecast."
+  },
   "failure_score": {
     "parts": {
       "event_in_session": "yes",
@@ -180,6 +184,79 @@
     },
     "variance_words": "The premium for protection is worked out here because no such series is kept anywhere: for each trading day, the fear gauge's implied swing for the month ahead minus the swing the fund actually made over the prior 21 trading days. It is computable only where the fund's shipped history (399 trading days, from March 25, 2025) meets the gauge file, and only through the gauge file's last day, October 1, 2026: that overlap, not any longer span, is what is printed."
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "2 graded forecasts of 10 recorded on the ledger (mean scores: abs_error 0.0133, brier 0.1132, log_loss 0.4101, signed_error -0.0133); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 10,
+        "graded_forecasts": 2,
+        "recorded_on": "2026-11-04",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_27",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-11-03",
+      "keys_present": [
+        "arms_today",
+        "as_of",
+        "calibration_attestation",
+        "claim",
+        "companions",
+        "execution_pricing",
+        "explanation",
+        "failure_score",
+        "feed",
+        "idea",
+        "kill_criterion",
+        "live",
+        "map_built",
+        "map_session",
+        "pin_state",
+        "price_basis",
+        "provenance",
+        "readings",
+        "record_surface",
+        "retired",
+        "self_test",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_cell_rule",
+        "tool"
+      ]
+    },
+    "feed": "tastytrade_chain_snapshot",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_27",
+      "forecasts": 10,
+      "grades": 2,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 10 forecasts are on record and 2 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "tastytrade_chain_snapshot",
+      "price_basis": "snapshot",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
   "retired": false,
   "self_test": {
     "feature_cases_checked": 9,
@@ -188,6 +265,52 @@
   },
   "source": "The pin watch record checked 2026-11-03, the morning map card built 2026-11-03T13:51:16.691421+00:00 (its readings are for the session of 2026-11-02), the week ahead record assembled 2026-10-31 (coverage 2026-01-01 to 2027-12-31), the shipped daily price history (2025-03-25 to 2026-11-03) and the long daily fear-gauge file (1990-01-02 to 2026-10-01).",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Net pull in billions per 1 percent move, per fund.",
+      "rows": [
+        {
+          "coverage": "price 753.75, flip 771.02",
+          "name": "SPY",
+          "score": -10.52
+        },
+        {
+          "coverage": "price 685.89, flip 717.9",
+          "name": "QQQ",
+          "score": -5.59
+        },
+        {
+          "coverage": "price 279.58, flip 292.45",
+          "name": "IWM",
+          "score": -1.89
+        }
+      ],
+      "source": "readings.funds[].net_pull_billions",
+      "title": "Net pull per fund, billions"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Next-expiry pull in millions of dollars, per fund.",
+      "rows": [
+        {
+          "name": "SPY",
+          "score": -1446.11
+        },
+        {
+          "name": "QQQ",
+          "score": -141.65
+        },
+        {
+          "name": "IWM",
+          "score": 14.49
+        }
+      ],
+      "source": "readings.funds[].next_expiry_pull_usd",
+      "title": "Pull at the next expiry, per fund"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any arm, and the plain near-pin row, with fewer than 30 graded weeks shows its count only, with no rate headline. The same holds for each fund's companion figures.",
   "tool": "Pin-or-Escape"
 }
