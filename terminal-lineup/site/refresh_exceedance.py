@@ -243,23 +243,31 @@ def expected_published_edges(close, half, guard_factor):
 
 
 def count_check(todays_rows, declared_subjects):
-    """EXCEEDANCE-RERUN-COUNT-20261104: split one session's ledger
-    forecast rows for this engine into this run's declared set and
-    same-session rows left by an earlier run of the same session.
-    Returns (ok, declared_count, superseded_subjects): ok when every
-    declared subject carries exactly 3 rows (one per quantity);
-    superseded subjects are named, never counted against the run."""
+    """EXCEEDANCE-RERUN-COUNT-20261104: verify this run's declared
+    forecasts landed on the ledger, counting distinct (subject,
+    quantity) pairs rather than rows. A same-session republication
+    whose inputs moved (SUPN's own thresholds moved by about a
+    hundred-thousandth when its missing 2026-11-02 bar was filled)
+    appends a parallel row for the same pair instead of reusing
+    the first publication's row, because the declared identity
+    carries the outcome spec; and a subject that qualified in an
+    earlier run of the session but not in this one leaves its rows
+    behind. Both stay on the record as genuinely published and are
+    named, never counted against the run. Returns (ok,
+    declared_pairs, superseded_subjects, parallel_subjects): ok
+    when every declared subject carries all three quantities."""
     declared = [r for r in todays_rows
                 if r.get("subject") in declared_subjects]
+    pairs = {(r.get("subject"), r.get("quantity")) for r in declared}
     superseded = sorted({r.get("subject") for r in todays_rows
                          if r.get("subject") not in declared_subjects})
     per_subject = {}
     for r in declared:
         per_subject[r.get("subject")] = \
             per_subject.get(r.get("subject"), 0) + 1
-    ok = (len(declared) == 3 * len(declared_subjects)
-          and all(v == 3 for v in per_subject.values()))
-    return ok, len(declared), superseded
+    parallel = sorted(s for s, n in per_subject.items() if n > 3)
+    ok = len(pairs) == 3 * len(declared_subjects)
+    return ok, len(pairs), superseded, parallel
 
 
 def quantile(vals, q):
@@ -700,28 +708,37 @@ def build():
               and r["lineage"]["clocks"]["decision_as_of"] == as_of]
     # EXCEEDANCE-RERUN-COUNT-20261104: the exact-count check used to
     # demand the ledger hold exactly this run's set for the session.
-    # The ledger is append-only and declared appends are idempotent,
-    # so a legitimate same-session re-run whose qualifying set shrank
-    # (the 2026-11-03 session was published by the scheduled run from
-    # a price panel that still had the SUPN hole, then re-run after
-    # the PANEL-LAGGARD-GAP cure filled it: 1,798 subjects on record
-    # vs 1,797 qualifying) failed forever at 5,394 vs 5,391. The
-    # check now proves this run's own declared rows all landed, and
-    # same-session rows for subjects outside this run's set are
-    # named as superseded on the page, never silently dropped: they
-    # were genuinely published and stay on the record to be graded.
-    count_ok, mine_today, superseded_subjects = count_check(
-        todays, {e["symbol"] for e in qualifying})
+    # The ledger is append-only, so a legitimate same-session re-run
+    # failed it forever: the 2026-11-03 session was published by the
+    # scheduled run from a price panel that still had the SUPN hole,
+    # then re-run after the PANEL-LAGGARD-GAP cure filled it. One
+    # subject qualified in the first run only (its rows stay), and
+    # SUPN itself, whose thresholds moved by about a
+    # hundred-thousandth when its own missing bar was filled, was
+    # appended as a parallel publication because the declared
+    # identity carries the outcome spec (5,394 rows against the
+    # expected 5,391 either way the count was taken). The check now
+    # proves this run's declared (subject, quantity) pairs all
+    # landed, and the earlier run's rows are named as superseded or
+    # parallel on the page, never silently dropped: they were
+    # genuinely published and stay on the record to be graded.
+    count_ok, mine_today, superseded_subjects, parallel_subjects = \
+        count_check(todays, {e["symbol"] for e in qualifying})
     if not count_ok:
-        return fail(f"ledger count disagreement: {mine_today} live "
-                    f"forecasts for the as-of session from this "
-                    f"run's declared set, expected "
+        return fail(f"ledger count disagreement: {mine_today} "
+                    f"declared subject and quantity pairs on the "
+                    f"ledger for the as-of session, expected "
                     f"{3 * len(qualifying)}")
     if superseded_subjects:
-        print(f"note: {3 * len(superseded_subjects)} same-session "
-              f"forecast rows from an earlier run of this session "
-              f"stay on the record for subjects not qualifying in "
-              f"this run: {', '.join(superseded_subjects)}")
+        print(f"note: same-session forecast rows from an earlier "
+              f"run of this session stay on the record for subjects "
+              f"not qualifying in this run: "
+              f"{', '.join(superseded_subjects)}")
+    if parallel_subjects:
+        print(f"note: same-session republication appended parallel "
+              f"rows for subjects whose declared outcomes moved "
+              f"between runs of this session: "
+              f"{', '.join(parallel_subjects)}")
     issue_days = len({
         r["lineage"]["clocks"]["decision_as_of"]
         for r in rows
@@ -770,12 +787,15 @@ def build():
             "names_qualifying": len(live_names),
             "superseded_same_session": {
                 "subjects": superseded_subjects,
-                "rows": 3 * len(superseded_subjects),
+                "parallel_subjects": parallel_subjects,
                 "note": ("Forecast rows published by an earlier run "
-                         "of this same session for names that do not "
-                         "qualify in the latest run stay on the "
-                         "record and will be graded; they are not "
-                         "part of the live set above.")},
+                         "of this same session stay on the record "
+                         "and will be graded; they are not part of "
+                         "the live set above. Subjects lists the "
+                         "names that qualified in an earlier run "
+                         "only; parallel subjects are names whose "
+                         "declared outcomes moved between runs, so "
+                         "both publications stand on the record.")},
             "names_checked": len(panel),
             "excluded_total": total_excluded,
             "excluded": {
