@@ -48,6 +48,17 @@ Fail-closed rules:
 - If any two-family name carries two or more direction words, so
   the counted-not-listed account of those names would be wrong,
   the refresh stops.
+- A genuinely missing input still stops the refresh: a source
+  record that is absent, or a Second Opinion record carrying no
+  names at all, publishes nothing.
+
+Zero-agreement sessions (ECHO-BOARD-ZERO-PUBLISH-20261104,
+ruling 2026-11-04): a session whose record honestly contains
+zero names with two or more families agreeing is not a missing
+input; it is the data. The board publishes for that session
+with an empty name list and its zero state stated in plain
+words, instead of refusing and leaving an older session's
+board standing on the page as if it were current.
 - If the Replication Wire's record no longer carries the 0.736
   agreement claim graded "Did not hold up" with its ruling text,
   the refresh stops.
@@ -100,6 +111,13 @@ COUNTED_WORDS = ("Names that are not listed are counted above, "
                  "covered by several families can still carry only "
                  "one direction, or none, and there is no second "
                  "direction for it to agree with.")
+
+ZERO_WORDS = ("No name on the record for this trading day has "
+              "two or more families that carry a direction "
+              "pointing the same way, so the board is empty for "
+              "this day. The families were read and counted "
+              "above; none of them agreed. An empty board is "
+              "this day's true picture, not a missing one.")
 
 FORBIDDEN = ("morgue", ".json", ".py", "ledger", "sleeve",
              "data file", "dataset", "scorecard")
@@ -266,10 +284,11 @@ def build():
         directional = n.get("directional") or []
         if len(directional) >= 2 and len(set(directional)) == 1:
             agreeing.append(n)
-    if not agreeing:
-        return fail("no name on the record has two or more "
-                    "families pointing the same way; refusing to "
-                    "publish a board with agreement filled in.")
+    # An empty agreement set is publishable (ruling
+    # ECHO-BOARD-ZERO-PUBLISH-20261104): the zero state is the
+    # session's honest data, stated in ZERO_WORDS on the page.
+    # What still refuses is a record with no names at all,
+    # checked above: that is a missing input, not a zero.
 
     # Counted-not-listed names: any name outside the agreement
     # set must fail the agreement test itself (fewer than two
@@ -372,6 +391,7 @@ def build():
         "coverage": {v: coverage[v] for v in COUNT_KEYS.values()
                      if coverage.get(v) is not None},
         "coverage_words": coverage_words,
+        "zero_words": ZERO_WORDS if not rows else None,
         "counted_words": COUNTED_WORDS,
         "agreement_words": AGREEMENT_WORDS,
         "ruling_words": ruling_words,
