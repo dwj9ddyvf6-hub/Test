@@ -142,7 +142,83 @@ ready(function () {
     draw(""); inp.focus();
   }
   document.addEventListener("keydown", function (e) { if (e.key === "/" && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); openFinder(); } if (e.key === "Escape") { var d = document.querySelector(".gb-fdlg"); if (d) d.remove(); } });
-  function enhance() { grammar(); jumpPills(); statsStrip(); }
+  /* Withdrawal tombstones (MASTER-TOMBSTONE-RENDER-20261104): on this
+     public mirror the desk and reads data files are deliberate
+     withdrawal tombstones (schema "withdrawal-tombstone/1"), not data,
+     and the app reads each one as a failure: the Desk view ends at
+     "The desk's numbers could not be loaded." with a retry that can
+     never work, the header status repeats the can't-reach line, the
+     Chart Read Engine ends at "No roster reads on file yet.", and the
+     Look up donut draws "0 stocks". A deliberate removal rendered as
+     a load failure reads as a broken product. This pass probes a file
+     ONLY when its broken state is on screen, and only when the
+     payload really is a tombstone replaces that state with a plain
+     withdrawal note carrying the payload's own date. A live payload
+     or a failed probe changes nothing: real load failures keep the
+     app's own error states. */
+  var TB = {};        /* key -> "tombstone" | "clear" | "probing" */
+  var TB_REASON = {}; /* key -> the payload's own reason text */
+  var TB_FILE = { edition: "edition.json", desk: "deskview.json", reads: "reads-index.json" };
+  var TB_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  function tbWhen(key) {
+    var m = /(\d{4})-(\d{2})-(\d{2})/.exec(TB_REASON[key] || "");
+    return m ? TB_MONTHS[Number(m[2]) - 1] + " " + Number(m[3]) + ", " + m[1] : "";
+  }
+  function tbProbe(key) {
+    if (TB[key] || typeof fetch !== "function") return;
+    TB[key] = "probing";
+    fetch(TB_FILE[key], { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (j) {
+      if (j && j.schema === "withdrawal-tombstone/1" && j.withdrawn === true) { TB[key] = "tombstone"; TB_REASON[key] = String(j.reason || ""); }
+      else TB[key] = "clear";
+      tbApply();
+    }).catch(function () { TB[key] = "clear"; });
+  }
+  function tbNote(lead, body) {
+    var box = el("div", "gb-tomb");
+    box.appendChild(el("p", "gb-tomb-lead", lead));
+    box.appendChild(el("p", "gb-tomb-body", body));
+    return box;
+  }
+  function tbApply() {
+    /* Guarded like the grammar pass: this pass never breaks the shell. */
+    try { tbApplyInner(); } catch (e) { /* presentation only */ }
+  }
+  function tbApplyInner() {
+    /* Header: while its edition never loads, the app repaints its
+       can't-reach line into #st1 and #load on a 15 s cycle; correct
+       the text each time it reappears and retire the banner. */
+    var st1 = document.getElementById("st1"), load = document.getElementById("load");
+    function cantReach(n) { return !!n && /reach the desk/.test(n.textContent || ""); }
+    if (TB.edition === "tombstone") {
+      var whenE = tbWhen("edition");
+      if (cantReach(st1)) st1.textContent = "Desk data removed from this public site" + (whenE ? " on " + whenE : "") + ".";
+      if (load && !load.hidden) load.hidden = true;
+    } else if (cantReach(st1) || cantReach(load)) tbProbe("edition");
+    /* Desk view: #d-wait is the app's loading and error card inside
+       #p-desk; while deskview.json is a tombstone it can only ever
+       end at the error text, so the card carries the withdrawal note
+       instead, with no retry button: there is nothing to retry. */
+    var dw = document.getElementById("d-wait"), dp = document.getElementById("p-desk");
+    if (dw && TB.desk === "tombstone") {
+      if (!dw.querySelector(".gb-tomb")) {
+        var whenD = tbWhen("desk");
+        dw.innerHTML = "";
+        dw.appendChild(tbNote("This view's data was withdrawn.", "The desk's account data was removed from the public site" + (whenD ? " on " + whenD : "") + ". A cleaned-up edition may be published here later."));
+        dw.setAttribute("data-gb-full", "1");
+      }
+    } else if (dw && dp && (!dp.hidden || /could not be loaded/.test(dw.textContent || ""))) tbProbe("desk");
+    /* The Chart Read Engine card and the Look up donut both read
+       reads-index.json; a tombstone leaves one at its no-reads note
+       and the other at a "0 stocks" donut. */
+    var lr = document.getElementById("lu-read"), lv = document.getElementById("lviz");
+    if (TB.reads === "tombstone") {
+      var whenR = tbWhen("reads");
+      var readsBody = "The reads were removed from the public site" + (whenR ? " on " + whenR : "") + ", along with the desk's account data. A cleaned-up edition may be published here later.";
+      if (lr && !lr.querySelector(".gb-tomb")) { lr.innerHTML = ""; lr.appendChild(tbNote("The roster reads were withdrawn.", readsBody)); lr.setAttribute("data-gb-full", "1"); }
+      if (lv && lv.children.length && !lv.querySelector(".gb-tomb")) { lv.innerHTML = ""; lv.appendChild(tbNote("The roster reads were withdrawn.", readsBody)); }
+    } else if ((lr && /No roster reads on file yet/.test(lr.textContent || "")) || (lv && lv.children.length)) tbProbe("reads");
+  }
+  function enhance() { grammar(); jumpPills(); statsStrip(); tbApply(); }
   enhance();
   [1200, 3000, 6000].forEach(function (ms) { setTimeout(enhance, ms); });
   var pending = null;
