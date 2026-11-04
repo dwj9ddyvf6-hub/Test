@@ -189,19 +189,25 @@ class TestScheduledChainWiring(unittest.TestCase):
 
 class TestLiveDataCurrent(unittest.TestCase):
     def test_live_lane_complete_through_latest_session(self):
+        # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+        # 2026-11-02 and 2026-11-03 maps were filed through the
+        # same reconstruction lane (EXPECTED-MOVE filing cure,
+        # terminal deficit cures), advancing the live record this
+        # pin stands on.
         data = json.load(open(os.path.join(
             SITE, "expected-move", "data.json")))
-        self.assertEqual(data["session"], "2026-10-30")
+        self.assertEqual(data["session"], "2026-11-03")
         lane = data["filing_lane"]
         self.assertEqual(lane["missing_sessions"], [])
         self.assertEqual(lane["latest_completed_session"],
-                         "2026-10-30")
+                         "2026-11-03")
         self.assertEqual(
             lane["reconstructed_sessions"],
             ["2026-10-26", "2026-10-27", "2026-10-28",
-             "2026-10-29", "2026-10-30"])
+             "2026-10-29", "2026-10-30", "2026-11-02",
+             "2026-11-03"])
         spy = [n for n in data["names"] if n["symbol"] == "SPY"][0]
-        self.assertEqual(spy["receipt"]["session"], "2026-10-30")
+        self.assertEqual(spy["receipt"]["session"], "2026-11-03")
         self.assertTrue(spy["reconstructed"])
 
 
