@@ -34,7 +34,17 @@ def labels(data):
                             out.add(str(r[k])[:60]); break
                 walk(r,depth+1)
         elif isinstance(v,dict):
-            for x in v.values(): walk(x,depth+1)
+            for k, x in v.items():
+                # NOT-RENDERED-AS-ROWS (2026-11-04): the Dark
+                # Prints page holds its per-stock readings as
+                # lookup data (per_name: one stock at a time,
+                # by typed ticker) and renders none of them as
+                # rows, so those identities can never badge on
+                # the glass; extracting them made the store
+                # claim badgeable rows the page does not have.
+                if k in ("per_name",):
+                    continue
+                walk(x,depth+1)
     walk(data,0)
     return sorted(out)[:400]
 def session_of(data):
