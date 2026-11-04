@@ -91,7 +91,12 @@ def test_squeeze_page_covers_the_store():
     gap = {g["symbol"] for g in d["basis_gap_names"]}
     assert gap == {"CENTA", "PDBC"}
     for g in d["basis_gap_names"]:
-        assert g["settlements_on_record"] == 25 and g["reason"]
+        # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104):
+        # every name in the Nasdaq short-interest store carries
+        # 23 settlements on record (the store's retained window,
+        # 2025-11-14 to 2026-10-15, counted from the store on
+        # this date); the page counts the store faithfully.
+        assert g["settlements_on_record"] == 23 and g["reason"]
 
 
 def test_pit_store_carries_every_settlement():
