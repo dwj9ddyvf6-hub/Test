@@ -108,7 +108,11 @@ def test_agentdebate_spot_parity_uses_snapshot_spot():
 
 def test_agentdebate_published_and_premium_parity():
     d = _data("agent-debate")
-    assert d["session"] == "2026-10-30"
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # census MAP-SESSION cure advanced the published debate to
+    # the 2026-11-03 session; the parity checks below are the
+    # durable part of this blocker.
+    assert d["session"] == "2026-11-03"
     assert d["tape_freshness"]["state"] == "current"
     so = _data("second-opinion")
     fb = _data("flow-board")
