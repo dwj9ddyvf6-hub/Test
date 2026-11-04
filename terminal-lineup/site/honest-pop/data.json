@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-02",
+  "as_of": "2026-11-03",
   "calibration_attestation": {
     "attestation": {
       "basis": "131 graded forecasts of 691 recorded on the ledger (mean scores: brier 0.3256, log_loss 0.9259); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
@@ -17,17 +17,13 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: probability, over to weekly expiry, graded at expiry close. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 26 weekly expiries, its Brier is no better than the uncorrected IV POP's. It counts as proven at 26 weekly expiries.",
-    "summary": "For SPY and QQQ, attach an honest chance of finishing above each strike to this week's expiry, and grade every strike when the week ends."
-  },
   "feed": "tastytrade_chain_snapshot",
   "kill_criterion": "This tool is retired if, after 26 weekly expiries have been graded, its score for how close its chances were is no better than the score of the market's own uncorrected chances recorded beside them.",
   "live": {
     "expiries_graded": 1,
     "proving_target_expiries": 26,
     "records_graded": 131,
-    "records_written": 691,
+    "records_written": 847,
     "state_note": "Surfaces are being recorded from stored chain snapshots and graded at each weekly expiry close."
   },
   "method": {
@@ -52,960 +48,632 @@
     "summary": "Each chance is half of a movement-based calculation (the last 30 trading days' realised movement, no drift assumed) and half of the index's own past finishes over the same number of days. The comparison chance beside it is the market's own priced volatility put through the same calculation with no correction."
   },
   "price_basis": "snapshot",
-  "price_history_as_of": "2026-11-02",
+  "price_history_as_of": "2026-11-03",
   "provenance": {
     "execution_pricing": false,
     "feed": "tastytrade_chain_snapshot",
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "131 graded forecasts of 691 recorded on the ledger (mean scores: brier 0.3256, log_loss 0.9259); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 691,
-        "graded_forecasts": 131,
-        "recorded_on": "2026-11-02",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_05",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-02",
-      "keys_present": [
-        "as_of",
-        "calibration_attestation",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "kill_criterion",
-        "live",
-        "method",
-        "price_basis",
-        "price_history_as_of",
-        "provenance",
-        "record_surface",
-        "scope_line",
-        "self_test",
-        "source",
-        "state",
-        "subject_chart",
-        "surfaces",
-        "thin_cell_rule",
-        "tool",
-        "waiting",
-        "what_exists"
-      ]
-    },
-    "feed": "tastytrade_chain_snapshot",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_05",
-      "forecasts": 691,
-      "grades": 131,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "More live grades are still to come: 691 forecasts are on record and 131 are graded so far. The rest arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "tastytrade_chain_snapshot",
-      "price_basis": "snapshot",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 2,
-          "path": "/method"
-        }
-      ],
-      "total_items_counted": 2
-    },
-    "version": 1
-  },
   "scope_line": "A win rate is not an edge. This page states the chance of finishing above a strike; it says nothing about how much a trade would win or lose, or whether any trade pays.",
   "self_test": {
     "oracle_cases": 8,
     "oracle_max_difference": 6e-08,
     "state": "passed",
-    "synthetic_records_written_to_a_throwaway_copy": 16,
-    "synthetic_strikes": 8
+    "synthetic_records_written_to_a_throwaway_copy": 18,
+    "synthetic_strikes": 9
   },
-  "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-11-02).",
+  "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-11-03).",
   "state": "proving",
-  "subject_chart": {
-    "lead": {
-      "kind": "curve",
-      "label": "Honest chance percent by strike.",
-      "points": [
-        {
-          "x": "736.0",
-          "y": 96.4
-        },
-        {
-          "x": "737.0",
-          "y": 96.0
-        },
-        {
-          "x": "738.0",
-          "y": 94.6
-        },
-        {
-          "x": "739.0",
-          "y": 93.2
-        },
-        {
-          "x": "740.0",
-          "y": 91.8
-        },
-        {
-          "x": "741.0",
-          "y": 90.1
-        },
-        {
-          "x": "742.0",
-          "y": 87.9
-        },
-        {
-          "x": "743.0",
-          "y": 85.5
-        },
-        {
-          "x": "744.0",
-          "y": 83.0
-        },
-        {
-          "x": "745.0",
-          "y": 79.9
-        },
-        {
-          "x": "746.0",
-          "y": 77.2
-        },
-        {
-          "x": "747.0",
-          "y": 74.2
-        },
-        {
-          "x": "748.0",
-          "y": 70.6
-        },
-        {
-          "x": "749.0",
-          "y": 67.4
-        },
-        {
-          "x": "750.0",
-          "y": 63.5
-        },
-        {
-          "x": "751.0",
-          "y": 59.4
-        },
-        {
-          "x": "752.0",
-          "y": 55.0
-        },
-        {
-          "x": "753.0",
-          "y": 50.0
-        },
-        {
-          "x": "754.0",
-          "y": 45.5
-        },
-        {
-          "x": "755.0",
-          "y": 41.5
-        },
-        {
-          "x": "756.0",
-          "y": 36.5
-        },
-        {
-          "x": "757.0",
-          "y": 32.0
-        },
-        {
-          "x": "758.0",
-          "y": 27.9
-        },
-        {
-          "x": "759.0",
-          "y": 23.8
-        },
-        {
-          "x": "760.0",
-          "y": 20.4
-        },
-        {
-          "x": "761.0",
-          "y": 18.0
-        },
-        {
-          "x": "762.0",
-          "y": 14.9
-        },
-        {
-          "x": "763.0",
-          "y": 12.3
-        },
-        {
-          "x": "764.0",
-          "y": 10.7
-        },
-        {
-          "x": "765.0",
-          "y": 8.4
-        },
-        {
-          "x": "766.0",
-          "y": 7.2
-        },
-        {
-          "x": "767.0",
-          "y": 5.9
-        },
-        {
-          "x": "768.0",
-          "y": 5.4
-        }
-      ],
-      "source": "surfaces[0].rows[].p_pct",
-      "title": "Chance of finishing above each strike, SPY"
-    },
-    "record": {
-      "kind": "curve",
-      "label": "The second surface on record, chance percent by strike.",
-      "points": [
-        {
-          "x": "655.0",
-          "y": 96.4
-        },
-        {
-          "x": "660.0",
-          "y": 93.3
-        },
-        {
-          "x": "665.0",
-          "y": 87.9
-        },
-        {
-          "x": "670.0",
-          "y": 79.0
-        },
-        {
-          "x": "675.0",
-          "y": 67.9
-        },
-        {
-          "x": "676.0",
-          "y": 66.2
-        },
-        {
-          "x": "677.0",
-          "y": 63.5
-        },
-        {
-          "x": "678.0",
-          "y": 60.9
-        },
-        {
-          "x": "679.0",
-          "y": 58.5
-        },
-        {
-          "x": "680.0",
-          "y": 55.8
-        },
-        {
-          "x": "681.0",
-          "y": 53.3
-        },
-        {
-          "x": "682.0",
-          "y": 50.3
-        },
-        {
-          "x": "683.0",
-          "y": 47.4
-        },
-        {
-          "x": "684.0",
-          "y": 43.6
-        },
-        {
-          "x": "685.0",
-          "y": 40.3
-        },
-        {
-          "x": "686.0",
-          "y": 37.2
-        },
-        {
-          "x": "687.0",
-          "y": 33.6
-        },
-        {
-          "x": "688.0",
-          "y": 30.9
-        },
-        {
-          "x": "689.0",
-          "y": 28.4
-        },
-        {
-          "x": "690.0",
-          "y": 26.1
-        },
-        {
-          "x": "691.0",
-          "y": 23.6
-        },
-        {
-          "x": "692.0",
-          "y": 21.7
-        },
-        {
-          "x": "693.0",
-          "y": 19.6
-        },
-        {
-          "x": "694.0",
-          "y": 17.2
-        },
-        {
-          "x": "695.0",
-          "y": 15.4
-        },
-        {
-          "x": "696.0",
-          "y": 13.7
-        },
-        {
-          "x": "697.0",
-          "y": 11.9
-        },
-        {
-          "x": "698.0",
-          "y": 10.7
-        },
-        {
-          "x": "699.0",
-          "y": 9.7
-        },
-        {
-          "x": "700.0",
-          "y": 8.7
-        },
-        {
-          "x": "701.0",
-          "y": 7.8
-        },
-        {
-          "x": "702.0",
-          "y": 7.1
-        },
-        {
-          "x": "703.0",
-          "y": 6.3
-        },
-        {
-          "x": "704.0",
-          "y": 5.9
-        },
-        {
-          "x": "705.0",
-          "y": 5.4
-        },
-        {
-          "x": "706.0",
-          "y": 4.6
-        },
-        {
-          "x": "707.0",
-          "y": 4.1
-        },
-        {
-          "x": "708.0",
-          "y": 3.7
-        }
-      ],
-      "source": "surfaces[1].rows[].p_pct",
-      "title": "Chance of finishing above each strike, QQQ"
-    },
-    "version": 1
-  },
   "surfaces": [
     {
-      "contracts_on_record": 12030,
-      "days_remaining": 4,
-      "expected_move": 8.17,
+      "contracts_on_record": 12800,
+      "days_remaining": 3,
+      "expected_move": 7.14,
       "expiry": "2026-11-06",
-      "hv30_pct": 10.37,
+      "hv30_pct": 10.43,
       "options_gate": {
-        "admitted": 12030,
+        "admitted": 12800,
         "greek_max_age_seconds": 4500,
         "greek_states": {
           "fresh": 0,
           "future": 0,
           "stale": 0,
-          "undated": 12030
+          "undated": 12800
         },
         "iv_ceiling": 5.0,
         "iv_states": {
-          "absent": 7280,
+          "absent": 7296,
           "invalid": 0,
-          "ok": 4750,
+          "ok": 5504,
           "over_ceiling": 0
         },
         "note": "Candidate gate applied to this snapshot: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent are refused; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted.",
         "refused": 0,
-        "total": 12030
+        "total": 12800
       },
       "rows": [
         {
-          "benchmark_p": 0.7707,
-          "benchmark_p_pct": 77.1,
-          "p": 0.9643,
-          "p_pct": 96.4,
-          "strike": 736.0
-        },
-        {
-          "benchmark_p": 0.7656,
-          "benchmark_p_pct": 76.6,
-          "p": 0.9603,
-          "p_pct": 96.0,
-          "strike": 737.0
-        },
-        {
-          "benchmark_p": 0.7494,
-          "benchmark_p_pct": 74.9,
-          "p": 0.9465,
-          "p_pct": 94.6,
-          "strike": 738.0
-        },
-        {
-          "benchmark_p": 0.7362,
-          "benchmark_p_pct": 73.6,
-          "p": 0.9315,
-          "p_pct": 93.2,
-          "strike": 739.0
-        },
-        {
-          "benchmark_p": 0.7246,
-          "benchmark_p_pct": 72.5,
-          "p": 0.9177,
-          "p_pct": 91.8,
-          "strike": 740.0
-        },
-        {
-          "benchmark_p": 0.7021,
-          "benchmark_p_pct": 70.2,
-          "p": 0.9011,
-          "p_pct": 90.1,
+          "benchmark_p": 0.7719,
+          "benchmark_p_pct": 77.2,
+          "p": 0.9572,
+          "p_pct": 95.7,
           "strike": 741.0
         },
         {
-          "benchmark_p": 0.6915,
-          "benchmark_p_pct": 69.2,
-          "p": 0.8791,
-          "p_pct": 87.9,
+          "benchmark_p": 0.7621,
+          "benchmark_p_pct": 76.2,
+          "p": 0.9445,
+          "p_pct": 94.4,
           "strike": 742.0
         },
         {
-          "benchmark_p": 0.6733,
-          "benchmark_p_pct": 67.3,
-          "p": 0.8553,
-          "p_pct": 85.5,
+          "benchmark_p": 0.7389,
+          "benchmark_p_pct": 73.9,
+          "p": 0.9302,
+          "p_pct": 93.0,
           "strike": 743.0
         },
         {
-          "benchmark_p": 0.6531,
-          "benchmark_p_pct": 65.3,
-          "p": 0.8297,
-          "p_pct": 83.0,
+          "benchmark_p": 0.7241,
+          "benchmark_p_pct": 72.4,
+          "p": 0.9166,
+          "p_pct": 91.7,
           "strike": 744.0
         },
         {
-          "benchmark_p": 0.6377,
-          "benchmark_p_pct": 63.8,
-          "p": 0.7986,
-          "p_pct": 79.9,
+          "benchmark_p": 0.7098,
+          "benchmark_p_pct": 71.0,
+          "p": 0.8974,
+          "p_pct": 89.7,
           "strike": 745.0
         },
         {
-          "benchmark_p": 0.6183,
-          "benchmark_p_pct": 61.8,
-          "p": 0.7719,
-          "p_pct": 77.2,
+          "benchmark_p": 0.6873,
+          "benchmark_p_pct": 68.7,
+          "p": 0.8747,
+          "p_pct": 87.5,
           "strike": 746.0
         },
         {
-          "benchmark_p": 0.5977,
-          "benchmark_p_pct": 59.8,
-          "p": 0.7423,
-          "p_pct": 74.2,
+          "benchmark_p": 0.6679,
+          "benchmark_p_pct": 66.8,
+          "p": 0.8522,
+          "p_pct": 85.2,
           "strike": 747.0
         },
         {
-          "benchmark_p": 0.5773,
-          "benchmark_p_pct": 57.7,
-          "p": 0.7062,
-          "p_pct": 70.6,
+          "benchmark_p": 0.649,
+          "benchmark_p_pct": 64.9,
+          "p": 0.8211,
+          "p_pct": 82.1,
           "strike": 748.0
         },
         {
-          "benchmark_p": 0.5581,
-          "benchmark_p_pct": 55.8,
-          "p": 0.6738,
-          "p_pct": 67.4,
+          "benchmark_p": 0.6264,
+          "benchmark_p_pct": 62.6,
+          "p": 0.7826,
+          "p_pct": 78.3,
           "strike": 749.0
         },
         {
-          "benchmark_p": 0.5377,
-          "benchmark_p_pct": 53.8,
-          "p": 0.6355,
-          "p_pct": 63.5,
+          "benchmark_p": 0.6027,
+          "benchmark_p_pct": 60.3,
+          "p": 0.7482,
+          "p_pct": 74.8,
           "strike": 750.0
         },
         {
-          "benchmark_p": 0.5168,
-          "benchmark_p_pct": 51.7,
-          "p": 0.594,
-          "p_pct": 59.4,
+          "benchmark_p": 0.5798,
+          "benchmark_p_pct": 58.0,
+          "p": 0.7055,
+          "p_pct": 70.6,
           "strike": 751.0
         },
         {
-          "benchmark_p": 0.4949,
-          "benchmark_p_pct": 49.5,
-          "p": 0.5497,
-          "p_pct": 55.0,
+          "benchmark_p": 0.5571,
+          "benchmark_p_pct": 55.7,
+          "p": 0.6575,
+          "p_pct": 65.8,
           "strike": 752.0
         },
         {
-          "benchmark_p": 0.473,
-          "benchmark_p_pct": 47.3,
-          "p": 0.5005,
-          "p_pct": 50.0,
+          "benchmark_p": 0.5324,
+          "benchmark_p_pct": 53.2,
+          "p": 0.6045,
+          "p_pct": 60.5,
           "strike": 753.0
         },
         {
-          "benchmark_p": 0.4508,
-          "benchmark_p_pct": 45.1,
-          "p": 0.4554,
-          "p_pct": 45.5,
+          "benchmark_p": 0.5077,
+          "benchmark_p_pct": 50.8,
+          "p": 0.557,
+          "p_pct": 55.7,
           "strike": 754.0
         },
         {
-          "benchmark_p": 0.4277,
-          "benchmark_p_pct": 42.8,
-          "p": 0.4148,
-          "p_pct": 41.5,
+          "benchmark_p": 0.4827,
+          "benchmark_p_pct": 48.3,
+          "p": 0.5192,
+          "p_pct": 51.9,
           "strike": 755.0
+        },
+        {
+          "benchmark_p": 0.4571,
+          "benchmark_p_pct": 45.7,
+          "p": 0.4681,
+          "p_pct": 46.8,
+          "strike": 756.0
+        },
+        {
+          "benchmark_p": 0.4304,
+          "benchmark_p_pct": 43.0,
+          "p": 0.4178,
+          "p_pct": 41.8,
+          "strike": 757.0
         },
         {
           "benchmark_p": 0.4044,
           "benchmark_p_pct": 40.4,
-          "p": 0.3653,
-          "p_pct": 36.5,
-          "strike": 756.0
-        },
-        {
-          "benchmark_p": 0.383,
-          "benchmark_p_pct": 38.3,
-          "p": 0.3196,
-          "p_pct": 32.0,
-          "strike": 757.0
-        },
-        {
-          "benchmark_p": 0.3601,
-          "benchmark_p_pct": 36.0,
-          "p": 0.2792,
-          "p_pct": 27.9,
+          "p": 0.3566,
+          "p_pct": 35.7,
           "strike": 758.0
         },
         {
-          "benchmark_p": 0.3381,
-          "benchmark_p_pct": 33.8,
-          "p": 0.238,
-          "p_pct": 23.8,
+          "benchmark_p": 0.3791,
+          "benchmark_p_pct": 37.9,
+          "p": 0.2995,
+          "p_pct": 29.9,
           "strike": 759.0
         },
         {
-          "benchmark_p": 0.3115,
-          "benchmark_p_pct": 31.2,
-          "p": 0.2035,
-          "p_pct": 20.4,
+          "benchmark_p": 0.3552,
+          "benchmark_p_pct": 35.5,
+          "p": 0.2469,
+          "p_pct": 24.7,
           "strike": 760.0
         },
         {
-          "benchmark_p": 0.2949,
-          "benchmark_p_pct": 29.5,
-          "p": 0.1795,
-          "p_pct": 18.0,
+          "benchmark_p": 0.3301,
+          "benchmark_p_pct": 33.0,
+          "p": 0.2077,
+          "p_pct": 20.8,
           "strike": 761.0
         },
         {
-          "benchmark_p": 0.2729,
-          "benchmark_p_pct": 27.3,
-          "p": 0.1486,
-          "p_pct": 14.9,
+          "benchmark_p": 0.3033,
+          "benchmark_p_pct": 30.3,
+          "p": 0.1683,
+          "p_pct": 16.8,
           "strike": 762.0
         },
         {
-          "benchmark_p": 0.2507,
-          "benchmark_p_pct": 25.1,
-          "p": 0.1231,
-          "p_pct": 12.3,
+          "benchmark_p": 0.279,
+          "benchmark_p_pct": 27.9,
+          "p": 0.135,
+          "p_pct": 13.5,
           "strike": 763.0
         },
         {
-          "benchmark_p": 0.2193,
-          "benchmark_p_pct": 21.9,
-          "p": 0.1066,
-          "p_pct": 10.7,
+          "benchmark_p": 0.2559,
+          "benchmark_p_pct": 25.6,
+          "p": 0.1127,
+          "p_pct": 11.3,
           "strike": 764.0
         },
         {
-          "benchmark_p": 0.2033,
-          "benchmark_p_pct": 20.3,
-          "p": 0.0842,
-          "p_pct": 8.4,
+          "benchmark_p": 0.2316,
+          "benchmark_p_pct": 23.2,
+          "p": 0.0899,
+          "p_pct": 9.0,
           "strike": 765.0
         },
         {
-          "benchmark_p": 0.183,
-          "benchmark_p_pct": 18.3,
-          "p": 0.0718,
-          "p_pct": 7.2,
+          "benchmark_p": 0.2068,
+          "benchmark_p_pct": 20.7,
+          "p": 0.0703,
+          "p_pct": 7.0,
           "strike": 766.0
         },
         {
-          "benchmark_p": 0.1671,
-          "benchmark_p_pct": 16.7,
-          "p": 0.0593,
-          "p_pct": 5.9,
+          "benchmark_p": 0.1799,
+          "benchmark_p_pct": 18.0,
+          "p": 0.0574,
+          "p_pct": 5.7,
           "strike": 767.0
         },
         {
-          "benchmark_p": 0.1528,
-          "benchmark_p_pct": 15.3,
-          "p": 0.054,
-          "p_pct": 5.4,
+          "benchmark_p": 0.172,
+          "benchmark_p_pct": 17.2,
+          "p": 0.0496,
+          "p_pct": 5.0,
           "strike": 768.0
         }
       ],
-      "snapshot_day": "2026-11-02",
-      "spot": 751.99,
+      "snapshot_day": "2026-11-03",
+      "spot": 754.48,
       "symbol": "SPY"
     },
     {
-      "contracts_on_record": 9832,
-      "days_remaining": 4,
-      "expected_move": 14.26,
+      "contracts_on_record": 10332,
+      "days_remaining": 3,
+      "expected_move": 12.4,
       "expiry": "2026-11-06",
-      "hv30_pct": 20.03,
+      "hv30_pct": 19.94,
       "options_gate": {
-        "admitted": 9832,
+        "admitted": 10332,
         "greek_max_age_seconds": 4500,
         "greek_states": {
           "fresh": 0,
           "future": 0,
           "stale": 0,
-          "undated": 9832
+          "undated": 10332
         },
         "iv_ceiling": 5.0,
         "iv_states": {
-          "absent": 5856,
+          "absent": 5442,
           "invalid": 0,
-          "ok": 3976,
+          "ok": 4890,
           "over_ceiling": 0
         },
         "note": "Candidate gate applied to this snapshot: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent are refused; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted.",
         "refused": 0,
-        "total": 9832
+        "total": 10332
       },
       "rows": [
         {
-          "benchmark_p": 0.7914,
-          "benchmark_p_pct": 79.1,
-          "p": 0.9636,
+          "benchmark_p": 0.8197,
+          "benchmark_p_pct": 82.0,
+          "p": 0.9781,
+          "p_pct": 97.8,
+          "strike": 661.0
+        },
+        {
+          "benchmark_p": 0.8053,
+          "benchmark_p_pct": 80.5,
+          "p": 0.9746,
+          "p_pct": 97.5,
+          "strike": 662.0
+        },
+        {
+          "benchmark_p": 0.795,
+          "benchmark_p_pct": 79.5,
+          "p": 0.9718,
+          "p_pct": 97.2,
+          "strike": 663.0
+        },
+        {
+          "benchmark_p": 0.78,
+          "benchmark_p_pct": 78.0,
+          "p": 0.9637,
           "p_pct": 96.4,
-          "strike": 655.0
+          "strike": 664.0
         },
         {
-          "benchmark_p": 0.7374,
-          "benchmark_p_pct": 73.7,
-          "p": 0.9328,
-          "p_pct": 93.3,
-          "strike": 660.0
-        },
-        {
-          "benchmark_p": 0.6858,
-          "benchmark_p_pct": 68.6,
-          "p": 0.8792,
-          "p_pct": 87.9,
+          "benchmark_p": 0.7751,
+          "benchmark_p_pct": 77.5,
+          "p": 0.955,
+          "p_pct": 95.5,
           "strike": 665.0
         },
         {
-          "benchmark_p": 0.6293,
-          "benchmark_p_pct": 62.9,
-          "p": 0.7896,
-          "p_pct": 79.0,
+          "benchmark_p": 0.7643,
+          "benchmark_p_pct": 76.4,
+          "p": 0.9458,
+          "p_pct": 94.6,
+          "strike": 666.0
+        },
+        {
+          "benchmark_p": 0.7544,
+          "benchmark_p_pct": 75.4,
+          "p": 0.9397,
+          "p_pct": 94.0,
+          "strike": 667.0
+        },
+        {
+          "benchmark_p": 0.7425,
+          "benchmark_p_pct": 74.2,
+          "p": 0.9305,
+          "p_pct": 93.0,
+          "strike": 668.0
+        },
+        {
+          "benchmark_p": 0.7279,
+          "benchmark_p_pct": 72.8,
+          "p": 0.9206,
+          "p_pct": 92.1,
+          "strike": 669.0
+        },
+        {
+          "benchmark_p": 0.7155,
+          "benchmark_p_pct": 71.5,
+          "p": 0.9087,
+          "p_pct": 90.9,
           "strike": 670.0
         },
         {
-          "benchmark_p": 0.5637,
-          "benchmark_p_pct": 56.4,
-          "p": 0.6792,
-          "p_pct": 67.9,
+          "benchmark_p": 0.7043,
+          "benchmark_p_pct": 70.4,
+          "p": 0.8949,
+          "p_pct": 89.5,
+          "strike": 671.0
+        },
+        {
+          "benchmark_p": 0.6883,
+          "benchmark_p_pct": 68.8,
+          "p": 0.8827,
+          "p_pct": 88.3,
+          "strike": 672.0
+        },
+        {
+          "benchmark_p": 0.6766,
+          "benchmark_p_pct": 67.7,
+          "p": 0.866,
+          "p_pct": 86.6,
+          "strike": 673.0
+        },
+        {
+          "benchmark_p": 0.6608,
+          "benchmark_p_pct": 66.1,
+          "p": 0.8436,
+          "p_pct": 84.4,
+          "strike": 674.0
+        },
+        {
+          "benchmark_p": 0.6525,
+          "benchmark_p_pct": 65.2,
+          "p": 0.8253,
+          "p_pct": 82.5,
           "strike": 675.0
         },
         {
-          "benchmark_p": 0.5522,
-          "benchmark_p_pct": 55.2,
-          "p": 0.6621,
-          "p_pct": 66.2,
+          "benchmark_p": 0.6362,
+          "benchmark_p_pct": 63.6,
+          "p": 0.8063,
+          "p_pct": 80.6,
           "strike": 676.0
         },
         {
-          "benchmark_p": 0.5378,
-          "benchmark_p_pct": 53.8,
-          "p": 0.6349,
-          "p_pct": 63.5,
+          "benchmark_p": 0.6211,
+          "benchmark_p_pct": 62.1,
+          "p": 0.7852,
+          "p_pct": 78.5,
           "strike": 677.0
         },
         {
-          "benchmark_p": 0.5244,
-          "benchmark_p_pct": 52.4,
-          "p": 0.6087,
-          "p_pct": 60.9,
+          "benchmark_p": 0.608,
+          "benchmark_p_pct": 60.8,
+          "p": 0.7659,
+          "p_pct": 76.6,
           "strike": 678.0
         },
         {
-          "benchmark_p": 0.5112,
-          "benchmark_p_pct": 51.1,
-          "p": 0.5848,
-          "p_pct": 58.5,
+          "benchmark_p": 0.5929,
+          "benchmark_p_pct": 59.3,
+          "p": 0.7373,
+          "p_pct": 73.7,
           "strike": 679.0
         },
         {
-          "benchmark_p": 0.4971,
-          "benchmark_p_pct": 49.7,
-          "p": 0.5584,
-          "p_pct": 55.8,
+          "benchmark_p": 0.5789,
+          "benchmark_p_pct": 57.9,
+          "p": 0.7119,
+          "p_pct": 71.2,
           "strike": 680.0
         },
         {
-          "benchmark_p": 0.4834,
-          "benchmark_p_pct": 48.3,
-          "p": 0.5332,
-          "p_pct": 53.3,
+          "benchmark_p": 0.5655,
+          "benchmark_p_pct": 56.5,
+          "p": 0.6809,
+          "p_pct": 68.1,
           "strike": 681.0
         },
         {
-          "benchmark_p": 0.4695,
-          "benchmark_p_pct": 46.9,
-          "p": 0.5031,
-          "p_pct": 50.3,
+          "benchmark_p": 0.5496,
+          "benchmark_p_pct": 55.0,
+          "p": 0.6557,
+          "p_pct": 65.6,
           "strike": 682.0
         },
         {
-          "benchmark_p": 0.4554,
-          "benchmark_p_pct": 45.5,
-          "p": 0.4744,
-          "p_pct": 47.4,
+          "benchmark_p": 0.5347,
+          "benchmark_p_pct": 53.5,
+          "p": 0.6264,
+          "p_pct": 62.6,
           "strike": 683.0
         },
         {
-          "benchmark_p": 0.4419,
-          "benchmark_p_pct": 44.2,
-          "p": 0.436,
-          "p_pct": 43.6,
+          "benchmark_p": 0.5197,
+          "benchmark_p_pct": 52.0,
+          "p": 0.5945,
+          "p_pct": 59.4,
           "strike": 684.0
         },
         {
-          "benchmark_p": 0.4274,
-          "benchmark_p_pct": 42.7,
-          "p": 0.4028,
-          "p_pct": 40.3,
+          "benchmark_p": 0.5041,
+          "benchmark_p_pct": 50.4,
+          "p": 0.5623,
+          "p_pct": 56.2,
           "strike": 685.0
         },
         {
-          "benchmark_p": 0.4129,
-          "benchmark_p_pct": 41.3,
-          "p": 0.3724,
-          "p_pct": 37.2,
+          "benchmark_p": 0.4888,
+          "benchmark_p_pct": 48.9,
+          "p": 0.5289,
+          "p_pct": 52.9,
           "strike": 686.0
         },
         {
-          "benchmark_p": 0.3994,
-          "benchmark_p_pct": 39.9,
-          "p": 0.3362,
-          "p_pct": 33.6,
+          "benchmark_p": 0.4733,
+          "benchmark_p_pct": 47.3,
+          "p": 0.498,
+          "p_pct": 49.8,
           "strike": 687.0
         },
         {
-          "benchmark_p": 0.3856,
-          "benchmark_p_pct": 38.6,
-          "p": 0.3091,
-          "p_pct": 30.9,
+          "benchmark_p": 0.4575,
+          "benchmark_p_pct": 45.8,
+          "p": 0.4611,
+          "p_pct": 46.1,
           "strike": 688.0
         },
         {
-          "benchmark_p": 0.3707,
-          "benchmark_p_pct": 37.1,
-          "p": 0.2837,
-          "p_pct": 28.4,
+          "benchmark_p": 0.4422,
+          "benchmark_p_pct": 44.2,
+          "p": 0.4257,
+          "p_pct": 42.6,
           "strike": 689.0
         },
         {
-          "benchmark_p": 0.3562,
-          "benchmark_p_pct": 35.6,
-          "p": 0.2612,
-          "p_pct": 26.1,
+          "benchmark_p": 0.4258,
+          "benchmark_p_pct": 42.6,
+          "p": 0.3907,
+          "p_pct": 39.1,
           "strike": 690.0
         },
         {
-          "benchmark_p": 0.345,
-          "benchmark_p_pct": 34.5,
-          "p": 0.2356,
-          "p_pct": 23.6,
+          "benchmark_p": 0.4111,
+          "benchmark_p_pct": 41.1,
+          "p": 0.3511,
+          "p_pct": 35.1,
           "strike": 691.0
         },
         {
-          "benchmark_p": 0.3296,
-          "benchmark_p_pct": 33.0,
-          "p": 0.2168,
-          "p_pct": 21.7,
+          "benchmark_p": 0.3947,
+          "benchmark_p_pct": 39.5,
+          "p": 0.3183,
+          "p_pct": 31.8,
           "strike": 692.0
         },
         {
-          "benchmark_p": 0.3133,
-          "benchmark_p_pct": 31.3,
-          "p": 0.196,
-          "p_pct": 19.6,
+          "benchmark_p": 0.3782,
+          "benchmark_p_pct": 37.8,
+          "p": 0.2848,
+          "p_pct": 28.5,
           "strike": 693.0
         },
         {
-          "benchmark_p": 0.3023,
-          "benchmark_p_pct": 30.2,
-          "p": 0.1721,
-          "p_pct": 17.2,
+          "benchmark_p": 0.3639,
+          "benchmark_p_pct": 36.4,
+          "p": 0.2507,
+          "p_pct": 25.1,
           "strike": 694.0
         },
         {
-          "benchmark_p": 0.2925,
-          "benchmark_p_pct": 29.3,
-          "p": 0.1537,
-          "p_pct": 15.4,
+          "benchmark_p": 0.3477,
+          "benchmark_p_pct": 34.8,
+          "p": 0.2161,
+          "p_pct": 21.6,
           "strike": 695.0
         },
         {
-          "benchmark_p": 0.28,
-          "benchmark_p_pct": 28.0,
-          "p": 0.1372,
-          "p_pct": 13.7,
+          "benchmark_p": 0.3341,
+          "benchmark_p_pct": 33.4,
+          "p": 0.1933,
+          "p_pct": 19.3,
           "strike": 696.0
         },
         {
-          "benchmark_p": 0.2606,
-          "benchmark_p_pct": 26.1,
-          "p": 0.1188,
-          "p_pct": 11.9,
+          "benchmark_p": 0.3182,
+          "benchmark_p_pct": 31.8,
+          "p": 0.1738,
+          "p_pct": 17.4,
           "strike": 697.0
         },
         {
-          "benchmark_p": 0.2485,
-          "benchmark_p_pct": 24.8,
-          "p": 0.1071,
-          "p_pct": 10.7,
+          "benchmark_p": 0.3025,
+          "benchmark_p_pct": 30.2,
+          "p": 0.1538,
+          "p_pct": 15.4,
           "strike": 698.0
         },
         {
-          "benchmark_p": 0.2306,
-          "benchmark_p_pct": 23.1,
-          "p": 0.0972,
-          "p_pct": 9.7,
+          "benchmark_p": 0.2877,
+          "benchmark_p_pct": 28.8,
+          "p": 0.1296,
+          "p_pct": 13.0,
           "strike": 699.0
         },
         {
-          "benchmark_p": 0.2237,
-          "benchmark_p_pct": 22.4,
-          "p": 0.0866,
-          "p_pct": 8.7,
+          "benchmark_p": 0.2759,
+          "benchmark_p_pct": 27.6,
+          "p": 0.1137,
+          "p_pct": 11.4,
           "strike": 700.0
         },
         {
-          "benchmark_p": 0.2095,
-          "benchmark_p_pct": 21.0,
-          "p": 0.0778,
-          "p_pct": 7.8,
+          "benchmark_p": 0.26,
+          "benchmark_p_pct": 26.0,
+          "p": 0.0997,
+          "p_pct": 10.0,
           "strike": 701.0
         },
         {
-          "benchmark_p": 0.2008,
-          "benchmark_p_pct": 20.1,
-          "p": 0.0707,
-          "p_pct": 7.1,
+          "benchmark_p": 0.242,
+          "benchmark_p_pct": 24.2,
+          "p": 0.0926,
+          "p_pct": 9.3,
           "strike": 702.0
         },
         {
-          "benchmark_p": 0.1889,
-          "benchmark_p_pct": 18.9,
-          "p": 0.0628,
-          "p_pct": 6.3,
+          "benchmark_p": 0.2325,
+          "benchmark_p_pct": 23.2,
+          "p": 0.0801,
+          "p_pct": 8.0,
           "strike": 703.0
         },
         {
-          "benchmark_p": 0.1779,
-          "benchmark_p_pct": 17.8,
-          "p": 0.059,
-          "p_pct": 5.9,
+          "benchmark_p": 0.2192,
+          "benchmark_p_pct": 21.9,
+          "p": 0.0682,
+          "p_pct": 6.8,
           "strike": 704.0
         },
         {
-          "benchmark_p": 0.1686,
-          "benchmark_p_pct": 16.9,
-          "p": 0.0544,
-          "p_pct": 5.4,
+          "benchmark_p": 0.2108,
+          "benchmark_p_pct": 21.1,
+          "p": 0.0618,
+          "p_pct": 6.2,
           "strike": 705.0
         },
         {
-          "benchmark_p": 0.1557,
-          "benchmark_p_pct": 15.6,
-          "p": 0.0465,
-          "p_pct": 4.6,
+          "benchmark_p": 0.1968,
+          "benchmark_p_pct": 19.7,
+          "p": 0.0524,
+          "p_pct": 5.2,
           "strike": 706.0
         },
         {
-          "benchmark_p": 0.1535,
-          "benchmark_p_pct": 15.3,
-          "p": 0.0413,
-          "p_pct": 4.1,
+          "benchmark_p": 0.1884,
+          "benchmark_p_pct": 18.8,
+          "p": 0.0472,
+          "p_pct": 4.7,
           "strike": 707.0
         },
         {
-          "benchmark_p": 0.1405,
-          "benchmark_p_pct": 14.1,
-          "p": 0.0365,
-          "p_pct": 3.7,
+          "benchmark_p": 0.1708,
+          "benchmark_p_pct": 17.1,
+          "p": 0.0413,
+          "p_pct": 4.1,
           "strike": 708.0
+        },
+        {
+          "benchmark_p": 0.1521,
+          "benchmark_p_pct": 15.2,
+          "p": 0.037,
+          "p_pct": 3.7,
+          "strike": 709.0
+        },
+        {
+          "benchmark_p": 0.1481,
+          "benchmark_p_pct": 14.8,
+          "p": 0.0319,
+          "p_pct": 3.2,
+          "strike": 710.0
         }
       ],
-      "snapshot_day": "2026-11-02",
-      "spot": 680.41,
+      "snapshot_day": "2026-11-03",
+      "spot": 685.755,
       "symbol": "QQQ"
     }
   ],
@@ -1014,22 +682,22 @@
   "waiting": false,
   "what_exists": {
     "archive_by_index": {
-      "IWM": 3,
-      "QQQ": 3,
-      "SPY": 3
+      "IWM": 4,
+      "QQQ": 4,
+      "SPY": 4
     },
-    "archive_snapshots_total": 9,
+    "archive_snapshots_total": 12,
     "archive_state_words": {
       "IWM": null,
       "QQQ": null,
       "SPY": null
     },
     "morning_map_reading": {
-      "contracts_counted": 6571,
-      "contracts_total": 8152,
-      "expiries_with_totals": 30,
-      "session": "2026-10-30",
-      "spot": 760.34,
+      "contracts_counted": 6993,
+      "contracts_total": 8177,
+      "expiries_with_totals": 29,
+      "session": "2026-11-02",
+      "spot": 753.75,
       "strikes_kept": 8
     },
     "note": "The chain archive this engine reads holds no snapshot yet. Each morning's market map does read a live chain and keeps totals from it (for SPY's latest session: the price level, the two walls, the flip level, one total per expiry and the 8 busiest strikes), but it keeps no full strike list and no per-strike volatility reading, so it cannot supply this forecast. Nothing has been filled in from it."
