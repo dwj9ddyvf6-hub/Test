@@ -116,10 +116,14 @@ def test_abstention_census_retaken():
     # audited character; the 2026-10-29 census day no longer
     # claims them, because their publishers keep only the
     # freshest day.
-    assert 'board.get("session") != "2026-10-30"' in src
-    assert 'sop.get("session") != "2026-10-30"' in src
-    assert 'ib_today.get("session") != "2026-10-30"' in src
-    assert '{"day": "2026-10-30",' in src
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # census was re-taken again in the terminal full census at
+    # the 2026-11-03 session, same character (the freshest
+    # day's abstainer is still Intake-Bias Reversal).
+    assert 'board.get("session") != "2026-11-03"' in src
+    assert 'sop.get("session") != "2026-11-03"' in src
+    assert 'ib_today.get("session") != "2026-11-03"' in src
+    assert '{"day": "2026-11-03",' in src
     assert '"abstained": ["Intake-Bias Reversal"]' in src
     # The 2026-10-23 census day is proven from the rebuilt
     # expected-move lane's own filing record (filed at the time,
@@ -131,26 +135,26 @@ def test_abstention_published_decision_record():
     with open(os.path.join(SITE, "abstention-signal", "data.json"),
               encoding="utf-8") as fh:
         data = json.load(fh)
-    assert data["as_of_session"] == "2026-10-30"
-    assert len(data["decision_days"]) == 7
-    assert data["today"]["day"] == "2026-10-30"
-    # Re-taken 2026-10-31 (terminal audit round 1): the freshest
-    # day's census now counts the Board and Second Opinion
-    # records that stand for 2026-10-30, so 3 tools were running
-    # and 1 stayed silent; the day's first-issue forecast pair
-    # stands on the ledger and the re-issue pair is voided and
-    # named, so the valid recorded count is still 6.
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # published record advanced with the re-taken census to
+    # the 2026-11-03 session and 9 decision days; the day's
+    # character is unchanged (3 tools running, 1 silent), and
+    # the ledger's first-issue and voided counts accrued to
+    # 8 recorded and 4 voided on the valid basis.
+    assert data["as_of_session"] == "2026-11-03"
+    assert len(data["decision_days"]) == 9
+    assert data["today"]["day"] == "2026-11-03"
     assert data["today"]["rate"] == 0.3333
-    assert data["live"]["forecasts_recorded"] == 6
-    assert data["live"]["forecasts_voided"] == 2
+    assert data["live"]["forecasts_recorded"] == 8
+    assert data["live"]["forecasts_voided"] == 4
     # The narrative must agree with the block it rides in (it once
     # described the previous census day, fired, 0 of 1, 6 days,
     # while the block carried the new day; cured 2026-10-31 by
     # computing the words from the freshest decision day).
     words = data["today"]["words"]
-    assert "Friday, October 30, 2026" in words
+    assert "Tuesday, November 3, 2026" in words
     assert "the silence rate is 1 of 3" in words
-    assert "Only 7 days carry" in words
+    assert "Only 9 days carry" in words
 
 
 # ---- In-Regime Oracle: the Board gate series builder ----
@@ -175,9 +179,15 @@ def test_inregimeoracle_board_gate_series_builder():
     # consistency: the computed inputs trail the whole series.
     assert len(series) >= 47
     assert sum(c["hit"] for c in series) >= 26
-    sessions = mod.sessions_through(dates, "2026-11-02")
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # consistency property is stated at the series' own last
+    # session, not a fixed date: the graded record has since
+    # accrued past 2026-11-02, so a fixed mid-series date no
+    # longer trails the whole series by construction.
+    last_session = max(dates)
+    sessions = mod.sessions_through(dates, last_session)
     calc = mod.compute_inputs(series, sessions,
-                              sessions.index("2026-11-02"))
+                              sessions.index(last_session))
     assert calc is not None
     assert calc["trailing_calls"] == len(series)
     assert 0.0 < calc["p"] < 1.0
