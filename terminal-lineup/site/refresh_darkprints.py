@@ -239,6 +239,24 @@ def write_panel_history(snapshot):
         fh.write("\n")
 
 
+def _next_session(day_iso):
+    """The NYSE session immediately after day_iso, from the
+    program's verified calendar (weekday fallback past its edge)."""
+    try:
+        import completed_session as _cs
+        sessions = _cs._sessions()
+    except Exception:
+        sessions = None
+    if sessions:
+        after = [s for s in sessions if s > day_iso]
+        return after[0] if after else None
+    from datetime import date, timedelta
+    d = date.fromisoformat(day_iso) + timedelta(days=1)
+    while d.weekday() >= 5:
+        d += timedelta(days=1)
+    return d.isoformat()
+
+
 def build():
     for path in (CARD_PATH, FEED_PATH, LEDGER_PATH, EXT_PATH):
         if not os.path.exists(path):
@@ -276,7 +294,19 @@ def build():
                     "coverage count; a reading without its "
                     "coverage stated is not publishable.")
 
-    if feed_doc.get("as_of_session") != session:
+    # DARKPRINTS-FEED-CLOCK-20261104: the feed's as_of_session is
+    # the Board's session, and the Board publishes same-day
+    # post-close, so on any evening the feed's as-of is exactly one
+    # session ahead of the dark reading's session (the FINRA file
+    # for the just-closed session is not yet published). The old
+    # equality gate therefore refused every coherent evening. The
+    # agreement that means something is that the summary's own
+    # per-fund dark readings carry the card's session and figures,
+    # checked per fund below; this headline check now only refuses
+    # a summary that is behind the card, or more than one session
+    # ahead of it.
+    feed_as_of = feed_doc.get("as_of_session")
+    if feed_as_of != session and feed_as_of != _next_session(session):
         return fail("the published daily summary belongs to a "
                     "different session than the index card; "
                     "refusing to publish until they agree.")
