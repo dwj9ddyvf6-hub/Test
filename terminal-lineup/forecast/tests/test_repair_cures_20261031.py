@@ -210,8 +210,18 @@ def test_market_mood_composite_is_a_labelled_median_line():
     data = _data("market-mood")
     comp = data["state"]["composite_percentile"]
     assert f'<p class="bignum">{comp}</p>' not in html
-    assert f"Composite percentile {comp}: the median of the" in html
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # owner's later ruling took the composite value off the
+    # page entirely (the generator now states the composite is
+    # recorded in the engine's history file and, by the
+    # owner's ruling, this page shows no single composite
+    # headline). The pin stands on that ruled contract.
+    assert f"Composite percentile {comp}:" not in html
+    assert "no single composite headline" in html
     assert "oldest gauge reading 2026-09-01" in html
-    assert data["state"]["regime"] in html
+    # The regime word no longer leads either: under the same
+    # ruling the page leads with the nine gauges themselves.
+    assert "The nine gauges" in html
+    assert "the gauges below are the reading" in html
     pipe = (SITE.parent / "psychology-engine" / "pipeline.py").read_text()
     assert "_spread_line" in pipe  # the cure lives in the generator
