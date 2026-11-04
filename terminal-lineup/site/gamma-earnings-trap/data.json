@@ -3,7 +3,7 @@
     "dated": 849,
     "names_on_record": 1838,
     "no_date": 989,
-    "priced_moves_on_record": 592,
+    "priced_moves_on_record": 520,
     "recorded_on": "2026-11-03",
     "stale_note": "The calendar was gathered on October 12, 2026, more than a week before the newest map session, so by its own page's rule it is old. Its dates are shown as recorded, and any date that has slipped will be caught when the calendar is next gathered.",
     "timing_note": "The calendar carries no report timing, nothing about whether a report lands before the open or after the close. Until a record carries timing, the report date itself is counted as the earnings day. That is a named gap in the record, not a fact about the companies."
@@ -25,10 +25,6 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: distribution, over the earnings session (events within 5 sessions). It is graded on how often its stated ranges contain what actually happens, checked against the width of those ranges. It would be ended if after 60 events, the exceedance confidence interval includes 50 percent or the median ratio is below 1.0. It counts as proven at 60 events.",
-    "summary": "Forecast how big an earnings-day move will be when market positioning is set to amplify it, and never which way it will go."
-  },
   "feed": "tastytrade_chain_snapshot",
   "forecast": {
     "claim": "For a stock in the index that reports earnings within the next 5 trading days while dealer positioning for the whole index is negative, the size of its earnings-day move, whichever way it goes, will be bigger than the move the options market priced in for at least 55 out of every 100 such reports, and the middle report's actual move will be at least 1.10 times its priced move.",
@@ -39,7 +35,7 @@
   "grading_note": "Grading waits on two things, both stated plainly: the shared grading machinery cannot yet score this kind of actual-against-priced size result for a group of reports, and the price history on record ends 2026-11-03, before every report date in the window.",
   "history": {
     "control_arm_graded": 0,
-    "detail": "No past report qualifies, in either group. The past-earnings record holds a pooled summary only: 35 reports across 3 names (AAPL, MSFT, NVDA), a pooled average move of -0.19 percent and a pooled middle of -0.28 percent, gathered 2026-11-02. Individual report dates and individual moves are not stored, no priced move exists for any of those reports, and positioning readings exist only for October 2026 sessions, long after them. With any one of the four inputs missing, an event is not graded, so the count is 0, stated plainly.",
+    "detail": "No past report qualifies, in either group. The past-earnings record holds a pooled summary only: 36 reports across 3 names (AAPL, MSFT, NVDA), a pooled average move of -0.23 percent and a pooled middle of -0.37 percent, gathered 2026-11-03. Individual report dates and individual moves are not stored, no priced move exists for any of those reports, and positioning readings exist only for October 2026 sessions, long after them. With any one of the four inputs missing, an event is not graded, so the count is 0, stated plainly.",
     "label": "History: past reports carrying every input the grading needs",
     "main_arm_graded": 0,
     "qualifying_events": 0
@@ -48,8 +44,8 @@
   "live": {
     "control_recorded": 0,
     "forecasts_graded": 0,
-    "forecasts_recorded": 1772,
-    "main_recorded": 1772,
+    "forecasts_recorded": 1776,
+    "main_recorded": 1776,
     "target_events": 60
   },
   "membership": {
@@ -241,171 +237,12 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "published_at_utc": "2026-11-03T13:51:16.691421+00:00",
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "no graded forecasts on record yet (1240 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 1240,
-        "graded_forecasts": 0,
-        "recorded_on": "2026-11-03",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_11",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-03",
-      "keys_present": [
-        "calendar",
-        "calibration_attestation",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "forecast",
-        "grading_note",
-        "history",
-        "kill_criterion",
-        "live",
-        "membership",
-        "missing_input",
-        "options_gate",
-        "panel_last_session",
-        "positioning",
-        "price_basis",
-        "provenance",
-        "published_at_utc",
-        "record_surface",
-        "self_test",
-        "source",
-        "state",
-        "subject_chart",
-        "thin_rule",
-        "tool",
-        "waiting",
-        "window",
-        "worked_example"
-      ]
-    },
-    "feed": "tastytrade_chain_snapshot",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_11",
-      "forecasts": 1772,
-      "grades": 0,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "Live grades are still building: 1772 forecasts are on record and none are graded yet. Grades arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "tastytrade_chain_snapshot",
-      "price_basis": "snapshot",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 0,
-          "path": "/history"
-        }
-      ],
-      "total_items_counted": 0
-    },
-    "version": 1
-  },
   "self_test": {
     "cases": 4,
     "passed": 4
   },
   "source": "The scheduled earnings calendar gathered on October 12, 2026, and the morning market map's index-wide positioning record",
   "state": "proving",
-  "subject_chart": {
-    "lead": {
-      "kind": "ranked",
-      "label": "Positioning dollars per 1 percent move, per event name.",
-      "rows": [
-        {
-          "name": "ADM",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "ADT",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "ADUS",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "AES",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "AFG",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "AIG",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "AIZ",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "ALAB",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "ALKS",
-          "score": -10523388737.221846
-        },
-        {
-          "name": "AMD",
-          "score": -10523388737.221846
-        }
-      ],
-      "source": "window.events[].positioning_value_usd_per_1pct",
-      "title": "Positioning pressure behind each coming report"
-    },
-    "record": {
-      "kind": "ranked",
-      "label": "Actual move percent per worked event, priced beside it. Labelled worked example on the page.",
-      "rows": [
-        {
-          "coverage": "priced 4.0 percent",
-          "name": "event 1",
-          "score": 5.0
-        },
-        {
-          "coverage": "priced 5.0 percent",
-          "name": "event 2",
-          "score": 4.0
-        },
-        {
-          "coverage": "priced 3.0 percent",
-          "name": "event 3",
-          "score": 3.6
-        },
-        {
-          "coverage": "priced 6.0 percent",
-          "name": "event 4",
-          "score": 6.6
-        }
-      ],
-      "source": "worked_example.events[].actual_move_pct",
-      "title": "Worked example: actual against priced move"
-    },
-    "version": 1
-  },
   "thin_rule": "Below 30 graded events in either group, counts only: no share and no middle ratio is drawn from a handful of reports.",
   "tool": "Gamma-Pressure Earnings Trap",
   "waiting": true,
@@ -423,8 +260,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.9%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ADM"
       },
       {
@@ -451,8 +288,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.4%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ADUS"
       },
       {
@@ -479,8 +316,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "AFG"
       },
       {
@@ -493,8 +330,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "AIG"
       },
       {
@@ -507,8 +344,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "AIZ"
       },
       {
@@ -521,8 +358,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "13.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ALAB"
       },
       {
@@ -535,8 +372,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ALKS"
       },
       {
@@ -549,8 +386,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "AMD"
       },
       {
@@ -563,8 +400,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "AME"
       },
       {
@@ -577,8 +414,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "AMGN"
       },
       {
@@ -605,8 +442,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "11.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ANDE"
       },
       {
@@ -619,8 +456,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ANET"
       },
       {
@@ -633,8 +470,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "3.8%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "APO"
       },
       {
@@ -661,8 +498,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ASH"
       },
       {
@@ -675,8 +512,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "BALL"
       },
       {
@@ -689,8 +526,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.9%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "BKNG"
       },
       {
@@ -703,8 +540,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "6.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "BR"
       },
       {
@@ -717,8 +554,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "CAR"
       },
       {
@@ -731,8 +568,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "CNK"
       },
       {
@@ -745,8 +582,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "13.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "CORT"
       },
       {
@@ -759,8 +596,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "CPNG"
       },
       {
@@ -773,8 +610,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "12.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "CVI"
       },
       {
@@ -787,8 +624,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "DD"
       },
       {
@@ -815,8 +652,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "DOCN"
       },
       {
@@ -843,8 +680,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "DT"
       },
       {
@@ -857,8 +694,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "14.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "DUOL"
       },
       {
@@ -871,8 +708,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "15.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ECG"
       },
       {
@@ -885,8 +722,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.9%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ETN"
       },
       {
@@ -899,8 +736,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "17.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "EVTC"
       },
       {
@@ -913,8 +750,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "EXPD"
       },
       {
@@ -927,8 +764,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "FBIN"
       },
       {
@@ -941,8 +778,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.4%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "FISV"
       },
       {
@@ -955,8 +792,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "GEF"
       },
       {
@@ -969,8 +806,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "13.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "GPK"
       },
       {
@@ -983,8 +820,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.4%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "GXO"
       },
       {
@@ -997,8 +834,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "HL"
       },
       {
@@ -1011,8 +848,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "HLNE"
       },
       {
@@ -1039,8 +876,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "HNI"
       },
       {
@@ -1067,8 +904,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "19.9%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "IBRX"
       },
       {
@@ -1081,8 +918,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.8%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "IFF"
       },
       {
@@ -1095,8 +932,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.8%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "IOSP"
       },
       {
@@ -1109,8 +946,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "IPGP"
       },
       {
@@ -1123,8 +960,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "IT"
       },
       {
@@ -1151,8 +988,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "6.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "JBTM"
       },
       {
@@ -1165,8 +1002,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "JKHY"
       },
       {
@@ -1179,8 +1016,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "JXN"
       },
       {
@@ -1193,8 +1030,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "KAI"
       },
       {
@@ -1207,8 +1044,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "KDP"
       },
       {
@@ -1221,8 +1058,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.4%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "KNF"
       },
       {
@@ -1235,8 +1072,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "LDOS"
       },
       {
@@ -1249,8 +1086,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "LPX"
       },
       {
@@ -1277,8 +1114,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "MCY"
       },
       {
@@ -1291,8 +1128,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "20.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "MOD"
       },
       {
@@ -1305,8 +1142,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "MOS"
       },
       {
@@ -1319,8 +1156,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "MPC"
       },
       {
@@ -1333,8 +1170,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "MTDR"
       },
       {
@@ -1347,8 +1184,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "NPO"
       },
       {
@@ -1361,8 +1198,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "12.4%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "NVTS"
       },
       {
@@ -1389,8 +1226,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "OHI"
       },
       {
@@ -1403,8 +1240,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "16.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "OUST"
       },
       {
@@ -1417,8 +1254,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "OVV"
       },
       {
@@ -1431,8 +1268,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "13.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "PARR"
       },
       {
@@ -1445,8 +1282,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "3.3%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "PFE"
       },
       {
@@ -1459,8 +1296,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "6.9%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "PJT"
       },
       {
@@ -1473,8 +1310,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "PNW"
       },
       {
@@ -1487,8 +1324,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "16.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "PRIM"
       },
       {
@@ -1501,8 +1338,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "PRU"
       },
       {
@@ -1515,8 +1352,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "18.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "QDEL"
       },
       {
@@ -1529,8 +1366,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.8%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "RRR"
       },
       {
@@ -1543,8 +1380,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "RRX"
       },
       {
@@ -1557,8 +1394,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "RVTY"
       },
       {
@@ -1599,8 +1436,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "5.8%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SHOP"
       },
       {
@@ -1613,8 +1450,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "12.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SKY"
       },
       {
@@ -1641,8 +1478,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "19.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SLDP"
       },
       {
@@ -1655,8 +1492,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SM"
       },
       {
@@ -1669,8 +1506,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "14.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SMCI"
       },
       {
@@ -1683,8 +1520,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SU"
       },
       {
@@ -1711,8 +1548,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SYY"
       },
       {
@@ -1725,8 +1562,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "11.8%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "TALO"
       },
       {
@@ -1739,8 +1576,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "6.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "TLN"
       },
       {
@@ -1753,8 +1590,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "10.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "TOST"
       },
       {
@@ -1767,8 +1604,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "11.1%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "UFCS"
       },
       {
@@ -1781,8 +1618,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "11.4%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "UFPT"
       },
       {
@@ -1795,8 +1632,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "6.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ULS"
       },
       {
@@ -1809,8 +1646,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.7%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "UNM"
       },
       {
@@ -1823,8 +1660,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.0%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "UPST"
       },
       {
@@ -1837,8 +1674,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "9.9%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "VAC"
       },
       {
@@ -1865,8 +1702,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "11.2%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "VTOL"
       },
       {
@@ -1879,8 +1716,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "6.6%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "WAT"
       },
       {
@@ -1893,8 +1730,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.5%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "WTRG"
       },
       {
@@ -1921,8 +1758,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "8.9%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "XYZ"
       },
       {
@@ -1935,8 +1772,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "4.9%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "YUM"
       },
       {
@@ -1949,8 +1786,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": "7.8%",
-        "priced_move_state": "on record",
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
         "symbol": "ZBRA"
       },
       {
@@ -6107,8 +5944,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
+        "priced_move_pct": "15.7%",
+        "priced_move_state": "on record",
         "symbol": "HUBG"
       },
       {
@@ -6289,8 +6126,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
+        "priced_move_pct": "11.3%",
+        "priced_move_state": "on record",
         "symbol": "KTB"
       },
       {
@@ -8347,8 +8184,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
+        "priced_move_pct": "17.7%",
+        "priced_move_state": "on record",
         "symbol": "MARA"
       },
       {
@@ -8627,8 +8464,8 @@
         "positioning_session": "2026-11-02",
         "positioning_sign": "negative",
         "positioning_value_usd_per_1pct": -10523388737.221846,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
+        "priced_move_pct": "14.5%",
+        "priced_move_state": "on record",
         "symbol": "TGTX"
       },
       {
@@ -8702,7 +8539,7 @@
         "symbol": "ZETA"
       }
     ],
-    "forecasts_recorded_today": 0,
+    "forecasts_recorded_today": 4,
     "reason_none": "Every report in the window has its date, its membership and its positioning state on record. What none of them has is a priced expected move, so no forecast could be recorded for any of them. Zero is the count, not a gap in the page.",
     "sessions": [
       "2026-11-03",
