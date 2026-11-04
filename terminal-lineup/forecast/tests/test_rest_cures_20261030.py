@@ -131,7 +131,13 @@ def test_engine19_page_carries_recounting_proof_gate_block():
 def test_builder_recounts_and_refuses_tamper(tmp_path):
     from proof_gate_block import (ProofGateError,
                                   build_proof_gate_block)
-    block = build_proof_gate_block(SITE, "engine_20", "2026-10-29",
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104): the
+    # fixture page date is the live gate's own as_of, read from
+    # the gate record, not a fixed cure-day date the gate has
+    # since advanced past (a page older than the gate is
+    # refused as a gate from the future, by design).
+    page_as_of = _gate()["as_of"]
+    block = build_proof_gate_block(SITE, "engine_20", page_as_of,
                                    LEDGER)
     # The tie is per distinct name against the gate's cumulative
     # created count (RC-05 cure, 2026-10-30): the first partial
@@ -149,7 +155,7 @@ def test_builder_recounts_and_refuses_tamper(tmp_path):
         assert "superseded" in block["words"]
     # A gate that does not name the engine is refused.
     try:
-        build_proof_gate_block(SITE, "engine_99", "2026-10-29",
+        build_proof_gate_block(SITE, "engine_99", page_as_of,
                                LEDGER)
     except ProofGateError:
         pass
@@ -174,7 +180,7 @@ def test_builder_recounts_and_refuses_tamper(tmp_path):
               encoding="utf-8") as fh:
         json.dump(gate, fh)
     try:
-        build_proof_gate_block(str(fake), "engine_20", "2026-10-29",
+        build_proof_gate_block(str(fake), "engine_20", page_as_of,
                                LEDGER)
     except ProofGateError:
         pass
