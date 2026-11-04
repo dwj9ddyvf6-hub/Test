@@ -95,6 +95,21 @@
     wrap.appendChild(rel);
   }
 
+  // Code footer (2026-11-04): the three public repositories behind this
+  // terminal, linked from every page out of this one shared source.
+  if (wrap && !document.querySelector(".gb-repos")) {
+    var repos = el("div", "related gb-repos");
+    repos.appendChild(el("p", "rlabel", "Code"));
+    [["InfinityBlade", "https://github.com/dwj9ddyvf6-hub/InfinityBlade-Engineering-Doctrine"],
+     ["Edge", "https://github.com/dwj9ddyvf6-hub/Edge"],
+     ["Test", "https://github.com/dwj9ddyvf6-hub/Test"]].forEach(function (pair) {
+      var a = el("a", null, pair[0]); a.href = pair[1];
+      a.target = "_blank"; a.rel = "noopener";
+      repos.appendChild(a);
+    });
+    wrap.appendChild(repos);
+  }
+
   // Verdict strip and progress meter (elements 2 and 3), built after the
   // page's own script has rendered, from values already on the page.
   function normText(e) {
