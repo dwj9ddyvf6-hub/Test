@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gp67CbJMcc0wkPdLYxDRl/eSHJ6K75KVA7GqRRjwwCA='; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <script>(()=>{const F=fetch.bind(window),P=Object.create(null),H=5000;if(!/[?&]f=/.test(location.search))for(const u of ["edition.json", "panels.json", "pulse.json", "charts.json", "market.json", "reads-index.json", "lineup.json"]){const e={};e.p=F(u,{cache:'no-cache'}).then(r=>{e.t=Date.now()+H;return r},x=>{delete P[u];throw x});P[u]=e}window.fetch=function(i,o){const e=typeof i==='string'&&!(o&&o.method&&o.method!=='GET')&&P[i];if(e&&(!e.t||Date.now()<e.t)){const s=o&&o.signal,c=e.p.then(r=>r.clone());if(!s)return c;const A=()=>new DOMException('Aborted','AbortError');if(s.aborted)return Promise.reject(A());return new Promise((y,n)=>{s.addEventListener('abort',()=>n(A()),{once:true});c.then(y,n)})}if(e)delete P[i];return F(i,o)}})();</script>
-<link rel="preload" href="market.f87012ae21.js" as="script">
+<link rel="preload" href="market.5dff211716.js" as="script">
 <link rel="preload" href="market.c133dcfde4.css" as="style">
 <title>Master Terminal</title>
-<meta name="description" content="The day’s best setups, the Fear-Day Buy List: one clear plan per stock, where to buy, where it is wrong, where to take profit, the evidence behind it in plain English, and every call scored.">
+<meta name="description" content="The desk’s own book, its sleeves and the market at a glance: one clear plan per stock, where to buy, where it is wrong, where to take profit, the evidence behind it in plain English, and every call scored.">
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#0b3b46">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -16,33 +16,29 @@
 <link rel="stylesheet" href="app.5afe1d0d37.css">
 <link rel="stylesheet" href="viz.a17524480c.css">
 <link rel="stylesheet" href="context.290b3d5052.css">
-<link rel="stylesheet" href="brief.d9b66f2b08.css">
 <link rel="stylesheet" href="strip.ce662f40de.css">
-<link rel="stylesheet" href="heur.809b23b99c.css">
 <link rel="stylesheet" href="funnel.cc0a756c83.css">
 <link rel="stylesheet" href="vendor.89ab384cbf.css">
-<link rel="stylesheet" href="ascend.aa1b4b04f6.css">
-<link rel="stylesheet" href="lineup.76eb5d9edd.css">
+<link rel="stylesheet" href="ascend.823038834a.css">
+<link rel="stylesheet" href="lineup.45a2c22cc2.css">
 <link rel="stylesheet" href="viz_market.b1b967e6e9.css">
-<link rel="stylesheet" href="viz_engines.b900669679.css">
+<link rel="stylesheet" href="viz_engines.3d87324a4c.css">
 <link rel="stylesheet" href="mybook.fc677e0b94.css">
-<script src="app.681d786cd0.js" defer></script>
-<script src="viz.1245bdfe72.js" defer></script>
+<script src="app.b90fce3246.js" defer></script>
+<script src="viz.d4ae48c8a2.js" defer></script>
 <script src="context.50c6ee21e3.js" defer></script>
-<script src="brief.18cc4bc19a.js" defer></script>
 <script src="gauges.ee9547eb0d.js" defer></script>
-<script src="strip.c4bed5533e.js" defer></script>
-<script src="heur.30d334cec7.js" defer></script>
-<script src="gk.84d7d22fe0.js" defer></script>
+<script src="strip.ffdf135557.js" defer></script>
+<script src="gk.33a7f9a451.js" defer></script>
 <script src="funnel.203f4cb435.js" defer></script>
 <script src="vendor.1db8f35cdc.js" defer></script>
-<script src="ascend.25e5883f18.js" defer></script>
-<script src="lineup.ffcce9165f.js" defer></script>
-<script src="optdata.ec8d0b1d02.js" defer></script>
-<script src="viz_market.901f5ca4ad.js" defer></script>
+<script src="ascend.0085d93e9c.js" defer></script>
+<script src="lineup.e930b469e0.js" defer></script>
+<script src="optdata.18b06f2c19.js" defer></script>
+<script src="viz_market.de7a5c9dbf.js" defer></script>
 <script src="dkc.7a2a3d4762.js" defer></script>
-<script src="viz_engines.0967af50dc.js" defer></script>
-<script src="mybook.a0dd54a77d.js" defer></script>
+<script src="viz_engines.dc3ce83400.js" defer></script>
+<script src="mybook.6e956453ad.js" defer></script>
 <link rel="stylesheet" href="grok-master.css"></head>
 <body>
 <header class="hdr" id="mast">
@@ -78,23 +74,7 @@
   <ul class="notes" id="notes" hidden></ul>
   <p class="card mu" id="load">Loading the latest edition…</p>
   <div class="grid" id="grid" hidden>
-    <div class="panel" id="p-setups" hidden>
-      <section id="fdb" aria-label="Fear-Day Buy List" data-anchor data-jump="Buy list" hidden></section>
-      <section id="heur" aria-label="Heuristics" data-anchor data-jump="Heuristics" hidden></section>
-      <div class="rk2">
-      <section id="clrank" aria-labelledby="h-clrank" hidden>
-        <div class="shd"><div class="sht"><p class="kick">His formula · his names</p><h2 id="h-clrank">ChartsLector Opportunity Score</h2></div><span class="pv" id="clrank-meta"></span></div>
-        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> A second opinion from ChartsLector's Opportunity Score, which ranks his watchlist of liquid tech and AI names that have 2X leveraged ETFs.</p><p><b>How.</b> Score = 0.40 × Breakout + 0.35 × Expansion + 0.25 × Risk, the average of his four horizons (10, 20, 42 and 63 sessions) with his own weights. Relative strength and volatility parts are percentiles against the desk's whole 1,838-stock roster, as his are against a broad US list. Breakout, Expansion and Risk are not published; the desk fits them to his posted tables (in later sessions it was not fitted to, its order agreed with his at a rank correlation of 0.88). Daily closes only.</p></details>
-        <div class="card" id="clrankc"></div>
-      </section>
-      <section id="lrank" aria-labelledby="h-lrank" hidden>
-        <div class="shd"><div class="sht"><p class="kick">Conviction 8 · no ranking power measured (Spearman −0.01)</p><h2 id="h-lrank">Lens ranking</h2></div></div>
-        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> How many independent lenses agree on a name, on an eight-category conviction design. It is context and does not change the Buy List.</p><p><b>How.</b> Conviction 8 scores eight categories from the desk's own data: relative strength, price action, participation, trend alignment, support and resistance, sector leadership, positioning and market context. A category is confirmed (✓) when at least half of its inputs score 60 or more; the score is the weighted mean of the categories with enough data. The board and watching names are shown, highest first.</p></details>
-        <div class="card" id="lrankc"></div>
-      </section>
-      </div>
-    </div>
-    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.f87012ae21.js" data-css="market.c133dcfde4.css" hidden>
+    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.5dff211716.js" data-css="market.c133dcfde4.css" hidden>
       <section class="mb" id="mybook" aria-labelledby="h-mybook" data-anchor data-jump="My Book" hidden></section>
       <div class="glance" id="glance"></div>
       <div class="strip" id="strip" aria-label="Market strip" hidden></div>
@@ -164,7 +144,7 @@
       <div class="mgrp" id="mg-look" data-jump="Look up" data-view>
       <section id="look" aria-labelledby="h-look" data-anchor data-jump="Look up" hidden>
         <div class="shd"><div class="sht"><p class="kick">Any stock on the list</p><h2 id="h-look">Look up</h2></div><span class="pv" id="look-meta"></span></div>
-        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> The desk's read of any stock on the desk's roster, not only the Buy List.</p><p><b>How.</b> Type a ticker for its take, plan and evidence, read from the latest daily bars.</p></details>
+        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> The desk's read of any stock on its roster.</p><p><b>How.</b> Type a ticker for its take, plan and evidence, read from the latest daily bars.</p></details>
         <div id="lviz"></div>
         <div class="card">
           <form id="lf" class="lf" role="search"><label class="sr" for="lq">Stock symbol</label><input id="lq" class="lq" type="text" inputmode="search" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Symbol, e.g. AAPL" maxlength="12"><button class="btn" type="submit">Read</button></form>
@@ -174,39 +154,11 @@
       </section>
       </div>
     </div>
-    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.040e5abd31.js" data-css="desk.cf3bdbae7b.css" hidden>
+    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.5555f92914.js" data-css="desk.cf3bdbae7b.css" hidden>
       <span class="anc" id="desk"></span>
       <div id="d-wait"><p class="card mu">Loading the desk…</p><svg width="1" height="1400" aria-hidden="true" focusable="false"></svg></div>
       <section id="d-book" aria-labelledby="h-d-book" data-anchor data-jump="Book performance" hidden></section>
       <section id="d-over" hidden></section><section id="d-curve" hidden></section><section id="d-lead" hidden></section><section id="d-sl" hidden></section><section id="d-pos" hidden></section><section id="d-heat" hidden></section><section id="d-eng" hidden></section><section id="d-closed" hidden></section><section id="d-sc" hidden></section>
-    </div>
-    <div class="panel" id="p-record" data-js="record.fee44bac7d.js" data-css="record.a2f4d3b1a3.css" hidden>
-      <section id="r-audit" aria-labelledby="h-raudit" data-anchor data-jump="Audit" hidden>
-        <div class="shd"><div class="sht"><p class="kick">Every call, losers included</p><h2 id="h-raudit">The record</h2></div></div>
-        <div class="card" id="r-audit-body"></div>
-      </section>
-      <section id="rstrip" aria-labelledby="h-rstrip" data-anchor data-jump="Every call" hidden>
-        <div class="shd"><div class="sht"><p class="kick">One square per call</p><h2 id="h-rstrip">Every call</h2></div></div>
-        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> Every call the desk has made, one square each, so the record cannot be cherry-picked.</p><p><b>How.</b> A call opens when a name is listed and is written down before the outcome. Colours: won, lost, open, waiting, missed or ended.</p></details>
-        <div class="card" id="rsq"></div>
-      </section>
-      <section id="rbars" aria-labelledby="h-rbars" data-anchor data-jump="In R" hidden>
-        <div class="shd"><div class="sht"><p class="kick">Closed calls, newest first</p><h2 id="h-rbars">Results in R</h2></div></div>
-        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> How much each closed call made or lost, in units of its own risk.</p><p><b>How.</b> R = the result divided by the planned risk (entry to stop). +1R made what was risked; -1R lost it.</p></details>
-        <div class="card" id="rbl"></div>
-      </section>
-      <section id="ropen" aria-labelledby="h-ropen" data-anchor data-jump="Time left" hidden>
-        <div class="shd"><div class="sht"><p class="kick">Open calls</p><h2 id="h-ropen">Time left</h2></div></div>
-        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> How long each open call has left before its plan expires.</p><p><b>How.</b> Each bar runs from the listing to the plan's time limit; today is marked.</p></details>
-        <div class="card" id="rol"></div>
-      </section>
-      <section id="record" aria-labelledby="h-rec" data-anchor data-jump="Numbers">
-        <div class="shd"><div class="sht"><p class="kick">The numbers</p><h2 id="h-rec">Track record</h2></div><span class="pv" id="rec-meta"></span></div>
-        <details class="wh"><summary>What is this?</summary><p><b>Why.</b> The desk's track record in numbers.</p><p><b>How.</b> Hit rate, mean result in R and counts across all closed calls, scored by the record's fixed rules: fills only at the buy range or better, exits at the stop, target or time limit.</p></details>
-        <div class="card">
-          <div id="rec"><p class="note">Every listed setup becomes a call, written down before the outcome and scored here.</p></div>
-        </div>
-      </section>
     </div>
     <div class="panel" id="p-engine" role="tabpanel" aria-labelledby="t-engine" data-js="engine.690ae43e94.js" data-css="engine.2d29ddf30a.css" hidden>
       <span class="anc" id="engine"></span>
@@ -246,10 +198,9 @@
         <ol class="steps">
           <li><b>Read everything.</b> After each close the desk reads every stock on its list the same way: the trend and its averages, the levels where buyers and sellers stepped in before, momentum and its divergences, volume, volatility, candles and gaps, chart patterns, Wyckoff events and the Elliott wave count, the fund each stock follows, the market, and its own strategies.</li>
           <li><b>One plan.</b> From those levels it builds one plan: where to buy, the daily close that proves it wrong, where to take profit, and by when. A stock that is falling gets a plan that buys only once it turns.</li>
-          <li><b>Conviction and the desk’s take.</b> Each kind of evidence (the trend, the levels, momentum, volume, the wave count and so on) casts one vote, however many readings it has. Every kind of chart reading votes, patterns, candles, Wyckoff and the wave count included; what its vote weighs is earned on the desk’s own graded reads, and each kind’s record shows beside its vote. A study grade of X means not yet proven by published studies, not barred. Conviction counts how many kinds clearly agree, net (at least half a vote each, less any clearly against): High at four, Solid at three. The desk’s take adds what the evidence does not hold: support stacked at the buy, the fund it follows, earnings inside the hold.</li>
-          <li><b>The strip.</b> Above the Buy List, five reads of the session. SPY gamma: the dealers' net gamma per 1% move from the option chain, under the usual convention that dealers are long the calls and short the puts (open interest does not say who holds it); Dampening when it is positive, Amplifying when negative, the word changing only after two reads agree, with the flip (where it changes sign) and the largest put and call walls. Range: the VIX's one-day expected move (VIX ÷ 15.87) and how much of it the clock has funded. Day: Pin, Grind or Volatile from the gamma, the gap and the range so far, logged and graded each session. Fear: Calm under 15, Normal to 18.5, Stressed above, against a forecast of realized volatility; a fear day is the Buy List's own rule: SPY down 1% or more on the day, under its 50-day average, or a volatility spike. SPX / NQ: whether SPY and QQQ agree today.</li>
-          <li><b>The Fear-Day Buy List.</b> When the market has a fear day inside a bull market, the desk lists names in three lanes: uptrend pullbacks, deep resets and a micro and nano lane. Each card gives its reasons, the vetoes that apply, and a plan: buy at the next open, hold about 60 sessions, a disaster stop as a level, and a weight that risks the same on every name. The market gate sits on top: under a Risk-off badge a buy reads as a smaller size or as a watch, never as a plain buy.</li>
-          <li><b>The record.</b> Every call the desk lists, including those from its earlier board, is written down before the outcome and scored as a reader could trade it, losers included: a buy that waits for a daily close fills at the next session’s open, and a daily close below the out line sells at the next open.</li>
+          <li><b>Conviction and the desk’s take.</b> Each kind of evidence (the trend, the levels, momentum, volume, the wave count and so on) casts one vote, however many readings it has. Every kind of chart reading votes, patterns, candles, Wyckoff and the wave count included; what its vote weighs is earned on the desk’s own graded reads, and each kind’s record shows beside its vote. A study grade of X means not yet proven by published studies, not barred. Conviction counts how many kinds clearly agree, net (at least half a vote each, less any clearly against): High at four, Solid at three. Caps then apply: High needs a reward-to-risk of 1.3 or more, else Solid at best; a turn on a falling chart, or evidence that leans against, is Speculative; a pattern breakout on light volume is Solid at best. The desk’s take adds what the evidence does not hold: support stacked at the buy, the fund it follows, earnings inside the hold.</li>
+          <li><b>The strip.</b> At the top of Market, five reads of the session. SPY gamma: the dealers' net gamma per 1% move from the option chain, under the usual convention that dealers are long the calls and short the puts (open interest does not say who holds it); Dampening when it is positive, Amplifying when negative, the word changing only after two reads agree, with the flip (where it changes sign) and the largest put and call walls. Range: the VIX's one-day expected move (VIX ÷ 15.87) and how much of it the clock has funded. Day: Pin, Grind or Volatile from the gamma, the gap and the range so far, logged and graded each session. Fear: Calm under 15, Normal to 18.5, Stressed above, against a forecast of realized volatility; a fear day: SPY down 1% or more on the day, under its 50-day average, or a volatility spike. SPX / NQ: whether SPY and QQQ agree today.</li>
+          <li><b>The tabs.</b> Market: My Book (the desk’s own book, its plans and every decision with its reasons), the strip, the market read, sectors and rotation, mood, positioning and the dealer map, the boards, news and Look up for any stock on the list. Desk: the sleeves’ curve against SPY, P&amp;L, exposure, positions and scorecards. Engine: every stock on the list ranked by strength and safety, and the forecast engines. Hub: the opportunity ranker, the desk lineup tools, gap fills, correlation, options data and the chart-read summary.</li>
         </ol>
         <details class="gls"><summary><h3>The wave method, in seven drawings</h3></summary>
           <div class="wv">
@@ -335,12 +286,10 @@
   <div class="dlg">
     <div class="dh"><h2 id="about-t">About Master Terminal</h2><button class="xb" id="aboutx" type="button" aria-label="Close">×</button></div>
     <h3>What this is</h3>
-    <p>Master Terminal publishes the desk’s best setups, the Fear-Day Buy List: one plan per stock, read from everything the desk measures, with the evidence behind it in plain English.</p>
-    <p>A new edition is published every <span id="cad">30</span> minutes, on a fixed schedule. Each stock’s read is made after the close, on completed daily prices.</p>
+    <p>Master Terminal shows the desk at a glance: the desk’s own book with every decision and its reasons, the sleeves’ results, the market’s mood, breadth, sectors and dealer positioning, the engine’s ranking of every stock on the list, and the hub’s tools, with Look up for any stock’s read.</p>
+    <p>A new edition is published every <span id="cad">30</span> minutes. Each stock’s read is made after the close, on completed daily prices.</p>
     <h3>Keyboard</h3>
     <p>Press / anywhere to look up a stock. <button class="lk" id="keys" type="button">Turn it off</button></p>
-    <h3>The record</h3>
-    <p>Every listed setup is written down before the outcome, with its plan and its evidence, and scored as a reader could trade it: a buy that waits for a daily close fills at the next session’s open, a daily close below the out line sells at the next open, the target when it trades, the time stop at the close of twice the horizon, at most 40 sessions (a wave plan's measured to its second target). A wave plan takes a fifth off at its first target and holds the rest for its second. Earlier calls keep the rule they were listed with: filled and sold at that close. Nothing is edited or deleted.</p>
   </div>
 </dialog>
 <div class="sr" id="live" role="status"></div>
