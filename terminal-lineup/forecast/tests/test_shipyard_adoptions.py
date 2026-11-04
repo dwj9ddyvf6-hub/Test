@@ -196,9 +196,14 @@ def test_mcp_tools_read_the_pages_own_files():
     ])
     catalog = json.loads(replies[0]["result"]["content"][0]["text"])
     assert catalog["count"] >= 100
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104):
+    # how-it-works is the third page with no data.json by
+    # design (an authored explainer, counted as such in the
+    # 2026-11-04 full census), beside the two sketches.
     assert all(e["has_data"] for e in catalog["tools"]
                if e["slug"] != "greeks-sketch"
-               and e["slug"] != "payoff-sketch")
+               and e["slug"] != "payoff-sketch"
+               and e["slug"] != "how-it-works")
     record = json.loads(replies[1]["result"]["content"][0]["text"])
     assert "abstention_audit" in record and "totals" in record
     chains = json.loads(replies[2]["result"]["content"][0]["text"])
