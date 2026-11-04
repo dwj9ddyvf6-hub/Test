@@ -19,6 +19,7 @@ import importlib.util
 import json
 import sys
 from pathlib import Path
+import tempfile
 
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location(
@@ -77,10 +78,22 @@ cand, reason = sync.candidate_for(
 check("snapshot desk payload refused",
       cand is None and reason and "privacy" in reason.lower(),
       f"reason={reason}")
-included = sync.included_files()
-check("no .published-trees paths in sync set",
-      not any(".published-trees" in p for p in included),
-      f"found {[p for p in included if '.published-trees' in p][:3]}")
+# Keep the sync-set check hermetic: build a temporary source tree with one
+# active desk file and one archived snapshot, then prove snapshots are excluded.
+old_root = sync.ROOT
+with tempfile.TemporaryDirectory(prefix="desk-privacy-test-") as tmp:
+    sync.ROOT = Path(tmp)
+    active = sync.ROOT / "site" / "desk"
+    archive = sync.ROOT / "site" / ".published-trees" / "fixture" / "desk"
+    active.mkdir(parents=True)
+    archive.mkdir(parents=True)
+    (active / "data.json").write_text("{}", encoding="utf-8")
+    (archive / "data.json").write_text("{}", encoding="utf-8")
+    included = sync.included_files()
+    check("no .published-trees paths in sync set",
+          "site/desk/data.json" in included
+          and not any(".published-trees" in p for p in included))
+sync.ROOT = old_root
 
 # 6. Unparseable desk JSON fails closed.
 cand, reason = sync.candidate_for("site/desk/data.json", b"{not json")
@@ -110,17 +123,30 @@ cand, reason = sync.candidate_for(
 check("non-desk cash key untouched", cand is not None,
       f"reason={reason}")
 
-# 10. The live local desk payloads, as they exist on disk right now,
-#     are all refused.
-desk_dir = HERE / "desk"
-for name in ("data.json", "attractions.json", "terminal_feed.json"):
-    p = desk_dir / name
-    if p.exists():
-        cand, reason = sync.candidate_for(
-            f"site/desk/{name}", p.read_bytes())
-        check(f"live local desk/{name} refused",
-              cand is None and reason and "privacy" in reason.lower(),
-              f"reason={reason}")
+# 10. Unsafe payloads are refused at active, temporary and archived desk
+#     paths, while the safe public V2 projection remains publishable.
+unsafe_paths = (
+    "site/desk/data.json",
+    "site/desk/data.json.tmp",
+    "site/.published-trees/fixture/desk/data.json",
+    "site/.published-trees/fixture/desk/data.json.tmp",
+)
+for rel in unsafe_paths:
+    cand, reason = sync.candidate_for(rel, RAW_DESK)
+    check(f"unsafe desk JSON refused ({Path(rel).name})",
+          cand is None and reason and "privacy" in reason.lower(),
+          f"reason={reason}")
+
+SAFE_PUBLIC = json.dumps({
+    "schema": "PEER_BREADTH_PUBLIC_DESK_FEED_V2",
+    "generated_at": "2030-01-02T03:04:05Z",
+    "cycle_id": "synthetic-cycle",
+}).encode()
+for rel in unsafe_paths:
+    cand, reason = sync.candidate_for(rel, SAFE_PUBLIC)
+    check(f"safe public feed allowed ({Path(rel).name})",
+          cand is not None and reason is None,
+          f"reason={reason}")
 
 print("RESULT:", "ALL PASS" if not FAILURES else f"{len(FAILURES)} FAILED")
 sys.exit(1 if FAILURES else 0)
