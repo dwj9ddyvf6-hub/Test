@@ -5,6 +5,15 @@
 :root{--teal-dark:#0b3b46;--teal-darker:#082d36;--teal:#177366;--teal-soft:#e3f1ec;--navy:#10283a;--ink:#1c2b39;--muted:#5b6b75;--bg:#eef5f2;--card:#ffffff;--line:#cfe0da;--green:#18744f;--red:#b0342e;--slate:#2a2d3a;--slate-2:#343849;--slate-line:#454a5e;--mint:#7ee0c3}
 body{background:linear-gradient(160deg,#f4f9f7 0%,#e9f3ef 60%,#eef5f2 100%)!important;color:var(--ink)!important}
 .gb-kicker{font-size:12px!important;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin:0 0 6px}
+/* F1-HEADER-COLLISION-20261104: every Master view rendered TWO sticky
+   nav systems stacked: the SPA's own .hdr (sticky top:0, z-20) and
+   .topnav (sticky top:var(--hh), z-19) underneath this shell's
+   injected .gb-mbar/.gb-mtabs (z-60/59), which painted over them and
+   clipped their labels (visual census finding F1, confirmed on
+   Midna's own renders 2026-11-03). The injected shell carries the
+   masthead and the view tabs, fully replacing both bars' routes, so
+   the SPA bars retire wherever this shell is injected. */
+.hdr,.topnav{display:none!important}
 .gb-mbar{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,#0b3b46,#082d36);color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;font-weight:800;font-size:15px;box-shadow:0 4px 16px rgba(8,45,54,.25)}
 .gb-mbar .gb-dot{width:9px;height:9px;border-radius:50%;background:#1e6f5c;box-shadow:0 0 0 4px rgba(30,111,92,.35)}
 .gb-mbar a{color:#7ee0c3;text-decoration:none;font-size:13px;font-weight:700}
