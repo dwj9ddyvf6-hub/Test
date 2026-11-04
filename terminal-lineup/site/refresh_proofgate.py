@@ -81,6 +81,38 @@ def build(closes_by_symbol, rule):
     return PG.compute_proof_universe(closes_by_symbol, rule)
 
 
+def build_from_panel(path, rule, max_names=None):
+    """The lane's scan, streamed (PROOFGATE-STREAM-20261104,
+    retention cure): each name's proof is computed as its
+    panel segment arrives and the segment is then dropped, so
+    the only panel-sized things ever held are one symbol's
+    rows and its indicator series. The first streaming form
+    still loaded every symbol's closes into one map for
+    build() to consume, and the retained map (plus the
+    fragmented arenas a full scan leaves behind) held the
+    process at the same 2.45 GB plateau the whole-text loader
+    died at: parsing was never the whole sink, retention was.
+    The BH correction is applied over the collected results
+    by the same factored step the in-memory scan uses, so the
+    published states are the scan's own, computed the bounded
+    way. Returns (results, freshest_session)."""
+    results = {}
+    freshest = None
+    for symbol, rows in _iter_panel_segments(path):
+        if not rows:
+            continue
+        closes = [float(r[4]) for r in rows]
+        last = rows[-1][0]
+        if freshest is None or last > freshest:
+            freshest = last
+        results[symbol] = PG.compute_name_proof(symbol, closes,
+                                                rule)
+        if max_names and len(results) >= max_names:
+            break
+    PG.apply_bh_correction(results, rule)
+    return results, freshest
+
+
 def _iter_panel_segments(path, chunk_size=1 << 23):
     """Yield (symbol, rows) for each top level array in the
     panel file, streaming: the file is read in chunks, consumed
@@ -145,8 +177,13 @@ def load_panel_closes(path, max_names=None):
     this scan touches every symbol, so every mapped page is
     faulted in. The lane therefore streams the file in chunks
     (_iter_panel_segments): resident panel memory is one chunk
-    plus one symbol's rows, and the only panel-sized thing held
-    is the closes map the scan itself consumes.
+    plus one symbol's rows. This loader still RETURNS the whole
+    closes map, so it is retained for the bounded consumers
+    that import it (the completion clock's helpers and the
+    tests); the proof gate lane itself no longer builds
+    through it, because holding the map was the larger half
+    of the sink. The lane scans through build_from_panel,
+    which computes each name as its segment arrives.
     Returns ({symbol: [closes]}, freshest_session)."""
     closes_by_symbol = {}
     freshest = None
@@ -265,12 +302,11 @@ def main(argv=None):
     if not os.path.exists(DEEP_PANEL_PATH):
         fail(f"DEEP panel absent at {DEEP_PANEL_PATH}; no state "
              f"is published from an absent input")
-    closes_by_symbol, as_of = load_panel_closes(
-        DEEP_PANEL_PATH, max_names=max_names)
-    if not closes_by_symbol:
+    results, as_of = build_from_panel(
+        DEEP_PANEL_PATH, rule, max_names=max_names)
+    if not results:
         fail("DEEP panel yielded no symbols; refusing to publish "
              "an empty proof scan")
-    results = build(closes_by_symbol, rule)
     horizon_close = forward_close_date(
         as_of, int(rule["forward_check"]["horizon_sessions"]))
     ledger_engine = rule["forward_check"]["ledger_engine_id"]
