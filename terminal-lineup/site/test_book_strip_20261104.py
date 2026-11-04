@@ -107,6 +107,104 @@ def main() -> int:
     if gen._pull_end("2026-11-03") != "2026-11-04T05:00:00Z":
         fails.append("pull end wrong: %r" % gen._pull_end("2026-11-03"))
 
+    # Position fields (BOOK-STRIP-POSITION-FIELDS-20261104): a
+    # position whose opening fill and journal invalidation exist
+    # renders with its entry price and exit line populated: from
+    # the position record's own fields in the book's schema
+    # (entry_fill, invalidation_close_below), derived from the
+    # ledger's opening fill and the journal entry that opened it
+    # when the position record does not restate them, and stated
+    # plainly in the line when neither exists anywhere.
+    POS_JOURNAL = """# Journal
+
+## 2026-11-04 12:35 ET · ENTRY · J-20261104-08
+- Instrument: SHOP
+- Invalidation: a close below 149.34, the print day range top, stated before size
+- Decision: BUY 89 SHOP at the charter fill price
+- Fill (appended when priced): Filled at $151.6458
+"""
+
+    def pos_ledger(position, fills):
+        return {
+            "book": "midna", "cash": 86503.52,
+            "starting_equity": 100000.0, "inception": "2026-10-30",
+            "positions": [position], "fills": fills,
+            "equity_history": [
+                {"date": "2026-11-04", "equity": 100123.19}],
+        }
+
+    SHOP_FILL = {"symbol": "SHOP", "side": "buy", "qty": 89,
+                 "decision_id": "J-20261104-08",
+                 "fill_price": 151.6458,
+                 "bar_ts": "2026-11-04T17:35:00Z"}
+
+    def state_for(ledger_obj, journal_text):
+        with tempfile.TemporaryDirectory() as td:
+            bdir = Path(td)
+            (bdir / "ledger.json").write_text(
+                json.dumps(ledger_obj), encoding="utf-8")
+            (bdir / "JOURNAL.md").write_text(
+                journal_text, encoding="utf-8")
+            gen.BOOK_DIR = bdir
+            try:
+                return gen.build_state(gen.datetime.now(gen.ET))
+            finally:
+                gen.BOOK_DIR = BOOK
+
+    real_mark, real_bench = gen.mark_for, gen.benchmark
+    gen.mark_for = lambda sym, now: (153.03,
+                                     "the November 4, 2026 close")
+    gen.benchmark = lambda sym, inc, through: None
+    try:
+        own = state_for(pos_ledger(
+            {"symbol": "SHOP", "qty": 89, "entry_fill": 151.6458,
+             "decision_id": "J-20261104-08",
+             "invalidation_close_below": 149.34,
+             "opened": "2026-11-04"}, [SHOP_FILL]), POS_JOURNAL)
+        rows = own.get("positions") or []
+        if len(rows) != 1 or rows[0].get("entry_price") != 151.6458 \
+                or rows[0].get("invalidation") != 149.34 \
+                or rows[0].get("entry_date") != "2026-11-04":
+            fails.append("position's own fields dropped: %r" % rows)
+        elif "in at 151.65" not in rows[0]["line"] or \
+                "Out on a close below 149.34" not in rows[0]["line"]:
+            fails.append("position line missing entry or exit: %r"
+                         % rows[0]["line"])
+        derived = state_for(pos_ledger(
+            {"symbol": "SHOP", "qty": 89,
+             "decision_id": "J-20261104-08",
+             "opened": "2026-11-04"}, [SHOP_FILL]), POS_JOURNAL)
+        rows = derived.get("positions") or []
+        if len(rows) != 1 or rows[0].get("entry_price") != 151.6458 \
+                or rows[0].get("invalidation") != 149.34:
+            fails.append("position fields not derived from the "
+                         "fill and journal: %r" % rows)
+        bare = state_for(pos_ledger(
+            {"symbol": "SHOP", "qty": 89, "opened": "2026-11-04"},
+            []), MINI_JOURNAL)
+        rows = bare.get("positions") or []
+        if len(rows) != 1 or rows[0].get("entry_price") is not None \
+                or rows[0].get("invalidation") is not None:
+            fails.append("unsourced position fields invented: %r"
+                         % rows)
+        elif "entry price is not in the book's record" not in \
+                rows[0]["line"] or \
+                "No exit line is recorded" not in rows[0]["line"]:
+            fails.append("unsourced position not stated plainly: %r"
+                         % rows[0]["line"])
+        # Dated pin on the real book: the SHOP position opened
+        # 2026-11-04 renders with its fill price and invalidation.
+        gen.BOOK_DIR = BOOK
+        live = gen.build_state(gen.datetime.now(gen.ET))
+        rows = [r for r in (live.get("positions") or [])
+                if r.get("symbol") == "SHOP"]
+        if len(rows) != 1 or rows[0].get("entry_price") != 151.6458 \
+                or rows[0].get("invalidation") != 149.34:
+            fails.append("real SHOP position fields wrong: %r" % rows)
+    finally:
+        gen.mark_for, gen.benchmark = real_mark, real_bench
+        gen.BOOK_DIR = BOOK
+
     # Fail-closed: an unreadable book record yields a dated
     # unavailable state, never figures.
     with tempfile.TemporaryDirectory() as td:
