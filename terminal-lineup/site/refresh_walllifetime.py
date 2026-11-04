@@ -206,6 +206,13 @@ def weekdays_from(start_iso, count):
     return out
 
 
+def session_dates_from(panel):
+    """The market session calendar for the grading-date rule:
+    the dates the panel's SPY bars carry, nothing else
+    (WALL-LIFETIME-SESSION-DATES-20261104)."""
+    return sorted({r[0] for r in panel.get("SPY", [])})
+
+
 def build():
     for path in (LOG_PATH, SCORECARD_PATH, PANEL_PATH, BAND_PATH,
                  WALLCHECK_PATH, MORNINGMAP_PATH):
@@ -261,8 +268,18 @@ def build():
         return fail("the published wall grading page disagrees with "
                     "the card record")
     graded = {}  # card_ts -> grade row, walls cross-checked
-    session_dates = sorted({g["session"] for g in grades} |
-                           {c["published_at_utc"][:10] for c in cards})
+    # WALL-LIFETIME-SESSION-DATES-20261104: the grading-date rule
+    # must be given true sessions, as its canonical caller in the
+    # morgue scorecards passes (each symbol's bar dates). This
+    # re-check used to pass grade sessions union card publish
+    # dates, which put Saturday 2026-10-31 (a post-close publish
+    # date, BOARD-POSTCLOSE-20261031) into the list as if it were
+    # a session; the rule's same-date branch then sent that
+    # morning's three cards to 2026-10-31 while the grader, on
+    # true sessions, graded them against Monday 2026-11-02, and
+    # the re-check refused every run. Session dates now come from
+    # the panel's SPY bars, the market session calendar.
+    session_dates = session_dates_from(panel)
     for g in grades:
         card = cards_by_ts.get(g.get("card_ts"))
         if card is None or g.get("underlying") != card["name"]:
