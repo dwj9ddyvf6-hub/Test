@@ -117,7 +117,10 @@ def test_family_card_stale_session_still_fails_closed():
 
 def test_family_fracture_page_reproduced():
     data = _page("family-fracture")
-    assert data["decision_date"] == "2026-11-02"
+    # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104):
+    # decision_date is the next weekday after the freshest tape
+    # session on record (2026-11-03), computed by the producer.
+    assert data["decision_date"] == "2026-11-04"
 
 
 def test_sponsored_wait_text_never_contradicts_counts():
