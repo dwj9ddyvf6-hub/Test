@@ -48,3 +48,20 @@ def test_voided_subject_is_named_and_not_promised_grading():
     assert "voided on the record" in note
     assert "and will be graded; they are not part" not in note
     assert block["voided_subjects"] == ["SUPN"]
+
+
+# Appended 2026-11-04 night (terminal total-fix loop, AUDIT-1 row
+# A1-06 completion): the all-empty case. On the 2026-11-04 session
+# there was no same-session republication at all (subjects,
+# parallel and voided all empty), yet the block still printed the
+# republication narrative and its blanket "will be graded"
+# promise. The block must say plainly that the session has a
+# single publication when that is the fact.
+def test_no_republication_states_single_publication():
+    block = mod.superseded_block([], [], [])
+    note = block["note"]
+    assert "will be graded" not in note
+    assert "single publication" in note
+    assert block["subjects"] == []
+    assert block["parallel_subjects"] == []
+    assert block["voided_subjects"] == []
