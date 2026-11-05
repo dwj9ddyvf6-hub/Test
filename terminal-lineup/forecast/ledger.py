@@ -433,6 +433,14 @@ class Ledger:
         row["row_id"] = row["row_hash"][:16]
         with open(self.path, "a", encoding="utf-8") as fh:
             fh.write(_canonical(row) + "\n")
+        self._write_provenance(row)
+        new_stat = self._stat()
+        self._cache_rows = rows + [row]
+        self._cache_stat = new_stat
+        self._verified_stat = new_stat
+        return row
+
+    def _write_provenance(self, row):
         # Append provenance (cure D-R1-01, 2026-10-31): every
         # append, from any path (the refresh runner, grading, or a
         # standalone refresher run by hand), writes one line to the
@@ -457,9 +465,102 @@ class Ledger:
                 fh.write(_canonical(prov) + "\n")
         except Exception:
             pass
+
+    # ---- streaming append (PROOFGATE-APPEND-STREAM-20261105) ------
+    def _stream_pass(self, engine_id, issued_ts):
+        """One streaming pass over the ledger file, the append
+        state's only read: the hash chain is verified exactly as
+        verify_chain_streaming verifies it (an unparseable line
+        raises LedgerError; a broken link raises LedgerError,
+        because the append path refuses rather than reports),
+        and the working set collected is only the tail row's hash
+        and the dedupe keys of the forecast rows of the one
+        (engine_id, issued_ts) batch. Nothing else is retained:
+        the resident set is the batch's key set, not the ledger.
+        A pass whose file moves under it is retried; a file that
+        will not sit still is refused."""
+        for _attempt in range(3):
+            stat0 = self._stat()
+            seen = set()
+            prev = ""
+            if stat0 is not None:
+                with open(self.path, "r", encoding="utf-8") as fh:
+                    for i, line in enumerate(fh, 1):
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            row = json.loads(line)
+                        except json.JSONDecodeError as exc:
+                            raise LedgerError(
+                                f"ledger line {i} is not valid JSON "
+                                f"(possible rewrite/corruption): {exc}")
+                        body = {k: v for k, v in row.items()
+                                if k not in ("row_hash", "prev_hash",
+                                             "row_id")}
+                        expect = hashlib.sha256(
+                            (prev + _canonical(body)).encode()
+                        ).hexdigest()
+                        if row.get("prev_hash") != prev \
+                                or row.get("row_hash") != expect:
+                            raise LedgerError(
+                                "ledger hash chain is broken; "
+                                "refusing to append to a ledger whose "
+                                "history does not verify (rewrite "
+                                "detected)")
+                        prev = row["row_hash"]
+                        if row.get("type") == "forecast" \
+                                and row.get("engine_id") == engine_id \
+                                and row.get("issued_ts") == issued_ts \
+                                and row.get("dedupe_key"):
+                            seen.add(row["dedupe_key"])
+            if self._stat() == stat0:
+                return {"engine_id": engine_id,
+                        "issued_ts": issued_ts, "stat": stat0,
+                        "tail_hash": prev, "seen": seen}
+        raise LedgerError(
+            "ledger changed repeatedly during the streaming "
+            "append pass; refusing to append")
+
+    def append_stream_state(self, engine_id, issued_ts):
+        """Open a streaming append state for one (engine,
+        issuance) batch: see _stream_pass and
+        append_forecast_streaming."""
+        return self._stream_pass(engine_id, issued_ts)
+
+    def _refresh_stream_state(self, state):
+        state.update(self._stream_pass(state["engine_id"],
+                                       state["issued_ts"]))
+
+    def _append_streaming(self, row, state):
+        """_append's streaming form: the caller guarantees the
+        stream state's stat is current (append_forecast_streaming
+        re-checks and refreshes it), so the chain link comes from
+        the state's tail hash instead of a re-read of the whole
+        ledger. The hash, the write, the provenance sidecar and
+        the cache discipline are _append's own."""
+        row = dict(row)
+        row["prev_hash"] = state["tail_hash"]
+        body = {k: v for k, v in row.items()
+                if k not in ("row_hash", "prev_hash", "row_id")}
+        row["row_hash"] = hashlib.sha256(
+            (state["tail_hash"] + _canonical(body)).encode()
+        ).hexdigest()
+        row["row_id"] = row["row_hash"][:16]
+        with open(self.path, "a", encoding="utf-8") as fh:
+            fh.write(_canonical(row) + "\n")
+        self._write_provenance(row)
         new_stat = self._stat()
-        self._cache_rows = rows + [row]
-        self._cache_stat = new_stat
+        state["stat"] = new_stat
+        state["tail_hash"] = row["row_hash"]
+        if row.get("type") == "forecast" and row.get("dedupe_key"):
+            state["seen"].add(row["dedupe_key"])
+        # The parsed-rows cache cannot be extended without
+        # holding it; drop it so no later rows() call in this
+        # process reads a stale copy, and record the verified
+        # stat the stream pass established.
+        self._cache_rows = None
+        self._cache_stat = None
         self._verified_stat = new_stat
         return row
 
@@ -470,35 +571,17 @@ class Ledger:
         return self._append({"type": "genesis", "program": "forecast-engines-30",
                              "note": note})
 
-    def append_forecast(self, *, engine_id, issued_ts, subject, quantity,
-                        value, horizon_open, horizon_close, lineage,
-                        families, outcome, absence_state="present",
-                        abstain_reasons=None, scored_zero=None,
-                        label_context=None, label_transform_id=None,
-                        label_transform_hash=None):
-        """Append a forecast row. Returns (row, created). A duplicate
-        republication returns (existing_row, False) and writes nothing.
-
-        An abstention row (absence_state other than present) may carry
-        abstain_reasons in the fixed vocabulary (see
-        normalize_abstain_reasons); they are stored sorted and
-        deduplicated. An abstention appended without reasons stores
-        an empty list, so reasonless refusals stay countable in the
-        coverage audit rather than invisible. A taken row must not
-        carry abstention reasons.
-
-        A passed event is ledgered as a scored zero (scored_zero
-        marker, see _validate_scored_zero): a taken row, never an
-        abstention.
-
-        Label freezing (DEEP-PASS 3.2 item 3): label_context (the
-        six field context), label_transform_id and
-        label_transform_hash freeze what this forecast's label
-        means. Supply all three or none; the row stores the context,
-        its fingerprint and the transform binding, the dedupe key
-        separates the same value issued under a different label
-        definition, and any later grade must repeat the identity
-        exactly (see append_grade)."""
+    def _forecast_body(self, *, engine_id, issued_ts, subject, quantity,
+                       value, horizon_open, horizon_close, lineage,
+                       families, outcome, absence_state="present",
+                       abstain_reasons=None, scored_zero=None,
+                       label_context=None, label_transform_id=None,
+                       label_transform_hash=None):
+        """Validation and body assembly for a forecast row: the
+        one source of truth both append forms (append_forecast
+        and append_forecast_streaming) build through, so the two
+        paths can never drift in what they validate or store.
+        Returns (body, dedupe_key)."""
         if absence_state not in ABSENCE_STATES:
             raise LedgerError(f"unknown absence_state {absence_state!r}")
         reasons_norm = None
@@ -536,9 +619,6 @@ class Ledger:
         if identity is not None:
             key = key + "|label:" + identity["label_context_fingerprint"] \
                 + ":" + identity["label_transform_hash"]
-        for row in self.rows():
-            if row.get("type") == "forecast" and row.get("dedupe_key") == key:
-                return row, False
         body = {
             "type": "forecast", "engine_id": engine_id,
             "issued_ts": issued_ts, "subject": subject, "quantity": quantity,
@@ -555,6 +635,50 @@ class Ledger:
             body["scored_zero"] = zero_norm
         if identity is not None:
             body.update(identity)
+        return body, key
+
+    def append_forecast(self, *, engine_id, issued_ts, subject, quantity,
+                        value, horizon_open, horizon_close, lineage,
+                        families, outcome, absence_state="present",
+                        abstain_reasons=None, scored_zero=None,
+                        label_context=None, label_transform_id=None,
+                        label_transform_hash=None):
+        """Append a forecast row. Returns (row, created). A duplicate
+        republication returns (existing_row, False) and writes nothing.
+
+        An abstention row (absence_state other than present) may carry
+        abstain_reasons in the fixed vocabulary (see
+        normalize_abstain_reasons); they are stored sorted and
+        deduplicated. An abstention appended without reasons stores
+        an empty list, so reasonless refusals stay countable in the
+        coverage audit rather than invisible. A taken row must not
+        carry abstention reasons.
+
+        A passed event is ledgered as a scored zero (scored_zero
+        marker, see _validate_scored_zero): a taken row, never an
+        abstention.
+
+        Label freezing (DEEP-PASS 3.2 item 3): label_context (the
+        six field context), label_transform_id and
+        label_transform_hash freeze what this forecast's label
+        means. Supply all three or none; the row stores the context,
+        its fingerprint and the transform binding, the dedupe key
+        separates the same value issued under a different label
+        definition, and any later grade must repeat the identity
+        exactly (see append_grade)."""
+        body, key = self._forecast_body(
+            engine_id=engine_id, issued_ts=issued_ts, subject=subject,
+            quantity=quantity, value=value,
+            horizon_open=horizon_open, horizon_close=horizon_close,
+            lineage=lineage, families=families, outcome=outcome,
+            absence_state=absence_state,
+            abstain_reasons=abstain_reasons, scored_zero=scored_zero,
+            label_context=label_context,
+            label_transform_id=label_transform_id,
+            label_transform_hash=label_transform_hash)
+        for row in self.rows():
+            if row.get("type") == "forecast" and row.get("dedupe_key") == key:
+                return row, False
         row = self._append(body)
         return row, True
 
@@ -586,6 +710,61 @@ class Ledger:
                 subject=kwargs["subject"], quantity=kwargs["quantity"],
                 outcome=kwargs.get("outcome")))
         return self.append_forecast(**kwargs)
+
+    def append_forecast_streaming(self, state, **kwargs):
+        """append_forecast_declared's streaming form
+        (PROOFGATE-APPEND-STREAM-20261105), for a bulk batch of
+        one (engine, issuance) whose horizon_open is the
+        issuance session itself (the proof gate's forward
+        records): under that convention a duplicate of a batch
+        row can only live inside the batch, so the batch's own
+        dedupe keys, collected by append_stream_state, are the
+        whole dedupe universe and the parsed ledger is never
+        loaded. Validation and body assembly are the shared
+        _forecast_body; the append is _append_streaming.
+
+        Returns (row, True) for a new issue and (None, False)
+        for a republication: the existing row is never loaded,
+        so it cannot be returned; callers that need it use the
+        classic path. A state opened for a different (engine,
+        issuance), or a call whose horizon_open is not its
+        issued_ts, is refused rather than silently mis-scoped."""
+        if state["engine_id"] != kwargs.get("engine_id") \
+                or state["issued_ts"] != kwargs.get("issued_ts"):
+            raise LedgerError(
+                "streaming append state is for a different "
+                "(engine, issuance) batch than the append")
+        if kwargs.get("horizon_open") != kwargs.get("issued_ts"):
+            raise LedgerError(
+                "streaming append requires horizon_open == "
+                "issued_ts (the batch convention its dedupe "
+                "scope rests on)")
+        if kwargs.get("label_context") is None \
+                and kwargs.get("label_transform_id") is None \
+                and kwargs.get("label_transform_hash") is None:
+            plain = dedupe_key(
+                kwargs["engine_id"], kwargs["subject"],
+                kwargs["horizon_open"], kwargs["horizon_close"],
+                value_hash(kwargs["value"]))
+            if plain in state["seen"]:
+                return None, False
+            kwargs.update(default_label_identity(
+                subject=kwargs["subject"],
+                quantity=kwargs["quantity"],
+                outcome=kwargs.get("outcome")))
+        call = {"absence_state": "present", "abstain_reasons": None,
+                "scored_zero": None, "label_context": None,
+                "label_transform_id": None,
+                "label_transform_hash": None}
+        call.update(kwargs)
+        body, key = self._forecast_body(**call)
+        while True:
+            if key in state["seen"]:
+                return None, False
+            if self._stat() == state["stat"]:
+                break
+            self._refresh_stream_state(state)
+        return self._append_streaming(body, state), True
 
     def append_grade(self, *, forecast_row, grade,
                      label_context_fingerprint=None,
