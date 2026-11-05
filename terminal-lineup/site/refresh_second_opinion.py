@@ -391,6 +391,17 @@ def build():
         return fail("the published summary's positioning does not "
                     "cover exactly the three index funds; refusing "
                     "to publish.")
+    # Null-DIX guard (2026-11-04): when the positioning card's
+    # FINRA leg is missing its dix fields are null, and the
+    # dark-pool comparison below died on round(None) with a raw
+    # TypeError instead of this lane's standard refusal (the
+    # 2026-11-04 tools refresh failure of record). Refuse by
+    # name, like every sibling cross-check in this file.
+    for sym, c in map_by_symbol.items():
+        if c.get("dix_ratio") is None or c.get("dix_date") is None:
+            return fail(f"the positioning card carries no dark "
+                        f"pool reading for {sym} (its FINRA leg "
+                        f"is missing); refusing to publish.")
     for sym, c in map_by_symbol.items():
         f = feed_map[sym]
         checks = [
