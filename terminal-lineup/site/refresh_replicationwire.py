@@ -530,16 +530,25 @@ def build():
     # pass): 7 sessions recorded, freshest 2026-11-03, still 2
     # golden prints; the accruing session count is the only pin
     # that moved, the established re-take for this claim.
+    # Recounted again 2026-11-05 (total-fix loop,
+    # REPLICATION-WIRE-RETAKE-20261105): the tape accrued the
+    # 2026-11-04 session, so 8 sessions recorded, freshest
+    # 2026-11-04, still 2 golden prints, 22 remaining to the
+    # 30 its decision rule requires. The stale 7 pin had made
+    # this refresher fail closed on the completed forecast
+    # lane (chainA's one exit 1, and one of the six named
+    # failures on the 2026-11-04 refresh's FAILED RUN
+    # accounting); the record itself was never wrong.
     claims.append(claim(
         "Golden sweep prints, a sweep at least as large as its contract's whole open interest with at least $1 million in it, are a signal worth following.",
         "An options-tape vendor tag, rebuilt by us",
         "untestable",
         "Our recording of every options print on the three index funds, checked for golden sweeps",
-        "7 recorded trading days so far on the index tape record, freshest session November 3, 2026, with two golden prints found",
-        "Cannot be tested on the records on hand: two golden prints stand on the recorded sessions, but neither has the following sessions a grade needs, so there is nothing gradeable yet. The missing record is the rest of the tape its own decision rule requires: 23 more recorded sessions to reach 30, with the decision date already set at December 8, 2026. Until a golden print's following sessions exist, no verdict either way is possible.",
-        "Recording started October 2026; tape record recounted November 4, 2026",
+        "8 recorded trading days so far on the index tape record, freshest session November 4, 2026, with two golden prints found",
+        "Cannot be tested on the records on hand: two golden prints stand on the recorded sessions, but neither has the following sessions a grade needs, so there is nothing gradeable yet. The missing record is the rest of the tape its own decision rule requires: 22 more recorded sessions to reach 30, with the decision date already set at December 8, 2026. Until a golden print's following sessions exist, no verdict either way is possible.",
+        "Recording started October 2026; tape record recounted November 5, 2026",
         [("terminal-lineup/site/golden-sweep-wire/data.json",
-          ["\"golden_prints\": 2", "\"sessions_recorded\": 7",
+          ["\"golden_prints\": 2", "\"sessions_recorded\": 8",
            "\"decision_date\": \"2026-12-08\""])]))
 
     # 26 The router's record. RC-13 pass, 2026-10-30:
