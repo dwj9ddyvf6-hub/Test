@@ -120,7 +120,11 @@ def test_family_fracture_page_reproduced():
     # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104):
     # decision_date is the next weekday after the freshest tape
     # session on record (2026-11-03), computed by the producer.
-    assert data["decision_date"] == "2026-11-04"
+    # Re-pinned again 2026-11-05 (TOTALFIX-REPIN-20261105):
+    # the producer ran clean in the completion chain on the
+    # 2026-11-04 session, so the same next-weekday derivation
+    # now lands on 2026-11-05.
+    assert data["decision_date"] == "2026-11-05"
 
 
 def test_sponsored_wait_text_never_contradicts_counts():
