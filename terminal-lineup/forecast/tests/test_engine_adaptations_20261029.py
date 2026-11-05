@@ -215,6 +215,14 @@ def test_engine10_plan_block_honest_state():
     # counts are pinned to the record the block itself publishes
     # (43 names classified, precision 1.0 on 645 labelled
     # footnotes at the cure's publication).
+    # Re-pinned 2026-11-05 (TOTALFIX-REPIN-20261105): the
+    # footnote record was re-collected on 2026-11-05T03:10:34Z
+    # (170 filings, window since 2026-05-01) and now carries
+    # 629 labelled footnotes (571 discretionary, 58 plan);
+    # precision still 1.0 (58 of 58 plan calls) and 43 names
+    # classified, recounted through this test's own code path
+    # in the total-fix loop's settled pass. The labelled pin
+    # follows the record's collection, as it did at the cure.
     block = e10.plan_adjustment_block({"AAA": {}, "BBB": {}})
     assert block["state"] == "recorded"
     assert block["classifier_state"] == "standing"
@@ -224,7 +232,7 @@ def test_engine10_plan_block_honest_state():
     assert block["precision_kill_floor"] == \
         ad.PLAN_CLASSIFIER_PRECISION_FLOOR
     assert block["precision"]["precision"] == pytest.approx(1.0)
-    assert block["precision"]["labelled"] == 645
+    assert block["precision"]["labelled"] == 629
     assert block["footnote_record"]["filings_on_record"] > 0
 
 
