@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gp67CbJMcc0wkPdLYxDRl/eSHJ6K75KVA7GqRRjwwCA='; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <script>(()=>{const F=fetch.bind(window),P=Object.create(null),H=5000;if(!/[?&]f=/.test(location.search))for(const u of ["edition.json", "panels.json", "pulse.json", "charts.json", "market.json", "reads-index.json", "lineup.json"]){const e={};e.p=F(u,{cache:'no-cache'}).then(r=>{e.t=Date.now()+H;return r},x=>{delete P[u];throw x});P[u]=e}window.fetch=function(i,o){const e=typeof i==='string'&&!(o&&o.method&&o.method!=='GET')&&P[i];if(e&&(!e.t||Date.now()<e.t)){const s=o&&o.signal,c=e.p.then(r=>r.clone());if(!s)return c;const A=()=>new DOMException('Aborted','AbortError');if(s.aborted)return Promise.reject(A());return new Promise((y,n)=>{s.addEventListener('abort',()=>n(A()),{once:true});c.then(y,n)})}if(e)delete P[i];return F(i,o)}})();</script>
-<link rel="preload" href="market.2d00af42d7.js" as="script">
+<link rel="preload" href="market.7a044f5e5a.js" as="script">
 <link rel="preload" href="market.c133dcfde4.css" as="style">
 <title>Master Terminal</title>
 <meta name="description" content="The desk’s own book, its sleeves and the market at a glance: one clear plan per stock, where to buy, where it is wrong, where to take profit, the evidence behind it in plain English, and every call scored.">
@@ -26,18 +26,18 @@
 <script src="app.46dba07a19.js" defer></script>
 <script src="viz.f3b48bc13c.js" defer></script>
 <script src="context.50c6ee21e3.js" defer></script>
-<script src="gauges.447ec1d862.js" defer></script>
+<script src="gauges.bcf29a096e.js" defer></script>
 <script src="strip.4ff366cd4b.js" defer></script>
 <script src="gk.1d214f96ea.js" defer></script>
 <script src="funnel.7b07e88ddb.js" defer></script>
 <script src="vendor.1db8f35cdc.js" defer></script>
 <script src="ascend.58a714d0b2.js" defer></script>
-<script src="lineup.761349a73f.js" defer></script>
+<script src="lineup.1e59379891.js" defer></script>
 <script src="optdata.42c78eec7d.js" defer></script>
-<script src="viz_market.bae7e9881b.js" defer></script>
+<script src="viz_market.116a9b36d9.js" defer></script>
 <script src="dkc.87d89c3ce0.js" defer></script>
-<script src="viz_engines.a75bbaac9e.js" defer></script>
-<script src="mybook.05004fe1b1.js" defer></script>
+<script src="viz_engines.86e6451e56.js" defer></script>
+<script src="mybook.ce9378ef51.js" defer></script>
 <script src="lu.29ccbde747.js" defer></script>
 <link rel="stylesheet" href="grok-master.css"></head>
 <body>
@@ -74,7 +74,7 @@
   <ul class="notes" id="notes" hidden></ul>
   <p class="card mu" id="load">Loading the latest edition…</p>
   <div class="grid" id="grid" hidden>
-    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.2d00af42d7.js" data-css="market.c133dcfde4.css" hidden>
+    <div class="panel" id="p-market" role="tabpanel" aria-labelledby="t-market" data-js="market.7a044f5e5a.js" data-css="market.c133dcfde4.css" hidden>
       <section class="mb" id="mybook" aria-labelledby="h-mybook" data-anchor data-jump="My Book" hidden></section>
       <div class="glance" id="glance"></div>
       <div class="strip" id="strip" aria-label="Market strip" hidden></div>
@@ -153,7 +153,7 @@
       </section>
       </div>
     </div>
-    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.85a332d40c.js" data-css="desk.c32030a142.css" hidden>
+    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.788bd588f1.js" data-css="desk.c32030a142.css" hidden>
       <span class="anc" id="desk"></span>
       <div id="d-wait"><p class="card mu">Loading the desk…</p><svg width="1" height="1400" aria-hidden="true" focusable="false"></svg></div>
       <section id="d-book" aria-labelledby="h-d-book" data-anchor data-jump="Book performance" hidden></section>
@@ -198,7 +198,7 @@
           <li><b>Read everything.</b> After each close the desk reads every stock on its list the same way: the trend and its averages, the levels where buyers and sellers stepped in before, momentum and its divergences, volume, volatility, candles and gaps, chart patterns, Wyckoff events and the Elliott wave count, the fund each stock follows, the market, and its own strategies.</li>
           <li><b>One plan.</b> From those levels it builds one plan: where to buy, the daily close that proves it wrong, where to take profit, and by when. A stock that is falling gets a plan that buys only once it turns.</li>
           <li><b>Conviction and the desk’s take.</b> Each kind of evidence (the trend, the levels, momentum, volume, the wave count and so on) casts one vote, however many readings it has. Every kind of chart reading votes, patterns, candles, Wyckoff and the wave count included; what its vote weighs is earned on the desk’s own graded reads, and each kind’s record shows beside its vote. A study grade of X means not yet proven by published studies, not barred. Conviction counts how many kinds clearly agree, net (at least half a vote each, less any clearly against): High at four, Solid at three. Caps then apply: High needs a reward-to-risk of 1.3 or more, else Solid at best; a turn on a falling chart, or evidence that leans against, is Speculative; a pattern breakout on light volume is Solid at best. The desk’s take adds what the evidence does not hold: support stacked at the buy, the fund it follows, earnings inside the hold.</li>
-          <li><b>The strip.</b> At the top of Market, five reads of the session. SPY gamma: the dealers' net gamma per 1% move from the option chain, under the usual convention that dealers are long the calls and short the puts (open interest does not say who holds it); Dampening when it is positive, Amplifying when negative, the word changing only after two reads agree, with the flip (where it changes sign) and the largest put and call walls. Range: the VIX's one-day expected move (VIX ÷ 15.87) and how much of it the clock has funded. Day: Pin, Grind or Volatile from the gamma, the gap and the range so far, logged and graded each session. Fear: Calm under 15, Normal to 18.5, Stressed above, against a forecast of realized volatility; a fear day: SPY down 1% or more on the day, under its 50-day average, or a volatility spike. SPX / NQ: whether SPY and QQQ agree today.</li>
+          <li><b>The strip.</b> At the top of Market, five reads of the session. SPY gamma: the dealers' net gamma per 1% move from the option chain, under the usual convention that dealers are long the calls and short the puts (open interest does not say who holds it); Dampening when it is positive, Amplifying when negative, the word changing only after two reads agree, with the flip (where it changes sign) and the largest put and call walls. Range: the VIX's one-day expected move (VIX ÷ 15.87) and how much of it the clock has funded. Day: Pin, Grind or Volatile from the gamma, the gap and the range so far, logged and graded each session. Fear: Calm under 15, Normal to 18.5, Stressed above, against a forecast of realized volatility; a fear day: see Fear day in the glossary. SPX / NQ: whether SPY and QQQ agree today.</li>
           <li><b>The tabs.</b> Market: My Book (the desk’s own book, its plans and every decision with its reasons), the strip, the market read, sectors and rotation, mood, positioning and the dealer map, the boards, news and Look up for any stock on the list. Desk: the sleeves’ curve against SPY, P&amp;L, exposure, positions and scorecards. Engine: every stock on the list ranked by strength and safety, and the forecast engines. Hub: the opportunity ranker, the desk lineup tools, gap fills, correlation, options data and the chart-read summary.</li>
         </ol>
         <details class="gls"><summary><h3>The wave method, in seven drawings</h3></summary>
@@ -266,7 +266,7 @@
             <div><dt>Elliott wave</dt><dd>Trends tend to move in five waves before a larger correction. The desk uses the count to say where a stock sits in its trend and which price proves the count wrong.</dd></div>
             <div><dt>Wave 4</dt><dd>After waves 1 to 3 up, the pullback that usually ends between the 0.382 and 0.5 retracement of wave 3, above the top of wave 1. A daily close up inside the zone is the buy; a close under the wave-1 high ends the count.</dd></div>
             <div><dt>Wave 2 and the reaction</dt><dd>After five clean waves up, the pullback usually ends between the 0.618 and 0.786 retracement of the advance, in three waves, on lighter volume. The zone is where to watch; a daily close up inside it is the buy. Under the start of wave 1 the count is wrong.</dd></div>
-            <div><dt>Fear day</dt><dd>A session the stock and the fund it follows (QQQ for tech, SPY for the rest) both close red. The desk’s fear-day rule buys long setups on such a day.</dd></div>
+            <div><dt>Fear day</dt><dd>A session SPY closed red and fell 1% or more, closed under its 50-day average, or saw its 20-day volatility (or the VIX) rise above 1.5 times its yearly median. The desk’s fear-day buy rule buys a long setup when the stock and the fund it follows (QQQ for tech, SPY for the rest) both close red.</dd></div>
             <div><dt>Conviction</dt><dd>High, Solid or Speculative: how many kinds of evidence clearly agree behind the plan, net, each kind counted once: High at four, Solid at three.</dd></div>
             <div><dt>The desk’s take</dt><dd>Strong, For, Leaning or Against: the desk’s judgment, recorded before the outcome so it can be scored.</dd></div>
           </dl>
