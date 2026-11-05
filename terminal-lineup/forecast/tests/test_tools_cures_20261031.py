@@ -112,14 +112,17 @@ def test_iv_pages_live_freshest_modelled_2026_10_30():
     # modelled chain pages advanced to the 2026-11-03 snapshot;
     # the test name keeps its cure date, the dates it pins are
     # the live record's.
+    # Re-pinned again 2026-11-05 (TOTALFIX-REPIN-20261105):
+    # the modelled chain pages advanced to the 2026-11-04
+    # snapshot on the completed forecast lane.
     ivw = _load_json("iv-weather/data.json")
-    assert ivw["freshest_date"] == "2026-11-03"
+    assert ivw["freshest_date"] == "2026-11-04"
     modelled = ivw["groups"][-1]  # the modelled chain group
     assert {n["symbol"] for n in modelled["names"]} == {
         "SPY", "QQQ", "IWM"}
-    assert {n["date"] for n in modelled["names"]} == {"2026-11-03"}
+    assert {n["date"] for n in modelled["names"]} == {"2026-11-04"}
     skew = _load_json("skew-lens/data.json")
-    assert skew["modelled_freshest_date"] == "2026-11-03"
+    assert skew["modelled_freshest_date"] == "2026-11-04"
 
 
 # ---- Morning Map / Gamma Ladder --------------------------------
