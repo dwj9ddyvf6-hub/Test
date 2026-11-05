@@ -1,21 +1,17 @@
 {
   "counts": {
-    "golden_prints": 2,
+    "golden_prints": 3,
     "sessions_needed": 30,
-    "sessions_recorded": 8,
-    "sessions_remaining": 22
+    "sessions_recorded": 9,
+    "sessions_remaining": 21
   },
   "decision": {
     "decision_date": "2026-12-08",
     "sessions_needed": 30
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its current reading is from 2026-11-04. Its study record, the history it was built and checked on, holds 8 counted items on file. On its live record it counts 2 golden prints, 30 sessions needed, 8 sessions recorded, 22 sessions remaining. Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule.",
-    "summary": "List every golden sweep that prints on SPY, QQQ and IWM, and keep the count of recorded trading days until there are enough to judge whether these rare prints mean anything."
-  },
   "feed": "forecast_ledger",
-  "freshest_session": "2026-11-04",
+  "freshest_session": "2026-11-05",
   "price_basis": "close",
   "prints": [
     {
@@ -139,6 +135,67 @@
       "side_words": "Bought above the asking price",
       "time_utc": "2026-10-30T18:33:08.873150889Z",
       "underlying": "SPY"
+    },
+    {
+      "contract": {
+        "expiry": "2026-11-10",
+        "kind": "call",
+        "strike": 740.0
+      },
+      "contract_code": "SPY261110C00740000",
+      "contracts": 2000,
+      "direction": "bullish",
+      "direction_words": "points up",
+      "heat_score": 17.0,
+      "premium_usd": 1200000.0,
+      "price_per_contract": 6.0,
+      "receipt": {
+        "completeness": {
+          "batches_capped": 6,
+          "by_index": [
+            {
+              "batches_capped": 3,
+              "contracts_in_scope": 3752,
+              "prints_examined": 785184,
+              "reason": "3 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "state": "incomplete",
+              "state_words": "Incomplete: 3 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "underlying": "SPY"
+            },
+            {
+              "batches_capped": 2,
+              "contracts_in_scope": 3623,
+              "prints_examined": 577379,
+              "reason": "2 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "state": "incomplete",
+              "state_words": "Incomplete: 2 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "underlying": "QQQ"
+            },
+            {
+              "batches_capped": 1,
+              "contracts_in_scope": 1635,
+              "prints_examined": 235545,
+              "reason": "1 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "state": "incomplete",
+              "state_words": "Incomplete: 1 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "underlying": "IWM"
+            }
+          ],
+          "contracts_in_scope": 9010,
+          "prints_examined": 1598108,
+          "reason": "6 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+          "state": "incomplete",
+          "state_words": "Incomplete: 6 very busy contract groups hit the reading limit, so some prints in those groups may be missing"
+        },
+        "coverage": "1,598,108 prints looked at across the three indexes; 1 golden sweeps found; Incomplete: 6 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+        "published_at_utc": "2026-11-05T22:04:44.743081+00:00",
+        "session": "2026-11-05",
+        "source": "Every options trade printed on the three big index funds during the trading day, scored print by print as it came in"
+      },
+      "session": "2026-11-05",
+      "side_words": "Bought above the asking price",
+      "time_utc": "2026-11-05T20:30:06.257632269Z",
+      "underlying": "SPY"
     }
   ],
   "provenance": {
@@ -147,80 +204,7 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "published_at_utc": "2026-11-04T21:46:19.551394+00:00",
-  "record_surface": {
-    "calibration_record": null,
-    "current_reading": {
-      "as_of": "2026-11-04",
-      "keys_present": [
-        "counts",
-        "decision",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "freshest_session",
-        "price_basis",
-        "prints",
-        "provenance",
-        "published_at_utc",
-        "record_surface",
-        "sessions",
-        "source",
-        "tape_freshness",
-        "tool"
-      ]
-    },
-    "feed": "forecast_ledger",
-    "label": "Study record",
-    "live_accrual": {
-      "counts": {
-        "golden_prints": 2,
-        "sessions_needed": 30,
-        "sessions_recorded": 8,
-        "sessions_remaining": 22
-      },
-      "source": "this page's own counts"
-    },
-    "missing": {
-      "what_and_when": "Nothing from the record on file is missing. The next update arrives at the next session close on this page's normal schedule."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "forecast_ledger",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 8,
-          "path": "/sessions"
-        }
-      ],
-      "total_items_counted": 8
-    },
-    "subject_charts": [
-      {
-        "kind": "ranked",
-        "label": "Each golden print on record with the premium it carried.",
-        "rows": [
-          {
-            "coverage": "bearish, heat 17.0",
-            "name": "QQQ261030C00470000",
-            "score": 1674660.0
-          },
-          {
-            "coverage": "bearish, heat 19.5",
-            "name": "SPY261103P00736000",
-            "score": 1290060.0
-          }
-        ],
-        "title": "The golden prints on record, by premium"
-      }
-    ],
-    "version": 1
-  },
+  "published_at_utc": "2026-11-05T22:04:44.743081+00:00",
   "sessions": [
     {
       "completeness": {
@@ -864,7 +848,7 @@
       },
       "golden_prints": 0,
       "prints_looked_at": 979686,
-      "published_at_utc": "2026-11-04T21:46:19.551394+00:00",
+      "published_at_utc": "2026-11-04T21:50:25.764399+00:00",
       "receipt": {
         "completeness": {
           "batches_capped": 4,
@@ -904,19 +888,105 @@
           "state_words": "Incomplete: 4 very busy contract groups hit the reading limit, so some prints in those groups may be missing"
         },
         "coverage": "979,686 prints looked at across the three indexes; 0 golden sweeps found; Incomplete: 4 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
-        "published_at_utc": "2026-11-04T21:46:19.551394+00:00",
+        "published_at_utc": "2026-11-04T21:50:25.764399+00:00",
         "session": "2026-11-04",
         "source": "Every options trade printed on the three big index funds during the trading day, scored print by print as it came in"
       },
       "session": "2026-11-04"
+    },
+    {
+      "completeness": {
+        "batches_capped": 6,
+        "by_index": [
+          {
+            "batches_capped": 3,
+            "contracts_in_scope": 3752,
+            "prints_examined": 785184,
+            "reason": "3 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+            "state": "incomplete",
+            "state_words": "Incomplete: 3 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+            "underlying": "SPY"
+          },
+          {
+            "batches_capped": 2,
+            "contracts_in_scope": 3623,
+            "prints_examined": 577379,
+            "reason": "2 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+            "state": "incomplete",
+            "state_words": "Incomplete: 2 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+            "underlying": "QQQ"
+          },
+          {
+            "batches_capped": 1,
+            "contracts_in_scope": 1635,
+            "prints_examined": 235545,
+            "reason": "1 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+            "state": "incomplete",
+            "state_words": "Incomplete: 1 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+            "underlying": "IWM"
+          }
+        ],
+        "contracts_in_scope": 9010,
+        "prints_examined": 1598108,
+        "reason": "6 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+        "state": "incomplete",
+        "state_words": "Incomplete: 6 very busy contract groups hit the reading limit, so some prints in those groups may be missing"
+      },
+      "golden_prints": 1,
+      "prints_looked_at": 1598108,
+      "published_at_utc": "2026-11-05T22:04:44.743081+00:00",
+      "receipt": {
+        "completeness": {
+          "batches_capped": 6,
+          "by_index": [
+            {
+              "batches_capped": 3,
+              "contracts_in_scope": 3752,
+              "prints_examined": 785184,
+              "reason": "3 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "state": "incomplete",
+              "state_words": "Incomplete: 3 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "underlying": "SPY"
+            },
+            {
+              "batches_capped": 2,
+              "contracts_in_scope": 3623,
+              "prints_examined": 577379,
+              "reason": "2 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "state": "incomplete",
+              "state_words": "Incomplete: 2 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "underlying": "QQQ"
+            },
+            {
+              "batches_capped": 1,
+              "contracts_in_scope": 1635,
+              "prints_examined": 235545,
+              "reason": "1 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "state": "incomplete",
+              "state_words": "Incomplete: 1 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+              "underlying": "IWM"
+            }
+          ],
+          "contracts_in_scope": 9010,
+          "prints_examined": 1598108,
+          "reason": "6 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+          "state": "incomplete",
+          "state_words": "Incomplete: 6 very busy contract groups hit the reading limit, so some prints in those groups may be missing"
+        },
+        "coverage": "1,598,108 prints looked at across the three indexes; 1 golden sweeps found; Incomplete: 6 very busy contract groups hit the reading limit, so some prints in those groups may be missing",
+        "published_at_utc": "2026-11-05T22:04:44.743081+00:00",
+        "session": "2026-11-05",
+        "source": "Every options trade printed on the three big index funds during the trading day, scored print by print as it came in"
+      },
+      "session": "2026-11-05"
     }
   ],
   "source": "Every options trade printed on the three big index funds during the trading day, scored print by print as it came in",
   "tape_freshness": {
-    "consumer_session": "2026-11-04",
+    "consumer_session": "2026-11-05",
     "note": "built from the freshest tape session",
     "state": "current",
-    "tape_session": "2026-11-04"
+    "tape_session": "2026-11-05"
   },
   "tool": "Golden Sweep Wire"
 }
