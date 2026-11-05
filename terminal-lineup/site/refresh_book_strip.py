@@ -45,7 +45,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -149,11 +149,29 @@ def _pull_end(through: str) -> str:
             + timedelta(days=1)).isoformat() + "T05:00:00Z"
 
 
+def _cap_end(end: str, cap_z: str) -> str:
+    """A pull window never reaches into the read route's recent-SIP
+    blind spot: the route answers 403 ("subscription does not
+    permit querying recent SIP data") for a window whose end is in
+    the future or within about 15 minutes of the present moment.
+    _pull_end's morning-after is still hours ahead when the strip
+    is generated in the evening, which cost the benchmark line
+    every evening (BOOK-STRIP-BENCH-WINDOW-20261104). Capping at
+    the present moment less the estate's established 20-minute
+    buffer loses nothing: no daily bar exists past the last
+    completed session's close, so the capped window still covers
+    the session in full."""
+    return min(end, cap_z)
+
+
 def benchmark(symbol: str, inception: date, through: str):
     """(pct, end_date) for a benchmark from its inception-date close
     to the freshest completed session's close, or None."""
     start = (inception - timedelta(days=7)).isoformat() + "T00:00:00Z"
-    end = _pull_end(through)
+    end = _cap_end(_pull_end(through),
+                   (datetime.now(timezone.utc)
+                    - timedelta(minutes=20)).strftime(
+                       "%Y-%m-%dT%H:%M:%SZ"))
     bars = fetch_bars(symbol, "1D", start, end)
     if not bars:
         return None
@@ -289,10 +307,15 @@ def card_expiry(entry) -> date:
     return entry["date"]
 
 
-def live_cards(entries, today: date):
+def live_cards(entries, today: date, now_et=None):
     """Signed conditional cards whose written window has not closed.
     Drafts are not cards until a later entry signs them under their
-    own id, so drafts never appear here."""
+    own id, so drafts never appear here. A card expiring today is
+    live until today's close: once the generation moment is past
+    16:00 ET on the expiry date the card is done, and showing it
+    for the rest of the evening would present an expired card as
+    live (BOOK-STRIP-CARD-EVENING-20261104). Callers that pass no
+    moment get the date-only rule."""
     cards = []
     for e in entries:
         if e["type"] != "ENTRY" or e["draft"]:
@@ -304,6 +327,9 @@ def live_cards(entries, today: date):
             continue
         expiry = card_expiry(e)
         if expiry < today:
+            continue
+        if (expiry == today and now_et is not None
+                and now_et.time() >= time(16, 0)):
             continue
         f = e["fields"]
         symbol = (_field(f, "Instrument")).strip()
@@ -580,7 +606,7 @@ def build_state(now: datetime) -> dict:
     else:
         perf += " · the index comparison could not be fetched this " \
                 "run and is left out rather than guessed"
-    cards = live_cards(entries, today)
+    cards = live_cards(entries, today, now_et=now.astimezone(ET))
     actions = recent_actions(entries, ledger)
     state = {
         "state": "ok",
