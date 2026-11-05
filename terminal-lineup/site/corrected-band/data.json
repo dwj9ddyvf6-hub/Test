@@ -459,7 +459,7 @@
         "volume_concentration"
       ],
       "missing": [],
-      "note": "FE12 session quality guard (DEEP-PASS 3.2 item 10): a one sided liquidity deterioration flag consumed as a band widener and abstention raiser. For this session the intraday bar record supplies depth_drop_z, realised_vol_z, spread_z, volume_concentration; the guard is partial because spread and book depth are in no store this terminal holds (no equity quote store and no order book store exists on disk), and those two inputs stay named missing. The recorded inputs widen the live bands by the guard's own factor and raise the abstention threshold the same way.",
+      "note": "FE12 session quality guard (DEEP-PASS 3.2 item 10): a one sided liquidity deterioration flag consumed as a band widener and abstention raiser. For this session the session quality record supplies depth_drop_z, realised_vol_z, spread_z, volume_concentration; the guard is recorded in full, with no input missing: the spread and book depth readings it once named missing are on record from the live quote capture, which has accrued the earlier sessions their z readings require. The recorded inputs widen the live bands by the guard's own factor and raise the abstention threshold the same way.",
       "one_sided_parts": {
         "depth_drop_z": 0.0961,
         "realised_vol_z": 4.3562,
