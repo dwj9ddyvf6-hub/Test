@@ -190,10 +190,13 @@ def session_quality_guard(as_of=None):
     2026-10-30) supplies the two inputs intraday bars carry:
     realised_vol_z and volume_concentration, read for the
     record's freshest session when it is this refresh's
-    session. spread_z and depth_drop_z are in no store this
-    terminal holds (no equity quote store, no order book
-    store), so they stay unsupplied and the guard names them
-    missing itself; its state is partial, never upgraded."""
+    session. spread_z and depth_drop_z are supplied by the
+    same record once the live quote capture has accrued the
+    earlier sessions their z readings require (from the
+    fourth live session, reached 2026-11-04); before that
+    accrual completes they stay unsupplied and the guard
+    names them missing itself, and its state is partial
+    until every input is supplied."""
     if _ea is None:
         return {"state": "not_recorded", "deterioration": None,
                 "missing": list(_ea_inputs()), "inputs_used": [],
@@ -529,27 +532,46 @@ def build():
                          "3.2 item 10): a one sided liquidity "
                          "deterioration flag consumed as a band "
                          "widener and abstention raiser. "
-                         + (("For this session the intraday bar "
-                             "record supplies "
+                         + (("For this session the session "
+                             "quality record supplies "
                              + ", ".join(guard.get("inputs_used")
                                          or [])
-                             + "; the guard is partial because "
-                             "spread and book depth are in no "
-                             "store this terminal holds (no equity "
-                             "quote store and no order book store "
-                             "exists on disk), and those two "
-                             "inputs stay named missing. The "
+                             + "; the guard is recorded in "
+                             "full, with no input missing: the "
+                             "spread and book depth readings it "
+                             "once named missing are on record "
+                             "from the live quote capture, which "
+                             "has accrued the earlier sessions "
+                             "their z readings require. The "
                              "recorded inputs widen the live "
                              "bands by the guard's own factor and "
                              "raise the abstention threshold the "
                              "same way.")
-                            if guard.get("state") in ("partial",
-                                                      "recorded")
-                            else ("No intraday reading is on "
-                                  "record for this session, so "
-                                  "the guard is not recorded, no "
-                                  "band was widened by it, and no "
-                                  "threshold was raised."))),
+                            if guard.get("state") == "recorded"
+                            else (("For this session the session "
+                                   "quality record supplies "
+                                   + ", ".join(
+                                       guard.get("inputs_used")
+                                       or [])
+                                   + "; the guard is partial "
+                                   "because "
+                                   + ", ".join(
+                                       guard.get("missing") or [])
+                                   + " are not yet on record for "
+                                   "this session, and those inputs "
+                                   "stay named missing. The "
+                                   "recorded inputs widen the live "
+                                   "bands by the guard's own factor "
+                                   "and raise the abstention "
+                                   "threshold the same way.")
+                                  if guard.get("state") == "partial"
+                                  else ("No intraday reading is on "
+                                        "record for this session, "
+                                        "so the guard is not "
+                                        "recorded, no band was "
+                                        "widened by it, and no "
+                                        "threshold was "
+                                        "raised.")))),
             },
         },
         "history": {
