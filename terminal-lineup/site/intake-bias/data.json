@@ -16,10 +16,6 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: direction (cohort), over 5 sessions. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if after 80 fires, the interaction mean is zero or positive, or no better than short volume alone. This is a cohort fade forecast, never a short book: A16 killed shorting picked names after borrow costs. It counts as proven at 80 fires.",
-    "summary": "Warn when a popular flow score looks bullish only because of the trades it leaves out, and short selling is heavy at the same time."
-  },
   "feed": "forecast_ledger",
   "forecast": {
     "companion_claim": "Companion claim, recorded the same way: the middle gain of the largest-gap group alone will be below zero over the same 5 trading days.",
@@ -30,7 +26,7 @@
   },
   "history": {
     "label": "History: the sessions on record, worked out after the fact and recorded nowhere in advance",
-    "outcomes_note": "No history outcome is graded: the price history on record ends 2026-11-03, before every tape session on record, so the 5 trading days after these sessions are not on record yet.",
+    "outcomes_note": "No history outcome is graded: the price history on record ends 2026-11-04, before every tape session on record, so the 5 trading days after these sessions are not on record yet.",
     "sessions": [
       {
         "bias_only": [
@@ -263,19 +259,57 @@
           "IWM"
         ],
         "short_share_date": "2026-10-30"
+      },
+      {
+        "bias_only": [
+          "QQQ"
+        ],
+        "fired": false,
+        "interaction": [],
+        "names": [
+          {
+            "all_prints": 18.9249,
+            "buys_only": 19.6463,
+            "gap": 0.7214,
+            "name": "SPY (the big S&P 500 fund)",
+            "short_share": 0.4786,
+            "symbol": "SPY"
+          },
+          {
+            "all_prints": 15.1233,
+            "buys_only": 16.2657,
+            "gap": 1.1425,
+            "name": "QQQ (the big Nasdaq-100 fund)",
+            "short_share": 0.4744,
+            "symbol": "QQQ"
+          },
+          {
+            "all_prints": 15.2878,
+            "buys_only": 12.4883,
+            "gap": -2.7996,
+            "name": "IWM (the big small-company fund)",
+            "short_share": 0.6162,
+            "symbol": "IWM"
+          }
+        ],
+        "session": "2026-11-03",
+        "short_only": [
+          "IWM"
+        ],
+        "short_share_date": "2026-11-02"
       }
     ],
-    "sessions_on_record": 7,
+    "sessions_on_record": 8,
     "would_have_fired": 2
   },
   "kill_criterion": "After 80 days on which the combined group actually forms, this tool is retired if that group's average gain is zero or better, or if it does no better than the short-volume-only group on its own.",
   "live": {
-    "forecasts_graded": 0,
-    "forecasts_recorded": 16,
+    "forecasts_graded": 3,
+    "forecasts_recorded": 19,
     "interaction_fires": 1,
     "target_fires": 80
   },
-  "panel_last_session": "2026-11-03",
+  "panel_last_session": "2026-11-04",
   "price_basis": "close",
   "provenance": {
     "execution_pricing": false,
@@ -283,84 +317,7 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "published_at_utc": "2026-11-03T21:46:30.254679+00:00",
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "3 graded forecasts of 16 recorded on the ledger (mean scores: abs_error 2.1178, signed_error 1.1178); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 16,
-        "graded_forecasts": 3,
-        "recorded_on": "2026-11-04",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_09",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-03",
-      "keys_present": [
-        "calibration_attestation",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "forecast",
-        "history",
-        "kill_criterion",
-        "live",
-        "panel_last_session",
-        "price_basis",
-        "provenance",
-        "published_at_utc",
-        "record_surface",
-        "short_volume_route",
-        "source",
-        "state",
-        "subject_chart",
-        "thin_rule",
-        "today",
-        "tool",
-        "universe"
-      ]
-    },
-    "feed": "forecast_ledger",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_09",
-      "forecasts": 16,
-      "grades": 3,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "More live grades are still to come: 16 forecasts are on record and 3 are graded so far. The rest arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "forecast_ledger",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 6,
-          "path": "/history"
-        },
-        {
-          "items": 6,
-          "path": "/history/sessions"
-        }
-      ],
-      "total_items_counted": 12
-    },
-    "version": 1
-  },
+  "published_at_utc": "2026-11-04T21:46:19.551394+00:00",
   "short_volume_route": {
     "not_used": [
       "The Short Volume Ledger page's own store: it has stored 0 days, so it supplies nothing.",
@@ -371,60 +328,14 @@
   },
   "source": "The daily options-print tape summaries for the three big index funds, and the short-sale share of each day's volume from the FINRA off-exchange daily file as republished in the morning map record",
   "state": "proving",
-  "subject_chart": {
-    "lead": {
-      "kind": "ranked",
-      "label": "Score gap (buys only against all prints) per fund, short share beside it.",
-      "rows": [
-        {
-          "coverage": "short share 0.4786",
-          "name": "SPY",
-          "score": 0.7214
-        },
-        {
-          "coverage": "short share 0.4744",
-          "name": "QQQ",
-          "score": 1.1425
-        },
-        {
-          "coverage": "short share 0.6162",
-          "name": "IWM",
-          "score": -2.7996
-        }
-      ],
-      "source": "today.names[].gap",
-      "title": "The intake bias itself, per fund"
-    },
-    "record": {
-      "kind": "ranked",
-      "label": "Score gap per fund in the latest history session.",
-      "rows": [
-        {
-          "name": "SPY",
-          "score": 0.8263
-        },
-        {
-          "name": "QQQ",
-          "score": 0.6909
-        },
-        {
-          "name": "IWM",
-          "score": -1.1449
-        }
-      ],
-      "source": "history.sessions[].names[].gap",
-      "title": "The bias on 2026-11-02"
-    },
-    "version": 1
-  },
   "thin_rule": "Below 30 graded, counts only: no percentage and no score is drawn from a handful of tests.",
   "today": {
     "bias_only": [
       "QQQ"
     ],
     "fired": false,
-    "horizon_close": "2026-11-10",
-    "horizon_open": "2026-11-04",
+    "horizon_close": "2026-11-11",
+    "horizon_open": "2026-11-05",
     "interaction": [],
     "ledgered_cells": [
       "bias_only",
@@ -433,35 +344,35 @@
     ],
     "names": [
       {
-        "all_prints": 18.9249,
-        "buys_only": 19.6463,
-        "gap": 0.7214,
+        "all_prints": 20.3699,
+        "buys_only": 20.0305,
+        "gap": -0.3394,
         "name": "SPY (the big S&P 500 fund)",
-        "short_share": 0.4786,
+        "short_share": 0.3662,
         "symbol": "SPY"
       },
       {
-        "all_prints": 15.1233,
-        "buys_only": 16.2657,
-        "gap": 1.1425,
+        "all_prints": 14.9307,
+        "buys_only": 14.9749,
+        "gap": 0.0441,
         "name": "QQQ (the big Nasdaq-100 fund)",
-        "short_share": 0.4744,
+        "short_share": 0.3438,
         "symbol": "QQQ"
       },
       {
-        "all_prints": 15.2878,
-        "buys_only": 12.4883,
-        "gap": -2.7996,
+        "all_prints": 16.9707,
+        "buys_only": 15.2991,
+        "gap": -1.6716,
         "name": "IWM (the big small-company fund)",
-        "short_share": 0.6162,
+        "short_share": 0.6161,
         "symbol": "IWM"
       }
     ],
-    "session": "2026-11-03",
+    "session": "2026-11-04",
     "short_only": [
       "IWM"
     ],
-    "short_share_date": "2026-11-02"
+    "short_share_date": "2026-11-03"
   },
   "tool": "Intake-Bias Reversal",
   "universe": {
