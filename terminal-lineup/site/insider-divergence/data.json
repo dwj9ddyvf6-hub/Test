@@ -17,7 +17,7 @@
   },
   "coverage": {
     "both": 0,
-    "both_note": "On the index cards, no name carries both readings: the three funds with card readings are not among the names with insider records. On the per-name store for 2026-11-03, 89 names carry both readings, and those are the names the arm tests below ran on.",
+    "both_note": "On the index cards, no name carries both readings: the three funds with card readings are not among the names with insider records. On the per-name store for 2026-11-04, 89 names carry both readings, and those are the names the arm tests below ran on.",
     "both_pername": 89,
     "heat": {
       "names": [
@@ -25,7 +25,7 @@
         "QQQ",
         "SPY"
       ],
-      "note": "Options heat is carded for the three index funds on every session on record. The per-name tape store also cards heat for 99 names for 2026-11-03, each name's own reading from its own prints. The two aggregations count prints differently and are kept apart; an index fund's card reading is never handed to a stock, and no reading is ever substituted for another.",
+      "note": "Options heat is carded for the three index funds on every session on record. The per-name tape store also cards heat for 99 names for 2026-11-04, each name's own reading from its own prints. The two aggregations count prints differently and are kept apart; an index fund's card reading is never handed to a stock, and no reading is ever substituted for another.",
       "pername_names": [
         "ABBV",
         "ACN",
@@ -128,7 +128,7 @@
         "XOM"
       ],
       "pername_names_count": 99,
-      "pername_session": "2026-11-03",
+      "pername_session": "2026-11-04",
       "sessions": [
         {
           "names": [
@@ -311,9 +311,35 @@
             }
           ],
           "session": "2026-11-03"
+        },
+        {
+          "names": [
+            {
+              "heat_state": "top",
+              "high_heat_prints": 278,
+              "mean_heat": 4.09,
+              "prints": 438361,
+              "symbol": "SPY"
+            },
+            {
+              "heat_state": "top",
+              "high_heat_prints": 313,
+              "mean_heat": 4.24,
+              "prints": 376679,
+              "symbol": "QQQ"
+            },
+            {
+              "heat_state": "top",
+              "high_heat_prints": 67,
+              "mean_heat": 3.85,
+              "prints": 164646,
+              "symbol": "IWM"
+            }
+          ],
+          "session": "2026-11-04"
         }
       ],
-      "sessions_on_record": 7
+      "sessions_on_record": 8
     },
     "insider": {
       "as_of": "2026-11-01",
@@ -350,10 +376,10 @@
     "control": "Names carrying both readings where the two agree, or where neither side of the insider test is triggered, are recorded as the comparison group and graded the same way. Each arm has to beat that group, not just the market.",
     "heat_states": "A name's heat for a session is at its top when at least one of its options trades that session scored at or above the tape's own High Heat line of 15. It is cold only when the name was actually measured that session and no trade reached the line. A name that was not measured is unmeasured, never cold."
   },
-  "grading_note": "Grading waits on the calendar, stated plainly: the shared grading machinery scores this kind of 21-day gain against SPY directly (the excess_21s resolver, wired 2026-10-30), each arm is judged against the comparison group once 30 in a group have graded, and the price history on record ends 2026-11-03, before every tape session on record, so no 21-day window after a fire exists yet either.",
+  "grading_note": "Grading waits on the calendar, stated plainly: the shared grading machinery scores this kind of 21-day gain against SPY directly (the excess_21s resolver, wired 2026-10-30), each arm is judged against the comparison group once 30 in a group have graded, and the price history on record ends 2026-11-04, before every tape session on record, so no 21-day window after a fire exists yet either.",
   "history": {
     "label": "History: the sessions on record, worked out after the fact and recorded nowhere in advance",
-    "note": "On every index-card session on record the overlap was empty, so no card session would have fired. The insider side alone was ready: 61 names met Arm A's selling test and 16 met Arm B's buying test. The per-name store session 2026-11-03 is the first session where the second reading exists for those same names: 89 names carried both readings and were tested for real, and their forecasts are in the ledger, not in this after-the-fact table.",
+    "note": "On every index-card session on record the overlap was empty, so no card session would have fired. The insider side alone was ready: 61 names met Arm A's selling test and 16 met Arm B's buying test. The per-name store session 2026-11-04 is the first session where the second reading exists for those same names: 89 names carried both readings and were tested for real, and their forecasts are in the ledger, not in this after-the-fact table.",
     "sessions": [
       {
         "arm_a": [],
@@ -405,37 +431,45 @@
         "session": "2026-11-03"
       },
       {
+        "arm_a": [],
+        "arm_b": [],
+        "control": [],
+        "overlap": [],
+        "session": "2026-11-04"
+      },
+      {
         "arm_a": [
           "ABBV",
-          "AJG",
           "AMGN",
           "ANF",
           "APA",
-          "BALL",
-          "CBRL",
+          "ASO",
+          "CBOE",
+          "CHRD",
           "COP",
           "CVX",
           "EL",
           "ELF",
           "GILD",
+          "HALO",
+          "HAS",
+          "HSTM",
           "LLY",
           "MA",
-          "MHK",
-          "PCTY",
-          "PR",
-          "PTEN",
+          "MAT",
           "REGN",
-          "RNG",
+          "SM",
           "SPOT",
-          "TALO",
-          "TGTX"
+          "TENB",
+          "TGTX",
+          "TRGP"
         ],
         "arm_b": [
           "CCI",
           "DFIN",
+          "DRH",
           "EVRG",
-          "GO",
-          "MO",
+          "KDP",
           "OPCH",
           "PEB",
           "SAIC",
@@ -444,35 +478,32 @@
         "control": [
           "ACN",
           "ADUS",
+          "AJG",
           "ALRM",
           "AMN",
           "APD",
-          "ASO",
+          "BALL",
           "BKH",
           "BMBL",
           "CART",
-          "CBOE",
+          "CBRL",
           "CENTA",
           "CHD",
-          "CHRD",
           "COLM",
           "CROX",
-          "DRH",
           "EG",
           "EGBN",
           "EXEL",
           "FDS",
           "FTRE",
           "GKOS",
+          "GO",
           "GPN",
           "HAE",
-          "HALO",
-          "HAS",
-          "HSTM",
-          "KDP",
           "LNG",
           "LW",
-          "MAT",
+          "MHK",
+          "MO",
           "MORN",
           "MTD",
           "MUR",
@@ -481,18 +512,20 @@
           "OVV",
           "OXY",
           "PCRX",
+          "PCTY",
           "PFE",
+          "PR",
           "PRGO",
+          "PTEN",
           "QLYS",
           "QTWO",
           "RGA",
+          "RNG",
           "ROP",
           "RS",
-          "SM",
           "SU",
-          "TENB",
+          "TALO",
           "THG",
-          "TRGP",
           "URBN",
           "USO",
           "VLTO",
@@ -591,15 +624,15 @@
           "WAY",
           "XOM"
         ],
-        "session": "2026-11-03",
+        "session": "2026-11-04",
         "source": "per-name tape store"
       }
     ],
     "would_have": {
-      "arm_a": 23,
+      "arm_a": 24,
       "arm_b": 9,
-      "control": 57,
-      "sessions_on_record": 8
+      "control": 56,
+      "sessions_on_record": 9
     }
   },
   "insider_legs": {
@@ -755,46 +788,47 @@
   },
   "kill_criterion": "After 60 fires in either arm, that arm is retired if its average gain against SPY points the wrong way: Arm A must average below SPY, Arm B must average above it. An arm that points the wrong way at 60 fires is finished, with its record left standing.",
   "live": {
-    "arm_a_fires": 88,
-    "arm_b_fires": 42,
-    "control_recorded": 257,
+    "arm_a_fires": 112,
+    "arm_b_fires": 51,
+    "control_recorded": 313,
     "forecasts_graded": 0,
-    "forecasts_recorded": 387,
+    "forecasts_recorded": 476,
     "target_per_arm": 60
   },
-  "panel_last_session": "2026-11-03",
+  "panel_last_session": "2026-11-04",
   "pername_today": {
     "arm_a": [
       "ABBV",
-      "AJG",
       "AMGN",
       "ANF",
       "APA",
-      "BALL",
-      "CBRL",
+      "ASO",
+      "CBOE",
+      "CHRD",
       "COP",
       "CVX",
       "EL",
       "ELF",
       "GILD",
+      "HALO",
+      "HAS",
+      "HSTM",
       "LLY",
       "MA",
-      "MHK",
-      "PCTY",
-      "PR",
-      "PTEN",
+      "MAT",
       "REGN",
-      "RNG",
+      "SM",
       "SPOT",
-      "TALO",
-      "TGTX"
+      "TENB",
+      "TGTX",
+      "TRGP"
     ],
     "arm_b": [
       "CCI",
       "DFIN",
+      "DRH",
       "EVRG",
-      "GO",
-      "MO",
+      "KDP",
       "OPCH",
       "PEB",
       "SAIC",
@@ -803,35 +837,32 @@
     "control": [
       "ACN",
       "ADUS",
+      "AJG",
       "ALRM",
       "AMN",
       "APD",
-      "ASO",
+      "BALL",
       "BKH",
       "BMBL",
       "CART",
-      "CBOE",
+      "CBRL",
       "CENTA",
       "CHD",
-      "CHRD",
       "COLM",
       "CROX",
-      "DRH",
       "EG",
       "EGBN",
       "EXEL",
       "FDS",
       "FTRE",
       "GKOS",
+      "GO",
       "GPN",
       "HAE",
-      "HALO",
-      "HAS",
-      "HSTM",
-      "KDP",
       "LNG",
       "LW",
-      "MAT",
+      "MHK",
+      "MO",
       "MORN",
       "MTD",
       "MUR",
@@ -840,18 +871,20 @@
       "OVV",
       "OXY",
       "PCRX",
+      "PCTY",
       "PFE",
+      "PR",
       "PRGO",
+      "PTEN",
       "QLYS",
       "QTWO",
       "RGA",
+      "RNG",
       "ROP",
       "RS",
-      "SM",
       "SU",
-      "TENB",
+      "TALO",
       "THG",
-      "TRGP",
       "URBN",
       "USO",
       "VLTO",
@@ -952,8 +985,8 @@
       "WAY",
       "XOM"
     ],
-    "reason": "89 names carry both an insider summary and a per-name heat reading for 2026-11-03. Every one of them was tested and recorded in the forecast ledger under its own arm, graded 21 sessions out against SPY.",
-    "session": "2026-11-03"
+    "reason": "89 names carry both an insider summary and a per-name heat reading for 2026-11-04. Every one of them was tested and recorded in the forecast ledger under its own arm, graded 21 sessions out against SPY.",
+    "session": "2026-11-04"
   },
   "plan_adjustment": {
     "classified": {
@@ -1126,8 +1159,8 @@
         "plan_10b5_1": 0
       },
       "WAY": {
-        "discretionary": 10,
-        "plan_10b5_1": 2
+        "discretionary": 8,
+        "plan_10b5_1": 0
       }
     },
     "classifier": "form4_footnote_plan_status_v1",
@@ -1135,15 +1168,15 @@
     "detail": "Plan status is now read from Form 4 footnote text on record (form4_footnotes.py, EDGAR ownership XML): each classified name's sales were matched to the footnotes their own transactions reference, and a filing with no footnotes stays unknown, never discretionary by default. Precision is measured against the record's labelled footnotes, labelled off the raw filing text by an independent literal rule, under the registered 0.90 floor on at least 20 labelled footnotes.",
     "footnote_record": {
       "filings_on_record": 170,
-      "updated_ts": "2026-11-04T06:13:25Z",
+      "updated_ts": "2026-11-04T22:59:07Z",
       "window_since": "2026-05-01"
     },
     "names_classified": 43,
     "names_with_summaries": 89,
     "precision": {
-      "labelled": 645,
-      "plan_calls": 60,
-      "plan_correct": 60,
+      "labelled": 641,
+      "plan_calls": 58,
+      "plan_correct": 58,
       "precision": 1.0
     },
     "precision_kill_floor": 0.9,
@@ -1156,7 +1189,7 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "published_at_utc": "2026-11-03T21:46:30.254679+00:00",
+  "published_at_utc": "2026-11-04T21:46:19.551394+00:00",
   "record_surface": {
     "calibration_record": {
       "attestation": {
@@ -1175,12 +1208,11 @@
       "zero_forecast_state": null
     },
     "current_reading": {
-      "as_of": "2026-11-03",
+      "as_of": "2026-11-04",
       "keys_present": [
         "calibration_attestation",
         "coverage",
         "execution_pricing",
-        "explanation",
         "feed",
         "forecast",
         "grading_note",
@@ -1194,11 +1226,9 @@
         "price_basis",
         "provenance",
         "published_at_utc",
-        "record_surface",
         "self_test",
         "source",
         "state",
-        "subject_chart",
         "thin_rule",
         "today",
         "tool",
@@ -1210,12 +1240,12 @@
     "live_accrual": {
       "corrections": 0,
       "engine": "engine_10",
-      "forecasts": 387,
+      "forecasts": 476,
       "grades": 0,
       "source": "forecast/ledger.jsonl (counted)"
     },
     "missing": {
-      "what_and_when": "Live grades are still building: 387 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+      "what_and_when": "Live grades are still building: 476 forecasts are on record and none are graded yet. Grades arrive after each following session close."
     },
     "provenance": {
       "execution_pricing": false,
@@ -1227,11 +1257,11 @@
       "label": "Study record",
       "locations": [
         {
-          "items": 8,
+          "items": 9,
           "path": "/history"
         },
         {
-          "items": 8,
+          "items": 9,
           "path": "/history/sessions"
         },
         {
@@ -1239,7 +1269,7 @@
           "path": "/history/would_have"
         }
       ],
-      "total_items_counted": 16
+      "total_items_counted": 18
     },
     "version": 1
   },
@@ -1386,7 +1416,7 @@
     "insider_as_of": "2026-11-01",
     "overlap": [],
     "reason": "No name carries both readings, so no test could run on any name and nothing was recorded. Zero is the count, not a gap in the page.",
-    "session": "2026-11-03"
+    "session": "2026-11-04"
   },
   "tool": "Insider-Flow Divergence",
   "waiting": true
