@@ -317,10 +317,17 @@ def record_forward_records(ledger, *, results, issued_ts,
     engine unless the caller names another consuming engine
     that carries the same frozen rule. Dedupe is the ledger's
     own: a republication of the same scan writes nothing.
+    The appends go through the ledger's streaming form
+    (PROOFGATE-APPEND-STREAM-20261105): one pass collects the
+    batch's dedupe keys and the chain tail, and no append ever
+    loads the parsed ledger, where the classic path held the
+    whole parsed ledger resident for the entire batch.
     Returns (created, duplicates)."""
     if engine_id is None:
         engine_id = rule["forward_check"]["ledger_engine_id"]
     created = duplicates = 0
+    state = ledger.append_stream_state(engine_id=engine_id,
+                                       issued_ts=issued_ts)
     for symbol, result in sorted(results.items()):
         value = {
             "proof_state": result["proof_state"],
@@ -337,7 +344,8 @@ def record_forward_records(ledger, *, results, issued_ts,
             "bh_significant": result["bh_significant"],
             "downgrade_reason": result["downgrade_reason"],
         }
-        _row, made = ledger.append_forecast_declared(
+        _row, made = ledger.append_forecast_streaming(
+            state,
             engine_id=engine_id, issued_ts=issued_ts, subject=symbol,
             quantity=FORWARD_QUANTITY, value=value,
             horizon_open=horizon_open, horizon_close=horizon_close,
