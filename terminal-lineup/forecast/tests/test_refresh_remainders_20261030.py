@@ -141,12 +141,24 @@ def test_abstention_published_decision_record():
     # character is unchanged (3 tools running, 1 silent), and
     # the ledger's first-issue and voided counts accrued to
     # 8 recorded and 4 voided on the valid basis.
+    # Re-pinned again 2026-11-05 (TOTALFIX-REPIN-20261105):
+    # forecasts_voided 4 to 6, from the ledger's own arithmetic
+    # recounted in the total-fix loop's settled pass: engine_30
+    # carries 14 forecast rows, exactly 6 voided by correction
+    # rows (4 for the 2026-10-30 issue day, the census re-take
+    # duplicate pairs at horizons 21 and 5, and 2 for the
+    # 2026-11-03 issue day, voided when that session was
+    # re-issued under advanced census inputs during the
+    # 2026-11-04 night re-runs); 14 minus 6 is the 8 recorded
+    # on the valid basis, which did not move. The SUPN triple
+    # (3 correction rows naming engine_06) is a different
+    # engine and never enters this per-engine count.
     assert data["as_of_session"] == "2026-11-03"
     assert len(data["decision_days"]) == 9
     assert data["today"]["day"] == "2026-11-03"
     assert data["today"]["rate"] == 0.3333
     assert data["live"]["forecasts_recorded"] == 8
-    assert data["live"]["forecasts_voided"] == 4
+    assert data["live"]["forecasts_voided"] == 6
     # The narrative must agree with the block it rides in (it once
     # described the previous census day, fired, 0 of 1, 6 days,
     # while the block carried the new day; cured 2026-10-31 by
