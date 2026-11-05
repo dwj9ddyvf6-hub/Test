@@ -194,20 +194,25 @@ class TestLiveDataCurrent(unittest.TestCase):
         # same reconstruction lane (EXPECTED-MOVE filing cure,
         # terminal deficit cures), advancing the live record this
         # pin stands on.
+        # Re-pinned 2026-11-05 (EXPECTED-MOVE-FILING-20261105):
+        # the 2026-11-04 map was filed through the same lane
+        # (two-source agreement on the 2026-11-03 priors: SPY
+        # 754.35, QQQ 685.28, VIX 20.83), advancing the record
+        # again.
         data = json.load(open(os.path.join(
             SITE, "expected-move", "data.json")))
-        self.assertEqual(data["session"], "2026-11-03")
+        self.assertEqual(data["session"], "2026-11-04")
         lane = data["filing_lane"]
         self.assertEqual(lane["missing_sessions"], [])
         self.assertEqual(lane["latest_completed_session"],
-                         "2026-11-03")
+                         "2026-11-04")
         self.assertEqual(
             lane["reconstructed_sessions"],
             ["2026-10-26", "2026-10-27", "2026-10-28",
              "2026-10-29", "2026-10-30", "2026-11-02",
-             "2026-11-03"])
+             "2026-11-03", "2026-11-04"])
         spy = [n for n in data["names"] if n["symbol"] == "SPY"][0]
-        self.assertEqual(spy["receipt"]["session"], "2026-11-03")
+        self.assertEqual(spy["receipt"]["session"], "2026-11-04")
         self.assertTrue(spy["reconstructed"])
 
 
