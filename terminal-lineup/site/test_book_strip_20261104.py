@@ -107,6 +107,53 @@ def main() -> int:
     if gen._pull_end("2026-11-03") != "2026-11-04T05:00:00Z":
         fails.append("pull end wrong: %r" % gen._pull_end("2026-11-03"))
 
+    # BOOK-STRIP-BENCH-WINDOW-20261104: the pull end is capped at
+    # the present moment, so an evening generation (whose nominal
+    # morning-after end is still in the future) still gets its
+    # benchmark window instead of a refused pull and an omitted
+    # comparison line. Pre-cure there is no cap helper at all.
+    if gen._cap_end("2026-11-05T05:00:00Z", "2026-11-05T02:21:00Z") != \
+            "2026-11-05T02:21:00Z":
+        fails.append("future pull end not capped at now: %r"
+                     % gen._cap_end("2026-11-05T05:00:00Z",
+                                    "2026-11-05T02:21:00Z"))
+    if gen._cap_end("2026-11-04T05:00:00Z", "2026-11-05T02:21:00Z") != \
+            "2026-11-04T05:00:00Z":
+        fails.append("past pull end moved by the cap: %r"
+                     % gen._cap_end("2026-11-04T05:00:00Z",
+                                    "2026-11-05T02:21:00Z"))
+
+    # Live behaviour, the defect itself: a benchmark pull for the
+    # freshest completed session succeeds at generation time,
+    # evening included (pre-cure it is refused after the 17:00 ET
+    # session roll and the strip omits its comparison line).
+    from datetime import datetime as _dt2
+    through_now = gen.freshest_session(_dt2.now(gen.ET))
+    got = gen.benchmark("SPY", date(2026, 10, 30), through_now)
+    if not got or got[1] != through_now:
+        fails.append("live benchmark pull failed for session %s: %r"
+                     % (through_now, got))
+
+    # BOOK-STRIP-CARD-EVENING-20261104: on the real journal, the
+    # cards expiring 2026-11-04 (EXPD, ABBV) are live in the
+    # afternoon of their expiry day and gone after its close,
+    # while the card expiring 2026-11-05 (AEP) stays live.
+    from datetime import datetime as _dt
+    afternoon = _dt(2026, 11, 4, 15, 0, tzinfo=gen.ET)
+    evening = _dt(2026, 11, 4, 16, 30, tzinfo=gen.ET)
+    day_syms = {c["symbol"] for c in
+                gen.live_cards(real, date(2026, 11, 4),
+                               now_et=afternoon)}
+    eve_syms = {c["symbol"] for c in
+                gen.live_cards(real, date(2026, 11, 4),
+                               now_et=evening)}
+    if day_syms != {"AEP", "EXPD", "ABBV"}:
+        fails.append("expiry-day afternoon cards %r, want "
+                     "['ABBV', 'AEP', 'EXPD']" % sorted(day_syms))
+    if eve_syms != {"AEP"}:
+        fails.append("expiry-day evening cards %r, want ['AEP']"
+                     % sorted(eve_syms))
+
     # Position fields (BOOK-STRIP-POSITION-FIELDS-20261104): a
     # position whose opening fill and journal invalidation exist
     # renders with its entry price and exit line populated: from
