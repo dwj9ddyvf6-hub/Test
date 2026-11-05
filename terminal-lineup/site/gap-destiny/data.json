@@ -5,7 +5,7 @@
       "basis": "14942 graded forecasts of 14942 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
       "forecasts_recorded": 14942,
       "graded_forecasts": 14942,
-      "recorded_on": "2026-11-04",
+      "recorded_on": "2026-11-05",
       "status": "not_attested"
     },
     "engine_id": "engine_28",
@@ -18,6 +18,10 @@
   },
   "excluded_variant": "One variant is left out on purpose: saying whether a gap fills early in the session or only by the close. The within-day price record on hand cannot support it today, so it is not promised.",
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: probability and distribution, over same session, graded at that close. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 120 index gaps, fill-probability Brier is no better than the unconditional per-band base rate. It counts as proven at 120 index gaps.",
+    "summary": "At the open, stake a set of chances on today's gap for every name that gaps at least half a percent, and be graded on it at today's close."
+  },
   "failed_gap_sub_claim": {
     "acceptance_proxy": "Acceptance for the live session is read from the first minutes record where it covers a name: the closing location inside the first 15 minute range, read in the gap's direction, from Alpaca SIP 5 minute bars (first_minutes.py). Names and sessions the record does not cover keep the daily proxy, the closing location inside the session's own daily range, labelled per entry as daily_proxy. Each live entry names its own acceptance_source.",
     "first_minutes_record": {
@@ -58725,8 +58729,156 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "14942 graded forecasts of 14942 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 14942,
+        "graded_forecasts": 14942,
+        "recorded_on": "2026-11-05",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_28",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-11-04",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "excluded_variant",
+        "execution_pricing",
+        "explanation",
+        "failed_gap_sub_claim",
+        "feed",
+        "history",
+        "idea",
+        "kill_criterion",
+        "live",
+        "live_record",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_cell_rule",
+        "tool",
+        "weekday_label"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_28",
+      "forecasts": 19638,
+      "grades": 19277,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 19638 forecasts are on record and 19277 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 33,
+          "path": "/history"
+        },
+        {
+          "items": 0,
+          "path": "/history/ancestor"
+        },
+        {
+          "items": 3,
+          "path": "/history/bands"
+        },
+        {
+          "items": 15,
+          "path": "/history/by_band_weekday_all"
+        },
+        {
+          "items": 15,
+          "path": "/history/by_band_weekday_index"
+        },
+        {
+          "items": 0,
+          "path": "/history/totals"
+        },
+        {
+          "items": 0,
+          "path": "/history/walk_forward"
+        },
+        {
+          "items": 0,
+          "path": "/history/walk_forward_by_band"
+        },
+        {
+          "items": 0,
+          "path": "/history/walk_forward_index"
+        }
+      ],
+      "total_items_counted": 66
+    },
+    "version": 1
+  },
   "source": "Daily prices for 1,833 names from the price history on record (407 trading days, 2025-03-25 to 2026-11-04), plus 504 daily fear gauge readings (2024-11-04 to 2026-11-04). The longer daily history the design names is not on record here, so every count on this page comes from that span and no other.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Index fill percent per gap-size band.",
+      "rows": [
+        {
+          "name": "Gap of 0.5% to 1%",
+          "score": 36.5
+        },
+        {
+          "name": "Gap of 1% to 2%",
+          "score": 26.1
+        },
+        {
+          "name": "Gap of Over 2%",
+          "score": 23.5
+        }
+      ],
+      "source": "history.bands[].index_fill_pct",
+      "title": "How often each size of gap filled"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Fill percent per gap band on Mondays, from the band by weekday record.",
+      "rows": [
+        {
+          "name": "Gap of 0.5% to 1%",
+          "score": 69.3
+        },
+        {
+          "name": "Gap of 1% to 2%",
+          "score": 54.9
+        },
+        {
+          "name": "Gap of Over 2%",
+          "score": 39.9
+        }
+      ],
+      "source": "history.by_band_weekday_all[].fill_pct",
+      "title": "Fill percent by band, Mondays"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any cell with fewer than 30 cases shows its count only, with no rate.",
   "tool": "Gap Destiny",
   "weekday_label": "Wednesday"
