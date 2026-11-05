@@ -1,5 +1,5 @@
 {
-  "as_of_session": "2026-11-03",
+  "as_of_session": "2026-11-04",
   "calibration_attestation": {
     "attestation": {
       "basis": "no graded forecasts on record yet (111 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
@@ -30,15 +30,15 @@
   "history": {
     "fear_days_judged": 29,
     "fear_days_total_in_history": 40,
-    "hard_drops_total": 12748,
+    "hard_drops_total": 12974,
     "label": "History, not live forecasts",
     "legs_never_combined": "The two groups are always shown separately. Their numbers are never added together or averaged into one figure.",
-    "neither_cases": 4152,
+    "neither_cases": 4155,
     "persist": {
       "claim_met": true,
       "claim_points": -0.5,
-      "days": 147,
-      "episodes": 6860,
+      "days": 148,
+      "episodes": 7083,
       "falsified": false,
       "graded": 6591,
       "median_ci95_points": [
@@ -64,21 +64,21 @@
       "missing_closes": 1,
       "with_forward_session": 1536
     },
-    "span": "2025-09-25 to 2026-11-03",
-    "warmup_note": "Judging a drop against a stock's own usual move needs 126 of its past trading days first, so the first judgeable day in this history is 2025-09-25 and 279 trading days are judged. Every stock that still trades is in this history; stocks that stopped trading are not, which can flatter the numbers."
+    "span": "2025-09-25 to 2026-11-04",
+    "warmup_note": "Judging a drop against a stock's own usual move needs 126 of its past trading days first, so the first judgeable day in this history is 2025-09-25 and 280 trading days are judged. Every stock that still trades is in this history; stocks that stopped trading are not, which can flatter the numbers."
   },
   "how_the_split_works": "Each stock's drop is first stripped of the market's move that day; what is left is the stock's own move. The drop counts only if it is at least twice the size of that stock's own usual daily move, measured over its past 126 trading days. No fixed percent drop is used anywhere: a quiet stock and a jumpy stock are each judged against themselves.",
   "kill_criterion": "Either forecast retires on its own if, after 150 of its cases have been graded, the middle outcome could still plausibly be zero.",
   "live": {
     "forecasts_graded": 0,
-    "forecasts_recorded": 111,
+    "forecasts_recorded": 334,
     "note": "The live record starts empty. Forecasts are written down before the 20 trading days they describe, and the first grades land only after those days have passed.",
     "target_graded_per_leg": 150
   },
   "market_today": {
     "kind": "flat or up",
     "note": "Neither forecast fires on a day like this: the keep-falling forecast needs the market flat or up, and the bounce-back forecast needs a fear day (the market down at least 1 percent).",
-    "return_pct": 0.3
+    "return_pct": 1.65
   },
   "price_basis": "close",
   "provenance": {
@@ -105,13 +105,12 @@
       "zero_forecast_state": null
     },
     "current_reading": {
-      "as_of": "2026-11-03",
+      "as_of": "2026-11-04",
       "keys_present": [
         "as_of_session",
         "calibration_attestation",
         "claims",
         "execution_pricing",
-        "explanation",
         "feed",
         "history",
         "how_the_split_works",
@@ -120,10 +119,8 @@
         "market_today",
         "price_basis",
         "provenance",
-        "record_surface",
         "source",
         "state",
-        "subject_chart",
         "thin_cell_rule",
         "today",
         "tool"
@@ -134,12 +131,12 @@
     "live_accrual": {
       "corrections": 0,
       "engine": "engine_13",
-      "forecasts": 111,
+      "forecasts": 334,
       "grades": 0,
       "source": "forecast/ledger.jsonl (counted)"
     },
     "missing": {
-      "what_and_when": "Live grades are still building: 111 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+      "what_and_when": "Live grades are still building: 334 forecasts are on record and none are graded yet. Grades arrive after each following session close."
     },
     "provenance": {
       "execution_pricing": false,
@@ -167,10 +164,32 @@
     },
     "version": 1
   },
-  "source": "The daily price history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-03, 406 trading days), checked for this page. The longer daily history the design names (2016 to 2026) is not on this computer, so the history below runs on the history that exists.",
+  "source": "The daily price history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-04, 407 trading days), checked for this page. The longer daily history the design names (2016 to 2026) is not on this computer, so the history below runs on the history that exists.",
   "state": "proving",
   "subject_chart": {
-    "lead": null,
+    "lead": {
+      "kind": "ranked",
+      "label": "Each name's own move percent today, market aside.",
+      "rows": [
+        {
+          "coverage": "43.3 percent of the drop was its own",
+          "name": "IWF",
+          "score": -1.26
+        },
+        {
+          "coverage": "49.8 percent of the drop was its own",
+          "name": "SGOV",
+          "score": -1.64
+        },
+        {
+          "coverage": "48.1 percent of the drop was its own",
+          "name": "SHY",
+          "score": -1.53
+        }
+      ],
+      "source": "today.neither[].own_move_pct",
+      "title": "Today's own-norm drops, per name"
+    },
     "record": {
       "kind": "ranked",
       "label": "Median forward points for the persist and reverse arms.",
@@ -191,348 +210,1369 @@
   },
   "thin_cell_rule": "Any group with fewer than 30 graded cases shows its count only, with no middle figure.",
   "today": {
-    "hard_drops": 56,
+    "hard_drops": 226,
     "names_checked": 1832,
     "names_judged": 1805,
     "names_set_aside_short_history": 27,
-    "neither": [],
+    "neither": [
+      {
+        "drop_own_units": 2.11,
+        "own_move_pct": -1.26,
+        "share_pct": 43.3,
+        "symbol": "IWF"
+      },
+      {
+        "drop_own_units": 2.12,
+        "own_move_pct": -1.64,
+        "share_pct": 49.8,
+        "symbol": "SGOV"
+      },
+      {
+        "drop_own_units": 2.05,
+        "own_move_pct": -1.53,
+        "share_pct": 48.1,
+        "symbol": "SHY"
+      }
+    ],
     "neither_note": "These stocks dropped hard enough today, but the market's in-between day (down, not a fear day) puts them in neither group. They are counted and named, and no forecast is made about them.",
     "persist": [
       {
-        "drop_own_units": 2.04,
-        "own_move_pct": -8.19,
-        "share_pct": 96.5,
-        "symbol": "ABR"
-      },
-      {
-        "drop_own_units": 3.57,
-        "own_move_pct": -13.89,
-        "share_pct": 97.9,
-        "symbol": "ADEA"
-      },
-      {
-        "drop_own_units": 3.75,
-        "own_move_pct": -7.12,
-        "share_pct": 96.0,
-        "symbol": "ADM"
-      },
-      {
-        "drop_own_units": 2.47,
-        "own_move_pct": -4.5,
-        "share_pct": 93.8,
-        "symbol": "AMCR"
-      },
-      {
-        "drop_own_units": 2.76,
-        "own_move_pct": -5.25,
-        "share_pct": 94.6,
-        "symbol": "APO"
-      },
-      {
-        "drop_own_units": 2.34,
-        "own_move_pct": -6.83,
-        "share_pct": 95.8,
-        "symbol": "APTV"
-      },
-      {
-        "drop_own_units": 4.17,
-        "own_move_pct": -7.44,
-        "share_pct": 96.1,
-        "symbol": "BALL"
-      },
-      {
-        "drop_own_units": 4.13,
-        "own_move_pct": -8.27,
-        "share_pct": 96.5,
-        "symbol": "CALX"
-      },
-      {
-        "drop_own_units": 2.48,
-        "own_move_pct": -5.21,
-        "share_pct": 94.6,
-        "symbol": "CBT"
-      },
-      {
-        "drop_own_units": 3.82,
-        "own_move_pct": -13.39,
-        "share_pct": 97.8,
-        "symbol": "CVI"
-      },
-      {
-        "drop_own_units": 2.49,
-        "own_move_pct": -5.33,
-        "share_pct": 94.7,
-        "symbol": "DHI"
-      },
-      {
-        "drop_own_units": 5.26,
-        "own_move_pct": -14.99,
-        "share_pct": 98.0,
-        "symbol": "DT"
-      },
-      {
-        "drop_own_units": 2.08,
-        "own_move_pct": -8.97,
-        "share_pct": 96.8,
-        "symbol": "EFOR"
-      },
-      {
-        "drop_own_units": 2.26,
-        "own_move_pct": -3.17,
-        "share_pct": 91.4,
-        "symbol": "FIBK"
-      },
-      {
-        "drop_own_units": 2.49,
-        "own_move_pct": -4.52,
-        "share_pct": 93.8,
-        "symbol": "HE"
-      },
-      {
-        "drop_own_units": 3.41,
-        "own_move_pct": -5.06,
-        "share_pct": 94.4,
-        "symbol": "HSIC"
-      },
-      {
-        "drop_own_units": 3.61,
-        "own_move_pct": -8.71,
-        "share_pct": 96.7,
-        "symbol": "HSTM"
+        "drop_own_units": 4.07,
+        "own_move_pct": -17.33,
+        "share_pct": 91.3,
+        "symbol": "AAON"
       },
       {
         "drop_own_units": 2.27,
-        "own_move_pct": -8.2,
-        "share_pct": 96.5,
-        "symbol": "INSP"
+        "own_move_pct": -4.88,
+        "share_pct": 74.7,
+        "symbol": "ADI"
       },
       {
-        "drop_own_units": 3.31,
-        "own_move_pct": -13.49,
-        "share_pct": 97.8,
-        "symbol": "IT"
+        "drop_own_units": 2.48,
+        "own_move_pct": -7.32,
+        "share_pct": 81.6,
+        "symbol": "ADMA"
+      },
+      {
+        "drop_own_units": 3.06,
+        "own_move_pct": -12.8,
+        "share_pct": 88.6,
+        "symbol": "AEIS"
+      },
+      {
+        "drop_own_units": 2.35,
+        "own_move_pct": -1.79,
+        "share_pct": 51.9,
+        "symbol": "AES"
+      },
+      {
+        "drop_own_units": 4.97,
+        "own_move_pct": -18.97,
+        "share_pct": 92.0,
+        "symbol": "AESI"
+      },
+      {
+        "drop_own_units": 4.58,
+        "own_move_pct": -18.19,
+        "share_pct": 91.7,
+        "symbol": "AGX"
+      },
+      {
+        "drop_own_units": 2.3,
+        "own_move_pct": -3.9,
+        "share_pct": 70.2,
+        "symbol": "AIT"
+      },
+      {
+        "drop_own_units": 2.79,
+        "own_move_pct": -4.59,
+        "share_pct": 73.6,
+        "symbol": "ALG"
+      },
+      {
+        "drop_own_units": 3.85,
+        "own_move_pct": -6.81,
+        "share_pct": 80.5,
+        "symbol": "AM"
+      },
+      {
+        "drop_own_units": 5.08,
+        "own_move_pct": -6.27,
+        "share_pct": 79.2,
+        "symbol": "AME"
+      },
+      {
+        "drop_own_units": 4.94,
+        "own_move_pct": -13.33,
+        "share_pct": 89.0,
+        "symbol": "ANDE"
+      },
+      {
+        "drop_own_units": 2.76,
+        "own_move_pct": -8.52,
+        "share_pct": 83.8,
+        "symbol": "APA"
+      },
+      {
+        "drop_own_units": 3.78,
+        "own_move_pct": -6.7,
+        "share_pct": 80.2,
+        "symbol": "APG"
+      },
+      {
+        "drop_own_units": 3.04,
+        "own_move_pct": -7.8,
+        "share_pct": 82.5,
+        "symbol": "APH"
+      },
+      {
+        "drop_own_units": 3.13,
+        "own_move_pct": -7.91,
+        "share_pct": 82.7,
+        "symbol": "AR"
+      },
+      {
+        "drop_own_units": 3.28,
+        "own_move_pct": -5.83,
+        "share_pct": 77.9,
+        "symbol": "ARMK"
+      },
+      {
+        "drop_own_units": 4.35,
+        "own_move_pct": -10.68,
+        "share_pct": 86.6,
+        "symbol": "AROC"
+      },
+      {
+        "drop_own_units": 2.04,
+        "own_move_pct": -4.59,
+        "share_pct": 73.5,
+        "symbol": "ARW"
+      },
+      {
+        "drop_own_units": 2.29,
+        "own_move_pct": -9.99,
+        "share_pct": 85.8,
+        "symbol": "AVAV"
       },
       {
         "drop_own_units": 2.03,
-        "own_move_pct": -3.86,
-        "share_pct": 92.8,
-        "symbol": "ITB"
+        "own_move_pct": -14.64,
+        "share_pct": 89.9,
+        "symbol": "AVEX"
       },
       {
-        "drop_own_units": 3.14,
-        "own_move_pct": -5.95,
-        "share_pct": 95.2,
-        "symbol": "KDP"
+        "drop_own_units": 2.16,
+        "own_move_pct": -5.09,
+        "share_pct": 75.5,
+        "symbol": "AVT"
       },
       {
-        "drop_own_units": 2.0,
-        "own_move_pct": -3.8,
-        "share_pct": 92.7,
-        "symbol": "KMB"
+        "drop_own_units": 3.29,
+        "own_move_pct": -5.98,
+        "share_pct": 78.4,
+        "symbol": "AZZ"
       },
       {
-        "drop_own_units": 2.11,
-        "own_move_pct": -5.69,
-        "share_pct": 95.0,
-        "symbol": "KMX"
+        "drop_own_units": 3.5,
+        "own_move_pct": -9.65,
+        "share_pct": 85.4,
+        "symbol": "BHE"
       },
       {
-        "drop_own_units": 2.78,
-        "own_move_pct": -6.85,
-        "share_pct": 95.8,
-        "symbol": "LDOS"
+        "drop_own_units": 3.31,
+        "own_move_pct": -7.18,
+        "share_pct": 81.3,
+        "symbol": "BKR"
       },
       {
-        "drop_own_units": 2.33,
-        "own_move_pct": -4.81,
-        "share_pct": 94.1,
-        "symbol": "LEA"
+        "drop_own_units": 6.03,
+        "own_move_pct": -19.27,
+        "share_pct": 92.1,
+        "symbol": "BTU"
       },
       {
-        "drop_own_units": 2.3,
-        "own_move_pct": -5.72,
-        "share_pct": 95.0,
-        "symbol": "LEN"
+        "drop_own_units": 4.21,
+        "own_move_pct": -9.48,
+        "share_pct": 85.2,
+        "symbol": "BWXT"
       },
       {
-        "drop_own_units": 2.47,
-        "own_move_pct": -8.54,
-        "share_pct": 96.6,
-        "symbol": "LGIH"
+        "drop_own_units": 2.96,
+        "own_move_pct": -8.7,
+        "share_pct": 84.0,
+        "symbol": "CACI"
       },
       {
-        "drop_own_units": 3.0,
-        "own_move_pct": -7.64,
-        "share_pct": 96.2,
-        "symbol": "MPT"
+        "drop_own_units": 2.48,
+        "own_move_pct": -11.36,
+        "share_pct": 87.3,
+        "symbol": "CAMT"
       },
       {
-        "drop_own_units": 4.62,
-        "own_move_pct": -6.94,
-        "share_pct": 95.9,
-        "symbol": "MSA"
+        "drop_own_units": 2.98,
+        "own_move_pct": -6.88,
+        "share_pct": 80.6,
+        "symbol": "CAT"
       },
       {
-        "drop_own_units": 4.16,
-        "own_move_pct": -8.79,
-        "share_pct": 96.7,
-        "symbol": "MTCH"
+        "drop_own_units": 3.1,
+        "own_move_pct": -8.36,
+        "share_pct": 83.5,
+        "symbol": "CEG"
       },
       {
-        "drop_own_units": 3.6,
-        "own_move_pct": -7.94,
-        "share_pct": 96.4,
-        "symbol": "MTUS"
+        "drop_own_units": 2.17,
+        "own_move_pct": -6.04,
+        "share_pct": 78.5,
+        "symbol": "CF"
       },
       {
-        "drop_own_units": 3.05,
-        "own_move_pct": -8.52,
-        "share_pct": 96.6,
-        "symbol": "NAVI"
+        "drop_own_units": 3.68,
+        "own_move_pct": -10.34,
+        "share_pct": 86.2,
+        "symbol": "CGNX"
+      },
+      {
+        "drop_own_units": 3.36,
+        "own_move_pct": -9.65,
+        "share_pct": 85.4,
+        "symbol": "CHRD"
+      },
+      {
+        "drop_own_units": 2.26,
+        "own_move_pct": -10.93,
+        "share_pct": 86.9,
+        "symbol": "CIEN"
+      },
+      {
+        "drop_own_units": 3.09,
+        "own_move_pct": -21.6,
+        "share_pct": 92.9,
+        "symbol": "CIFR"
+      },
+      {
+        "drop_own_units": 2.65,
+        "own_move_pct": -10.85,
+        "share_pct": 86.8,
+        "symbol": "CLF"
+      },
+      {
+        "drop_own_units": 2.05,
+        "own_move_pct": -3.88,
+        "share_pct": 70.1,
+        "symbol": "CLH"
+      },
+      {
+        "drop_own_units": 2.26,
+        "own_move_pct": -10.7,
+        "share_pct": 86.6,
+        "symbol": "CLS"
+      },
+      {
+        "drop_own_units": 3.5,
+        "own_move_pct": -18.22,
+        "share_pct": 91.7,
+        "symbol": "CLSK"
+      },
+      {
+        "drop_own_units": 3.71,
+        "own_move_pct": -7.41,
+        "share_pct": 81.8,
+        "symbol": "CMI"
+      },
+      {
+        "drop_own_units": 3.33,
+        "own_move_pct": -5.16,
+        "share_pct": 75.7,
+        "symbol": "CNP"
       },
       {
         "drop_own_units": 2.18,
-        "own_move_pct": -4.14,
-        "share_pct": 93.3,
-        "symbol": "NVR"
+        "own_move_pct": -5.4,
+        "share_pct": 76.6,
+        "symbol": "CNR"
       },
       {
-        "drop_own_units": 4.0,
-        "own_move_pct": -8.95,
-        "share_pct": 96.8,
-        "symbol": "NXRT"
+        "drop_own_units": 2.64,
+        "own_move_pct": -13.74,
+        "share_pct": 89.3,
+        "symbol": "COHU"
       },
       {
-        "drop_own_units": 2.47,
-        "own_move_pct": -6.53,
-        "share_pct": 95.6,
-        "symbol": "OC"
+        "drop_own_units": 2.87,
+        "own_move_pct": -6.82,
+        "share_pct": 80.5,
+        "symbol": "COP"
       },
       {
-        "drop_own_units": 6.48,
-        "own_move_pct": -9.15,
-        "share_pct": 96.8,
-        "symbol": "OTTR"
+        "drop_own_units": 2.53,
+        "own_move_pct": -12.05,
+        "share_pct": 87.9,
+        "symbol": "CORZ"
+      },
+      {
+        "drop_own_units": 3.17,
+        "own_move_pct": -7.57,
+        "share_pct": 82.1,
+        "symbol": "CRC"
+      },
+      {
+        "drop_own_units": 3.65,
+        "own_move_pct": -11.49,
+        "share_pct": 87.4,
+        "symbol": "CRGY"
+      },
+      {
+        "drop_own_units": 3.12,
+        "own_move_pct": -8.92,
+        "share_pct": 84.4,
+        "symbol": "CRL"
+      },
+      {
+        "drop_own_units": 3.54,
+        "own_move_pct": -13.15,
+        "share_pct": 88.8,
+        "symbol": "CVI"
+      },
+      {
+        "drop_own_units": 7.28,
+        "own_move_pct": -14.18,
+        "share_pct": 89.6,
+        "symbol": "CVS"
+      },
+      {
+        "drop_own_units": 2.62,
+        "own_move_pct": -5.34,
+        "share_pct": 76.4,
+        "symbol": "CVX"
+      },
+      {
+        "drop_own_units": 5.34,
+        "own_move_pct": -10.82,
+        "share_pct": 86.8,
+        "symbol": "CW"
       },
       {
         "drop_own_units": 2.12,
-        "own_move_pct": -4.08,
-        "share_pct": 93.2,
-        "symbol": "PBI"
+        "own_move_pct": -3.43,
+        "share_pct": 67.5,
+        "symbol": "DD"
       },
       {
-        "drop_own_units": 2.52,
-        "own_move_pct": -4.59,
-        "share_pct": 93.9,
-        "symbol": "PFGC"
+        "drop_own_units": 3.32,
+        "own_move_pct": -16.07,
+        "share_pct": 90.7,
+        "symbol": "DDOG"
       },
       {
-        "drop_own_units": 2.3,
-        "own_move_pct": -4.85,
-        "share_pct": 94.2,
-        "symbol": "PJT"
+        "drop_own_units": 3.5,
+        "own_move_pct": -9.41,
+        "share_pct": 85.1,
+        "symbol": "DINO"
       },
       {
-        "drop_own_units": 2.12,
-        "own_move_pct": -3.64,
-        "share_pct": 92.4,
-        "symbol": "PRK"
+        "drop_own_units": 2.93,
+        "own_move_pct": -6.19,
+        "share_pct": 78.9,
+        "symbol": "DNOW"
       },
       {
-        "drop_own_units": 2.44,
-        "own_move_pct": -3.99,
-        "share_pct": 93.0,
-        "symbol": "PSMT"
+        "drop_own_units": 2.75,
+        "own_move_pct": -6.83,
+        "share_pct": 80.5,
+        "symbol": "DRNZ"
       },
       {
-        "drop_own_units": 2.51,
-        "own_move_pct": -8.76,
-        "share_pct": 96.7,
-        "symbol": "RH"
+        "drop_own_units": 3.43,
+        "own_move_pct": -5.73,
+        "share_pct": 77.6,
+        "symbol": "DTM"
       },
       {
-        "drop_own_units": 5.98,
-        "own_move_pct": -9.94,
-        "share_pct": 97.1,
-        "symbol": "SHC"
+        "drop_own_units": 3.33,
+        "own_move_pct": -9.0,
+        "share_pct": 84.5,
+        "symbol": "DVN"
+      },
+      {
+        "drop_own_units": 3.97,
+        "own_move_pct": -13.41,
+        "share_pct": 89.0,
+        "symbol": "DXPE"
+      },
+      {
+        "drop_own_units": 2.29,
+        "own_move_pct": -8.61,
+        "share_pct": 83.9,
+        "symbol": "DY"
+      },
+      {
+        "drop_own_units": 9.36,
+        "own_move_pct": -30.94,
+        "share_pct": 94.9,
+        "symbol": "ECG"
+      },
+      {
+        "drop_own_units": 4.37,
+        "own_move_pct": -11.29,
+        "share_pct": 87.2,
+        "symbol": "EME"
+      },
+      {
+        "drop_own_units": 3.45,
+        "own_move_pct": -8.77,
+        "share_pct": 84.2,
+        "symbol": "ENS"
+      },
+      {
+        "drop_own_units": 2.86,
+        "own_move_pct": -6.88,
+        "share_pct": 80.6,
+        "symbol": "EOG"
+      },
+      {
+        "drop_own_units": 2.41,
+        "own_move_pct": -4.84,
+        "share_pct": 74.6,
+        "symbol": "EQT"
+      },
+      {
+        "drop_own_units": 2.85,
+        "own_move_pct": -5.93,
+        "share_pct": 78.2,
+        "symbol": "ESE"
+      },
+      {
+        "drop_own_units": 2.36,
+        "own_move_pct": -6.3,
+        "share_pct": 79.2,
+        "symbol": "ESI"
+      },
+      {
+        "drop_own_units": 3.32,
+        "own_move_pct": -5.12,
+        "share_pct": 75.6,
+        "symbol": "ET"
+      },
+      {
+        "drop_own_units": 4.49,
+        "own_move_pct": -11.51,
+        "share_pct": 87.5,
+        "symbol": "ETN"
       },
       {
         "drop_own_units": 2.39,
-        "own_move_pct": -9.04,
-        "share_pct": 96.8,
-        "symbol": "SHOP"
+        "own_move_pct": -4.57,
+        "share_pct": 73.4,
+        "symbol": "EXE"
       },
       {
-        "drop_own_units": 2.15,
-        "own_move_pct": -5.17,
-        "share_pct": 94.5,
-        "symbol": "SKYW"
+        "drop_own_units": 3.44,
+        "own_move_pct": -4.89,
+        "share_pct": 74.8,
+        "symbol": "EXPD"
+      },
+      {
+        "drop_own_units": 2.56,
+        "own_move_pct": -6.57,
+        "share_pct": 79.9,
+        "symbol": "FANG"
+      },
+      {
+        "drop_own_units": 10.0,
+        "own_move_pct": -25.32,
+        "share_pct": 93.9,
+        "symbol": "FIS"
+      },
+      {
+        "drop_own_units": 4.89,
+        "own_move_pct": -16.73,
+        "share_pct": 91.0,
+        "symbol": "FIX"
+      },
+      {
+        "drop_own_units": 2.68,
+        "own_move_pct": -13.98,
+        "share_pct": 89.4,
+        "symbol": "FLEX"
+      },
+      {
+        "drop_own_units": 2.25,
+        "own_move_pct": -13.58,
+        "share_pct": 89.2,
+        "symbol": "FORM"
+      },
+      {
+        "drop_own_units": 3.02,
+        "own_move_pct": -12.19,
+        "share_pct": 88.1,
+        "symbol": "FTAI"
+      },
+      {
+        "drop_own_units": 2.2,
+        "own_move_pct": -5.01,
+        "share_pct": 75.2,
+        "symbol": "FTI"
+      },
+      {
+        "drop_own_units": 2.79,
+        "own_move_pct": -4.22,
+        "share_pct": 71.9,
+        "symbol": "GD"
+      },
+      {
+        "drop_own_units": 4.36,
+        "own_move_pct": -7.25,
+        "share_pct": 81.4,
+        "symbol": "GEF"
+      },
+      {
+        "drop_own_units": 3.55,
+        "own_move_pct": -10.95,
+        "share_pct": 86.9,
+        "symbol": "GEV"
       },
       {
         "drop_own_units": 2.01,
-        "own_move_pct": -4.75,
-        "share_pct": 94.1,
-        "symbol": "SLVM"
+        "own_move_pct": -7.6,
+        "share_pct": 82.1,
+        "symbol": "GFS"
       },
       {
-        "drop_own_units": 2.06,
-        "own_move_pct": -5.41,
-        "share_pct": 94.8,
-        "symbol": "SMG"
+        "drop_own_units": 3.3,
+        "own_move_pct": -11.19,
+        "share_pct": 87.1,
+        "symbol": "GNRC"
       },
       {
-        "drop_own_units": 14.69,
-        "own_move_pct": -33.15,
-        "share_pct": 99.1,
-        "symbol": "SUPN"
+        "drop_own_units": 2.74,
+        "own_move_pct": -6.12,
+        "share_pct": 78.8,
+        "symbol": "GPOR"
       },
       {
-        "drop_own_units": 6.17,
-        "own_move_pct": -9.63,
-        "share_pct": 97.0,
-        "symbol": "SYY"
+        "drop_own_units": 3.71,
+        "own_move_pct": -4.73,
+        "share_pct": 74.1,
+        "symbol": "GRID"
       },
       {
-        "drop_own_units": 2.28,
-        "own_move_pct": -4.5,
+        "drop_own_units": 2.16,
+        "own_move_pct": -4.79,
+        "share_pct": 74.4,
+        "symbol": "HAL"
+      },
+      {
+        "drop_own_units": 2.29,
+        "own_move_pct": -5.73,
+        "share_pct": 77.6,
+        "symbol": "HII"
+      },
+      {
+        "drop_own_units": 3.52,
+        "own_move_pct": -8.69,
+        "share_pct": 84.0,
+        "symbol": "HRMY"
+      },
+      {
+        "drop_own_units": 2.18,
+        "own_move_pct": -4.1,
+        "share_pct": 71.3,
+        "symbol": "HUBB"
+      },
+      {
+        "drop_own_units": 3.79,
+        "own_move_pct": -24.88,
         "share_pct": 93.8,
-        "symbol": "USFD"
+        "symbol": "HUT"
       },
       {
-        "drop_own_units": 2.32,
-        "own_move_pct": -4.35,
-        "share_pct": 93.6,
-        "symbol": "VRTX"
+        "drop_own_units": 2.43,
+        "own_move_pct": -5.94,
+        "share_pct": 78.2,
+        "symbol": "HWM"
       },
       {
-        "drop_own_units": 4.7,
-        "own_move_pct": -10.68,
-        "share_pct": 97.3,
-        "symbol": "VTS"
+        "drop_own_units": 4.01,
+        "own_move_pct": -18.52,
+        "share_pct": 91.8,
+        "symbol": "IESC"
       },
       {
-        "drop_own_units": 2.31,
-        "own_move_pct": -5.46,
-        "share_pct": 94.8,
-        "symbol": "WINA"
+        "drop_own_units": 2.74,
+        "own_move_pct": -3.2,
+        "share_pct": 65.9,
+        "symbol": "IEX"
       },
       {
-        "drop_own_units": 2.15,
-        "own_move_pct": -2.31,
-        "share_pct": 88.5,
-        "symbol": "XLB"
+        "drop_own_units": 2.66,
+        "own_move_pct": -6.54,
+        "share_pct": 79.8,
+        "symbol": "IFF"
+      },
+      {
+        "drop_own_units": 2.05,
+        "own_move_pct": -6.55,
+        "share_pct": 79.9,
+        "symbol": "ILMN"
+      },
+      {
+        "drop_own_units": 2.47,
+        "own_move_pct": -6.8,
+        "share_pct": 80.5,
+        "symbol": "INSW"
+      },
+      {
+        "drop_own_units": 14.8,
+        "own_move_pct": -20.38,
+        "share_pct": 92.5,
+        "symbol": "IOSP"
+      },
+      {
+        "drop_own_units": 2.18,
+        "own_move_pct": -7.44,
+        "share_pct": 81.8,
+        "symbol": "IPGP"
+      },
+      {
+        "drop_own_units": 2.0,
+        "own_move_pct": -12.89,
+        "share_pct": 88.6,
+        "symbol": "IREN"
+      },
+      {
+        "drop_own_units": 2.46,
+        "own_move_pct": -3.19,
+        "share_pct": 65.9,
+        "symbol": "ITA"
       },
       {
         "drop_own_units": 2.08,
-        "own_move_pct": -5.55,
-        "share_pct": 94.9,
-        "symbol": "XPEL"
+        "own_move_pct": -3.64,
+        "share_pct": 68.8,
+        "symbol": "ITT"
+      },
+      {
+        "drop_own_units": 2.24,
+        "own_move_pct": -6.49,
+        "share_pct": 79.7,
+        "symbol": "JBL"
+      },
+      {
+        "drop_own_units": 4.2,
+        "own_move_pct": -7.91,
+        "share_pct": 82.7,
+        "symbol": "JCI"
+      },
+      {
+        "drop_own_units": 2.06,
+        "own_move_pct": -4.0,
+        "share_pct": 70.8,
+        "symbol": "JXN"
+      },
+      {
+        "drop_own_units": 2.07,
+        "own_move_pct": -7.88,
+        "share_pct": 82.7,
+        "symbol": "KALU"
+      },
+      {
+        "drop_own_units": 6.24,
+        "own_move_pct": -10.67,
+        "share_pct": 86.6,
+        "symbol": "KEX"
+      },
+      {
+        "drop_own_units": 3.25,
+        "own_move_pct": -7.96,
+        "share_pct": 82.8,
+        "symbol": "KEYS"
+      },
+      {
+        "drop_own_units": 4.37,
+        "own_move_pct": -13.0,
+        "share_pct": 88.7,
+        "symbol": "KGS"
+      },
+      {
+        "drop_own_units": 3.23,
+        "own_move_pct": -5.76,
+        "share_pct": 77.7,
+        "symbol": "KMI"
+      },
+      {
+        "drop_own_units": 5.46,
+        "own_move_pct": -15.57,
+        "share_pct": 90.4,
+        "symbol": "KMT"
+      },
+      {
+        "drop_own_units": 3.31,
+        "own_move_pct": -7.31,
+        "share_pct": 81.6,
+        "symbol": "KNTK"
+      },
+      {
+        "drop_own_units": 3.5,
+        "own_move_pct": -15.17,
+        "share_pct": 90.2,
+        "symbol": "KRMN"
+      },
+      {
+        "drop_own_units": 3.92,
+        "own_move_pct": -13.92,
+        "share_pct": 89.4,
+        "symbol": "KTOS"
+      },
+      {
+        "drop_own_units": 2.07,
+        "own_move_pct": -11.29,
+        "share_pct": 87.2,
+        "symbol": "LASR"
+      },
+      {
+        "drop_own_units": 3.4,
+        "own_move_pct": -12.86,
+        "share_pct": 88.6,
+        "symbol": "LBRT"
+      },
+      {
+        "drop_own_units": 3.08,
+        "own_move_pct": -8.0,
+        "share_pct": 82.9,
+        "symbol": "LFUS"
+      },
+      {
+        "drop_own_units": 3.9,
+        "own_move_pct": -8.11,
+        "share_pct": 83.1,
+        "symbol": "LHX"
+      },
+      {
+        "drop_own_units": 3.82,
+        "own_move_pct": -8.53,
+        "share_pct": 83.8,
+        "symbol": "LMT"
+      },
+      {
+        "drop_own_units": 3.29,
+        "own_move_pct": -7.81,
+        "share_pct": 82.5,
+        "symbol": "LNG"
+      },
+      {
+        "drop_own_units": 2.18,
+        "own_move_pct": -6.52,
+        "share_pct": 79.8,
+        "symbol": "LPG"
+      },
+      {
+        "drop_own_units": 2.01,
+        "own_move_pct": -8.35,
+        "share_pct": 83.5,
+        "symbol": "LTBR"
+      },
+      {
+        "drop_own_units": 2.04,
+        "own_move_pct": -7.55,
+        "share_pct": 82.0,
+        "symbol": "LUMN"
+      },
+      {
+        "drop_own_units": 2.61,
+        "own_move_pct": -6.39,
+        "share_pct": 79.5,
+        "symbol": "LYB"
+      },
+      {
+        "drop_own_units": 3.27,
+        "own_move_pct": -6.22,
+        "share_pct": 79.0,
+        "symbol": "MATX"
+      },
+      {
+        "drop_own_units": 8.29,
+        "own_move_pct": -15.07,
+        "share_pct": 90.1,
+        "symbol": "MCY"
+      },
+      {
+        "drop_own_units": 2.59,
+        "own_move_pct": -6.88,
+        "share_pct": 80.6,
+        "symbol": "MGY"
+      },
+      {
+        "drop_own_units": 2.32,
+        "own_move_pct": -7.32,
+        "share_pct": 81.6,
+        "symbol": "MIR"
+      },
+      {
+        "drop_own_units": 5.75,
+        "own_move_pct": -23.09,
+        "share_pct": 93.3,
+        "symbol": "MOD"
+      },
+      {
+        "drop_own_units": 4.99,
+        "own_move_pct": -11.5,
+        "share_pct": 87.4,
+        "symbol": "MOG.A"
+      },
+      {
+        "drop_own_units": 3.79,
+        "own_move_pct": -9.76,
+        "share_pct": 85.5,
+        "symbol": "MPC"
+      },
+      {
+        "drop_own_units": 3.54,
+        "own_move_pct": -12.31,
+        "share_pct": 88.2,
+        "symbol": "MRCY"
+      },
+      {
+        "drop_own_units": 2.64,
+        "own_move_pct": -5.18,
+        "share_pct": 75.8,
+        "symbol": "MSM"
+      },
+      {
+        "drop_own_units": 2.89,
+        "own_move_pct": -8.91,
+        "share_pct": 84.4,
+        "symbol": "MTDR"
+      },
+      {
+        "drop_own_units": 4.32,
+        "own_move_pct": -19.31,
+        "share_pct": 92.1,
+        "symbol": "MTRN"
+      },
+      {
+        "drop_own_units": 4.73,
+        "own_move_pct": -10.9,
+        "share_pct": 86.8,
+        "symbol": "MTUS"
+      },
+      {
+        "drop_own_units": 4.64,
+        "own_move_pct": -17.04,
+        "share_pct": 91.2,
+        "symbol": "MTZ"
+      },
+      {
+        "drop_own_units": 3.22,
+        "own_move_pct": -10.57,
+        "share_pct": 86.5,
+        "symbol": "MUR"
+      },
+      {
+        "drop_own_units": 4.09,
+        "own_move_pct": -11.15,
+        "share_pct": 87.1,
+        "symbol": "MYRG"
+      },
+      {
+        "drop_own_units": 2.85,
+        "own_move_pct": -8.34,
+        "share_pct": 83.5,
+        "symbol": "NE"
+      },
+      {
+        "drop_own_units": 2.82,
+        "own_move_pct": -4.93,
+        "share_pct": 74.9,
+        "symbol": "NEU"
+      },
+      {
+        "drop_own_units": 2.73,
+        "own_move_pct": -4.31,
+        "share_pct": 72.3,
+        "symbol": "NFG"
+      },
+      {
+        "drop_own_units": 3.18,
+        "own_move_pct": -6.19,
+        "share_pct": 78.9,
+        "symbol": "NOC"
+      },
+      {
+        "drop_own_units": 3.71,
+        "own_move_pct": -12.5,
+        "share_pct": 88.3,
+        "symbol": "NOG"
+      },
+      {
+        "drop_own_units": 4.84,
+        "own_move_pct": -15.17,
+        "share_pct": 90.2,
+        "symbol": "NRG"
+      },
+      {
+        "drop_own_units": 2.4,
+        "own_move_pct": -4.83,
+        "share_pct": 74.5,
+        "symbol": "NVDA"
+      },
+      {
+        "drop_own_units": 4.75,
+        "own_move_pct": -14.37,
+        "share_pct": 89.7,
+        "symbol": "NVT"
+      },
+      {
+        "drop_own_units": 2.4,
+        "own_move_pct": -1.8,
+        "share_pct": 52.1,
+        "symbol": "OGN"
+      },
+      {
+        "drop_own_units": 2.43,
+        "own_move_pct": -5.28,
+        "share_pct": 76.2,
+        "symbol": "OKE"
+      },
+      {
+        "drop_own_units": 2.08,
+        "own_move_pct": -10.33,
+        "share_pct": 86.2,
+        "symbol": "ONTO"
+      },
+      {
+        "drop_own_units": 3.51,
+        "own_move_pct": -7.1,
+        "share_pct": 81.1,
+        "symbol": "OPLN"
+      },
+      {
+        "drop_own_units": 2.82,
+        "own_move_pct": -7.27,
+        "share_pct": 81.5,
+        "symbol": "OVV"
+      },
+      {
+        "drop_own_units": 2.69,
+        "own_move_pct": -6.78,
+        "share_pct": 80.4,
+        "symbol": "OXY"
+      },
+      {
+        "drop_own_units": 3.2,
+        "own_move_pct": -5.32,
+        "share_pct": 76.3,
+        "symbol": "PDBC"
+      },
+      {
+        "drop_own_units": 3.33,
+        "own_move_pct": -5.33,
+        "share_pct": 76.4,
+        "symbol": "PH"
+      },
+      {
+        "drop_own_units": 2.31,
+        "own_move_pct": -7.05,
+        "share_pct": 81.0,
+        "symbol": "PKE"
+      },
+      {
+        "drop_own_units": 2.58,
+        "own_move_pct": -6.29,
+        "share_pct": 79.2,
+        "symbol": "PLXS"
+      },
+      {
+        "drop_own_units": 2.53,
+        "own_move_pct": -3.67,
+        "share_pct": 68.9,
+        "symbol": "PNW"
+      },
+      {
+        "drop_own_units": 3.85,
+        "own_move_pct": -14.04,
+        "share_pct": 89.5,
+        "symbol": "POWL"
+      },
+      {
+        "drop_own_units": 4.11,
+        "own_move_pct": -4.66,
+        "share_pct": 73.8,
+        "symbol": "PPA"
+      },
+      {
+        "drop_own_units": 3.14,
+        "own_move_pct": -8.19,
+        "share_pct": 83.2,
+        "symbol": "PR"
+      },
+      {
+        "drop_own_units": 2.52,
+        "own_move_pct": -15.63,
+        "share_pct": 90.4,
+        "symbol": "PRIM"
+      },
+      {
+        "drop_own_units": 2.01,
+        "own_move_pct": -5.44,
+        "share_pct": 76.7,
+        "symbol": "PRLB"
+      },
+      {
+        "drop_own_units": 2.63,
+        "own_move_pct": -6.18,
+        "share_pct": 78.9,
+        "symbol": "PSX"
+      },
+      {
+        "drop_own_units": 3.06,
+        "own_move_pct": -11.01,
+        "share_pct": 87.0,
+        "symbol": "PTEN"
+      },
+      {
+        "drop_own_units": 4.67,
+        "own_move_pct": -13.3,
+        "share_pct": 89.0,
+        "symbol": "PWR"
+      },
+      {
+        "drop_own_units": 3.05,
+        "own_move_pct": -5.48,
+        "share_pct": 76.8,
+        "symbol": "RBC"
+      },
+      {
+        "drop_own_units": 2.1,
+        "own_move_pct": -11.97,
+        "share_pct": 87.9,
+        "symbol": "RCAT"
+      },
+      {
+        "drop_own_units": 2.48,
+        "own_move_pct": -6.04,
+        "share_pct": 78.5,
+        "symbol": "REGN"
+      },
+      {
+        "drop_own_units": 3.18,
+        "own_move_pct": -6.96,
+        "share_pct": 80.8,
+        "symbol": "RRR"
+      },
+      {
+        "drop_own_units": 2.35,
+        "own_move_pct": -4.3,
+        "share_pct": 72.2,
+        "symbol": "RTX"
+      },
+      {
+        "drop_own_units": 2.6,
+        "own_move_pct": -5.75,
+        "share_pct": 77.7,
+        "symbol": "SAFE"
+      },
+      {
+        "drop_own_units": 3.68,
+        "own_move_pct": -14.25,
+        "share_pct": 89.6,
+        "symbol": "SANM"
+      },
+      {
+        "drop_own_units": 3.69,
+        "own_move_pct": -18.56,
+        "share_pct": 91.8,
+        "symbol": "SEI"
+      },
+      {
+        "drop_own_units": 2.03,
+        "own_move_pct": -11.24,
+        "share_pct": 87.2,
+        "symbol": "SIMO"
+      },
+      {
+        "drop_own_units": 2.56,
+        "own_move_pct": -1.8,
+        "share_pct": 52.2,
+        "symbol": "SLAB"
+      },
+      {
+        "drop_own_units": 4.58,
+        "own_move_pct": -16.95,
+        "share_pct": 91.1,
+        "symbol": "SM"
+      },
+      {
+        "drop_own_units": 2.62,
+        "own_move_pct": -14.57,
+        "share_pct": 89.8,
+        "symbol": "SMTC"
+      },
+      {
+        "drop_own_units": 2.47,
+        "own_move_pct": -8.2,
+        "share_pct": 83.2,
+        "symbol": "SOLS"
+      },
+      {
+        "drop_own_units": 3.45,
+        "own_move_pct": -7.76,
+        "share_pct": 82.4,
+        "symbol": "SPXC"
+      },
+      {
+        "drop_own_units": 2.85,
+        "own_move_pct": -4.53,
+        "share_pct": 73.3,
+        "symbol": "SRE"
+      },
+      {
+        "drop_own_units": 2.08,
+        "own_move_pct": -4.7,
+        "share_pct": 74.0,
+        "symbol": "STLD"
+      },
+      {
+        "drop_own_units": 4.84,
+        "own_move_pct": -23.11,
+        "share_pct": 93.3,
+        "symbol": "STRL"
+      },
+      {
+        "drop_own_units": 2.17,
+        "own_move_pct": -9.79,
+        "share_pct": 85.6,
+        "symbol": "STX"
+      },
+      {
+        "drop_own_units": 2.58,
+        "own_move_pct": -6.17,
+        "share_pct": 78.9,
+        "symbol": "SU"
+      },
+      {
+        "drop_own_units": 2.02,
+        "own_move_pct": -4.63,
+        "share_pct": 73.7,
+        "symbol": "SXI"
+      },
+      {
+        "drop_own_units": 2.04,
+        "own_move_pct": -6.69,
+        "share_pct": 80.2,
+        "symbol": "TDW"
+      },
+      {
+        "drop_own_units": 5.22,
+        "own_move_pct": -6.42,
+        "share_pct": 79.5,
+        "symbol": "TDY"
+      },
+      {
+        "drop_own_units": 4.59,
+        "own_move_pct": -9.46,
+        "share_pct": 85.1,
+        "symbol": "TKR"
+      },
+      {
+        "drop_own_units": 3.03,
+        "own_move_pct": -10.19,
+        "share_pct": 86.0,
+        "symbol": "TLN"
+      },
+      {
+        "drop_own_units": 5.49,
+        "own_move_pct": -15.01,
+        "share_pct": 90.1,
+        "symbol": "TPL"
+      },
+      {
+        "drop_own_units": 2.66,
+        "own_move_pct": -6.19,
+        "share_pct": 78.9,
+        "symbol": "TRGP"
+      },
+      {
+        "drop_own_units": 9.14,
+        "own_move_pct": -18.97,
+        "share_pct": 92.0,
+        "symbol": "TRMB"
+      },
+      {
+        "drop_own_units": 2.07,
+        "own_move_pct": -3.32,
+        "share_pct": 66.8,
+        "symbol": "TT"
+      },
+      {
+        "drop_own_units": 2.18,
+        "own_move_pct": -11.76,
+        "share_pct": 87.7,
+        "symbol": "TTMI"
+      },
+      {
+        "drop_own_units": 2.14,
+        "own_move_pct": -1.77,
+        "share_pct": 51.7,
+        "symbol": "TXNM"
+      },
+      {
+        "drop_own_units": 6.93,
+        "own_move_pct": -14.59,
+        "share_pct": 89.8,
+        "symbol": "UFCS"
+      },
+      {
+        "drop_own_units": 2.06,
+        "own_move_pct": -3.67,
+        "share_pct": 69.0,
+        "symbol": "UNF"
+      },
+      {
+        "drop_own_units": 12.4,
+        "own_move_pct": -19.49,
+        "share_pct": 92.2,
+        "symbol": "UNM"
+      },
+      {
+        "drop_own_units": 2.83,
+        "own_move_pct": -6.02,
+        "share_pct": 78.5,
+        "symbol": "URI"
+      },
+      {
+        "drop_own_units": 2.84,
+        "own_move_pct": -9.72,
+        "share_pct": 85.5,
+        "symbol": "USO"
+      },
+      {
+        "drop_own_units": 2.21,
+        "own_move_pct": -2.03,
+        "share_pct": 55.1,
+        "symbol": "UUP"
+      },
+      {
+        "drop_own_units": 3.12,
+        "own_move_pct": -9.67,
+        "share_pct": 85.4,
+        "symbol": "VAL"
+      },
+      {
+        "drop_own_units": 2.71,
+        "own_move_pct": -7.41,
+        "share_pct": 81.8,
+        "symbol": "VLO"
+      },
+      {
+        "drop_own_units": 3.48,
+        "own_move_pct": -5.57,
+        "share_pct": 77.1,
+        "symbol": "VMI"
+      },
+      {
+        "drop_own_units": 4.04,
+        "own_move_pct": -8.69,
+        "share_pct": 84.0,
+        "symbol": "VNOM"
+      },
+      {
+        "drop_own_units": 3.57,
+        "own_move_pct": -14.54,
+        "share_pct": 89.8,
+        "symbol": "VRT"
+      },
+      {
+        "drop_own_units": 2.61,
+        "own_move_pct": -12.88,
+        "share_pct": 88.6,
+        "symbol": "VSAT"
+      },
+      {
+        "drop_own_units": 5.47,
+        "own_move_pct": -15.48,
+        "share_pct": 90.4,
+        "symbol": "VST"
+      },
+      {
+        "drop_own_units": 2.68,
+        "own_move_pct": -5.79,
+        "share_pct": 77.8,
+        "symbol": "VTOL"
+      },
+      {
+        "drop_own_units": 2.73,
+        "own_move_pct": -6.7,
+        "share_pct": 80.2,
+        "symbol": "VTS"
+      },
+      {
+        "drop_own_units": 2.03,
+        "own_move_pct": -5.8,
+        "share_pct": 77.8,
+        "symbol": "VVX"
+      },
+      {
+        "drop_own_units": 3.31,
+        "own_move_pct": -11.29,
+        "share_pct": 87.2,
+        "symbol": "VXX"
+      },
+      {
+        "drop_own_units": 4.5,
+        "own_move_pct": -11.57,
+        "share_pct": 87.5,
+        "symbol": "WCC"
+      },
+      {
+        "drop_own_units": 2.07,
+        "own_move_pct": -10.24,
+        "share_pct": 86.1,
+        "symbol": "WGMI"
+      },
+      {
+        "drop_own_units": 2.83,
+        "own_move_pct": -8.04,
+        "share_pct": 82.9,
+        "symbol": "WHD"
+      },
+      {
+        "drop_own_units": 4.08,
+        "own_move_pct": -8.01,
+        "share_pct": 82.9,
+        "symbol": "WMB"
+      },
+      {
+        "drop_own_units": 2.04,
+        "own_move_pct": -3.6,
+        "share_pct": 68.6,
+        "symbol": "WTS"
+      },
+      {
+        "drop_own_units": 3.36,
+        "own_move_pct": -6.39,
+        "share_pct": 79.5,
+        "symbol": "XLE"
+      },
+      {
+        "drop_own_units": 3.33,
+        "own_move_pct": -2.74,
+        "share_pct": 62.4,
+        "symbol": "XLI"
       },
       {
         "drop_own_units": 2.9,
-        "own_move_pct": -9.06,
-        "share_pct": 96.8,
-        "symbol": "ZBRA"
+        "own_move_pct": -6.27,
+        "share_pct": 79.1,
+        "symbol": "XOM"
+      },
+      {
+        "drop_own_units": 3.62,
+        "own_move_pct": -8.04,
+        "share_pct": 83.0,
+        "symbol": "XOP"
       }
     ],
     "reverse": []
