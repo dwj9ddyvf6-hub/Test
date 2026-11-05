@@ -167,22 +167,43 @@ def test_session_quality_record():
     inputs = rec["freshest_inputs"]
     assert 0.0 <= inputs["volume_concentration"] <= 1.0
     assert inputs["realised_vol_z"] is not None
-    assert inputs["spread_z"] is None
+    # Restated 2026-11-05 (TOTALFIX-REPIN-20261105): the live
+    # quote capture reached its fourth live session on
+    # 2026-11-04, the point the record's own absent text names
+    # ("the z follows from the fourth live session"), so the
+    # spread and depth z readings are now supplied. Before the
+    # accrual completed, this pin read spread_z is None.
+    assert inputs["spread_z"] is not None
+    assert inputs["depth_drop_z"] is not None
     # Updated 2026-10-30 by sweep stream 4: the absent text now
     # names the live quote capture accrual instead of the old
     # no store statement, which the capture record superseded.
     assert "live quote" in rec["absent_inputs"]["spread_z"]
     assert "live quote" in rec["absent_inputs"]["depth_drop_z"]
-    assert rec["live_quote_capture"]["sessions_on_record"] >= 1
+    assert rec["live_quote_capture"]["sessions_on_record"] >= 4
 
 
 def test_corrected_band_guard_partial_and_counts():
+    # Test name keeps its cure-era name. Restated 2026-11-05
+    # (TOTALFIX-REPIN-20261105): the guard graduated from
+    # partial to recorded when the live quote capture accrued
+    # its fourth session (see test_session_quality_record), so
+    # the era pins below state the recorded shape. The note
+    # assertions are the regression blocker for
+    # CORRECTED-BAND-GUARD-NOTE-20261105: the published note
+    # must agree with the guard block it rides in (it claimed
+    # the guard was partial, with spread and depth named
+    # missing, beside a recorded guard missing nothing).
     data = load(os.path.join("corrected-band", "data.json"))
     guard = data["live"]["session_quality_guard"]
-    assert guard["state"] == "partial"
-    assert guard["inputs_used"] == ["realised_vol_z",
+    assert guard["state"] == "recorded"
+    assert guard["inputs_used"] == ["depth_drop_z",
+                                    "realised_vol_z",
+                                    "spread_z",
                                     "volume_concentration"]
-    assert guard["missing"] == ["spread_z", "depth_drop_z"]
+    assert guard["missing"] == []
+    assert "guard is partial" not in guard["note"]
+    assert "stay named missing" not in guard["note"]
     assert guard["band_widen_factor"] > 1.0
     live = data["live"]
     assert live["forecasts_recorded"] == 6 * live["issue_days"]
