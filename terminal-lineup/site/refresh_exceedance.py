@@ -285,6 +285,19 @@ def superseded_block(superseded_subjects, parallel_subjects,
     stand voided, the block names the subjects and the note
     says exactly that in plain words; with no voids the
     original wording stands unchanged."""
+    if not superseded_subjects and not parallel_subjects \
+            and not voided_subjects:
+        # A1-06 completion (2026-11-04 night): no earlier run of
+        # this session published anything, so the republication
+        # narrative and its grading promise describe a situation
+        # that does not exist. State the single-publication fact.
+        return {"subjects": superseded_subjects,
+                "parallel_subjects": parallel_subjects,
+                "voided_subjects": voided_subjects,
+                "note": ("This session has a single publication: "
+                         "no earlier run of the session published "
+                         "rows for it, so there are no superseded, "
+                         "parallel or voided rows to name.")}
     note = ("Forecast rows published by an earlier run of this "
             "same session stay on the record and will be graded; "
             "they are not part of the live set above. Subjects "
