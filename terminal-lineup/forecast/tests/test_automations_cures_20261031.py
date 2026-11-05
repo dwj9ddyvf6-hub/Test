@@ -112,7 +112,12 @@ def test_agentdebate_published_and_premium_parity():
     # census MAP-SESSION cure advanced the published debate to
     # the 2026-11-03 session; the parity checks below are the
     # durable part of this blocker.
-    assert d["session"] == "2026-11-03"
+    # Re-pinned again 2026-11-05 (TOTALFIX-REPIN-20261105):
+    # the published debate advanced to the 2026-11-04 session
+    # when the forecast lane completed that night (chainA/B/C
+    # receipts); the parity checks below are re-proven at the
+    # new session by this same test.
+    assert d["session"] == "2026-11-04"
     assert d["tape_freshness"]["state"] == "current"
     so = _data("second-opinion")
     fb = _data("flow-board")
