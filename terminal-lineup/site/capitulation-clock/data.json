@@ -1,5 +1,5 @@
 {
-  "as_of_session": "2026-11-04",
+  "as_of_session": "2026-11-05",
   "calibration_attestation": {
     "attestation": {
       "basis": "no graded forecasts on record yet (403 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
@@ -22,52 +22,48 @@
     "separate_words": "The two halves are graded separately. Either half can fail on its own, and a failed half is retired on its own."
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: direction and probability, over 20 sessions (return leg); 10 sessions (exhaustion leg). It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 200 episodes, either leg's confidence interval includes its null. It counts as proven at 200 episodes.",
-    "summary": "When a stock that is already falling prints its own heaviest falling-day trading, say what tends to happen next: how it does against the market over 20 trading days, and how fast the heavy trading dies down."
-  },
   "feed": "forecast_ledger",
   "gate_words": "The same heavy trading on a rising stock is treated by an older finding as a warning sign, not a buying sign. So this tool only ever fires on a stock that is already in a fall of its own, and never on a stock that is rising.",
   "history": {
-    "distinct_names": 1404,
-    "episodes": 4099,
+    "distinct_names": 1456,
+    "episodes": 4252,
     "exhaustion_half": {
       "claim_met": false,
       "claim_pct": 60,
-      "episodes": 4099,
+      "episodes": 4252,
       "falsified": false,
-      "graded": 3813,
-      "pending": 286,
+      "graded": 3849,
+      "pending": 403,
       "share_ci95_pct": [
-        54.8,
-        57.9
+        54.3,
+        57.5
       ],
-      "share_pct": 56.3,
-      "successes": 2148
+      "share_pct": 55.9,
+      "successes": 2152
     },
     "label": "History, not live forecasts",
-    "raw_triggers": 7003,
+    "raw_triggers": 7287,
     "return_half": {
       "claim_met": false,
       "claim_points": 1.0,
-      "episodes": 4099,
+      "episodes": 4252,
       "falsified": false,
-      "graded": 3610,
+      "graded": 3630,
       "median_ci95_points": [
-        -0.18,
+        -0.17,
         0.53
       ],
       "median_points": 0.18,
-      "pending": 489
+      "pending": 622
     },
-    "span": "2026-01-09 to 2026-11-04",
-    "suppressed_repeats": 2904,
-    "warmup_note": "Judging a day against a stock's own past needs 200 of its past trading days first, so the first judgeable day is a stock's 201st trading day on record (January 9, 2026 for stocks with a full record) and 13 stocks have too little history to be judged at all. On 207 stock-days the falling-day record was still too short (fewer than 30 past falling days), so those days were set aside and counted. Every stock in this history still trades today; stocks that stopped trading are not in it, which can flatter the numbers."
+    "span": "2026-01-09 to 2026-11-05",
+    "suppressed_repeats": 3035,
+    "warmup_note": "Judging a day against a stock's own past needs 200 of its past trading days first, so the first judgeable day is a stock's 201st trading day on record (January 9, 2026 for stocks with a full record) and 13 stocks have too little history to be judged at all. On 208 stock-days the falling-day record was still too short (fewer than 30 past falling days), so those days were set aside and counted. Every stock in this history still trades today; stocks that stopped trading are not in it, which can flatter the numbers."
   },
   "kill_criterion": "After 200 graded episodes, either half retires on its own if its figures could still plausibly be nothing: for the return half, if the middle gain could still be zero; for the exhaustion half, if the share settling down could still be a coin flip.",
   "live": {
-    "episodes_recorded": 201,
-    "forecasts_recorded": 403,
+    "episodes_recorded": 354,
+    "forecasts_recorded": 709,
     "graded_exhaustion_half": 0,
     "graded_return_half": 0,
     "note": "Episodes are written down at the close that triggers them, before the days they describe. The return half grades 20 trading days later and the exhaustion half within 10, so the first grades land only after those days pass.",
@@ -80,583 +76,891 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "no graded forecasts on record yet (403 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 403,
-        "graded_forecasts": 0,
-        "recorded_on": "2026-11-05",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_16",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-04",
-      "keys_present": [
-        "as_of_session",
-        "calibration_attestation",
-        "claims",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "gate_words",
-        "history",
-        "kill_criterion",
-        "live",
-        "price_basis",
-        "provenance",
-        "record_surface",
-        "source",
-        "state",
-        "study_record",
-        "subject_chart",
-        "tension_words",
-        "thin_cell_rule",
-        "today",
-        "tool",
-        "trigger_words"
-      ]
-    },
-    "feed": "forecast_ledger",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_16",
-      "forecasts": 403,
-      "grades": 0,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "Live grades are still building: 403 forecasts are on record and none are graded yet. Grades arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "forecast_ledger",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 4,
-          "path": "/history"
-        },
-        {
-          "items": 0,
-          "path": "/study_record"
-        },
-        {
-          "items": 2,
-          "path": "/history/exhaustion_half"
-        },
-        {
-          "items": 2,
-          "path": "/history/return_half"
-        }
-      ],
-      "total_items_counted": 8
-    },
-    "version": 1
-  },
-  "source": "The daily price and share-volume history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-04, 407 trading days), checked for this page. The longer daily history the parent studies ran on (2016 to 2026) is not on this computer, so the history below runs on the history that exists, which holds only stocks that still trade.",
+  "source": "The daily price and share-volume history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-05, 408 trading days), checked for this page. The longer daily history the parent studies ran on (2016 to 2026) is not on this computer, so the history below runs on the history that exists, which holds only stocks that still trade.",
   "state": "proving",
   "study_record": {
     "f6": "In the long study (2016 to 2026), heavy trading on falling days inside a fall lined up with better days ahead in both stretches of years checked: the link measured +0.040 and +0.020, and the heaviest fifth beat the lightest fifth by 0.95 and 1.28 points.",
     "label": "The earlier studies this tool is built from",
     "n6": "A second study of volume-confirmed falls found the same direction: the link measured +0.016 and +0.015 in its two samples."
   },
-  "subject_chart": {
-    "lead": {
-      "kind": "ranked",
-      "label": "Down volume against its line, per triggered name.",
-      "rows": [
-        {
-          "coverage": "activity 2.47 times its line",
-          "name": "AAON",
-          "score": 2.15
-        },
-        {
-          "coverage": "activity 2.4 times its line",
-          "name": "ADMA",
-          "score": 1.51
-        },
-        {
-          "coverage": "activity 1.22 times its line",
-          "name": "AEIS",
-          "score": 1.09
-        },
-        {
-          "coverage": "activity 1.92 times its line",
-          "name": "AESI",
-          "score": 1.62
-        },
-        {
-          "coverage": "activity 1.38 times its line",
-          "name": "AROC",
-          "score": 1.1
-        },
-        {
-          "coverage": "activity 1.23 times its line",
-          "name": "AVAV",
-          "score": 1.09
-        },
-        {
-          "coverage": "activity 1.28 times its line",
-          "name": "AZZ",
-          "score": 1.03
-        },
-        {
-          "coverage": "activity 1.4 times its line",
-          "name": "BTU",
-          "score": 1.25
-        },
-        {
-          "coverage": "activity 1.33 times its line",
-          "name": "BWXT",
-          "score": 1.2
-        },
-        {
-          "coverage": "activity 1.44 times its line",
-          "name": "CEG",
-          "score": 1.08
-        },
-        {
-          "coverage": "activity 1.27 times its line",
-          "name": "CGNX",
-          "score": 1.04
-        },
-        {
-          "coverage": "activity 1.84 times its line",
-          "name": "CIFR",
-          "score": 1.8
-        }
-      ],
-      "source": "today.triggers[].down_volume_times_line",
-      "title": "Today's capitulation triggers, by falling-day volume"
-    },
-    "record": {
-      "kind": "ranked",
-      "label": "Exhaustion share and median forward return from the history run.",
-      "rows": [
-        {
-          "name": "Exhaustion share, percent",
-          "score": 56.3
-        },
-        {
-          "name": "Median forward return, points",
-          "score": 0.18
-        }
-      ],
-      "source": "history.exhaustion_half.share_pct / return_half.median_points",
-      "title": "The study record, as outcomes"
-    },
-    "version": 1
-  },
   "tension_words": "One earlier study points the other way. It measured a nearby but different thing, trading drying up after a fall rather than trading surging on falling days, and it found the drying-up version predicted worse, not better, days ahead, in both stretches of years it checked. This tool follows the surging version, the one two other studies found pointed up, and prints the disagreement here rather than hiding it. The live record below is what will settle which reading is right for this exact definition.",
   "thin_cell_rule": "Any half with fewer than 30 graded episodes shows its count only, with no middle figure and no share.",
   "today": {
     "gate_blocked": [
-      "AME",
+      "ABNB",
+      "ADSK",
+      "AEE",
+      "ALL",
       "AMRX",
-      "APG",
-      "ARMK",
-      "AVT",
-      "COF",
+      "AMZN",
+      "AOS",
+      "ASB",
+      "BCPC",
+      "BJRI",
+      "BRK.B",
+      "BUG",
+      "CIBR",
+      "CNXN",
+      "CON",
+      "CPRT",
+      "CRSR",
       "CVI",
+      "CWK",
       "CXW",
-      "DD",
-      "DT",
-      "EPAM",
-      "EXPD",
-      "GEF",
-      "IFF",
-      "INSW",
-      "JXN",
-      "LMT",
+      "DIA",
+      "DRH",
+      "ECL",
+      "EMR",
+      "EPAC",
+      "EXPE",
+      "EXR",
+      "FBIN",
+      "FROG",
+      "GH",
+      "GPK",
+      "GWW",
+      "GXO",
+      "HACK",
+      "HASI",
+      "HAYW",
+      "HCI",
+      "HD",
+      "HLI",
+      "HR",
+      "HST",
+      "HTO",
+      "IBB",
+      "ICUI",
+      "ILMN",
+      "ISRG",
+      "J",
+      "JLL",
+      "KIM",
+      "KTB",
+      "LFST",
+      "LIVN",
       "LNC",
-      "OPLN",
+      "LNT",
+      "LOW",
+      "LTC",
+      "MAC",
+      "MAR",
+      "NSC",
+      "OPCH",
+      "OTIS",
+      "PG",
       "PNW",
-      "RVTY",
-      "SO",
-      "SWKS",
-      "SWX",
-      "SYF",
-      "TALO",
+      "PRK",
+      "PRSU",
+      "PTC",
+      "RAL",
+      "RELY",
+      "RL",
+      "ROP",
+      "RVMD",
+      "RXO",
+      "SCHD",
+      "SHW",
+      "SLAB",
+      "SMG",
+      "SYK",
+      "SYNA",
+      "TDC",
+      "TECH",
+      "TMP",
+      "TPC",
+      "TREX",
+      "TWST",
+      "TXN",
+      "TXRH",
+      "UDR",
       "UFCS",
+      "USFD",
+      "V",
+      "VCTR",
+      "VLTO",
+      "VOO",
       "VRNS",
-      "WEX"
+      "VTI",
+      "WTS",
+      "XEL",
+      "XLP",
+      "XLV",
+      "XLY"
     ],
-    "gate_blocked_count": 29,
+    "gate_blocked_count": 100,
     "names_checked": 1832,
     "names_judged": 1799,
     "names_set_aside": 33,
     "notes": "Names that printed both kinds of heavy trading today but are not in a fall of their own are listed as held back by the gate, and no forecast is made about them. Names in a fall that cleared only one of the two heavy-trading lines are counted too.",
-    "one_line_count": 245,
-    "suppressed_repeats_today": 41,
-    "trigger_count": 71,
+    "one_line_count": 175,
+    "suppressed_repeats_today": 131,
+    "trigger_count": 153,
     "triggers": [
       {
-        "activity_times_line": 2.47,
-        "down_volume_times_line": 2.15,
-        "symbol": "AAON"
+        "activity_times_line": 2.2,
+        "down_volume_times_line": 1.94,
+        "symbol": "ACAD"
       },
       {
-        "activity_times_line": 2.4,
-        "down_volume_times_line": 1.51,
-        "symbol": "ADMA"
+        "activity_times_line": 2.21,
+        "down_volume_times_line": 1.72,
+        "symbol": "ADI"
       },
       {
-        "activity_times_line": 1.22,
-        "down_volume_times_line": 1.09,
-        "symbol": "AEIS"
-      },
-      {
-        "activity_times_line": 1.92,
-        "down_volume_times_line": 1.62,
-        "symbol": "AESI"
-      },
-      {
-        "activity_times_line": 1.38,
-        "down_volume_times_line": 1.1,
-        "symbol": "AROC"
-      },
-      {
-        "activity_times_line": 1.23,
-        "down_volume_times_line": 1.09,
-        "symbol": "AVAV"
-      },
-      {
-        "activity_times_line": 1.28,
-        "down_volume_times_line": 1.03,
-        "symbol": "AZZ"
-      },
-      {
-        "activity_times_line": 1.4,
-        "down_volume_times_line": 1.25,
-        "symbol": "BTU"
-      },
-      {
-        "activity_times_line": 1.33,
-        "down_volume_times_line": 1.2,
-        "symbol": "BWXT"
-      },
-      {
-        "activity_times_line": 1.44,
-        "down_volume_times_line": 1.08,
-        "symbol": "CEG"
-      },
-      {
-        "activity_times_line": 1.27,
-        "down_volume_times_line": 1.04,
-        "symbol": "CGNX"
-      },
-      {
-        "activity_times_line": 1.84,
-        "down_volume_times_line": 1.8,
-        "symbol": "CIFR"
-      },
-      {
-        "activity_times_line": 2.14,
-        "down_volume_times_line": 1.85,
-        "symbol": "CMI"
-      },
-      {
-        "activity_times_line": 2.51,
-        "down_volume_times_line": 2.16,
-        "symbol": "CNP"
-      },
-      {
-        "activity_times_line": 1.17,
-        "down_volume_times_line": 1.02,
-        "symbol": "CRC"
-      },
-      {
-        "activity_times_line": 2.75,
-        "down_volume_times_line": 2.23,
-        "symbol": "CVS"
-      },
-      {
-        "activity_times_line": 1.71,
-        "down_volume_times_line": 1.46,
-        "symbol": "DDOG"
-      },
-      {
-        "activity_times_line": 1.21,
-        "down_volume_times_line": 1.07,
-        "symbol": "DOCN"
-      },
-      {
-        "activity_times_line": 3.94,
-        "down_volume_times_line": 3.09,
-        "symbol": "ECG"
-      },
-      {
-        "activity_times_line": 1.37,
-        "down_volume_times_line": 1.13,
-        "symbol": "EME"
-      },
-      {
-        "activity_times_line": 1.59,
-        "down_volume_times_line": 1.22,
-        "symbol": "ETN"
-      },
-      {
-        "activity_times_line": 2.54,
-        "down_volume_times_line": 2.06,
-        "symbol": "FIX"
-      },
-      {
-        "activity_times_line": 1.31,
-        "down_volume_times_line": 1.13,
-        "symbol": "FTAI"
+        "activity_times_line": 1.64,
+        "down_volume_times_line": 1.32,
+        "symbol": "ADNT"
       },
       {
         "activity_times_line": 1.65,
-        "down_volume_times_line": 1.23,
-        "symbol": "GFS"
+        "down_volume_times_line": 1.28,
+        "symbol": "AKAM"
       },
       {
-        "activity_times_line": 1.26,
-        "down_volume_times_line": 1.07,
-        "symbol": "GNRC"
+        "activity_times_line": 1.53,
+        "down_volume_times_line": 1.23,
+        "symbol": "ALAB"
+      },
+      {
+        "activity_times_line": 1.4,
+        "down_volume_times_line": 1.11,
+        "symbol": "AMAT"
+      },
+      {
+        "activity_times_line": 1.3,
+        "down_volume_times_line": 1.14,
+        "symbol": "AME"
+      },
+      {
+        "activity_times_line": 1.33,
+        "down_volume_times_line": 1.02,
+        "symbol": "AMSC"
       },
       {
         "activity_times_line": 2.05,
-        "down_volume_times_line": 1.65,
-        "symbol": "HRMY"
+        "down_volume_times_line": 1.71,
+        "symbol": "ANIP"
       },
       {
-        "activity_times_line": 1.93,
-        "down_volume_times_line": 1.47,
-        "symbol": "HUBS"
+        "activity_times_line": 1.35,
+        "down_volume_times_line": 1.16,
+        "symbol": "AORT"
       },
       {
-        "activity_times_line": 1.47,
+        "activity_times_line": 1.27,
+        "down_volume_times_line": 1.06,
+        "symbol": "AOSL"
+      },
+      {
+        "activity_times_line": 1.6,
+        "down_volume_times_line": 1.41,
+        "symbol": "APG"
+      },
+      {
+        "activity_times_line": 1.09,
+        "down_volume_times_line": 1.05,
+        "symbol": "APLD"
+      },
+      {
+        "activity_times_line": 1.38,
+        "down_volume_times_line": 1.23,
+        "symbol": "ARM"
+      },
+      {
+        "activity_times_line": 1.59,
+        "down_volume_times_line": 1.38,
+        "symbol": "ARMK"
+      },
+      {
+        "activity_times_line": 1.57,
         "down_volume_times_line": 1.35,
-        "symbol": "HUT"
+        "symbol": "ASML"
+      },
+      {
+        "activity_times_line": 1.64,
+        "down_volume_times_line": 1.29,
+        "symbol": "ASTE"
+      },
+      {
+        "activity_times_line": 1.38,
+        "down_volume_times_line": 1.17,
+        "symbol": "ASTS"
+      },
+      {
+        "activity_times_line": 1.95,
+        "down_volume_times_line": 1.53,
+        "symbol": "ASX"
+      },
+      {
+        "activity_times_line": 1.43,
+        "down_volume_times_line": 1.18,
+        "symbol": "AVGO"
+      },
+      {
+        "activity_times_line": 1.25,
+        "down_volume_times_line": 1.15,
+        "symbol": "AVT"
+      },
+      {
+        "activity_times_line": 2.44,
+        "down_volume_times_line": 2.15,
+        "symbol": "AXON"
+      },
+      {
+        "activity_times_line": 1.33,
+        "down_volume_times_line": 1.08,
+        "symbol": "BGC"
+      },
+      {
+        "activity_times_line": 1.51,
+        "down_volume_times_line": 1.2,
+        "symbol": "BHE"
+      },
+      {
+        "activity_times_line": 1.49,
+        "down_volume_times_line": 1.31,
+        "symbol": "BHP"
+      },
+      {
+        "activity_times_line": 1.69,
+        "down_volume_times_line": 1.3,
+        "symbol": "BOTZ"
+      },
+      {
+        "activity_times_line": 2.53,
+        "down_volume_times_line": 2.25,
+        "symbol": "BROS"
+      },
+      {
+        "activity_times_line": 1.4,
+        "down_volume_times_line": 1.1,
+        "symbol": "BRUN"
+      },
+      {
+        "activity_times_line": 1.66,
+        "down_volume_times_line": 1.25,
+        "symbol": "CAVA"
+      },
+      {
+        "activity_times_line": 1.81,
+        "down_volume_times_line": 1.13,
+        "symbol": "CCOI"
+      },
+      {
+        "activity_times_line": 1.26,
+        "down_volume_times_line": 1.03,
+        "symbol": "CELH"
+      },
+      {
+        "activity_times_line": 1.58,
+        "down_volume_times_line": 1.17,
+        "symbol": "CHAT"
+      },
+      {
+        "activity_times_line": 1.61,
+        "down_volume_times_line": 1.1,
+        "symbol": "CIEN"
+      },
+      {
+        "activity_times_line": 1.19,
+        "down_volume_times_line": 1.07,
+        "symbol": "CNR"
+      },
+      {
+        "activity_times_line": 1.5,
+        "down_volume_times_line": 1.23,
+        "symbol": "CORZ"
+      },
+      {
+        "activity_times_line": 1.25,
+        "down_volume_times_line": 1.01,
+        "symbol": "CPNG"
+      },
+      {
+        "activity_times_line": 1.67,
+        "down_volume_times_line": 1.32,
+        "symbol": "CRDO"
+      },
+      {
+        "activity_times_line": 1.31,
+        "down_volume_times_line": 1.03,
+        "symbol": "CRGY"
+      },
+      {
+        "activity_times_line": 1.5,
+        "down_volume_times_line": 1.22,
+        "symbol": "CRUS"
+      },
+      {
+        "activity_times_line": 1.48,
+        "down_volume_times_line": 1.2,
+        "symbol": "CVSA"
+      },
+      {
+        "activity_times_line": 1.6,
+        "down_volume_times_line": 1.13,
+        "symbol": "CW"
       },
       {
         "activity_times_line": 1.41,
+        "down_volume_times_line": 1.28,
+        "symbol": "CWEN"
+      },
+      {
+        "activity_times_line": 2.3,
+        "down_volume_times_line": 1.89,
+        "symbol": "CYTK"
+      },
+      {
+        "activity_times_line": 1.81,
+        "down_volume_times_line": 1.51,
+        "symbol": "DAVE"
+      },
+      {
+        "activity_times_line": 1.85,
+        "down_volume_times_line": 1.38,
+        "symbol": "DFH"
+      },
+      {
+        "activity_times_line": 2.5,
+        "down_volume_times_line": 2.05,
+        "symbol": "DGII"
+      },
+      {
+        "activity_times_line": 1.77,
+        "down_volume_times_line": 1.57,
+        "symbol": "DIOD"
+      },
+      {
+        "activity_times_line": 1.47,
+        "down_volume_times_line": 1.24,
+        "symbol": "DNOW"
+      },
+      {
+        "activity_times_line": 1.23,
+        "down_volume_times_line": 1.08,
+        "symbol": "DTE"
+      },
+      {
+        "activity_times_line": 1.65,
+        "down_volume_times_line": 1.27,
+        "symbol": "EEM"
+      },
+      {
+        "activity_times_line": 2.05,
+        "down_volume_times_line": 1.52,
+        "symbol": "ENTG"
+      },
+      {
+        "activity_times_line": 1.22,
+        "down_volume_times_line": 1.04,
+        "symbol": "EQIX"
+      },
+      {
+        "activity_times_line": 1.67,
+        "down_volume_times_line": 1.23,
+        "symbol": "ERII"
+      },
+      {
+        "activity_times_line": 1.86,
+        "down_volume_times_line": 1.24,
+        "symbol": "EWY"
+      },
+      {
+        "activity_times_line": 1.13,
+        "down_volume_times_line": 1.01,
+        "symbol": "FCX"
+      },
+      {
+        "activity_times_line": 1.1,
+        "down_volume_times_line": 1.02,
+        "symbol": "FLR"
+      },
+      {
+        "activity_times_line": 2.18,
+        "down_volume_times_line": 1.84,
+        "symbol": "FNF"
+      },
+      {
+        "activity_times_line": 2.69,
+        "down_volume_times_line": 1.69,
+        "symbol": "FOUR"
+      },
+      {
+        "activity_times_line": 1.42,
+        "down_volume_times_line": 1.11,
+        "symbol": "FSLY"
+      },
+      {
+        "activity_times_line": 1.39,
+        "down_volume_times_line": 1.17,
+        "symbol": "GEF"
+      },
+      {
+        "activity_times_line": 1.36,
+        "down_volume_times_line": 1.12,
+        "symbol": "GLW"
+      },
+      {
+        "activity_times_line": 1.8,
+        "down_volume_times_line": 1.62,
+        "symbol": "GMED"
+      },
+      {
+        "activity_times_line": 1.59,
+        "down_volume_times_line": 1.34,
+        "symbol": "GOLD"
+      },
+      {
+        "activity_times_line": 1.24,
+        "down_volume_times_line": 1.09,
+        "symbol": "GT"
+      },
+      {
+        "activity_times_line": 1.29,
         "down_volume_times_line": 1.06,
-        "symbol": "HWM"
+        "symbol": "HLIT"
+      },
+      {
+        "activity_times_line": 1.43,
+        "down_volume_times_line": 1.19,
+        "symbol": "IBKR"
+      },
+      {
+        "activity_times_line": 1.1,
+        "down_volume_times_line": 1.04,
+        "symbol": "IBOC"
+      },
+      {
+        "activity_times_line": 1.49,
+        "down_volume_times_line": 1.3,
+        "symbol": "IBP"
+      },
+      {
+        "activity_times_line": 1.45,
+        "down_volume_times_line": 1.17,
+        "symbol": "ICHR"
+      },
+      {
+        "activity_times_line": 2.27,
+        "down_volume_times_line": 2.08,
+        "symbol": "INVA"
+      },
+      {
+        "activity_times_line": 1.61,
+        "down_volume_times_line": 1.38,
+        "symbol": "IRM"
+      },
+      {
+        "activity_times_line": 2.62,
+        "down_volume_times_line": 2.08,
+        "symbol": "ITA"
+      },
+      {
+        "activity_times_line": 1.7,
+        "down_volume_times_line": 1.53,
+        "symbol": "ITT"
+      },
+      {
+        "activity_times_line": 1.4,
+        "down_volume_times_line": 1.09,
+        "symbol": "JBL"
+      },
+      {
+        "activity_times_line": 1.34,
+        "down_volume_times_line": 1.02,
+        "symbol": "KEX"
+      },
+      {
+        "activity_times_line": 1.72,
+        "down_volume_times_line": 1.54,
+        "symbol": "KLIC"
+      },
+      {
+        "activity_times_line": 1.44,
+        "down_volume_times_line": 1.15,
+        "symbol": "LMAT"
+      },
+      {
+        "activity_times_line": 2.67,
+        "down_volume_times_line": 2.41,
+        "symbol": "LOPE"
+      },
+      {
+        "activity_times_line": 1.38,
+        "down_volume_times_line": 1.24,
+        "symbol": "LZ"
+      },
+      {
+        "activity_times_line": 1.27,
+        "down_volume_times_line": 1.0,
+        "symbol": "MAA"
+      },
+      {
+        "activity_times_line": 1.28,
+        "down_volume_times_line": 1.09,
+        "symbol": "MCD"
+      },
+      {
+        "activity_times_line": 1.55,
+        "down_volume_times_line": 1.37,
+        "symbol": "MDU"
+      },
+      {
+        "activity_times_line": 2.13,
+        "down_volume_times_line": 1.68,
+        "symbol": "MDY"
+      },
+      {
+        "activity_times_line": 1.7,
+        "down_volume_times_line": 1.36,
+        "symbol": "MKSI"
+      },
+      {
+        "activity_times_line": 1.32,
+        "down_volume_times_line": 1.07,
+        "symbol": "MRCY"
+      },
+      {
+        "activity_times_line": 1.22,
+        "down_volume_times_line": 1.01,
+        "symbol": "MS"
+      },
+      {
+        "activity_times_line": 1.4,
+        "down_volume_times_line": 1.22,
+        "symbol": "MU"
       },
       {
         "activity_times_line": 1.75,
         "down_volume_times_line": 1.44,
-        "symbol": "IESC"
+        "symbol": "MXL"
       },
       {
-        "activity_times_line": 1.58,
-        "down_volume_times_line": 1.32,
-        "symbol": "IOSP"
+        "activity_times_line": 1.67,
+        "down_volume_times_line": 1.4,
+        "symbol": "MYRG"
       },
       {
-        "activity_times_line": 1.32,
-        "down_volume_times_line": 1.1,
-        "symbol": "IREN"
+        "activity_times_line": 1.77,
+        "down_volume_times_line": 1.35,
+        "symbol": "NBIS"
+      },
+      {
+        "activity_times_line": 1.51,
+        "down_volume_times_line": 1.17,
+        "symbol": "NET"
+      },
+      {
+        "activity_times_line": 2.27,
+        "down_volume_times_line": 2.1,
+        "symbol": "NGVT"
       },
       {
         "activity_times_line": 1.26,
         "down_volume_times_line": 1.15,
-        "symbol": "JCI"
+        "symbol": "NLR"
       },
       {
-        "activity_times_line": 1.65,
-        "down_volume_times_line": 1.02,
-        "symbol": "KGS"
+        "activity_times_line": 1.16,
+        "down_volume_times_line": 1.04,
+        "symbol": "NOG"
       },
       {
-        "activity_times_line": 1.18,
-        "down_volume_times_line": 1.03,
-        "symbol": "KMI"
+        "activity_times_line": 1.64,
+        "down_volume_times_line": 1.49,
+        "symbol": "NPO"
       },
       {
-        "activity_times_line": 1.74,
-        "down_volume_times_line": 1.59,
-        "symbol": "KRMN"
-      },
-      {
-        "activity_times_line": 1.37,
-        "down_volume_times_line": 1.18,
-        "symbol": "KTOS"
-      },
-      {
-        "activity_times_line": 2.06,
-        "down_volume_times_line": 1.68,
-        "symbol": "MCY"
-      },
-      {
-        "activity_times_line": 5.21,
-        "down_volume_times_line": 3.91,
-        "symbol": "MOD"
-      },
-      {
-        "activity_times_line": 1.3,
-        "down_volume_times_line": 1.02,
-        "symbol": "MTDR"
-      },
-      {
-        "activity_times_line": 2.05,
-        "down_volume_times_line": 1.87,
-        "symbol": "MTRN"
-      },
-      {
-        "activity_times_line": 2.48,
-        "down_volume_times_line": 1.82,
-        "symbol": "MTUS"
-      },
-      {
-        "activity_times_line": 1.23,
-        "down_volume_times_line": 1.08,
-        "symbol": "NEU"
-      },
-      {
-        "activity_times_line": 2.21,
-        "down_volume_times_line": 1.78,
-        "symbol": "NFG"
+        "activity_times_line": 1.35,
+        "down_volume_times_line": 1.21,
+        "symbol": "NTCT"
       },
       {
         "activity_times_line": 1.33,
-        "down_volume_times_line": 1.04,
-        "symbol": "NOC"
+        "down_volume_times_line": 1.1,
+        "symbol": "NVST"
       },
       {
-        "activity_times_line": 2.7,
-        "down_volume_times_line": 2.26,
-        "symbol": "NRG"
+        "activity_times_line": 1.59,
+        "down_volume_times_line": 1.23,
+        "symbol": "NWSA"
       },
       {
-        "activity_times_line": 1.74,
-        "down_volume_times_line": 1.31,
-        "symbol": "PRIM"
+        "activity_times_line": 1.3,
+        "down_volume_times_line": 1.16,
+        "symbol": "NXT"
       },
       {
-        "activity_times_line": 2.01,
-        "down_volume_times_line": 1.63,
-        "symbol": "PWR"
+        "activity_times_line": 1.68,
+        "down_volume_times_line": 1.53,
+        "symbol": "ON"
       },
       {
-        "activity_times_line": 1.4,
-        "down_volume_times_line": 1.09,
-        "symbol": "RRR"
+        "activity_times_line": 1.25,
+        "down_volume_times_line": 1.16,
+        "symbol": "ONTO"
       },
       {
-        "activity_times_line": 1.29,
-        "down_volume_times_line": 1.14,
-        "symbol": "RRX"
+        "activity_times_line": 2.37,
+        "down_volume_times_line": 1.95,
+        "symbol": "PBH"
       },
       {
-        "activity_times_line": 1.23,
-        "down_volume_times_line": 1.2,
-        "symbol": "SEDG"
+        "activity_times_line": 1.11,
+        "down_volume_times_line": 1.05,
+        "symbol": "PEG"
       },
       {
-        "activity_times_line": 1.95,
-        "down_volume_times_line": 1.58,
-        "symbol": "SEI"
+        "activity_times_line": 1.61,
+        "down_volume_times_line": 1.3,
+        "symbol": "PENG"
       },
       {
-        "activity_times_line": 1.45,
-        "down_volume_times_line": 1.45,
-        "symbol": "SMCI"
+        "activity_times_line": 1.57,
+        "down_volume_times_line": 1.16,
+        "symbol": "PFF"
       },
       {
-        "activity_times_line": 1.36,
-        "down_volume_times_line": 1.11,
-        "symbol": "SMTC"
-      },
-      {
-        "activity_times_line": 2.08,
-        "down_volume_times_line": 1.74,
-        "symbol": "SRE"
-      },
-      {
-        "activity_times_line": 3.2,
-        "down_volume_times_line": 2.67,
-        "symbol": "STRL"
-      },
-      {
-        "activity_times_line": 1.17,
-        "down_volume_times_line": 1.03,
-        "symbol": "TE"
-      },
-      {
-        "activity_times_line": 2.15,
-        "down_volume_times_line": 1.93,
-        "symbol": "TKR"
-      },
-      {
-        "activity_times_line": 1.52,
+        "activity_times_line": 1.67,
         "down_volume_times_line": 1.4,
-        "symbol": "TLN"
-      },
-      {
-        "activity_times_line": 1.92,
-        "down_volume_times_line": 1.44,
-        "symbol": "TPL"
-      },
-      {
-        "activity_times_line": 2.21,
-        "down_volume_times_line": 1.9,
-        "symbol": "TRMB"
+        "symbol": "PLUS"
       },
       {
         "activity_times_line": 1.47,
-        "down_volume_times_line": 1.09,
-        "symbol": "TSEM"
+        "down_volume_times_line": 1.21,
+        "symbol": "POWL"
       },
       {
-        "activity_times_line": 1.15,
+        "activity_times_line": 1.6,
+        "down_volume_times_line": 1.3,
+        "symbol": "PPA"
+      },
+      {
+        "activity_times_line": 1.45,
         "down_volume_times_line": 1.13,
-        "symbol": "UMAC"
+        "symbol": "PRCT"
       },
       {
-        "activity_times_line": 4.73,
-        "down_volume_times_line": 3.17,
-        "symbol": "UNM"
+        "activity_times_line": 1.51,
+        "down_volume_times_line": 1.33,
+        "symbol": "PRDO"
+      },
+      {
+        "activity_times_line": 1.36,
+        "down_volume_times_line": 1.23,
+        "symbol": "PZZA"
+      },
+      {
+        "activity_times_line": 1.84,
+        "down_volume_times_line": 1.65,
+        "symbol": "QCOM"
+      },
+      {
+        "activity_times_line": 1.61,
+        "down_volume_times_line": 1.31,
+        "symbol": "QDEL"
       },
       {
         "activity_times_line": 1.79,
         "down_volume_times_line": 1.41,
-        "symbol": "VNOM"
+        "symbol": "QQQ"
       },
       {
-        "activity_times_line": 1.26,
+        "activity_times_line": 1.73,
+        "down_volume_times_line": 1.3,
+        "symbol": "QTUM"
+      },
+      {
+        "activity_times_line": 1.1,
         "down_volume_times_line": 1.06,
-        "symbol": "VPG"
+        "symbol": "RKLB"
       },
       {
-        "activity_times_line": 1.71,
-        "down_volume_times_line": 1.46,
-        "symbol": "VTOL"
+        "activity_times_line": 2.72,
+        "down_volume_times_line": 2.28,
+        "symbol": "ROAD"
       },
       {
-        "activity_times_line": 1.24,
-        "down_volume_times_line": 1.24,
-        "symbol": "VXX"
+        "activity_times_line": 4.75,
+        "down_volume_times_line": 3.49,
+        "symbol": "ROCK"
       },
       {
-        "activity_times_line": 1.98,
-        "down_volume_times_line": 1.6,
-        "symbol": "WMB"
+        "activity_times_line": 2.09,
+        "down_volume_times_line": 1.81,
+        "symbol": "ROK"
       },
       {
-        "activity_times_line": 2.03,
-        "down_volume_times_line": 1.7,
-        "symbol": "WRBY"
+        "activity_times_line": 1.58,
+        "down_volume_times_line": 1.16,
+        "symbol": "SANM"
+      },
+      {
+        "activity_times_line": 2.19,
+        "down_volume_times_line": 1.5,
+        "symbol": "SCSC"
+      },
+      {
+        "activity_times_line": 2.33,
+        "down_volume_times_line": 2.03,
+        "symbol": "SHOO"
+      },
+      {
+        "activity_times_line": 2.15,
+        "down_volume_times_line": 1.51,
+        "symbol": "SMH"
+      },
+      {
+        "activity_times_line": 1.47,
+        "down_volume_times_line": 1.3,
+        "symbol": "SNDK"
+      },
+      {
+        "activity_times_line": 1.63,
+        "down_volume_times_line": 1.36,
+        "symbol": "STM"
+      },
+      {
+        "activity_times_line": 2.53,
+        "down_volume_times_line": 2.0,
+        "symbol": "STRA"
+      },
+      {
+        "activity_times_line": 1.48,
+        "down_volume_times_line": 1.12,
+        "symbol": "STX"
+      },
+      {
+        "activity_times_line": 2.34,
+        "down_volume_times_line": 1.9,
+        "symbol": "TAN"
+      },
+      {
+        "activity_times_line": 1.15,
+        "down_volume_times_line": 1.01,
+        "symbol": "TAP"
+      },
+      {
+        "activity_times_line": 2.13,
+        "down_volume_times_line": 1.68,
+        "symbol": "TDS"
+      },
+      {
+        "activity_times_line": 1.58,
+        "down_volume_times_line": 1.34,
+        "symbol": "TDY"
+      },
+      {
+        "activity_times_line": 1.59,
+        "down_volume_times_line": 1.25,
+        "symbol": "TKO"
+      },
+      {
+        "activity_times_line": 4.38,
+        "down_volume_times_line": 4.14,
+        "symbol": "TRIP"
+      },
+      {
+        "activity_times_line": 2.3,
+        "down_volume_times_line": 1.84,
+        "symbol": "TSM"
+      },
+      {
+        "activity_times_line": 1.67,
+        "down_volume_times_line": 1.21,
+        "symbol": "UCTT"
+      },
+      {
+        "activity_times_line": 1.46,
+        "down_volume_times_line": 1.4,
+        "symbol": "UEC"
+      },
+      {
+        "activity_times_line": 2.4,
+        "down_volume_times_line": 1.71,
+        "symbol": "UNIT"
+      },
+      {
+        "activity_times_line": 1.29,
+        "down_volume_times_line": 1.14,
+        "symbol": "URA"
+      },
+      {
+        "activity_times_line": 8.9,
+        "down_volume_times_line": 8.22,
+        "symbol": "VCYT"
+      },
+      {
+        "activity_times_line": 1.27,
+        "down_volume_times_line": 1.01,
+        "symbol": "VECO"
+      },
+      {
+        "activity_times_line": 2.54,
+        "down_volume_times_line": 1.73,
+        "symbol": "VGT"
+      },
+      {
+        "activity_times_line": 1.34,
+        "down_volume_times_line": 1.17,
+        "symbol": "VICR"
+      },
+      {
+        "activity_times_line": 1.77,
+        "down_volume_times_line": 1.27,
+        "symbol": "VRT"
+      },
+      {
+        "activity_times_line": 1.43,
+        "down_volume_times_line": 1.09,
+        "symbol": "VSH"
+      },
+      {
+        "activity_times_line": 1.36,
+        "down_volume_times_line": 1.21,
+        "symbol": "WDC"
       },
       {
         "activity_times_line": 1.3,
-        "down_volume_times_line": 1.15,
-        "symbol": "WULF"
+        "down_volume_times_line": 1.04,
+        "symbol": "WGMI"
+      },
+      {
+        "activity_times_line": 2.39,
+        "down_volume_times_line": 2.17,
+        "symbol": "WMS"
+      },
+      {
+        "activity_times_line": 1.37,
+        "down_volume_times_line": 1.07,
+        "symbol": "WYFI"
+      },
+      {
+        "activity_times_line": 1.27,
+        "down_volume_times_line": 1.05,
+        "symbol": "WYNN"
+      },
+      {
+        "activity_times_line": 1.52,
+        "down_volume_times_line": 1.05,
+        "symbol": "XLK"
+      },
+      {
+        "activity_times_line": 1.49,
+        "down_volume_times_line": 1.18,
+        "symbol": "XLU"
+      },
+      {
+        "activity_times_line": 1.3,
+        "down_volume_times_line": 1.04,
+        "symbol": "XRAY"
+      },
+      {
+        "activity_times_line": 1.94,
+        "down_volume_times_line": 1.64,
+        "symbol": "YELP"
       }
     ]
   },
