@@ -8,6 +8,10 @@
     "passed_every_check_published": 30
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its current reading is from 2026-11-05. On its live record it counts 1838 names checked, 50 names published, 1833 names scored, 5 not enough data. No study record is on file for this page; what it shows is its current reading, updated on its normal schedule.",
+    "summary": "Show the day's highest-scoring stocks, mark the ones that passed every check, and say exactly which checks each name passed and which one it missed, so you can see what is actually worth a closer look and why."
+  },
   "feed": "forecast_ledger",
   "groups": [
     {
@@ -2929,7 +2933,131 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "published_at_utc": "2026-11-05T22:12:59.438076+00:00",
+  "record_surface": {
+    "calibration_record": null,
+    "current_reading": {
+      "as_of": "2026-11-05",
+      "keys_present": [
+        "counts",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "groups",
+        "price_basis",
+        "provenance",
+        "published_at_utc",
+        "record_surface",
+        "session",
+        "source",
+        "subject_chart",
+        "tool"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "counts": {
+        "names_checked": 1838,
+        "names_published": 50,
+        "names_scored": 1833,
+        "not_enough_data": 5,
+        "passed_every_check_all": 107,
+        "passed_every_check_published": 30
+      },
+      "source": "this page's own counts"
+    },
+    "missing": {
+      "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
   "session": "2026-11-05",
   "source": "Daily price and trading history for each stock, plus public filings on the positions big investors report, combined into the same eight checks for every name",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Each name's board score, biggest first.",
+      "rows": [
+        {
+          "name": "KDP",
+          "score": 74.8
+        },
+        {
+          "name": "WBD",
+          "score": 73.6
+        },
+        {
+          "name": "PGNY",
+          "score": 72.3
+        },
+        {
+          "name": "XLP",
+          "score": 72.3
+        },
+        {
+          "name": "VCEL",
+          "score": 72.2
+        },
+        {
+          "name": "BDX",
+          "score": 72.1
+        },
+        {
+          "name": "EXEL",
+          "score": 71.8
+        },
+        {
+          "name": "ED",
+          "score": 71.6
+        },
+        {
+          "name": "MHK",
+          "score": 71.6
+        },
+        {
+          "name": "ADUS",
+          "score": 71.4
+        },
+        {
+          "name": "MORN",
+          "score": 71.1
+        },
+        {
+          "name": "OGE",
+          "score": 70.9
+        }
+      ],
+      "source": "groups[0].names[].score",
+      "title": "Today's board, scored"
+    },
+    "record": {
+      "buckets": [
+        {
+          "label": "60-69",
+          "value": 19
+        },
+        {
+          "label": "70-79",
+          "value": 31
+        }
+      ],
+      "kind": "distribution",
+      "label": "How the scored names spread across score bands.",
+      "source": "groups[0].names[].score distribution",
+      "title": "Board scores, spread out"
+    },
+    "version": 1
+  },
   "tool": "Qualified Board"
 }
