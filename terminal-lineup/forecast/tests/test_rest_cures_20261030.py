@@ -56,7 +56,15 @@ def _gate():
 def test_calibrationleague_engine12_binds_to_its_own_page():
     src = _src("refresh_calibrationleague.py")
     assert 'live_counts["engine_12"] % 3' not in src
-    assert '"engine_12", "engine_15"' in src
+    # engine_12 still binds strictly to its own page in the main
+    # loop. engine_15 split out of the old six-engine tuple on
+    # 2026-11-07 (CALIBRATION-GENERATION-20261107): it binds at
+    # its page's generation via expected_page_count, because its
+    # producer appends mid-run and writes its page last, so
+    # strict equality froze a banked gap across four runs.
+    assert '"engine_12")' in src
+    assert 'live_counts["engine_15"] != _expected15' in src
+    assert "expected_page_count" in src
     assert 'd["live"]["distribution_forecasts_recorded"]' in src
     assert 'd["live"]["not_recorded_rows"]' in src
 
