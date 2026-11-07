@@ -361,7 +361,8 @@ def record_forward_records(ledger, *, results, issued_ts,
     return created, duplicates
 
 
-def grade_forward_record(ledger, forecast_row, realised_net_return):
+def grade_forward_record(ledger, forecast_row, realised_net_return,
+                         stream_state=None):
     """Grade one forward record from the realised net forward
     return over its frozen horizon. A SUPPORTED name is checked
     on whether its forward return actually cleared the friction
@@ -374,7 +375,8 @@ def grade_forward_record(ledger, forecast_row, realised_net_return):
     frozen = {f: forecast_row[f] for f in (
         "label_context_fingerprint", "label_transform_id",
         "label_transform_hash") if forecast_row.get(f) is not None}
-    return ledger.append_grade(forecast_row=forecast_row, **frozen, grade={
+    return ledger.append_grade(forecast_row=forecast_row, **frozen,
+                               stream_state=stream_state, grade={
         "rule_id": "abs_error",
         "realised_net_return": realised_net_return,
         "proof_state_at_issue": (forecast_row.get("value") or {})
