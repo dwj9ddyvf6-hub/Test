@@ -4,7 +4,7 @@ Start here. This file is the map of the whole repository for a reader (human or 
 
 Total files indexed: 8266
 
-Indexed commit: `1c055def167496b5c315718aa339e521dbabebd1`. Generated at: 2026-11-07T02:08:54Z. Total size of indexed files (self entries excluded, their sizes are null): 1103139317 bytes.
+Indexed commit: `408dd467f74a2cf8923aadfcd17aab8ea56f1d24`. Generated at: 2026-11-07T02:12:53Z. Total size of indexed files (self entries excluded, their sizes are null): 1103139317 bytes.
 
 ## What this repository is
 
@@ -107,7 +107,7 @@ A public library of trading strategies and the desk software around them: strate
 
 ## Coverage statement
 
-Every file present at the indexed commit (`1c055def167496b5c315718aa339e521dbabebd1`) is listed in INDEX.json: 8266 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
+Every file present at the indexed commit (`408dd467f74a2cf8923aadfcd17aab8ea56f1d24`) is listed in INDEX.json: 8266 entries in total, covering every blob in the tree at that commit. The three index files themselves (INDEX.md, INDEX.json, tools/build_repo_index.py) are the only entries whose sha and size are null; they are marked "self": true because a file cannot contain its own hash. All other entries carry the exact git blob sha and size from the tree. Nothing at the indexed commit is omitted, and no path is listed that was not in the tree, apart from the self entries for the two index files created by the generation itself.
 
 ## How to regenerate
 
