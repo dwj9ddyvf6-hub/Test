@@ -538,13 +538,34 @@ def self_test(live_ledger_hash_before):
 # session's close for that name is above the call's close, which
 # is the Record's own rose / did-not-rise grade. Only sessions
 # the Record itself publishes as graded at 1 day enter, and the
-# built series is cross-checked against Horizon Grades'
-# published qualified aggregates (graded count and rose count)
+# built series is cross-checked against the Record's own
+# strongest 1-day aggregates (graded count and rose count)
 # before anything is published: a disagreement fails closed.
 # ------------------------------------------------------------------
 def board_gate_series(record, horizon, panel):
-    hz1 = {h["days"]: h for h in horizon["horizons"]}[1]
-    qualified = hz1["qualified"]
+    # Cure 2026-11-07 (INREGIME-RECORD-BINDING-20261107): the gate
+    # used to bind the built series to Horizon Grades' published
+    # qualified aggregates. Horizon Grades computes nothing: it
+    # republishes the Record's strongest block, and no step in
+    # the daily run rebuilds it, so its page (stamped 2026-11-05)
+    # froze two Record generations behind the Record it copies
+    # (generated 2026-11-06). The gate therefore compared this
+    # builder's live recomputation against a frozen snapshot and
+    # failed identically on every run (built 141 graded / 65 rose
+    # against the frozen 94 / 50) while the current Record agreed
+    # with the builder to the call. The gate now binds to the
+    # source the republication copies, the current Record's own
+    # strongest 1-day block, which is the same generation as the
+    # groups this builder iterates. The horizon argument is kept
+    # for the caller's other register checks; it no longer gates
+    # this series. Horizon Grades' own staleness stays visible
+    # to the freshness census as a separate row.
+    qualified = record["board"]["strongest"]["horizons"]["1d"]
+    if qualified.get("state") != "graded" \
+            or "graded_count" not in qualified \
+            or "rose_count" not in qualified:
+        fail("the Record's strongest 1-day block is not in a "
+             "graded state; cannot bind the Board gate series")
     closes = {sym: {r[0]: float(r[4]) for r in rows}
               for sym, rows in panel.items()}
     if "SPY" not in closes:
@@ -552,6 +573,8 @@ def board_gate_series(record, horizon, panel):
              "gate series")
     dates = sorted(closes["SPY"])
     series = []
+    candidates = 0
+    dropped = 0
     for group in record["board"]["groups"]:
         grade1d = (group.get("grades") or {}).get("1d") or {}
         if grade1d.get("state") != "graded":
@@ -564,8 +587,10 @@ def board_gate_series(record, horizon, panel):
         for call in group["calls"]:
             if not call.get("passed_every_check"):
                 continue
+            candidates += 1
             sym = call["symbol"]
             if sym not in closes or grade_date not in closes[sym]:
+                dropped += 1
                 continue
             hit = 1 if closes[sym][grade_date] > float(call["close"]) \
                 else 0
@@ -576,10 +601,14 @@ def board_gate_series(record, horizon, panel):
                           else float(call["score"]))})
     if len(series) != qualified["graded_count"] \
             or sum(c["hit"] for c in series) != qualified["rose_count"]:
-        fail(f"Board gate series builder disagrees with Horizon "
-             f"Grades: built {len(series)} graded calls with "
-             f"{sum(c['hit'] for c in series)} rose, Horizon "
-             f"publishes {qualified['graded_count']} graded with "
+        fail(f"Board gate series builder disagrees with the "
+             f"Record's strongest block (the source Horizon Grades "
+             f"republishes): built {len(series)} graded calls with "
+             f"{sum(c['hit'] for c in series)} rose, from "
+             f"{candidates} passed calls in graded groups "
+             f"({dropped} dropped for a missing panel close on "
+             f"the grade date); the Record publishes "
+             f"{qualified['graded_count']} graded with "
              f"{qualified['rose_count']} rose")
     return series, dates
 
