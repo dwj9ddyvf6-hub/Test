@@ -1,11 +1,11 @@
 {
-  "as_of": "2026-11-04",
+  "as_of": "2026-11-06",
   "calibration_attestation": {
     "attestation": {
-      "basis": "131 graded forecasts of 983 recorded on the ledger (mean scores: brier 0.3256, log_loss 0.9259); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "basis": "983 graded forecasts of 983 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
       "forecasts_recorded": 983,
-      "graded_forecasts": 131,
-      "recorded_on": "2026-11-05",
+      "graded_forecasts": 983,
+      "recorded_on": "2026-11-06",
       "status": "not_attested"
     },
     "engine_id": "engine_05",
@@ -17,17 +17,13 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: probability, over to weekly expiry, graded at expiry close. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 26 weekly expiries, its Brier is no better than the uncorrected IV POP's. It counts as proven at 26 weekly expiries.",
-    "summary": "For SPY and QQQ, attach an honest chance of finishing above each strike to this week's expiry, and grade every strike when the week ends."
-  },
   "feed": "tastytrade_chain_snapshot",
   "kill_criterion": "This tool is retired if, after 26 weekly expiries have been graded, its score for how close its chances were is no better than the score of the market's own uncorrected chances recorded beside them.",
   "live": {
-    "expiries_graded": 1,
+    "expiries_graded": 2,
     "proving_target_expiries": 26,
-    "records_graded": 131,
-    "records_written": 983,
+    "records_graded": 983,
+    "records_written": 1303,
     "state_note": "Surfaces are being recorded from stored chain snapshots and graded at each weekly expiry close."
   },
   "method": {
@@ -52,927 +48,1206 @@
     "summary": "Each chance is half of a movement-based calculation (the last 30 trading days' realised movement, no drift assumed) and half of the index's own past finishes over the same number of days. The comparison chance beside it is the market's own priced volatility put through the same calculation with no correction."
   },
   "price_basis": "snapshot",
-  "price_history_as_of": "2026-11-04",
+  "price_history_as_of": "2026-11-06",
   "provenance": {
     "execution_pricing": false,
     "feed": "tastytrade_chain_snapshot",
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "131 graded forecasts of 983 recorded on the ledger (mean scores: brier 0.3256, log_loss 0.9259); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 983,
-        "graded_forecasts": 131,
-        "recorded_on": "2026-11-05",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_05",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-04",
-      "keys_present": [
-        "as_of",
-        "calibration_attestation",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "kill_criterion",
-        "live",
-        "method",
-        "price_basis",
-        "price_history_as_of",
-        "provenance",
-        "record_surface",
-        "scope_line",
-        "self_test",
-        "source",
-        "state",
-        "subject_chart",
-        "surfaces",
-        "thin_cell_rule",
-        "tool",
-        "waiting",
-        "what_exists"
-      ]
-    },
-    "feed": "tastytrade_chain_snapshot",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_05",
-      "forecasts": 983,
-      "grades": 549,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "More live grades are still to come: 983 forecasts are on record and 549 are graded so far. The rest arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "tastytrade_chain_snapshot",
-      "price_basis": "snapshot",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 2,
-          "path": "/method"
-        }
-      ],
-      "total_items_counted": 2
-    },
-    "version": 1
-  },
   "scope_line": "A win rate is not an edge. This page states the chance of finishing above a strike; it says nothing about how much a trade would win or lose, or whether any trade pays.",
   "self_test": {
     "oracle_cases": 8,
     "oracle_max_difference": 6e-08,
     "state": "passed",
-    "synthetic_records_written_to_a_throwaway_copy": 20,
-    "synthetic_strikes": 10
+    "synthetic_records_written_to_a_throwaway_copy": 28,
+    "synthetic_strikes": 14
   },
-  "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-11-04).",
+  "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-11-06).",
   "state": "proving",
-  "subject_chart": {
-    "lead": {
-      "kind": "curve",
-      "label": "Honest chance percent by strike.",
-      "points": [
-        {
-          "x": "754.0",
-          "y": 96.8
-        },
-        {
-          "x": "755.0",
-          "y": 95.5
-        },
-        {
-          "x": "756.0",
-          "y": 94.5
-        },
-        {
-          "x": "757.0",
-          "y": 93.2
-        },
-        {
-          "x": "758.0",
-          "y": 91.3
-        },
-        {
-          "x": "759.0",
-          "y": 88.9
-        },
-        {
-          "x": "760.0",
-          "y": 86.8
-        },
-        {
-          "x": "761.0",
-          "y": 83.5
-        },
-        {
-          "x": "762.0",
-          "y": 79.9
-        },
-        {
-          "x": "763.0",
-          "y": 74.5
-        },
-        {
-          "x": "764.0",
-          "y": 69.4
-        },
-        {
-          "x": "765.0",
-          "y": 62.8
-        },
-        {
-          "x": "766.0",
-          "y": 56.3
-        },
-        {
-          "x": "767.0",
-          "y": 48.8
-        },
-        {
-          "x": "768.0",
-          "y": 43.1
-        },
-        {
-          "x": "769.0",
-          "y": 36.9
-        },
-        {
-          "x": "770.0",
-          "y": 30.6
-        },
-        {
-          "x": "771.0",
-          "y": 24.5
-        },
-        {
-          "x": "772.0",
-          "y": 19.0
-        },
-        {
-          "x": "773.0",
-          "y": 14.2
-        },
-        {
-          "x": "774.0",
-          "y": 11.5
-        },
-        {
-          "x": "775.0",
-          "y": 8.4
-        },
-        {
-          "x": "776.0",
-          "y": 6.7
-        },
-        {
-          "x": "777.0",
-          "y": 5.7
-        },
-        {
-          "x": "778.0",
-          "y": 4.5
-        },
-        {
-          "x": "779.0",
-          "y": 3.2
-        }
-      ],
-      "source": "surfaces[0].rows[].p_pct",
-      "title": "Chance of finishing above each strike, SPY"
-    },
-    "record": {
-      "kind": "curve",
-      "label": "The second surface on record, chance percent by strike.",
-      "points": [
-        {
-          "x": "671.0",
-          "y": 97.9
-        },
-        {
-          "x": "672.0",
-          "y": 97.5
-        },
-        {
-          "x": "673.0",
-          "y": 97.1
-        },
-        {
-          "x": "674.0",
-          "y": 96.6
-        },
-        {
-          "x": "675.0",
-          "y": 95.7
-        },
-        {
-          "x": "676.0",
-          "y": 95.0
-        },
-        {
-          "x": "677.0",
-          "y": 94.2
-        },
-        {
-          "x": "678.0",
-          "y": 92.4
-        },
-        {
-          "x": "679.0",
-          "y": 90.4
-        },
-        {
-          "x": "680.0",
-          "y": 88.8
-        },
-        {
-          "x": "681.0",
-          "y": 87.2
-        },
-        {
-          "x": "682.0",
-          "y": 84.9
-        },
-        {
-          "x": "683.0",
-          "y": 83.0
-        },
-        {
-          "x": "684.0",
-          "y": 80.7
-        },
-        {
-          "x": "685.0",
-          "y": 77.9
-        },
-        {
-          "x": "686.0",
-          "y": 75.0
-        },
-        {
-          "x": "687.0",
-          "y": 71.9
-        },
-        {
-          "x": "688.0",
-          "y": 68.5
-        },
-        {
-          "x": "689.0",
-          "y": 64.7
-        },
-        {
-          "x": "690.0",
-          "y": 59.9
-        },
-        {
-          "x": "691.0",
-          "y": 55.0
-        },
-        {
-          "x": "692.0",
-          "y": 50.5
-        },
-        {
-          "x": "693.0",
-          "y": 45.5
-        },
-        {
-          "x": "694.0",
-          "y": 40.6
-        },
-        {
-          "x": "695.0",
-          "y": 35.5
-        },
-        {
-          "x": "696.0",
-          "y": 31.7
-        },
-        {
-          "x": "697.0",
-          "y": 26.9
-        },
-        {
-          "x": "698.0",
-          "y": 22.8
-        },
-        {
-          "x": "699.0",
-          "y": 19.7
-        },
-        {
-          "x": "700.0",
-          "y": 17.2
-        },
-        {
-          "x": "701.0",
-          "y": 14.4
-        },
-        {
-          "x": "702.0",
-          "y": 12.4
-        },
-        {
-          "x": "703.0",
-          "y": 10.6
-        },
-        {
-          "x": "704.0",
-          "y": 8.9
-        },
-        {
-          "x": "705.0",
-          "y": 7.4
-        },
-        {
-          "x": "706.0",
-          "y": 6.5
-        },
-        {
-          "x": "707.0",
-          "y": 5.5
-        },
-        {
-          "x": "708.0",
-          "y": 4.5
-        },
-        {
-          "x": "709.0",
-          "y": 3.8
-        },
-        {
-          "x": "710.0",
-          "y": 3.1
-        },
-        {
-          "x": "711.0",
-          "y": 2.5
-        },
-        {
-          "x": "712.0",
-          "y": 2.2
-        }
-      ],
-      "source": "surfaces[1].rows[].p_pct",
-      "title": "Chance of finishing above each strike, QQQ"
-    },
-    "version": 1
-  },
   "surfaces": [
     {
-      "contracts_on_record": 12954,
-      "days_remaining": 2,
-      "expected_move": 6.45,
-      "expiry": "2026-11-06",
-      "hv30_pct": 11.38,
+      "contracts_on_record": 12952,
+      "days_remaining": 7,
+      "expected_move": 17.57,
+      "expiry": "2026-11-13",
+      "hv30_pct": 17.25,
       "options_gate": {
-        "admitted": 12954,
+        "admitted": 12952,
         "greek_max_age_seconds": 4500,
         "greek_states": {
           "fresh": 0,
           "future": 0,
           "stale": 0,
-          "undated": 12954
+          "undated": 12952
         },
         "iv_ceiling": 5.0,
         "iv_states": {
-          "absent": 7398,
+          "absent": 7864,
           "invalid": 0,
-          "ok": 5556,
+          "ok": 5088,
           "over_ceiling": 0
         },
         "note": "Candidate gate applied to this snapshot: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent are refused; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted.",
         "refused": 0,
-        "total": 12954
+        "total": 12952
       },
       "rows": [
         {
-          "benchmark_p": 0.8738,
-          "benchmark_p_pct": 87.4,
-          "p": 0.9676,
-          "p_pct": 96.8,
-          "strike": 754.0
+          "benchmark_p": 0.8327,
+          "benchmark_p_pct": 83.3,
+          "p": 0.9725,
+          "p_pct": 97.2,
+          "strike": 705.0
         },
         {
-          "benchmark_p": 0.8436,
-          "benchmark_p_pct": 84.4,
-          "p": 0.9547,
-          "p_pct": 95.5,
-          "strike": 755.0
+          "benchmark_p": 0.7924,
+          "benchmark_p_pct": 79.2,
+          "p": 0.9523,
+          "p_pct": 95.2,
+          "strike": 710.0
         },
         {
-          "benchmark_p": 0.8389,
-          "benchmark_p_pct": 83.9,
-          "p": 0.9451,
-          "p_pct": 94.5,
-          "strike": 756.0
+          "benchmark_p": 0.7501,
+          "benchmark_p_pct": 75.0,
+          "p": 0.9198,
+          "p_pct": 92.0,
+          "strike": 715.0
         },
         {
-          "benchmark_p": 0.8004,
-          "benchmark_p_pct": 80.0,
-          "p": 0.9321,
-          "p_pct": 93.2,
-          "strike": 757.0
+          "benchmark_p": 0.7451,
+          "benchmark_p_pct": 74.5,
+          "p": 0.9111,
+          "p_pct": 91.1,
+          "strike": 716.0
         },
         {
-          "benchmark_p": 0.8109,
-          "benchmark_p_pct": 81.1,
-          "p": 0.913,
-          "p_pct": 91.3,
-          "strike": 758.0
+          "benchmark_p": 0.7316,
+          "benchmark_p_pct": 73.2,
+          "p": 0.8971,
+          "p_pct": 89.7,
+          "strike": 717.0
         },
         {
-          "benchmark_p": 0.7799,
-          "benchmark_p_pct": 78.0,
-          "p": 0.8887,
-          "p_pct": 88.9,
-          "strike": 759.0
+          "benchmark_p": 0.7283,
+          "benchmark_p_pct": 72.8,
+          "p": 0.8827,
+          "p_pct": 88.3,
+          "strike": 718.0
         },
         {
-          "benchmark_p": 0.7399,
-          "benchmark_p_pct": 74.0,
-          "p": 0.8678,
+          "benchmark_p": 0.7158,
+          "benchmark_p_pct": 71.6,
+          "p": 0.868,
           "p_pct": 86.8,
-          "strike": 760.0
+          "strike": 719.0
         },
         {
-          "benchmark_p": 0.7082,
-          "benchmark_p_pct": 70.8,
-          "p": 0.8353,
-          "p_pct": 83.5,
-          "strike": 761.0
+          "benchmark_p": 0.7041,
+          "benchmark_p_pct": 70.4,
+          "p": 0.8577,
+          "p_pct": 85.8,
+          "strike": 720.0
         },
         {
-          "benchmark_p": 0.6776,
-          "benchmark_p_pct": 67.8,
-          "p": 0.7988,
-          "p_pct": 79.9,
-          "strike": 762.0
+          "benchmark_p": 0.6929,
+          "benchmark_p_pct": 69.3,
+          "p": 0.8421,
+          "p_pct": 84.2,
+          "strike": 721.0
         },
         {
-          "benchmark_p": 0.6421,
-          "benchmark_p_pct": 64.2,
+          "benchmark_p": 0.683,
+          "benchmark_p_pct": 68.3,
+          "p": 0.8311,
+          "p_pct": 83.1,
+          "strike": 722.0
+        },
+        {
+          "benchmark_p": 0.6711,
+          "benchmark_p_pct": 67.1,
+          "p": 0.8185,
+          "p_pct": 81.9,
+          "strike": 723.0
+        },
+        {
+          "benchmark_p": 0.6549,
+          "benchmark_p_pct": 65.5,
+          "p": 0.8031,
+          "p_pct": 80.3,
+          "strike": 724.0
+        },
+        {
+          "benchmark_p": 0.6443,
+          "benchmark_p_pct": 64.4,
+          "p": 0.7873,
+          "p_pct": 78.7,
+          "strike": 725.0
+        },
+        {
+          "benchmark_p": 0.6331,
+          "benchmark_p_pct": 63.3,
+          "p": 0.77,
+          "p_pct": 77.0,
+          "strike": 726.0
+        },
+        {
+          "benchmark_p": 0.6182,
+          "benchmark_p_pct": 61.8,
           "p": 0.7449,
           "p_pct": 74.5,
-          "strike": 763.0
+          "strike": 727.0
         },
         {
-          "benchmark_p": 0.6051,
-          "benchmark_p_pct": 60.5,
-          "p": 0.6937,
-          "p_pct": 69.4,
-          "strike": 764.0
+          "benchmark_p": 0.6035,
+          "benchmark_p_pct": 60.4,
+          "p": 0.7221,
+          "p_pct": 72.2,
+          "strike": 728.0
         },
         {
-          "benchmark_p": 0.5646,
-          "benchmark_p_pct": 56.5,
-          "p": 0.6284,
-          "p_pct": 62.8,
-          "strike": 765.0
+          "benchmark_p": 0.59,
+          "benchmark_p_pct": 59.0,
+          "p": 0.6966,
+          "p_pct": 69.7,
+          "strike": 729.0
         },
         {
-          "benchmark_p": 0.5214,
-          "benchmark_p_pct": 52.1,
-          "p": 0.5634,
-          "p_pct": 56.3,
-          "strike": 766.0
+          "benchmark_p": 0.5761,
+          "benchmark_p_pct": 57.6,
+          "p": 0.682,
+          "p_pct": 68.2,
+          "strike": 730.0
         },
         {
-          "benchmark_p": 0.4755,
-          "benchmark_p_pct": 47.5,
-          "p": 0.4882,
-          "p_pct": 48.8,
-          "strike": 767.0
-        },
-        {
-          "benchmark_p": 0.4283,
-          "benchmark_p_pct": 42.8,
-          "p": 0.4306,
-          "p_pct": 43.1,
-          "strike": 768.0
-        },
-        {
-          "benchmark_p": 0.3813,
-          "benchmark_p_pct": 38.1,
-          "p": 0.3693,
-          "p_pct": 36.9,
-          "strike": 769.0
-        },
-        {
-          "benchmark_p": 0.3312,
-          "benchmark_p_pct": 33.1,
-          "p": 0.3059,
-          "p_pct": 30.6,
-          "strike": 770.0
-        },
-        {
-          "benchmark_p": 0.2829,
-          "benchmark_p_pct": 28.3,
-          "p": 0.2448,
-          "p_pct": 24.5,
-          "strike": 771.0
-        },
-        {
-          "benchmark_p": 0.2471,
-          "benchmark_p_pct": 24.7,
-          "p": 0.19,
-          "p_pct": 19.0,
-          "strike": 772.0
-        },
-        {
-          "benchmark_p": 0.1939,
-          "benchmark_p_pct": 19.4,
-          "p": 0.1418,
-          "p_pct": 14.2,
-          "strike": 773.0
-        },
-        {
-          "benchmark_p": 0.1524,
-          "benchmark_p_pct": 15.2,
-          "p": 0.1148,
-          "p_pct": 11.5,
-          "strike": 774.0
-        },
-        {
-          "benchmark_p": 0.1377,
-          "benchmark_p_pct": 13.8,
-          "p": 0.0845,
-          "p_pct": 8.4,
-          "strike": 775.0
-        },
-        {
-          "benchmark_p": 0.0881,
-          "benchmark_p_pct": 8.8,
-          "p": 0.0666,
-          "p_pct": 6.7,
-          "strike": 776.0
-        },
-        {
-          "benchmark_p": 0.0874,
-          "benchmark_p_pct": 8.7,
-          "p": 0.0573,
-          "p_pct": 5.7,
-          "strike": 777.0
-        },
-        {
-          "benchmark_p": 0.0838,
-          "benchmark_p_pct": 8.4,
-          "p": 0.0451,
-          "p_pct": 4.5,
-          "strike": 778.0
-        },
-        {
-          "benchmark_p": 0.0621,
-          "benchmark_p_pct": 6.2,
-          "p": 0.0321,
-          "p_pct": 3.2,
-          "strike": 779.0
-        }
-      ],
-      "snapshot_day": "2026-11-04",
-      "spot": 766.525,
-      "symbol": "SPY"
-    },
-    {
-      "contracts_on_record": 10398,
-      "days_remaining": 2,
-      "expected_move": 10.34,
-      "expiry": "2026-11-06",
-      "hv30_pct": 20.2,
-      "options_gate": {
-        "admitted": 10398,
-        "greek_max_age_seconds": 4500,
-        "greek_states": {
-          "fresh": 0,
-          "future": 0,
-          "stale": 0,
-          "undated": 10398
-        },
-        "iv_ceiling": 5.0,
-        "iv_states": {
-          "absent": 5853,
-          "invalid": 0,
-          "ok": 4545,
-          "over_ceiling": 0
-        },
-        "note": "Candidate gate applied to this snapshot: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent are refused; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted.",
-        "refused": 0,
-        "total": 10398
-      },
-      "rows": [
-        {
-          "benchmark_p": 0.8772,
-          "benchmark_p_pct": 87.7,
-          "p": 0.9788,
-          "p_pct": 97.9,
-          "strike": 671.0
-        },
-        {
-          "benchmark_p": 0.8675,
-          "benchmark_p_pct": 86.7,
-          "p": 0.9746,
-          "p_pct": 97.5,
-          "strike": 672.0
-        },
-        {
-          "benchmark_p": 0.8556,
-          "benchmark_p_pct": 85.6,
-          "p": 0.9711,
-          "p_pct": 97.1,
-          "strike": 673.0
-        },
-        {
-          "benchmark_p": 0.8601,
-          "benchmark_p_pct": 86.0,
-          "p": 0.9656,
-          "p_pct": 96.6,
-          "strike": 674.0
-        },
-        {
-          "benchmark_p": 0.8406,
-          "benchmark_p_pct": 84.1,
-          "p": 0.9568,
-          "p_pct": 95.7,
-          "strike": 675.0
-        },
-        {
-          "benchmark_p": 0.8271,
-          "benchmark_p_pct": 82.7,
-          "p": 0.9497,
-          "p_pct": 95.0,
-          "strike": 676.0
-        },
-        {
-          "benchmark_p": 0.8151,
-          "benchmark_p_pct": 81.5,
-          "p": 0.9416,
-          "p_pct": 94.2,
-          "strike": 677.0
-        },
-        {
-          "benchmark_p": 0.7921,
-          "benchmark_p_pct": 79.2,
-          "p": 0.9239,
-          "p_pct": 92.4,
-          "strike": 678.0
-        },
-        {
-          "benchmark_p": 0.7763,
-          "benchmark_p_pct": 77.6,
-          "p": 0.9039,
-          "p_pct": 90.4,
-          "strike": 679.0
-        },
-        {
-          "benchmark_p": 0.7644,
-          "benchmark_p_pct": 76.4,
-          "p": 0.8877,
-          "p_pct": 88.8,
-          "strike": 680.0
-        },
-        {
-          "benchmark_p": 0.7453,
-          "benchmark_p_pct": 74.5,
-          "p": 0.8716,
-          "p_pct": 87.2,
-          "strike": 681.0
-        },
-        {
-          "benchmark_p": 0.7256,
-          "benchmark_p_pct": 72.6,
-          "p": 0.8495,
-          "p_pct": 84.9,
-          "strike": 682.0
-        },
-        {
-          "benchmark_p": 0.7044,
-          "benchmark_p_pct": 70.4,
-          "p": 0.8299,
-          "p_pct": 83.0,
-          "strike": 683.0
-        },
-        {
-          "benchmark_p": 0.6816,
-          "benchmark_p_pct": 68.2,
-          "p": 0.8067,
-          "p_pct": 80.7,
-          "strike": 684.0
-        },
-        {
-          "benchmark_p": 0.6596,
-          "benchmark_p_pct": 66.0,
-          "p": 0.7788,
-          "p_pct": 77.9,
-          "strike": 685.0
-        },
-        {
-          "benchmark_p": 0.6379,
-          "benchmark_p_pct": 63.8,
-          "p": 0.75,
-          "p_pct": 75.0,
-          "strike": 686.0
-        },
-        {
-          "benchmark_p": 0.6121,
-          "benchmark_p_pct": 61.2,
-          "p": 0.7191,
-          "p_pct": 71.9,
-          "strike": 687.0
-        },
-        {
-          "benchmark_p": 0.5881,
-          "benchmark_p_pct": 58.8,
-          "p": 0.685,
-          "p_pct": 68.5,
-          "strike": 688.0
-        },
-        {
-          "benchmark_p": 0.5625,
+          "benchmark_p": 0.5623,
           "benchmark_p_pct": 56.2,
-          "p": 0.6466,
-          "p_pct": 64.7,
-          "strike": 689.0
+          "p": 0.6586,
+          "p_pct": 65.9,
+          "strike": 731.0
         },
         {
-          "benchmark_p": 0.5363,
-          "benchmark_p_pct": 53.6,
-          "p": 0.5993,
-          "p_pct": 59.9,
-          "strike": 690.0
+          "benchmark_p": 0.5454,
+          "benchmark_p_pct": 54.5,
+          "p": 0.6362,
+          "p_pct": 63.6,
+          "strike": 732.0
         },
         {
-          "benchmark_p": 0.5086,
-          "benchmark_p_pct": 50.9,
-          "p": 0.5505,
-          "p_pct": 55.0,
-          "strike": 691.0
+          "benchmark_p": 0.53,
+          "benchmark_p_pct": 53.0,
+          "p": 0.6039,
+          "p_pct": 60.4,
+          "strike": 733.0
         },
         {
-          "benchmark_p": 0.4807,
+          "benchmark_p": 0.5146,
+          "benchmark_p_pct": 51.5,
+          "p": 0.5728,
+          "p_pct": 57.3,
+          "strike": 734.0
+        },
+        {
+          "benchmark_p": 0.4982,
+          "benchmark_p_pct": 49.8,
+          "p": 0.5454,
+          "p_pct": 54.5,
+          "strike": 735.0
+        },
+        {
+          "benchmark_p": 0.4815,
           "benchmark_p_pct": 48.1,
-          "p": 0.5053,
-          "p_pct": 50.5,
-          "strike": 692.0
+          "p": 0.5253,
+          "p_pct": 52.5,
+          "strike": 736.0
         },
         {
-          "benchmark_p": 0.4524,
-          "benchmark_p_pct": 45.2,
-          "p": 0.4554,
-          "p_pct": 45.5,
-          "strike": 693.0
+          "benchmark_p": 0.4645,
+          "benchmark_p_pct": 46.5,
+          "p": 0.5066,
+          "p_pct": 50.7,
+          "strike": 737.0
         },
         {
-          "benchmark_p": 0.4242,
-          "benchmark_p_pct": 42.4,
-          "p": 0.4058,
-          "p_pct": 40.6,
-          "strike": 694.0
+          "benchmark_p": 0.4477,
+          "benchmark_p_pct": 44.8,
+          "p": 0.4781,
+          "p_pct": 47.8,
+          "strike": 738.0
+        },
+        {
+          "benchmark_p": 0.4302,
+          "benchmark_p_pct": 43.0,
+          "p": 0.4398,
+          "p_pct": 44.0,
+          "strike": 739.0
+        },
+        {
+          "benchmark_p": 0.4124,
+          "benchmark_p_pct": 41.2,
+          "p": 0.4103,
+          "p_pct": 41.0,
+          "strike": 740.0
         },
         {
           "benchmark_p": 0.3953,
           "benchmark_p_pct": 39.5,
-          "p": 0.3554,
-          "p_pct": 35.5,
+          "p": 0.3847,
+          "p_pct": 38.5,
+          "strike": 741.0
+        },
+        {
+          "benchmark_p": 0.3756,
+          "benchmark_p_pct": 37.6,
+          "p": 0.3593,
+          "p_pct": 35.9,
+          "strike": 742.0
+        },
+        {
+          "benchmark_p": 0.3581,
+          "benchmark_p_pct": 35.8,
+          "p": 0.3366,
+          "p_pct": 33.7,
+          "strike": 743.0
+        },
+        {
+          "benchmark_p": 0.3416,
+          "benchmark_p_pct": 34.2,
+          "p": 0.3043,
+          "p_pct": 30.4,
+          "strike": 744.0
+        },
+        {
+          "benchmark_p": 0.3215,
+          "benchmark_p_pct": 32.1,
+          "p": 0.2736,
+          "p_pct": 27.4,
+          "strike": 745.0
+        },
+        {
+          "benchmark_p": 0.3041,
+          "benchmark_p_pct": 30.4,
+          "p": 0.2542,
+          "p_pct": 25.4,
+          "strike": 746.0
+        },
+        {
+          "benchmark_p": 0.2874,
+          "benchmark_p_pct": 28.7,
+          "p": 0.239,
+          "p_pct": 23.9,
+          "strike": 747.0
+        },
+        {
+          "benchmark_p": 0.2645,
+          "benchmark_p_pct": 26.5,
+          "p": 0.2154,
+          "p_pct": 21.5,
+          "strike": 748.0
+        },
+        {
+          "benchmark_p": 0.2528,
+          "benchmark_p_pct": 25.3,
+          "p": 0.1934,
+          "p_pct": 19.3,
+          "strike": 749.0
+        },
+        {
+          "benchmark_p": 0.2271,
+          "benchmark_p_pct": 22.7,
+          "p": 0.178,
+          "p_pct": 17.8,
+          "strike": 750.0
+        },
+        {
+          "benchmark_p": 0.2127,
+          "benchmark_p_pct": 21.3,
+          "p": 0.1605,
+          "p_pct": 16.0,
+          "strike": 751.0
+        },
+        {
+          "benchmark_p": 0.196,
+          "benchmark_p_pct": 19.6,
+          "p": 0.1458,
+          "p_pct": 14.6,
+          "strike": 752.0
+        },
+        {
+          "benchmark_p": 0.1811,
+          "benchmark_p_pct": 18.1,
+          "p": 0.1315,
+          "p_pct": 13.2,
+          "strike": 753.0
+        },
+        {
+          "benchmark_p": 0.1534,
+          "benchmark_p_pct": 15.3,
+          "p": 0.1213,
+          "p_pct": 12.1,
+          "strike": 754.0
+        },
+        {
+          "benchmark_p": 0.1567,
+          "benchmark_p_pct": 15.7,
+          "p": 0.1128,
+          "p_pct": 11.3,
+          "strike": 755.0
+        },
+        {
+          "benchmark_p": 0.1309,
+          "benchmark_p_pct": 13.1,
+          "p": 0.107,
+          "p_pct": 10.7,
+          "strike": 756.0
+        },
+        {
+          "benchmark_p": 0.1319,
+          "benchmark_p_pct": 13.2,
+          "p": 0.0967,
+          "p_pct": 9.7,
+          "strike": 757.0
+        },
+        {
+          "benchmark_p": 0.0989,
+          "benchmark_p_pct": 9.9,
+          "p": 0.0893,
+          "p_pct": 8.9,
+          "strike": 758.0
+        },
+        {
+          "benchmark_p": 0.0936,
+          "benchmark_p_pct": 9.4,
+          "p": 0.0809,
+          "p_pct": 8.1,
+          "strike": 759.0
+        },
+        {
+          "benchmark_p": 0.0849,
+          "benchmark_p_pct": 8.5,
+          "p": 0.0753,
+          "p_pct": 7.5,
+          "strike": 760.0
+        },
+        {
+          "benchmark_p": 0.0767,
+          "benchmark_p_pct": 7.7,
+          "p": 0.0689,
+          "p_pct": 6.9,
+          "strike": 761.0
+        },
+        {
+          "benchmark_p": 0.0671,
+          "benchmark_p_pct": 6.7,
+          "p": 0.059,
+          "p_pct": 5.9,
+          "strike": 762.0
+        },
+        {
+          "benchmark_p": 0.062,
+          "benchmark_p_pct": 6.2,
+          "p": 0.0544,
+          "p_pct": 5.4,
+          "strike": 763.0
+        },
+        {
+          "benchmark_p": 0.0498,
+          "benchmark_p_pct": 5.0,
+          "p": 0.0513,
+          "p_pct": 5.1,
+          "strike": 764.0
+        },
+        {
+          "benchmark_p": 0.0425,
+          "benchmark_p_pct": 4.2,
+          "p": 0.0448,
+          "p_pct": 4.5,
+          "strike": 765.0
+        },
+        {
+          "benchmark_p": 0.0355,
+          "benchmark_p_pct": 3.5,
+          "p": 0.0397,
+          "p_pct": 4.0,
+          "strike": 766.0
+        },
+        {
+          "benchmark_p": 0.0292,
+          "benchmark_p_pct": 2.9,
+          "p": 0.0361,
+          "p_pct": 3.6,
+          "strike": 767.0
+        },
+        {
+          "benchmark_p": 0.0468,
+          "benchmark_p_pct": 4.7,
+          "p": 0.034,
+          "p_pct": 3.4,
+          "strike": 768.0
+        },
+        {
+          "benchmark_p": 0.0211,
+          "benchmark_p_pct": 2.1,
+          "p": 0.0296,
+          "p_pct": 3.0,
+          "strike": 769.0
+        },
+        {
+          "benchmark_p": 0.0173,
+          "benchmark_p_pct": 1.7,
+          "p": 0.0254,
+          "p_pct": 2.5,
+          "strike": 770.0
+        }
+      ],
+      "snapshot_day": "2026-11-06",
+      "spot": 735.28,
+      "symbol": "SPY"
+    },
+    {
+      "contracts_on_record": 11478,
+      "days_remaining": 7,
+      "expected_move": 25.41,
+      "expiry": "2026-11-13",
+      "hv30_pct": 27.95,
+      "options_gate": {
+        "admitted": 11478,
+        "greek_max_age_seconds": 4500,
+        "greek_states": {
+          "fresh": 0,
+          "future": 0,
+          "stale": 0,
+          "undated": 11478
+        },
+        "iv_ceiling": 5.0,
+        "iv_states": {
+          "absent": 6247,
+          "invalid": 0,
+          "ok": 5231,
+          "over_ceiling": 0
+        },
+        "note": "Candidate gate applied to this snapshot: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent are refused; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted.",
+        "refused": 0,
+        "total": 11478
+      },
+      "rows": [
+        {
+          "benchmark_p": 0.8749,
+          "benchmark_p_pct": 87.5,
+          "p": 0.9848,
+          "p_pct": 98.5,
+          "strike": 606.0
+        },
+        {
+          "benchmark_p": 0.8895,
+          "benchmark_p_pct": 88.9,
+          "p": 0.9836,
+          "p_pct": 98.4,
+          "strike": 607.0
+        },
+        {
+          "benchmark_p": 0.8991,
+          "benchmark_p_pct": 89.9,
+          "p": 0.9824,
+          "p_pct": 98.2,
+          "strike": 608.0
+        },
+        {
+          "benchmark_p": 0.8809,
+          "benchmark_p_pct": 88.1,
+          "p": 0.9811,
+          "p_pct": 98.1,
+          "strike": 609.0
+        },
+        {
+          "benchmark_p": 0.8721,
+          "benchmark_p_pct": 87.2,
+          "p": 0.9797,
+          "p_pct": 98.0,
+          "strike": 610.0
+        },
+        {
+          "benchmark_p": 0.8638,
+          "benchmark_p_pct": 86.4,
+          "p": 0.9782,
+          "p_pct": 97.8,
+          "strike": 611.0
+        },
+        {
+          "benchmark_p": 0.858,
+          "benchmark_p_pct": 85.8,
+          "p": 0.9753,
+          "p_pct": 97.5,
+          "strike": 612.0
+        },
+        {
+          "benchmark_p": 0.8536,
+          "benchmark_p_pct": 85.4,
+          "p": 0.9736,
+          "p_pct": 97.4,
+          "strike": 613.0
+        },
+        {
+          "benchmark_p": 0.852,
+          "benchmark_p_pct": 85.2,
+          "p": 0.9717,
+          "p_pct": 97.2,
+          "strike": 614.0
+        },
+        {
+          "benchmark_p": 0.8478,
+          "benchmark_p_pct": 84.8,
+          "p": 0.9684,
+          "p_pct": 96.8,
+          "strike": 615.0
+        },
+        {
+          "benchmark_p": 0.8315,
+          "benchmark_p_pct": 83.2,
+          "p": 0.965,
+          "p_pct": 96.5,
+          "strike": 616.0
+        },
+        {
+          "benchmark_p": 0.8416,
+          "benchmark_p_pct": 84.2,
+          "p": 0.9626,
+          "p_pct": 96.3,
+          "strike": 617.0
+        },
+        {
+          "benchmark_p": 0.8323,
+          "benchmark_p_pct": 83.2,
+          "p": 0.9601,
+          "p_pct": 96.0,
+          "strike": 618.0
+        },
+        {
+          "benchmark_p": 0.831,
+          "benchmark_p_pct": 83.1,
+          "p": 0.9575,
+          "p_pct": 95.8,
+          "strike": 619.0
+        },
+        {
+          "benchmark_p": 0.8272,
+          "benchmark_p_pct": 82.7,
+          "p": 0.9547,
+          "p_pct": 95.5,
+          "strike": 620.0
+        },
+        {
+          "benchmark_p": 0.817,
+          "benchmark_p_pct": 81.7,
+          "p": 0.9505,
+          "p_pct": 95.0,
+          "strike": 621.0
+        },
+        {
+          "benchmark_p": 0.805,
+          "benchmark_p_pct": 80.5,
+          "p": 0.9473,
+          "p_pct": 94.7,
+          "strike": 622.0
+        },
+        {
+          "benchmark_p": 0.8077,
+          "benchmark_p_pct": 80.8,
+          "p": 0.9415,
+          "p_pct": 94.1,
+          "strike": 623.0
+        },
+        {
+          "benchmark_p": 0.8002,
+          "benchmark_p_pct": 80.0,
+          "p": 0.9343,
+          "p_pct": 93.4,
+          "strike": 624.0
+        },
+        {
+          "benchmark_p": 0.7872,
+          "benchmark_p_pct": 78.7,
+          "p": 0.9306,
+          "p_pct": 93.1,
+          "strike": 625.0
+        },
+        {
+          "benchmark_p": 0.7912,
+          "benchmark_p_pct": 79.1,
+          "p": 0.9217,
+          "p_pct": 92.2,
+          "strike": 626.0
+        },
+        {
+          "benchmark_p": 0.7799,
+          "benchmark_p_pct": 78.0,
+          "p": 0.9151,
+          "p_pct": 91.5,
+          "strike": 627.0
+        },
+        {
+          "benchmark_p": 0.7713,
+          "benchmark_p_pct": 77.1,
+          "p": 0.9071,
+          "p_pct": 90.7,
+          "strike": 628.0
+        },
+        {
+          "benchmark_p": 0.7645,
+          "benchmark_p_pct": 76.5,
+          "p": 0.9014,
+          "p_pct": 90.1,
+          "strike": 629.0
+        },
+        {
+          "benchmark_p": 0.753,
+          "benchmark_p_pct": 75.3,
+          "p": 0.893,
+          "p_pct": 89.3,
+          "strike": 630.0
+        },
+        {
+          "benchmark_p": 0.7417,
+          "benchmark_p_pct": 74.2,
+          "p": 0.8882,
+          "p_pct": 88.8,
+          "strike": 631.0
+        },
+        {
+          "benchmark_p": 0.7375,
+          "benchmark_p_pct": 73.7,
+          "p": 0.8794,
+          "p_pct": 87.9,
+          "strike": 632.0
+        },
+        {
+          "benchmark_p": 0.7272,
+          "benchmark_p_pct": 72.7,
+          "p": 0.8729,
+          "p_pct": 87.3,
+          "strike": 633.0
+        },
+        {
+          "benchmark_p": 0.7272,
+          "benchmark_p_pct": 72.7,
+          "p": 0.865,
+          "p_pct": 86.5,
+          "strike": 634.0
+        },
+        {
+          "benchmark_p": 0.7147,
+          "benchmark_p_pct": 71.5,
+          "p": 0.8569,
+          "p_pct": 85.7,
+          "strike": 635.0
+        },
+        {
+          "benchmark_p": 0.7079,
+          "benchmark_p_pct": 70.8,
+          "p": 0.8436,
+          "p_pct": 84.4,
+          "strike": 636.0
+        },
+        {
+          "benchmark_p": 0.6972,
+          "benchmark_p_pct": 69.7,
+          "p": 0.8339,
+          "p_pct": 83.4,
+          "strike": 637.0
+        },
+        {
+          "benchmark_p": 0.687,
+          "benchmark_p_pct": 68.7,
+          "p": 0.824,
+          "p_pct": 82.4,
+          "strike": 638.0
+        },
+        {
+          "benchmark_p": 0.6774,
+          "benchmark_p_pct": 67.7,
+          "p": 0.8177,
+          "p_pct": 81.8,
+          "strike": 639.0
+        },
+        {
+          "benchmark_p": 0.6666,
+          "benchmark_p_pct": 66.7,
+          "p": 0.8062,
+          "p_pct": 80.6,
+          "strike": 640.0
+        },
+        {
+          "benchmark_p": 0.658,
+          "benchmark_p_pct": 65.8,
+          "p": 0.7958,
+          "p_pct": 79.6,
+          "strike": 641.0
+        },
+        {
+          "benchmark_p": 0.6523,
+          "benchmark_p_pct": 65.2,
+          "p": 0.7816,
+          "p_pct": 78.2,
+          "strike": 642.0
+        },
+        {
+          "benchmark_p": 0.6423,
+          "benchmark_p_pct": 64.2,
+          "p": 0.7659,
+          "p_pct": 76.6,
+          "strike": 643.0
+        },
+        {
+          "benchmark_p": 0.6316,
+          "benchmark_p_pct": 63.2,
+          "p": 0.744,
+          "p_pct": 74.4,
+          "strike": 644.0
+        },
+        {
+          "benchmark_p": 0.6211,
+          "benchmark_p_pct": 62.1,
+          "p": 0.733,
+          "p_pct": 73.3,
+          "strike": 645.0
+        },
+        {
+          "benchmark_p": 0.6093,
+          "benchmark_p_pct": 60.9,
+          "p": 0.7195,
+          "p_pct": 72.0,
+          "strike": 646.0
+        },
+        {
+          "benchmark_p": 0.5993,
+          "benchmark_p_pct": 59.9,
+          "p": 0.7071,
+          "p_pct": 70.7,
+          "strike": 647.0
+        },
+        {
+          "benchmark_p": 0.5886,
+          "benchmark_p_pct": 58.9,
+          "p": 0.6934,
+          "p_pct": 69.3,
+          "strike": 648.0
+        },
+        {
+          "benchmark_p": 0.577,
+          "benchmark_p_pct": 57.7,
+          "p": 0.6746,
+          "p_pct": 67.5,
+          "strike": 649.0
+        },
+        {
+          "benchmark_p": 0.5652,
+          "benchmark_p_pct": 56.5,
+          "p": 0.6571,
+          "p_pct": 65.7,
+          "strike": 650.0
+        },
+        {
+          "benchmark_p": 0.5545,
+          "benchmark_p_pct": 55.4,
+          "p": 0.6345,
+          "p_pct": 63.4,
+          "strike": 651.0
+        },
+        {
+          "benchmark_p": 0.5428,
+          "benchmark_p_pct": 54.3,
+          "p": 0.6143,
+          "p_pct": 61.4,
+          "strike": 652.0
+        },
+        {
+          "benchmark_p": 0.5306,
+          "benchmark_p_pct": 53.1,
+          "p": 0.5953,
+          "p_pct": 59.5,
+          "strike": 653.0
+        },
+        {
+          "benchmark_p": 0.5189,
+          "benchmark_p_pct": 51.9,
+          "p": 0.5788,
+          "p_pct": 57.9,
+          "strike": 654.0
+        },
+        {
+          "benchmark_p": 0.5068,
+          "benchmark_p_pct": 50.7,
+          "p": 0.5598,
+          "p_pct": 56.0,
+          "strike": 655.0
+        },
+        {
+          "benchmark_p": 0.4945,
+          "benchmark_p_pct": 49.5,
+          "p": 0.5371,
+          "p_pct": 53.7,
+          "strike": 656.0
+        },
+        {
+          "benchmark_p": 0.4819,
+          "benchmark_p_pct": 48.2,
+          "p": 0.5255,
+          "p_pct": 52.6,
+          "strike": 657.0
+        },
+        {
+          "benchmark_p": 0.4693,
+          "benchmark_p_pct": 46.9,
+          "p": 0.5053,
+          "p_pct": 50.5,
+          "strike": 658.0
+        },
+        {
+          "benchmark_p": 0.4565,
+          "benchmark_p_pct": 45.7,
+          "p": 0.4926,
+          "p_pct": 49.3,
+          "strike": 659.0
+        },
+        {
+          "benchmark_p": 0.4432,
+          "benchmark_p_pct": 44.3,
+          "p": 0.4725,
+          "p_pct": 47.3,
+          "strike": 660.0
+        },
+        {
+          "benchmark_p": 0.4304,
+          "benchmark_p_pct": 43.0,
+          "p": 0.4487,
+          "p_pct": 44.9,
+          "strike": 661.0
+        },
+        {
+          "benchmark_p": 0.4172,
+          "benchmark_p_pct": 41.7,
+          "p": 0.4275,
+          "p_pct": 42.8,
+          "strike": 662.0
+        },
+        {
+          "benchmark_p": 0.4049,
+          "benchmark_p_pct": 40.5,
+          "p": 0.4052,
+          "p_pct": 40.5,
+          "strike": 663.0
+        },
+        {
+          "benchmark_p": 0.3917,
+          "benchmark_p_pct": 39.2,
+          "p": 0.3841,
+          "p_pct": 38.4,
+          "strike": 664.0
+        },
+        {
+          "benchmark_p": 0.3781,
+          "benchmark_p_pct": 37.8,
+          "p": 0.3619,
+          "p_pct": 36.2,
+          "strike": 665.0
+        },
+        {
+          "benchmark_p": 0.3633,
+          "benchmark_p_pct": 36.3,
+          "p": 0.3387,
+          "p_pct": 33.9,
+          "strike": 666.0
+        },
+        {
+          "benchmark_p": 0.3505,
+          "benchmark_p_pct": 35.0,
+          "p": 0.3192,
+          "p_pct": 31.9,
+          "strike": 667.0
+        },
+        {
+          "benchmark_p": 0.3371,
+          "benchmark_p_pct": 33.7,
+          "p": 0.3036,
+          "p_pct": 30.4,
+          "strike": 668.0
+        },
+        {
+          "benchmark_p": 0.3224,
+          "benchmark_p_pct": 32.2,
+          "p": 0.2844,
+          "p_pct": 28.4,
+          "strike": 669.0
+        },
+        {
+          "benchmark_p": 0.3125,
+          "benchmark_p_pct": 31.2,
+          "p": 0.269,
+          "p_pct": 26.9,
+          "strike": 670.0
+        },
+        {
+          "benchmark_p": 0.2964,
+          "benchmark_p_pct": 29.6,
+          "p": 0.2551,
+          "p_pct": 25.5,
+          "strike": 671.0
+        },
+        {
+          "benchmark_p": 0.2848,
+          "benchmark_p_pct": 28.5,
+          "p": 0.24,
+          "p_pct": 24.0,
+          "strike": 672.0
+        },
+        {
+          "benchmark_p": 0.2741,
+          "benchmark_p_pct": 27.4,
+          "p": 0.2214,
+          "p_pct": 22.1,
+          "strike": 673.0
+        },
+        {
+          "benchmark_p": 0.2571,
+          "benchmark_p_pct": 25.7,
+          "p": 0.2117,
+          "p_pct": 21.2,
+          "strike": 674.0
+        },
+        {
+          "benchmark_p": 0.2485,
+          "benchmark_p_pct": 24.8,
+          "p": 0.1959,
+          "p_pct": 19.6,
+          "strike": 675.0
+        },
+        {
+          "benchmark_p": 0.2352,
+          "benchmark_p_pct": 23.5,
+          "p": 0.1865,
+          "p_pct": 18.6,
+          "strike": 676.0
+        },
+        {
+          "benchmark_p": 0.2195,
+          "benchmark_p_pct": 22.0,
+          "p": 0.1773,
+          "p_pct": 17.7,
+          "strike": 677.0
+        },
+        {
+          "benchmark_p": 0.2062,
+          "benchmark_p_pct": 20.6,
+          "p": 0.167,
+          "p_pct": 16.7,
+          "strike": 678.0
+        },
+        {
+          "benchmark_p": 0.1944,
+          "benchmark_p_pct": 19.4,
+          "p": 0.1581,
+          "p_pct": 15.8,
+          "strike": 679.0
+        },
+        {
+          "benchmark_p": 0.1853,
+          "benchmark_p_pct": 18.5,
+          "p": 0.1469,
+          "p_pct": 14.7,
+          "strike": 680.0
+        },
+        {
+          "benchmark_p": 0.1671,
+          "benchmark_p_pct": 16.7,
+          "p": 0.1396,
+          "p_pct": 14.0,
+          "strike": 681.0
+        },
+        {
+          "benchmark_p": 0.1568,
+          "benchmark_p_pct": 15.7,
+          "p": 0.1301,
+          "p_pct": 13.0,
+          "strike": 682.0
+        },
+        {
+          "benchmark_p": 0.1522,
+          "benchmark_p_pct": 15.2,
+          "p": 0.1219,
+          "p_pct": 12.2,
+          "strike": 683.0
+        },
+        {
+          "benchmark_p": 0.1419,
+          "benchmark_p_pct": 14.2,
+          "p": 0.1152,
+          "p_pct": 11.5,
+          "strike": 684.0
+        },
+        {
+          "benchmark_p": 0.1251,
+          "benchmark_p_pct": 12.5,
+          "p": 0.1111,
+          "p_pct": 11.1,
+          "strike": 685.0
+        },
+        {
+          "benchmark_p": 0.1108,
+          "benchmark_p_pct": 11.1,
+          "p": 0.1034,
+          "p_pct": 10.3,
+          "strike": 686.0
+        },
+        {
+          "benchmark_p": 0.1043,
+          "benchmark_p_pct": 10.4,
+          "p": 0.0935,
+          "p_pct": 9.4,
+          "strike": 687.0
+        },
+        {
+          "benchmark_p": 0.0937,
+          "benchmark_p_pct": 9.4,
+          "p": 0.0887,
+          "p_pct": 8.9,
+          "strike": 688.0
+        },
+        {
+          "benchmark_p": 0.0915,
+          "benchmark_p_pct": 9.2,
+          "p": 0.0828,
+          "p_pct": 8.3,
+          "strike": 689.0
+        },
+        {
+          "benchmark_p": 0.0873,
+          "benchmark_p_pct": 8.7,
+          "p": 0.0759,
+          "p_pct": 7.6,
+          "strike": 690.0
+        },
+        {
+          "benchmark_p": 0.0809,
+          "benchmark_p_pct": 8.1,
+          "p": 0.0678,
+          "p_pct": 6.8,
+          "strike": 691.0
+        },
+        {
+          "benchmark_p": 0.0787,
+          "benchmark_p_pct": 7.9,
+          "p": 0.0637,
+          "p_pct": 6.4,
+          "strike": 692.0
+        },
+        {
+          "benchmark_p": 0.0653,
+          "benchmark_p_pct": 6.5,
+          "p": 0.0597,
+          "p_pct": 6.0,
+          "strike": 693.0
+        },
+        {
+          "benchmark_p": 0.0756,
+          "benchmark_p_pct": 7.6,
+          "p": 0.0558,
+          "p_pct": 5.6,
+          "strike": 694.0
+        },
+        {
+          "benchmark_p": 0.0517,
+          "benchmark_p_pct": 5.2,
+          "p": 0.0533,
+          "p_pct": 5.3,
           "strike": 695.0
         },
         {
-          "benchmark_p": 0.3678,
-          "benchmark_p_pct": 36.8,
-          "p": 0.3167,
-          "p_pct": 31.7,
+          "benchmark_p": 0.0491,
+          "benchmark_p_pct": 4.9,
+          "p": 0.0497,
+          "p_pct": 5.0,
           "strike": 696.0
         },
         {
-          "benchmark_p": 0.3397,
-          "benchmark_p_pct": 34.0,
-          "p": 0.269,
-          "p_pct": 26.9,
+          "benchmark_p": 0.0496,
+          "benchmark_p_pct": 5.0,
+          "p": 0.0451,
+          "p_pct": 4.5,
           "strike": 697.0
         },
         {
-          "benchmark_p": 0.3096,
-          "benchmark_p_pct": 31.0,
-          "p": 0.2283,
-          "p_pct": 22.8,
+          "benchmark_p": 0.0395,
+          "benchmark_p_pct": 3.9,
+          "p": 0.0417,
+          "p_pct": 4.2,
           "strike": 698.0
         },
         {
-          "benchmark_p": 0.2775,
-          "benchmark_p_pct": 27.8,
-          "p": 0.1972,
-          "p_pct": 19.7,
+          "benchmark_p": 0.034,
+          "benchmark_p_pct": 3.4,
+          "p": 0.0385,
+          "p_pct": 3.9,
           "strike": 699.0
         },
         {
-          "benchmark_p": 0.2539,
-          "benchmark_p_pct": 25.4,
-          "p": 0.172,
-          "p_pct": 17.2,
+          "benchmark_p": 0.0307,
+          "benchmark_p_pct": 3.1,
+          "p": 0.0367,
+          "p_pct": 3.7,
           "strike": 700.0
         },
         {
-          "benchmark_p": 0.2317,
-          "benchmark_p_pct": 23.2,
-          "p": 0.1443,
-          "p_pct": 14.4,
+          "benchmark_p": 0.0253,
+          "benchmark_p_pct": 2.5,
+          "p": 0.0337,
+          "p_pct": 3.4,
           "strike": 701.0
         },
         {
-          "benchmark_p": 0.2035,
-          "benchmark_p_pct": 20.3,
-          "p": 0.1238,
-          "p_pct": 12.4,
+          "benchmark_p": 0.0226,
+          "benchmark_p_pct": 2.3,
+          "p": 0.0309,
+          "p_pct": 3.1,
           "strike": 702.0
         },
         {
-          "benchmark_p": 0.1872,
-          "benchmark_p_pct": 18.7,
-          "p": 0.1057,
-          "p_pct": 10.6,
+          "benchmark_p": 0.021,
+          "benchmark_p_pct": 2.1,
+          "p": 0.0269,
+          "p_pct": 2.7,
           "strike": 703.0
         },
         {
-          "benchmark_p": 0.1595,
-          "benchmark_p_pct": 16.0,
-          "p": 0.0886,
-          "p_pct": 8.9,
+          "benchmark_p": 0.0466,
+          "benchmark_p_pct": 4.7,
+          "p": 0.0242,
+          "p_pct": 2.4,
           "strike": 704.0
         },
         {
-          "benchmark_p": 0.1398,
-          "benchmark_p_pct": 14.0,
-          "p": 0.0739,
-          "p_pct": 7.4,
+          "benchmark_p": 0.04,
+          "benchmark_p_pct": 4.0,
+          "p": 0.0217,
+          "p_pct": 2.2,
           "strike": 705.0
         },
         {
-          "benchmark_p": 0.1227,
-          "benchmark_p_pct": 12.3,
-          "p": 0.065,
-          "p_pct": 6.5,
+          "benchmark_p": 0.0348,
+          "benchmark_p_pct": 3.5,
+          "p": 0.0192,
+          "p_pct": 1.9,
           "strike": 706.0
         },
         {
-          "benchmark_p": 0.1037,
-          "benchmark_p_pct": 10.4,
-          "p": 0.0547,
-          "p_pct": 5.5,
+          "benchmark_p": 0.0111,
+          "benchmark_p_pct": 1.1,
+          "p": 0.018,
+          "p_pct": 1.8,
           "strike": 707.0
-        },
-        {
-          "benchmark_p": 0.0875,
-          "benchmark_p_pct": 8.7,
-          "p": 0.0453,
-          "p_pct": 4.5,
-          "strike": 708.0
-        },
-        {
-          "benchmark_p": 0.0735,
-          "benchmark_p_pct": 7.3,
-          "p": 0.0379,
-          "p_pct": 3.8,
-          "strike": 709.0
-        },
-        {
-          "benchmark_p": 0.0686,
-          "benchmark_p_pct": 6.9,
-          "p": 0.0312,
-          "p_pct": 3.1,
-          "strike": 710.0
-        },
-        {
-          "benchmark_p": 0.058,
-          "benchmark_p_pct": 5.8,
-          "p": 0.0252,
-          "p_pct": 2.5,
-          "strike": 711.0
-        },
-        {
-          "benchmark_p": 0.0523,
-          "benchmark_p_pct": 5.2,
-          "p": 0.0222,
-          "p_pct": 2.2,
-          "strike": 712.0
         }
       ],
-      "snapshot_day": "2026-11-04",
-      "spot": 691.46,
+      "snapshot_day": "2026-11-06",
+      "spot": 656.33,
       "symbol": "QQQ"
     }
   ],
@@ -981,22 +1256,22 @@
   "waiting": false,
   "what_exists": {
     "archive_by_index": {
-      "IWM": 5,
-      "QQQ": 5,
-      "SPY": 5
+      "IWM": 7,
+      "QQQ": 7,
+      "SPY": 7
     },
-    "archive_snapshots_total": 15,
+    "archive_snapshots_total": 21,
     "archive_state_words": {
       "IWM": null,
       "QQQ": null,
       "SPY": null
     },
     "morning_map_reading": {
-      "contracts_counted": 7044,
-      "contracts_total": 8044,
+      "contracts_counted": 7543,
+      "contracts_total": 8794,
       "expiries_with_totals": 29,
-      "session": "2026-11-04",
-      "spot": 766.9,
+      "session": "2026-11-06",
+      "spot": 736.07,
       "strikes_kept": 8
     },
     "note": "The chain archive this engine reads holds no snapshot yet. Each morning's market map does read a live chain and keeps totals from it (for SPY's latest session: the price level, the two walls, the flip level, one total per expiry and the 8 busiest strikes), but it keeps no full strike list and no per-strike volatility reading, so it cannot supply this forecast. Nothing has been filled in from it."
