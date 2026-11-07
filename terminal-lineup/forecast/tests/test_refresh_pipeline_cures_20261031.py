@@ -119,11 +119,17 @@ def test_abstention_reissue_voids_and_valid_basis():
     # the valid basis, never the raw row count.
     assert 'mine.get("forecasts_valid"' in src
     assert '"forecasts_voided"' in src
-    # The census pins stand at the re-taken session for both
+    # The census pins stood at the re-taken session for both
     # rolling publishers (re-taken 2026-11-04 in the terminal
-    # full census: 2026-11-03; SUITE-TRIAGE-REPIN-20261104).
-    assert 'board.get("session") != "2026-11-03"' in src
-    assert 'sop.get("session") != "2026-11-03"' in src
+    # full census: 2026-11-03; SUITE-TRIAGE-REPIN-20261104)
+    # until 2026-11-07, when the pins themselves were cured
+    # (ABSTENTION-SESSION-PIN-20261107): both publishers advance
+    # daily by design, so the bindings are now computed (the
+    # Board against the panel's freshest session, Second
+    # Opinion as a panel session at or after the census floor).
+    assert "board_session_ok" in src and "sop_session_ok" in src
+    assert 'board.get("session") != "2026-11-03"' not in src
+    assert 'sop.get("session") != "2026-11-03"' not in src
 
 
 def test_runner_regenerates_attestations_after_grading():
