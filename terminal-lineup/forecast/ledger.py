@@ -358,6 +358,31 @@ class Ledger:
         self._cache_rows = out
         return list(out)
 
+    def iter_rows(self):
+        """Stream the ledger's rows one at a time
+        (GRADING-STREAM-20261106): the same parse and the same
+        LedgerError on an invalid line as rows(), but nothing is
+        retained and the parsed-rows cache is neither read nor
+        populated, so a caller walking a ledger of any size holds
+        one parsed row of resident memory. Rows appended to the
+        file while a stream is open may or may not be seen by
+        that stream; callers that append as they go (the grading
+        driver) only ever append row types their own scan
+        filters out."""
+        if self._stat() is None:
+            return
+        with open(self.path, "r", encoding="utf-8") as fh:
+            for i, line in enumerate(fh, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    yield json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise LedgerError(
+                        f"ledger line {i} is not valid JSON (possible "
+                        f"rewrite/corruption): {exc}")
+
     def verify_chain(self, rows=None):
         """Return True iff every row's hash chain link is intact."""
         rows = self.rows() if rows is None else rows
@@ -408,6 +433,86 @@ class Ledger:
                     return False
                 prev = row["row_hash"]
         return True
+
+    # Outcome kinds whose grading needs ledger context beyond the
+    # row itself (grade_forecast's context scans). The streaming
+    # grading state pre-collects exactly these rows: 28 exist in
+    # the 253,163-row ledger of 2026-11-06.
+    GRADING_CONTEXT_KINDS = ("first_failure_side", "league_interval",
+                             "league_ranking")
+
+    def grading_stream_state(self):
+        """One streaming pass over the ledger collecting the
+        grading append state (GRADING-STREAM-20261106): the hash
+        chain is verified exactly as _stream_pass verifies it (an
+        unparseable line or a broken link raises LedgerError,
+        because the append path refuses rather than reports), and
+        the working set collected is only the tail hash, the ids
+        of already-graded forecasts, the void map, the grade
+        count, and the few context rows grade_forecast scans for.
+        Nothing else is retained and the parsed-rows cache is
+        neither read nor populated: the resident set is the id
+        sets, not the parsed ledger. A pass whose file moves
+        under it is retried; a file that will not sit still is
+        refused. The returned dict carries the stream-state keys
+        _append_streaming consumes (stat, tail_hash, seen), so
+        grade appends route through it unchanged."""
+        for _attempt in range(3):
+            stat0 = self._stat()
+            graded_ids = set()
+            voided_by = {}
+            context_rows = []
+            grade_count = 0
+            prev = ""
+            if stat0 is not None:
+                with open(self.path, "r", encoding="utf-8") as fh:
+                    for i, line in enumerate(fh, 1):
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            row = json.loads(line)
+                        except json.JSONDecodeError as exc:
+                            raise LedgerError(
+                                f"ledger line {i} is not valid JSON "
+                                f"(possible rewrite/corruption): {exc}")
+                        body = {k: v for k, v in row.items()
+                                if k not in ("row_hash", "prev_hash",
+                                             "row_id")}
+                        expect = hashlib.sha256(
+                            (prev + _canonical(body)).encode()
+                        ).hexdigest()
+                        if row.get("prev_hash") != prev \
+                                or row.get("row_hash") != expect:
+                            raise LedgerError(
+                                "ledger hash chain is broken; "
+                                "refusing to append to a ledger whose "
+                                "history does not verify (rewrite "
+                                "detected)")
+                        prev = row["row_hash"]
+                        rtype = row.get("type")
+                        if rtype == "grade":
+                            grade_count += 1
+                            if row.get("forecast_row_id"):
+                                graded_ids.add(row["forecast_row_id"])
+                        elif rtype == "correction":
+                            if row.get("corrects_row_id"):
+                                voided_by[row["corrects_row_id"]] = \
+                                    row["row_id"]
+                        elif rtype == "forecast":
+                            if (row.get("outcome") or {}).get("kind") \
+                                    in self.GRADING_CONTEXT_KINDS:
+                                context_rows.append(row)
+            if self._stat() == stat0:
+                return {"engine_id": None, "issued_ts": None,
+                        "stat": stat0, "tail_hash": prev, "seen": set(),
+                        "graded_ids": graded_ids,
+                        "voided_by": voided_by,
+                        "grade_count": grade_count,
+                        "context_rows": context_rows}
+        raise LedgerError(
+            "ledger changed repeatedly during the streaming "
+            "grading pass; refusing to append")
 
     def _append(self, row):
         rows = self.rows()
@@ -768,7 +873,8 @@ class Ledger:
 
     def append_grade(self, *, forecast_row, grade,
                      label_context_fingerprint=None,
-                     label_transform_id=None, label_transform_hash=None):
+                     label_transform_id=None, label_transform_hash=None,
+                     stream_state=None):
         """Append a grade row referencing the forecast row it grades.
         Refuses to grade a forecast twice (a re-grade is a correction).
 
@@ -803,6 +909,50 @@ class Ledger:
                     "identity frozen on the forecast row; refusing "
                     "to grade a label under a different definition "
                     "than the one it was issued under")
+        if stream_state is not None:
+            # Streaming form (GRADING-STREAM-20261106): the refusal
+            # checks consult the grading stream state's id sets
+            # instead of a rows() scan, and the append goes through
+            # _append_streaming, so grading a ledger of any size
+            # never parses it. The checks, the messages and the
+            # appended body are the classic path's own; if the file
+            # moved under the state (another writer appended), the
+            # state is rebuilt once and the checks run again
+            # against the fresh sets.
+            for _attempt in range(2):
+                if forecast_row["row_id"] in \
+                        stream_state["voided_by"]:
+                    raise LedgerError(
+                        "forecast voided by correction "
+                        f"{stream_state['voided_by'][forecast_row['row_id']]}; "
+                        "refusing to grade a voided forecast "
+                        "(grade rows on voided forecasts cure, "
+                        "2026-10-30, defect 8)")
+                if forecast_row["row_id"] in \
+                        stream_state["graded_ids"]:
+                    raise LedgerError(
+                        "forecast already graded; append a correction "
+                        "row instead of a second grade")
+                body = {
+                    "type": "grade",
+                    "engine_id": forecast_row["engine_id"],
+                    "forecast_row_id": forecast_row["row_id"],
+                    "subject": forecast_row["subject"],
+                    "horizon_close": forecast_row["horizon_close"],
+                    "grade": grade}
+                if frozen is not None:
+                    body.update(frozen)
+                if self._stat() == stream_state["stat"]:
+                    appended = self._append_streaming(body,
+                                                      stream_state)
+                    stream_state["graded_ids"].add(
+                        forecast_row["row_id"])
+                    stream_state["grade_count"] += 1
+                    return appended
+                stream_state.update(self.grading_stream_state())
+            raise LedgerError(
+                "ledger changed repeatedly during streaming grade "
+                "appends; refusing to append")
         for row in self.rows():
             if row.get("type") == "correction" and \
                     row.get("corrects_row_id") == forecast_row["row_id"]:
