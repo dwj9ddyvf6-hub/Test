@@ -124,7 +124,32 @@ def test_family_fracture_page_reproduced():
     # the producer ran clean in the completion chain on the
     # 2026-11-04 session, so the same next-weekday derivation
     # now lands on 2026-11-05.
-    assert data["decision_date"] == "2026-11-05"
+    # Durable form 2026-11-07 (same stale-pin class as the
+    # refresh-leg cures of that day): the expectation is derived
+    # from the producer's own inputs instead of a pinned date.
+    # The producer's freshest full tape day comes from the
+    # morgue permanent log's tape-aggregate runs (every day
+    # carrying all index symbols), and its decision date is the
+    # next weekday after it, by the producer's own next_weekday.
+    # When this was converted, the tape stood at 2026-11-06 and
+    # the page at the derived 2026-11-09.
+    ff = _load("ff_derive", os.path.join(
+        SITE, "refresh_familyfracture.py"))
+    log_path = os.path.expanduser(
+        "~/workspace/morgue/output/ledger.jsonl")
+    days = {}
+    with open(log_path, encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            r = json.loads(line)
+            if r.get("component") == "tape-aggregate":
+                days.setdefault(r["ts_utc"][:10], set()).add(
+                    r["value"]["underlying"])
+    full_days = sorted(d for d, syms in days.items()
+                       if set(ff.SYMBOLS) <= syms)
+    assert full_days, "the permanent log holds no full tape day"
+    assert data["decision_date"] == ff.next_weekday(full_days[-1])
 
 
 def test_sponsored_wait_text_never_contradicts_counts():
