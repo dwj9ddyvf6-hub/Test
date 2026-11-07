@@ -1016,6 +1016,75 @@ def run_grading(ledger_obj, prices, registry, as_of=None, skipped=None,
     return new_grades
 
 
+class _StreamingGradeLedger:
+    """The ledger as grade_forecast needs it during a streaming
+    grading pass (GRADING-STREAM-20261106): rows() returns only
+    the pre-collected context rows (the ledger's handful of
+    first_failure_side and league rows, whose grading scans the
+    ledger by engine, symbol or row id; every such row is in the
+    set, so the scans find exactly what a full rows() would hand
+    them), and append_grade routes through the grading stream
+    state, so no call ever parses the ledger."""
+
+    def __init__(self, led, state):
+        self._led = led
+        self._state = state
+
+    def rows(self):
+        return list(self._state["context_rows"])
+
+    def append_grade(self, **kwargs):
+        return self._led.append_grade(stream_state=self._state,
+                                      **kwargs)
+
+
+def run_grading_streaming(led, prices, registry, state, as_of=None,
+                          skipped=None, record_outcomes=None):
+    """run_grading's streaming form (GRADING-STREAM-20261106):
+    the same predicates, the same order, the same skipped
+    accounting and the same appended grade rows, but the ledger
+    is walked with iter_rows() against the id sets the grading
+    stream state collected, so the parsed ledger is never held.
+    The classic run_grading remains for every other caller; the
+    live runner uses this form because the classic form's
+    resident set (the whole parsed ledger, 1.83 GB measured at
+    253,163 rows, held beside the price panel for the run's
+    whole length) is what the 2026-11-06 grading step died of
+    (exit -9) when lanes overlapped it."""
+    graded_ids = state["graded_ids"]
+    voided_by = state["voided_by"]
+    shim = _StreamingGradeLedger(led, state)
+    new_grades = []
+    for row in led.iter_rows():
+        if row.get("type") != "forecast" or row["row_id"] in graded_ids:
+            continue
+        if row["row_id"] in voided_by:
+            if skipped is not None:
+                skipped.append({
+                    "row_id": row["row_id"],
+                    "engine_id": row.get("engine_id"),
+                    "kind": (row.get("outcome") or {}).get("kind"),
+                    "reason": "voided by correction "
+                              f"{voided_by[row['row_id']]}"})
+            continue
+        if row.get("absence_state") not in (None, "present"):
+            continue
+        if is_matured(row, prices, as_of=as_of):
+            try:
+                new_grades.append(
+                    grade_forecast(shim, row, prices, registry,
+                                   as_of=as_of,
+                                   record_outcomes=record_outcomes))
+            except (GradingError, KeyError, TypeError, ValueError) as exc:
+                if skipped is not None:
+                    skipped.append({"row_id": row["row_id"],
+                                    "engine_id": row.get("engine_id"),
+                                    "kind": (row.get("outcome") or {})
+                                    .get("kind"),
+                                    "reason": f"{type(exc).__name__}: {exc}"})
+    return new_grades
+
+
 # ---- horizon overlap measurement (DEEP-PASS 3.2 item 4) -------------
 # Ported from the horizon_overlap.py geometry in Ausar's forecast
 # package (Section 2.2, M09): overlapping pair count, max concurrent
