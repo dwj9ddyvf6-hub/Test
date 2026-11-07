@@ -403,7 +403,7 @@ Practice separate statements:
 
 ### Bollinger's own instruction
 
-John Bollinger describes bands as a relative high/low framework. A band touch alone is not a buy or sell; strong trends can continue along an outer band. BandWidth describes compression/expansion, while %b describes location within the bands. He also recommends complementary rather than redundant indicators. Those distinctions make bands useful for asking whether a move is extending, compressing or changing character, rather than assigning the same meaning to every touch. Source read: [Bollinger Band Rules](https://www.bollingerbands.com/bollinger-band-rules).
+J. Bollinger describes bands as a relative high/low framework. A band touch alone is not a buy or sell; strong trends can continue along an outer band. BandWidth describes compression/expansion, while %b describes location within the bands. He also recommends complementary rather than redundant indicators. Those distinctions make bands useful for asking whether a move is extending, compressing or changing character, rather than assigning the same meaning to every touch. Source read: [Bollinger Band Rules](https://www.bollingerbands.com/bollinger-band-rules).
 
 Original exercise: construct two sequences that both close at the upper band. In A, the average rises, pullbacks are shallow, and closes remain near the highs. In B, the average is flat, the price reaches a previously rejected range ceiling, and the next bar closes back in the range. Explain why identical band location does not imply identical trade structure. State the next observation that would change each interpretation.
 
