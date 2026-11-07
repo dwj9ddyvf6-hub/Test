@@ -120,9 +120,22 @@ def test_abstention_census_retaken():
     # census was re-taken again in the terminal full census at
     # the 2026-11-03 session, same character (the freshest
     # day's abstainer is still Intake-Bias Reversal).
-    assert 'board.get("session") != "2026-11-03"' in src
-    assert 'sop.get("session") != "2026-11-03"' in src
-    assert 'ib_today.get("session") != "2026-11-03"' in src
+    # Cured 2026-11-07 (ABSTENTION-SESSION-PIN-20261107): the
+    # literal pins this test asserted WERE the defect. Both
+    # pages advance daily by design, so the pins broke by
+    # construction and forced both hand re-takes above. The
+    # durable contract is the computed binding: the Board's
+    # session equals the panel's freshest session, Second
+    # Opinion's is a panel session at or after the census
+    # floor, the intake-bias census facts bind to the source's
+    # retained history with its live counters as floors, and
+    # the decision window is closed at the census day.
+    assert "board_session_ok" in src and "sop_session_ok" in src
+    assert "ib_history_ok" in src and "ib_live_ok" in src
+    assert 'board.get("session") != "2026-11-03"' not in src
+    assert 'sop.get("session") != "2026-11-03"' not in src
+    assert 'ib_today.get("session") != "2026-11-03"' not in src
+    assert 'WINDOW_CLOSE_SESSION = "2026-11-03"' in src
     assert '{"day": "2026-11-03",' in src
     assert '"abstained": ["Intake-Bias Reversal"]' in src
     # The 2026-10-23 census day is proven from the rebuilt
@@ -153,12 +166,22 @@ def test_abstention_published_decision_record():
     # on the valid basis, which did not move. The SUPN triple
     # (3 correction rows naming engine_06) is a different
     # engine and never enters this per-engine count.
+    # Recounted 2026-11-07 (ABSTENTION-SESSION-PIN-20261107):
+    # forecasts_voided 6 to 8, from the ledger's own arithmetic
+    # recounted the same day: engine_30 carries 16 forecast
+    # rows, exactly 8 voided (4 for the 2026-10-30 issue day,
+    # and 4 for the 2026-11-03 issue day: the second pair was
+    # voided when that session was re-issued under the book
+    # pages' advance since 2026-11-04, during the cure's first
+    # successful runs of the leg, the leg's own frozen-at-first-
+    # issue rule working as designed); 16 minus 8 is the 8
+    # recorded on the valid basis, which did not move.
     assert data["as_of_session"] == "2026-11-03"
     assert len(data["decision_days"]) == 9
     assert data["today"]["day"] == "2026-11-03"
     assert data["today"]["rate"] == 0.3333
     assert data["live"]["forecasts_recorded"] == 8
-    assert data["live"]["forecasts_voided"] == 6
+    assert data["live"]["forecasts_voided"] == 8
     # The narrative must agree with the block it rides in (it once
     # described the previous census day, fired, 0 of 1, 6 days,
     # while the block carried the new day; cured 2026-10-31 by
