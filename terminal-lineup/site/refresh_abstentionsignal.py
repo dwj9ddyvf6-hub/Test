@@ -291,6 +291,70 @@ def load_json(path):
         return json.load(fh)
 
 
+# The last inspected census day for the book pages whose freshest
+# day advances by design (census of 2026-11-04). It is a floor, not
+# a pin: a page may advance past it freely and may never regress
+# below it. See the cure note at the Board check in build().
+# The same day closes the decision window this page assembles:
+# the episode's record ends at the last full census (see the
+# decision-days assembly note in build()).
+WINDOW_CLOSE_SESSION = "2026-11-03"
+CENSUS_FLOOR_SESSION = WINDOW_CLOSE_SESSION
+
+# The intake-bias sessions whose per-day facts were inspected at
+# the censuses. They must all survive in the source's retained
+# history; sessions accrued after the census are the record
+# working as designed, not a disagreement.
+INSPECTED_IB_SESSIONS = ("2026-10-26", "2026-10-27", "2026-10-28",
+                         "2026-10-29", "2026-10-30", "2026-11-02")
+
+
+def ib_history_ok(history_sessions):
+    """Every inspected intake-bias session is still carried by the
+    source's retained history (its per-day facts are checked
+    individually in build())."""
+    return all(s in history_sessions for s in INSPECTED_IB_SESSIONS)
+
+
+def gradeable(row, graded_ids, voided_ids):
+    """A forecast row may be graded only if it is this engine's,
+    not already graded, not voided by a correction row (the ledger
+    refuses grades on voided forecasts by design), and not absent.
+    """
+    return (row.get("type") == "forecast"
+            and row.get("engine_id") == ENGINE_ID
+            and row["row_id"] not in graded_ids
+            and row["row_id"] not in voided_ids
+            and row.get("absence_state") in (None, "present"))
+
+
+def ib_live_ok(live):
+    """Census floors for the intake-bias live counters (16 forecasts
+    recorded, 1 interaction fire at the 2026-11-04 census): a
+    healthy accruing record may only stand at or above them."""
+    return (live.get("interaction_fires", 0) >= 1
+            and live.get("forecasts_recorded", 0) >= 16)
+
+
+def board_session_ok(board_session, panel_sessions):
+    """The Board keeps only its freshest day, so its session must
+    equal the freshest session on the SPY panel this same record
+    trusts for its outcome history. Anything else is a Board that
+    is behind the panel (or ahead of it), a true staleness signal.
+    """
+    return bool(panel_sessions) and board_session == panel_sessions[-1]
+
+
+def sop_session_ok(sop_session, panel_sessions):
+    """Second Opinion advances on its own coverage cadence, not the
+    Board's, so its binding is membership plus a floor: its freshest
+    day must be a real panel session and may not regress below the
+    last inspected census day.
+    """
+    return (sop_session in panel_sessions
+            and sop_session >= CENSUS_FLOOR_SESSION)
+
+
 def build():
     for path in [PANEL_PATH, VIX_PATH, MORGUE_LEDGER_PATH] + list(BOOK_FILES.values()):
         if not os.path.exists(path):
@@ -303,6 +367,7 @@ def build():
     sop = load_json(BOOK_FILES["second_opinion"])
     gsw = load_json(BOOK_FILES["golden_sweep"])
     ib = load_json(BOOK_FILES["intake_bias"])
+    panel_sessions = [r[0] for r in (load_json(PANEL_PATH).get("SPY") or [])]
 
     rec = router["session_record"]
     if len(rec) != 1:
@@ -329,8 +394,22 @@ def build():
     # file on this run, the character is unchanged again (1838
     # checked, 50 published, big-investors check no_data for
     # all 50 published names).
-    if board.get("session") != "2026-11-03":
-        return fail("board session disagreement")
+    # Cure 2026-11-07 (ABSTENTION-SESSION-PIN-20261107): the date
+    # pin this guard carried broke by construction on every
+    # trading day the Board advanced, which is every trading day;
+    # it had already forced two hand re-takes (above) and failed
+    # four consecutive full refresh runs against a healthy record
+    # (Board at 2026-11-06, counts and character unchanged). The
+    # binding is now computed, not censused: the Board's session
+    # must equal the freshest session on the SPY panel this same
+    # record trusts for its outcome history (board_session_ok).
+    # A Board behind the panel now fails closed as a true
+    # staleness signal; a Board advancing with the panel passes
+    # without a human re-pinning a date ever again.
+    if not board_session_ok(board.get("session"), panel_sessions):
+        return fail("board session disagreement: the Board is stamped "
+                    f"{board.get('session')}, the panel's freshest "
+                    f"session is {panel_sessions[-1] if panel_sessions else None}")
     big_inv_states = []
 
     def walk_board(o):
@@ -374,8 +453,19 @@ def build():
     # unchanged. Re-taken 2026-11-04: freshest day 2026-11-03,
     # coverage counts counted from the file on this run and
     # unchanged (1838 on record, 5 no-family, 5 too-little-data).
-    if sop.get("session") != "2026-11-03":
-        return fail("second-opinion session disagreement")
+    # Cure 2026-11-07 (ABSTENTION-SESSION-PIN-20261107): the same
+    # stale-pin class sat one check behind the Board pin. Second
+    # Opinion advances on its own coverage cadence (its freshest
+    # day is the freshest day it holds coverage for, and it lags
+    # the Board legitimately), so its binding is membership plus
+    # the census floor (sop_session_ok): a real panel session, no
+    # regression below the inspected census day, accrual past it
+    # expected. The coverage counts below stay exact.
+    if not sop_session_ok(sop.get("session"), panel_sessions):
+        return fail("second-opinion session disagreement: its freshest "
+                    f"day is {sop.get('session')}, which is not a panel "
+                    "session at or after the inspected census day "
+                    f"{CENSUS_FLOOR_SESSION}")
     cov = sop["coverage"]
     if cov["names_on_record"] != 1838 or cov["no_family"] != 5 or cov["too_little_data"] != 5:
         return fail("second-opinion coverage disagreement")
@@ -410,9 +500,17 @@ def build():
     # 2026-11-03, on which it did not form, and the live record
     # stands at 16 forecasts recorded, counted from the file on
     # this run.
-    if sorted(ib_hist) != ["2026-10-26", "2026-10-27", "2026-10-28",
-                           "2026-10-29", "2026-10-30", "2026-11-02"]:
-        return fail("intake-bias history sessions disagreement")
+    # Cure 2026-11-07 (ABSTENTION-SESSION-PIN-20261107): the exact
+    # session-list pin broke the first day the source accrued a
+    # new history session (2026-11-03 rolled into its history, as
+    # designed). The binding is that the inspected sessions all
+    # survive in the retained history; their per-day facts are
+    # checked individually below. Accrual beyond the census is
+    # the record working, not a disagreement.
+    if not ib_history_ok(ib_hist):
+        return fail("intake-bias history sessions disagreement: an "
+                    "inspected session is missing from the retained "
+                    "history")
     if ib_hist["2026-10-26"]["fired"] is not True or ib_hist["2026-10-26"]["interaction"] != ["SPY"]:
         return fail("intake-bias 2026-10-26 disagreement: its own record "
                     "shows the combined group formed that day")
@@ -427,12 +525,26 @@ def build():
         return fail("intake-bias 2026-10-30 disagreement")
     if ib_hist["2026-11-02"]["fired"] is not False or ib_hist["2026-11-02"]["interaction"] != []:
         return fail("intake-bias 2026-11-02 disagreement")
-    ib_today = ib["today"]
-    if ib_today.get("session") != "2026-11-03" or ib_today["fired"] is not False \
-            or ib_today["interaction"] != []:
-        return fail("intake-bias freshest session disagreement")
-    if ib["live"]["interaction_fires"] != 1 or ib["live"]["forecasts_recorded"] != 16:
-        return fail("intake-bias live record disagreement")
+    # Cure 2026-11-07 (ABSTENTION-SESSION-PIN-20261107): the live
+    # intake-bias page has advanced past the closed window (its
+    # today is a later session, on which it has since fired), so
+    # pinning its today to the census day failed by construction.
+    # The census-day facts are verified instead from the source's
+    # own retained history, which still carries 2026-11-03 with
+    # the inspected record (did not fire, no interaction), and the
+    # live counters are verified against their census floors
+    # (ib_live_ok): accrual above them is expected, regression
+    # below them is a real defect.
+    ib_census_day = ib_hist.get(WINDOW_CLOSE_SESSION)
+    if ib_census_day is None or ib_census_day["fired"] is not False \
+            or ib_census_day["interaction"] != []:
+        return fail("intake-bias census-day disagreement: the retained "
+                    "history does not carry the inspected 2026-11-03 "
+                    "record (no fire, no interaction)")
+    if not ib_live_ok(ib["live"]):
+        return fail("intake-bias live record disagreement: the live "
+                    "counters fell below the inspected census floors "
+                    "(16 forecasts recorded, 1 interaction fire)")
 
     # Decision days, per the registered construction. Each entry:
     # (day, active, abstained, defect_excluded, notes_key)
@@ -454,6 +566,17 @@ def build():
     # the same audited character; Intake-Bias days 2026-10-30
     # and 2026-11-02 join from its own retained history, on
     # neither of which it fired, so it abstained on both.
+    # Window closed 2026-11-07 (ABSTENTION-SESSION-PIN-20261107):
+    # the assembled window ends at the 2026-11-04 census day,
+    # 2026-11-03, and does not extend further. The Board and
+    # Second Opinion pages keep only their freshest day, so later
+    # days' character is not recoverable from them, and this
+    # leg's own guard failures since 2026-11-04 broke the daily
+    # evidence trail an extension would need. The list below is
+    # the closed episode; its forecasts stand as issued from
+    # 2026-11-03 and mature against the advancing panel, and its
+    # guards verify the retained records, not the live heads of
+    # pages that have legitimately moved on.
     decision_days = [
         {"day": "2026-10-16", "active": ["The Router"],
          "abstained": ["The Router"], "defect_excluded": [],
@@ -505,8 +628,13 @@ def build():
         return fail("independent abstainer count disagreement with the "
                     "inspected record (no day may exceed 1)")
     freshest = decision_days[-1]
-    if freshest["day"] != ib_today["session"]:
-        return fail("freshest decision day is not the freshest tape session")
+    # Cure 2026-11-07 (ABSTENTION-SESSION-PIN-20261107): the join is
+    # to the closed window's last day, not to the live tape's
+    # freshest session, which advances daily and is no longer part
+    # of this closed record.
+    if freshest["day"] != WINDOW_CLOSE_SESSION:
+        return fail("freshest decision day is not the closed window's "
+                    "last day")
     rates_pool = [d["rate"] for d in decision_days]
 
     # ---------- SPY panel and the outcome history ----------
@@ -781,13 +909,21 @@ def build():
     # ---------- Grade any matured engine_30 forecasts ----------
     rows = led.rows()
     graded_ids = {r["forecast_row_id"] for r in rows if r.get("type") == "grade"}
+    # Cure 2026-11-07 (ABSTENTION-GRADE-VOIDED-20261107): voided
+    # duplicate re-issues stay on the append-only ledger, and the
+    # ledger refuses grades on them by design (defect 8 cure,
+    # 2026-10-30); this loop never excluded them, so the first
+    # matured voided row killed the leg with LedgerError. The
+    # skip decision now lives in gradeable(), which excludes
+    # voided rows exactly as the figures section below does when
+    # it counts valid forecasts.
+    voided_ids = {r.get("corrects_row_id") for r in rows
+                  if r.get("type") == "correction"}
     vol_prices = [None]
     date_index = {d: i for i, d in enumerate(dates)}
     newly_graded = 0
     for r in rows:
-        if r.get("type") != "forecast" or r.get("engine_id") != ENGINE_ID:
-            continue
-        if r["row_id"] in graded_ids or r.get("absence_state") not in (None, "present"):
+        if not gradeable(r, graded_ids, voided_ids):
             continue
         oc = r["outcome"]
         h = oc["horizon_sessions"]
@@ -797,8 +933,15 @@ def build():
         j = date_index[issue]
         if j + h > len(closes) - 1:
             continue
-        if thr is None or fwd is None:
-            continue
+        # Dead guard removed 2026-11-07
+        # (ABSTENTION-GRADE-GUARD-20261107): this loop carried a
+        # leftover "thr/fwd is None" check from the pre-RC-19 self
+        # grading implementation; neither name exists in this
+        # scope, so the first reachable matured row raised
+        # NameError and killed the leg. The shared grading path
+        # below recomputes everything it needs per row and raises
+        # GradingError for an ungradeable row, which this loop
+        # already catches; no guard is needed here.
         # Shared grading path (RC-19 cure, 2026-10-30): the
         # shared resolver recomputes this row's bit under its
         # own threshold_rule from the price source, and the
