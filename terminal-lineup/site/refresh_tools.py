@@ -48,6 +48,20 @@ except ImportError:  # runner stays runnable standalone
 
 GROUPS = [
     ("producers", [
+        # Dependency order (TOOLS-CHAIN-PIN-ORDER-20261107):
+        # refresh_morning_map chains a Gamma Ladder re-run at
+        # the end of every republication, and the ladder reads
+        # the Expiry Pin Watch page. The Pin Watch refresh must
+        # therefore land BEFORE the Morning Map leg, or the
+        # chained ladder reads the pin page as the previous
+        # evening left it and refuses a mixed state on a
+        # one-session-stale snapshot (the tools runs of
+        # 2026-11-05 and 2026-11-06 both failed on exactly
+        # this). The lane that owns the snapshot produces it
+        # first: the morgue chain collector stores the current
+        # session's snapshots by about 16:00 ET, hours before
+        # this 19:00 chain runs.
+        "refresh_pinwatch.py",
         "refresh_morning_map.py",
         "refresh_board.py",
         "refresh_chain.py",
@@ -56,7 +70,6 @@ GROUPS = [
         # its filing log. It runs here, after the chain refresh
         # its chain_map leg reads.
         "refresh_expected_move.py",
-        "refresh_pinwatch.py",
         "refresh_earningscal.py",
         "refresh_weekahead.py",
     ]),
