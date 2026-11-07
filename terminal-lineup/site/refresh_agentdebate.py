@@ -236,8 +236,27 @@ def main():
         if not price or not prints or not pos:
             fail("Second Opinion reading for " + sym + " is missing a family")
         if pos.get("dix_date") != mm_session:
-            fail("Morning Map session disagrees with the positioning card "
-                 "session the Second Opinion carries for " + sym)
+            # Name the culprit side (T2 cure, 2026-11-07): the
+            # old message reported a disagreement with no
+            # values, so a frozen consumer never said WHICH
+            # record was stale. Both values and both records'
+            # build stamps are in the message now, and the
+            # older side is named: that lane is the one to
+            # refresh; this consumer stays frozen until the
+            # two agree. The gate itself is unchanged.
+            so_dix = pos.get("dix_date")
+            stale_side = ("Second Opinion" if (so_dix or "") < mm_session
+                          else "Morning Map")
+            fail("session disagreement for " + sym + ": Second "
+                 "Opinion positioning card session (dix_date) "
+                 + str(so_dix) + " (Second Opinion session "
+                 + str(session) + ", positioning built "
+                 + str(so.get("positioning_built_at_utc"))
+                 + ") vs Morning Map session " + str(mm_session)
+                 + " (Morning Map built "
+                 + str(mm.get("generated_at_utc")) + "): the "
+                 + stale_side + " side is stale; refresh that "
+                 "lane first")
         for fam in (price, prints, pos):
             if fam.get("stance") not in STANCES:
                 fail("unknown stance word in the Second Opinion reading for " + sym)
