@@ -430,7 +430,7 @@ The archived Quant Charts example obtains a VWAP series from a helper and comput
 The Test repository's Griffith recipe combines a short-term average relationship, proximity to VWAP, RSI, market context and a scan score, with fixed numerical stop/target assumptions. The document labels the historical sleeve live; this study did not verify current operation. Its educational contribution is how a broad idea becomes a specific recipe. The exact fractions, universe and sizing are that recipe's parameters, not the definition of every VWAP pullback.
 
 
-[Archived Griffith recipe](https://github.com/dwj9ddyvf6-hub/Test/blob/5b13da715e96f7d38397e6799caf8ec96a3b8994/strategies/griffith/griffith-vwap-pullback.md)
+[Archived Griffith recipe](https://github.com/dwj9ddyvf6-hub/Test/blob/d73fac7b162e2c4442d920c0ff9275211159f9e0/strategies/griffith/griffith-vwap-pullback.md)
 
 ## Timestamp the divergence anchors
 The archived scanner description pairs consecutive same-type price-close swings and compares RSI/OBV at those anchors. Regular bullish divergence means lower price but higher oscillator; regular bearish is the reverse. Its windows, minimum separation, one-bar interior-pivot confirmation, strength threshold, five-bar active life and near-30/70 labels are **that implementation**, not universal definitions. An overlap label is usable only when both component records already exist. The archive documents an earlier future-record overlap bug; visual historical labels can therefore look cleaner than signals available in real time.
