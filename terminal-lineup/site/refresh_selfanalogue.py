@@ -912,6 +912,16 @@ def build():
         },
         "live": {
             "forecasts_recorded": mine["forecasts"],
+            # Generation stamp (cure CALIBRATION-GENERATION-20261107):
+            # the number of ledger rows this page's figures were
+            # computed from, counted on the same read that produced
+            # them. Cross-checks bind to this generation, never to
+            # a later live total: this leg appends its own rows
+            # mid-run and is the run's longest leg, so a checker
+            # reading the page against the live ledger after an
+            # interrupted run used to inherit a frozen one-sided
+            # gap and fail on a healthy record.
+            "ledger_rows_at_write": len(rows),
             "forecasts_graded": mine["graded"],
             "proving_target_graded": KILL_FORECASTS,
             "forecasts": live_forecasts,
