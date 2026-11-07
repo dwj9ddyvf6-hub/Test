@@ -116,6 +116,54 @@ def load_json(rel):
         return json.load(f)
 
 
+GOLDEN_REL = "terminal-lineup/site/golden-sweep-wire/data.json"
+# Claim 25's census, taken 2026-11-05
+# (REPLICATION-WIRE-RETAKE-20261105): 8 recorded sessions, freshest
+# 2026-11-04, 2 golden prints inside those sessions. Since the
+# 2026-11-07 cure (REPLICATION-CLAIM25-ASOF-20261107) the claim is
+# verified AS OF its census day, never against the live totals:
+# the tape accrues a session every trading day by design, so an
+# equality pin on its counts broke on schedule after every
+# re-take (2026-10-30, 2026-11-04, 2026-11-05) while the record
+# itself was never wrong.
+GOLDEN_CENSUS = {"sessions": 8, "freshest": "2026-11-04", "prints": 2}
+
+
+def golden_claim_asof_ok(data, census=GOLDEN_CENSUS):
+    """Verify claim 25's census against the golden-sweep record
+    as of the census day: the sessions recorded on or before the
+    census freshest day still number exactly the census count and
+    end on that day (prefix stability: no early session added,
+    removed, or re-dated), the prints inside that prefix still
+    number the census count (an as-of recount, not a substring),
+    and the live totals stand at or above the census (floors:
+    accrual may only grow them). Sessions and prints accrued
+    after the census are the record working as designed.
+    """
+    sessions = sorted(s["session"] for s in data["sessions"])
+    prefix = [s for s in sessions if s <= census["freshest"]]
+    if len(prefix) != census["sessions"] \
+            or not prefix or prefix[-1] != census["freshest"]:
+        return False
+    prints_in_prefix = sum(
+        1 for p in data["prints"] if p["session"] <= census["freshest"])
+    if prints_in_prefix != census["prints"]:
+        return False
+    counts = data["counts"]
+    return (counts["sessions_recorded"] >= census["sessions"]
+            and counts["golden_prints"] >= census["prints"])
+
+
+def check_golden_claim_asof(rel):
+    data = load_json(rel)
+    if not golden_claim_asof_ok(data):
+        fail(f"{rel}: claim 25's census could not be re-verified "
+             f"as of {GOLDEN_CENSUS['freshest']} (a prefix of "
+             f"{GOLDEN_CENSUS['sessions']} sessions ending that "
+             f"day, {GOLDEN_CENSUS['prints']} prints inside it, "
+             "live totals at or above the census)")
+
+
 def fmt_day(iso):
     d = datetime.fromisoformat(iso.replace("Z", "+00:00"))
     return d.strftime("%B %-d, %Y")
@@ -539,17 +587,25 @@ def build():
     # lane (chainA's one exit 1, and one of the six named
     # failures on the 2026-11-04 refresh's FAILED RUN
     # accounting); the record itself was never wrong.
+    # Cured 2026-11-07 (REPLICATION-CLAIM25-ASOF-20261107): the
+    # re-take chain ends here. The census is verified as of its
+    # own day by check_golden_claim_asof (prefix stability, an
+    # as-of recount of the prints inside it, live totals as
+    # floors), the prose states the census as of its day, and
+    # the only live needle left is the decision date, a fixed
+    # rule parameter that does not accrue. The tape stood at 10
+    # sessions and 3 prints when this cure landed, and the claim
+    # passes on that record without a re-pin.
+    check_golden_claim_asof(GOLDEN_REL)
     claims.append(claim(
         "Golden sweep prints, a sweep at least as large as its contract's whole open interest with at least $1 million in it, are a signal worth following.",
         "An options-tape vendor tag, rebuilt by us",
         "untestable",
         "Our recording of every options print on the three index funds, checked for golden sweeps",
-        "8 recorded trading days so far on the index tape record, freshest session November 4, 2026, with two golden prints found",
-        "Cannot be tested on the records on hand: two golden prints stand on the recorded sessions, but neither has the following sessions a grade needs, so there is nothing gradeable yet. The missing record is the rest of the tape its own decision rule requires: 22 more recorded sessions to reach 30, with the decision date already set at December 8, 2026. Until a golden print's following sessions exist, no verdict either way is possible.",
-        "Recording started October 2026; tape record recounted November 5, 2026",
-        [("terminal-lineup/site/golden-sweep-wire/data.json",
-          ["\"golden_prints\": 2", "\"sessions_recorded\": 8",
-           "\"decision_date\": \"2026-12-08\""])]))
+        "8 recorded trading days on the index tape record at the November 5, 2026 recount, freshest session November 4, 2026, with two golden prints found in those sessions; the tape accrues a session each trading day and the wire's own page carries the live count",
+        "Cannot be tested on the records on hand: two golden prints stand on the sessions recorded at the recount, but neither has the following sessions a grade needs, so there is nothing gradeable yet. The missing record is the rest of the tape its own decision rule requires: 22 more recorded sessions were needed at the recount to reach 30, and sessions recorded since count toward it, with the decision date already set at December 8, 2026. Until a golden print's following sessions exist, no verdict either way is possible.",
+        "Recording started October 2026; tape record recounted November 5, 2026; the census is verified as of its own day since 2026-11-07 and is not re-pinned as the tape accrues",
+        [(GOLDEN_REL, ["\"decision_date\": \"2026-12-08\""])]))
 
     # 26 The router's record. RC-13 pass, 2026-10-30:
     # recorded as untestable with the missing record named.
