@@ -156,10 +156,16 @@ class T(unittest.TestCase):
 
     def test_reference_price_chain_tags_fallbacks(self):
         now = 1000.0
-        self.assertEqual(reference_price((10.0, now - 60), None, lambda: None, now), (10.0, "last"))
-        self.assertEqual(reference_price((10.0, now - 9000), (9.9, 10.1, now - 30), lambda: None, now), (10.0, "mid"))
+        self.assertEqual(reference_price((10.0, now - 60), None, None, now), (10.0, "last"))
+        self.assertEqual(reference_price((10.0, now - 9000), (9.9, 10.1, now - 30), None, now), (10.0, "mid"))
         self.assertEqual(reference_price((10.0, now - 9000), (9.0, 11.0, now - 30), (10.5, now - 30), now), (10.5, "secondary"))
-        self.assertEqual(reference_price(None, None, lambda: None, now), (None, "none"))
+        self.assertEqual(reference_price(None, None, None, now), (None, "none"))
+        # Secondary inputs are fetched observations, subject to the same
+        # timestamp/price policy as the primary; they are never callbacks.
+        for secondary in ((10.5, now - 601), (10.5, now + 1),
+                          (float("nan"), now), (10.5, float("inf"))):
+            with self.subTest(secondary=secondary):
+                self.assertEqual(reference_price(None, None, secondary, now), (None, "none"))
 
     def test_datahub_missing_stale_and_replace(self):
         calls = {"v": 1}

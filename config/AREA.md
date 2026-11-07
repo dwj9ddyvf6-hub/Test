@@ -1,8 +1,8 @@
 # config/: what lives here
 
-Desk configuration. config/sleeves.json is the live roster config mirrored into this repository (336 sleeves, paper trading only).
+Desk configuration. config/sleeves.json is the versioned paper-only roster snapshot mirrored into this repository; it does not establish current runtime state.
 
-Files here: 2 including this entry doc (count at the index commit named in INDEX.md).
+Exact file count, byte total and captured revision: [the generated repository index](../INDEX.md). The matching entries in [INDEX.json](../INDEX.json) retain every path and blob hash.
 
 This folder holds exactly one data file, config/sleeves.json, plus this entry doc. There is no code here.
 

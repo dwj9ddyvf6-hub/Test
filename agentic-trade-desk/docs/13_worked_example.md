@@ -15,9 +15,27 @@ book (replayed from ledger): flat
 chain ok: True
 ```
 What it proves:
-* the signal id is derived from the **data bar** (`bar_ts`), so a "restarted process" does not re-enter;
+* the signal id is derived from the **data bar** (`bar_ts`), so reconstructing the `Desk` on the same signal does not re-enter;
 * the ledger's replayed book is the position truth;
 * the hash chain verifies.
+
+The output label "restarted process" describes a simulation: this example
+creates another `Desk` object inside the same Python process, sharing the
+ledger. It demonstrates repeat-evaluation deduplication. An operating-system
+restart, interrupted network send and supervisor recovery need their own
+drills in the extension exercises below.
+
+From the repository root, the clean-copy check runs this example and the
+invariant suite with no inherited credentials and rejects network activity:
+
+```bash
+python3 agentic-trade-desk/skeleton/tools/check_onboarding.py
+```
+
+Its JSON receipt checks one entry and one exit across twelve toy passes,
+zero duplicate orders on the six simulated restarts, a flat final book and
+the ledger chain. See [setup Step 3](03_setup_step_by_step.md#step-3--copy-the-skeleton-and-run-its-tests)
+for the copy layout and proof boundary.
 
 ## 13.2 Read the toy sleeve
 `DipBuyer.entries()` returns an intent with `bar_ts = <date of the bar that triggered it>`. That single field is the difference between a restart-safe desk and a desk that re-enters on every restart (P-01).
@@ -49,7 +67,13 @@ Real calendars/holidays, partial fills, stops, corporate actions, real data, mul
   "accounts_allowlist": []
 }
 ```
-Config is hot-reloaded each pass; unknown keys alert (never raise).
+This is a configuration contract for an extended implementation. The supplied
+`run_example.py` constructs its lane directly in Python; it does not read this
+JSON or implement hot reload. When adding a config loader, implement and test
+the intended behavior: reload a valid configuration each pass, and report
+unknown keys. A malformed or risk-invalid update must not silently loosen the
+last accepted policy. Keep this exercise separate from the toy's existing
+deduplication proof.
 The budgets, slots, and timing in this toy are simulation fixtures, not sizing recommendations. A risk policy must be defined for the instrument and strategy before any paper order path is enabled; this example intentionally does not prescribe a stop percentage.
 
 ## 13.6 A minimal regression harness skeleton

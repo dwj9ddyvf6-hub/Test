@@ -1,11 +1,13 @@
 # Fixed README section (generator source)
 
-The root `README.md` is regenerated from `docs/CATALOG.json` by a generator that is **not in this repository**.
+The root `README.md` contains listings derived from `docs/CATALOG.json` and `docs/ALL-SLEEVES.json`. The historical README producer is external to this repository; the local inventory generator builds only INDEX.md and INDEX.json.
 That regeneration has dropped the agent-guide links before. Whatever produces the README must emit the block
-below verbatim, between the `BEGIN FIXED SECTION` / `END FIXED SECTION` markers, right after the line
-"Monitors and research recorders are not listed."
+below verbatim, including its `BEGIN FIXED SECTION` / `END FIXED SECTION` markers, under the
+"Guides for agents and builders" heading after the three strategy views. Preserve the substantive
+front matter and both full listings when regenerating; this block is only one preservation contract.
 
-Verify any regenerated README with:
+The check compares the exact block with this source, requires exactly one marker pair, and resolves
+all three guide targets plus the reconciliation relative to the selected README. Verify with:
 
     python3 agentic-trade-desk/skeleton/tools/check_root_readme_links.py README.md
 

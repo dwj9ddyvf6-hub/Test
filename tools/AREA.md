@@ -1,12 +1,18 @@
-# tools/: what lives here
+# tools/: use the library and maintain its map
 
-Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md.
+These standard-library Python tools provide local navigation and reproducible inventories. They do not run a strategy, fetch market data, contact a broker, activate a service or publish a repository change.
 
-Files here: 2 including this entry doc (count at the index commit named in INDEX.md).
+- [repo_navigator.py](repo_navigator.py): search paths/content, select a curated task route, create a bounded reading packet, or check navigation integrity. The curated route and area definitions live once in [docs/REPOSITORY-MAP.json](../docs/REPOSITORY-MAP.json).
+- [build_repo_index.py](build_repo_index.py): generate INDEX.json/INDEX.md from a selected local commit, the staged candidate, a saved tree or the GitHub API; `--check` compares saved outputs without rewriting them.
 
-This folder holds exactly one tool, tools/build_repo_index.py, plus this entry doc. Run it to regenerate INDEX.json and INDEX.md from the live tree.
+```sh
+python3 tools/repo_navigator.py search tensor
+python3 tools/repo_navigator.py route explain-strategy
+python3 tools/repo_navigator.py packet explain-strategy --max-chars 18000
+python3 tools/repo_navigator.py check
+python3 tools/build_repo_index.py --local-repo . --ref HEAD --check --out-dir .
+```
 
-## Where its index lives
+Run the commands from the repository root. For a published inventory, commit source updates first, generate the index from that exact commit, and then commit the two generated outputs. A staged inventory has an exact computed Git tree hash and no commit; label it as a candidate. Only the two index outputs have self-excluded hashes: the generator and every other source file remain hashed.
 
-- Every file in this area is listed, with size and blob sha, in the root INDEX.json (search it by the path prefix `tools/`).
-- The prose map is the root INDEX.md; the mandatory first read is the root START-HERE.md; routing by topic is the root ROADMAP.md.
+The exact tool inventory and captured revision are in [INDEX.md](../INDEX.md) and [INDEX.json](../INDEX.json). The [operating guide](../docs/LLM-OPERATING-GUIDE.md) explains how to use search results and packets as evidence without turning them into unsupported capability claims.

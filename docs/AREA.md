@@ -1,10 +1,10 @@
 # docs/: what lives here
 
-Documentation at scale: the strategy catalog data, the current-desk and all-strategies accountings, one algorithm and recreation document per strategy, verification notes, and the research collections under docs/research/.
+Documentation at scale: the strategy catalog data, the captured-roster and all-strategies accountings, one algorithm and recreation document per strategy, verification notes, and the research collections under docs/research/.
 
-Files here: 1207 including this entry doc (count at the index commit named in INDEX.md).
+Exact file count, byte total and captured revision: [the generated repository index](../INDEX.md). The matching entries in [INDEX.json](../INDEX.json) retain every path and blob hash.
 
-Layout: 1,091 documents at the top of this folder (the catalogs, the accountings, the per-strategy algorithm and recreation notes, the guides), research/ (100 files after the sweep records landed: every study is named in ROADMAP.md) and verify/ (15 verification notes, indexed by docs/VERIFY.md).
+Layout: catalogs, accounting, algorithm/recreation notes and guides at the top of this folder, research/ (independent studies enumerated from the tree in INDEX.md and routed in ROADMAP.md) and verify/ (15 verification notes, indexed by docs/VERIFY.md).
 
 ## Where its index lives
 

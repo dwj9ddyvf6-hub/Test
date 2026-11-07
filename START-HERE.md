@@ -1,75 +1,92 @@
-# START HERE: mandatory first read
+# Start here: turn the library into a useful answer
 
-You are an LLM (or a person) arriving cold at a large repository: 7,226 files in 24 top-level areas. Readers who start from the README alone, or from the strategy catalog alone, miss about three quarters of what is here, because the catalog covers only one collection (269 strategy cards) out of 7,226 files. This file exists so that cannot happen again. Follow the protocol below before answering anything about this repository.
+**Test is the public source and research library.** It preserves strategy cards, implementation copies, reconstruction notes, independent studies, educational engines, terminal snapshots and paper-desk engineering guides. [InfinityBlade Engineering Doctrine](https://github.com/dwj9ddyvf6-hub/InfinityBlade-Engineering-Doctrine) is the companion operating discipline: how an agent scopes, investigates, verifies and reports work. Use the two together without confusing a research record with an installed capability.
+
+The library is larger than its strategy catalog. The complete measured inventory is [INDEX.md](INDEX.md), with every path, Git blob hash and size in [INDEX.json](INDEX.json). Counts belong to that captured source tree; this page deliberately does not maintain a competing total. The catalog's strategy cards are one collection, not the denominator for the repository.
 
 ## Mandatory reading protocol
 
-Do these steps in order, in full, before answering any question about this repository:
+1. Read this page completely, then [INDEX.md](INDEX.md), the map of every top-level area and research collection.
+2. Choose the relevant [ROADMAP.md](ROADMAP.md) route. Read the README or AREA.md for each area you will use, plus any narrower AGENTS.md before editing or running its code.
+3. Read [docs/LLM-OPERATING-GUIDE.md](docs/LLM-OPERATING-GUIDE.md) for the source-to-answer workflow appropriate to your task. It explains how to turn the material into a bounded explanation, reproduction, comparison or verification.
+4. Open the exact source, configuration, dependency and evidence files the route identifies. Do not substitute a summary, filename or status label for those files.
+5. Report the source revision and what the inspected material supports. Distinguish a historical claim, a proposed method, a local test, a live service and a prospective result.
 
-1. Read this file, START-HERE.md, completely.
-2. Read INDEX.md: the prose map of the whole repository, with per-area counts and entry points into every major collection.
-3. Read the ROADMAP.md section for your topic: it names the exact files to read, in order, and what each file proves.
-4. Read the area entry doc for each area you touch: the README.md or AREA.md at the top of that area's folder.
-5. Only then open the specific files your question needs. Use INDEX.json (every file, with its path, size and blob sha) to find exact paths.
+[AGENTS.md](AGENTS.md) supplies repository guardrails. It does not replace the map, authorize a deployment, or grant permission to send an order.
 
-## Anti-miss rules (binding)
+## First useful actions
 
-- Never answer from README.md alone. README.md is the strategy catalog front page; it is not the map of the repository.
-- Never treat docs/CATALOG.json as the catalog of the repository. It catalogs 269 strategy cards in one collection only. The repository also holds the desk code, the terminal, the engines, the tools, the packages, the proofs and the research studies, none of which are in CATALOG.json.
-- AGENTS.md is guardrails for working safely in this repository. It is not a map and it does not replace steps 1 to 4.
-- If something is not found, search INDEX.json by path fragment before concluding it is absent. Absence from a prose page is not absence from the repository.
-- If a count matters, take it from INDEX.json or INDEX.md at the indexed commit, and say which commit you counted. Check the indexed commit in INDEX.md against the branch HEAD before quoting counts: the index describes the commit it names, and later mirror commits can move data files (notably under master/) past it.
-- Every top-level area is listed in the map below. If your answer touches an area you have not read the entry doc for, say so instead of guessing.
+With a local checkout and Python3, these read-only commands avoid loading a large index or archive into context:
 
-## What this repository is
+```sh
+python3 tools/repo_navigator.py route "explain a strategy"
+python3 tools/repo_navigator.py search "tensor"
+python3 tools/repo_navigator.py packet explain-strategy --max-chars 18000
+python3 tools/repo_navigator.py check
+```
 
-A public library of trading strategies and the desk software around them: strategy cards, sleeve source code, recreation notes that let anyone rebuild a strategy from its recorded rules, the public terminal and its tool pages, forecast and psychology engines, whole packages from the desk's builders, install proofs, tests, and the research studies the desks were built on. Paper trading only.
+A route gives reading order, source roles, relevant checks and an evidence boundary. A search finds candidates; it does not prove they answer the question. A bounded packet is a selected reading aid, not a claim to contain every relevant file. The navigator does not run the commands described by a route or activate any system. Browser-only readers can follow the same paths in ROADMAP and the area entrypoints below.
 
-## Complete map of every top-level area
+| Your first question | Route or starting evidence | Useful result |
+| --- | --- | --- |
+| What is one strategy, and where does its rule come from? | `explain-strategy`; card → accounting → exact implementation | A sourced rule explanation with unresolved differences named. |
+| How would I reconstruct it? | `recreate-strategy`; algorithm/recreation notes → dependencies → tests | A reproducible plan and an explicit missing-dependency list. |
+| Why do the strategy counts differ? | `reconcile-strategy-catalogs` | Separate denominators for cards, distinct accounting entries, aliases and roster IDs. |
+| Where is Tensor? | `trace-tensor` | The cross-directory source, adapter, document and package trail. |
+| How can I improve an LLM's working method? | `study-agent-methods`, `study-enhancement-history`, `study-second-brain` | Independent research findings and their actual adoption status. |
+| Can I try something without credentials or a running desk? | `build-offline-desk`, `forecast-numeric-kernels`, `psychology-research` | A documented offline example with its exact claim boundary. |
+| What does a public terminal snapshot establish? | `inspect-published-snapshot` | Its producer, recorded clocks, files and limits; not inferred live health. |
+| Is a named file or capability missing? | `find-missing-material`; search exact paths and aliases | A searched/excluded/unavailable record rather than an unsupported absence claim. |
 
-Counts are files (blobs) at the index commit named in INDEX.md, regenerated as part of the discoverability cure that added this file. Total: 7,226 files.
+## Evidence rules that prevent wrong answers
 
-| Area | Files | What it is |
-| --- | ---: | --- |
-| (root) | 13 | Repository root: the entry files (START-HERE.md, ROADMAP.md, INDEX.md, INDEX.json, README.md, AGENTS.md, index.html), and the build notes for the newest sleeve families. |
-| adapters | 31 | Standalone desk adapters for recently built sleeves (one-bar, Trullas variants, Teddy ORB, PRZM and others), one file per sleeve. |
-| adapters3 | 266 | The Aster adapter set: one adapter module per Aster sleeve variant, mirroring the sleeves they wire in. |
-| agentic-trade-desk | 55 | The operational kit for running an agentic trade desk: a runnable skeleton, docs and templates. Paper trading only. |
-| aster_sleeves | 12 | Aster sleeve entry points (thin wrappers over the shared engine commons). |
-| config | 2 | Desk configuration. config/sleeves.json is the live roster config mirrored into this repository (336 sleeves, paper trading only). |
-| desk3 | 51 | The desk3 sleeve collection and its portfolio branches: the v3 desk engine modules, sleeve modules and portfolio books. |
-| docs | 1207 | Documentation at scale: the strategy catalog data, the current-desk and all-strategies accountings, one algorithm and recreation document per strategy, verification notes, and the research collections under docs/research/. |
-| educational | 40 | The shipyard engines collection (educational/shipyard-engines/): self-contained educational trading engines and their supporting material, kept whole. |
-| engines | 20 | Shared engine code: desk3 bridges and enhancements, sleeve commons, the roster config copy and a transport kernel. |
-| indicator | 2 | A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/). |
-| integration | 328 | Integration adapters that wire each sleeve into the desk runner, plus the wiring guide. |
-| laz_sleeves | 11 | Lazarus sleeve entry points (thin wrappers over the shared engine commons). |
-| master | 75 | The mirrored Master Terminal edition: the combined terminal's Master half as published web assets (content-hashed JS and CSS) plus its live data files (deskview.json, edition.json, market.json, pulse.json, sleeves.json, positions.json, charts.json, panels.json, publish-manifest.json). Reached from the repository front door, index.html. Caution: the hourly mirror sync owns master/ wholesale and rewrites it entire, so master/AREA.md is best-effort and may be overwritten or removed by the mirror; the durable description of master/ lives in START-HERE.md, INDEX.md and ROADMAP.md. |
-| packages | 1928 | Whole packages contributed by the desk's builders, grouped by author (ausar, claude, grokbot), kept whole rather than cherry-picked. |
-| pine | 2 | Pine Script sources (the BB/RSI divergence indicator for TradingView). |
-| proof | 23 | Install proof records: one JSON receipt per installed sleeve under proof/install/. |
-| psychology-engine | 124 | The standalone market-psychology engine package: engine code, audits, research and reports. One of the two psychology engines in this repository. |
-| research | 10 | Standalone research works: the technical analysis study and practice archive, and the master trader study, in Markdown, PDF, DOCX and ZIP forms. |
-| sleeves | 571 | Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder. |
-| strategies | 270 | Strategy cards: one card per catalogued strategy (269 cards), grouped by family folder. The family folders are enumerated in docs/CATALOG.json and in INDEX.json. |
-| terminal-lineup | 2174 | The public terminal lineup: the tool site under site/ (104 tool pages), the forecast engines under forecast/ (30 engines), build records, design documents, the oracle and the workflow scripts that built the tools. |
-| tests | 9 | Repository-level regression blocker tests. |
-| tools | 2 | Repository tooling. Home of build_repo_index.py, the generator that produces INDEX.json and INDEX.md. |
+- **Inventory is not interpretation.** INDEX.json proves what files and bytes were captured. CATALOG.json describes cards. ALL-SLEEVES.json records a broader deduplicated accounting. SLEEVES.json describes a roster snapshot. None substitutes for another.
+- **A snapshot is not “running today.”** A committed roster, a mirrored terminal, an old install receipt and a status word such as `live` retain their captured context. Check source clocks and a permitted current runtime before claiming present operation.
+- **Independent studies stay independent.** The agent-methods handbook, LLM-enhancement extraction, second-brain sweep, two chart studies and two psychology engines have different sources, purposes and limits. Compare them; do not invent a common lineage or merge their evidence.
+- **Preserve the source trail.** Read code copies with their original provenance, version and representation notes. Historical packages are not automatically the current implementation. A similar filename is not an equivalent algorithm.
+- **Search before declaring absence.** Search INDEX.json or the navigator by exact path fragment, then aliases, neighboring collections and archive manifests. State when content is unexamined, inaccessible, inside a container, or outside this repository.
+- **Keep the execution boundary explicit.** This library does not authorize an account, service, schedule, network source, manual order or live trading. Paper/synthetic examples and historical engineering checks do not establish profitability or live readiness.
+- **Current navigation must not rewrite historical evidence.** Improve maps and current guides; preserve frozen studies, vendor code, source records and scientific receipts. Reconcile contradictions in a new, sourced note rather than silently changing the record.
+
+## Areas and their entrypoints
+
+The complete current area set, exact counts and package breakdowns are generated in INDEX.md. This orientation table preserves the major routes; newly added areas remain discoverable through the complete index even before an explanation is curated.
+
+| Area | What it supplies | First read |
+| --- | --- | --- |
+| Root | Entry protocol, maps, full strategy listing and family build records | [INDEX.md](INDEX.md), [ROADMAP.md](ROADMAP.md) |
+| `adapters/` | Standalone sleeve adapters | [AREA.md](adapters/AREA.md) |
+| `adapters3/` | Aster adapter collection | [AREA.md](adapters3/AREA.md) |
+| `agentic-trade-desk/` | Paper-desk guide, offline skeleton and templates | [README.md](agentic-trade-desk/README.md), nested [AGENTS.md](agentic-trade-desk/AGENTS.md) |
+| `aster_sleeves/` | Thin Aster entrypoints | [AREA.md](aster_sleeves/AREA.md) |
+| `config/` | Versioned paper-only roster | [AREA.md](config/AREA.md) |
+| `desk3/` | Desk engine, sleeve and portfolio source copies | [AREA.md](desk3/AREA.md) |
+| `docs/` | Catalogs, accounting, reconstruction notes, guides and research | [AREA.md](docs/AREA.md) |
+| `educational/` | Standalone educational math/engine packages | [AREA.md](educational/AREA.md) |
+| `engines/` | Shared engine copies and bridges | [AREA.md](engines/AREA.md), [sanitization note](engines/SANITIZATION-NOTE.md) |
+| `indicator/` | Indicator algorithm contract | [AREA.md](indicator/AREA.md) |
+| `integration/` | Sleeve integration adapters and wiring guide | [AREA.md](integration/AREA.md) |
+| `laz_sleeves/` | Thin Lazarus entrypoints | [AREA.md](laz_sleeves/AREA.md) |
+| `master/` | Externally mirrored terminal assets and dated data | [Terminal route](ROADMAP.md#the-terminal); the mirror can replace this directory wholesale |
+| `packages/` | Whole contributed packages with distinct versions | [AREA.md](packages/AREA.md), then the chosen package's own entry doc |
+| `pine/` | Pine indicator source | [AREA.md](pine/AREA.md) |
+| `proof/` | Historical install receipts | [AREA.md](proof/AREA.md) |
+| `psychology-engine/` | Standalone research/reference engine | [README.md](psychology-engine/README.md), [public validation](psychology-engine/PUBLIC_VALIDATION.md) |
+| `research/` | Standalone studies and practice archives | [AREA.md](research/AREA.md) |
+| `sleeves/` | Strategy implementation copies | [AREA.md](sleeves/AREA.md) |
+| `strategies/` | The strategy-card collection | [AREA.md](strategies/AREA.md) |
+| `terminal-lineup/` | Tool snapshots, forecast research and build records | [AREA.md](terminal-lineup/AREA.md) |
+| `tests/` | Repository test sources | [AREA.md](tests/AREA.md) |
+| `tools/` | Offline navigation and inventory maintenance | [AREA.md](tools/AREA.md) |
 
 ## Dispersed collection: Tensor
 
-Tensor has no single home in this repository: its material is dispersed by design across six areas, and no folder contains all of it. The homes are:
+Tensor has no single source directory here. Its trail spans sleeves, adapters, integration, documents, cards and retained packages. Search `tensor`, then follow [ROADMAP's Tensor route](ROADMAP.md#tensor-where-the-tensor-material-lives): a roster row → its exact sleeve → `adapters3/` and `integration/` wiring → algorithm/recreation documents → package provenance where relevant. The D20 pair is `sleeves/aster_tensor_d20_tensor.py` and `sleeves/aster_tensor_d20_pv.py`; the feed library is under `sleeves/tensor_research/`, and another implementation is `sleeves/midna/midna_tensor.py`. Presence of these files does not imply the external Tensor engine or all required feeds are bundled.
 
-- Sleeve code: the 30 tensor modules at the top of sleeves/ (the aster_tensor_* and aster_r19_tensor_* families, plus tensor_swing.py and tensor_red_dip.py), including the D20 pair, sleeves/aster_tensor_d20_tensor.py and sleeves/aster_tensor_d20_pv.py. More tensor code sits under sleeves/tensor_research/ (the tensor feed library), at sleeves/midna/midna_tensor.py, and inside family folders under sleeves/.
-- Adapters: adapters3/ holds the matching Aster adapter module for each tensor sleeve (30 files, same file stems as the sleeves), and integration/ holds the matching *_adapter.py wiring module for each (30 files).
-- Documents: 86 tensor documents under docs/: the ASTER_TENSOR_* algorithm and recreation documents (48 files covering the aster_tensor family, the D20 documents among them), docs/D20TENSOR-RECREATE.md, and the R19_TENSOR_*, GRIFFITH_TENSOR_*, MK_CREATIVETENSOR*, QR_TENSOR_*, TENSOR_SWING and TENSOR_RED_DIP recreation documents.
-- Strategy cards: the 28 tensor cards under strategies/, including the strategies/tensor_research/ family folder.
-- Packages: tensor material also sits inside whole packages under packages/ (155 path hits, mostly the Ausar Aster packages).
+## Leave the next reader something verifiable
 
-To enumerate all of it, search INDEX.json by the path fragment "tensor" (377 hits at the indexed commit named in INDEX.md). The search returns the pile; this entry is the routing: start from the sleeve's row in docs/SLEEVES.md, then read the sleeve, its adapters3/ and integration/ adapters, and its docs/ document pair.
+A useful answer records: the question; selected route; exact paths and revision; source dates; what was read or run; the supported conclusion; competing evidence or missing dependencies; and the next observation that would change the conclusion. Use the worked workflows in [the LLM operating guide](docs/LLM-OPERATING-GUIDE.md). This is how the library becomes reusable knowledge rather than a list of impressive filenames.
 
-## Where to go next
+## Enhancement research and acceptance record
 
-- By topic: ROADMAP.md routes by question (sleeves and strategies, desk code, terminal, engines and tools, research studies, packages, proofs and tests) with the exact files to read in order.
-- By collection: INDEX.md lists entry points into every major collection, including the per-author breakdown of packages/ and every research study under docs/research/ and research/.
-- By exact path: INDEX.json lists every one of the 7,226 files with size and blob sha.
+The [2026-11-07 research record](docs/research/repository-enhancement-2026-11-07/README.md) documents the external research and source-backed design choices behind this navigation layer. The [repository upgrade report](docs/REPOSITORY-UPGRADE-2026-11-07.md) records implemented improvements, preservation checks and acceptance evidence, with their limits. These dated records complement the current source inventory; they do not replace it.

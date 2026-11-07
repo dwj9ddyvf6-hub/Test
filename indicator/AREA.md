@@ -2,7 +2,7 @@
 
 A single indicator package: the BB/RSI divergence indicator algorithm contract (its Pine Script source is under pine/).
 
-Files here: 2 including this entry doc (count at the index commit named in INDEX.md).
+Exact file count, byte total and captured revision: [the generated repository index](../INDEX.md). The matching entries in [INDEX.json](../INDEX.json) retain every path and blob hash.
 
 This folder holds exactly one file, indicator/BB_RSI_Divergence_Algorithm.md, plus this entry doc. Its Pine Script source is pine/BB_RSI_Divergence_Indicator.pine and its research note is docs/BB_RSI_Divergence_Research.md.
 

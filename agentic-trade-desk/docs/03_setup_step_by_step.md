@@ -26,12 +26,42 @@ Pin dependencies (`pip freeze > requirements.lock`). On a recent Python some pin
 **Proof:** `python3 -m unittest` runs (zero tests is fine now).
 
 ## Step 3 — Copy the skeleton and run its tests
+Keep the reusable `deskkit` package at the new repository root. Your
+project-specific orchestration can live in `engine/`; the supplied tests and
+example import `deskkit`, not `engine.deskkit`. Copy the *contents* of the test
+directory into the existing `tests/` directory so discovery does not silently
+skip a nested `tests/tests/` folder.
+
 ```bash
-cp -r <this-repo>/agentic-trade-desk/skeleton/deskkit engine/
-cp -r <this-repo>/agentic-trade-desk/skeleton/tests tests/
+mkdir -p tests examples
+cp -R <this-repo>/agentic-trade-desk/skeleton/deskkit ./deskkit
+cp -R <this-repo>/agentic-trade-desk/skeleton/tests/. ./tests/
+cp -R <this-repo>/agentic-trade-desk/skeleton/examples/. ./examples/
 python3 -m unittest discover -s tests -v
+python3 examples/run_example.py
 ```
-**Proof:** 19 tests pass. Read each test name: it is a list of invariants you now own.
+Replace `<this-repo>` with the path to your reviewed source checkout. Run these
+commands from the new desk repository created in Step 1. Use an empty target
+for the first copy; review any merge into an existing project explicitly.
+
+**Proof:** discovery runs a nonzero suite and every test passes, with no skipped
+tests. The supplied suite currently defines 23 invariant tests; the receipt's
+actual count governs if the source evolves. Read each test name: it is a list
+of invariants you now own. The frozen example produces one entry and one exit,
+no extra orders on its simulated restarts, a flat final book and a valid ledger
+chain. Its restarted `Desk` objects do not prove operating-system failover.
+
+Before copying, a single command from the source repository root verifies this
+same layout in a temporary export, without credentials or network calls:
+
+```bash
+python3 agentic-trade-desk/skeleton/tools/check_onboarding.py
+```
+
+The JSON receipt includes discovered/executed test counts, toy outcomes and
+SHA-256 hashes of the exact copied source. A missing test suite, skipped test,
+wrong import layout or failed toy outcome makes the command fail. It creates
+no broker connection, scheduler or persistent desk state.
 
 ## Step 4 — Simulated broker, one trivial sleeve
 Write one sleeve (e.g. "buy 1 share of an ETF when yesterday closed down; sell after 3 sessions"). Run passes against **ShadowBroker** with frozen fixture bars. Confirm: entry created once; re-running the pass creates nothing; a restart (new process, same ledger) creates nothing; the exit fires after 3 sessions; ledger replay equals the book.
@@ -77,7 +107,7 @@ A read-only snapshot with: mode, last pass time, pass duration, orders/fills, al
 One at a time. Never batch-import hundreds without an inventory.
 
 ## Step 13 — Failover worker (optional, after a stable week)
-Deploy **in dry mode**, compare its decisions with the primary's for a few sessions, promote exits to live, then entries after a clean dry day and an explicit human yes. See `07` §7.6.
+Deploy **in dry mode**, compare its decisions with the primary's for a few sessions, enable exits in the authorized **broker-paper environment**, then entries after a clean dry day and an explicit human yes. Here activation means paper execution, never real-money trading. See `07` §7.6.
 
 ## Step 14 — Wake-up routines for agents
 Create two routines: (1) a **fear-window / critical-window wake** shortly before any time-critical decision window, (2) a **trading-day heartbeat wake** every 30 minutes that *checks* and revives. Both must stay **quiet** when healthy. They run deterministic scripts first and only escalate to reasoning on an exception. Add a **boot hook** that restarts the supervisor after a machine re-provision.

@@ -1,8 +1,21 @@
-# Strategy catalog
+# Test: source library, research engines and strategy catalog
 
 > **Start here: [START-HERE.md](START-HERE.md)** is the mandatory first read for any reader (human or LLM) arriving cold: its reading protocol, the complete map and the anti-miss rules. Then [INDEX.md](INDEX.md), the prose map of the whole repository, [ROADMAP.md](ROADMAP.md), the routing by topic, and [INDEX.json](INDEX.json), the machine-readable twin listing every file in the repository. Read those first, then this page. This page is the strategy catalog front page only.
 
-**651 distinct trading strategies** have been built across our desks, and this repository is the public library that holds them: the strategy cards, the code, the recreation notes that let anyone rebuild a strategy from its recorded rules, the desk software that runs the current roster, and the guides that teach an agent (or a person) how to build a desk like this. It holds **7,226 files** in total. Everything below is a map of the whole repository, not just the catalog.
+**654 distinct trading strategies** are recorded in the accounting across the contributing desks. This public library preserves their cards, implementation copies, reconstruction notes, desk engineering, independent studies, educational engines and terminal snapshots. It is a source library for learning, comparison, reproduction and evidence-backed work. [INDEX.md](INDEX.md) and [INDEX.json](INDEX.json) hold the exact file counts and hashes at a named source revision. The complete strategy listings remain below.
+
+## Make the library useful immediately
+
+Read [the LLM operating guide](docs/LLM-OPERATING-GUIDE.md) for worked routes from a question to exact sources, an offline example and a bounded result. The companion [InfinityBlade Engineering Doctrine](https://github.com/dwj9ddyvf6-hub/InfinityBlade-Engineering-Doctrine) supplies the general work discipline; Test supplies domain sources, code and preserved research. Their roles complement one another.
+
+```sh
+python3 tools/repo_navigator.py route "explain a strategy"
+python3 tools/repo_navigator.py search "tensor"
+python3 tools/repo_navigator.py packet explain-strategy --max-chars 18000
+python3 tools/repo_navigator.py check
+```
+
+These commands read the checkout and do not execute route checks or activate a desk. [The route manifest](docs/REPOSITORY-MAP.json) records ordered sources, check scopes, evidence boundaries and related routes. The [topic roadmap](ROADMAP.md) offers the same entrypoints for browser readers. A source snapshot, historical status or passing offline example does not establish present operation or profitability.
 
 ## The research engines and studies
 
@@ -10,27 +23,31 @@ Strategies are only part of what this repository holds. It also holds the resear
 
 ### Technical analysis and chart reading
 
-Three layers, from study to running code:
+Three related layers, from study to implementation:
 
 - **The mastery study** (`docs/research/technical-analysis-mastery-20261030/`, 28 files): a full training in reading charts, built from a census of the chart-reading canon across the desks and the public literature. The internal volume teaches the working method in six sections: the eye, structure and levels, patterns, waves and Fibonacci, indicators as servants, and the reading protocol. The external volume adds the code canon (how pattern libraries detect formations mechanically), identification craft, Wyckoff and classical methods, and practitioner craft from working chartists. It closes with identification drills and a demonstration of worked reads.
 - **The study and practice atlas** (`research/technical-analysis-study-2026-10-30/`): a second, independent training (Ausar), as an illustrated atlas in Markdown, Word and PDF, plus a research and practice archive of 87 entries (lessons, source ledgers, and masked practice cases with their reveals). It covers price structure, support and resistance, candlesticks, classical patterns, breakout and retest sequences, volume, indicators, relative strength, Elliott wave, Wyckoff, market profiles, multi-timeframe analysis, trader-specific methods, and deliberate practice.
-- **The chart-reading engine** (`packages/claude/master-desk-terminal-builder/desk/terminal/read/`): the executable form of that training, 33 Python modules that read a chart the way the studies teach: geometry and pivots, structure and trendlines, pattern and candlestick recognition, divergence, Elliott waves, Wyckoff phases, indicators, levels, and composing the final read and plan. The terminal's own AI Chart Read tool, which applies a learned read to live names, is at `terminal-lineup/site/ai-chart-read/`.
+- **The chart-reading engine** (`packages/claude/master-desk-terminal-builder/desk/terminal/read/`): an implementation collection of 33 Python modules for related chart-reading tasks (shared subject matter alone does not prove derivation from either study): geometry and pivots, structure and trendlines, pattern and candlestick recognition, divergence, Elliott waves, Wyckoff phases, indicators, levels, and composing the final read and plan. The captured terminal's AI Chart Read tool is at `terminal-lineup/site/ai-chart-read/`.
 
 ### The psychology engines
 
 Two independent market-psychology engines, built separately and kept whole:
 
 - **The research and reference engine** (`psychology-engine/`, 124 files, Ausar): the engine itself under `engine/`, its research and audit trail, a 38-page report, and `PUBLIC_VALIDATION.md` with checksums.
-- **The live nine-gauge engine** (`docs/research/psychology-engine-2026-10-30/`, Midna): the design, theory and measurement study for the engine that runs daily on the terminal, scoring market mood from nine gauges into one composite reading with a recorded history.
+- **The nine-gauge engine study and implementation snapshot** (`docs/research/psychology-engine-2026-10-30/`, Midna): the design, theory and measurement study for a terminal engine designed to score market mood from nine gauges into one composite reading, with its recorded history. Its files establish the captured design and state; present operation needs current evidence.
 
 ### The forecast engines and market tools
 
-`terminal-lineup/` holds the terminal itself: **30 forecast engines** (code, registry and grading machinery under `terminal-lineup/forecast/`; each engine issues dated forecasts that are later settled and graded against what the market actually did) and **104 tool pages** under `terminal-lineup/site/` (market mood, regime, flow, options, breadth, screeners, calendars and the rest), each page carrying its own data, its own drawn charts, and a plain explanation of what it does and how it is graded. Start at `terminal-lineup/FORECAST-ENGINES-30.md` and `terminal-lineup/THE-70-TOOLS.md`.
+`terminal-lineup/` preserves the terminal source and published snapshots: **30 registry entries for forecast engines** (code, registry and grading machinery under `terminal-lineup/forecast/`; the implementation is designed to issue dated forecasts and later settle and grade them against market observations; registry presence alone does not prove an engine is source-bound, enabled or currently running) and **104 tool pages** under `terminal-lineup/site/` (market mood, regime, flow, options, breadth, screeners, calendars and the rest), each page carrying its own data, its own drawn charts, and a plain explanation of what it does and how it is graded. Start at `terminal-lineup/FORECAST-ENGINES-30.md` and `terminal-lineup/THE-70-TOOLS.md`.
+
+## Agent methods, knowledge organization and trader formation
+
+The library also preserves [agent-methods source research](docs/research/agent-methods/2026-10-31/README.md), the independent [three-pass LLM-enhancement extraction](docs/research/llm-enhancement-extraction-20261031/REPORT.md), the [second-brain sweep](docs/research/obsidian-second-brain-sweep-20261102/SYNTHESIS.md), master-trader studies and formation records. Each has its own sources, coverage and adoption status. Use [ROADMAP.md](ROADMAP.md#research-studies) and the generated research inventory to reach all collections; a recommendation in an archive is not an installed capability.
 
 ## The three views of the strategies
 
-- [The full accounting](docs/ALL-SLEEVES.md): all **651** distinct strategies, deduplicated from **1,562 recorded ids** across every desk, arranged by type, each with its recorded algorithm and every distinct variant. The by-type listing further down this page mirrors it. Its machine-readable twin is [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json): 651 strategy entries, **104 flagged unresolved** (kept separate, never force-merged), plus 3 monitors listed apart from the strategies.
-- [The current desk](docs/SLEEVES.md): the **336** sleeves installed on the desk today, one row each with its code file in this repo. Machine-readable twin: [docs/SLEEVES.json](docs/SLEEVES.json) (336 rows, all 336 with code present in this repo). The roster it mirrors lives at [config/sleeves.json](config/sleeves.json), a byte copy of the desk roster config (336 sleeves, paper trading only).
+- [The full accounting](docs/ALL-SLEEVES.md): all **654** distinct strategies, deduplicated from **1,562 strategy aliases** across every desk, arranged by type, each with its recorded algorithm and every distinct variant. The by-type listing further down this page mirrors it. Its machine-readable twin is [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json): 654 strategy entries, **104 flagged unresolved** (kept separate, never force-merged), plus 3 non-strategy IDs listed apart: **1,565 raw IDs** in total.
+- [The recorded desk roster](docs/SLEEVES.md): the **336** sleeves in the committed roster snapshot, one row each with its code file in this repo. Machine-readable twin: [docs/SLEEVES.json](docs/SLEEVES.json) (336 rows, all 336 with code present in this repo). The roster it mirrors lives at [config/sleeves.json](config/sleeves.json), the versioned desk roster config (336 sleeves, paper trading only).
 - [The catalog](docs/CATALOG.json): **269** strategy cards, variants folded into one card each, across **15 families** (APEX, Ausar, Femto-lean, Galath / GrokBot, Griffith, Lazarus, Midna, Milkman, Muse, Quant research, Qullamaggie, Sable, SPAN, Tensor research, and the killed studies). The cards are also listed by family at the bottom of this page, and one card per strategy lives under `strategies/<family>/` (269 card files).
 
 Monitors and research recorders are not listed as strategies in any of the three views.
@@ -48,31 +65,33 @@ Monitors and research recorders are not listed as strategies in any of the three
 
 ## Layout: every part of the repository
 
+Exact file and byte counts, including every research collection and contributed package, are generated in [INDEX.md](INDEX.md). This table explains what the areas contain; it does not maintain a second inventory.
+
 | Folder or file | What is there |
 |---|---|
 | `strategies/<family>/` | One card per strategy: **269 cards** in 15 family folders (femto 45, milkman 34, apex 33, ausar 24, griffith 23, lazarus 19, quant_research 18, midna 17, muse 17, tensor_research 13, galath 10, killed 10, qullamaggie 3, sable 2, span 1). Start from a card to learn what a strategy does. |
-| `docs/` | **1,165 files.** The catalogs and indexes above, the guides, and the recreation library: **872 `-RECREATE.md` notes and 184 `-ALGORITHM.md` notes** that record a strategy's rules closely enough to rebuild it, plus `docs/research/` (62 files of research passes) and `docs/verify/` (15 pages; the index is `docs/VERIFY.md`, the code lines each card rule was read from). |
-| `sleeves/` | Strategy code: **569 Python files**, 318 at the top level and the rest under family folders (`sleeves/<family>/`, each copied file listed in `docs/VERIFY.md`). |
-| `desk3/`, `integration/` | The v3 desk: `desk3/` (50 files: the desk engine, sleeve modules and portfolio books) and `integration/` (327 adapter files wiring sleeves into the desk). |
-| `adapters/`, `adapters3/` | Earlier adapter sets: 29 files in `adapters/`, 265 in `adapters3/`. |
-| `aster_sleeves/`, `laz_sleeves/` | Two sleeve families kept as their own folders, 10 files each. |
-| `engines/` | A compact copy of the engine layer (19 files: desk3 pieces, adapters, sleeve samples, config and universe files, with a sanitization note). |
-| `config/sleeves.json` | The current desk roster of record: 336 sleeves, paper trading only. |
-| `packages/` | **1,927 files** of complete packages posted by the peer desks, kept whole rather than cherry-picked: `packages/claude/` (1,105 files: the master desk's terminal builder and public app, sleeve port library, parity tools, feed library, forecast system and more), `packages/ausar/` (791 files: the Aster desk R13 baseline and R15 execution packages, the forecast-engines lab, research terminals and rulebooks), `packages/grokbot/` (31 files: the md2 master-desk package, Q07 and RL64 Lazarus engines, small tools). |
-| `psychology-engine/` | One of this repo's two market-psychology engines, as a self-contained package (124 files): the research and reference implementation (Ausar), with the engine itself (67 files under `engine/`), its audit trail, research and 38-page report, plus `PUBLIC_VALIDATION.md` and a checksum file. The second psychology engine is the live nine-gauge build (Midna); its design, theory, measurement study and engine live under `docs/research/psychology-engine-2026-10-30/`. |
-| `agentic-trade-desk/` | The operational kit behind the guides (55 files): a runnable skeleton with tests (paper trading only), operating documents and templates. Its own front page is [`agentic-trade-desk/README.md`](agentic-trade-desk/README.md). |
+| `docs/` | The catalogs and indexes above, the guides, and the recreation library: **872 `-RECREATE.md` notes and 184 `-ALGORITHM.md` notes** that record a strategy's rules closely enough to rebuild it, plus `docs/research/` (independent studies enumerated in INDEX.md) and `docs/verify/` (15 pages; the index is `docs/VERIFY.md`, the code lines each card rule was read from). |
+| `sleeves/` | Strategy code: standalone Python modules and family folders (`sleeves/<family>/`, each copied file listed in `docs/VERIFY.md`). |
+| `desk3/`, `integration/` | The v3 desk: `desk3/` (the desk engine, sleeve modules and portfolio books) and `integration/` (adapters wiring sleeves into the desk). |
+| `adapters/`, `adapters3/` | Earlier adapter sets: `adapters/` and `adapters3/`; consult INDEX.md for measured coverage. |
+| `aster_sleeves/`, `laz_sleeves/` | Two sleeve families kept as their own folders. |
+| `engines/` | A compact copy of the engine layer (desk3 pieces, adapters, sleeve samples, config and universe files, with a sanitization note). |
+| `config/sleeves.json` | The committed roster snapshot: 336 sleeves, paper trading only. |
+| `packages/` | Complete packages posted by the peer desks, kept whole rather than cherry-picked: `packages/claude/` (the master desk's terminal builder and public app, sleeve port library, parity tools, feed library, forecast system and more), `packages/ausar/` (the Aster desk R13 baseline and R15 execution packages, the forecast-engines lab, research terminals and rulebooks), `packages/grokbot/` (the md2 master-desk package, Q07 and RL64 Lazarus engines, small tools). |
+| `psychology-engine/` | One of this repo's two market-psychology engines, as a self-contained package (124 files): the research and reference implementation (Ausar), with the engine itself (67 files under `engine/`), its audit trail, research and 38-page report, plus `PUBLIC_VALIDATION.md` and a checksum file. The second psychology engine is the separate nine-gauge build snapshot (Midna); its design, theory, measurement study and engine live under `docs/research/psychology-engine-2026-10-30/`. |
+| `agentic-trade-desk/` | The operational kit behind the guides: a runnable skeleton with tests (paper trading only), operating documents and templates. Its own front page is [`agentic-trade-desk/README.md`](agentic-trade-desk/README.md). |
 | `pine/`, `indicator/` | The BB/RSI divergence indicator: the TradingView Pine script and its algorithm contract. Its research note is `docs/BB_RSI_Divergence_Research.md`. |
-| `proof/install/` | Install proof records (22 JSON files), one per installed sleeve package, recording what was installed and verified. |
-| `tests/` | Regression blocker tests (8 files) for the one-bar, PRZM, Raschke, Teddy ORB, Trullas, CCI-correlation and VIX-hedge builds. |
+| `proof/install/` | Historical install receipts, one per recorded sleeve package, with the producer, date, source and claims of what was installed and verified. |
+| `tests/` | Regression tests for the one-bar, PRZM, Raschke, Teddy ORB, Trullas, CCI-correlation and VIX-hedge builds, plus navigation and inventory integrity. Reading test code and executing it on a named revision establish different evidence. |
 | `research/`, `docs/research/` | The technical analysis and chart reading research. At the root, `research/technical-analysis-study-2026-10-30/` holds the 2026-10-30 technical-analysis study and practice atlas (Ausar): README, the atlas in Markdown, Word and PDF, the full archive zip, and checksums. Under `docs/research/`: the technical-analysis mastery study (`technical-analysis-mastery-20261030/`), a full census of the chart-reading canon and a working chart-reading method in sections (the eye, structure, patterns, waves, indicators, protocol) with drills and a demonstration; and the one-bar family study (`onebar-family-2026-10-30/`); and the second psychology engine's design, theory and measurement study (`psychology-engine-2026-10-30/`). |
 | Root build notes | `BTA-ONEBAR-BUILD.md`, `TEDDY-ORB-SPY-BUILD.md` with `TEDDY-ORB-SPY-SPEC-2026-10-28.md`, `TRULLAS-VARIANTS-BUILD.md` with `TRULLAS-VARIANTS-SPEC-2026-10-29.md`, and `AGENTS.md`: the build records for the newest sleeve families and the working rules for agents in this repo. Matching spec/build pairs for other families sit in `docs/`. |
 | `docs/CATALOG.json` | Every strategy card with its variants and row ids (269 cards). |
-| `docs/SLEEVES.md` / `docs/SLEEVES.json` | Every sleeve on the current desk (336), one row each, with its code file in this repo. |
-| `docs/ALL-SLEEVES.md` / `docs/ALL-SLEEVES.json` | The curated accounting: every strategy ever built across all desks (651), deduplicated, arranged by type, with its algorithm and variants. |
+| `docs/SLEEVES.md` / `docs/SLEEVES.json` | Every sleeve in the recorded roster (336), one row each, with its code file in this repo. |
+| `docs/ALL-SLEEVES.md` / `docs/ALL-SLEEVES.json` | The curated accounting: every strategy recorded in the accounting across the contributing desks (654), deduplicated, arranged by type, with its algorithm and variants. |
 | `docs/THREE-GUIDES-RECONCILIATION.md` | The map between the three agent guides: shared invariants, unique lessons, and the differences to decide consciously. |
 | `docs/YOUR-OWN-ALERT-SYSTEM.md` | How a reader actually uses all of this day to day: the terminal as a home-screen alert system. |
 | `docs/VERIFY.md` | The code lines each card rule was read from (one page per family in `docs/verify/`), and where each copied file came from. |
-| `terminal-lineup/` | The terminal lineup: **1,398 files** saved from the local terminal tree: `site/` (1,156 files, with **104 tool pages** across 105 tool folders, plus shared code and data), `forecast/` (**88 files** of forecast engine code, registry and tests for the **30 forecast engines** in `forecast/registry.json`), `specs/` (4 files), `oracle/` (5 files), `records/` (16 files), root design and build docs (19 Markdown files) and **110 workflow build scripts**. Start at `terminal-lineup/site/` for the tools and `terminal-lineup/forecast/` for the engines. |
+| `terminal-lineup/` | Terminal source and snapshots: `site/` (tool pages, shared code, assets and dated data), `forecast/` (forecast implementations, registry and tests for the **30 registry entries**), `specs/`, `oracle/`, `records/`, root design and build documents, and workflow build scripts. Start at `terminal-lineup/site/` for the tools and `terminal-lineup/forecast/` for the engines; measured counts and research routes are in INDEX.md. |
 
 ## Start here, by what you came for
 
@@ -81,27 +100,27 @@ Monitors and research recorders are not listed as strategies in any of the three
 | See the whole repository, not just the catalog | [START-HERE.md](START-HERE.md) first (mandatory protocol and complete map), then [INDEX.md](INDEX.md) and [ROADMAP.md](ROADMAP.md). |
 | Understand one strategy | Its card under `strategies/<family>/`, then its entry in [the accounting](docs/ALL-SLEEVES.md) for the full algorithm and variants. |
 | Rebuild a strategy from its rules | The matching `-ALGORITHM.md` and `-RECREATE.md` notes in `docs/` (1,056 notes between them). |
-| See what the desk runs today | [The current desk index](docs/SLEEVES.md) (336 sleeves) and `config/sleeves.json`. |
-| Count or cross-check every strategy ever built | [The full accounting](docs/ALL-SLEEVES.md) and `docs/ALL-SLEEVES.json` (651 from 1,562 ids; 104 unresolved, kept separate). |
-| Build or run an agentic trade desk | The three guides in the fixed section below, the reconciliation first, then the kit in `agentic-trade-desk/`. |
+| Inspect the captured desk roster | [The roster index](docs/SLEEVES.md) (336 sleeves) and `config/sleeves.json`; present operation needs separately dated runtime evidence. |
+| Count or cross-check every strategy ever built | [The full accounting](docs/ALL-SLEEVES.md) and `docs/ALL-SLEEVES.json` (654 from 1,562 strategy aliases, plus 3 non-strategy IDs; 104 unresolved, kept separate). |
+| Build or run an agentic trade desk | The three guides in the fixed section above, the reconciliation first, then the kit in `agentic-trade-desk/`. |
 | Use the desk as an alert system | [Run this desk as your own alert system](docs/YOUR-OWN-ALERT-SYSTEM.md). |
-| Run or study the terminal engines and tools | `terminal-lineup/` (1,398 files): the tool pages under `terminal-lineup/site/`, the forecast engine code and registry under `terminal-lineup/forecast/`, and the design docs at `terminal-lineup/THE-70-TOOLS.md` and `terminal-lineup/FORECAST-ENGINES-30.md`. |
-| Study the psychology engines | Two independent builds: `psychology-engine/` (Ausar's research and reference implementation; start with its README and `PUBLIC_VALIDATION.md`) and `docs/research/psychology-engine-2026-10-30/` (Midna's live nine-gauge engine: ENGINE-DESIGN, STUDY-THEORY, STUDY-MEASUREMENT). |
+| Run or study the terminal engines and tools | `terminal-lineup/` (exact coverage in INDEX.md): the tool pages under `terminal-lineup/site/`, the forecast engine code and registry under `terminal-lineup/forecast/`, and the design docs at `terminal-lineup/THE-70-TOOLS.md` and `terminal-lineup/FORECAST-ENGINES-30.md`. |
+| Study the psychology engines | Two independent builds: `psychology-engine/` (Ausar's research and reference implementation; start with its README and `PUBLIC_VALIDATION.md`) and `docs/research/psychology-engine-2026-10-30/` (Midna's nine-gauge engine study and snapshot: ENGINE-DESIGN, STUDY-THEORY, STUDY-MEASUREMENT). |
 | Take a whole peer-desk package | `packages/claude/`, `packages/ausar/` or `packages/grokbot/`. |
 | Check where a rule or a copied file came from | `docs/VERIFY.md` and `docs/verify/`. |
 
-The master desk runs these sleeves on the Femto-lean framework (branch master-desk). Not in this repo: the framework itself (trading engine, order handling, data hub) and the Tensor indicator engine.
+Historical source notes describe the master desk running these sleeves on the Femto-lean framework (branch master-desk). The notes identify the framework (trading engine, order handling, data hub) and Tensor indicator engine as external dependencies. Inspect the chosen implementation and its provenance before making a completeness or current-runtime claim.
 
 ## How this repository is maintained
 
 - **Generated parts:** the two long listings on this page (strategies by type, and catalog cards by family) are generated from `docs/ALL-SLEEVES.json` and `docs/CATALOG.json`. The catalog and accounting files are the sources of truth; if a number on this page ever disagrees with them, the files win.
 - **Hand-written parts:** the front matter above those listings, the layout map, the guides, the recreation notes and the package folders are maintained directly.
-- **The fixed section:** the agent-guide block below is a fixed section. Its source text lives in `docs/README_FIXED_SECTION.md`, and `agentic-trade-desk/skeleton/tools/check_root_readme_links.py` checks that the guide links survive. The README generator is not in this repository, so whoever regenerates this page must emit the fixed section verbatim and keep the descriptive front matter: both have been dropped by regeneration before, which is why the fixed section exists.
+- **The fixed section:** the agent-guide block above is a fixed section. Its source text lives in `docs/README_FIXED_SECTION.md`, and `agentic-trade-desk/skeleton/tools/check_root_readme_links.py` checks the exact block against its source, all three guide targets and the reconciliation target. The README generator is not in this repository, so whoever regenerates this page must emit the fixed section verbatim and keep the descriptive front matter: both have been dropped by regeneration before, which is why the fixed section exists.
 - **Copied code:** files copied from another desk keep their provenance in `docs/VERIFY.md`; nothing is silently rewritten.
 
-## Strategies by type (651)
+## Strategies by type (654)
 
-Every distinct strategy ever built across all desks, deduplicated from 1,562 recorded ids, arranged by type. Each name links to its full entry in [the accounting](docs/ALL-SLEEVES.md): the recorded algorithm and every distinct variant. 104 entries are flagged unresolved in the accounting (kept separate, never force-merged); monitors and recorders sit in the accounting closing section, not in this list.
+Every distinct strategy in the recorded accounting, deduplicated from 1,562 strategy aliases (plus 3 separately listed non-strategy IDs), arranged by type. Each name links to its full entry in [the accounting](docs/ALL-SLEEVES.md): the recorded algorithm and every distinct variant. 104 entries are flagged unresolved in the accounting (kept separate, never force-merged); monitors and recorders sit in the accounting closing section, not in this list.
 
 ### Trend following (200)
 
@@ -426,7 +445,7 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [PUBLIC_TOMAZETTI_RSI2_SPOT100](docs/ALL-SLEEVES.md#public_tomazetti_rsi2_spot100) | No strategy description recorded in consulted sources. | 1 |
 | [TRADER_RSI2](docs/ALL-SLEEVES.md#trader_rsi2) | No strategy description recorded in consulted sources. | 1 |
 
-### Breakout (52)
+### Breakout (55)
 
 | Strategy | What the record shows | Variants |
 |---|---|---:|
@@ -482,6 +501,10 @@ Every distinct strategy ever built across all desks, deduplicated from 1,562 rec
 | [Multi-day Golden Gate (weekly ATR)](docs/ALL-SLEEVES.md#multi-day-golden-gate-weekly-atr) | US equities, index ETFs and futures · 1d (weekly ATR levels) · 1,822 US stocks + 14 index ETFs and futures. Full recorded algorithm in the accounting entry. | 1 |
 | [Swing Golden Gate (monthly ATR)](docs/ALL-SLEEVES.md#swing-golden-gate-monthly-atr) | US equities, index ETFs and futures · 1d (monthly ATR levels) · 1,822 US stocks + 14 index ETFs and futures. Full recorded algorithm in the accounting entry. | 1 |
 | [s_mn_turtle](docs/ALL-SLEEVES.md#s_mn_turtle) | No strategy description recorded in consulted sources. | 1 |
+| [bta_onebar_qqq](docs/ALL-SLEEVES.md#bta_onebar_qqq) | US equities · 30-minute bars · QQQ. Full recorded algorithm in the accounting entry. | 1 |
+| [bta_onebar_basket](docs/ALL-SLEEVES.md#bta_onebar_basket) | US equities · 30-minute bars · SPY, QQQ, MDY, DIA. Full recorded algorithm in the accounting entry. | 1 |
+| [bta_onebar_rth](docs/ALL-SLEEVES.md#bta_onebar_rth) | US equities · 30-minute bars · QQQ. Full recorded algorithm in the accounting entry. | 1 |
+
 
 ### Divergence reversal (15)
 
@@ -1208,7 +1231,7 @@ Status counts are master-desk rows; one card can hold several rows (its variants
 | off | switched off |
 | Midna's desk only | not run on the master desk |
 
-Status is the master desk's roll call of 2026-10-26.
+Status is the master desk's historical roll call of **2026-10-26**, retained as source context. It is not a current health check, an authorization to trade or evidence of profitability.
 
 ## Credits
 

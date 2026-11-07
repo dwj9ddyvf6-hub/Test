@@ -2,7 +2,7 @@
 
 Lazarus sleeve entry points (thin wrappers over the shared engine commons).
 
-Files here: 11 including this entry doc (count at the index commit named in INDEX.md).
+Exact file count, byte total and captured revision: [the generated repository index](../INDEX.md). The matching entries in [INDEX.json](../INDEX.json) retain every path and blob hash.
 
 All 10 files sit at the top of this folder. The shared commons they wrap live in engines/laz_sleeves/.
 

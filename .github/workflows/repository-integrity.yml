@@ -1,0 +1,68 @@
+name: Repository integrity
+
+# Every source change affects the measured inventory; intentionally no path filter.
+'on':
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-integrity-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out the exact revision and its source history
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          # INDEX.json names a source commit that precedes its index-only successor.
+          # Full history lets the checker verify that recorded commit and tree.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run nonempty offline navigation and inventory contracts
+        run: |
+          python3 --version
+          python3 - <<'PY'
+          import sys
+          import unittest
+          suite = unittest.defaultTestLoader.discover('tests', pattern='test_repo_*.py')
+          count = suite.countTestCases()
+          if count == 0:
+              raise SystemExit('No repository-integrity tests discovered')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          raise SystemExit(0 if result.wasSuccessful() and result.testsRun == count else 1)
+          PY
+
+      - name: Validate every area and task-source pointer
+        run: python3 tools/repo_navigator.py check
+
+      - name: Preserve the exact guide block and all guide targets
+        run: python3 agentic-trade-desk/skeleton/tools/check_root_readme_links.py README.md
+
+      - name: Reproduce the isolated offline desk example
+        run: python3 agentic-trade-desk/skeleton/tools/check_onboarding.py
+
+      - name: Verify the published inventory and its source provenance
+        # Commit source edits locally, generate INDEX from that source commit,
+        # commit the two index outputs, then push both commits together. CI checks
+        # the pushed tip. A source-only push is correctly stale until regenerated;
+        # there is no success override or freshness bypass for that intermediate state.
+        run: python3 tools/build_repo_index.py --local-repo . --ref HEAD --out-dir . --check
+
+      - name: Confirm verification did not rewrite tracked source
+        run: |
+          git diff --exit-code
+          git diff --cached --exit-code

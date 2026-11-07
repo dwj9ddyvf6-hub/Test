@@ -2,7 +2,7 @@
 
 Install proof records: one JSON receipt per installed sleeve under proof/install/.
 
-Files here: 23 including this entry doc (count at the index commit named in INDEX.md).
+Exact file count, byte total and captured revision: [the generated repository index](../INDEX.md). The matching entries in [INDEX.json](../INDEX.json) retain every path and blob hash.
 
 Everything here lives under proof/install/ (22 JSON receipts, one per installed sleeve). There are no files at the top of proof/ itself besides this entry doc.
 

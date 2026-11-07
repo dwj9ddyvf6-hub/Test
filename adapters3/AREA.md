@@ -2,7 +2,7 @@
 
 The Aster adapter set: one adapter module per Aster sleeve variant, mirroring the sleeves they wire in.
 
-Files here: 266 including this entry doc (count at the index commit named in INDEX.md).
+Exact file count, byte total and captured revision: [the generated repository index](../INDEX.md). The matching entries in [INDEX.json](../INDEX.json) retain every path and blob hash.
 
 All 265 files sit at the top of this folder, one adapter module per Aster sleeve variant.
 

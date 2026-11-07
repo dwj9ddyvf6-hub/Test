@@ -2,7 +2,7 @@
 
 Sleeve source code grouped by family, plus standalone sleeve modules at the top of the folder.
 
-Files here: 571 including this entry doc (count at the index commit named in INDEX.md).
+Exact file count, byte total and captured revision: [the generated repository index](../INDEX.md). The matching entries in [INDEX.json](../INDEX.json) retain every path and blob hash.
 
 Layout: 319 standalone modules at the top of this folder, and 251 more under 16 family folders. Family folder names and per-family counts are enumerated in INDEX.json; the roster view is docs/SLEEVES.md.
 

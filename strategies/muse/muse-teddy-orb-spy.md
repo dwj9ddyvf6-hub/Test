@@ -20,7 +20,7 @@ Trades SPY after a volume-qualified break of the 30-minute opening range, enteri
 
 ## Exit
 
-- Stop beyond the pullback extreme; target the measured move or 2R, whichever is closer.
+- Stop just inside the broken opening-range edge: OR high minus $0.10 for longs, OR low plus $0.10 for shorts; target the measured move or 2R, whichever is closer. This matches the [frozen spec](../../docs/TEDDY-ORB-SPY-SPEC-2026-10-28.md#stop-and-target) and `sleeves/teddy_orb_spy.py::_stop_target`.
 - A post-entry close back inside the range exits; hard flat at 14:00 ET.
 
 ## Sizing

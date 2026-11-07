@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "research_date": "2026-11-07",
+  "scope": "Selected primary research, standards, provider guidance and pinned external repository files relevant to agent-readable research libraries and operating doctrine.",
+  "method": "Sources were opened and the listed portions inspected. External GitHub file references use inspected commit SHAs and blob hashes. Findings are paraphrases; design applications are proposed transfers, not measured repository improvements.",
+  "source_count": 15,
+  "external_repository_count": 5,
+  "external_repositories": [
+    {
+      "repo": "agentskills/agentskills",
+      "sha": "83021e2be457a9b6679148719c1f6074f0ad975e",
+      "date": "2026-11-04T19:47:24Z"
+    },
+    {
+      "repo": "agentsmd/agents.md",
+      "sha": "d001185d792eb6402a58e4cbef1c228b309ec25d",
+      "date": "2026-09-10T18:46:16Z"
+    },
+    {
+      "repo": "anthropics/skills",
+      "sha": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+      "date": "2026-11-06T22:32:28Z"
+    },
+    {
+      "repo": "SWE-agent/mini-swe-agent",
+      "sha": "04d809ceab9df28f9adaed044884180159172930",
+      "date": "2026-09-03T05:05:59Z"
+    },
+    {
+      "repo": "Aider-AI/aider",
+      "sha": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+      "date": "2026-05-22T14:02:20Z"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Effective context engineering for AI agents",
+      "kind": "provider engineering guidance",
+      "url": "https://www.anthropic.com/research/effective-context-engineering-for-ai-agents",
+      "published": "2025-09-29",
+      "inspected": "Context anatomy; retrieval and agentic search; examples; autonomy tradeoffs.",
+      "finding": "Organize context around the task, using identifiable references and selective retrieval. Guidance includes examples and hybrid retrieval; it does not establish a universal optimal prompt length.",
+      "application": [
+        "task routes",
+        "progressive references"
+      ],
+      "limits": "Provider practice; local outcomes require evaluation."
+    },
+    {
+      "id": "S02",
+      "title": "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?",
+      "kind": "empirical preprint",
+      "url": "https://arxiv.org/html/2602.11988v3",
+      "published": "2026-02-12",
+      "revision": "v3, 2026-09-29",
+      "inspected": "Abstract, benchmark setup, findings, ablations, limitations and conclusion.",
+      "finding": "Tested context files increased cost without statistically significant task-resolution gains. File length alone did not explain results. The evaluation concerns Python tasks and does not establish effects on security or other outcomes.",
+      "application": [
+        "evaluate instructions",
+        "avoid automatic improvement claims"
+      ],
+      "limits": "Specific agents, Python repositories and task-resolution benchmarks; not an audit of these repositories."
+    },
+    {
+      "id": "S03",
+      "title": "Lost in the Middle: How Language Models Use Long Contexts",
+      "kind": "peer-reviewed empirical research",
+      "url": "https://aclanthology.org/2024.tacl-1.9/",
+      "published": "2024",
+      "inspected": "Publication metadata and abstract: multi-document question answering and key-value retrieval.",
+      "finding": "Relevant information's position affected performance in tested models and tasks. This motivates retrieval tests, not an assumption that every current model has the same weakness.",
+      "application": [
+        "retrieval canaries",
+        "exact evidence links"
+      ],
+      "limits": "Historical model/task scope; see the newer counterpoint S04."
+    },
+    {
+      "id": "S04",
+      "title": "Retrieval Quality at Context Limit",
+      "kind": "primary empirical research summary",
+      "url": "https://research.google/pubs/retrieval-quality-at-context-limit/",
+      "published": "2025",
+      "inspected": "Google Research publication abstract.",
+      "finding": "Gemini 2.5 Flash showed strong position-independent retrieval near its context limit on simple factoid questions. Long-context weaknesses therefore depend on model and task.",
+      "application": [
+        "model-specific evaluation",
+        "counterevidence"
+      ],
+      "limits": "Simple factoid retrieval does not establish multi-step repository reasoning performance; abstract inspected."
+    },
+    {
+      "id": "S05",
+      "title": "Agent Skills specification, authoring guidance and reference validator",
+      "kind": "open specification and implementation",
+      "url": "https://agentskills.io/specification",
+      "published": null,
+      "inspected": "Specification; best-practices sections on task specificity and loading; complete validator.py.",
+      "finding": "Skills separate discovery metadata, activated instructions and on-demand resources. The reference validator checks metadata and naming, not task performance or resource completeness.",
+      "application": [
+        "portable skills",
+        "resource closure checks",
+        "task-specific activation"
+      ],
+      "limits": "Host behavior varies; specification validity does not prove a skill is effective.",
+      "files": [
+        {
+          "repository": "agentskills/agentskills",
+          "path": "docs/specification.mdx",
+          "commit": "83021e2be457a9b6679148719c1f6074f0ad975e",
+          "commit_date": "2026-11-04T19:47:24Z",
+          "blob_sha": "d9a2db099d905da8b879a5c6f996728073985279",
+          "url": "https://github.com/agentskills/agentskills/blob/83021e2be457a9b6679148719c1f6074f0ad975e/docs/specification.mdx"
+        },
+        {
+          "repository": "agentskills/agentskills",
+          "path": "docs/skill-creation/best-practices.mdx",
+          "commit": "83021e2be457a9b6679148719c1f6074f0ad975e",
+          "commit_date": "2026-11-04T19:47:24Z",
+          "blob_sha": "cfe9188d2d0b3d5106d528e830d6119adb5cff93",
+          "url": "https://github.com/agentskills/agentskills/blob/83021e2be457a9b6679148719c1f6074f0ad975e/docs/skill-creation/best-practices.mdx"
+        },
+        {
+          "repository": "agentskills/agentskills",
+          "path": "skills-ref/src/skills_ref/validator.py",
+          "commit": "83021e2be457a9b6679148719c1f6074f0ad975e",
+          "commit_date": "2026-11-04T19:47:24Z",
+          "blob_sha": "22cf6f8ae5f905d780cb097c0938711cc37016a9",
+          "url": "https://github.com/agentskills/agentskills/blob/83021e2be457a9b6679148719c1f6074f0ad975e/skills-ref/src/skills_ref/validator.py"
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "AGENTS.md format and repository example",
+      "kind": "open format and repository documentation",
+      "url": "https://agents.md/",
+      "published": null,
+      "inspected": "Format website and complete project AGENTS.md.",
+      "finding": "Repository instructions can expose unusual local constraints and commands. The inspected project's development-server warning illustrates concrete, repository-specific guidance rather than a generic repository overview.",
+      "application": [
+        "scoped instructions",
+        "non-obvious operating facts"
+      ],
+      "limits": "The format defines a convention, not proof of improved model performance.",
+      "files": [
+        {
+          "repository": "agentsmd/agents.md",
+          "path": "AGENTS.md",
+          "commit": "d001185d792eb6402a58e4cbef1c228b309ec25d",
+          "commit_date": "2026-09-10T18:46:16Z",
+          "blob_sha": "3cf929b91208081e40df9dec3835e4ff54bf4dc4",
+          "url": "https://github.com/agentsmd/agents.md/blob/d001185d792eb6402a58e4cbef1c228b309ec25d/AGENTS.md"
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "Anthropic skill-creator and evaluation scripts",
+      "kind": "external repository implementation",
+      "url": "https://github.com/anthropics/skills",
+      "published": null,
+      "inspected": "SKILL.md creation/evaluation workflow; benchmark aggregation and trigger-evaluation code.",
+      "finding": "Skill development compares baseline and skill-assisted runs. Trigger measurement differs from successful execution. The inspected aggregator can fall back from output characters into a tokens field, so metric units need independent validation.",
+      "application": [
+        "paired trials",
+        "separate trigger and outcome metrics",
+        "explicit metric units"
+      ],
+      "limits": "An implementation example, not an endorsed dependency or proof of transfer.",
+      "files": [
+        {
+          "repository": "anthropics/skills",
+          "path": "skills/skill-creator/SKILL.md",
+          "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+          "commit_date": "2026-11-06T22:32:28Z",
+          "blob_sha": "65b3a402dbd09b8e83f9d637c6b553875189085c",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/SKILL.md"
+        },
+        {
+          "repository": "anthropics/skills",
+          "path": "skills/skill-creator/scripts/aggregate_benchmark.py",
+          "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+          "commit_date": "2026-11-06T22:32:28Z",
+          "blob_sha": "3e66e8c105be9bab9f0e9c61f0d1482619401580",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/scripts/aggregate_benchmark.py"
+        },
+        {
+          "repository": "anthropics/skills",
+          "path": "skills/skill-creator/scripts/run_eval.py",
+          "commit": "2c5958ecac7cee2b583967a2c4981d0f4a75c579",
+          "commit_date": "2026-11-06T22:32:28Z",
+          "blob_sha": "e58c70bea39d5b252a1e819f242bbdcdf20e8b87",
+          "url": "https://github.com/anthropics/skills/blob/2c5958ecac7cee2b583967a2c4981d0f4a75c579/skills/skill-creator/scripts/run_eval.py"
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "Mini-SWE-Agent default agent and tests",
+      "kind": "external repository implementation",
+      "url": "https://github.com/SWE-agent/mini-swe-agent",
+      "published": null,
+      "inspected": "Complete default agent; focused tests for step/cost limits, timeouts, partial output and wall time.",
+      "finding": "A compact model-action-observation loop records trajectories and explicit exit reasons with configurable resource bounds. Exiting successfully and solving the user's task remain different claims.",
+      "application": [
+        "inspectable execution",
+        "bounded recovery",
+        "honest outcome states"
+      ],
+      "limits": "Framework mechanisms do not prove success on these repositories; limits are checked at particular execution boundaries.",
+      "files": [
+        {
+          "repository": "SWE-agent/mini-swe-agent",
+          "path": "src/minisweagent/agents/default.py",
+          "commit": "04d809ceab9df28f9adaed044884180159172930",
+          "commit_date": "2026-09-03T05:05:59Z",
+          "blob_sha": "ca310e37d7c61888c576f73f5e1790ac769407b1",
+          "url": "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/src/minisweagent/agents/default.py"
+        },
+        {
+          "repository": "SWE-agent/mini-swe-agent",
+          "path": "tests/agents/test_default.py",
+          "commit": "04d809ceab9df28f9adaed044884180159172930",
+          "commit_date": "2026-09-03T05:05:59Z",
+          "blob_sha": "cb8587475a25abd23612107dd655435187bb12d9",
+          "url": "https://github.com/SWE-agent/mini-swe-agent/blob/04d809ceab9df28f9adaed044884180159172930/tests/agents/test_default.py"
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "title": "Aider repository map documentation and implementation",
+      "kind": "external repository implementation",
+      "url": "https://aider.chat/docs/repomap.html",
+      "published": null,
+      "inspected": "Repository-map documentation; map budget, symbol graph and PageRank implementation.",
+      "finding": "Aider builds a relevance-ranked map of definitions and relationships within a context budget. A compact map routes exploration; it is not a complete inventory or an absence proof.",
+      "application": [
+        "bounded repository search",
+        "separate inventory and relevance"
+      ],
+      "limits": "Its code-oriented graph may not transfer to mixed research archives without evaluation.",
+      "files": [
+        {
+          "repository": "Aider-AI/aider",
+          "path": "aider/website/docs/repomap.md",
+          "commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+          "commit_date": "2026-05-22T14:02:20Z",
+          "blob_sha": "900c31f1a369c2a2e88a08442699af62603a963e",
+          "url": "https://github.com/Aider-AI/aider/blob/5dc9490bb35f9729ef2c95d00a19ccd30c26339c/aider/website/docs/repomap.md"
+        },
+        {
+          "repository": "Aider-AI/aider",
+          "path": "aider/repomap.py",
+          "commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+          "commit_date": "2026-05-22T14:02:20Z",
+          "blob_sha": "541bba6ef4a5385b8cf032201ec6e3f3e32a6ea6",
+          "url": "https://github.com/Aider-AI/aider/blob/5dc9490bb35f9729ef2c95d00a19ccd30c26339c/aider/repomap.py"
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "title": "LongMemEval: Benchmarking Chat Assistants on Long-Term Interactive Memory",
+      "kind": "peer-reviewed benchmark research",
+      "url": "https://arxiv.org/abs/2410.10813",
+      "published": "2024-10-14",
+      "revision": "v2, 2025-03-04; ICLR 2025",
+      "inspected": "Paper abstract and conference publication abstract.",
+      "finding": "The benchmark separates extraction, cross-session reasoning, temporal reasoning, updates and abstention. Those distinct abilities provide useful categories for evaluating archival retrieval.",
+      "application": [
+        "temporal provenance",
+        "supersession",
+        "abstention cases"
+      ],
+      "limits": "Conversational-memory benchmark; the proposed repository tasks require their own evidence."
+    },
+    {
+      "id": "S11",
+      "title": "tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+      "kind": "primary benchmark research",
+      "url": "https://arxiv.org/abs/2406.12045",
+      "published": "2024-06-17",
+      "inspected": "Paper abstract and benchmark description.",
+      "finding": "Evaluation compares final database state against the task goal and measures repeated-trial reliability. Consistency across runs differs from obtaining one successful attempt.",
+      "application": [
+        "final-state oracles",
+        "repeatability"
+      ],
+      "limits": "Simulated domains and historical models; reported benchmark scores are not current capability estimates."
+    },
+    {
+      "id": "S12",
+      "title": "Demystifying evals for AI agents",
+      "kind": "provider engineering guidance",
+      "url": "https://www.anthropic.com/research/demystifying-evals-for-ai-agents",
+      "published": "2026-01-09",
+      "inspected": "Task/trial/trace/outcome definitions; grader tradeoffs; pass@k versus pass^k.",
+      "finding": "Evaluate observable outcomes with graders appropriate to the task. Deterministic, model-based and human grading have different failure modes; repeated success and any-attempt success answer different questions.",
+      "application": [
+        "outcome grading",
+        "human calibration",
+        "multiple trials"
+      ],
+      "limits": "Provider advice and examples; grader agreement must be checked locally."
+    },
+    {
+      "id": "S13",
+      "title": "Evaluation best practices",
+      "kind": "provider documentation",
+      "url": "https://developers.openai.com/api/docs/guides/evaluation-best-practices",
+      "published": null,
+      "inspected": "Evaluation definitions, tips, anti-patterns and objective/dataset/metric/compare workflow.",
+      "finding": "Use task-specific datasets, explicit success criteria, comparison runs and human calibration. Generic metrics and impressionistic judgments can miss the intended outcome.",
+      "application": [
+        "task-specific evaluation",
+        "provider-independent artifacts"
+      ],
+      "limits": "Living documentation; recommendations do not require adopting a hosted evaluation product."
+    },
+    {
+      "id": "S14",
+      "title": "Writing effective tools for agents — with agents",
+      "kind": "provider engineering guidance",
+      "url": "https://www.anthropic.com/research/writing-tools-for-agents",
+      "published": "2025-09-11",
+      "inspected": "Tool-selection guidance, evaluation process, metrics and held-out tasks.",
+      "finding": "Clear workflow-oriented tool contracts and relevant responses can reduce ambiguity. Tool evaluation should include errors, latency, calls and tokens alongside task outcomes.",
+      "application": [
+        "clear search contracts",
+        "measured tool efficiency"
+      ],
+      "limits": "Do not constrain every valid task to one exact tool sequence; provider-specific guidance needs local trials."
+    },
+    {
+      "id": "S15",
+      "title": "PROV-DM: The PROV Data Model",
+      "kind": "W3C recommendation",
+      "url": "https://www.w3.org/TR/prov-dm/",
+      "published": "2013-04-30",
+      "inspected": "Core entity/activity/agent concepts, derivation/usage/generation relations; PROV overview.",
+      "finding": "Provenance connects artifacts, the activities producing them and their sources. These relationships support tracing transformations and distinguishing evidence from later interpretation.",
+      "application": [
+        "artifact provenance",
+        "source and revision edges"
+      ],
+      "limits": "A lightweight JSON record inspired by these concepts is not automatically W3C PROV compliant."
+    }
+  ],
+  "limitations": [
+    "This is a selective research review, not an exhaustive literature survey or whole-repository semantic audit.",
+    "No model-based before/after behavioral benchmark was run for this research report.",
+    "Documentation and static-check improvements must not be presented as universal gains for every LLM.",
+    "External code was inspected for design patterns and failure modes; this ledger does not import or relicense it.",
+    "Primary source publication dates are retained when verified; undated living documentation uses the research date as its access date."
+  ]
+}

@@ -2,7 +2,7 @@
 
 Repository-level regression blocker tests.
 
-Files here: 9 including this entry doc (count at the index commit named in INDEX.md).
+Exact file count, byte total and captured revision: [the generated repository index](../INDEX.md). The matching entries in [INDEX.json](../INDEX.json) retain every path and blob hash.
 
 All 8 test files sit at the top of this folder: one-bar, PRZM, Raschke event feed, CCI correlation, Teddy ORB, Trullas variants, and two VIX hedge blocker files.
 

@@ -59,9 +59,24 @@ flowchart LR
 
 ```bash
 cd agentic-trade-desk/skeleton
-python3 -m unittest discover -s tests -v     # 19 invariant tests
+python3 -m unittest discover -s tests -v     # invariant tests; require a nonzero count
 python3 examples/run_example.py              # toy desk; shows restart-safety
 ```
+
+For a clean-copy onboarding check, run this from the repository root:
+
+```bash
+python3 agentic-trade-desk/skeleton/tools/check_onboarding.py
+```
+
+It verifies the documented copy layout in a temporary directory, runs the
+discovered tests, checks the toy's one-entry/one-exit result and emits a JSON
+receipt with source hashes. No credentials are inherited; network and child
+process activity inside the example/test process are rejected. The guard is
+for this reviewed example, not a sandbox for untrusted packages. No broker or
+service is activated. See [setup Step 3](docs/03_setup_step_by_step.md#step-3--copy-the-skeleton-and-run-its-tests)
+for the exact reusable layout, and the repository-wide
+[LLM operating guide](../docs/LLM-OPERATING-GUIDE.md) for source-to-proof workflows.
 
 ## How an LLM should use this repository
 
