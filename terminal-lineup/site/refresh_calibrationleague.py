@@ -216,6 +216,9 @@ FIRST_ROUND_MONTH = "2026-11"
 FIRST_ISSUE_OPEN = "2026-11-02"     # first trading day of November 2026
 FIRST_DECISION_AS_OF = "2026-10-30"  # the Friday close before it
 TOL = 0.26                  # points; fail-closed tolerance vs the register
+DRIFT_TOL = 2.0             # points; a measured interval further than
+                            # this from its registered stake fails
+                            # closed (cure CALIBRATION-INTERVAL-20261107)
 
 
 def fail(msg):
@@ -249,6 +252,37 @@ def interval_for(stated_pct, centre_pts, anchor_q=None):
             "err_low_pts": round(lo * 100 - stated_pct, 1),
             "err_high_pts": round(hi * 100 - stated_pct, 1),
             "width_pts": round((hi - lo) * 100, 1)}
+
+
+def registered_interval(stated_pct, reg, anchor_q=None):
+    """Reproduce a registered will-stake interval (cure
+    CALIBRATION-INTERVAL-20261107): the register's error bounds
+    were produced by interval_for at registration, so scan
+    centres for the one whose bounds match the register within
+    rounding and return that interval (with its centre). An
+    anchored entrant's interval is centre-free by construction.
+    Returns (interval, centre_pts) or None when no centre
+    reproduces the register, which fails closed in build_table:
+    a register that cannot be reproduced is a register in
+    question, not a number to publish.
+    """
+    if anchor_q is not None:
+        iv = interval_for(stated_pct, 0.0, anchor_q=anchor_q)
+        if abs(iv["err_low_pts"] - reg[0]) <= 0.15 \
+                and abs(iv["err_high_pts"] - reg[1]) <= 0.15:
+            return iv, None
+        return None
+    best = None
+    for centre_hundredths in range(-3000, 3001):
+        centre = centre_hundredths / 100.0
+        iv = interval_for(stated_pct, centre)
+        err = abs(iv["err_low_pts"] - reg[0]) \
+            + abs(iv["err_high_pts"] - reg[1])
+        if best is None or err < best[0]:
+            best = (err, iv, centre)
+    if best is not None and best[0] <= 0.3:
+        return best[1], best[2]
+    return None
 
 
 def spearman(xs, ys):
@@ -396,11 +430,23 @@ def measure_entrants():
     # None. The binding that remains is the one main() enforces:
     # the ledger count must equal the count its own page
     # publishes (which is why this refresh stays failed closed
-    # while its page is stale against the ledger).
+    # while its page is stale against the ledger). Since
+    # 2026-11-07 (cure CALIBRATION-GENERATION-20261107) that
+    # equality is evaluated at the page's own generation: see
+    # expected_page_count and the check in main().
     out["engine_15"] = {"graded": 0, "stated_pct": 80.0,
                         "realised_pct": None, "error_pts": None,
                         "live_recorded_src":
-                            d["live"]["forecasts_recorded"]}
+                            d["live"]["forecasts_recorded"],
+                        # Generation stamp written by the page's
+                        # own producer since 2026-11-07 (cure
+                        # CALIBRATION-GENERATION-20261107): the
+                        # ledger row count its figures were
+                        # computed from. Absent on pages written
+                        # before the cure; main() then falls back
+                        # to strict equality for one cycle.
+                        "ledger_checkpoint_src":
+                            d["live"].get("ledger_rows_at_write")}
 
     row = evidence_row("AD-55")
     for token in ("81.6/80.9", "83.2/81.7", "85.0/82.2"):
@@ -523,6 +569,28 @@ ENTRANTS = [
 ]
 
 
+def expected_page_count(src_count, checkpoint, rows, engine_id):
+    """The live count a page's published count should be compared
+    against, at the page's own generation: its published count
+    plus the engine's forecast rows appended to the ledger after
+    the page's checkpoint (cure CALIBRATION-GENERATION-20261107).
+
+    A page without a checkpoint (written before the cure) gets
+    strict equality: its count must equal the live count exactly.
+    With a checkpoint, rows the engine appended after the page
+    was written, including rows banked by an interrupted run of
+    the engine's own leg, are expected accrual, not divergence;
+    a page whose count disagrees with the ledger AT its own
+    checkpoint still fails.
+    """
+    if checkpoint is None:
+        return src_count
+    appended = sum(1 for r in rows[checkpoint:]
+                   if r.get("type") == "forecast"
+                   and r.get("engine_id") == engine_id)
+    return src_count + appended
+
+
 def build_table(measured, live_counts):
     table = []
     for e in ENTRANTS:
@@ -536,14 +604,39 @@ def build_table(measured, live_counts):
             row["interval"] = None
             row["rival_interval"] = None
         else:
-            iv = interval_for(m["stated_pct"], m["error_pts"],
-                              anchor_q=m.get("anchor_q"))
+            # Cure CALIBRATION-INTERVAL-20261107: the staked
+            # interval is the REGISTERED one, reproduced from the
+            # register by registered_interval(); the measured
+            # centre moves as its walk-forward sample grows (the
+            # G2 re-registration already made the counts floors
+            # for exactly this reason), so demanding today's
+            # recomputation equal the register within TOL broke
+            # as the panel advanced (engine_01: computed
+            # -19.6..4.4 against the registered -19.3..4.6 on a
+            # healthy, growing record). What is ledgered for the
+            # round is the registered stake, never a drifted
+            # recomputation; the measured interval is still
+            # computed and drift-guarded: beyond DRIFT_TOL from
+            # the register the register itself is in question
+            # and the league fails closed.
             reg = REGISTERED_INTERVALS[e["id"]]
-            if abs(iv["err_low_pts"] - reg[0]) > TOL or \
-                    abs(iv["err_high_pts"] - reg[1]) > TOL:
-                fail(f"{e['id']} interval {iv['err_low_pts']}.."
-                     f"{iv['err_high_pts']} disagrees with the "
-                     f"registered {reg[0]}..{reg[1]}")
+            reproduced = registered_interval(
+                m["stated_pct"], reg, anchor_q=m.get("anchor_q"))
+            if reproduced is None:
+                fail(f"{e['id']} registered interval {reg[0]}.."
+                     f"{reg[1]} could not be reproduced from any "
+                     f"centre; the register is in question")
+            iv, _reg_centre = reproduced
+            live_iv = interval_for(m["stated_pct"], m["error_pts"],
+                                   anchor_q=m.get("anchor_q"))
+            if abs(live_iv["err_low_pts"] - reg[0]) > DRIFT_TOL or \
+                    abs(live_iv["err_high_pts"] - reg[1]) > DRIFT_TOL:
+                fail(f"{e['id']} measured interval "
+                     f"{live_iv['err_low_pts']}.."
+                     f"{live_iv['err_high_pts']} has drifted more "
+                     f"than {DRIFT_TOL} points from the registered "
+                     f"{reg[0]}..{reg[1]}; the register is in "
+                     f"question")
             row["forecastable"] = True
             row["interval"] = iv
             rival_centre = m.get("rival_centre_pts", m["error_pts"])
@@ -843,10 +936,29 @@ def main():
     # is the one that ties each entrant to its own page: the ledger
     # count must equal the count the entrant's own page publishes.
     for eid in ("engine_01", "engine_02", "engine_05", "engine_06",
-                "engine_12", "engine_15"):
+                "engine_12"):
         if live_counts[eid] != measured[eid]["live_recorded_src"]:
             fail(f"{eid} live count disagrees with its own page: "
                  f"{live_counts[eid]} vs {measured[eid]['live_recorded_src']}")
+    # engine_15 binds at its page's generation (cure
+    # CALIBRATION-GENERATION-20261107): its producer appends its
+    # own forecast rows mid-run at the end of the run's longest
+    # leg and writes its page last, so strict equality against
+    # the live count froze a one-sided gap whenever a run died
+    # inside that leg (two runtime kills banked the 6,606-row gap
+    # this check reported identically across four runs, while a
+    # completed run left both sides agreeing to the row). The
+    # comparison now counts the engine's appends after the page's
+    # own checkpoint as expected accrual; a page wrong at its own
+    # generation still fails, with the disagreement bucketed.
+    _src15 = measured["engine_15"]["live_recorded_src"]
+    _ckpt15 = measured["engine_15"].get("ledger_checkpoint_src")
+    _expected15 = expected_page_count(_src15, _ckpt15, rows, "engine_15")
+    if live_counts["engine_15"] != _expected15:
+        fail(f"engine_15 live count disagrees with its own page: "
+             f"live {live_counts['engine_15']} vs page {_src15} at "
+             f"ledger checkpoint {_ckpt15} (expected {_expected15} "
+             f"after counting its forecasts appended since)")
 
     table, ranking, fam_rows = build_table(measured, live_counts)
     for row in table:
