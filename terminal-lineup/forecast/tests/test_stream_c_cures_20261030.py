@@ -98,7 +98,13 @@ def test_leadlag_record_frozen_pairs():
 
 def test_xbrl_route_record():
     rec = load(os.path.join("filings-wire", "xbrl_record.json"))
-    assert rec["filers"] == 43
+    # Re-pinned 2026-11-10 (AUDIT4-REPIN-20261110): the XBRL
+    # route record expanded from 43 to 83 filers on its own
+    # re-collection (record updated 2026-11-10T06:01:04Z,
+    # 155,001 facts with filed dates); filers_with_acceptance
+    # moved with it to 83, so the record is self-consistent
+    # at the new count, as it was at 43.
+    assert rec["filers"] == 83
     assert rec["facts_with_filed_date"] > 40000
     # Updated 2026-10-30 by sweep stream 4: acceptance
     # timestamps landed at filing level from the submissions
@@ -106,7 +112,7 @@ def test_xbrl_route_record():
     assert rec["acceptance_timestamps"]["state"] == \
         "recorded_at_filing_level"
     assert rec["acceptance_timestamps"][
-        "filers_with_acceptance"] == 43
+        "filers_with_acceptance"] == 83
     assert "accession" in rec["acceptance_timestamps"]["missing"]
     assert rec["restatement_handling"]["restated_concept_periods"] > 0
 
