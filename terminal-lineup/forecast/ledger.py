@@ -514,21 +514,64 @@ class Ledger:
             "ledger changed repeatedly during the streaming "
             "grading pass; refusing to append")
 
+    def _tail_hash(self):
+        """The last row's hash, read from the file's tail at
+        bounded memory (LEDGER-APPEND-TAIL-20261109): lines are
+        walked backwards in blocks until the last non-empty
+        line is whole, and only that line is parsed. _append
+        needs the tail and nothing else; the pre-cure code
+        parsed the entire ledger for it, so every classic
+        append on the grown 660 MB ledger cost a full parse
+        (measured: four appends in one refresher, each after
+        a cache invalidation, at about 2.3 GB peak apiece)."""
+        try:
+            size = os.path.getsize(self.path)
+        except OSError:
+            return ""
+        if size == 0:
+            return ""
+        block = 1 << 16
+        data = b""
+        pos = size
+        with open(self.path, "rb") as fh:
+            while pos > 0:
+                step = min(block, pos)
+                pos -= step
+                fh.seek(pos)
+                data = fh.read(step) + data
+                lines = [ln for ln in data.split(b"\n") if ln.strip()]
+                if len(lines) >= 2 or pos == 0:
+                    if not lines:
+                        return ""
+                    try:
+                        return json.loads(
+                            lines[-1].decode("utf-8"))["row_hash"]
+                    except (ValueError, KeyError, UnicodeDecodeError) as exc:
+                        raise LedgerError(
+                            "the ledger's last line is not a valid "
+                            f"row (possible rewrite/corruption): {exc}")
+        return ""
+
     def _append(self, row):
-        rows = self.rows()
         stat = self._stat()
         if self._verified_stat != stat:
-            if rows and not self.verify_chain(rows):
+            # Verification streams (LEDGER-APPEND-TAIL-20261109):
+            # the same chain verdict as verify_chain(rows), at
+            # one parsed row of resident memory; the pre-cure
+            # code parsed the whole ledger to reach it.
+            if stat is not None and not self.verify_chain_streaming():
                 raise LedgerError(
                     "ledger hash chain is broken; refusing to append to a "
                     "ledger whose history does not verify (rewrite detected)")
-            self._verified_stat = stat
+            self._verified_stat = self._stat()
+            stat = self._verified_stat
         # If another writer appended between our read and this
         # write, our prev link would be stale: re-check the stat
         # and start over with the fresh tail when it moved.
         if self._stat() != stat:
             return self._append(row)
-        prev = rows[-1]["row_hash"] if rows else ""
+        rows = None
+        prev = self._tail_hash()
         row = dict(row)
         row["prev_hash"] = prev
         body = {k: v for k, v in row.items()
@@ -540,8 +583,13 @@ class Ledger:
             fh.write(_canonical(row) + "\n")
         self._write_provenance(row)
         new_stat = self._stat()
-        self._cache_rows = rows + [row]
-        self._cache_stat = new_stat
+        # The parsed-rows cache cannot be extended without the
+        # parse this cure exists to avoid; drop it, exactly as
+        # _append_streaming does, so no later rows() call in
+        # this process reads a stale copy. Callers that held
+        # the cache as their working set re-read on demand.
+        self._cache_rows = None
+        self._cache_stat = None
         self._verified_stat = new_stat
         return row
 
@@ -671,7 +719,7 @@ class Ledger:
 
     # ---- writing -----------------------------------------------------
     def append_genesis(self, note=""):
-        if self.rows():
+        if self._stat() is not None:
             raise LedgerError("genesis row already exists")
         return self._append({"type": "genesis", "program": "forecast-engines-30",
                              "note": note})
@@ -781,7 +829,7 @@ class Ledger:
             label_context=label_context,
             label_transform_id=label_transform_id,
             label_transform_hash=label_transform_hash)
-        for row in self.rows():
+        for row in self.iter_rows():
             if row.get("type") == "forecast" and row.get("dedupe_key") == key:
                 return row, False
         row = self._append(body)
@@ -806,7 +854,7 @@ class Ledger:
                 kwargs["engine_id"], kwargs["subject"],
                 kwargs["horizon_open"], kwargs["horizon_close"],
                 value_hash(kwargs["value"]))
-            for row in self.rows():
+            for row in self.iter_rows():
                 if row.get("type") == "forecast" \
                         and row.get("dedupe_key") == plain \
                         and frozen_label_identity(row) is None:
@@ -953,7 +1001,9 @@ class Ledger:
             raise LedgerError(
                 "ledger changed repeatedly during streaming grade "
                 "appends; refusing to append")
-        for row in self.rows():
+        # The refusal checks stream (LEDGER-APPEND-TAIL-20261109):
+        # same two checks, same messages, one parsed row held.
+        for row in self.iter_rows():
             if row.get("type") == "correction" and \
                     row.get("corrects_row_id") == forecast_row["row_id"]:
                 raise LedgerError(
@@ -977,7 +1027,7 @@ class Ledger:
         return self._append(body)
 
     def append_correction(self, *, corrects_row_id, note, payload=None):
-        ids = {r["row_id"] for r in self.rows()}
+        ids = {r["row_id"] for r in self.iter_rows()}
         if corrects_row_id not in ids:
             raise LedgerError(f"correction targets unknown row {corrects_row_id}")
         return self._append({"type": "correction",
@@ -988,6 +1038,21 @@ class Ledger:
 def recompute_figures(rows):
     """Recompute every published figure from ledger rows alone.
     Returns per-engine counts and mean scores by grading rule.
+
+    `rows` may be any iterable of parsed rows, including a
+    one-shot generator (LEDGER-STREAM-FIGURES-20261109): it is
+    consumed exactly once. The forecast and correction rows
+    stream into the two collections the grade pass needs
+    (forecast rows by id, voided ids), and the grade rows
+    stream through the counting loop directly; the old form
+    walked its argument three times, which on a list was
+    merely wasteful and on a one-shot stream would have
+    silently produced empty figures. Callers holding a Ledger
+    can pass ledger.iter_rows() instead of the parsed whole;
+    the verdicts are identical on the same file and resident
+    memory stays at one parsed row plus the forecast rows
+    themselves, which the grade pass must look up by id in
+    any implementation.
 
     Void exclusion (defect 8 cure, 2026-10-30): a forecast voided
     by a correction row is counted in forecasts_voided and its
@@ -1003,10 +1068,18 @@ def recompute_figures(rows):
     group's means when the engine has exactly one group, and empty
     when it has more than one, because pooling outcomes across
     fingerprints is refused, never averaged over."""
-    forecasts = {r["row_id"]: r for r in rows if r.get("type") == "forecast"}
-    voided_ids = {r["corrects_row_id"] for r in rows
-                  if r.get("type") == "correction"
-                  and r.get("corrects_row_id") in forecasts}
+    forecasts = {}
+    corrects = []
+    grade_rows = []
+    for r in rows:
+        kind = r.get("type")
+        if kind == "forecast":
+            forecasts[r["row_id"]] = r
+        elif kind == "correction":
+            corrects.append(r.get("corrects_row_id"))
+        elif kind == "grade":
+            grade_rows.append(r)
+    voided_ids = {c for c in corrects if c in forecasts}
     figures = {}
     groups = {}  # engine_id -> group key -> {"scores": {}, ...}
 
@@ -1039,9 +1112,7 @@ def recompute_figures(rows):
         _group(row["engine_id"], row)["forecasts"] += 1
         if is_scored_zero(row):
             _engine(row["engine_id"])["scored_zero"] += 1
-    for row in rows:
-        if row.get("type") != "grade":
-            continue
+    for row in grade_rows:
         eng = _engine(row["engine_id"])
         eng["graded_raw"] += 1
         if row.get("forecast_row_id") in voided_ids:
