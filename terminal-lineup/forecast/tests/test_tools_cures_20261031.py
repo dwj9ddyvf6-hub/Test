@@ -115,14 +115,17 @@ def test_iv_pages_live_freshest_modelled_2026_10_30():
     # Re-pinned again 2026-11-05 (TOTALFIX-REPIN-20261105):
     # the modelled chain pages advanced to the 2026-11-04
     # snapshot on the completed forecast lane.
+    # Re-pinned 2026-11-10 (AUDIT4-REPIN-20261110): the
+    # modelled chain pages advanced to the 2026-11-09
+    # snapshot on the completed 2026-11-09 forecast lane.
     ivw = _load_json("iv-weather/data.json")
-    assert ivw["freshest_date"] == "2026-11-04"
+    assert ivw["freshest_date"] == "2026-11-09"
     modelled = ivw["groups"][-1]  # the modelled chain group
     assert {n["symbol"] for n in modelled["names"]} == {
         "SPY", "QQQ", "IWM"}
-    assert {n["date"] for n in modelled["names"]} == {"2026-11-04"}
+    assert {n["date"] for n in modelled["names"]} == {"2026-11-09"}
     skew = _load_json("skew-lens/data.json")
-    assert skew["modelled_freshest_date"] == "2026-11-04"
+    assert skew["modelled_freshest_date"] == "2026-11-09"
 
 
 # ---- Morning Map / Gamma Ladder --------------------------------
@@ -169,11 +172,23 @@ def test_expected_move_qqq_current_and_lane_per_name():
     data = _load_json("expected-move/data.json")
     lane = data["filing_lane"]
     latest = lane["latest_completed_session"]
-    assert lane["names"]["QQQ"]["newest_session"] == latest
-    assert lane["names"]["QQQ"]["missing_sessions"] == []
-    assert lane["names"]["SPY"]["newest_session"] == latest
+    # The lane's currency contract (AUDIT-4 re-read, 2026-11-10):
+    # each name's newest filed map is at least the latest
+    # completed session and no expected session is missing for
+    # it. Equality with latest_completed was the form this test
+    # took before the desk's at-time filing bridge began filing
+    # the NEXT session's map ahead of the open (the 2026-11-10
+    # map filed at 00:03:31Z, proven filed_at_time in the live
+    # record): a name's newest may then stand one session ahead
+    # of the last completed one, which is the bridge working,
+    # not the lane lagging. The page session and each name's
+    # receipt must still agree with each other exactly.
+    for sym in ("SPY", "QQQ"):
+        assert lane["names"][sym]["newest_session"] >= latest
+        assert lane["names"][sym]["missing_sessions"] == []
+    assert lane["names"]["QQQ"]["newest_session"] == data["session"]
     qqq = [n for n in data["names"] if n["symbol"] == "QQQ"][0]
-    assert qqq["receipt"]["session"] == latest
+    assert qqq["receipt"]["session"] == data["session"]
 
 
 def test_expected_move_source_uses_panel_and_names():
