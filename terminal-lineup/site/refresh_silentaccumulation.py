@@ -743,16 +743,26 @@ def build():
     # ---- Ledger (API only) ----
     reg = registry_mod.load()
     led = ledger_mod.Ledger(LEDGER_PATH, registry=reg)
-    if not led.verify_chain():
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
 
     # ---- Live: a group forms only on a stored dark session ----
+    # LEDGER-STREAM-FIGURES-20261109: the parsed whole ledger is
+    # never held anywhere in this section. Every read below is a
+    # fresh stream filtered to this engine's rows (its forecasts
+    # and grades are a small share of the ledger); the grading
+    # loop re-streams after each append exactly as the pre-cure
+    # code re-read rows(), so grades appended mid-loop are seen
+    # by the next pass and never double-graded. The pre-cure
+    # form loaded the ledger five times over in this section
+    # and the process died by SIGKILL on the grown 660 MB
+    # ledger.
     created = 0
     missed_sessions = []
     recorded_days = {(r.get("lineage") or {}).get("cohort", {})
                      .get("cohort_date")
-                     for r in led.rows()
+                     for r in led.iter_rows()
                      if r.get("type") == "forecast"
                      and r.get("engine_id") == ENGINE_ID
                      and (r.get("lineage") or {}).get("cohort")}
@@ -770,7 +780,8 @@ def build():
         missed_sessions.append(dark_session)
 
     # ---- Grade any recorded group whose 21 sessions have passed ----
-    rows = led.rows()
+    rows = [r for r in led.iter_rows()
+            if r.get("engine_id") == ENGINE_ID]
     graded_now = 0
     for row in list(rows):
         if row.get("type") != "forecast" or row.get("engine_id") != ENGINE_ID:
@@ -809,13 +820,15 @@ def build():
                      "day's all-names yardstick")},
             **(ledger_mod.frozen_label_identity(row) or {}))
         graded_now += 1
-        rows = led.rows()
+        rows = [r for r in led.iter_rows()
+                if r.get("engine_id") == ENGINE_ID]
 
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    rows = [r for r in led.iter_rows()
+            if r.get("engine_id") == ENGINE_ID]
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
     cohort_days = sorted({(r.get("lineage") or {}).get("cohort", {})
                           .get("cohort_date")
