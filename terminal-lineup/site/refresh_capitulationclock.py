@@ -402,11 +402,20 @@ def build():
     reg = registry_mod.load()
     led = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=reg)
-    rows_before = led.rows()
-    if not led.verify_chain(rows_before):
+    # Streaming ledger reads (cure LEDGER-STREAM-CLOCKS-20261110):
+    # this leg used to parse the whole ledger into a list twice
+    # (rows_before and rows_after) and hash-verify the parsed list
+    # twice, holding two full copies of a 660 MB ledger's parsed
+    # rows on a 6 GB box; under the refresh's combined load it was
+    # SIGKILLed (exit -9) on 2026-11-10. Every read below now
+    # streams: chain verification via verify_chain_streaming(),
+    # figures via recompute_figures(led.iter_rows()) consumed
+    # exactly once (cure LEDGER-STREAM-FIGURES-20261109), and the
+    # after-write collections via engine-filtered stream lists.
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
-    figures_before = ledger_mod.recompute_figures(rows_before)
+    figures_before = ledger_mod.recompute_figures(led.iter_rows())
     recorded_before = figures_before.get(ENGINE_ID, {}).get("forecasts", 0)
 
     created = 0
@@ -455,21 +464,20 @@ def build():
                              item["frozen_own_median_volume"],
                          "base_date": as_of, "at_date": fut_exh[-1]})
             created += 1 if was else 0
-    rows_after = led.rows()
-    if not led.verify_chain(rows_after):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows_after)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
     if mine["forecasts"] != recorded_before + created:
         return fail("ledger figures do not match the live rows expected")
-    live_subjects = {r["subject"] for r in rows_after
+    live_subjects = {r["subject"] for r in led.iter_rows()
                      if r.get("type") == "forecast"
                      and r.get("engine_id") == ENGINE_ID}
-    graded_rows = [r for r in rows_after if r.get("type") == "grade"
+    graded_rows = [r for r in led.iter_rows() if r.get("type") == "grade"
                    and r.get("engine_id") == ENGINE_ID]
     graded_by_q = {}
-    fc_by_id = {r["row_id"]: r for r in rows_after
+    fc_by_id = {r["row_id"]: r for r in led.iter_rows()
                 if r.get("type") == "forecast"}
     for r in graded_rows:
         q = fc_by_id.get(r["forecast_row_id"], {}).get("quantity", "?")
