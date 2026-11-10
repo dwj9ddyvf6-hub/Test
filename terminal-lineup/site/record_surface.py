@@ -1409,7 +1409,13 @@ def _subj_earnings_calendar(d):
         "after the report against the close just before it. The "
         "expected move priced for the name before it reported is "
         "printed beside each bar, where one was on record.",
-        rows, limit=40)
+        # No truncation (cure 2026-11-10, AUDIT-4): the record
+        # chart is the realised moves, every event. The old
+        # limit=40 silently dropped events once the accrual store
+        # grew past 40 rows (206 rows by 2026-11-10, 166 dropped),
+        # which is the silent-dropping class the subject-chart
+        # cure exists to prevent.
+        rows, limit=None)
     return [chart] if chart else []
 
 
