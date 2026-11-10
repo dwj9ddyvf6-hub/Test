@@ -1699,7 +1699,7 @@ def probability_render_decision(engine_entry):
 
 
 def attestation_record(engine_entry, figures, recorded_on,
-                       counting_basis=None):
+                       counting_basis=None, ledger_rows=None):
     """The per engine attestation record built from its own graded
     record (RC-22 cure, 2026-10-30). ``figures`` is the engine's
     recompute_figures entry (forecasts / graded / mean_scores).
@@ -1754,6 +1754,16 @@ def attestation_record(engine_entry, figures, recorded_on,
               "graded_forecasts": graded,
               "forecasts_recorded": forecasts,
               "recorded_on": recorded_on}
+    if ledger_rows is not None:
+        # Ledger position stamp (cure ATTESTATION-STAMP-20261108):
+        # the row count of the ledger this record was recounted
+        # from. An attestation is a snapshot by design; the stamp
+        # is what lets forecast/verify_grade_rows.py tell a
+        # snapshot the ledger has since outgrown (stale: recount)
+        # from a figure that was wrong on its own ledger (a real
+        # mismatch). Callers that pass no position stamp keep the
+        # pre-cure record shape.
+        record["ledger_rows_at_write"] = int(ledger_rows)
     if counting_basis:
         record["counting_basis"] = counting_basis
         record["basis"] = (basis.rstrip(".") + ". Counting basis: "
