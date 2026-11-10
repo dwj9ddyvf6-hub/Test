@@ -799,7 +799,7 @@ def build():
     # ---- live forecasts for qualifying names (none today) ----
     reg = registry_mod.load()
     led = ledger_mod.Ledger(LEDGER_PATH, registry=reg)
-    if not led.verify_chain():
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
     live_forecasts = []
@@ -856,12 +856,19 @@ def build():
                 "low_percent": round(fc["p10"], 2),
                 "middle_percent": round(fc["p50"], 2),
                 "high_percent": round(fc["p90"], 2)})
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    # LEDGER-STREAM-FIGURES-20261109: the parsed whole ledger is
+    # never held; verification and the figures recompute stream,
+    # and the generation stamp is a counted stream, so its
+    # meaning (rows on the ledger at this run's own read) is
+    # unchanged. The pre-cure form loaded the ledger three
+    # times over in this block alone and the process died by
+    # SIGKILL on the grown 660 MB ledger.
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
+    rows_count = sum(1 for _ in led.iter_rows())
 
     data = {
         "tool": "Per-Name Self-Analogue",
@@ -921,7 +928,7 @@ def build():
             # reading the page against the live ledger after an
             # interrupted run used to inherit a frozen one-sided
             # gap and fail on a healthy record.
-            "ledger_rows_at_write": len(rows),
+            "ledger_rows_at_write": rows_count,
             "forecasts_graded": mine["graded"],
             "proving_target_graded": KILL_FORECASTS,
             "forecasts": live_forecasts,
