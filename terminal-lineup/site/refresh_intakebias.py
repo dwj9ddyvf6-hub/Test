@@ -334,7 +334,7 @@ def build():
     registry = Registry()
     ledger = Ledger(os.path.join(FORECAST_DIR, "ledger.jsonl"),
                     registry=registry)
-    if not ledger.verify_chain():
+    if not ledger.verify_chain_streaming():
         return fail("the forecast ledger's chain does not verify")
     lineage = {
         "source_artifacts": [
@@ -411,11 +411,17 @@ def build():
         created_total += int(created)
         ledgered.append("companion_median")
 
-    if not ledger.verify_chain():
+    # LEDGER-STREAM-FIGURES-20261109: verification streams and
+    # the count below streams filtered to this engine's rows;
+    # the pre-cure form parsed the whole 660 MB ledger three
+    # times in this function (two verify_chain() calls, each
+    # loading rows(), plus this scan) and the process died by
+    # SIGKILL beside its sibling legs doing the same.
+    if not ledger.verify_chain_streaming():
         return fail("the forecast ledger's chain broke during append")
     recorded = graded = fires = 0
     fire_days = set()
-    for row in ledger.rows():
+    for row in ledger.iter_rows():
         if row.get("engine_id") != ENGINE_ID:
             continue
         if row.get("type") == "forecast":
