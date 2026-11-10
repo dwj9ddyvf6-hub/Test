@@ -165,7 +165,24 @@ def recount(ledger_path):
             "per_engine": per}
 
 
-def cross_tie(site_dir, per):
+def _attestation_position_stale(att, total_rows):
+    """True when a stamped attestation was recounted from an older
+    ledger than the one being verified (cure
+    ATTESTATION-STAMP-20261108): its figures are a snapshot of
+    that ledger, so a recount of today's longer ledger cannot
+    judge them. The attestation-to-attestation tie between the
+    registry record and its page copy stays strict wherever
+    cross_tie applies it, and the regeneration cadence is what
+    brings the snapshot current again. Unstamped attestations
+    (written before the stamp existed) return False: they carry
+    no position to trust, so they keep the strict figure tie
+    until a regeneration stamps them."""
+    stamp = att.get("ledger_rows_at_write")
+    return (isinstance(stamp, int) and total_rows is not None
+            and stamp != total_rows)
+
+
+def cross_tie(site_dir, per, total_rows=None):
     mismatches = []
     checked = []
     if not os.path.isdir(site_dir):
@@ -185,7 +202,8 @@ def cross_tie(site_dir, per):
             "attestation") or {}
         eid = (data.get("calibration_attestation") or {}).get(
             "engine_id")
-        if att and eid and "forecasts_recorded" in att:
+        if att and eid and "forecasts_recorded" in att \
+                and not _attestation_position_stale(att, total_rows):
             exp = per.get(eid) or {"forecasts_valid": 0,
                                    "grades_valid": 0,
                                    "forecasts_valid_own": 0,
@@ -223,7 +241,8 @@ def cross_tie(site_dir, per):
                         f"{live[field]} recounted {want} delta "
                         f"{live[field] - want}")
             checked.append(f"{name} ({eid})")
-            if att:
+            if att and not _attestation_position_stale(
+                    att, total_rows):
                 for a_field, l_field in (
                         ("forecasts_recorded", "forecasts_recorded"),
                         ("graded_forecasts", "forecasts_graded")):
@@ -236,7 +255,7 @@ def cross_tie(site_dir, per):
     return mismatches, checked
 
 
-def registry_mismatches(registry_path, per):
+def registry_mismatches(registry_path, per, total_rows=None):
     mismatches = []
     try:
         with open(registry_path, encoding="utf-8") as fh:
@@ -246,6 +265,8 @@ def registry_mismatches(registry_path, per):
     for eng in data.get("engines") or []:
         att = eng.get("calibration_attestation") or {}
         if "forecasts_recorded" not in att:
+            continue
+        if _attestation_position_stale(att, total_rows):
             continue
         exp = per.get(eng["id"]) or {"forecasts_valid": 0,
                                      "grades_valid": 0,
@@ -322,10 +343,11 @@ def main(argv=None):
         if e["orphan_grades"] or e["double_grades"]:
             failures.append(f"{eid}: orphans {e['orphan_grades']} "
                             f"doubles {e['double_grades']}")
-    mismatches, checked = cross_tie(site_dir, result["per_engine"])
+    mismatches, checked = cross_tie(site_dir, result["per_engine"],
+                                    total_rows=result["rows"])
     mismatches = registry_mismatches(
         os.path.join(HERE, "registry.json"),
-        result["per_engine"]) + mismatches
+        result["per_engine"], total_rows=result["rows"]) + mismatches
     print(f"cross-tie pages checked: {checked}")
     for m in mismatches:
         print(f"MISMATCH {m}")
