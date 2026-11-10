@@ -33,8 +33,19 @@ volume tests are not assembled on record and are not claimed.
 readings at both settlements on record, and it is the change in
 shares sold short between those two settlements; names with one
 reading show a plain not-on-record state for the change, never a
-zero. (4) Coverage is counted against the 50 names the gathering
-itself covered: 20 carry a short-interest reading and 30 do not.
+zero. (4) Coverage is counted against the names the gatherings
+covered: the readings file is cumulative across gathers and the
+gathering's board rotates, so the page lists every name with a
+reading at the freshest settlement that at least one current
+record still carries, each cross-checked against whichever
+record carries it (the latest gathering record, the
+short-interest store, or both, which must agree where they
+overlap). A name no current record carries has rotated out:
+it is not listed, and it is counted and named in the coverage
+block as rotated out, never silently dropped. Earlier text
+counted against one static gathering of 50 names, 20 with
+readings; that board is gone and the count with it (cure
+SQUEEZE-ROTATION-20261108).
 (5) Freshness follows the formula's own stated rule: a settlement
 reading older than 40 days is stale. The page carries the
 settlement date on every row and shows the stale state plainly
@@ -57,9 +68,12 @@ not-available state with the reason, never as a zero, and no
 substitute measure is used in its place.
 
 Fail-closed rules: if the readings file and the provenance record
-disagree on any name's settlement date, short interest share or
-days to cover, if a name carries a reading in one record and not
-the other, if the studies card and the published feed disagree on
+disagree on any name both carry (settlement date, short interest
+share or days to cover), if the short-interest store's figures
+disagree with the readings or with the provenance record on any
+name they share, if the provenance record carries figures for a
+name the readings file does not hold at all, if no record carries
+a usable days to cover for a listed name, if the studies card and the published feed disagree on
 the squeeze pane's state or on the vendor's figures, if the
 permanent log's squeeze entries disagree with that state, if the
 short-volume lane's stamp disagrees with the days actually
@@ -225,27 +239,22 @@ def build():
             return fail(f"the reading for {sym} is missing its "
                         "share counts; refusing to publish.")
         by_name.setdefault(sym, {})[r["settlement_date"]] = r
-    settlements = sorted({d for m in by_name.values() for d in m})
-    freshest = settlements[-1]
-    # Publication dates are per gather vintage (RC-24 cure,
-    # 2026-10-30): the store now carries every settlement, and
-    # later gathers admit older settlements on their own
-    # retrieval dates, so vintages legitimately differ across
-    # settlements. The rule that still binds: the freshest
-    # settlement's readings share one publication date, and
-    # that date is the page's published date.
-    freshest_pubs = {r["publication_date"]
-                     for m in by_name.values()
-                     for d, r in m.items()
-                     if d == freshest and r.get("publication_date")}
-    if len(freshest_pubs) != 1:
-        return fail("the freshest settlement's readings carry "
-                    "more than one publication date; refusing "
-                    "to publish.")
-    published_date = freshest_pubs.pop()
+    # The freshest settlement and the publication vintage are
+    # computed further down, over the listed names only: which
+    # names are listed depends on the provenance record and the
+    # store, read next.
 
-    # --- The provenance record: the gathering's own coverage set
-    # and its per-name figures must agree with the readings. ---
+    # --- The provenance record: a snapshot of the LATEST gather,
+    # whose board rotates, where the readings file is cumulative
+    # across gathers (RC-24). The two coverage sets therefore
+    # legitimately differ once the board has rotated (cure
+    # SQUEEZE-ROTATION-20261108; proven 2026-11-08: the record
+    # carries 19 names with figures, the readings 34, and every
+    # overlapping figure agrees exactly). What still binds,
+    # enforced per name below: every figure the record carries
+    # must agree with the readings, and a name the record
+    # carries figures for but the readings file does not hold
+    # at all is a genuine disagreement. ---
     bundle = {k: v for k, v in provenance.items() if k != "_meta"}
     if not bundle:
         return fail("the gathering record names no companies; "
@@ -255,9 +264,11 @@ def build():
         si = (entry or {}).get("si") or {}
         if "days_to_cover" in si:
             prov_with_si[sym] = si
-    if set(prov_with_si) != set(by_name):
-        return fail("the gathering record and the readings file "
-                    "cover different names; refusing to publish.")
+    for sym in prov_with_si:
+        if sym not in by_name:
+            return fail("the gathering record carries figures "
+                        f"for {sym} but the readings file holds "
+                        "no reading for it; refusing to publish.")
 
     # --- The Nasdaq store cross-check (RC-24 cure): every name
     # the store serves must be accounted for on this page,
@@ -265,12 +276,22 @@ def build():
     # gap. The store carries rows for CENTA and PDBC, but no
     # shares-outstanding basis is on record for either, so no
     # share of float can be computed for them; they are named,
-    # never silently dropped and never given a figure. ---
+    # never silently dropped and never given a figure. The
+    # store is also the second carrier of days to cover: the
+    # per-name loop below takes the figure from whichever
+    # record carries the name and refuses when both carry it
+    # and disagree. ---
     if not os.path.exists(SI_STORE_PATH):
         return fail("the short-interest store is missing; "
                     "refusing to publish.")
     si_store = load_json(SI_STORE_PATH)
     store_names = si_store.get("names") or {}
+    store_rows = {}
+    for sym, rows in store_names.items():
+        if isinstance(rows, dict):
+            rows = rows.get("rows") or []
+        store_rows[sym] = {r.get("settlement_date"): r
+                           for r in rows or []}
     basis_gap = []
     for sym in sorted(store_names):
         if sym in by_name:
@@ -296,9 +317,63 @@ def build():
                        "so no share of float can be computed."),
         })
 
+    # --- Listing scope (cure SQUEEZE-ROTATION-20261108,
+    # completed 2026-11-08): the readings file is cumulative
+    # across gathers, but the provenance record describes only
+    # the latest gather and the store is rewritten by its own
+    # collection (si_daily) for the gathering's current names
+    # only. A name a gather rotated out is therefore carried,
+    # in time, by NO current record: no cross-check maintains
+    # its figures and no carrier maintains its days to cover.
+    # Such a name leaves the page. It is counted and named in
+    # the coverage block as rotated out, never silently
+    # dropped, and its readings stay in the append-only file
+    # untouched. Every name at least one current record DOES
+    # carry stays listed and fully checked below, and fails
+    # closed on any disagreement, including a carrier that
+    # carries the name but no usable days to cover. ---
+    carried = set(prov_with_si) | set(store_rows)
+    listed = {sym: m for sym, m in by_name.items()
+              if sym in carried}
+    if not listed:
+        return fail("no reading is carried by the gathering "
+                    "record or the store; refusing to publish "
+                    "an unchecked list.")
+    rotated_out = sorted(set(by_name) - set(listed))
+    settlements = sorted({d for m in listed.values() for d in m})
+    freshest = settlements[-1]
+    # Publication dates are per gather vintage (RC-24 cure,
+    # 2026-10-30): the store now carries every settlement, and
+    # later gathers admit older settlements on their own
+    # retrieval dates, so vintages legitimately differ across
+    # settlements. They also differ WITHIN the freshest
+    # settlement once the gathering's board has rotated (cure
+    # SQUEEZE-ROTATION-20261108): the producer stamps each
+    # reading with its admission date (its own test names the
+    # field "retrieval = admission"), the board the gather
+    # covers rotates, and a rotated-in name's backfilled history
+    # carries the later gather's date at every settlement,
+    # including the freshest (proven 2026-11-08: settlement
+    # 2026-10-15 carries 20 readings admitted 2026-10-26 and 14
+    # admitted 2026-11-08, figures in exact agreement across
+    # both records). The rule that still binds: every freshest
+    # reading carries a publication date, and the page's
+    # published date is the LATEST of them, so the page never
+    # claims its readings were public before the last of them
+    # was admitted.
+    freshest_rows = [r for m in listed.values()
+                     for d, r in m.items() if d == freshest]
+    if any(not r.get("publication_date") for r in freshest_rows):
+        return fail("a reading at the freshest settlement "
+                    "carries no publication date; refusing to "
+                    "publish.")
+    published_date = max(r["publication_date"]
+                         for r in freshest_rows)
+
     names = []
-    for sym in sorted(by_name):
-        own = by_name[sym]
+    cross_checked = 0
+    for sym in sorted(listed):
+        own = listed[sym]
         if freshest not in own:
             return fail(f"{sym} carries no reading at the freshest "
                         f"settlement ({freshest}); refusing to "
@@ -309,20 +384,51 @@ def build():
             return fail(f"{sym}'s short interest share recomputes "
                         f"above the {SI_ERROR_OVER_PCT:.0f}% "
                         "data-error line; refusing to publish.")
-        prov = prov_with_si[sym]
-        if prov.get("settlement_date") != freshest:
-            return fail(f"the gathering record's settlement for "
-                        f"{sym} disagrees with the readings; "
+        # Cross-checks (cure SQUEEZE-ROTATION-20261108): the
+        # gathering record and the store each carry only their
+        # own names now, so each name is checked against every
+        # record that carries it, and the two records must agree
+        # where they overlap (on 2026-11-08 they agreed exactly
+        # on all five names both carry, and the store's share
+        # counts agreed with the readings on all twenty it
+        # carries). A name no record cross-checks still stands
+        # on the readings file's own integrity: append-only,
+        # first vintage wins, every share recomputed above.
+        prov = prov_with_si.get(sym)
+        store_row = store_rows.get(sym, {}).get(freshest)
+        if store_row is not None and \
+                store_row.get("si_shares") != cur["si_shares"]:
+            return fail(f"the short-interest store's share "
+                        f"count for {sym} at the freshest "
+                        "settlement disagrees with the readings; "
                         "refusing to publish.")
-        if abs(prov.get("si_pct_of_shares_out", -1) - si_pct) > 1e-6:
-            return fail(f"the gathering record's short interest "
-                        f"share for {sym} disagrees with the "
-                        "readings; refusing to publish.")
-        dtc = prov.get("days_to_cover")
+        dtc = None
+        if prov is not None:
+            if prov.get("settlement_date") != freshest:
+                return fail(f"the gathering record's settlement "
+                            f"for {sym} disagrees with the "
+                            "readings; refusing to publish.")
+            if abs(prov.get("si_pct_of_shares_out", -1)
+                   - si_pct) > 1e-6:
+                return fail(f"the gathering record's short "
+                            f"interest share for {sym} disagrees "
+                            "with the readings; refusing to "
+                            "publish.")
+            dtc = prov.get("days_to_cover")
+            cross_checked += 1
+        if store_row is not None:
+            sdtc = store_row.get("days_to_cover")
+            if isinstance(sdtc, (int, float)) and sdtc > 0:
+                if dtc is not None and \
+                        abs(float(dtc) - float(sdtc)) > 1e-9:
+                    return fail(f"the gathering record and the "
+                                f"short-interest store disagree "
+                                f"on days to cover for {sym}; "
+                                "refusing to publish.")
+                dtc = sdtc
         if not isinstance(dtc, (int, float)) or dtc <= 0:
-            return fail(f"the gathering record carries no usable "
-                        f"days to cover for {sym}; refusing to "
-                        "publish.")
+            return fail(f"no record carries a usable days to "
+                        f"cover for {sym}; refusing to publish.")
         change = None
         prior_settlement = None
         earlier = [d for d in own if d < freshest]
@@ -371,14 +477,16 @@ def build():
         "stale_at_record": age_days > STALE_AFTER_DAYS,
         "coverage": {
             "names_covered": len(names),
-            "names_gathered": len(bundle),
-            "names_not_covered": len(bundle) - len(names),
+            "names_cross_checked": cross_checked,
+            "names_in_latest_gathering": len(bundle),
             "names_in_store": len(store_names),
             "names_without_float_basis": len(basis_gap),
+            "names_rotated_out": len(rotated_out),
             "above_bar": len(above),
             "with_prior_reading": sum(
                 1 for n in names if n["si_change"] is not None),
         },
+        "rotated_out_names": rotated_out,
         "basis_gap_names": basis_gap,
         "names": names,
         "vendor_calibration": {
@@ -417,11 +525,21 @@ def build():
             "published_date": published_date,
             "source": SOURCE_WORDS,
             "coverage": (
-                f"{len(names)} of the {len(bundle)} names the "
-                f"gathering covered carry a short interest "
-                f"reading; {len(bundle) - len(names)} do not. "
-                f"{len(above)} of the {len(names)} readings are "
-                f"at or above the {SI_BAR_PCT:.0f}% bar"),
+                f"{len(names)} names carry a short interest "
+                f"reading at the settlement of {freshest}; "
+                f"{cross_checked} of them are cross-checked "
+                f"against the latest gathering record"
+                + (f" and the rest against the short-interest "
+                   f"store" if len(names) > cross_checked
+                   else "")
+                + f", and the two records agree on every name "
+                f"both carry. {len(above)} of the {len(names)} "
+                f"readings are at or above the "
+                f"{SI_BAR_PCT:.0f}% bar"
+                + (f". {len(rotated_out)} further names carry "
+                   f"readings from earlier gathers, but no "
+                   f"current record carries them, so they are "
+                   f"not listed" if rotated_out else "")),
         },
     }
 
