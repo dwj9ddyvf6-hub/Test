@@ -15,6 +15,17 @@ A lock file in the program home keeps two cycles from publishing at
 once; a lock younger than 25 minutes is respected, an older one is
 treated as abandoned (a killed run) and taken over.
 
+The publish route is the sync's SCOPED mode (cure
+BOOK-STRIP-SCOPED-PUBLISH-20261109): the watcher names exactly the
+files its generator can rewrite (the strip data file, the hub page
+and the live-state and asset files the hub injection touches), and
+the scoped publisher waits for the sync single-flight lock instead
+of standing down, so a book change no longer queues behind a
+whole-tree publish or reports the stand-down as a failure. Before
+this cure the watcher drove the full sync and its cycles failed on
+publish exit 3 (409 races, 2026-11-05/06) and exit 5 (single-flight
+stand-downs, 2026-11-09), each reported as a publish failure.
+
 Usage: python3 watch_book_strip.py
 Exit 0 on no-change, on a respected lock, and on a successful
 republication; exit 1 when the republication itself failed.
@@ -44,9 +55,17 @@ HOME = Path(os.environ.get(
 STATE = HOME / "watcher-state.json"
 LOG = HOME / "republish-log.md"
 LOCK = HOME / "watcher.lock"
+# The generator's full write set (refresh_book_strip.py: the strip
+# data file, plus the hub page and its live-state, asset-manifest
+# and chips files when the hub injection rewrites them). The scoped
+# publisher uploads only these that actually changed.
+SCOPED_FILES = ("site/book-strip/data.json", "site/index.html",
+                "site/serve_live_state.json",
+                "site/asset-manifest.json", "site/hub_chips.json")
 SYNC_CMD = os.environ.get(
     "BOOK_STRIP_SYNC_CMD",
-    "%s %s" % (sys.executable, HERE / "sync_to_test.py")).split()
+    "%s %s --only %s" % (sys.executable, HERE / "sync_to_test.py",
+                         " ".join(SCOPED_FILES))).split()
 GEN_CMD = [sys.executable, str(HERE / "refresh_book_strip.py")]
 LOCK_STALE_SECONDS = 25 * 60
 
@@ -94,7 +113,23 @@ def acquire_lock() -> bool:
             return False
     except OSError:
         pass
-    LOCK.write_text(str(os.getpid()), encoding="utf-8")
+    try:
+        LOCK.write_text(str(os.getpid()), encoding="utf-8")
+    except OSError as exc:
+        # BOOK-STRIP-LOCK-EPERM-20261108: a transient permission
+        # wall on the lock write (Errno 1, 2026-11-08 09:48 ET
+        # cycle) must not kill the cycle. The lock is only a
+        # concurrency guard; skipping this cycle loses nothing,
+        # because hashes are recorded only after a successful
+        # publish, so the next cycle retries the same change.
+        # Degrade to the respected-lock outcome and leave the
+        # failure in the republication log when it is writable.
+        try:
+            log_line("LOCK-UNAVAILABLE: lock write failed (%s); "
+                     "cycle skipped, will retry next cycle" % exc)
+        except OSError:
+            pass
+        return False
     return True
 
 
@@ -112,7 +147,8 @@ def run(cmd, timeout):
         lines = (out.stdout or "").strip().splitlines()
         tail = ""
         for line in reversed(lines):
-            if line.startswith("- ") or line.startswith("census:"):
+            if line.startswith("- ") or line.startswith("census:") \
+                    or line.startswith("scoped census:"):
                 tail = line
                 break
         if not tail and lines:
@@ -144,7 +180,10 @@ def main() -> int:
                                            gen_rc, gen_tail))
             print("FAILED: generator exit %d" % gen_rc)
             return 1
-        sync_rc, sync_tail = run(SYNC_CMD, 1500)
+        # 2700s: the scoped publisher may wait up to 1500s for the
+        # single-flight lock behind a running full sync, then needs
+        # its own publish time; the watcher must outwait both.
+        sync_rc, sync_tail = run(SYNC_CMD, 2700)
         if sync_rc != 0:
             log_line("FAILED on %s: publish exit %d (%s); will "
                      "retry next cycle" % (", ".join(changed),
