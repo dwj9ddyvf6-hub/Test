@@ -174,13 +174,15 @@
         num(data.si_bar_pct) + "% bar" +
         (above.length ? ": " + above.map(function(n){ return esc(n.symbol); }).join(" and ") : "") +
         ".</p>";
-      h += "<p>Coverage: the gathering behind these readings covered " + num(cov.names_gathered) +
-        " names. " + num(cov.names_covered) + " of them carry a short interest reading; " +
-        num(cov.names_not_covered) + " do not, so no marker is shown for those " +
-        num(cov.names_not_covered) + ". Two settlements are on record (" +
-        (data.settlements_on_record || []).map(fmtDateShort).join(" and ") + "); " +
-        num(cov.with_prior_reading) + " names carry a reading at both, and only those names " +
-        "show a change.</p>";
+      var settlements = data.settlements_on_record || [];
+      h += "<p>Coverage: " + num(cov.names_covered) + " names carry a short interest reading " +
+        "at this settlement. " + num(cov.names_cross_checked) + " of them are cross-checked " +
+        "against the latest gathering record and the rest against the short-interest store; " +
+        "the two records agree on every name both carry. " +
+        num(settlements.length) + " settlements are on record (" +
+        settlements.map(fmtDateShort).join(", ") + "); " +
+        num(cov.with_prior_reading) + " names carry a reading at an earlier settlement too, " +
+        "and only those names show a change.</p>";
       h += "<table><thead><tr><th>Name</th>" +
         '<th class="num">Short interest</th>' +
         '<th class="num">Days to cover</th>' +
