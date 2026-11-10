@@ -199,21 +199,31 @@ class TestLiveDataCurrent(unittest.TestCase):
         # (two-source agreement on the 2026-11-03 priors: SPY
         # 754.35, QQQ 685.28, VIX 20.83), advancing the record
         # again.
+        # Re-pinned 2026-11-10 (WORKER-HOME-FILING-20261110 /
+        # EMAP-PROVENANCE-TIEBREAK-20261110): the desk's at-time
+        # filings for 2026-11-02 through 2026-11-10 were delivered
+        # from the worker shadow ledger into the permanent ledger
+        # and the provenance tiebreak made the at-time filings
+        # the maps of record, so the 2026-11-02..2026-11-04 maps
+        # are no longer labelled reconstructed, the lane is
+        # complete through the 2026-11-09 completed session, and
+        # the current SPY map (session 2026-11-10) is an at-time
+        # filing, not a reconstruction.
         data = json.load(open(os.path.join(
             SITE, "expected-move", "data.json")))
-        self.assertEqual(data["session"], "2026-11-04")
+        self.assertEqual(data["session"], "2026-11-10")
         lane = data["filing_lane"]
         self.assertEqual(lane["missing_sessions"], [])
         self.assertEqual(lane["latest_completed_session"],
-                         "2026-11-04")
+                         "2026-11-09")
         self.assertEqual(
             lane["reconstructed_sessions"],
             ["2026-10-26", "2026-10-27", "2026-10-28",
-             "2026-10-29", "2026-10-30", "2026-11-02",
-             "2026-11-03", "2026-11-04"])
+             "2026-10-29", "2026-10-30"])
         spy = [n for n in data["names"] if n["symbol"] == "SPY"][0]
-        self.assertEqual(spy["receipt"]["session"], "2026-11-04")
-        self.assertTrue(spy["reconstructed"])
+        self.assertEqual(spy["receipt"]["session"], "2026-11-10")
+        self.assertFalse(spy["reconstructed"])
+        self.assertEqual(spy["receipt"]["filing"], "filed_at_time")
 
 
 if __name__ == "__main__":
