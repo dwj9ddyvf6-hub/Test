@@ -117,7 +117,12 @@ def test_agentdebate_published_and_premium_parity():
     # when the forecast lane completed that night (chainA/B/C
     # receipts); the parity checks below are re-proven at the
     # new session by this same test.
-    assert d["session"] == "2026-11-04"
+    # Re-pinned 2026-11-10 (AUDIT4-REPIN-20261110): the
+    # published debate advanced to the 2026-11-09 session under
+    # AGENTDEBATE-STALE-JOIN-20261109 (tape_family_run proof
+    # exit 0, all nine consumers at 2026-11-09); the parity
+    # checks below are re-proven at the new session.
+    assert d["session"] == "2026-11-09"
     assert d["tape_freshness"]["state"] == "current"
     so = _data("second-opinion")
     fb = _data("flow-board")
