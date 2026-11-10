@@ -44,20 +44,30 @@ test_sync_desk_privacy_gate_20261103.py beside this script.
 Usage: python3 sync_to_test.py [--dry-run]
 Exit codes: 0 clean (gate-blocked skips are a logged, expected state),
 2 truncated tree, 3 hard API error (including 403/429 rate stops),
-4 zero-byte guard refusal (nothing published, file named).
+4 zero-byte guard refusal (nothing published, file named),
+5 stood down: another invocation already holds the single-flight
+lock, so this one published nothing (cure SYNC-SINGLE-FLIGHT-
+20261108: overlapping invocations raced each other on base blob
+shas and the loser died on a 409; exactly one sync runs at a
+time now, and the stand-down is named, never a hard API error).
+The scoped route below waits for the lock instead of standing
+down (cure SYNC-SCOPED-WAIT-20261109, see publish_scoped).
 """
 
 from __future__ import annotations
 
 import base64
 import hashlib
+import http.client
 import importlib.util
 import json
 import os
 import re
+import ssl
 import sys
 import tempfile
 import time
+import urllib.error
 import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
@@ -162,7 +172,7 @@ def included_files() -> list:
             if p.name == "lane_state.json":
                 continue
             if p.name in (".live-server.pid", "live-server.log",
-                          "suite_out.txt"):
+                          "suite_out.txt", ".sync_to_test.lock"):
                 continue
             if rel == "forecast/ledger.jsonl":
                 continue
@@ -196,6 +206,46 @@ def fetch_head_and_tree():
     return sha, generated_at, tree["tree"], blobs
 
 
+TRANSPORT_ERRORS = (urllib.error.URLError,
+                    http.client.HTTPException,
+                    ConnectionError, TimeoutError, ssl.SSLError)
+
+
+def _put_once(repo_path: str, payload: dict):
+    """One PUT attempt through the gated helper, with a single
+    transport retry (cure SYNC-PUT-TRANSPORT-20261109).
+
+    ghapi.api converts HTTPError responses into ApiError but a
+    transport failure (an SSLEOFError inside a URLError, a
+    dropped connection, a reset) raises raw: no HTTP response
+    ever existed, so there is no status to honor, and the
+    PUT's outcome is unknown (it may have landed). On
+    2026-11-09 the 19:12 ET sync died with exit 1 mid-publish
+    on one such drop: files already landed, no index
+    regeneration, no sync-log line, while the mirror wrote to
+    the same repo through the same helper minutes later. The
+    retry re-issues the PUT once, unchanged in content and
+    base sha; ghapi fetches a fresh credential surrogate per
+    call, so the retry rides a fresh connection. A second
+    transport error raises, unchanged, so a genuinely dead
+    route still fails loud. ApiError is never caught here, so
+    every response-bearing outcome (401, 409, 422, 403)
+    reaches put_file's own branches untouched: a 403 rate
+    stop is never retried by this wrapper."""
+    try:
+        return ghapi.api(
+            "PUT", f"{REPO_API}/contents/"
+                   + urllib.parse.quote(repo_path), payload)
+    except TRANSPORT_ERRORS as te:
+        print(f"put_file {repo_path}: transport error "
+              f"({type(te).__name__}: {te}); retrying the PUT "
+              "once", flush=True)
+        time.sleep(2)
+        return ghapi.api(
+            "PUT", f"{REPO_API}/contents/"
+                   + urllib.parse.quote(repo_path), payload)
+
+
 def put_file(repo_path: str, data: bytes, message: str,
              existing_sha: str | None) -> str:
     # Avoid GitHub's account-default email when publishing public commits.
@@ -210,18 +260,61 @@ def put_file(repo_path: str, data: bytes, message: str,
     if existing_sha:
         payload["sha"] = existing_sha
     try:
-        _, resp = ghapi.api(
-            "PUT", f"{REPO_API}/contents/"
-                   + urllib.parse.quote(repo_path), payload)
+        _, resp = _put_once(repo_path, payload)
     except ghapi.ApiError as e:
-        if e.status == 422 and "sha" in e.body:
-            _, cur = ghapi.api(
-                "GET", f"{REPO_API}/contents/"
-                         + urllib.parse.quote(repo_path))
-            payload["sha"] = cur["sha"]
-            _, resp = ghapi.api(
-                "PUT", f"{REPO_API}/contents/"
-                       + urllib.parse.quote(repo_path), payload)
+        if e.status == 401:
+            # A sporadic edge/credential flake (cure
+            # SYNC-PUT-AUTH-20261108): the estate transport
+            # diagnosis (2026-10-28) already classed transient
+            # HTTP 401s on this egress path as a sporadic
+            # edge/credential flake, retried by design in the
+            # older pusher. On 2026-11-08 two consecutive sync
+            # runs died mid-publish on a single 401 each, on
+            # different files (ai-chart-read/data.json, then
+            # pattern-draw/data.json), while single authenticated
+            # calls and the mirror's writes to this same repo,
+            # through this same credential helper, succeeded
+            # minutes apart. The credential is not dead; one
+            # request in a long run draws the flake and the
+            # unretried error killed the whole run. The cure
+            # retries the PUT once, unchanged in content and
+            # base sha; ghapi fetches a fresh credential
+            # surrogate per call, so the retry carries a freshly
+            # fetched credential. A second 401 raises, unchanged,
+            # so a genuinely dead credential still fails loud.
+            time.sleep(2)
+            _, resp = _put_once(repo_path, payload)
+            return resp.get("content", {}).get("sha")
+        # A sha conflict means the file moved on the remote after
+        # this run's tree snapshot was taken (cure
+        # SYNC-PUT-SHA-20261108): another writer landed on the
+        # repo mid-run (on 2026-11-08 the history-rewrite publish
+        # moved every blob while a sync was uploading, and the
+        # run died on decay-watch/data.json). GitHub answers a
+        # stale base sha with 409, and a missing one with 422;
+        # the old retry handled only the 422 form, so the 409
+        # killed the whole run mid-publish, after dozens of files
+        # had already landed, with no index regeneration and no
+        # log line. The cure re-reads the file's CURRENT sha and
+        # retries once with that base; the content written is
+        # still exactly this run's candidate bytes, and the
+        # caller's returned-sha check plus the run's final
+        # read-back proof still verify the remote ends with
+        # those bytes. A second conflict raises, unchanged.
+        # (The 409 body names the two blob hashes but never the
+        # word "sha"; the 422 body does, so the word test stays
+        # on the 422 form only.)
+        if e.status == 409 or (e.status == 422 and "sha" in e.body):
+            try:
+                _, cur = ghapi.api(
+                    "GET", f"{REPO_API}/contents/"
+                           + urllib.parse.quote(repo_path))
+                payload["sha"] = cur["sha"]
+            except ghapi.ApiError as ge:
+                if ge.status != 404:
+                    raise
+                payload.pop("sha", None)
+            _, resp = _put_once(repo_path, payload)
         else:
             raise
     return resp.get("content", {}).get("sha")
@@ -351,8 +444,239 @@ def load_repo_generator():
     return mod
 
 
+MAP_PATH = "docs/REPOSITORY-MAP.json"
+
+
+def fetch_navigation(entries):
+    """Return the curated navigation map named by a repo tree, or
+    None when that tree carries no map.
+
+    Cure SYNC-INDEX-NAVIGATION-20261110: both index regeneration
+    paths below rendered INDEX.md with no navigation, while the
+    repo generator's own check (tools/build_repo_index.py, run by
+    the Repository integrity workflow) renders the saved INDEX.md
+    against the navigation map at the indexed commit and compares
+    byte for byte. The map changes area summaries, entrypoints and
+    collection routes, so every sync-published INDEX.md differed
+    from the deterministic rendering and the integrity workflow
+    failed on every hourly run (live proof: run 42840525482, step
+    8, "INDEX.md differs from the deterministic rendering", and
+    the saved INDEX.md reproduced locally as exactly the
+    no-navigation render). The map is fetched by blob sha from
+    the same post-upload tree the index describes, so the
+    published rendering is the one the checker will reproduce.
+    A tree without a map keeps the old no-navigation render."""
+    entry = next((e for e in entries
+                  if e.get("path") == MAP_PATH), None)
+    if entry is None:
+        return None
+    _, blob = ghapi.api("GET", f"{REPO_API}/git/blobs/{entry['sha']}")
+    if blob.get("encoding") not in (None, "base64"):
+        raise ValueError("Navigation map blob is not base64")
+    return json.loads(base64.b64decode(
+        blob.get("content") or "").decode("utf-8"))
+
+
+_LOCK_FH = None
+
+
+def acquire_single_flight():
+    """Hold the sync's single-flight lock for this process, or
+    return None when another invocation already holds it. The
+    lock is an flock on a file beside this script, released by
+    the OS when the holder exits, so a killed run never leaves
+    a stale lock behind."""
+    global _LOCK_FH
+    import fcntl
+    fh = open(Path(__file__).with_name(".sync_to_test.lock"), "a+")
+    try:
+        fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        fh.close()
+        return None
+    _LOCK_FH = fh
+    return fh
+
+
+def acquire_single_flight_wait(timeout=1500):
+    """Like acquire_single_flight, but waits for the lock.
+
+    Cure SYNC-SCOPED-WAIT-20261109: the full sync stands down on
+    contention (exit 5) because waiting would serialize two
+    whole-tree publishes. The scoped publisher below carries a
+    handful of files, so waiting is the right trade: the holder
+    is a sync that is already publishing this run's delta too,
+    and when it finishes the scoped census finds nothing left to
+    upload. Returns the lock handle, or None when the wait times
+    out (the caller then fails loud, never silently)."""
+    import fcntl
+    deadline = time.time() + timeout
+    while True:
+        fh = acquire_single_flight()
+        if fh is not None:
+            return fh
+        if time.time() >= deadline:
+            return None
+        time.sleep(5)
+
+
+def publish_scoped(rels) -> int:
+    """Publish only the named files (paths relative to ROOT),
+    under the same gates as the full sync, waiting for the
+    single-flight lock instead of standing down.
+
+    Cure SYNC-SCOPED-WAIT-20261109: the book strip watcher's
+    publish is one data file (plus whatever else its generator
+    rewrote, such as the hub page), but it drove the full-tree
+    sync, so it collided with the hourly sync's whole publish,
+    first dying on 409 sha conflicts (exit 3, 2026-11-05/06) and,
+    after the single-flight cure, standing down (exit 5,
+    2026-11-09 08:13 and 15:13 ET) behind runs of 5 to 20 minutes
+    while the watcher reported each stand-down as a publish
+    FAILURE. The scoped route uploads only the named files'
+    candidates (same sanitization and gates via candidate_for,
+    same zero-byte guard, same per-file sha-conflict retry inside
+    put_file), then regenerates INDEX.json/INDEX.md against the
+    post-upload tree exactly as the full sync does, and verifies
+    by read-back. Exit codes mirror the full sync's: 0 clean
+    (nothing changed is clean), 2 truncated tree, 3 hard API
+    error, 4 zero-byte guard refusal, 6 the lock wait timed out.
+    """
+    fh = acquire_single_flight_wait()
+    if fh is None:
+        print("SCOPED PUBLISH: single-flight lock still held "
+              "after waiting; failing loud, nothing published.",
+              flush=True)
+        return 6
+    summary = {"uploaded": [], "skipped_unchanged": 0,
+               "skipped_gate": [], "index_md": "not-run",
+               "index_json": "not-run", "index_total": None,
+               "head_before": None, "head_after": None,
+               "scoped": list(rels)}
+    try:
+        head, _gen_at, _entries, blobs = fetch_head_and_tree()
+        summary["head_before"] = head
+        repo_shas = {p: e["sha"] for p, e in blobs.items()}
+        changed = []
+        for rel in rels:
+            raw = (ROOT / rel).read_bytes()
+            cand, reason = candidate_for(rel, raw)
+            if cand is None:
+                summary["skipped_gate"].append(
+                    {"path": rel, "reason": reason})
+                continue
+            if repo_shas.get(PREFIX + rel) == blob_sha(cand):
+                summary["skipped_unchanged"] += 1
+                continue
+            changed.append((rel, cand))
+        repo_sizes = {p: e.get("size", 0) for p, e in blobs.items()}
+        violations = zero_byte_violations(changed, repo_sizes)
+        if violations:
+            for v in violations:
+                print(f"GUARD REFUSAL: {v}", flush=True)
+            summary["guard_violations"] = violations
+            print(json.dumps(summary, indent=1))
+            return 4
+        print(f"scoped census: {len(changed)} changed, "
+              f"{summary['skipped_unchanged']} unchanged, "
+              f"{len(summary['skipped_gate'])} gate-skipped",
+              flush=True)
+        uploaded_sha = {}
+        for rel, cand in changed:
+            repo_path = PREFIX + rel
+            got = put_file(repo_path, cand,
+                           f"terminal-lineup: scoped sync {rel}",
+                           repo_shas.get(repo_path))
+            exp = blob_sha(cand)
+            if got != exp:
+                print(f"UPLOAD SHA MISMATCH {repo_path}: repo "
+                      f"{got} expected {exp}", flush=True)
+                return 3
+            uploaded_sha[repo_path] = exp
+            summary["uploaded"].append(rel)
+            time.sleep(0.15)
+        head2, gen_at2, entries2, blobs2 = fetch_head_and_tree()
+        summary["head_after"] = head2
+        gen = load_repo_generator()
+        index = gen.build_index(entries2, head2, gen_at2,
+                                "dwj9ddyvf6-hub", "Test")
+        summary["index_total"] = index["totals"]["files"]
+        idx_json = (json.dumps(index, indent=1, sort_keys=True)
+                    + "\n").encode("utf-8")
+        idx_md = gen.render_markdown(
+            index, fetch_navigation(entries2)).encode("utf-8")
+        repo_shas2 = {p: e["sha"] for p, e in blobs2.items()}
+        for repo_path, data, key in (
+                ("INDEX.json", idx_json, "index_json"),
+                ("INDEX.md", idx_md, "index_md")):
+            if len(data) == 0:
+                print(f"GUARD REFUSAL: {repo_path}: zero-byte "
+                      f"generated index refused", flush=True)
+                return 4
+            if repo_shas2.get(repo_path) == blob_sha(data):
+                summary[key] = "unchanged"
+                continue
+            try:
+                got = put_file(repo_path, data,
+                               f"index: regenerate {repo_path}",
+                               repo_shas2.get(repo_path))
+            except Exception as e:
+                summary[key] = f"blocked: {type(e).__name__}: {e}"
+                print(f"INDEX {repo_path} BLOCKED: {e}", flush=True)
+                continue
+            if got != blob_sha(data):
+                print(f"INDEX SHA MISMATCH {repo_path}", flush=True)
+                return 3
+            uploaded_sha[repo_path] = blob_sha(data)
+            summary[key] = "uploaded"
+            time.sleep(0.15)
+        _h3, _g3, _e3, blobs3 = fetch_head_and_tree()
+        final_shas = {p: e["sha"] for p, e in blobs3.items()}
+        bad = [p for p, exp in uploaded_sha.items()
+               if final_shas.get(p) != exp]
+        if bad:
+            print(f"READ-BACK MISMATCH: {bad}", flush=True)
+            return 3
+        summary["read_back_verified"] = len(uploaded_sha)
+        ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        changed_names = ",".join(summary["uploaded"]) or "none"
+        line = (f"- {ts} | scoped publish: "
+                f"{len(summary['uploaded'])} ({changed_names}) | "
+                f"gate-skipped: {len(summary['skipped_gate'])} | "
+                f"unchanged: {summary['skipped_unchanged']} | "
+                f"index total: {summary['index_total']} | "
+                f"INDEX.md: {summary['index_md']} | INDEX.json: "
+                f"{summary['index_json']} | read-back verified: "
+                f"{summary['read_back_verified']} | head: "
+                f"{summary['head_after']}\n")
+        SYNC_LOG.parent.mkdir(parents=True, exist_ok=True)
+        with open(SYNC_LOG, "a", encoding="utf-8") as fh2:
+            fh2.write(line)
+        print(line, flush=True)
+        print(json.dumps(summary, indent=1))
+        return 0
+    except ghapi.ApiError as e:
+        print(f"HARD API ERROR: {e}", flush=True)
+        return 3
+
+
 def main(argv=None) -> int:
-    dry_run = "--dry-run" in (argv or sys.argv[1:])
+    args = list(argv if argv is not None else sys.argv[1:])
+    if "--only" in args:
+        i = args.index("--only")
+        rels = [r for r in args[i + 1:] if not r.startswith("--")]
+        if not rels:
+            print("scoped publish needs at least one file path",
+                  flush=True)
+            return 2
+        return publish_scoped(rels)
+    dry_run = "--dry-run" in args
+    if not dry_run and acquire_single_flight() is None:
+        print("SYNC ALREADY RUNNING: another sync_to_test.py "
+              "invocation holds the single-flight lock; this "
+              "invocation stands down and published nothing.",
+              flush=True)
+        return 5
     summary = {"uploaded": [], "skipped_unchanged": 0, "skipped_gate": [],
                "index_md": "not-run", "index_json": "not-run",
                "index_total": None, "head_before": None, "head_after": None}
@@ -418,7 +742,8 @@ def main(argv=None) -> int:
         summary["index_total"] = index["totals"]["files"]
         idx_json = (json.dumps(index, indent=1, sort_keys=True)
                     + "\n").encode("utf-8")
-        idx_md = gen.render_markdown(index).encode("utf-8")
+        idx_md = gen.render_markdown(
+            index, fetch_navigation(entries2)).encode("utf-8")
         repo_shas2 = {p: e["sha"] for p, e in blobs2.items()}
         for repo_path, data, key in (
                 ("INDEX.json", idx_json, "index_json"),
