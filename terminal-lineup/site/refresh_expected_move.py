@@ -45,6 +45,14 @@ Fail-closed cross-checks, all of them:
   names the prior close (16.68 for the session of 2026-10-22),
   and only the map matching it may be published; if no filed
   map matched it, the refresh would stop instead of choosing.
+  When two matching maps remain and exactly one carries the
+  filed_at_time provenance stamp while the other is stamped
+  reconstructed, the at-time filing is the session's map of
+  record (EMAP-PROVENANCE-TIEBREAK-20261110): a reconstruction
+  is a later recomputation from saved closes and its anchor
+  can differ from the traded close by cents, so it never
+  displaces the map actually filed when the session was drawn.
+  Every other tie still stops the refresh.
   The 2026-10-23 session's filings all agree with each other.
 - For the Nasdaq-100 fund, the filed record carries its session
   move but not the close it was measured from. A band is
@@ -331,6 +339,64 @@ def check_map(m):
     return None
 
 
+def resolve_sessions(filed, vix):
+    """Resolve each session to its one map of record.
+    Returns {session: (map, epoch, bars_served, filing)},
+    or a fail() tuple when a session cannot be resolved
+    under the honesty rules in the module docstring."""
+    resolved = {}
+    for session in sorted(filed):
+        candidates = filed[session]
+        prior = prior_weekday(date.fromisoformat(session)).isoformat()
+        verified_vix = vix.get(prior)
+        chosen = None
+        for key, (m, epoch, served, filing) in candidates.items():
+            err = check_map(m)
+            if err:
+                return fail(f"the map filed for {session} fails "
+                            f"its own construction: {err}; "
+                            "refusing to publish it.")
+            if verified_vix is not None and m["vix_close"] == verified_vix:
+                if chosen is not None:
+                    # EMAP-PROVENANCE-TIEBREAK-20261110: when both
+                    # matching maps carry provenance stamps and
+                    # exactly one is filed_at_time, the at-time
+                    # filing is the session's map of record and the
+                    # reconstructed rebuild (a later recomputation
+                    # from saved closes, whose anchor can differ by
+                    # cents) is superseded for that session. The
+                    # refusal below still governs every other tie:
+                    # two at-time filings, or any tie where
+                    # provenance is absent or equal.
+                    if (chosen[3] == "reconstructed"
+                            and filing == "filed_at_time"):
+                        chosen = (m, epoch, served, filing)
+                    elif not (filing == "reconstructed"
+                              and chosen[3] == "filed_at_time"):
+                        return fail(f"two different maps filed for "
+                                    f"{session} both match the prior "
+                                    f"volatility close on record; "
+                                    "refusing to choose between them.")
+                else:
+                    chosen = (m, epoch, served, filing)
+        if verified_vix is not None:
+            if chosen is None:
+                return fail(f"no map filed for {session} uses the "
+                            f"prior volatility close on record "
+                            f"({verified_vix} on {prior}); refusing "
+                            "to publish an unverified map.")
+        else:
+            if len(candidates) != 1:
+                return fail(f"the maps filed for {session} "
+                            "disagree and no independent volatility "
+                            "record covers that week; refusing to "
+                            "choose between them.")
+            chosen = next(iter(candidates.values()))
+        resolved[session] = chosen
+
+    return resolved
+
+
 def build():
     for path in (LOG_PATH, BARS_PATH, VIX_PATH, CACHE_PATH):
         if not os.path.exists(path):
@@ -362,40 +428,9 @@ def build():
                     "record.")
 
     # --- Resolve each session to one map, and prove it. ---
-    resolved = {}  # session -> (map, first_epoch, bars_served, filing)
-    for session in sorted(filed):
-        candidates = filed[session]
-        prior = prior_weekday(date.fromisoformat(session)).isoformat()
-        verified_vix = vix.get(prior)
-        chosen = None
-        for key, (m, epoch, served, filing) in candidates.items():
-            err = check_map(m)
-            if err:
-                return fail(f"the map filed for {session} fails "
-                            f"its own construction: {err}; "
-                            "refusing to publish it.")
-            if verified_vix is not None and m["vix_close"] == verified_vix:
-                if chosen is not None:
-                    return fail(f"two different maps filed for "
-                                f"{session} both match the prior "
-                                f"volatility close on record; "
-                                "refusing to choose between them.")
-                chosen = (m, epoch, served, filing)
-        if verified_vix is not None:
-            if chosen is None:
-                return fail(f"no map filed for {session} uses the "
-                            f"prior volatility close on record "
-                            f"({verified_vix} on {prior}); refusing "
-                            "to publish an unverified map.")
-        else:
-            if len(candidates) != 1:
-                return fail(f"the maps filed for {session} "
-                            "disagree and no independent volatility "
-                            "record covers that week; refusing to "
-                            "choose between them.")
-            chosen = next(iter(candidates.values()))
-        resolved[session] = chosen
-
+    resolved = resolve_sessions(filed, vix)
+    if isinstance(resolved, int):
+        return resolved
     sessions_desc = sorted(resolved, reverse=True)
 
     # --- SPY: the freshest resolved session's filed map. ---
