@@ -104,9 +104,16 @@ def test_fetch_spot_anchors_at_fetch_moment(monkeypatch):
 
 def test_collector_main_does_not_pass_run_start_to_fetch_spot():
     src = _read(os.path.join(SITE, "collect_chains.py"))
-    assert "fetch_spot(symbol)" in src
-    assert "fetch_spot(\n                symbol, now=now_utc)" not in src
+    # Restated 2026-11-10 (AUDIT4-REPIN-20261110): since
+    # CHAIN-SPOT-RETRY-20261109 main calls the bounded-retry
+    # wrapper fetch_spot_fresh(symbol, require_fresh=...)
+    # instead of fetch_spot(symbol) directly. The durable
+    # claim of this blocker is unchanged: no run-start time
+    # is passed into the spot fetch on either form.
+    assert "fetch_spot_fresh(" in src
     assert "fetch_spot(symbol, now=now_utc)" not in src
+    assert "fetch_spot_fresh(symbol, now" not in src
+    assert "symbol, now=now_utc" not in src
 
 
 # ---- IV-LEDGER-LOSS: failed captures name their zero accrual ---------
