@@ -277,6 +277,25 @@ def build():
                 resolved[cik] = tracked_hits[0]
             elif len(options) == 1:
                 resolved[cik] = options[0]
+            elif len(options) > 1:
+                # Class-suffix rule (cure FILINGS-CLASS-SUFFIX-
+                # 20261110): a number whose tickers differ only by
+                # a trailing warrant or unit marker (-WT, -WS, -U,
+                # -UN) on ONE bare root names that root's common
+                # stock: the store holds the filer's companyfacts,
+                # which is the common issuer's record, and the
+                # suffixed line is a derivative of the same issuer.
+                # Names that differ in the root itself (CENT vs
+                # CENTA, RGA vs RZC: distinct share classes) stay
+                # unnamed rather than guessed.
+                bare = [o for o in options
+                        if not re.search(r"-(WT|WS|WTS|U|UN)$",
+                                         o[0])]
+                if len(bare) == 1 and all(
+                        o[0] == bare[0][0]
+                        or o[0].startswith(bare[0][0] + "-")
+                        for o in options):
+                    resolved[cik] = bare[0]
         by_cik = resolved
         companies = []
         freshest = None
