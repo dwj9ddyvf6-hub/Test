@@ -109,12 +109,27 @@ def test_echo_lens_publishes_the_store_readings():
 
 def test_filings_wire_joins_every_company_to_a_tracked_symbol():
     d = load("filings-wire")
-    assert len(d["companies"]) == 43
+    # Re-taken durably (AUDIT-4, 2026-11-10): the count is tied
+    # to the page's own record, not the 43 borrowed when this
+    # test was written. The facts store grew from 43 to 83
+    # company files as the tracked universe grew, and the wire's
+    # own publish gate already enforces
+    # len(companies) == companies_on_record. The join property
+    # below is the real contract: every company the refresher's
+    # resolution rules can name carries a symbol and a name (the
+    # class-suffix cure FILINGS-CLASS-SUFFIX-20261110 names
+    # OXY, whose number also carries the OXY-WT warrant line),
+    # and a number whose tickers are distinct share classes
+    # (CENT/CENTA, RGA/RZC) stays unnamed rather than guessed.
+    assert len(d["companies"]) == d["companies_on_record"]
     for c in d["companies"]:
-        assert c["symbol"], c["company_name"]
-        assert c["company_name"]
+        if c["symbol"]:
+            assert c["company_name"], c["company_number"]
     oxy = next(c for c in d["companies"] if c["symbol"] == "OXY")
     assert "OCCIDENTAL" in oxy["company_name"]
+    unnamed = {c["company_number"] for c in d["companies"]
+               if not c["symbol"]}
+    assert unnamed == {"887733", "898174"}, unnamed
 
 
 def test_second_opinion_families_speak_from_the_stores():
@@ -150,7 +165,14 @@ def test_second_opinion_families_speak_from_the_stores():
 
 def test_one_page_report_filings_section_is_populated():
     d = load("one-page-report")
-    assert d["filings_names_covered"] == 43
+    fw = load("filings-wire")
+    # Re-taken durably (AUDIT-4, 2026-11-10): the covered count
+    # is the filings wire's own named-company count, recomputed
+    # from the wire, not the 43 borrowed when this test was
+    # written (the wire now names 81 of its 83 companies; the
+    # two distinct-class numbers stay unnamed by design).
+    assert d["filings_names_covered"] == sum(
+        1 for c in fw["companies"] if c["symbol"])
     assert d["names"]["ACN"]["filings"]
     assert sum(d["coverage_distribution"].values()) == 1838
 
@@ -173,7 +195,12 @@ def test_one_page_report_receipt_recomputes_and_moves_pass_through():
     n_labels = sum(1 for e in d["names"].values()
                    if e["chart"] and e["chart"].get("label"))
     assert f"unusual volume lists {len(uv['names'])}" in d["receipt"]
-    assert f"a date for {ec['dated_names']}" in d["receipt"]
+    # Format restated 2026-11-10 (AUDIT4-REPIN-20261110):
+    # the receipt comma-formats its counts (as the pattern
+    # label assert below already expects with {:,}); once
+    # dated_names crossed 1,000 the unformatted form of
+    # this assert could never match the recomputed receipt.
+    assert f"a date for {ec['dated_names']:,}" in d["receipt"]
     assert f"pattern label for {n_labels:,}" in d["receipt"]
     priced = {n["symbol"]: n["expected_move"] for n in ec["names"]
               if n.get("expected_move")}
