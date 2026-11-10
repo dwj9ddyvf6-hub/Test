@@ -225,6 +225,34 @@ def build():
               "refusing to publish a mismatched page.", file=sys.stderr)
         return 1
 
+    # Per-card graded state, stamped from the grading summary's own
+    # grade rows (cure SIGNALFEED-GRADED-STATE-20261108): a card is
+    # graded exactly when a grade row names it, the same definition
+    # the wall study's consumers tie against (cards_graded ==
+    # len(grades)). The Record publishes the state on each card so
+    # consumers read it from the record itself; before this stamp
+    # the Signal Feed derived the state from grading-session
+    # arithmetic, which counted the 2026-11-05 group as graded
+    # (its grading session 2026-11-06 is older than the freshest,
+    # 2026-11-09) while no grade rows exist for it, and refused to
+    # publish against the Record's own count. The stamp is checked
+    # against the summary's graded count here, at the producer:
+    # a disagreement refuses this refresh, not a downstream one.
+    map_grades = (summary.get("map") or {}).get("grades") or []
+    graded_ts = {g.get("card_ts") for g in map_grades}
+    n_stamped_graded = 0
+    for g in cards:
+        for c in g["cards"]:
+            c["graded"] = c["published_at_utc"] in graded_ts
+            n_stamped_graded += 1 if c["graded"] else 0
+    if n_stamped_graded != (summary.get("map") or {}).get(
+            "cards_graded"):
+        print(f"The Record refresh: the grading summary's grade rows "
+              f"mark {n_stamped_graded} Map cards graded but its own "
+              f"count says {(summary.get('map') or {}).get('cards_graded')}; "
+              "refusing to publish a mismatched page.", file=sys.stderr)
+        return 1
+
     published = summary["board"]["published"]
     qualified = summary["board"]["qualified"]
 
