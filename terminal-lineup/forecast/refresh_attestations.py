@@ -114,7 +114,8 @@ def regenerate(recorded_on=None, registry_path=REGISTRY_PATH,
                     "graded": 0, "mean_scores": {}}
             counting_basis = COUNTING_BASIS[eng["id"]]
         record = grading.attestation_record(
-            eng, fig, recorded_on, counting_basis=counting_basis)
+            eng, fig, recorded_on, counting_basis=counting_basis,
+            ledger_rows=len(rows))
         if eng.get("calibration_attestation") != record:
             eng["calibration_attestation"] = record
             changed.append(eng["id"])
