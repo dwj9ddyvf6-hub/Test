@@ -675,7 +675,7 @@ def build():
     reg = registry_mod.load()
     led = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=reg)
-    if not led.verify_chain():
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
     lineage = {
@@ -752,12 +752,24 @@ def build():
             created += 1 if was_created else 0
 
     # ---- Figures recomputed from the ledger alone ----
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    # LEDGER-STREAM-FIGURES-20261109: the parsed whole ledger is
+    # never held. Verification, the figures recompute and this
+    # engine's own scans each take a fresh stream; what is
+    # retained is this engine's rows only (its forecasts are a
+    # small share of the ledger) plus the row-id map the void
+    # check below needs, at the size the old code already held
+    # it. The pre-cure form loaded the ledger four times over
+    # (rows() inside verify_chain, rows() again, the declared
+    # appends' dedupe scans) and the process died by SIGKILL
+    # on the grown 660 MB ledger.
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
+    rows = [r for r in led.iter_rows()
+            if r.get("engine_id") == ENGINE_ID
+            or r.get("type") == "correction"]
     todays = [r for r in rows
               if r.get("type") == "forecast"
               and r.get("engine_id") == ENGINE_ID
