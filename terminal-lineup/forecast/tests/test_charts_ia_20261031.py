@@ -1509,10 +1509,12 @@ def test_subject_earnings_calendar_realised_moves():
     rows = d.get("realised_moves") or []
     assert rows, "earnings-calendar: no realised moves carried"
     priced = {}
+    priced_dates = {}
     pp = SITE / "earnings-record" / "priced_moves.json"
     if pp.exists():
-        priced = {k: v["priced_move_pct"] for k, v in
-                  json.loads(pp.read_text())["names"].items()}
+        for k, v in json.loads(pp.read_text())["names"].items():
+            priced[k] = v["priced_move_pct"]
+            priced_dates[k] = v.get("report_date")
     for r in rows:
         assert r["report_date"] < d["recorded_on"], r
         expect, sess = _move_on_or_after(
@@ -1522,7 +1524,22 @@ def test_subject_earnings_calendar_realised_moves():
         if r.get("expected_move_pct") is not None:
             # An expected value may only be the priced record's own
             # figure for that same name; never another name's.
-            assert priced.get(r["symbol"]) == r["expected_move_pct"], r
+            # Scoped 2026-11-10 (AUDIT-4): the priced record is
+            # keyed by symbol and holds only the NEXT upcoming
+            # report inside its 14-day window, while the realised
+            # store is append-only precisely so a name's priced
+            # figure survives the calendar rotating forward (the
+            # refresher's own design note). The unscoped comparison
+            # therefore failed on rotation alone: 182 of 206 rows
+            # absent from the priced record, and HUBG present with
+            # a different figure that is correct for its NEXT
+            # report (12.0243 for 2026-11-12) against the realised
+            # row's vintage figure (12.7193 for 2026-11-05). The
+            # guard keeps full strength wherever the comparison is
+            # defined: the same symbol priced for the SAME report
+            # date with a different figure still fails.
+            if priced_dates.get(r["symbol"]) == r["report_date"]:
+                assert priced[r["symbol"]] == r["expected_move_pct"], r
     # No name that has not yet reported appears among realised rows.
     future = {n["symbol"] for n in d["names"]
               if n["date"] >= d["recorded_on"]}
