@@ -207,34 +207,39 @@ def build():
 
     # ---- The Record: Morning Map cards it keeps -----------------
     map_part = record.get("map") or {}
-    # The Record's map cards are graded by the wall study once
-    # a following session exists: the state is "graded" with a
-    # graded and a waiting count, not the not-yet-graded pin
-    # this feed was built against. A card is graded when its
-    # grading session is older than the freshest grading
-    # session on record (the waiting cards are exactly the
-    # freshest group); the derived count must equal the
-    # Record's own graded count or this feed refuses (hookup
-    # cure, 2026-10-29).
+    # The Record's map cards carry their own graded state,
+    # stamped by the Record from the grading summary's grade
+    # rows (cure SIGNALFEED-GRADED-STATE-20261108): a card is
+    # graded exactly when a grade row names it. This feed reads
+    # the state as published, in the Record's own terms, and
+    # the count of stamped cards must equal the Record's own
+    # graded count or this feed refuses. The derivation this
+    # replaces (hookup cure, 2026-10-29) inferred the state
+    # from grading sessions (graded when a card's grading
+    # session is older than the freshest on record, on the
+    # premise that the waiting cards are exactly the freshest
+    # group); the premise failed on 2026-11-08, when the
+    # 2026-11-05 group (grading session 2026-11-06) still
+    # carried no grade rows while a fresher group existed, so
+    # the inference counted 30 graded against the Record's 27
+    # and this feed refused a sound record. A card carrying
+    # no state of its own is a state this feed cannot match.
     if map_part.get("state") not in ("not_yet_graded", "graded"):
         return fail("The Record's map cards carry a grading state "
                     "this feed cannot match; refusing to publish.")
     map_groups = map_part.get("groups") or []
     all_cards = [c for g in map_groups for c in g.get("cards") or []]
-    grading_sessions = [c.get("grading_session") for c in all_cards
-                        if c.get("grading_session")]
-    freshest_grading = max(grading_sessions) if grading_sessions \
-        else None
 
     def map_card_graded(card):
-        gs = card.get("grading_session")
-        return bool(gs and freshest_grading
-                    and gs < freshest_grading)
+        return card.get("graded") is True
 
+    if any(not isinstance(c.get("graded"), bool) for c in all_cards):
+        return fail("a Record map card carries no graded state "
+                    "of its own; refusing to publish.")
     if sum(1 for c in all_cards if map_card_graded(c)) \
             != map_part.get("cards_graded"):
         return fail("The Record's map graded count disagrees "
-                    "with the per-card grading sessions; refusing "
+                    "with the per-card grading states; refusing "
                     "to publish.")
     record_map_count = 0
     for group in map_part.get("groups") or []:
