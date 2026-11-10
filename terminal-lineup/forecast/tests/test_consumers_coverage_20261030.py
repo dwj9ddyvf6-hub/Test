@@ -89,7 +89,14 @@ def test_squeeze_page_covers_the_store():
     assert cov["with_prior_reading"] == cov["names_covered"]
     assert len(d["settlements_on_record"]) >= 25
     gap = {g["symbol"] for g in d["basis_gap_names"]}
-    assert gap == {"CENTA", "PDBC"}
+    # Re-pinned 2026-11-08 (SQUEEZE-ROTATION-20261108): the
+    # gathering's board rotated at the 2026-11-08 weekly gather
+    # and the store was re-collected for the new board the same
+    # night; the names the store serves without a float basis
+    # are now CENT, CENTA and ROKU (PDBC rotated off the board,
+    # CENT and ROKU rotated on). Counted from the store and the
+    # provenance record on this date.
+    assert gap == {"CENT", "CENTA", "ROKU"}
     for g in d["basis_gap_names"]:
         # Re-pinned 2026-11-04 (SUITE-TRIAGE-REPIN-20261104):
         # every name in the Nasdaq short-interest store carries
@@ -102,13 +109,20 @@ def test_squeeze_page_covers_the_store():
 def test_pit_store_carries_every_settlement():
     pit = [json.loads(ln) for ln in open(
         os.path.join(MORGUE, "output", "short_interest_pit.jsonl"))]
-    assert len(pit) == 500
+    # Re-pinned 2026-11-08 (SQUEEZE-ROTATION-20261108): the
+    # store is append-only across gathers and the gathering's
+    # board rotated on 2026-11-08, admitting 14 new names with
+    # the source's 23-settlement retained window each, beside
+    # the original 20 names at 25 settlements each: 822 rows,
+    # 34 names, counted from the store on this date.
+    assert len(pit) == 822
     per_name = {}
     for r in pit:
         per_name.setdefault(r["symbol"], set()).add(
             r["settlement_date"])
-    assert len(per_name) == 20
-    assert all(len(v) == 25 for v in per_name.values())
+    assert len(per_name) == 34
+    counts = sorted(len(v) for v in per_name.values())
+    assert counts == [23] * 14 + [25] * 20
 
 
 def test_bundle_builder_appends_all_settlements():
