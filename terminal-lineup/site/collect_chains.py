@@ -60,6 +60,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import datetime, time as dtime, timezone
 from zoneinfo import ZoneInfo
 
@@ -376,6 +377,49 @@ def fetch_spot(symbol, now=None):
             None, "unchecked")
 
 
+# Spot re-fetch budget (cure CHAIN-SPOT-RETRY-20261109): a stale
+# verdict gets this many fetches in total, spaced by these sleeps,
+# before the caller's fail-closed refusal fires.
+SPOT_ATTEMPTS = 3
+SPOT_RETRY_SLEEPS = (10, 30)
+
+
+def fetch_spot_fresh(symbol, fetch=None, sleep=None,
+                     require_fresh=True):
+    """Fetch the spot quote, re-fetching on a stale verdict
+    (CHAIN-SPOT-RETRY-20261109).
+
+    Root cause of the 2026-11-09 15:57 ET refusals: the symbols
+    are processed in sequence and each symbol's Alpaca content
+    leg runs between the previous symbol's spot fetch and this
+    one's, so a quote whose timestamp lagged at the source
+    (QQQ and IWM both carried 2026-11-09T20:56:17Z / 20:56:18Z)
+    crossed the 90-second gate by the time its own single fetch
+    was checked, and the collector refused on that one verdict
+    with no second look. The quote source is a live endpoint
+    whose regularMarketTime advances between fetches (on the
+    surrounding captures it advances roughly a minute per
+    symbol), so the cure is a fresh fetch, never a wider gate:
+    the 90-second threshold is unchanged, and a quote that is
+    still stale after the last attempt is returned stale so the
+    caller's refusal fires on the last quote actually seen.
+    When freshness is not required (outside the market window,
+    the --force seed path, where a closed market's quote can
+    never turn fresh) exactly one fetch is made."""
+    fetch = fetch if fetch is not None else fetch_spot
+    sleep = sleep if sleep is not None else time.sleep
+    result = fetch(symbol)
+    if not require_fresh:
+        return result
+    attempts = 1
+    while result[3] != "fresh" and attempts < SPOT_ATTEMPTS:
+        sleep(SPOT_RETRY_SLEEPS[min(attempts - 1,
+                                    len(SPOT_RETRY_SLEEPS) - 1)])
+        result = fetch(symbol)
+        attempts += 1
+    return result
+
+
 # ---- Alpaca content leg (measured OI/volume, MODELLED IV) --------------
 IV_LEDGER_PATH = os.path.join(CHAINS_DIR, "iv_ledger_modelled.jsonl")
 PAPER_URL = "https://paper-api.alpaca.markets"
@@ -568,6 +612,9 @@ here supplies a Greek timestamp, so contracts are undated.
 The spot quote is freshness-gated at capture (terminal_common,
 90 seconds, fail-closed): in the market window a stale or missing
 quote timestamp stores no snapshot and lands as a manifest error.
+A stale verdict is re-fetched up to three times in total, spaced
+10 and 30 seconds, before it refuses (CHAIN-SPOT-RETRY-20261109);
+the 90-second gate itself is unchanged.
 Field honesty (2026-10-29 content cure): the TastyTrade nested
 chain still carries no open interest, volume or implied
 volatility; it remains the layout source of record only. OI is
@@ -618,8 +665,14 @@ def main(argv):
             stats = validate_chain_payload(doc, symbol)
             # No now argument: the freshness gate anchors at the
             # spot fetch moment inside fetch_spot, not at this
-            # run's start (CHAIN-SPOT-ANCHOR-20261031).
-            spot, spot_source, spot_ts, spot_state = fetch_spot(symbol)
+            # run's start (CHAIN-SPOT-ANCHOR-20261031). A stale
+            # verdict is re-fetched inside a bounded budget
+            # before it can refuse the snapshot
+            # (CHAIN-SPOT-RETRY-20261109).
+            spot, spot_source, spot_ts, spot_state = \
+                fetch_spot_fresh(
+                    symbol,
+                    require_fresh=in_market_window(now_et))
             if in_market_window(now_et) and spot_state != "fresh":
                 # Fail closed in session: a stale or missing live
                 # quote stores NO snapshot rather than presenting an
