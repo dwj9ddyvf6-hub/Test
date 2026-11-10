@@ -181,7 +181,16 @@ def test_abstention_published_decision_record():
     assert data["today"]["day"] == "2026-11-03"
     assert data["today"]["rate"] == 0.3333
     assert data["live"]["forecasts_recorded"] == 8
-    assert data["live"]["forecasts_voided"] == 8
+    # Recounted 2026-11-10 (AUDIT4-REPIN-20261110):
+    # forecasts_voided 8 to 10, from the ledger's own
+    # arithmetic recounted the same day: engine_30 now
+    # carries 18 forecast rows, exactly 10 voided by
+    # correction rows (10 distinct corrects_row_id values,
+    # the duplicate re-issue voids of the 2026-11-02 and
+    # 2026-11-04 sessions under the frozen-at-first-issue
+    # rule); 18 minus 10 is the 8 recorded, which did not
+    # move.
+    assert data["live"]["forecasts_voided"] == 10
     # The narrative must agree with the block it rides in (it once
     # described the previous census day, fired, 0 of 1, 6 days,
     # while the block carried the new day; cured 2026-10-31 by
