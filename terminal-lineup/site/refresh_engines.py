@@ -61,7 +61,14 @@ def write_proof_log(text: str, exit_code: int,
     path.write_text(header + text, encoding="utf-8")
 
 
+STAGE_TIMINGS_LOG = ROOT / "stage_timings.jsonl"
+
+
 def main() -> int:
+    import time as _time
+    from datetime import datetime as _dt, timezone as _tz
+    _started = _time.monotonic()
+    _started_iso = _dt.now(_tz.utc).isoformat()
     tee = _Tee(sys.stdout)
     code = 1
     try:
@@ -69,6 +76,18 @@ def main() -> int:
             code = _run()
     finally:
         write_proof_log(tee.buffer.getvalue(), code)
+    # Stage timings (GLORY item 2b): one structured record per run,
+    # built from the runner's own duration prints plus this timer.
+    # Additive only: a stamp failure must never fail a refresh.
+    try:
+        sys.path.insert(0, str(HERE))
+        import stage_timings as _st
+        _rec = _st.build_record(
+            tee.buffer.getvalue(), _time.monotonic() - _started, code,
+            started_at=_started_iso)
+        _st.append_record(_rec, STAGE_TIMINGS_LOG)
+    except Exception as _e:  # noqa: BLE001 - stamp is evidence, not a gate
+        print(f"stage timings stamp failed: {_e}", file=sys.stderr)
     return code
 
 try:
