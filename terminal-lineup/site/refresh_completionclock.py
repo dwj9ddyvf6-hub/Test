@@ -948,10 +948,16 @@ def build():
     # ---- live pipeline ---------------------------------------------------------
     reg = registry_mod.load()
     led = ledger_mod.Ledger(LEDGER_PATH, registry=reg)
-    rows_before = led.rows()
-    if not led.verify_chain(rows_before):
+    # Streaming ledger reads (cure LEDGER-STREAM-CLOCKS-20261110):
+    # this leg used to parse the whole 660 MB ledger into a list
+    # twice and hash-verify the parsed list twice; under the
+    # refresh's combined load it was SIGKILLed (exit -9) on
+    # 2026-11-10. Chain verification now streams via
+    # verify_chain_streaming() and the row collections below are
+    # engine-filtered stream lists.
+    if not led.verify_chain_streaming():
         return fail("the shared ledger's chain does not verify")
-    existing29 = [r for r in rows_before
+    existing29 = [r for r in led.iter_rows()
                   if r.get("engine_id") == ENGINE_ID
                   and r.get("type") == "forecast"]
     ledgered_now = []
@@ -1049,13 +1055,12 @@ def build():
                                  "stays as its own outcome class"})
             if created:
                 ledgered_now.append(cid)
-    rows_after = led.rows()
-    if not led.verify_chain(rows_after):
+    if not led.verify_chain_streaming():
         return fail("the shared ledger's chain broke after append")
-    live_rows = [r for r in rows_after
+    live_rows = [r for r in led.iter_rows()
                  if r.get("engine_id") == ENGINE_ID
                  and r.get("type") == "forecast"]
-    grade_rows = [r for r in rows_after
+    grade_rows = [r for r in led.iter_rows()
                   if r.get("engine_id") == ENGINE_ID
                   and r.get("type") == "grade"]
     matured = len(grade_rows)
