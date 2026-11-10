@@ -320,6 +320,27 @@ def evidence_row(tag):
     fail(f"evidence row {tag} not found in {EVIDENCE}")
 
 
+def _generation_fields(slug, eid):
+    """The page-generation fields for one entrant (cure
+    CALIBRATION-GENERATION-GENERAL-20261110): the ledger row count
+    the page's figures were computed from, written by the page's
+    own producer as live.ledger_rows_at_write. Engine 15's producer
+    has carried the stamp since CALIBRATION-GENERATION-20261107
+    (read there as d["live"].get("ledger_rows_at_write")); the
+    ledger's own _append refreshes the same stamp on the
+    calibration league's own page after its grading appends, which
+    is the estate-wide convention. Pages written by producers that
+    do not stamp it yet yield None, and their binding stays strict
+    equality until their producer lands the stamp."""
+    try:
+        d = load_json(SRC[eid])
+    except Exception:
+        return None
+    live = d.get("live") or {}
+    ckpt = live.get("ledger_rows_at_write")
+    return ckpt if isinstance(ckpt, int) else None
+
+
 def measure_entrants():
     """Recompute every entrant's measured error from its own
     published record; fail closed on disagreement with the register."""
@@ -353,7 +374,9 @@ def measure_entrants():
                         # RC-06 follow-on pattern).
                         "live_recorded_src":
                             d["live"].get("ledger_rows_total",
-                                           d["live"]["forecasts_recorded"])}
+                                           d["live"]["forecasts_recorded"]),
+                        "ledger_checkpoint_src":
+                            d["live"].get("ledger_rows_at_write")}
 
     d = load_json(SRC["engine_02"])
     cells = d["history"]["cells"]
@@ -365,7 +388,9 @@ def measure_entrants():
     out["engine_02"] = {"graded": graded, "stated_pct": round(stated, 2),
                         "realised_pct": round(realised, 2),
                         "error_pts": round(realised - stated, 2),
-                        "live_recorded_src": d["live"]["forecasts_recorded"]}
+                        "live_recorded_src": d["live"]["forecasts_recorded"],
+                        "ledger_checkpoint_src":
+                            d["live"].get("ledger_rows_at_write")}
 
     d = load_json(SRC["engine_05"])
     # Re-registered 2026-10-29 (cure G17): engine 5 left its
@@ -384,7 +409,9 @@ def measure_entrants():
                         "realised_pct": 83.0, "error_pts": 0.6,
                         "prior_based": True, "anchor_q": 0.83,
                         "live_recorded_src": d["live"]["records_written"],
-                        "live_graded_src": d["live"]["records_graded"]}
+                        "live_graded_src": d["live"]["records_graded"],
+                        "ledger_checkpoint_src":
+                            d["live"].get("ledger_rows_at_write")}
 
     d = load_json(SRC["engine_06"])
     cells = d["history"]["cells"]
@@ -396,7 +423,9 @@ def measure_entrants():
     out["engine_06"] = {"graded": graded, "stated_pct": round(stated, 2),
                         "realised_pct": round(realised, 2),
                         "error_pts": round(realised - stated, 2),
-                        "live_recorded_src": d["live"]["forecasts_recorded"]}
+                        "live_recorded_src": d["live"]["forecasts_recorded"],
+                        "ledger_checkpoint_src":
+                            d["live"].get("ledger_rows_at_write")}
 
     d = load_json(SRC["engine_12"])
     pool = d["history"]["pooled"]
@@ -418,7 +447,9 @@ def measure_entrants():
                         # (RC-06 follow-on cure, 2026-10-30).
                         "live_recorded_src":
                             d["live"]["distribution_forecasts_recorded"]
-                            + d["live"]["not_recorded_rows"]}
+                            + d["live"]["not_recorded_rows"],
+                        "ledger_checkpoint_src":
+                            d["live"].get("ledger_rows_at_write")}
 
     d = load_json(SRC["engine_15"])
     # Re-registered 2026-10-30 (cure G17): engine 15 left its
@@ -937,9 +968,25 @@ def main():
     # count must equal the count the entrant's own page publishes.
     for eid in ("engine_01", "engine_02", "engine_05", "engine_06",
                 "engine_12"):
-        if live_counts[eid] != measured[eid]["live_recorded_src"]:
+        _src = measured[eid]["live_recorded_src"]
+        _ckpt = measured[eid].get("ledger_checkpoint_src")
+        _expected = expected_page_count(_src, _ckpt, rows, eid)
+        if live_counts[eid] != _expected:
             fail(f"{eid} live count disagrees with its own page: "
-                 f"{live_counts[eid]} vs {measured[eid]['live_recorded_src']}")
+                 f"live {live_counts[eid]} vs page {_src} at "
+                 f"ledger checkpoint {_ckpt} (expected {_expected} "
+                 f"after counting its forecasts appended since)")
+    # Every strict-bound entrant now binds at its page's
+    # generation (cure CALIBRATION-GENERATION-GENERAL-20261110,
+    # generalising the engine_15 cure below): the comparison
+    # counts the entrant's appends after its page's checkpoint as
+    # expected accrual, because the runner's engine order
+    # (alphabetical) refreshes calibration-league second, before
+    # most entrants append their day's forecasts; strict equality
+    # measured the league against pages from the previous cycle
+    # and failed closed on healthy runs (engine_06: live 41,323
+    # vs page 38,659 on 2026-11-10, the gap being exceedance's
+    # own appends banked since its stale page was written).
     # engine_15 binds at its page's generation (cure
     # CALIBRATION-GENERATION-20261107): its producer appends its
     # own forecast rows mid-run at the end of the run's longest
