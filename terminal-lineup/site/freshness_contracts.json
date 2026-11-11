@@ -1,0 +1,443 @@
+{
+  "registry": "T12 Phase 0 freshness contracts (declaration only; Phase 1 warn and Phase 2 strict are separate phases)",
+  "spec": "~/workspace/research_notes/infinityblade-maximal-application-20261108/work/pass2-designs/T12-CONTRACTS.md sections 1-3",
+  "worklist": "~/workspace/research_notes/fix-all-20261110/T12-DECLARATION-WORKLIST.md",
+  "declared_on": "2026-11-10",
+  "contracts": [
+    {
+      "surface": "13f-tracker",
+      "producer": "refresh_13ftracker.py",
+      "producing_lanes": [
+        "terminal-weekly-lane",
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "weekly",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 9 days of load age",
+      "warn_threshold": "No successful load by the Tue 06:46 ET maintenance pass following the Mon 08:00 ET lane",
+      "strict_threshold": "No load by the next Mon 08:00 ET lane (one full missed cycle); absolute backstop 9 days of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Content is quarterly SEC 13F filings, so the reading date lagging the calendar is expected; the missed weekly load is the breach that matters"
+    },
+    {
+      "surface": "smart-money-tracker",
+      "producer": "refresh_smartmoney.py",
+      "producing_lanes": [
+        "terminal-weekly-lane",
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "weekly",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 9 days of load age",
+      "warn_threshold": "No successful load by the Tue 06:46 ET maintenance pass following the Mon 08:00 ET lane",
+      "strict_threshold": "No load by the next Mon 08:00 ET lane (one full missed cycle); absolute backstop 9 days of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Dependency rule (spec verbatim): a load whose input 13f-tracker load is older than its own previous load is a quality failure, not a fresh load"
+    },
+    {
+      "surface": "filings-wire",
+      "producer": "refresh_filings.py",
+      "producing_lanes": [
+        "terminal-weekly-lane",
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "weekly",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "record_surface.current_reading.as_of",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 9 days of load age",
+      "warn_threshold": "No successful load by the Tue 06:46 ET maintenance pass following the Mon 08:00 ET lane",
+      "strict_threshold": "No load by the next Mon 08:00 ET lane (one full missed cycle); absolute backstop 9 days of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Reading field pinned to record_surface.current_reading.as_of; the top-level as_of reads newer and does not describe the readings, and is documented here in the registry entry per the spec-mandated builder choice (documented, not retired)"
+    },
+    {
+      "surface": "insider-wire",
+      "producer": "refresh_insider.py",
+      "producing_lanes": [
+        "terminal-weekly-lane",
+        "terminal-tools-daily-refresh",
+        "forecast-engine-daily-refresh"
+      ],
+      "cadence_class": "weekly",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 9 days of load age",
+      "warn_threshold": "No successful load by the Tue 06:46 ET maintenance pass following the Mon 08:00 ET lane",
+      "strict_threshold": "No load by the next Mon 08:00 ET lane (one full missed cycle); absolute backstop 9 days of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Engine-lane and tools-lane loads count as loads for SLA purposes (FORECAST30-PROGRESS slug, triple-produced)"
+    },
+    {
+      "surface": "grade-a-board",
+      "producer": "refresh_gradeaboard.py",
+      "producing_lanes": [
+        "forecast-engine-daily-refresh"
+      ],
+      "cadence_class": "exception",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "record_surface.current_reading.as_of",
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "record-anchored reading (finished study record), daily load",
+        "authority": "Producer register triple in refresh_gradeaboard.py: every date on the page comes from the records (the forecast-search-2026-10-27 bundle), never from the clock; the producer republishes that finished record and exits 0 nightly (refresh_proof.log 2026-11-09 run: 1s exit 0; data load landed 2026-11-11T02:21Z). TRM-2 classification cure, TOTAL APPLICATION W3, 2026-11-10: the clustered 2026-10-27 stop dates are the record's own date, not a producer failure.",
+        "re_review_trigger": "A new forecast-search record bundle is filed under records/ (a new search or re-grade); the reading then advances to that record's date and this contract is re-reviewed."
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself TRM-2 cure (2026-11-10): the reading date is record-anchored by the producer's design and is not a freshness signal for this surface; the load (mtime interim anchor, loaded_at_utc when the stamp lands) is."
+    },
+    {
+      "surface": "half-life-clock",
+      "producer": "refresh_halflifeclock.py",
+      "producing_lanes": [
+        "forecast-engine-daily-refresh"
+      ],
+      "cadence_class": "exception",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of",
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "record-anchored reading (engine first reading), monthly-round cadence",
+        "authority": "refresh_halflifeclock.py pins READING_DATE = '2026-10-29' (the engine's first reading) and FIRST_ISSUE = '2026-11-02'; its rounds are monthly and the published live_record records the November round opening with zero families clocked (rounds_issued 0), so no newer reading exists to publish. Producer exits 0 nightly (refresh_proof.log 2026-11-09 run: 60s exit 0; load landed 2026-11-11T02:21Z). TRM-2 classification cure, TOTAL APPLICATION W3, 2026-11-10: the 2026-10-29 cluster is the three forecast30 engines' shared first-reading date.",
+        "re_review_trigger": "A monthly round first clocks a family (rounds_issued rises above 0 in the published live_record) or the producer's READING_DATE pin advances."
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Attestation rule: a load that changes figures without a matching calibration_attestation recount is a quality failure (IBMA-D43 class) TRM-2 cure (2026-11-10): the reading date is record-anchored by the producer's design and is not a freshness signal for this surface; the load (mtime interim anchor, loaded_at_utc when the stamp lands) is."
+    },
+    {
+      "surface": "mortality-curve",
+      "producer": "refresh_mortalitycurve.py",
+      "producing_lanes": [
+        "forecast-engine-daily-refresh"
+      ],
+      "cadence_class": "exception",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of",
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "record-anchored reading (engine first issue), event-driven cadence",
+        "authority": "refresh_mortalitycurve.py pins ISSUE = '2026-10-29'; its published live_record states nothing can be graded until the next check or the next promotion happens, and that both are events, not dates (64 forecasts recorded, 0 graded). Producer exits 0 nightly (refresh_proof.log 2026-11-09 run: 30s exit 0; load landed 2026-11-11T02:21Z). TRM-2 classification cure, TOTAL APPLICATION W3, 2026-11-10.",
+        "re_review_trigger": "A check or promotion event lands in the record (graded rises above 0 or forecasts_recorded changes), advancing the issue."
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Loads are individually visible in refresh_proof.log (named leg, 149s in the cron budget note) TRM-2 cure (2026-11-10): the reading date is record-anchored by the producer's design and is not a freshness signal for this surface; the load (mtime interim anchor, loaded_at_utc when the stamp lands) is."
+    },
+    {
+      "surface": "streak-trap",
+      "producer": "refresh_streaktrap.py",
+      "producing_lanes": [
+        "forecast-engine-daily-refresh"
+      ],
+      "cadence_class": "exception",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of",
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "record-anchored reading (engine first reading), maturity-driven cadence",
+        "authority": "refresh_streaktrap.py pins ISSUANCE_DATE = '2026-10-29' (the engine's first reading); figures already staked are never re-staked and mature on their next 30 outcomes (16 staked, 1 matured, decision target 10). Producer exits 0 nightly (refresh_proof.log 2026-11-09 run: 34s exit 0; load landed 2026-11-11T02:21Z). TRM-2 classification cure, TOTAL APPLICATION W3, 2026-11-10.",
+        "re_review_trigger": "The staked figures reach their decision target (matured reaches 10) or a new trigger cohort is staked (issued_this_run rises above 0)."
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Attestation rule: a load that changes figures without a matching calibration_attestation recount is a quality failure (IBMA-D43 class) TRM-2 cure (2026-11-10): the reading date is record-anchored by the producer's design and is not a freshness signal for this surface; the load (mtime interim anchor, loaded_at_utc when the stamp lands) is."
+    },
+    {
+      "surface": "abstention-signal",
+      "producer": "refresh_abstentionsignal.py",
+      "producing_lanes": [
+        "forecast-engine-daily-refresh"
+      ],
+      "cadence_class": "exception",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of_session",
+      "freshness_sla": "No SLA (exception class); the exception object itself is the contract state",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "closed-window record",
+        "authority": "Producer pin ABSTENTION-SESSION-PIN-20261107 (Window closed 2026-11-07) in refresh_abstentionsignal.py, and the prior register row recording the surface as closed by design",
+        "re_review_trigger": "A new abstention episode window opens by a forecast-program decision; on that event the contract converts to its lane's daily-weekday class by amendment before the new window's first expected load"
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Serve as-is with its closed-window wording; excluded from stale counts"
+    },
+    {
+      "surface": "squeeze-watch",
+      "producer": "refresh_squeeze.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "daily-weekday",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "published_date",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
+      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
+      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Upstream dependency rule: the short-interest store is fed by ~/workspace/morgue/si_daily.py inside terminal-daily-stores-refresh (18:46), so a squeeze load stamped before that day's store load is a quality failure. Settlement dates inside names[] are content, not freshness"
+    },
+    {
+      "surface": "decay-watch",
+      "producer": "refresh_decaywatch.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "exception",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "record_surface.current_reading.as_of",
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "record-anchored reading (single grading on record), daily load",
+        "authority": "Producer register triple in refresh_decaywatch.py: the record holds exactly one grading of the promoted book, made 2026-10-27 from the two searches of that day, and no entry has been re-graded since; this contract's own quality_rules already recorded that a load may land while the reading date honestly stays. Producer exits 0 in its lane and its load landed 2026-11-11T02:21Z. TRM-2 classification cure, TOTAL APPLICATION W3, 2026-11-10.",
+        "re_review_trigger": "A second grading of the promoted book is recorded (a new book version or a re-grade event); movements then exist and the reading advances."
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Content is the forecast record's grading history, so a load may land while the reading date honestly stays TRM-2 cure (2026-11-10): the reading date is record-anchored by the producer's design and is not a freshness signal for this surface; the load (mtime interim anchor, loaded_at_utc when the stamp lands) is."
+    },
+    {
+      "surface": "odds-cards",
+      "producer": "refresh_oddscards.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "exception",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of",
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "record-anchored reading (finished replay record), daily load",
+        "authority": "Producer register triple in refresh_oddscards.py: the replay date comes from the record (picker-replay-2026-10-27; 296,093 cases to 2026-10-15), never from the clock; this contract's own quality_rules already recorded the load/content separation. Producer exits 0 in its lane and its load landed 2026-11-11T02:21Z. TRM-2 classification cure, TOTAL APPLICATION W3, 2026-11-10.",
+        "re_review_trigger": "A new picker replay record is filed under records/; the reading then advances to that record's date."
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Load/content separation as decay-watch: a load may land while the reading date honestly stays TRM-2 cure (2026-11-10): the reading date is record-anchored by the producer's design and is not a freshness signal for this surface; the load (mtime interim anchor, loaded_at_utc when the stamp lands) is."
+    },
+    {
+      "surface": "week-ahead",
+      "producer": "refresh_weekahead.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "exception",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "assembled_on",
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "record-anchored assembly (committed calendar document), coverage-ruled",
+        "authority": "Producer register triple in refresh_weekahead.py: dates come from the calendar document (desk-macro-calendar-v2, assembled 2026-10-31), never from the clock; coverage on record runs 2026-01-01 to 2027-12-31 and the published window rolls to the read date (window_start 2026-11-10 at cure time). Producer exits 0 in its lane and its load landed 2026-11-11T02:21Z. TRM-2 classification cure, TOTAL APPLICATION W3, 2026-11-10.",
+        "re_review_trigger": "The calendar document is re-assembled or widened (a new calendar version), or coverage no longer extends at least 4 weeks past the read date (the quality rule below), at which point this surface returns to a dated-stale state until re-assembled."
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Content quality rule: coverage must extend at least 4 weeks past the read date, checked at load TRM-2 cure (2026-11-10): the reading date is record-anchored by the producer's design and is not a freshness signal for this surface; the load (mtime interim anchor, loaded_at_utc when the stamp lands) is."
+    },
+    {
+      "surface": "expected-move",
+      "producer": "refresh_expected_move.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh",
+        "forecast-engine-daily-refresh"
+      ],
+      "cadence_class": "daily-weekday",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "filing_lane.latest_completed_session",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
+      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
+      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Dual-produced (17:46 engine lane and tools chain); governing lane is the tools chain as last writer. Roll-up field filing_lane.latest_completed_session pinned as the declared reading field per the spec-mandated builder decision; per-name receipt.session values are content. The roll-up versus per-name receipt spread is a content-lag finding for AUDIT-4, not resolved by this declaration"
+    },
+    {
+      "surface": "signal-feed",
+      "producer": "refresh_signalfeed.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "daily-weekday",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "freshest_session",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
+      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
+      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Dependency rule: a load whose freshest input load predates its own previous load is a quality failure"
+    },
+    {
+      "surface": "survivors-wire",
+      "producer": "refresh_survivorswire.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "daily-weekday",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "record_surface.current_reading.as_of",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
+      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
+      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Volume-bounds rule declared as a floor of zero-with-note (single-candidate surface, candidate_count 1), not a median band, per the spec"
+    },
+    {
+      "surface": "echo-lens",
+      "producer": "refresh_echolens.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "daily-weekday",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "lens_session",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
+      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
+      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Honest end state: if the external newsletter record stops publishing, the surface goes strict on schedule and the notice says the source stopped"
+    },
+    {
+      "surface": "one-page-report",
+      "producer": "refresh_onepagereport.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "daily-weekday",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "none (not applicable; load-time only contract, per-reading dates inherited from sources and displayed per reading as its as_of_note states)",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
+      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
+      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; The loaded_at_utc stamp is MANDATORY for this surface per the spec (without it the surface is unevaluable, IBMA-D45); this row cannot close on the mtime fallback alone without a named ruling"
+    },
+    {
+      "surface": "promoted-book",
+      "producer": "refresh_promotedbook.py",
+      "producing_lanes": [
+        "terminal-tools-daily-refresh"
+      ],
+      "cadence_class": "daily-weekday",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "none (not applicable; load-time only contract, per-reading dates inherited from sources; as_of is null and as_of_note declares the page dateless)",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
+      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
+      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; The loaded_at_utc stamp is MANDATORY for this surface per the spec (IBMA-D45); not an exception: its producer runs daily and its loads are contractible"
+    },
+    {
+      "surface": "state-analogue",
+      "producer": "refresh_analogue.py",
+      "producing_lanes": [
+        "terminal-daily-stores-refresh"
+      ],
+      "cadence_class": "daily-weekday",
+      "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
+      "reading_date_field": "as_of_session",
+      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
+      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
+      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
+      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
+      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
+      "exception": null,
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Consistency rule: a load where receipt.session is newer than as_of_session by more than one session fails quality until the owning lane reconciles the two fields (IBMA-D20/D33)"
+    },
+    {
+      "surface": "greeks-sketch",
+      "producer": "none",
+      "producing_lanes": [],
+      "cadence_class": "exception",
+      "load_anchor": "Not applicable (exception class; no data.json load to anchor)",
+      "reading_date_field": "none (no data.json; static sketch renders no dated reading)",
+      "freshness_sla": "No SLA (exception class); the exception object itself is the contract state",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "static sketch, no producer",
+        "authority": "Spec tree verification (T12-CONTRACTS.md section 2e): site/greeks-sketch/ is index.html only, no data.json, no refresher; re-verified live 2026-11-10",
+        "re_review_trigger": "Any change that makes it render figures from data, at which point it needs a full contract before it may serve them"
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself"
+    },
+    {
+      "surface": "payoff-sketch",
+      "producer": "none",
+      "producing_lanes": [],
+      "cadence_class": "exception",
+      "load_anchor": "Not applicable (exception class; no data.json load to anchor)",
+      "reading_date_field": "none (no data.json; static sketch renders no dated reading)",
+      "freshness_sla": "No SLA (exception class); the exception object itself is the contract state",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "static sketch, no producer",
+        "authority": "Spec tree verification (T12-CONTRACTS.md section 2e): site/payoff-sketch/ is index.html only, no data.json, no refresher; re-verified live 2026-11-10",
+        "re_review_trigger": "Any change that makes it render figures from data, at which point it needs a full contract before it may serve them"
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself"
+    },
+    {
+      "surface": "how-it-works",
+      "producer": "none",
+      "producing_lanes": [],
+      "cadence_class": "exception",
+      "load_anchor": "Not applicable (exception class; no data.json load to anchor)",
+      "reading_date_field": "none (no data.json; static explainer renders no dated reading)",
+      "freshness_sla": "No SLA (exception class); the exception object itself is the contract state",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "static explainer",
+        "authority": "Spec tree verification (T12-CONTRACTS.md section 2e): index.html only (last written 2026-11-03), no data file, no producer. Confirm-or-strike flag: the task census named only the two sketches as by-design, so this exception rested on the spec lane's tree verification for AUDIT-4 to confirm or strike. AUDIT-4 CONFIRMED this exception (AUDIT-4.md, ~/workspace/research_notes/terminal-total-fix-loop-20261104/, rendered 2026-11-10), confirming the static-explainer exception shape from the tree check",
+        "re_review_trigger": "The moment it renders data-derived figures, it needs a full contract before it may serve them"
+      },
+      "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself"
+    }
+  ]
+}
