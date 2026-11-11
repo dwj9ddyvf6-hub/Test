@@ -478,7 +478,16 @@ def build():
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, "w", encoding="utf-8") as fh:
         data = _tc.stamp_for_script(data, __file__) if _tc is not None else data
-        json.dump(data, fh, indent=2, sort_keys=True)
+        # CHAIN-COMPACT-PUBLISH-20261110: this file outgrew every
+        # GitHub REST publish route on formatting alone: 46.7 MB
+        # written at indent=2 against ~15 MB of content, over the
+        # Contents PUT ceiling (proven at 41.3 MB, refused at
+        # 46.7 MB) and over the create-blob ceiling (refused in
+        # both encodings). The content is unchanged; the write is
+        # compact (consumers JSON.parse the file, and the sync
+        # publishes the local bytes identically, so the published
+        # artifact stays byte-identical to this file).
+        json.dump(data, fh, separators=(",", ":"), sort_keys=True)
         fh.write("\n")
     print(f"Wrote {OUT_PATH} (state {data['state']}, "
           f"{data['snapshots_on_record']} snapshot(s) on record, "
