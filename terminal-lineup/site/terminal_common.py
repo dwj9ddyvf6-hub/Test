@@ -24,6 +24,16 @@ One source of truth for three contracts every refresh script shares:
    and meanings, and consumers that do not read provenance are
    unaffected.
 
+   Every stamp also carries a top-level ``loaded_at_utc``: the UTC
+   moment of the write itself (T12 B0 stamp, T12-B0-B3-20261111;
+   design of record T12-CONTRACTS.md section 1, ``load_anchor``
+   durable form). This is the load anchor the freshness contracts
+   in ``freshness_contracts.json`` key their SLAs to: it states
+   when the data was LOADED, never what session the content
+   describes, so a fresh load of an old reading and a stale load
+   are distinguishable. It is deliberately NOT a reading-date
+   field and ``freshness.py`` does not resolve it as one.
+
 3. WRITE PATH. ``write_data_json`` stamps provenance and writes in
    the house style (indent=2, sort_keys, trailing newline). Refresh
    scripts wired to the stamp call ``stamp_for_script`` immediately
@@ -258,13 +268,23 @@ def gate_figures(data, figure_keys, quote_ts, now=None,
 
 
 def stamp_provenance(data, feed, price_basis, execution_pricing=False,
-                     indicative_keys=()):
+                     indicative_keys=(), now=None):
     """Return a copy of ``data`` with provenance fields added and any
     ``indicative_keys`` renamed to the ``indicative_`` prefix. Existing
     fields keep their names and meanings; a pre-existing top-level
     ``feed``/``price_basis`` value is preserved in the provenance
-    block's ``declared_*`` slots rather than overwritten silently."""
+    block's ``declared_*`` slots rather than overwritten silently.
+
+    The copy also gains ``loaded_at_utc``, the moment of this stamp
+    (T12 B0): a pre-existing value is replaced, because the anchor
+    names THIS write, not an earlier one. ``now`` may be passed by
+    callers (and tests) that need the stamp tied to a specific
+    instant; it defaults to the current UTC time."""
     out = dict(data)
+    stamp_now = now or datetime.now(timezone.utc)
+    if stamp_now.tzinfo is None:
+        stamp_now = stamp_now.replace(tzinfo=timezone.utc)
+    out["loaded_at_utc"] = stamp_now.isoformat()
     for key in indicative_keys:
         if key in out and not key.startswith("indicative_"):
             out["indicative_" + key] = out.pop(key)
@@ -288,8 +308,9 @@ def stamp_for_script(data, script_path, **kwargs):
 
 
 def write_data_json(path, data, feed, price_basis, **kwargs):
-    """Stamp provenance and write ``data`` as the tool's data.json in
-    the house style. Returns the stamped dict."""
+    """Stamp provenance (including the T12 ``loaded_at_utc`` load
+    anchor) and write ``data`` as the tool's data.json in the house
+    style. Returns the stamped dict."""
     stamped = stamp_provenance(data, feed=feed, price_basis=price_basis,
                                **kwargs)
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
