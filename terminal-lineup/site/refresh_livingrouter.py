@@ -407,12 +407,17 @@ def main():
     registry = Registry(os.path.join(FORECAST, "registry.json"))
     registry.validate_engine(ENGINE_ID)
     ledger = Ledger(LEDGER_PATH, registry=registry)
-    rows = ledger.rows()
-    if not ledger.verify_chain(rows):
+    if not ledger.verify_chain_streaming():
         fail("forecast ledger hash chain does not verify")
 
     board = read_board(record)
-    e16 = read_engine16(rows)
+    # read_engine16 walks its input twice and can only consult
+    # engine_16 rows, so it is handed exactly that subset,
+    # collected from a stream (TRM-1 residual cure; the
+    # calibration-league pattern).
+    e16_rows = [r for r in ledger.iter_rows()
+                if r.get("engine_id") == "engine_16"]
+    e16 = read_engine16(e16_rows)
 
     # Cross-checks against the sources' own published counts.
     # Session pins cured at the class level (terminal audit,
@@ -443,7 +448,8 @@ def main():
     if map_cards != record["totals"]["map_calls"]:
         fail("Record map totals disagree with its groups")
 
-    grade_rows_total = sum(1 for r in rows if r.get("type") == "grade")
+    grade_rows_total = sum(1 for r in ledger.iter_rows()
+                           if r.get("type") == "grade")
 
     # ---- populations and weights --------------------------------
     # n_eff: graded 21-session forward records. Board: from The
@@ -525,19 +531,25 @@ def main():
                           "p_top": dist[2],
                           "effective_weight": round(ew, 6)})
 
-    rows_after = ledger.rows()
-    if not ledger.verify_chain(rows_after):
+    if not ledger.verify_chain_streaming():
         fail("forecast ledger chain broke after appends")
-    e18 = [r for r in rows_after if r.get("engine_id") == ENGINE_ID
-           and r.get("type") == "forecast"]
-    e18_graded = sum(1 for r in rows_after if r.get("type") == "grade"
-                     and r.get("engine_id") == ENGINE_ID)
+    # One stream pass collects this engine's own rows, the only
+    # rows the counts below can touch (TRM-1 residual cure).
+    e18 = []
+    e18_grade_rows = []
+    for r in ledger.iter_rows():
+        if r.get("engine_id") != ENGINE_ID:
+            continue
+        if r.get("type") == "forecast":
+            e18.append(r)
+        elif r.get("type") == "grade":
+            e18_grade_rows.append(r)
+    e18_graded = len(e18_grade_rows)
     # Independent windows: greedy non-overlapping count over graded
     # name-windows (none today).
     indep = 0
     last_close = ""
-    for r in sorted((r for r in rows_after if r.get("type") == "grade"
-                     and r.get("engine_id") == ENGINE_ID),
+    for r in sorted(e18_grade_rows,
                     key=lambda r: r.get("horizon_close", "")):
         if r.get("horizon_close", "") > last_close:
             indep += 1
