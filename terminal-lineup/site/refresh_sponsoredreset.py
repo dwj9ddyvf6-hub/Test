@@ -789,7 +789,7 @@ def build():
     # ---- Ledger (API only) ----
     reg = registry_mod.load()
     led = ledger_mod.Ledger(LEDGER_PATH, registry=reg)
-    if not led.verify_chain():
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
 
@@ -848,20 +848,25 @@ def build():
                              "group started and nothing was recorded.")
     missed = [d for d in fear_days if SHIP_DATE <= d < freshest]
     recorded_days = {r["lineage"]["cohort"]["fear_day"]
-                     for r in led.rows()
+                     for r in led.iter_rows()
                      if r.get("type") == "forecast"
                      and r.get("engine_id") == ENGINE_ID
                      and (r.get("lineage") or {}).get("cohort")}
     missed = [d for d in missed if d not in recorded_days]
 
     # ---- Grade any recorded group whose 20 sessions have passed ----
-    rows = led.rows()
+    # Stream passes replace the materialized snapshots (TRM-1
+    # residual cure): the graded-id set grows with each append,
+    # which is exactly what the old per-append snapshot refresh
+    # made visible to the membership check.
+    graded_ids = {r.get("forecast_row_id") for r in led.iter_rows()
+                  if r.get("type") == "grade"}
+    engine_forecasts = [r for r in led.iter_rows()
+                        if r.get("type") == "forecast"
+                        and r.get("engine_id") == ENGINE_ID]
     graded_now = 0
-    for row in list(rows):
-        if row.get("type") != "forecast" or row.get("engine_id") != ENGINE_ID:
-            continue
-        if any(g.get("type") == "grade"
-               and g.get("forecast_row_id") == row["row_id"] for g in rows):
+    for row in engine_forecasts:
+        if row["row_id"] in graded_ids:
             continue
         outcome = row.get("outcome") or {}
         day = outcome.get("fear_day")
@@ -882,25 +887,30 @@ def build():
                      "names over the 20 sessions after the fear day")},
             **(ledger_mod.frozen_label_identity(row) or {}))
         graded_now += 1
-        rows = led.rows()
+        graded_ids.add(row["row_id"])
 
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
+    # One stream pass collects this engine's own rows,
+    # the only rows the figures below can touch (TRM-1
+    # residual cure).
+    mine_rows = [r for r in led.iter_rows()
+                 if r.get("engine_id") == ENGINE_ID
+                 and r.get("type") in ("forecast", "grade")]
     cohorts_formed = len({(r.get("lineage") or {}).get("cohort", {})
                           .get("fear_day")
-                          for r in rows
+                          for r in mine_rows
                           if r.get("type") == "forecast"
                           and r.get("engine_id") == ENGINE_ID
                           and (r.get("lineage") or {}).get("cohort")})
-    cohorts_matured = len({r["subject"].split(" ")[0] for r in rows
+    cohorts_matured = len({r["subject"].split(" ")[0] for r in mine_rows
                            if r.get("type") == "grade"
                            and r.get("engine_id") == ENGINE_ID})
     arm_means = {}
-    for r in rows:
+    for r in mine_rows:
         if r.get("type") == "grade" and r.get("engine_id") == ENGINE_ID:
             arm = (r.get("subject") or "").rsplit(": ", 1)[-1]
             arm_means.setdefault(arm, []).append(r["grade"])
@@ -910,7 +920,7 @@ def build():
     # so the wait text and the live counts can never claim
     # opposite states on the same page.
     formed_cohorts = {}
-    for r in rows:
+    for r in mine_rows:
         if r.get("type") == "forecast" \
                 and r.get("engine_id") == ENGINE_ID:
             cohort = (r.get("lineage") or {}).get("cohort") or {}
