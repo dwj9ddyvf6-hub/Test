@@ -616,8 +616,12 @@ def expected_page_count(src_count, checkpoint, rows, engine_id):
     """
     if checkpoint is None:
         return src_count
-    appended = sum(1 for r in rows[checkpoint:]
-                   if r.get("type") == "forecast"
+    # LEDGER-STREAM-W1-20261110: rows may be any iterable (the live
+    # callers pass led.iter_rows()); the checkpoint is a row index,
+    # so the slice is an enumerate skip with identical membership.
+    appended = sum(1 for i, r in enumerate(rows)
+                   if i >= checkpoint
+                   and r.get("type") == "forecast"
                    and r.get("engine_id") == engine_id)
     return src_count + appended
 
@@ -785,15 +789,41 @@ def entrant_realised_error(rows, entrant_id, horizon_open):
         rows, entrant_id, horizon_open, n_next=N_NEXT)
 
 
+def _entrant_rows(led, entrant_id):
+    """The rows league_entrant_realised_error can see for one
+    entrant, collected from two streams (LEDGER-STREAM-W1-20261110):
+    the entrant's own forecasts, plus the grades written on them.
+    The shared function's grades dict is consulted only by entrant
+    forecast ids, and its forecast scan filters to the entrant, so
+    this subset yields its identical result; entrant data does not
+    change while grade_rounds runs (its appends are League grades
+    on League forecasts), so a per-call collection equals the old
+    refreshed whole-ledger snapshot for every value returned."""
+    forecasts = [r for r in led.iter_rows()
+                 if r.get("type") == "forecast"
+                 and r.get("engine_id") == entrant_id]
+    ids = {r["row_id"] for r in forecasts}
+    grades = [r for r in led.iter_rows()
+              if r.get("type") == "grade"
+              and r.get("forecast_row_id") in ids]
+    return forecasts + grades
+
+
 def grade_rounds(led, rows):
     """Grade every matured League entrant-round from the record.
-    Returns (grades_appended, round_stats)."""
-    graded_ids = {r.get("forecast_row_id") for r in rows
-                  if r.get("type") == "grade"}
+    Returns (grades_appended, round_stats). `rows` is a stream of
+    the ledger (led.iter_rows()) consumed exactly once, for the
+    graded-id set and this engine's own forecast rows."""
+    graded_ids = set()
+    league_rows = []
+    for r in rows:
+        if r.get("type") == "grade":
+            graded_ids.add(r.get("forecast_row_id"))
+        elif r.get("type") == "forecast" \
+                and r.get("engine_id") == ENGINE_ID:
+            league_rows.append(r)
     appended = 0
     stats = {}
-    league_rows = [r for r in rows if r.get("type") == "forecast"
-                   and r.get("engine_id") == ENGINE_ID]
     realised_by_round = {}
     for row in league_rows:
         if row["row_id"] in graded_ids:
@@ -801,8 +831,9 @@ def grade_rounds(led, rows):
         out = row.get("outcome") or {}
         if out.get("kind") != "league_interval":
             continue
-        res = entrant_realised_error(rows, out["entrant"],
-                                     row["horizon_open"])
+        res = entrant_realised_error(
+            _entrant_rows(led, out["entrant"]), out["entrant"],
+            row["horizon_open"])
         if res is None:
             continue
         # Shared grade schema (RC-19 cure, 2026-10-30): the
@@ -833,7 +864,6 @@ def grade_rounds(led, rows):
         appended += 1
         realised_by_round.setdefault(out["round"], {})[out["entrant"]] = \
             realised_E
-        rows = led.rows()
     for row in league_rows:
         if row["row_id"] in graded_ids:
             continue
@@ -859,8 +889,7 @@ def grade_rounds(led, rows):
             "price_source": "ledger grades (league record)"},
             **(ledger_frozen_identity(row) or {}))
         appended += 1
-        rows = led.rows()
-    for row in rows:
+    for row in led.iter_rows():
         if row.get("type") != "grade" or row.get("engine_id") != ENGINE_ID:
             continue
         g = row["grade"]
@@ -926,7 +955,7 @@ def self_test(reg):
                           rnd, lineage)
     if created != 2:
         fail(f"self-test issue created {created}, expected 2")
-    appended, _ = grade_rounds(led, led.rows())
+    appended, _ = grade_rounds(led, led.iter_rows())
     if appended < 1:
         fail("self-test grading appended nothing")
     return {"state": "passed",
@@ -946,18 +975,27 @@ def main():
     measured = measure_entrants()
 
     led = Ledger(LEDGER_PATH, registry=reg)
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    # LEDGER-STREAM-W1-20261110: verify_chain_streaming() and
+    # iter_rows() replace verify_chain()/rows() on the live path
+    # of this refresher: the materializing pair parsed and cached
+    # the whole forecast ledger (~675 MB, ~349k rows) in a 6 GB
+    # shared box, and main() alone re-read it seven times. The
+    # self-test below keeps the materializing read on its
+    # throwaway ledger of ~122 synthetic rows, the
+    # bounded-fixture class.
+    if not led.verify_chain_streaming():
         fail("shared record hash chain does not verify")
     live_counts = {}
     live_graded = {}
     for e in ENTRANTS:
         if e["id"].startswith("engine_"):
             live_counts[e["id"]] = sum(
-                1 for r in rows if r.get("type") == "forecast"
+                1 for r in led.iter_rows()
+                if r.get("type") == "forecast"
                 and r.get("engine_id") == e["id"])
             live_graded[e["id"]] = sum(
-                1 for r in rows if r.get("type") == "grade"
+                1 for r in led.iter_rows()
+                if r.get("type") == "grade"
                 and r.get("engine_id") == e["id"])
     # Re-registered 2026-10-29 (cure G17): the exact-count register
     # and the zero live-graded assertion were build-day facts, not
@@ -970,7 +1008,8 @@ def main():
                 "engine_12"):
         _src = measured[eid]["live_recorded_src"]
         _ckpt = measured[eid].get("ledger_checkpoint_src")
-        _expected = expected_page_count(_src, _ckpt, rows, eid)
+        _expected = expected_page_count(_src, _ckpt,
+                                            led.iter_rows(), eid)
         if live_counts[eid] != _expected:
             fail(f"{eid} live count disagrees with its own page: "
                  f"live {live_counts[eid]} vs page {_src} at "
@@ -1000,7 +1039,9 @@ def main():
     # generation still fails, with the disagreement bucketed.
     _src15 = measured["engine_15"]["live_recorded_src"]
     _ckpt15 = measured["engine_15"].get("ledger_checkpoint_src")
-    _expected15 = expected_page_count(_src15, _ckpt15, rows, "engine_15")
+    _expected15 = expected_page_count(_src15, _ckpt15,
+                                              led.iter_rows(),
+                                              "engine_15")
     if live_counts["engine_15"] != _expected15:
         fail(f"engine_15 live count disagrees with its own page: "
              f"live {live_counts['engine_15']} vs page {_src15} at "
@@ -1012,8 +1053,7 @@ def main():
         row["live_graded"] = live_graded.get(row["id"], 0)
 
     # ---- grading of any matured League rounds (none can exist yet)
-    appended, stats = grade_rounds(led, rows)
-    rows = led.rows()
+    appended, stats = grade_rounds(led, led.iter_rows())
 
     # ---- issue step: only inside a round's issue window, never on
     # the build day. A round's window opens on its decision day and
@@ -1027,7 +1067,7 @@ def main():
         m += 1
         if m == 13:
             y, m = y + 1, 1
-    already = {r["subject"].split(":")[0] for r in rows
+    already = {r["subject"].split(":")[0] for r in led.iter_rows()
                if r.get("type") == "forecast"
                and r.get("engine_id") == ENGINE_ID}
     for month_str in months:
@@ -1046,12 +1086,14 @@ def main():
                     for p in list(SRC.values()) + [EVIDENCE]]}
             issued_now += issue_round(led, reg, table, ranking, fam_rows,
                                       rnd, lineage)
-            rows = led.rows()
-    league_forecasts = sum(1 for r in rows if r.get("type") == "forecast"
+    league_forecasts = sum(1 for r in led.iter_rows()
+                           if r.get("type") == "forecast"
                            and r.get("engine_id") == ENGINE_ID)
-    league_grades = sum(1 for r in rows if r.get("type") == "grade"
+    league_grades = sum(1 for r in led.iter_rows()
+                        if r.get("type") == "grade"
                         and r.get("engine_id") == ENGINE_ID)
-    rounds_issued = len({r["subject"].split(":")[0] for r in rows
+    rounds_issued = len({r["subject"].split(":")[0]
+                         for r in led.iter_rows()
                          if r.get("type") == "forecast"
                          and r.get("engine_id") == ENGINE_ID})
 
