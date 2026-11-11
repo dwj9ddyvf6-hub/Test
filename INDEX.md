@@ -2,10 +2,10 @@
 
 The complete measured file inventory and collection map. [INDEX.json](INDEX.json) is the machine-readable twin; [docs/REPOSITORY-MAP.json](docs/REPOSITORY-MAP.json) supplies curated meanings and task routes when present. No catalog or prose page substitutes for the full inventory.
 
-Total files indexed: 8350
+Total files indexed: 8352
 
-Indexed commit: `8a06b79da2fd05fd91448cb965768df9a8669379`. Source commit timestamp: 2026-11-11T22:13:36Z.
-Total indexed bytes: 1046744377 (only the two generated index outputs have null hashes and sizes).
+Indexed commit: `a4d9814b9d0c0f124c830d63dfdb30b230be7ee8`. Source commit timestamp: 2026-11-11T22:19:01Z.
+Total indexed bytes: 1046473121 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
 
@@ -46,7 +46,7 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 | indicator | 2 | 9040 | Indicator algorithm contract and supporting explanation. [indicator/AREA.md](indicator/AREA.md) · [indicator/BB_RSI_Divergence_Algorithm.md](indicator/BB_RSI_Divergence_Algorithm.md) algorithm specification; compare with the Pine source before claiming parity |
 | integration | 328 | 361125 | Integration adapters and wiring notes connecting sleeves with desk interfaces. [integration/AREA.md](integration/AREA.md) · [integration/Femto-lean_Wiring.md](integration/Femto-lean_Wiring.md) wiring source and historical guidance; presence is not proof of installed execution |
 | laz_sleeves | 11 | 13767 | Lazarus entry-point wrappers over shared sleeve implementations. [laz_sleeves/AREA.md](laz_sleeves/AREA.md) · [engines/AREA.md](engines/AREA.md) source wrappers; follow the shared implementation and version |
-| master | 106 | 27686442 | Published Master Terminal assets and timestamped data snapshots maintained by an external mirror. [START-HERE.md](START-HERE.md) · [ROADMAP.md](ROADMAP.md) · [master/publish-manifest.json](master/publish-manifest.json) publisher-owned generated snapshot; edit the actual producer for durable behavior changes |
+| master | 108 | 27415186 | Published Master Terminal assets and timestamped data snapshots maintained by an external mirror. [START-HERE.md](START-HERE.md) · [ROADMAP.md](ROADMAP.md) · [master/publish-manifest.json](master/publish-manifest.json) publisher-owned generated snapshot; edit the actual producer for durable behavior changes |
 | packages | 1928 | 117474908 | Complete contributed packages and versioned source snapshots, retained as separate collections. [packages/AREA.md](packages/AREA.md) · [INDEX.md](INDEX.md) historical and contributed packages; preserve provenance and package boundaries |
 | pine | 2 | 10723 | TradingView Pine Script source for the indicator collection. [pine/AREA.md](pine/AREA.md) · [indicator/BB_RSI_Divergence_Algorithm.md](indicator/BB_RSI_Divergence_Algorithm.md) platform-specific source; not independently verified live trading behavior |
 | proof | 23 | 62879 | Dated installation and verification receipts. [proof/AREA.md](proof/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) historical evidence; receipt dates and subject revisions bound every claim |
@@ -94,7 +94,7 @@ These are independent source collections unless their own records establish a li
 - [terminal-lineup/site/](terminal-lineup/site/) — 2949 files: tool pages, assets, source and dated data.
 - [terminal-lineup/forecast/](terminal-lineup/forecast/) — 132 files: forecast implementations, registry, grading and tests.
 - [terminal-lineup/records/](terminal-lineup/records/) — 16 files: historical build and source-discovery records.
-- [master/](master/) — 106 files: externally mirrored terminal assets and snapshots.
+- [master/](master/) — 108 files: externally mirrored terminal assets and snapshots.
 - [docs/VERIFY.md](docs/VERIFY.md), [docs/verify/](docs/verify/) and [proof/install/](proof/install/): source attribution and historical receipts. Check the captured source, date and exact claim before relying on them.
 - [engines/SANITIZATION-NOTE.md](engines/SANITIZATION-NOTE.md): disclosed representation differences in copied source.
 - [agentic-trade-desk/README.md](agentic-trade-desk/README.md): paper-desk architecture, offline skeleton and operational guide; it does not authorize an account or order.
@@ -102,7 +102,7 @@ These are independent source collections unless their own records establish a li
 
 ## Coverage and preservation contract
 
-INDEX.json has 8350 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
+INDEX.json has 8352 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
 
 A file inventory proves paths and byte identity, not semantic correctness or runtime behavior. Unsupported submodules, truncated snapshots, duplicate paths, unsafe paths and missing hashes/sizes fail explicitly rather than yielding a partial inventory described as complete. The index does not enumerate files inside archives; use their own manifests and the artifact's documented extraction procedure.
 
