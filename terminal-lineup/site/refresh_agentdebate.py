@@ -49,9 +49,20 @@ Fail-closed rules:
 - If a fund is missing from any record, or a family stance word is
   not one the Second Opinion uses, the refresh stops.
 - If the Second Opinion's prints figures disagree with the Flow
-  Board's freshest-session figures for the same fund (call-side,
-  put-side, or their sum against the published net), the refresh
-  stops.
+  Board figures from the same tape card generation for the same
+  fund (call-side, put-side, or their sum against the published
+  net), the refresh stops. The comparison is like for like, at
+  the card generation the Second Opinion's prints were built
+  from (its prints_published_at_utc; the Flow Board carries that
+  stamp per cell): comparing one generation's prints against a
+  fresher generation's cell is a cross-session comparison, not
+  a disagreement, and it froze this page nightly (SYS-2 cure,
+  TOTAL APPLICATION W3, 2026-11-10). When the joined generation
+  is behind the freshest tape session the page still publishes,
+  stamped stale against the tape, and the tools lane's tape
+  family re-sync (refresh_tools.py re-runs the family after
+  the Second Opinion advances in its assemblies) brings it
+  current the same evening.
 - If the Second Opinion's positioning figures disagree with the
   Morning Map's spot, walls or flip level for the same fund, or
   their above/below relationship disagrees, the refresh stops.
@@ -208,6 +219,7 @@ def main():
         fail("Regime Dial carries no position check")
 
     funds = []
+    prints_join_sessions = []
     for sym in FUNDS:
         n = so_names.get(sym)
         if not n:
@@ -218,19 +230,51 @@ def main():
         row = fb_rows.get(sym)
         if not row:
             fail("Flow Board carries no row for " + sym)
-        # Second Opinion's prints family is built from the
-        # freshest tape card, so its figures join the Flow
-        # Board cell at the tape family's freshest session,
-        # not at the scored session: joining at the scored
-        # session compared two different days' prints and
-        # refused every coherent evening (hookup cure,
-        # 2026-10-29).
+        # Second Opinion's prints family is built from a tape
+        # card, so its figures join the Flow Board cell from
+        # the SAME card generation, identified by the published
+        # stamp both records carry (the Second Opinion's
+        # prints_published_at_utc, the cell's own
+        # published_at_utc). The earlier form joined the cell
+        # at the tape family's freshest session on the
+        # assumption that the Second Opinion was always built
+        # from the freshest card; that assumption fails on the
+        # lane rhythm (the tape family runs at 17:30, the
+        # Second Opinion refreshes in the 19:00 tools lane),
+        # so most evenings the comparison crossed generations
+        # and the page froze on a disagreement that did not
+        # exist inside either record (the estate's own
+        # diagnoses of 2026-11-07, 2026-11-09 and 2026-11-10
+        # each verified the figures match exactly at the
+        # generation the Second Opinion was built from).
+        # Arbitration (SYS-2 cure, TOTAL APPLICATION W3,
+        # 2026-11-10): join like for like by generation; fail
+        # closed when no cell carries that generation; when
+        # the joined generation is behind the freshest tape
+        # session, publish stamped stale (below) rather than
+        # frozen or falsely current. This is the same rule the
+        # positioning gate below already follows: agreement
+        # with the session the source itself carries
+        # (AGENTDEBATE-CARD-SESSION-20261031).
         cell = None
-        for c in row.get("cells", []):
-            if c.get("session") == fb.get("freshest_session"):
-                cell = c
-        if not cell:
-            fail("Flow Board carries no freshest-session figures for " + sym)
+        so_card = so.get("prints_published_at_utc")
+        if so_card:
+            for c in row.get("cells", []):
+                if c.get("published_at_utc") == so_card:
+                    cell = c
+            if not cell:
+                fail("Flow Board carries no figures from the "
+                     "tape card the Second Opinion's prints "
+                     "were built from (" + str(so_card) + ") for "
+                     + sym + "; the records cannot be compared "
+                     "like for like")
+        else:
+            for c in row.get("cells", []):
+                if c.get("session") == fb.get("freshest_session"):
+                    cell = c
+            if not cell:
+                fail("Flow Board carries no freshest-session figures for " + sym)
+        prints_join_sessions.append(cell.get("session"))
 
         price, prints, pos = n.get("price"), n.get("prints"), n.get("positioning")
         if not price or not prints or not pos:
@@ -456,11 +500,28 @@ def main():
     # freshest session (the tape session, fail-closed above when
     # that join is absent), so a successful refresh is current
     # in the orchestrator's joined-consumer sense.
+    # The stamp tells the truth about the generation join
+    # (SYS-2 cure, 2026-11-10): current only when the joined
+    # tape generation IS the freshest tape session; a debate
+    # joined at an older generation is stamped stale, never
+    # silently current, and the tools lane's late re-run of
+    # this refresh (after the Second Opinion lands) is what
+    # brings it current the same evening.
+    prints_behind = any(s != fb.get("freshest_session")
+                        for s in prints_join_sessions)
     out["tape_freshness"] = {
         "tape_session": fb.get("freshest_session"),
         "consumer_session": session,
-        "state": "current",
+        "state": "stale" if prints_behind else "current",
         "note": ("this consumer's headline session is "
+                 "the scored session it debates; its "
+                 "tape figures are joined like for like at "
+                 "the tape card generation its prints were "
+                 "built from, which is behind the freshest "
+                 "tape session; it is re-run after the "
+                 "tools lane refreshes the Second Opinion"
+                 if prints_behind else
+                 "this consumer's headline session is "
                  "the scored session it debates; its "
                  "tape figures are joined at the "
                  "freshest tape session and its refresh "
