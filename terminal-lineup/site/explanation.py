@@ -201,15 +201,21 @@ def build_explanation(slug, data):
 def enrich_file(path):
     path = Path(path)
     slug = path.parent.name
-    data = json.loads(path.read_text())
+    raw = path.read_text()
+    data = json.loads(raw)
     if not isinstance(data, dict):
         return False
     block = build_explanation(slug, data)
     if block is None:
         return False
     data["explanation"] = block
+    # ENRICH-COMPACT-PRESERVE-20261111: serialize in the style of
+    # the file being replaced, so a producer's compact write (the
+    # publish-ceiling cure) survives the enrich pass instead of
+    # being silently re-inflated to indent=2.
+    import terminal_common as _tc
     tmp = path.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+    tmp.write_text(_tc.dumps_like_existing(raw, data))
     os.replace(tmp, path)
     return True
 
