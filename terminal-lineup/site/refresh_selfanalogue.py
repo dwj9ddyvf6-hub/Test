@@ -631,10 +631,14 @@ def synthetic_self_test(ledger_before_md5):
     prices = grading_mod.PriceSource(bars_path)
     graded = grading_mod.run_grading(led, prices, reg)
     assert len(graded) == 1, f"expected 1 graded, got {len(graded)}"
-    figures = ledger_mod.recompute_figures(led.rows())
+    # LEDGER-STREAM-W1-20261110: the self-test's throwaway ledger
+    # reads stream too (iter_rows()), completing this refresher's
+    # conversion; its live path already streamed.
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures[ENGINE_ID]
     assert mine["forecasts"] == 1 and mine["graded"] == 1
-    grade_row = [r for r in led.rows() if r.get("type") == "grade"][0]
+    grade_row = next(r for r in led.iter_rows()
+                     if r.get("type") == "grade")
     score = grade_row["grade"]["scores"]
     realised = (rows[issue_idx + HORIZON][4] / rows[issue_idx][4]
                 - 1.0) * 100.0
@@ -817,6 +821,20 @@ def build():
                      "of the as-of session, graded at exactly 21 "
                      "sessions on the name's own return.")}
         cached_fc = read_fc_cache(fc_path)
+        # LEDGER-APPEND-STREAM-20261110: one append per qualifying
+        # name (thousands on the DEEP panel) under one (engine,
+        # issuance), issued_ts == horizon_open == future[0], so
+        # the batch routes through the ledger's streaming append
+        # form: one streaming pass collects this batch's dedupe
+        # keys and the tail hash, each append is then O(1). The
+        # declared form re-scanned the whole ledger twice per
+        # append; at the 2026-11-10 ledger (348,927 rows, a 23s
+        # stream) that alone is ~13 hours over this batch, on top
+        # of the per-name forecast computation, which is why this
+        # leg never completed (three attempts, all timeouts).
+        # Dedupe is unchanged: the seen set is seeded from the
+        # ledger's own rows for this (engine, issuance).
+        stream_state = led.append_stream_state(ENGINE_ID, future[0])
         for sym in qualifying:
             # Fast path (cure G17 remainder, 2026-10-30): the
             # reference self_analogue_forecast is O(n^2) per name
@@ -841,7 +859,8 @@ def build():
             value = {"quantiles": {"0.1": round(fc["p10"], 4),
                                    "0.5": round(fc["p50"], 4),
                                    "0.9": round(fc["p90"], 4)}}
-            _row, was = led.append_forecast_declared(
+            _row, was = led.append_forecast_streaming(
+                stream_state,
                 engine_id=ENGINE_ID, issued_ts=future[0], subject=sym,
                 quantity="own_return_21s_percent_distribution",
                 value=value, horizon_open=future[0],
