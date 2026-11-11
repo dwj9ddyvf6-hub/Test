@@ -127,8 +127,20 @@ GROUPS = [
         "refresh_horizongrades.py",
         "refresh_decaywatch.py",
         "refresh_router.py",
-        "refresh_survivorswire.py",
+        # Graveyard before Survivors Wire
+        # (GRAVEYARD-WIRE-ORDER-20261110): the Graveyard
+        # restates the Replication Wire, stamping the wire's
+        # grading_run_at it read; Survivors Wire refuses when
+        # the Graveyard's stamp is not the Wire's current one.
+        # The Wire is re-graded by the engine lane earlier in
+        # the evening, so running the Wire's restatement AFTER
+        # its checker froze the pair at the previous grading
+        # (2026-11-10: Graveyard carried the 15:07 grading
+        # against the Wire's 21:58 re-grade, and Survivors
+        # Wire refused on the mismatch). The producer of the
+        # restatement runs first; the checker follows it.
         "refresh_graveyard.py",
+        "refresh_survivorswire.py",
         "refresh_oddscards.py",
         "refresh_onepagereport.py",
     ]),
