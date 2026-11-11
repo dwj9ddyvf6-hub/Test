@@ -78,10 +78,27 @@ def _atomic_write(path: Path, text: str) -> None:
     window, 2026-11-02 17:58Z) left the hub at 0 bytes and the sync
     published a blank page. With temp + os.replace the target is
     only ever swapped for a complete file; a killed writer leaves
-    at most a stray .atomic-tmp, which the sync excludes by name."""
-    tmp = path.with_name(path.name + ".atomic-tmp")
-    tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, path)
+    at most a stray .atomic-tmp, which the sync excludes by name.
+
+    The temp name is unique per process (cure
+    HUB-ATOMIC-WRITE-RACE-20261110): the fixed name meant two
+    concurrent writer processes shared one temp file, and at
+    11:20 ET on 2026-11-10 the hourly lane died with
+    FileNotFoundError renaming index.html.atomic-tmp ->
+    index.html because the other writer's rename had already
+    moved the shared temp away. The per-process name still
+    ends with ".atomic-tmp", so the sync's exclusion of that
+    suffix keeps working unchanged."""
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.atomic-tmp")
+    try:
+        tmp.write_text(text, encoding="utf-8")
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass
+        raise
 
 DATE_FIELDS = ("as_of_session", "session", "as_of", "recorded_on",
                "published_at_utc", "generated_at_utc")
