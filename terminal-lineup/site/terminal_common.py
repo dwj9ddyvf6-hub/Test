@@ -299,6 +299,28 @@ def write_data_json(path, data, feed, price_basis, **kwargs):
     return stamped
 
 
+def dumps_like_existing(existing_text, data):
+    """Serialize ``data`` in the serialization style of the file it
+    replaces (ENRICH-COMPACT-PRESERVE-20261111).
+
+    A file whose current bytes are a single line (the compact form a
+    producer chose because the pretty form outgrew the GitHub REST
+    publish ceilings: chain-explorer, short-volume, ai-chart-read)
+    is serialized compact; every other file keeps the house style
+    (indent=2, sort_keys, trailing newline). The content is
+    identical either way: consumers JSON.parse the file. Before
+    this cure the shared enrich pass (record_surface / explanation
+    via enrich_all, run at every lane close) re-serialized every
+    page at indent=2, silently undoing CHAIN-COMPACT-PUBLISH-
+    20261110 within one lane cycle of the producer's compact write:
+    chain-explorer/data.json went back to 46,715,795 bytes and the
+    hourly sync died on it again (blob POST 422, 2026-11-11 01:12
+    ET run)."""
+    if existing_text is not None and "\n" not in existing_text.rstrip("\n"):
+        return json.dumps(data, separators=(",", ":"), sort_keys=True) + "\n"
+    return json.dumps(data, indent=2, sort_keys=True) + "\n"
+
+
 # ------------------------------------------------------------------
 # MANIFEST SYNC (MANIFEST-SHARED-WRITE-20261031)
 #
