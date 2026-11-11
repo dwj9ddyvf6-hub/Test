@@ -513,12 +513,14 @@ def main():
              "of at least 375 logged alerts graded)")
 
     led = Ledger(LEDGER_PATH, registry=reg)
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         fail("shared record hash chain does not verify")
-    e22 = [r for r in rows if r.get("engine_id") == ENGINE_ID]
-    if e22:
-        fail(f"shared record already holds {len(e22)} engine_22 "
+    # Only the engine's row count is consumed; one stream pass
+    # replaces the materialized snapshot (TRM-1 residual cure).
+    n_e22 = sum(1 for r in led.iter_rows()
+                if r.get("engine_id") == ENGINE_ID)
+    if n_e22:
+        fail(f"shared record already holds {n_e22} engine_22 "
              "rows before the first issue; the build ledgers nothing")
 
     test = self_test(reg)
