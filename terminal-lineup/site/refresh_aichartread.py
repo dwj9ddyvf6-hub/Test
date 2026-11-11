@@ -316,6 +316,10 @@ def build():
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, "w", encoding="utf-8") as fh:
         data = _tc.stamp_for_script(data, __file__) if _tc is not None else data
+        # Compact write (pinned by test_compact_publish_preserved_
+        # 20261111): at indent=2 this file was 35,926,290 bytes
+        # against ~15 MB of content, over the same publish-ceiling
+        # growth path as CHAIN-COMPACT-PUBLISH-20261110.
         json.dump(data, fh, separators=(",", ":"), sort_keys=True)
         fh.write("\n")
     size = os.path.getsize(OUT_PATH)
