@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gp67CbJMcc0wkPdLYxDRl/eSHJ6K75KVA7GqRRjwwCA='; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
-<script>(()=>{const F=fetch.bind(window),P=Object.create(null),H=5000;if(!/[?&]f=/.test(location.search))for(const u of ["edition.json", "panels.json", "pulse.json", "charts.json", "market.json", "reads-index.json", "lineup.json"]){const e={};e.p=F(u,{cache:'no-cache'}).then(r=>{e.t=Date.now()+H;return r},x=>{delete P[u];throw x});P[u]=e}window.fetch=function(i,o){const e=typeof i==='string'&&!(o&&o.method&&o.method!=='GET')&&P[i];if(e&&(!e.t||Date.now()<e.t)){const s=o&&o.signal,c=e.p.then(r=>r.clone());if(!s)return c;const A=()=>new DOMException('Aborted','AbortError');if(s.aborted)return Promise.reject(A());return new Promise((y,n)=>{s.addEventListener('abort',()=>n(A()),{once:true});c.then(y,n)})}if(e)delete P[i];return F(i,o)}})();</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-DBfDXob8tlQHX/8c622EyE5iuYJInyLFtTTfHheKhAI='; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'none'; frame-src https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+<script>(()=>{const F=fetch.bind(window),P=Object.create(null),H=5000,G={"lineup.json":["hub","p-hub","h-hub","hub-rank","h-lineup","h-h-lineup","lu-asof","lu-chips","lu-body","h-gaps","h-h-gaps","lu-gap","h-corr","h-h-corr","lu-corr","h-optdata","h-h-optdata","od-body","h-read","h-h-read","lu-read","h-mind","h-h-mind","mind-body"]},h=location.hash.slice(1);if(!/[?&]f=/.test(location.search))for(const u of ["edition.json", "panels.json", "pulse.json", "charts.json", "market.json", "reads-index.json"].concat(Object.keys(G).filter(k=>G[k].includes(h)))){const e={};e.p=F(u,{cache:'no-cache'}).then(r=>{e.t=Date.now()+H;return r},x=>{delete P[u];throw x});P[u]=e}window.fetch=function(i,o){const e=typeof i==='string'&&!(o&&o.method&&o.method!=='GET')&&P[i];if(e&&(!e.t||Date.now()<e.t)){const s=o&&o.signal,c=e.p.then(r=>r.clone());if(!s)return c;const A=()=>new DOMException('Aborted','AbortError');if(s.aborted)return Promise.reject(A());return new Promise((y,n)=>{s.addEventListener('abort',()=>n(A()),{once:true});c.then(y,n)})}if(e)delete P[i];return F(i,o)}})();</script>
 <link rel="preload" href="market.bc6e953356.js" as="script">
 <link rel="preload" href="market.c133dcfde4.css" as="style">
 <title>Master Terminal</title>
@@ -19,26 +19,26 @@
 <link rel="stylesheet" href="strip.d3b3c78cb1.css">
 <link rel="stylesheet" href="funnel.cc0a756c83.css">
 <link rel="stylesheet" href="vendor.89ab384cbf.css">
-<link rel="stylesheet" href="ascend.823038834a.css">
+<link rel="stylesheet" href="ascend.d8635d08c7.css">
 <link rel="stylesheet" href="viz_market.b1b967e6e9.css">
 <link rel="stylesheet" href="viz_engines.3d87324a4c.css">
 <link rel="stylesheet" href="mybook.e2fa45fc72.css">
 <script src="app.a305436a15.js" defer></script>
 <script src="viz.f3b48bc13c.js" defer></script>
 <script src="context.50c6ee21e3.js" defer></script>
-<script src="gauges.1ef4a5872e.js" defer></script>
+<script src="gauges.8d0bce093a.js" defer></script>
 <script src="strip.23711bfa30.js" defer></script>
 <script src="gk.0d9a37e9e1.js" defer></script>
 <script src="funnel.c44cabf63f.js" defer></script>
 <script src="vendor.1db8f35cdc.js" defer></script>
-<script src="ascend.b9b3d6d39a.js" defer></script>
+<script src="ascend.444cda1b97.js" defer></script>
 <script src="lineup.fedd9d3497.js" defer></script>
 <script src="optdata.42c78eec7d.js" defer></script>
-<script src="viz_market.2719c7f250.js" defer></script>
-<script src="dkc.dc21232374.js" defer></script>
-<script src="viz_engines.5266367fb2.js" defer></script>
-<script src="mybook.096df4a95d.js" defer></script>
-<script src="lu.b3a4c3a40e.js" defer></script>
+<script src="viz_market.d8300194cd.js" defer></script>
+<script src="dkc.0b5b2fbc91.js" defer></script>
+<script src="viz_engines.cf7324e37b.js" defer></script>
+<script src="mybook.7fc1d5bd4d.js" defer></script>
+<script src="lu.299849ee0d.js" defer></script>
 <link rel="stylesheet" href="grok-master.css"></head>
 <body>
 <header class="hdr" id="mast">
@@ -153,7 +153,7 @@
       </section>
       </div>
     </div>
-    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.098ce4dc0c.js" data-css="desk.67d481b7a8.css" hidden>
+    <div class="panel" id="p-desk" role="tabpanel" aria-labelledby="t-desk" data-js="desk.2237e53325.js" data-css="desk.67d481b7a8.css" hidden>
       <span class="anc" id="desk"></span>
       <div id="d-wait"><p class="card mu">Loading the desk…</p><svg width="1" height="1400" aria-hidden="true" focusable="false"></svg></div>
       <section id="d-book" aria-labelledby="h-d-book" data-anchor data-jump="Book performance" hidden></section>
@@ -164,7 +164,7 @@
       <section class="ek" id="e-rank" aria-labelledby="h-e-rank" data-anchor data-jump="Engine" hidden></section>
       <section class="ek" id="e-fc" aria-labelledby="h-e-fc" data-anchor data-jump="Forecasts" hidden></section>
     </div>
-    <div class="panel" id="p-hub" role="tabpanel" aria-labelledby="t-hub" data-css="lineup.1ef115e962.css" hidden>
+    <div class="panel" id="p-hub" role="tabpanel" aria-labelledby="t-hub" data-js="mind.e8cc90bfa8.js" data-css="lineup.467294dc88.css" hidden>
       <section id="hub" aria-labelledby="h-hub" data-anchor data-jump="Ranker">
         <div class="shd"><div class="sht"><p class="kick">Breakout · expansion · risk</p><h2 id="h-hub">Opportunity Ranker</h2></div></div>
         <div class="card" id="hub-rank"></div>
@@ -188,6 +188,10 @@
       <section id="h-read" aria-labelledby="h-h-read" data-anchor data-jump="Chart Read">
         <div class="shd"><div class="sht"><p class="kick">Evidence for and against</p><h2 id="h-h-read">Chart Read Engine</h2></div></div>
         <div class="card" id="lu-read"></div>
+      </section>
+      <section id="h-mind" aria-labelledby="h-h-mind" data-anchor data-jump="Systems" hidden>
+        <div class="shd"><div class="sht"><p class="kick">One card per system</p><h2 id="h-h-mind">Systems</h2></div></div>
+        <div class="card" id="mind-body"></div>
       </section>
     </div>
     <div class="panel" id="p-how" role="tabpanel" aria-labelledby="t-how" hidden>
