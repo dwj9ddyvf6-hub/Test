@@ -696,8 +696,7 @@ def main():
     registry = Registry(os.path.join(FORECAST, "registry.json"))
     registry.validate_engine(ENGINE_ID)
     ledger = Ledger(LEDGER_PATH, registry=registry)
-    rows = ledger.rows()
-    if not ledger.verify_chain(rows):
+    if not ledger.verify_chain_streaming():
         fail("forecast ledger hash chain does not verify")
     live_hash_before = file_sha256(LEDGER_PATH)
 
@@ -921,9 +920,17 @@ def main():
         created += 1 if made else 0
         if made:
             issued_today.append(BOARD_GATE_POP_ID)
-        graded_ids = {r["forecast_row_id"] for r in ledger.rows()
+        graded_ids = {r["forecast_row_id"] for r in ledger.iter_rows()
                       if r.get("type") == "grade"}
-        for row in ledger.rows():
+        # The grading loop appends grades as it goes, so it walks
+        # this engine's forecasts collected from a stream first:
+        # the same rows the materialized snapshot showed it, and
+        # its own appends (grade rows) are outside the scan's
+        # filter either way (TRM-1 residual cure).
+        engine_forecasts = [r for r in ledger.iter_rows()
+                            if r.get("type") == "forecast"
+                            and r.get("engine_id") == ENGINE_ID]
+        for row in engine_forecasts:
             if row.get("type") != "forecast" \
                     or row.get("engine_id") != ENGINE_ID \
                     or row["row_id"] in graded_ids:
@@ -947,9 +954,10 @@ def main():
                 **(frozen_label_identity(row) or {}))
             graded_today += 1
 
-    rows_after = ledger.rows()
-    if not ledger.verify_chain(rows_after):
+    if not ledger.verify_chain_streaming():
         fail("forecast ledger chain broke during refresh")
+    rows_after = [r for r in ledger.iter_rows()
+                  if r.get("engine_id") == ENGINE_ID]
     if today.weekday() != 0 and file_sha256(LEDGER_PATH) != live_hash_before:
         fail("forecast ledger changed during a no-issue refresh")
     # The self-test asserts the live ledger is untouched by the
