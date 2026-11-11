@@ -131,7 +131,24 @@ def main():
             note = (f"refresh failed this run "
                     f"({entry['tail'][0] if entry['tail'] else 'no output'}); "
                     "the data shown is from its last successful run")
-        if data_rel in JOINED_CONSUMERS and entry["exit"] == 0:
+        if (data_rel in JOINED_CONSUMERS and entry["exit"] == 0
+                and session != tape_session):
+            # A joined consumer that completed behind the tape
+            # (SYS-2 cure, 2026-11-10: the consumer now joins
+            # its tape figures like for like and publishes
+            # stamped stale instead of freezing) is stamped by
+            # the ordinary equality rule with the reason named;
+            # only a joined consumer AT the tape session earns
+            # the joined-consumer "current" stamp below.
+            note = ("this consumer's headline session is the "
+                    "scored session it debates; its tape "
+                    "figures are joined like for like at the "
+                    "tape card generation its prints source "
+                    "was built from, behind the freshest tape "
+                    "session; it is re-run after the tools "
+                    "lane refreshes that source")
+        if (data_rel in JOINED_CONSUMERS and entry["exit"] == 0
+                and session == tape_session):
             doc["tape_freshness"] = {
                 "tape_session": tape_session,
                 "consumer_session": session,
