@@ -160,7 +160,7 @@ def abstention_audit_block():
         led = ledger_mod.Ledger(os.path.expanduser(
             "~/workspace/terminal-lineup/forecast/ledger.jsonl"))
         audit = grading_mod.abstention_coverage_audit(
-            led.rows(), grading_mod.PriceSource())
+            led.iter_rows(), grading_mod.PriceSource())
         names = {eid: e["name"]
                  for eid, e in registry_mod.load().engines.items()}
         engines = []
