@@ -1108,15 +1108,21 @@ def build_record_surface(slug, data):
 def enrich_file(path):
     path = Path(path)
     slug = path.parent.name
-    data = json.loads(path.read_text())
+    raw = path.read_text()
+    data = json.loads(raw)
     if not isinstance(data, dict):
         return False
     data["record_surface"] = build_record_surface(slug, data)
     subject = build_subject_chart(slug, data)
     if subject is not None:
         data["subject_chart"] = subject
-    text = json.dumps(data, indent=2, sort_keys=True) + "\n"
-    if path.read_text() == text:
+    # ENRICH-COMPACT-PRESERVE-20261111: serialize in the style of
+    # the file being replaced, so a producer's compact write (the
+    # publish-ceiling cure) survives the enrich pass instead of
+    # being silently re-inflated to indent=2.
+    import terminal_common as _tc
+    text = _tc.dumps_like_existing(raw, data)
+    if raw == text:
         return False  # unchanged: do not touch the file (freshness cure:
         # hourly enrich must not re-stamp every data file's mtime)
     tmp = path.with_suffix(".json.tmp")
