@@ -70,9 +70,26 @@ def canonical(obj):
 
 
 def recount(ledger_path):
-    rows = []
+    # VERIFY-STREAM-RECOUNT-20261110: this verifier used to append
+    # every parsed ledger row to a list (plus a full by-id dict of
+    # row bodies) before counting: at ~349k rows that is a ~3 GB
+    # parsed peak, and it was OOM-killed (exit 137) inside the
+    # 2026-11-10 refresh_tools verify step and again standalone.
+    # The recount now streams the file twice: pass 1 verifies the
+    # hash chain and records only each row id's type plus the
+    # correction targets; the voided set is derived exactly as
+    # before (a correction voids its target only when the target
+    # is a forecast row on the ledger); pass 2 re-streams for the
+    # per-engine forecast and grade counting, in file order, so
+    # every count, orphan, double-grade and score figure is
+    # unchanged. This module still shares no code with
+    # forecast/ledger.py: the streaming is reimplemented here.
     first_break = None
     prev = ""
+    head = None
+    n_rows = 0
+    types = {}
+    correction_targets = []
     with open(ledger_path, "r", encoding="utf-8") as fh:
         for i, line in enumerate(fh):
             line = line.strip()
@@ -89,12 +106,14 @@ def recount(ledger_path):
                 first_break = {"index": i, "row_id": row.get("row_id"),
                                "type": row.get("type")}
             prev = row.get("row_hash") or prev
-            rows.append(row)
-    by_id = {r["row_id"]: r for r in rows}
-    voided = {r["corrects_row_id"] for r in rows
-              if r.get("type") == "correction"
-              and r.get("corrects_row_id") in by_id
-              and by_id[r["corrects_row_id"]].get("type") == "forecast"}
+            head = row.get("row_hash")
+            n_rows += 1
+            types[row.get("row_id")] = row.get("type")
+            if row.get("type") == "correction" \
+                    and row.get("corrects_row_id"):
+                correction_targets.append(row["corrects_row_id"])
+    voided = {cid for cid in correction_targets
+              if types.get(cid) == "forecast"}
     per = {}
 
     def eng(eid):
@@ -108,40 +127,47 @@ def recount(ledger_path):
             "_graded_ids": set(), "_scores": {},
             "_foreign_ids": set()})
 
-    for r in rows:
-        if r.get("type") == "forecast":
+    # Pass 2: re-stream the ledger for the per-engine counting.
+    # The forecast and grade loops of the materializing version
+    # touched disjoint counters, so one pass in file order gives
+    # identical figures; target existence is judged against the
+    # pass-1 type map, the full id set, exactly as the by-id dict
+    # judged it before.
+    with open(ledger_path, "r", encoding="utf-8") as fh:
+        rows = (json.loads(line) for line in fh if line.strip())
+        for r in rows:
+            if r.get("type") == "forecast":
+                e = eng(r["engine_id"])
+                e["forecasts_raw"] += 1
+                if (r.get("outcome") or {}).get("kind") in \
+                        FOREIGN_OUTCOME_KINDS.get(r["engine_id"], set()):
+                    e["_foreign_ids"].add(r["row_id"])
+                    e["forecasts_foreign"] = \
+                        e.get("forecasts_foreign", 0) + 1
+                if r["row_id"] in voided:
+                    e["forecasts_voided"] += 1
+                continue
+            if r.get("type") != "grade":
+                continue
             e = eng(r["engine_id"])
-            e["forecasts_raw"] += 1
-            if (r.get("outcome") or {}).get("kind") in \
-                    FOREIGN_OUTCOME_KINDS.get(r["engine_id"], set()):
-                e["_foreign_ids"].add(r["row_id"])
-                e["forecasts_foreign"] = \
-                    e.get("forecasts_foreign", 0) + 1
-            if r["row_id"] in voided:
-                e["forecasts_voided"] += 1
-    for r in rows:
-        if r.get("type") != "grade":
-            continue
-        e = eng(r["engine_id"])
-        e["grades_raw"] += 1
-        target = by_id.get(r.get("forecast_row_id"))
-        if target is None:
-            e["orphan_grades"] += 1
-            continue
-        if r["forecast_row_id"] in e["_graded_ids"]:
-            e["double_grades"] += 1
-        e["_graded_ids"].add(r["forecast_row_id"])
-        if r["forecast_row_id"] in voided:
-            e["grades_on_voided"] += 1
-            continue
-        e["grades_valid"] += 1
-        if r["forecast_row_id"] in e["_foreign_ids"]:
-            e["grades_foreign_valid"] += 1
-        fp = r.get("label_context_fingerprint") or "unfrozen_legacy"
-        grp = e["_scores"].setdefault(fp, {})
-        for name, val in (r["grade"].get("scores") or {}).items():
-            if isinstance(val, (int, float)):
-                grp.setdefault(name, []).append(val)
+            e["grades_raw"] += 1
+            if r.get("forecast_row_id") not in types:
+                e["orphan_grades"] += 1
+                continue
+            if r["forecast_row_id"] in e["_graded_ids"]:
+                e["double_grades"] += 1
+            e["_graded_ids"].add(r["forecast_row_id"])
+            if r["forecast_row_id"] in voided:
+                e["grades_on_voided"] += 1
+                continue
+            e["grades_valid"] += 1
+            if r["forecast_row_id"] in e["_foreign_ids"]:
+                e["grades_foreign_valid"] += 1
+            fp = r.get("label_context_fingerprint") or "unfrozen_legacy"
+            grp = e["_scores"].setdefault(fp, {})
+            for name, val in (r["grade"].get("scores") or {}).items():
+                if isinstance(val, (int, float)):
+                    grp.setdefault(name, []).append(val)
     for e in per.values():
         e["forecasts_valid"] = e["forecasts_raw"] - e["forecasts_voided"]
         foreign_ids = e.pop("_foreign_ids")
@@ -160,8 +186,8 @@ def recount(ledger_path):
             e["mean_scores_valid"] = {
                 k: sum(v) / len(v) for k, v in grp.items() if v}
         e.pop("_graded_ids")
-    return {"rows": len(rows), "first_break": first_break,
-            "head": rows[-1]["row_hash"] if rows else None,
+    return {"rows": n_rows, "first_break": first_break,
+            "head": head,
             "per_engine": per}
 
 
