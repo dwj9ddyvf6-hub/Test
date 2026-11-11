@@ -783,7 +783,11 @@ def build():
     reg = registry_mod.load()
     led = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=reg)
-    if not led.verify_chain():
+    # LEDGER-STREAM-W1-20261110: verify_chain_streaming() and
+    # iter_rows() replace verify_chain()/rows() in this refresher:
+    # the materializing pair parsed and cached the whole forecast
+    # ledger (~675 MB, ~349k rows) in a 6 GB shared box.
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing to add to it")
     artifacts = [{"path": p, "sha256": ledger_mod.file_sha256(p)}
                  for p in [PANEL_PATH, VIX_PATH, MORGUE_LEDGER_PATH]
@@ -875,11 +879,10 @@ def build():
     # re-issue, voided here by correction rows. Identical
     # republications never reach this code (the ledger dedupes
     # them at append).
-    _rows_now = led.rows()
-    _corrected = {r.get("corrects_row_id") for r in _rows_now
+    _corrected = {r.get("corrects_row_id") for r in led.iter_rows()
                   if r.get("type") == "correction"}
     _seen_issue = set()
-    for _r in _rows_now:
+    for _r in led.iter_rows():
         if _r.get("type") != "forecast" \
                 or _r.get("engine_id") != ENGINE_ID:
             continue
@@ -907,8 +910,8 @@ def build():
                                        "issue")})
 
     # ---------- Grade any matured engine_30 forecasts ----------
-    rows = led.rows()
-    graded_ids = {r["forecast_row_id"] for r in rows if r.get("type") == "grade"}
+    graded_ids = {r["forecast_row_id"] for r in led.iter_rows()
+                  if r.get("type") == "grade"}
     # Cure 2026-11-07 (ABSTENTION-GRADE-VOIDED-20261107): voided
     # duplicate re-issues stay on the append-only ledger, and the
     # ledger refuses grades on them by design (defect 8 cure,
@@ -917,12 +920,12 @@ def build():
     # skip decision now lives in gradeable(), which excludes
     # voided rows exactly as the figures section below does when
     # it counts valid forecasts.
-    voided_ids = {r.get("corrects_row_id") for r in rows
+    voided_ids = {r.get("corrects_row_id") for r in led.iter_rows()
                   if r.get("type") == "correction"}
     vol_prices = [None]
     date_index = {d: i for i, d in enumerate(dates)}
     newly_graded = 0
-    for r in rows:
+    for r in led.iter_rows():
         if not gradeable(r, graded_ids, voided_ids):
             continue
         oc = r["outcome"]
@@ -957,10 +960,9 @@ def build():
         newly_graded += 1
 
     # ---------- Figures recomputed from the ledger alone ----------
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after writing")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
     # Valid basis (terminal audit, 2026-10-31): the count binds
     # on valid forecasts, not raw rows. A voided duplicate
@@ -969,14 +971,14 @@ def build():
     # 2 per day would refuse every voided correction forever,
     # the same binding error the calibration league's RC-06
     # follow-on cured on its own page.
-    _voided = {r.get("corrects_row_id") for r in rows
+    _voided = {r.get("corrects_row_id") for r in led.iter_rows()
                if r.get("type") == "correction"}
-    primary_rows = [r for r in rows if r.get("type") == "forecast"
+    primary_rows = [r for r in led.iter_rows() if r.get("type") == "forecast"
                     and r.get("engine_id") == ENGINE_ID
                     and r["row_id"] not in _voided
                     and r["outcome"].get("horizon_sessions") == 21]
     ledgered_days = len({r["outcome"]["issue_date"] for r in primary_rows})
-    graded_primary = sum(1 for r in rows if r.get("type") == "grade"
+    graded_primary = sum(1 for r in led.iter_rows() if r.get("type") == "grade"
                          and r.get("engine_id") == ENGINE_ID
                          and any(p["row_id"] == r["forecast_row_id"]
                                  for p in primary_rows))
