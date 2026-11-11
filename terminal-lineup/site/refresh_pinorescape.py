@@ -792,7 +792,7 @@ def build():
     # ---- Ledger (API only) ----
     reg = registry_mod.load()
     led = ledger_mod.Ledger(LEDGER_PATH, registry=reg)
-    if not led.verify_chain():
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
 
@@ -850,7 +850,7 @@ def build():
     if candidate_day >= SHIP_DATE:
         recorded_keys = {
             (r.get("horizon_close"), (r.get("outcome") or {}).get("symbol"))
-            for r in led.rows()
+            for r in led.iter_rows()
             if r.get("type") == "forecast"
             and r.get("engine_id") == ENGINE_ID}
         for fund in FUNDS:
@@ -863,14 +863,19 @@ def build():
                     recorded_keys.add((expiry, fund))
 
     # ---- Grade any recorded morning whose close is now on record ----
-    rows = led.rows()
+    # Stream passes replace the materialized snapshots (TRM-1
+    # residual cure): the graded-id set grows with each append,
+    # which is exactly what the old per-append snapshot refresh
+    # made visible to the membership check.
+    graded_ids = {r.get("forecast_row_id") for r in led.iter_rows()
+                  if r.get("type") == "grade"}
+    engine_forecasts = [r for r in led.iter_rows()
+                        if r.get("type") == "forecast"
+                        and r.get("engine_id") == ENGINE_ID]
     graded_now = 0
     pin_prices = [None]
-    for row in list(rows):
-        if row.get("type") != "forecast" or row.get("engine_id") != ENGINE_ID:
-            continue
-        if any(g.get("type") == "grade"
-               and g.get("forecast_row_id") == row["row_id"] for g in rows):
+    for row in engine_forecasts:
+        if row["row_id"] in graded_ids:
             continue
         outcome = row.get("outcome") or {}
         fund = outcome.get("symbol")
@@ -895,24 +900,29 @@ def build():
         except grading_mod.GradingError:
             continue
         graded_now += 1
-        rows = led.rows()
+        graded_ids.add(row["row_id"])
 
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
+    # One stream pass collects this engine's own rows,
+    # the only rows the figures below can touch (TRM-1
+    # residual cure).
+    mine_rows = [r for r in led.iter_rows()
+                 if r.get("engine_id") == ENGINE_ID
+                 and r.get("type") in ("forecast", "grade")]
 
     # ---- Live figures from the ledger alone ----
     def arm_stats(arm):
         rec = grd = hits = 0
-        for r in rows:
+        for r in mine_rows:
             if r.get("type") == "forecast" \
                     and r.get("engine_id") == ENGINE_ID \
                     and (r.get("value") or {}).get("arm") == arm:
                 rec += 1
-        for r in rows:
+        for r in mine_rows:
             if r.get("type") == "grade" \
                     and r.get("engine_id") == ENGINE_ID \
                     and (r.get("grade") or {}).get("arm") == arm:
@@ -924,7 +934,7 @@ def build():
                 "thin": grd < THIN}
     arm_a, arm_b, baseline = (arm_stats("arm_a"), arm_stats("arm_b"),
                               arm_stats("baseline"))
-    weeks = sorted({r["horizon_close"] for r in rows
+    weeks = sorted({r["horizon_close"] for r in mine_rows
                     if r.get("type") == "forecast"
                     and r.get("engine_id") == ENGINE_ID})
     z = two_share_z(arm_a["hits"], arm_a["graded"],
