@@ -735,22 +735,22 @@
   "fe04_fair_gap_remainder": {
     "counts": {
       "full_residual": 0,
-      "gap_names": 1455,
-      "market_leg": 1452,
-      "market_sector_residual": 1452,
+      "gap_names": 1173,
+      "market_leg": 1169,
+      "market_sector_residual": 1169,
       "news_leg": 0,
-      "news_on_record": 42,
-      "sector_leg_cluster": 258,
-      "sector_leg_gics": 1194,
+      "news_on_record": 34,
+      "sector_leg_cluster": 270,
+      "sector_leg_gics": 899,
       "sector_leg_missing": 0
     },
-    "detail": "The FE04 fair gap model now exists (fair_gap_model.py) and its record for session 2026-11-09 decomposes 1455 gap names into a market leg (rolling overnight beta times the index overnight gap) and a sector leg (sector median gap, orthogonalised, with a labelled correlation cluster fallback for names with no sector on record), publishing a market and sector residual per name in gap-destiny/fair_gap_record.json. The news leg carries no registered coefficient, and the model's own record now proves why none can be estimated from the records on hand: for this session 42 of the 1455 gap names have an overnight article on record, and the news store's articles carry no signed direction field at all, so the missing inputs are a signed per article direction record and coverage beyond the tracked universe (named in the record's news_leg_evidence block). Residuals are published as market and sector residuals, never as full fair gap residuals. Engine 28's raw gap legs continue unchanged so the residual leg can be graded against them. The FE04 failed gap sign flip half already stands as Engine 28's separately graded sub claim.",
+    "detail": "The FE04 fair gap model now exists (fair_gap_model.py) and its record for session 2026-11-10 decomposes 1173 gap names into a market leg (rolling overnight beta times the index overnight gap) and a sector leg (sector median gap, orthogonalised, with a labelled correlation cluster fallback for names with no sector on record), publishing a market and sector residual per name in gap-destiny/fair_gap_record.json. The news leg carries no registered coefficient, and the model's own record now proves why none can be estimated from the records on hand: for this session 34 of the 1173 gap names have an overnight article on record, and the news store's articles carry no signed direction field at all, so the missing inputs are a signed per article direction record and coverage beyond the tracked universe (named in the record's news_leg_evidence block). Residuals are published as market and sector residuals, never as full fair gap residuals. Engine 28's raw gap legs continue unchanged so the residual leg can be graded against them. The FE04 failed gap sign flip half already stands as Engine 28's separately graded sub claim.",
     "news_leg_evidence": {
-      "gap_names": 1455,
-      "gap_names_with_overnight_news": 42,
+      "gap_names": 1173,
+      "gap_names_with_overnight_news": 34,
       "missing_inputs": [
         "a signed per article direction record (sentiment or event direction) in the news store: its articles carry only id, headline, source, created_at, url and symbols, so no signed news variable exists to estimate a coefficient against",
-        "news coverage beyond the tracked universe: the store covers 94 symbols, and 1413 of the 1455 gap names have no overnight article on record for this session"
+        "news coverage beyond the tracked universe: the store covers 94 symbols, and 1139 of the 1173 gap names have no overnight article on record for this session"
       ],
       "news_store_fields": [
         "created_at",
@@ -765,24 +765,24 @@
       ],
       "news_store_symbols": 94,
       "note": "No news coefficient is registered, because the records on hand cannot estimate one honestly: an unsigned article count would enter an award headline and a fraud headline with the same sign. The news leg and the full residual stay at 0 until a signed news record exists.",
-      "overnight_articles_on_gap_names": 139,
+      "overnight_articles_on_gap_names": 124,
       "signed_direction_field_present": false,
       "state": "not_estimable_on_records_on_hand",
       "window_utc": [
-        "2026-11-06T20:00:00Z",
-        "2026-11-09T13:30:00Z"
+        "2026-11-09T20:00:00Z",
+        "2026-11-10T13:30:00Z"
       ]
     },
-    "session": "2026-11-09",
+    "session": "2026-11-10",
     "state": "recorded_market_sector"
   },
   "fe17_centre": {
-    "detail": "FE17's blend (0.60 of the priced implied move plus 0.40 of the historical event move, adjusted for dispersion and timing quality) is registered as this engine's centre, and it takes over on each name whose inputs exist. All three inputs are on record: a per name priced move record (110 upcoming reporters priced from stored at the money straddle quotes), a report timing record from the earnings record lane (254 names with a timing quality), and a dispersion record (1601 names). The dispersion input is forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names, carried by the earnings record. It is not cross analyst estimate dispersion, which no free source carries; the two quantities are different and neither is renamed into the other. The registered definition originally named cross analyst estimate dispersion as this input. By the registry amendment of 2026-10-30, made under the owner's decision delegated to Midna that day, the registered dispersion input is the forecast error dispersion on record, adopted under its own true name. A name missing any other input keeps the historical middle as its centre, labelled as such, with the missing input named.",
+    "detail": "FE17's blend (0.60 of the priced implied move plus 0.40 of the historical event move, adjusted for dispersion and timing quality) is registered as this engine's centre, and it takes over on each name whose inputs exist. All three inputs are on record: a per name priced move record (110 upcoming reporters priced from stored at the money straddle quotes), a report timing record from the earnings record lane (232 names with a timing quality), and a dispersion record (1601 names). The dispersion input is forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names, carried by the earnings record. It is not cross analyst estimate dispersion, which no free source carries; the two quantities are different and neither is renamed into the other. The registered definition originally named cross analyst estimate dispersion as this input. By the registry amendment of 2026-10-30, made under the owner's decision delegated to Midna that day, the registered dispersion input is the forecast error dispersion on record, adopted under its own true name. A name missing any other input keeps the historical middle as its centre, labelled as such, with the missing input named.",
     "dispersion_definition": "forecast error dispersion: sd of the name's own prior forecast errors, z scored across reporting names. Not cross analyst dispersion.",
     "dispersion_input": "forecast_error_dispersion",
     "missing": [],
     "names_with_dispersion_on_record": 1601,
-    "names_with_timing": 254,
+    "names_with_timing": 232,
     "priced_moves_on_record": 110,
     "state": "inputs_recorded"
   },
@@ -6828,7 +6828,8 @@
         "fe17_centre": {
           "centre_pct": null,
           "missing": [
-            "forecast_error_dispersion_z"
+            "forecast_error_dispersion_z",
+            "timing_quality"
           ],
           "state": "not_recorded"
         },
@@ -7469,7 +7470,7 @@
         "basis": "760 graded forecasts of 2533 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
         "forecasts_recorded": 2533,
         "graded_forecasts": 760,
-        "ledger_rows_at_write": 349386,
+        "ledger_rows_at_write": 349553,
         "recorded_on": "2026-11-11",
         "status": "not_attested"
       },
