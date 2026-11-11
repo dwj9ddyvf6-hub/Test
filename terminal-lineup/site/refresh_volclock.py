@@ -552,15 +552,19 @@ def build():
     reg = registry_mod.load()
     led = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=reg)
-    if not led.verify_chain():
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
-    rows_before = led.rows()
+    # Two stream passes replace the materialized snapshot
+    # (TRM-1 residual cure): the correction targets first, then
+    # exactly the engine forecasts the voiding pass can touch,
+    # collected before any correction is appended so the pass
+    # sees the same rows the snapshot showed it.
     corrected_ids = {
-        r.get("corrects_row_id") for r in rows_before
+        r.get("corrects_row_id") for r in led.iter_rows()
         if r.get("type") == "correction"}
-    voided = 0
-    for row in rows_before:
+    void_candidates = []
+    for row in led.iter_rows():
         if row.get("type") != "forecast" \
                 or row.get("engine_id") != ENGINE_ID:
             continue
@@ -569,6 +573,9 @@ def build():
             continue  # already a corrected-construction row
         if row["row_id"] in corrected_ids:
             continue  # already voided by an earlier run
+        void_candidates.append(row)
+    voided = 0
+    for row in void_candidates:
         led.append_correction(
             corrects_row_id=row["row_id"],
             note=VOID_NOTE,
@@ -652,17 +659,22 @@ def build():
         created += 1 if was_created else 0
 
     # ---- Figures recomputed from the ledger alone ----
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
-    voided_ids = {
-        r.get("corrects_row_id") for r in rows
-        if r.get("type") == "correction"}
-    my_rows = [r for r in rows if r.get("type") == "forecast"
-               and r.get("engine_id") == ENGINE_ID]
+    # One stream pass collects exactly what the void arithmetic
+    # below can touch: every correction target and this engine's
+    # own forecasts (TRM-1 residual cure).
+    voided_ids = set()
+    my_rows = []
+    for r in led.iter_rows():
+        if r.get("type") == "correction":
+            voided_ids.add(r.get("corrects_row_id"))
+        elif r.get("type") == "forecast" \
+                and r.get("engine_id") == ENGINE_ID:
+            my_rows.append(r)
     valid_rows = [r for r in my_rows if r["row_id"] not in voided_ids]
     voided_total = len(my_rows) - len(valid_rows)
     cohort_dates = sorted({
