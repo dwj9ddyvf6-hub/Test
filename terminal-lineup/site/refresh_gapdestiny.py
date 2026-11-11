@@ -873,7 +873,11 @@ def build():
     reg = registry_mod.load()
     led = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=reg)
-    if not led.verify_chain():
+    # LEDGER-STREAM-W1-20261110: verify_chain_streaming() and
+    # iter_rows() replace verify_chain()/rows() in this refresher:
+    # the materializing pair parsed and cached the whole forecast
+    # ledger (~675 MB, ~349k rows) in a 6 GB shared box.
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
     lineage = {
@@ -956,10 +960,17 @@ def build():
     # voided by correction rows (the Engine 14 pattern) and the
     # counts below exclude voided rows. The session's original
     # issue stands as issued.
-    rows_pre = led.rows()
+    # The voiding passes walk a snapshot of this engine's own
+    # forecast rows plus the correction target set, both collected
+    # from iter_rows() streams (LEDGER-STREAM-W1-20261110); the
+    # snapshot semantics of the old rows() list are preserved for
+    # exactly the rows the passes can touch.
     corrected_ids = {
-        r.get("corrects_row_id") for r in rows_pre
+        r.get("corrects_row_id") for r in led.iter_rows()
         if r.get("type") == "correction"}
+    rows_pre = [r for r in led.iter_rows()
+                if r.get("type") == "forecast"
+                and r.get("engine_id") == ENGINE_ID]
     for row in rows_pre:
         if row.get("type") != "forecast" \
                 or row.get("engine_id") != ENGINE_ID \
@@ -1027,16 +1038,15 @@ def build():
                                 "set is frozen at first issue"),
                      "superseded_by": ("the session's original "
                                        "issue")})
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
     voided_ids = {
-        r.get("corrects_row_id") for r in rows
+        r.get("corrects_row_id") for r in led.iter_rows()
         if r.get("type") == "correction"}
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
-    todays = [r for r in rows
+    todays = [r for r in led.iter_rows()
               if r.get("type") == "forecast"
               and r.get("engine_id") == ENGINE_ID
               and r.get("quantity") == QUANTITY
@@ -1045,7 +1055,7 @@ def build():
     if len(todays) != len(live_entries):
         return fail(f"ledger count disagreement: {len(todays)} live "
                     f"sets for {as_of}, expected {len(live_entries)}")
-    sub_todays = [r for r in rows
+    sub_todays = [r for r in led.iter_rows()
                   if r.get("type") == "forecast"
                   and r.get("engine_id") == ENGINE_ID
                   and r.get("quantity") == SUB_QUANTITY
@@ -1056,25 +1066,25 @@ def build():
                     f"{len(sub_todays)} live sub claim rows for "
                     f"{as_of}, expected {len(live_entries)}")
     main_recorded = sum(
-        1 for r in rows if r.get("type") == "forecast"
+        1 for r in led.iter_rows() if r.get("type") == "forecast"
         and r.get("engine_id") == ENGINE_ID
         and r.get("quantity") == QUANTITY
         and r["row_id"] not in voided_ids)
     sub_recorded = sum(
-        1 for r in rows if r.get("type") == "forecast"
+        1 for r in led.iter_rows() if r.get("type") == "forecast"
         and r.get("engine_id") == ENGINE_ID
         and r.get("quantity") == SUB_QUANTITY
         and r["row_id"] not in voided_ids)
-    sub_row_ids = {r["row_id"] for r in rows
+    sub_row_ids = {r["row_id"] for r in led.iter_rows()
                    if r.get("type") == "forecast"
                    and r.get("engine_id") == ENGINE_ID
                    and r.get("quantity") == SUB_QUANTITY
                    and r["row_id"] not in voided_ids}
     sub_graded = sum(
-        1 for g in rows if g.get("type") == "grade"
+        1 for g in led.iter_rows() if g.get("type") == "grade"
         and g.get("forecast_row_id") in sub_row_ids)
     index_recorded = sum(
-        1 for r in rows if r.get("type") == "forecast"
+        1 for r in led.iter_rows() if r.get("type") == "forecast"
         and r.get("engine_id") == ENGINE_ID
         and r.get("quantity") == QUANTITY
         and r["row_id"] not in voided_ids
@@ -1264,11 +1274,11 @@ def build():
             # recorded figure must count valid rows only, with the
             # voided count named beside it, never inside it.
             "forecasts_recorded": mine["forecasts"] - sum(
-                1 for r in rows if r.get("type") == "forecast"
+                1 for r in led.iter_rows() if r.get("type") == "forecast"
                 and r.get("engine_id") == ENGINE_ID
                 and r["row_id"] in voided_ids),
             "forecasts_voided": sum(
-                1 for r in rows if r.get("type") == "forecast"
+                1 for r in led.iter_rows() if r.get("type") == "forecast"
                 and r.get("engine_id") == ENGINE_ID
                 and r["row_id"] in voided_ids),
             "gap_sets_recorded": main_recorded,
