@@ -246,6 +246,80 @@ def _put_once(repo_path: str, payload: dict):
                    + urllib.parse.quote(repo_path), payload)
 
 
+def _put_via_git_data(repo_path: str, data: bytes, message: str,
+                      identity: dict) -> str:
+    """Publish one oversize file through the Git Data route
+    (cure SYNC-PUT-OVERSIZE-20261110).
+
+    The Contents PUT refuses files past a size between the
+    ~41 MB version of chain-explorer/data.json it accepted
+    earlier and the 46,715,772-byte version it answered 422
+    "too large" on 2026-11-10, while DATA_JSON_CAP (50 MB)
+    still admits those files to the publish set, so the PUT
+    route alone left them unpublishable. This fallback is
+    the codebase's existing oversize mechanism, in the shape
+    of morgue/daily_cycle.py push_feed(): create the blob,
+    verify its sha is exactly blob_sha(data), then build a
+    one-entry tree on the current head, commit it and move
+    the ref, re-reading the head and retrying the whole
+    tree/commit/ref step on non-fast-forward (8 attempts,
+    as in push_feed). The ref is patched with force=False,
+    so a head that keeps moving fails loud after the eighth
+    attempt instead of ever being forced. Returns the blob
+    sha, so put_file's callers' returned-sha check and the
+    run's final read-back proof verify this route exactly
+    as they verify the PUT route.
+
+    Live boundary found the same day (2026-11-10): the
+    create-blob step itself has a REST processing ceiling
+    below this file's size. Standalone probes of the exact
+    candidate bytes were answered 422 "Sorry, your input
+    was too large to process" in BOTH encodings (base64,
+    a 62.3 MB request; utf-8, a 50.7 MB request), and the
+    in-run attempt died on a transport disconnect in the
+    same window. When that happens the ApiError propagates
+    unchanged (the run fails loud, exit 3) and the file
+    stays unpublished: it is never split and never forced
+    through another route from inside this helper."""
+    expected = blob_sha(data)
+    _, blob = ghapi.api(
+        "POST", f"{REPO_API}/git/blobs",
+        {"content": base64.b64encode(data).decode(),
+         "encoding": "base64"})
+    if blob.get("sha") != expected:
+        raise RuntimeError(
+            f"git-data blob sha mismatch for {repo_path}: "
+            f"API returned {blob.get('sha')}, expected {expected}")
+    _, repo = ghapi.api("GET", REPO_API)
+    branch = repo.get("default_branch", "main")
+    last = None
+    for _attempt in range(8):
+        try:
+            _, ref = ghapi.api(
+                "GET", f"{REPO_API}/git/ref/heads/{branch}")
+            head = ref["object"]["sha"]
+            _, head_commit = ghapi.api(
+                "GET", f"{REPO_API}/git/commits/{head}")
+            _, tree = ghapi.api(
+                "POST", f"{REPO_API}/git/trees",
+                {"base_tree": head_commit["tree"]["sha"],
+                 "tree": [{"path": repo_path, "mode": "100644",
+                           "type": "blob", "sha": expected}]})
+            _, commit = ghapi.api(
+                "POST", f"{REPO_API}/git/commits",
+                {"message": message, "tree": tree["sha"],
+                 "parents": [head],
+                 "author": dict(identity),
+                 "committer": dict(identity)})
+            ghapi.api("PATCH",
+                      f"{REPO_API}/git/refs/heads/{branch}",
+                      {"sha": commit["sha"], "force": False})
+            return expected
+        except Exception as e:  # non-FF or transient: re-read head
+            last = e
+    raise last
+
+
 def put_file(repo_path: str, data: bytes, message: str,
              existing_sha: str | None) -> str:
     # Avoid GitHub's account-default email when publishing public commits.
@@ -315,6 +389,19 @@ def put_file(repo_path: str, data: bytes, message: str,
                     raise
                 payload.pop("sha", None)
             _, resp = _put_once(repo_path, payload)
+        elif e.status == 422 and "too large" in (e.body or "").lower():
+            # Oversize (cure SYNC-PUT-OVERSIZE-20261110): the
+            # Contents PUT has a size ceiling below this
+            # file's size (see _put_via_git_data), so this
+            # one file publishes through the Git Data route
+            # instead. This branch is checked AFTER the
+            # sha-conflict branch above, so a 422 naming sha
+            # keeps its exact existing behaviour, and a 422
+            # that is neither sha nor too-large still raises
+            # below. The fallback returns the blob sha, so
+            # the caller's check passes unchanged.
+            return _put_via_git_data(repo_path, data, message,
+                                     identity)
         else:
             raise
     return resp.get("content", {}).get("sha")
