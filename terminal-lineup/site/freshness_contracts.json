@@ -439,5 +439,6 @@
       },
       "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself"
     }
-  ]
+  ],
+  "b0_b3_amendment": "2026-11-11 (T12-B0-B3-20261111): B0 landed: terminal_common.stamp_provenance/write_data_json now stamp a top-level loaded_at_utc on every write, so the durable load_anchor form named in every contract below is live (the 'not yet landed at declaration time' wording in the load_anchor fields is the 2026-11-10 declaration state, superseded by this amendment). B3 landed: site/freshness_guard.py fails closed on any disagreement among the spec section 2 census set, this registry, and the tree. Blocker: site/test_t12_stamp_guard_20261111.py. V2 producer proof (a lane load carrying the stamp in a live data.json) rides the Wed 2026-11-11 17:46/18:46/19:00 scheduled loads per EC-B12."
 }
