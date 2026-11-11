@@ -495,7 +495,7 @@ def issue_triggers(led, reg, figures, structures, sources_meta):
     """Ledger every not-yet-forecast trigger via the machinery API
     only. Returns rows created. Fails closed on any disagreement
     with the registered enumeration at issuance."""
-    existing = {r["outcome"]["trigger_id"] for r in led.rows()
+    existing = {r["outcome"]["trigger_id"] for r in led.iter_rows()
                 if r.get("type") == "forecast"
                 and r.get("engine_id") == ENGINE_ID}
     created = 0
@@ -550,12 +550,19 @@ def issue_triggers(led, reg, figures, structures, sources_meta):
 def grade_triggers(led, figures_now, outcomes_now, structures):
     """Grade every matured, ungraded trigger from its source's own
     refreshed record. Returns grades appended (void included)."""
-    rows = led.rows()
-    graded_ids = {r.get("forecast_row_id") for r in rows
+    graded_ids = {r.get("forecast_row_id") for r in led.iter_rows()
                   if r.get("type") == "grade"}
     by_trigger = {t["id"]: t for t in TRIGGERS}
     appended = 0
-    for row in rows:
+    # The loop appends grades as it goes, so it walks this
+    # engine's forecasts collected from a stream first: the same
+    # rows the materialized snapshot showed it, and its own
+    # appends (grade rows) are outside the scan's filter either
+    # way (TRM-1 residual cure).
+    engine_forecasts = [r for r in led.iter_rows()
+                        if r.get("type") == "forecast"
+                        and r.get("engine_id") == ENGINE_ID]
+    for row in engine_forecasts:
         if row.get("type") != "forecast" or \
                 row.get("engine_id") != ENGINE_ID or \
                 row["row_id"] in graded_ids:
@@ -715,10 +722,10 @@ def main():
                     "repl": repl["grading_run_at"]}
 
     led = Ledger(LEDGER_PATH, registry=reg)
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         fail("shared record hash chain does not verify")
-    already = sum(1 for r in rows if r.get("type") == "forecast"
+    already = sum(1 for r in led.iter_rows()
+                  if r.get("type") == "forecast"
                   and r.get("engine_id") == ENGINE_ID)
 
     # Issuance-only source proofs (frozen afterwards, per register).
@@ -730,21 +737,20 @@ def main():
                  "neutral-base register must be revisited")
 
     created = issue_triggers(led, reg, figures, structures, sources_meta)
-    rows = led.rows()
     appended = grade_triggers(led, figures, outcomes_now, structures)
-    rows = led.rows()
-    stats = kill_stats(rows)
+    stats = kill_stats(led.iter_rows())
 
     test = self_test(reg)
 
-    forecast_rows = {r["outcome"]["trigger_id"]: r for r in rows
+    forecast_rows = {r["outcome"]["trigger_id"]: r
+                     for r in led.iter_rows()
                      if r.get("type") == "forecast"
                      and r.get("engine_id") == ENGINE_ID}
     if len(forecast_rows) != len(TRIGGERS):
         fail(f"record holds {len(forecast_rows)} engine_21 forecasts, "
              f"expected {len(TRIGGERS)}")
     graded_by = {}
-    for r in rows:
+    for r in led.iter_rows():
         if r.get("type") == "grade" and r.get("engine_id") == ENGINE_ID:
             graded_by[r["forecast_row_id"]] = r["grade"]
 
