@@ -559,7 +559,16 @@ def build():
     registry = Registry()
     ledger = Ledger(os.path.join(FORECAST_DIR, "ledger.jsonl"),
                     registry=registry)
-    if not ledger.verify_chain():
+    # LEDGER-STREAM-REFRESH-20261110: verify_chain_streaming()
+    # and iter_rows() replace verify_chain()/rows() here:
+    # the materializing pair parsed and CACHED the whole
+    # forecast ledger (~707 MB on disk, ~3 GB parsed) in
+    # this process, which is what the OOM killer reaped
+    # inside full refresh runs (EARNINGS-MEMORY-
+    # CONTENTION-20261108, third recurrence). The streaming
+    # forms give identical verdicts and rows (ledger.py's
+    # own contract) while holding one parsed row.
+    if not ledger.verify_chain_streaming():
         return fail("the forecast ledger's chain does not verify")
     lineage = {
         "source_artifacts": [
@@ -640,12 +649,12 @@ def build():
         created_total += record_cells(
             pername_day, pername_tape, pername_row,
             pername_generated, pn_lineage, "per-name tape store")
-    if not ledger.verify_chain():
+    if not ledger.verify_chain_streaming():
         return fail("the forecast ledger's chain broke during append")
 
     recorded = graded = 0
     fires = {"arm_a": 0, "arm_b": 0, "control": 0}
-    for row in ledger.rows():
+    for row in ledger.iter_rows():
         if row.get("engine_id") != ENGINE_ID:
             continue
         if row.get("type") == "forecast":
