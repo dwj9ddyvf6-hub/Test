@@ -459,7 +459,7 @@ def build():
     reg = registry_mod.load()
     led = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=reg)
-    if not led.verify_chain():
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
     lineage = {
@@ -540,15 +540,14 @@ def build():
         created += 1 if was_created else 0
 
     # ---- Figures recomputed from the ledger alone ----
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
     cohort_dates = sorted({
         r["lineage"]["clocks"]["decision_as_of"]
-        for r in rows
+        for r in led.iter_rows()
         if r.get("type") == "forecast" and r.get("engine_id") == ENGINE_ID})
     if mine["forecasts"] != 8 * len(cohort_dates):
         return fail(f"ledger count disagreement: {mine['forecasts']} "
