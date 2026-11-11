@@ -387,7 +387,11 @@ def build():
     reg = registry_mod.load()
     led = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=reg)
-    if not led.verify_chain():
+    # LEDGER-STREAM-W1-20261110: verify_chain_streaming() and
+    # iter_rows() replace verify_chain()/rows() in this refresher:
+    # the materializing pair parsed and cached the whole forecast
+    # ledger (~675 MB, ~349k rows) in a 6 GB shared box.
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
     panel_hash = ledger_mod.file_sha256(PANEL_PATH)
@@ -435,15 +439,14 @@ def build():
             created += 1 if was_created else 0
 
     # ---- Figures recomputed from the ledger alone ----
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
     issue_days = len({
         r["lineage"]["clocks"]["decision_as_of"]
-        for r in rows
+        for r in led.iter_rows()
         if r.get("type") == "forecast" and r.get("engine_id") == ENGINE_ID})
     # Count issuance slots, not raw rows (cure 2026-10-30, the
     # RC-05 duplicate class): on 2026-10-29 two issuance runs
@@ -457,7 +460,7 @@ def build():
     slots = {
         (r["lineage"]["clocks"]["decision_as_of"], r.get("subject"),
          r.get("quantity"))
-        for r in rows
+        for r in led.iter_rows()
         if r.get("type") == "forecast" and r.get("engine_id") == ENGINE_ID}
     duplicate_rows = mine["forecasts"] - len(slots)
     if len(slots) != 6 * issue_days:
