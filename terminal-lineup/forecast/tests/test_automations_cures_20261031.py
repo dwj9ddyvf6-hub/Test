@@ -122,7 +122,13 @@ def test_agentdebate_published_and_premium_parity():
     # AGENTDEBATE-STALE-JOIN-20261109 (tape_family_run proof
     # exit 0, all nine consumers at 2026-11-09); the parity
     # checks below are re-proven at the new session.
-    assert d["session"] == "2026-11-09"
+    # Re-pinned 2026-11-10 (SYS-2 cure, TOTAL APPLICATION W3):
+    # the published debate advanced to the 2026-11-10 session
+    # under AGENTDEBATE-GENERATION-JOIN-20261110 (standalone
+    # consumer exit 0, session 2026-11-10, tape_freshness
+    # current); the parity checks below are re-proven at the
+    # new session.
+    assert d["session"] == "2026-11-10"
     assert d["tape_freshness"]["state"] == "current"
     so = _data("second-opinion")
     fb = _data("flow-board")
