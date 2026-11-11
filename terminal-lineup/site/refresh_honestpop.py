@@ -532,7 +532,11 @@ def build():
     # ---- Ledger (API only) ----
     reg = registry_mod.load()
     led = ledger_mod.Ledger(LEDGER_PATH, registry=reg)
-    if not led.verify_chain():
+    # LEDGER-STREAM-W1-20261110: verify_chain_streaming() and
+    # iter_rows() replace verify_chain()/rows() in this refresher:
+    # the materializing pair parsed and cached the whole forecast
+    # ledger (~675 MB, ~349k rows) in a 6 GB shared box.
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
 
@@ -607,13 +611,12 @@ def build():
                 created += 1 if was else 0
         surfaces.append(surface)
 
-    rows = led.rows()
-    if not led.verify_chain(rows):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
-    graded_expiries = len({r["horizon_close"] for r in rows
+    graded_expiries = len({r["horizon_close"] for r in led.iter_rows()
                            if r.get("type") == "grade"
                            and r.get("engine_id") == ENGINE_ID})
     waiting = not surfaces
