@@ -405,7 +405,7 @@ def build():
     registry = Registry()
     ledger = Ledger(os.path.join(FORECAST_DIR, "ledger.jsonl"),
                     registry=registry)
-    if not ledger.verify_chain():
+    if not ledger.verify_chain_streaming():
         return fail("the forecast ledger's chain does not verify")
     lineage = {
         "source_artifacts": [
@@ -566,10 +566,10 @@ def build():
                               "down_p": bins[1], "neither_p": bins[2]},
         })
 
-    if not ledger.verify_chain():
+    if not ledger.verify_chain_streaming():
         return fail("the forecast ledger's chain broke during append")
     figures = {}
-    for row in ledger.rows():
+    for row in ledger.iter_rows():
         if row.get("type") == "forecast" and \
                 row.get("engine_id") == ENGINE_ID:
             figures["recorded"] = figures.get("recorded", 0) + 1
