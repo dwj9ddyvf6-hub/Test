@@ -64,7 +64,8 @@ def main(argv):
             unmapped.append(tool_dir)
             continue
         with open(path, encoding="utf-8") as fh:
-            data = json.load(fh)
+            raw = fh.read()
+        data = json.loads(raw)
         if not isinstance(data, dict):
             notdict.append(tool_dir)
             continue
@@ -76,9 +77,11 @@ def main(argv):
             continue
         if not check_only:
             out = tc.stamp_provenance(data, feed=feed, price_basis=basis)
+            # ENRICH-COMPACT-PRESERVE-20261111: keep the file's own
+            # serialization style (a compact producer write stays
+            # compact) instead of forcing the house style.
             with open(path, "w", encoding="utf-8") as fh:
-                json.dump(out, fh, indent=2, sort_keys=True)
-                fh.write("\n")
+                fh.write(tc.dumps_like_existing(raw, out))
         stamped.append(tool_dir)
     print(f"stamped={len(stamped)} already={len(already)} "
           f"unmapped={len(unmapped)} notdict={len(notdict)}")
