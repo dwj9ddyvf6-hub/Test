@@ -403,7 +403,7 @@ def main():
     # Ledger, machinery API only, and only if the gate passed.
     reg = Registry(REGJ)
     led = Ledger(LEDGER_PATH, registry=reg)
-    if not led.verify_chain():
+    if not led.verify_chain_streaming():
         fail("shared record chain does not verify")
     created = 0
     if gate_passed:
@@ -448,13 +448,18 @@ def main():
                      "grading_event": "next pre-registered recheck",
                      "leg": "cohort_failure_count"})
         created += 1 if made else 0
-    rows_now = led.rows()
-    if not led.verify_chain(rows_now):
+    if not led.verify_chain_streaming():
         fail("shared record chain broke after writing")
-    mine = [r for r in rows_now if r.get("engine_id") == ENGINE_ID
-            and r.get("type") == "forecast"]
-    graded = [r for r in rows_now if r.get("engine_id") == ENGINE_ID
-              and r.get("type") == "grade"]
+    # Only the two counts are consumed below; one stream pass
+    # replaces the materialized snapshot (TRM-1 residual cure).
+    n_mine = n_graded = 0
+    for r in led.iter_rows():
+        if r.get("engine_id") != ENGINE_ID:
+            continue
+        if r.get("type") == "forecast":
+            n_mine += 1
+        elif r.get("type") == "grade":
+            n_graded += 1
     bc = backcast["classes"]
     data = {
         "tool": "mortality-curve", "as_of": ISSUE,
@@ -571,7 +576,7 @@ def main():
             "October 27, 2026, so this arm has not fired yet."),
         "pair_table": pair_table,
         "live_record": {
-            "forecasts_recorded": len(mine), "graded": len(graded),
+            "forecasts_recorded": n_mine, "graded": n_graded,
             "created_this_run": created,
             "words": (
                 "%d forecasts are written in the public record (%d "
@@ -580,7 +585,7 @@ def main():
                 "next promotion happens; both are events, not dates, "
                 "so this page's proving state is in part unmet until "
                 "one of them lands." % (
-                    len(mine), max(0, len(mine) - 1), len(graded)))
+                    n_mine, max(0, n_mine - 1), n_graded))
                 if gate_passed else
                 "0 forecasts are written in the public record, "
                 "because the method was rejected at its first check. "
@@ -614,7 +619,7 @@ def main():
         json.dump(data, fh, indent=1, sort_keys=False)
         fh.write("\n")
     print("refresh_mortalitycurve: gate_passed=%s created=%d "
-          "recorded=%d data=%s" % (gate_passed, created, len(mine),
+          "recorded=%d data=%s" % (gate_passed, created, n_mine,
                                    OUT_PATH))
 
 
