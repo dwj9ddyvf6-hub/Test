@@ -350,6 +350,26 @@ def band_widen(bands):
     return 1.0
 
 
+def band_session_check(bands, panel_last):
+    """The published band record must be dated for the price
+    panel's freshest session (cure FAMILYFRACTURE-BAND-SESSION-
+    20261110). Engine 1 derives its as-of session from this same
+    panel's last row, so a band record dated for any other
+    session is a stale record the panel has advanced past, not a
+    figure disagreement: the recomputation and the published
+    figure can only be compared within one session. Returns a
+    failure message naming both sessions, or None when the
+    sessions agree (the figure comparison then decides)."""
+    band_session = bands.get("as_of_session")
+    if band_session != panel_last:
+        return (f"the published band record is dated "
+                f"{band_session}, but the price panel ends "
+                f"{panel_last}; the band record is stale, "
+                f"republish Engine 1 (refresh_correctedband.py) "
+                f"for the panel's freshest session")
+    return None
+
+
 def positioning_card_session(map_card, map_runs, symbols):
     """The session the positioning card file represents, or None
     when it agrees with no permanent log run.
@@ -469,6 +489,9 @@ def build():
 
     # ---- Recent-movement base, checked against Engine 1 ----
     panel_last = panel["SPY"][-1][0]
+    band_stale = band_session_check(bands, panel_last)
+    if band_stale is not None:
+        return fail(band_stale)
     base_info = {}
     band_by_sym = {n["symbol"]: n for n in bands["live"]["names"]}
     for sym in SYMBOLS:
