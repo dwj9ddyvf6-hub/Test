@@ -700,6 +700,22 @@ def build():
                  "name the same construction from that name's own "
                  "recent movement."),
     }
+    # LEDGER-APPEND-STREAM-20261110: this batch is ~5,400 appends
+    # (every qualifying name x three forecasts) under one
+    # (engine, issuance), and issued_ts == horizon_open, so it
+    # routes through the ledger's streaming append form: one
+    # streaming pass collects this batch's dedupe keys and the
+    # tail hash, and each append is then O(1). The declared form
+    # used before re-scanned the whole ledger twice per append
+    # (the legacy-row scan in append_forecast_declared, then the
+    # dedupe scan in append_forecast); at the 2026-11-10 ledger
+    # (348,927 rows, a 23s stream) that is ~46s per append and
+    # ~69 hours per run, which is why this leg timed out at
+    # 5,400s with no write and died by SIGKILL inside the full
+    # refresh. Dedupe is unchanged: the stream state's seen set
+    # is seeded from the ledger's own rows for this (engine,
+    # issuance), so a same-session re-run still appends nothing.
+    stream_state = led.append_stream_state(ENGINE_ID, horizon_open)
     created = 0
     for entry in qualifying:
         sym = entry["symbol"]
@@ -720,7 +736,8 @@ def build():
                     "symbol": sym, "kind": "abs_return",
                     "base_date": as_of, "at_date": future[h - 1],
                     "threshold_fraction": round(mult * s["em"][5][t], 6)}
-            row, was_created = led.append_forecast_declared(
+            row, was_created = led.append_forecast_streaming(
+                stream_state,
                 engine_id=ENGINE_ID,
                 issued_ts=horizon_open,
                 subject=sym,
@@ -732,23 +749,21 @@ def build():
                 families=["price", "distributional_volatility"],
                 outcome=outcome,
             )
-            if row.get("quantity") != QUANTITIES[key]:
-                row, was_created = led.append_forecast_declared(
-                    engine_id=ENGINE_ID,
-                    issued_ts=horizon_open,
-                    subject=sym,
-                    quantity=QUANTITIES[key],
-                    value={"p": entry[key]["p"],
-                           "quantity": QUANTITIES[key]},
-                    horizon_open=horizon_open,
-                    horizon_close=future[h - 1],
-                    lineage=lineage,
-                    families=["price", "distributional_volatility"],
-                    outcome=outcome,
-                )
-                if row.get("quantity") != QUANTITIES[key]:
-                    return fail(f"ledger write for {sym} {key} landed "
-                                f"on a different forecast row")
+            # The pre-streaming quantity-collision fallback (a
+            # second append carrying the quantity inside the value
+            # when the returned row was a different forecast's) is
+            # unreachable on this path: the streaming form returns
+            # a row only when it created it, and a created row's
+            # quantity is the quantity passed, by _forecast_body's
+            # construction; a republication returns (None, False).
+            # The three forecasts' dedupe keys are separated by
+            # their frozen label identities (the outcome spec is
+            # part of the identity), so no parallel-row workaround
+            # is needed. A created row landing on a different
+            # quantity would still fail closed here.
+            if was_created and row.get("quantity") != QUANTITIES[key]:
+                return fail(f"ledger write for {sym} {key} landed "
+                            f"on a different forecast row")
             created += 1 if was_created else 0
 
     # ---- Figures recomputed from the ledger alone ----
