@@ -361,11 +361,10 @@ def build():
     reg = registry_mod.load()
     led = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=reg)
-    rows_before = led.rows()
-    if not led.verify_chain(rows_before):
+    if not led.verify_chain_streaming():
         return fail("the forecast record does not verify; refusing "
                     "to add to it")
-    figures_before = ledger_mod.recompute_figures(rows_before)
+    figures_before = ledger_mod.recompute_figures(led.iter_rows())
     recorded_before = figures_before.get(ENGINE_ID, {}).get("forecasts", 0)
 
     created = 0
@@ -402,11 +401,10 @@ def build():
                              "benchmark": "SPY",
                              "base_date": as_of, "at_date": fut[-1]})
                 created += 1 if was else 0
-    rows_after = led.rows()
-    if not led.verify_chain(rows_after):
+    if not led.verify_chain_streaming():
         return fail("the forecast record failed verification after "
                     "writing; not publishing figures from it")
-    figures = ledger_mod.recompute_figures(rows_after)
+    figures = ledger_mod.recompute_figures(led.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
     if mine["forecasts"] != recorded_before + created:
         return fail("ledger figures do not match the live rows expected")
