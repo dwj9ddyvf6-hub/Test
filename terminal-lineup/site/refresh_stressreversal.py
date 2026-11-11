@@ -396,12 +396,11 @@ def main():
     ledger = ledger_mod.Ledger(
         os.path.join(LINEUP, "forecast", "ledger.jsonl"), registry=registry)
     try:
-        rows_before = ledger.rows()
-        if not ledger.verify_chain(rows_before):
+        if not ledger.verify_chain_streaming():
             return fail("ledger hash chain does not verify; refusing to run")
     except ledger_mod.LedgerError as exc:
         return fail(f"ledger disagrees: {exc}")
-    figures_before = ledger_mod.recompute_figures(rows_before)
+    figures_before = ledger_mod.recompute_figures(ledger.iter_rows())
     recorded_before = figures_before.get(ENGINE_ID, {}).get("forecasts", 0)
 
     live_rows = []
@@ -476,10 +475,9 @@ def main():
                       "yesterday_return_pct": round(yret * 100.0, 3)}
                      for yret, sym in cohort]
 
-    rows_after = ledger.rows()
-    if not ledger.verify_chain(rows_after):
+    if not ledger.verify_chain_streaming():
         return fail("ledger hash chain broke after appends; not publishing")
-    figures = ledger_mod.recompute_figures(rows_after)
+    figures = ledger_mod.recompute_figures(ledger.iter_rows())
     mine = figures.get(ENGINE_ID, {"forecasts": 0, "graded": 0})
     expected = recorded_before + created
     if mine["forecasts"] != expected:
