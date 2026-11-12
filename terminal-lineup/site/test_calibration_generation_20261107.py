@@ -80,7 +80,16 @@ def test_no_checkpoint_falls_back_to_strict_equality():
 def test_producer_stamps_its_generation():
     with open(PRODUCER_PATH, encoding="utf-8") as fh:
         src = fh.read()
-    assert '"ledger_rows_at_write": len(rows)' in src
+    # rows_count is the ledger row count from the same read that
+    # produced the page's figures (refresh_selfanalogue counts it
+    # via led.iter_rows() before stamping). The assertion's
+    # original text pinned a `len(rows)` expression the producer
+    # never carried after its streaming rewrite; corrected
+    # 2026-11-11 (test drift, BUGLOG REFRESH-RESUME-20261111
+    # records) so the pin tracks the stamp itself, not a dead
+    # spelling of it.
+    assert '"ledger_rows_at_write": rows_count' in src
+    assert "rows_count = sum(1 for _ in led.iter_rows())" in src
 
 
 def test_checker_reads_the_checkpoint():
