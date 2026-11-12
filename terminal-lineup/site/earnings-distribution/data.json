@@ -1,9 +1,9 @@
 {
   "calendar": {
     "chain_snapshots": 304,
-    "dated": 1153,
+    "dated": 1155,
     "names_on_record": 1838,
-    "no_date": 685,
+    "no_date": 683,
     "no_date_names": [
       "AA",
       "AAL",
@@ -21,7 +21,6 @@
       "AEP",
       "AGYS",
       "AIN",
-      "AIR",
       "AIS",
       "AIT",
       "ALGN",
@@ -459,7 +458,6 @@
       "PDBC",
       "PECO",
       "PEGA",
-      "PENG",
       "PEP",
       "PFBC",
       "PFF",
@@ -691,19 +689,19 @@
       "ZION",
       "ZWS"
     ],
-    "priced_moves_on_record": 110,
-    "recorded_at": "2026-11-10T23:50:49Z",
-    "recorded_on": "2026-11-10",
+    "priced_moves_on_record": 103,
+    "recorded_at": "2026-11-11T23:49:38Z",
+    "recorded_on": "2026-11-11",
     "second_list_note": "A second list of upcoming dates disagrees with the calendar on a few names. It never governs an upcoming report here; the calendar does. Days from that second list that already sit inside the price history are counted only as past observations in the group history.",
     "stale_note": "The calendar was gathered on October 12, 2026 and is out of date by its own page's rule. Its dates are used exactly as recorded.",
     "timing_note": "Report timing now comes from the earnings record lane, which keeps the calendar source's own time class for each dated name (pre market, after hours, or not supplied by the source). Names whose class is not supplied keep the report date itself as the earnings day, named as a partial reading, not a fact about the company."
   },
   "calibration_attestation": {
     "attestation": {
-      "basis": "848 graded forecasts of 2533 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-      "forecasts_recorded": 2533,
+      "basis": "848 graded forecasts of 2569 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 2569,
       "graded_forecasts": 848,
-      "ledger_rows_at_write": 361135,
+      "ledger_rows_at_write": 373943,
       "recorded_on": "2026-11-11",
       "status": "not_attested"
     },
@@ -723,8 +721,8 @@
   },
   "decision_as_of": "2026-11-11",
   "exceedance": {
-    "detail": "A per name priced move record now exists (110 upcoming reporters priced from stored at the money straddle quotes, priced_moves.py). Each priced name's bigger than priced chance is recorded on its own block as the share of its group pool past moves bigger than that priced move. Names with no priced move on record stay not_recorded, named per name.",
-    "priced_moves_on_record": 110,
+    "detail": "A per name priced move record now exists (103 upcoming reporters priced from stored at the money straddle quotes, priced_moves.py). Each priced name's bigger than priced chance is recorded on its own block as the share of its group pool past moves bigger than that priced move. Names with no priced move on record stay not_recorded, named per name.",
+    "priced_moves_on_record": 103,
     "state": "recorded"
   },
   "execution_pricing": false,
@@ -735,22 +733,22 @@
   "fe04_fair_gap_remainder": {
     "counts": {
       "full_residual": 0,
-      "gap_names": 1173,
-      "market_leg": 1169,
-      "market_sector_residual": 1169,
+      "gap_names": 1209,
+      "market_leg": 1206,
+      "market_sector_residual": 1206,
       "news_leg": 0,
-      "news_on_record": 34,
-      "sector_leg_cluster": 270,
-      "sector_leg_gics": 899,
+      "news_on_record": 33,
+      "sector_leg_cluster": 261,
+      "sector_leg_gics": 945,
       "sector_leg_missing": 0
     },
-    "detail": "The FE04 fair gap model now exists (fair_gap_model.py) and its record for session 2026-11-10 decomposes 1173 gap names into a market leg (rolling overnight beta times the index overnight gap) and a sector leg (sector median gap, orthogonalised, with a labelled correlation cluster fallback for names with no sector on record), publishing a market and sector residual per name in gap-destiny/fair_gap_record.json. The news leg carries no registered coefficient, and the model's own record now proves why none can be estimated from the records on hand: for this session 34 of the 1173 gap names have an overnight article on record, and the news store's articles carry no signed direction field at all, so the missing inputs are a signed per article direction record and coverage beyond the tracked universe (named in the record's news_leg_evidence block). Residuals are published as market and sector residuals, never as full fair gap residuals. Engine 28's raw gap legs continue unchanged so the residual leg can be graded against them. The FE04 failed gap sign flip half already stands as Engine 28's separately graded sub claim.",
+    "detail": "The FE04 fair gap model now exists (fair_gap_model.py) and its record for session 2026-11-11 decomposes 1209 gap names into a market leg (rolling overnight beta times the index overnight gap) and a sector leg (sector median gap, orthogonalised, with a labelled correlation cluster fallback for names with no sector on record), publishing a market and sector residual per name in gap-destiny/fair_gap_record.json. The news leg carries no registered coefficient, and the model's own record now proves why none can be estimated from the records on hand: for this session 33 of the 1209 gap names have an overnight article on record, and the news store's articles carry no signed direction field at all, so the missing inputs are a signed per article direction record and coverage beyond the tracked universe (named in the record's news_leg_evidence block). Residuals are published as market and sector residuals, never as full fair gap residuals. Engine 28's raw gap legs continue unchanged so the residual leg can be graded against them. The FE04 failed gap sign flip half already stands as Engine 28's separately graded sub claim.",
     "news_leg_evidence": {
-      "gap_names": 1173,
-      "gap_names_with_overnight_news": 34,
+      "gap_names": 1209,
+      "gap_names_with_overnight_news": 33,
       "missing_inputs": [
         "a signed per article direction record (sentiment or event direction) in the news store: its articles carry only id, headline, source, created_at, url and symbols, so no signed news variable exists to estimate a coefficient against",
-        "news coverage beyond the tracked universe: the store covers 94 symbols, and 1139 of the 1173 gap names have no overnight article on record for this session"
+        "news coverage beyond the tracked universe: the store covers 94 symbols, and 1176 of the 1209 gap names have no overnight article on record for this session"
       ],
       "news_store_fields": [
         "created_at",
@@ -765,25 +763,25 @@
       ],
       "news_store_symbols": 94,
       "note": "No news coefficient is registered, because the records on hand cannot estimate one honestly: an unsigned article count would enter an award headline and a fraud headline with the same sign. The news leg and the full residual stay at 0 until a signed news record exists.",
-      "overnight_articles_on_gap_names": 226,
+      "overnight_articles_on_gap_names": 165,
       "signed_direction_field_present": false,
       "state": "not_estimable_on_records_on_hand",
       "window_utc": [
-        "2026-11-09T20:00:00Z",
-        "2026-11-10T13:30:00Z"
+        "2026-11-10T20:00:00Z",
+        "2026-11-11T13:30:00Z"
       ]
     },
-    "session": "2026-11-10",
+    "session": "2026-11-11",
     "state": "recorded_market_sector"
   },
   "fe17_centre": {
-    "detail": "FE17's blend (0.60 of the priced implied move plus 0.40 of the historical event move, adjusted for dispersion and timing quality) is registered as this engine's centre, and it takes over on each name whose inputs exist. All three inputs are on record: a per name priced move record (110 upcoming reporters priced from stored at the money straddle quotes), a report timing record from the earnings record lane (232 names with a timing quality), and a dispersion record (1601 names). The dispersion input is forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names, carried by the earnings record. It is not cross analyst estimate dispersion, which no free source carries; the two quantities are different and neither is renamed into the other. The registered definition originally named cross analyst estimate dispersion as this input. By the registry amendment of 2026-10-30, made under the owner's decision delegated to Midna that day, the registered dispersion input is the forecast error dispersion on record, adopted under its own true name. A name missing any other input keeps the historical middle as its centre, labelled as such, with the missing input named.",
+    "detail": "FE17's blend (0.60 of the priced implied move plus 0.40 of the historical event move, adjusted for dispersion and timing quality) is registered as this engine's centre, and it takes over on each name whose inputs exist. All three inputs are on record: a per name priced move record (103 upcoming reporters priced from stored at the money straddle quotes), a report timing record from the earnings record lane (219 names with a timing quality), and a dispersion record (1601 names). The dispersion input is forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names, carried by the earnings record. It is not cross analyst estimate dispersion, which no free source carries; the two quantities are different and neither is renamed into the other. The registered definition originally named cross analyst estimate dispersion as this input. By the registry amendment of 2026-10-30, made under the owner's decision delegated to Midna that day, the registered dispersion input is the forecast error dispersion on record, adopted under its own true name. A name missing any other input keeps the historical middle as its centre, labelled as such, with the missing input named.",
     "dispersion_definition": "forecast error dispersion: sd of the name's own prior forecast errors, z scored across reporting names. Not cross analyst dispersion.",
     "dispersion_input": "forecast_error_dispersion",
     "missing": [],
     "names_with_dispersion_on_record": 1601,
-    "names_with_timing": 232,
-    "priced_moves_on_record": 110,
+    "names_with_timing": 219,
+    "priced_moves_on_record": 103,
     "state": "inputs_recorded"
   },
   "fe18_pead": {
@@ -923,16 +921,16 @@
   "issued_ts": "2026-11-11T22:22:45.007048+00:00",
   "kill_criterion": "After two full seasons, this engine is retired if a season's middle-80-percent range covers less than 70 percent or more than 90 percent of that season's reports, or if the score for its bigger-than-priced chances is no better than simply quoting the priced move's own implied chance.",
   "live": {
-    "distribution_forecasts_recorded": 1931,
+    "distribution_forecasts_recorded": 1933,
     "forecasts_graded": 848,
     "names_recorded": 747,
     "not_recorded_rows": 638,
     "season_all_names": 1838,
-    "season_dated_names": 1153,
+    "season_dated_names": 1155,
     "seasons_completed": 0,
     "target": "two full seasons"
   },
-  "loaded_at_utc": "2026-11-11T23:29:43.081019+00:00",
+  "loaded_at_utc": "2026-11-12T01:31:37.530767+00:00",
   "missed": {
     "count": 927,
     "names": [
@@ -3080,6 +3078,11 @@
         "date": "2026-11-04",
         "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
         "symbol": "BKH"
+      },
+      {
+        "date": "2026-11-04",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "BMBL"
       },
       {
         "date": "2026-11-04",
@@ -5534,11 +5537,6 @@
       {
         "date": "2026-11-11",
         "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
-        "symbol": "BMBL"
-      },
-      {
-        "date": "2026-11-11",
-        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
         "symbol": "CTVA"
       },
       {
@@ -6066,7 +6064,6 @@
       {
         "abs": {
           "blend": "group_only",
-          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
@@ -6078,13 +6075,13 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 3.1061,
+            "0.5": 2.4555,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 3.1061
+          "typical_pct": 2.4555
         },
         "date": "2026-11-12",
         "exceedance": {
@@ -6094,13 +6091,11 @@
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.1061,
-          "dispersion_adjustment": -0.0144,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1798,
-          "missing": [],
-          "model_score_normalised": 3.1061,
-          "state": "recorded"
+          "centre_pct": null,
+          "missing": [
+            "timing_quality"
+          ],
+          "state": "not_recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -7251,7 +7246,6 @@
       {
         "abs": {
           "blend": "group_only",
-          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 234,
           "high80_pct": 11.1926,
@@ -7263,13 +7257,13 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 3.8841,
+            "0.5": 4.0683,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 3.8841
+          "typical_pct": 4.0683
         },
         "date": "2026-11-12",
         "exceedance": {
@@ -7279,13 +7273,11 @@
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.8841,
-          "dispersion_adjustment": -0.0139,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1732,
-          "missing": [],
-          "model_score_normalised": 3.8841,
-          "state": "recorded"
+          "centre_pct": null,
+          "missing": [
+            "timing_quality"
+          ],
+          "state": "not_recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -7447,7 +7439,7 @@
         "tier_label": "Mid-sized companies (on the mid-sized list)"
       }
     ],
-    "new_rows_today": 36,
+    "new_rows_today": 2,
     "signed_horizon_close": "2026-11-19"
   },
   "panel_last_session": "2026-11-11",
@@ -7471,10 +7463,10 @@
   "record_surface": {
     "calibration_record": {
       "attestation": {
-        "basis": "848 graded forecasts of 2533 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 2533,
+        "basis": "848 graded forecasts of 2569 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 2569,
         "graded_forecasts": 848,
-        "ledger_rows_at_write": 361135,
+        "ledger_rows_at_write": 373943,
         "recorded_on": "2026-11-11",
         "status": "not_attested"
       },
@@ -7495,7 +7487,6 @@
         "decision_as_of",
         "exceedance",
         "execution_pricing",
-        "explanation",
         "fe04_fair_gap_remainder",
         "fe17_centre",
         "fe18_pead",
@@ -7514,12 +7505,10 @@
         "past_record",
         "price_basis",
         "provenance",
-        "record_surface",
         "rest",
         "self_test",
         "source",
         "state",
-        "subject_chart",
         "thin_rule",
         "tiers",
         "tool"
@@ -7530,12 +7519,12 @@
     "live_accrual": {
       "corrections": 0,
       "engine": "engine_12",
-      "forecasts": 2569,
+      "forecasts": 2571,
       "grades": 848,
       "source": "forecast/ledger.jsonl (counted)"
     },
     "missing": {
-      "what_and_when": "More live grades are still to come: 2569 forecasts are on record and 848 are graded so far. The rest arrive after each following session close."
+      "what_and_when": "More live grades are still to come: 2571 forecasts are on record and 848 are graded so far. The rest arrive after each following session close."
     },
     "provenance": {
       "execution_pricing": false,
@@ -7568,7 +7557,7 @@
     "version": 1
   },
   "rest": {
-    "count": 199,
+    "count": 201,
     "names": [
       {
         "abs": {
@@ -8449,7 +8438,8 @@
         "fe17_centre": {
           "centre_pct": null,
           "missing": [
-            "forecast_error_dispersion_z"
+            "forecast_error_dispersion_z",
+            "timing_quality"
           ],
           "state": "not_recorded"
         },
@@ -15036,62 +15026,6 @@
         "abs": {
           "blend": "group_only",
           "conditioner_applied": false,
-          "group_events": 73,
-          "high80_pct": 8.052,
-          "low80_pct": 0.1873,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.1873,
-            "0.2": 0.5233,
-            "0.3": 0.9243,
-            "0.4": 1.6872,
-            "0.5": 2.137,
-            "0.6": 2.8436,
-            "0.7": 3.6399,
-            "0.8": 4.4204,
-            "0.9": 8.052
-          },
-          "typical_pct": 2.137
-        },
-        "date": "2026-12-01",
-        "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": null,
-        "signed": {
-          "group_events": 9,
-          "own_events": 0,
-          "reason": "its group holds only 9 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "UNFI",
-        "tier": "sp600",
-        "tier_label": "Smaller companies (on the smaller-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "conditioner_applied": false,
           "group_events": 234,
           "high80_pct": 11.1926,
           "low80_pct": 0.4304,
@@ -17844,6 +17778,62 @@
         "abs": {
           "blend": "group_only",
           "conditioner_applied": false,
+          "group_events": 73,
+          "high80_pct": 8.052,
+          "low80_pct": 0.1873,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.1873,
+            "0.2": 0.5233,
+            "0.3": 0.9243,
+            "0.4": 1.6872,
+            "0.5": 2.137,
+            "0.6": 2.8436,
+            "0.7": 3.6399,
+            "0.8": 4.4204,
+            "0.9": 8.052
+          },
+          "typical_pct": 2.137
+        },
+        "date": "2026-12-08",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "group_events": 9,
+          "own_events": 0,
+          "reason": "its group holds only 9 past moves for this part; 30 are needed",
+          "state": "not_recorded"
+        },
+        "symbol": "UNFI",
+        "tier": "sp600",
+        "tier_label": "Smaller companies (on the smaller-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
           "low80_pct": 0.4093,
@@ -18164,77 +18154,6 @@
         "symbol": "ORCL",
         "tier": "sp500",
         "tier_label": "Largest companies (on the largest-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 234,
-          "high80_pct": 11.1926,
-          "low80_pct": 0.4304,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4304,
-            "0.2": 1.2821,
-            "0.3": 2.0598,
-            "0.4": 2.9956,
-            "0.5": 4.0683,
-            "0.6": 5.1424,
-            "0.7": 6.6667,
-            "0.8": 8.0614,
-            "0.9": 11.1926
-          },
-          "typical_pct": 4.0683
-        },
-        "date": "2026-12-09",
-        "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": null,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 227,
-          "high80_pct": 21.8659,
-          "low80_pct": -19.188,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -19.188,
-            "0.2": -11.2333,
-            "0.3": -8.0442,
-            "0.4": -4.2157,
-            "0.5": 0.0,
-            "0.6": 3.7512,
-            "0.7": 9.4627,
-            "0.8": 15.7784,
-            "0.9": 21.8659
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "PL",
-        "tier": "untagged",
-        "tier_label": "Not on any of the size lists"
       },
       {
         "abs": {
@@ -18688,6 +18607,77 @@
         "symbol": "NX",
         "tier": "sp600",
         "tier_label": "Smaller companies (on the smaller-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 234,
+          "high80_pct": 11.1926,
+          "low80_pct": 0.4304,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.4304,
+            "0.2": 1.2821,
+            "0.3": 2.0598,
+            "0.4": 2.9956,
+            "0.5": 4.0683,
+            "0.6": 5.1424,
+            "0.7": 6.6667,
+            "0.8": 8.0614,
+            "0.9": 11.1926
+          },
+          "typical_pct": 4.0683
+        },
+        "date": "2026-12-10",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 227,
+          "high80_pct": 21.8659,
+          "low80_pct": -19.188,
+          "own_events": 0,
+          "state": "computed",
+          "steps_pct": {
+            "0.1": -19.188,
+            "0.2": -11.2333,
+            "0.3": -8.0442,
+            "0.4": -4.2157,
+            "0.5": 0.0,
+            "0.6": 3.7512,
+            "0.7": 9.4627,
+            "0.8": 15.7784,
+            "0.9": 21.8659
+          },
+          "typical_pct": 0.0
+        },
+        "symbol": "PL",
+        "tier": "untagged",
+        "tier_label": "Not on any of the size lists"
       },
       {
         "abs": {
@@ -20679,6 +20669,120 @@
           "state": "not_recorded"
         },
         "symbol": "WGO",
+        "tier": "sp600",
+        "tier_label": "Smaller companies (on the smaller-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 73,
+          "high80_pct": 8.052,
+          "low80_pct": 0.1873,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.1873,
+            "0.2": 0.5233,
+            "0.3": 0.9243,
+            "0.4": 1.6872,
+            "0.5": 2.137,
+            "0.6": 2.8436,
+            "0.7": 3.6399,
+            "0.8": 4.4204,
+            "0.9": 8.052
+          },
+          "typical_pct": 2.137
+        },
+        "date": "2027-01-05",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move",
+            "timing_quality"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "group_events": 9,
+          "own_events": 0,
+          "reason": "its group holds only 9 past moves for this part; 30 are needed",
+          "state": "not_recorded"
+        },
+        "symbol": "AIR",
+        "tier": "sp600",
+        "tier_label": "Smaller companies (on the smaller-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 73,
+          "high80_pct": 8.052,
+          "low80_pct": 0.1873,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.1873,
+            "0.2": 0.5233,
+            "0.3": 0.9243,
+            "0.4": 1.6872,
+            "0.5": 2.137,
+            "0.6": 2.8436,
+            "0.7": 3.6399,
+            "0.8": 4.4204,
+            "0.9": 8.052
+          },
+          "typical_pct": 2.137
+        },
+        "date": "2027-01-05",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move",
+            "timing_quality"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "group_events": 9,
+          "own_events": 0,
+          "reason": "its group holds only 9 past moves for this part; 30 are needed",
+          "state": "not_recorded"
+        },
+        "symbol": "PENG",
         "tier": "sp600",
         "tier_label": "Smaller companies (on the smaller-company list)"
       }
