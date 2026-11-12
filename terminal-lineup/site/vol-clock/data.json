@@ -2,11 +2,11 @@
   "as_of_session": "2026-11-11",
   "calibration_attestation": {
     "attestation": {
-      "basis": "no graded forecasts on record yet (715 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-      "forecasts_recorded": 715,
+      "basis": "no graded forecasts on record yet (755 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 755,
       "graded_forecasts": 0,
-      "ledger_rows_at_write": 373943,
-      "recorded_on": "2026-11-11",
+      "ledger_rows_at_write": 376930,
+      "recorded_on": "2026-11-12",
       "status": "not_attested"
     },
     "engine_id": "engine_14",
@@ -22,6 +22,10 @@
     "median": "The middle figure beats the stock's own plain middle settling time by at least 20 percent in average error."
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: timing and distribution, over normalisation within up to 63 sessions (censor). It is graded on a loss score on each of its stated percentile lines, where lower is better. It would be ended if after 200 matured forecasts, coverage error exceeds 10 points or MAE does not beat the baseline. It counts as proven at 200 matured forecasts.",
+    "summary": "When a stock's recent moves suddenly get much bigger than that stock's own usual moves, say how many trading days it is likely to take for its moves to settle back to its own usual size."
+  },
   "feed": "forecast_ledger",
   "history": {
     "abstained": 908,
@@ -1565,8 +1569,216 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (755 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 755,
+        "graded_forecasts": 0,
+        "ledger_rows_at_write": 376930,
+        "recorded_on": "2026-11-12",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_14",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-11-11",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "claims",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "history",
+        "kill_criterion",
+        "live",
+        "loaded_at_utc",
+        "next_session",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_cell_rule",
+        "tool",
+        "window_note"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_14",
+      "forecasts": 781,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 781 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 0,
+          "path": "/history"
+        },
+        {
+          "items": 0,
+          "path": "/history/source_counts"
+        },
+        {
+          "items": 0,
+          "path": "/history/study_record"
+        }
+      ],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
   "source": "Daily closing prices from the price history on record (1,833 names, at most 412 trading days each, March 25, 2025 to November 11, 2026).",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Median sessions to settle, per name.",
+      "rows": [
+        {
+          "coverage": "move 39.0 percent",
+          "name": "ADM",
+          "score": 10.0
+        },
+        {
+          "coverage": "move 47.8 percent",
+          "name": "AMZN",
+          "score": 13.0
+        },
+        {
+          "coverage": "move 63.2 percent",
+          "name": "APA",
+          "score": 9.0
+        },
+        {
+          "coverage": "move 124.3 percent",
+          "name": "ARM",
+          "score": 13.0
+        },
+        {
+          "coverage": "move 204.9 percent",
+          "name": "AXTI",
+          "score": 18.5
+        },
+        {
+          "coverage": "move 124.7 percent",
+          "name": "AZTA",
+          "score": 15.0
+        },
+        {
+          "coverage": "move 27.5 percent",
+          "name": "BNY",
+          "score": 11.0
+        },
+        {
+          "coverage": "move 41.6 percent",
+          "name": "COP",
+          "score": 12.5
+        },
+        {
+          "coverage": "move 83.9 percent",
+          "name": "COTY",
+          "score": 15.0
+        },
+        {
+          "coverage": "move 71.0 percent",
+          "name": "CRGY",
+          "score": 11.0
+        },
+        {
+          "coverage": "move 169.5 percent",
+          "name": "CRWV",
+          "score": 13.0
+        },
+        {
+          "coverage": "move 54.9 percent",
+          "name": "CTRA",
+          "score": 14.0
+        }
+      ],
+      "source": "live.names[].median_sessions",
+      "title": "Days for the spike to settle, per name"
+    },
+    "record": {
+      "kind": "ranked",
+      "label": "Movement percent per name in the live library.",
+      "rows": [
+        {
+          "name": "ADM",
+          "score": 39.0
+        },
+        {
+          "name": "AMZN",
+          "score": 47.8
+        },
+        {
+          "name": "APA",
+          "score": 63.2
+        },
+        {
+          "name": "ARM",
+          "score": 124.3
+        },
+        {
+          "name": "AXTI",
+          "score": 204.9
+        },
+        {
+          "name": "AZTA",
+          "score": 124.7
+        },
+        {
+          "name": "BNY",
+          "score": 27.5
+        },
+        {
+          "name": "COP",
+          "score": 41.6
+        },
+        {
+          "name": "COTY",
+          "score": 83.9
+        },
+        {
+          "name": "CRGY",
+          "score": 71.0
+        },
+        {
+          "name": "CRWV",
+          "score": 169.5
+        },
+        {
+          "name": "CTRA",
+          "score": 54.9
+        }
+      ],
+      "source": "live.names[].movement_pct",
+      "title": "Spike size on record, per name"
+    },
+    "version": 1
+  },
   "thin_cell_rule": "Any graded group with fewer than 30 graded cases shows its count only, with no percentage and no error figure.",
   "tool": "Own-Volatility Normalisation Clock",
   "window_note": "The original design judges each stock against three years of its own past. Only about nineteen months of daily history is on record here, so this clock judges each stock against all of its own past that exists, once at least six months of its own readings exist. Stocks without six months of readings are left out and counted."
