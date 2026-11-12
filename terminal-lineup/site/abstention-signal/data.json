@@ -58,7 +58,7 @@
       "basis": "4 graded forecasts of 8 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
       "forecasts_recorded": 8,
       "graded_forecasts": 4,
-      "ledger_rows_at_write": 376930,
+      "ledger_rows_at_write": 380809,
       "recorded_on": "2026-11-12",
       "status": "not_attested"
     },
@@ -203,10 +203,6 @@
     }
   ],
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: probability, over 21 sessions (secondary 5). It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 80 graded days, its probability adds no Brier improvement over the VIX-only control. It counts as proven at 80 graded days.",
-    "summary": "Forecast whether SPY's next three weeks will move more than its own recent typical movement, from how many of this site's tools stayed silent that day."
-  },
   "feed": "forecast_ledger",
   "grading_words": "Grading compares three scores on the same days: this page's silence chance, the fear-gauge-only chance, and the plain overall rate. A split of the record, before and after any change to the list of tools above or to any test, is graded on its own days.",
   "idea": "When the tools on this site mostly stay silent on the same days, the next three weeks in the market tend to be rougher than usual. That is the claim, and this page stakes a number on it: each day the record reaches, it writes down the chance that SPY's movement over the next 21 trading days will be bigger than its own recent typical movement. Beside it, every day, sits the same chance built from the market's fear gauge alone, so the silence has to beat the fear gauge, not just sound clever.",
@@ -216,25 +212,25 @@
     "days_recorded": 4,
     "forecasts_graded": 4,
     "forecasts_recorded": 8,
-    "forecasts_voided": 14,
+    "forecasts_voided": 16,
     "graded_primary": 0,
     "target": 80,
     "words": "Every chance is written down before its three weeks open, and graded when they close. A day counts toward the 80 that decide this tool only when its 21 trading days can be measured from the price record. The three-week windows overlap each other, and they are counted as the days they were written on, with the overlap stated rather than hidden."
   },
-  "loaded_at_utc": "2026-11-12T01:02:37.795430+00:00",
+  "loaded_at_utc": "2026-11-12T23:06:14.445370+00:00",
   "outcome_history": {
-    "base_rate_pct": 42.3,
-    "control_fitted_days": 17,
-    "days": 307,
-    "exceedances": 130,
+    "base_rate_pct": 42.5,
+    "control_fitted_days": 18,
+    "days": 308,
+    "exceedances": 131,
     "label": "History, not live forecasts",
-    "latest_completed_pct": 21.85,
+    "latest_completed_pct": 21.56,
     "panel_end_median_pct": 10.11,
-    "secondary_base_rate_pct": 49.6,
-    "secondary_days": 339,
-    "span_end": "2026-10-13",
+    "secondary_base_rate_pct": 49.7,
+    "secondary_days": 340,
+    "span_end": "2026-10-14",
     "span_start": "2025-07-25",
-    "words": "Worked out day by day over SPY's price history on record: on 307 past days both the recent typical movement and the following 21 days' movement can be measured, and on 130 of them (42.3%) the following movement was the bigger one. (The first 294 of those days are the registered study prefix, with 124 exceedances; later days are new history the extended panel adds.) That rate is the plain overall rate both of today's chances start from. The fear gauge alone could be fitted on only 17 of those days (its record on file is 23 days long and ends on October 21, 2026), and on the first 4 the following movement was not the bigger one: far too few to build a fear-gauge-only chance from, which is why the control also starts at the plain rate and is marked as thin until 30 fitted days exist."
+    "words": "Worked out day by day over SPY's price history on record: on 308 past days both the recent typical movement and the following 21 days' movement can be measured, and on 131 of them (42.5%) the following movement was the bigger one. (The first 294 of those days are the registered study prefix, with 124 exceedances; later days are new history the extended panel adds.) That rate is the plain overall rate both of today's chances start from. The fear gauge alone could be fitted on only 18 of those days (its record on file is 23 days long and ends on October 21, 2026), and on the first 4 the following movement was not the bigger one: far too few to build a fear-gauge-only chance from, which is why the control also starts at the plain rate and is marked as thin until 30 fitted days exist."
   },
   "price_basis": "close",
   "provenance": {
@@ -244,132 +240,8 @@
     "stamped_by": "terminal_common.stamp_provenance"
   },
   "record_reaches": "2026-11-03",
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "4 graded forecasts of 8 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 8,
-        "graded_forecasts": 4,
-        "ledger_rows_at_write": 376930,
-        "recorded_on": "2026-11-12",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_30",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-03",
-      "keys_present": [
-        "as_of_session",
-        "book",
-        "calibration_attestation",
-        "decision_days",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "grading_words",
-        "idea",
-        "kill_criterion",
-        "live",
-        "loaded_at_utc",
-        "outcome_history",
-        "price_basis",
-        "provenance",
-        "record_reaches",
-        "record_surface",
-        "source",
-        "state",
-        "subject_chart",
-        "thin_cell_rule",
-        "today",
-        "tool"
-      ]
-    },
-    "feed": "forecast_ledger",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_30",
-      "forecasts": 22,
-      "grades": 4,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "More live grades are still to come: 22 forecasts are on record and 4 are graded so far. The rest arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "forecast_ledger",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 9,
-          "path": "/decision_days"
-        }
-      ],
-      "total_items_counted": 9
-    },
-    "version": 1
-  },
   "source": "The tools' own published records (the Router's session record of October 16, 2026; the Board's day of October 28, 2026; the Expected Move Map through October 23, 2026; the Second Opinion's day of October 28, 2026; the Golden Sweep Wire's four recorded days; the Intake-Bias Reversal's tape sessions through October 29, 2026), SPY's daily closing prices on record (403 trading days, March 25, 2025 to October 29, 2026), and the fear gauge's daily closes on record (23 days, September 21 to October 21, 2026).",
   "state": "proving",
-  "subject_chart": {
-    "lead": null,
-    "record": {
-      "kind": "curve",
-      "label": "The share of active tools abstaining, per decision day on record.",
-      "points": [
-        {
-          "x": "2026-10-16",
-          "y": 100.0
-        },
-        {
-          "x": "2026-10-23",
-          "y": 0.0
-        },
-        {
-          "x": "2026-10-26",
-          "y": 0.0
-        },
-        {
-          "x": "2026-10-27",
-          "y": 100.0
-        },
-        {
-          "x": "2026-10-28",
-          "y": 100.0
-        },
-        {
-          "x": "2026-10-29",
-          "y": 0.0
-        },
-        {
-          "x": "2026-10-30",
-          "y": 100.0
-        },
-        {
-          "x": "2026-11-02",
-          "y": 100.0
-        },
-        {
-          "x": "2026-11-03",
-          "y": 33.33
-        }
-      ],
-      "source": "decision_days[].rate",
-      "title": "Silence on record: abstention rate by day"
-    },
-    "version": 1
-  },
   "thin_cell_rule": "Thin record rule: any part of the record with fewer than 30 graded days is shown as a count, never as a score. A handful of days proves nothing here, in either direction.",
   "today": {
     "abstained": [
@@ -380,16 +252,16 @@
       "Second Opinion",
       "Intake-Bias Reversal"
     ],
-    "base_rate_pct": 42.3,
+    "base_rate_pct": 42.5,
     "day": "2026-11-03",
     "defect_tagged": 1,
     "horizon_close_21": "2026-12-02",
     "horizon_close_5": "2026-11-10",
     "horizon_open": "2026-11-04",
     "independent_abstainers": 1,
-    "p_control": 0.4235,
+    "p_control": 0.4253,
     "p_control_form": "plain overall rate (too few fitted days for the fear-gauge-only reading)",
-    "p_main": 0.4235,
+    "p_main": 0.4253,
     "p_main_form": "plain overall rate (the silence reading is not yet available)",
     "percentile": null,
     "rate": 0.3333,
