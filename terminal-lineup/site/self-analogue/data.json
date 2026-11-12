@@ -21,6 +21,10 @@
   "coverage_rule": "Coverage is counted across all graded forecasts together and again stock by stock. Any group with fewer than 30 graded forecasts shows its count only, with no percentage headline.",
   "dropped_reading": "One reading the original design named is left out: how expensive the stock's options say its future swings will be. That record stopped on October 14, 2026, with 60 names carrying at most 12 readings each, far too little to score a stock against its own past, so the state is built from the four price readings only and this page says so rather than filling the gap in.",
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution, over 21 sessions. It is graded on a loss score on each of its stated percentile lines, where lower is better. It would be ended if pooled coverage error over 10 points after 200 forecasts. It counts as proven at 200 forecasts (pooled); per-name suspension at 100 forecasts.",
+    "summary": "Forecast a stock's next 21 trading days from the times that same stock was last in the state it is in now."
+  },
   "family_note": "This forecast is built from prices alone, one kind of evidence. Where other tools agree with it, that agreement counts once alongside the other price-based forecast engines, never as separate confirmations.",
   "feed": "forecast_ledger",
   "forecast_explained": "For each stock, today is described by four readings of that stock's own past: where its price sits, how much it has been trading, how it has been opening, and how far it has fallen measured against how widely it usually swings. Each reading is scored against that stock's own earlier readings only. The engine then finds the past days whose scores sit closest to today's, the nearest one-sixth of them, and looks at what the stock did over the 21 trading days that followed each of those days. The low figure is the point only 1 in 10 of those follow-ups fell below, the middle figure is the halfway follow-up, and the high figure is the point only 1 in 10 rose above.",
@@ -73209,6 +73213,76 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (81108 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 81108,
+        "graded_forecasts": 0,
+        "ledger_rows_at_write": 373943,
+        "recorded_on": "2026-11-11",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_15",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-11-11",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "claim",
+        "coverage_rule",
+        "dropped_reading",
+        "execution_pricing",
+        "family_note",
+        "feed",
+        "forecast_explained",
+        "kill_criterion",
+        "live",
+        "loaded_at_utc",
+        "panel_reader",
+        "price_basis",
+        "provenance",
+        "self_test",
+        "source",
+        "state",
+        "suspension_rule",
+        "thin_cell_rule",
+        "tool",
+        "waiting"
+      ]
+    },
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_15",
+      "forecasts": 83063,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 83063 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
+    },
+    "version": 1
+  },
   "self_test": {
     "band_percent": {
       "high": 11.73,
@@ -73225,6 +73299,133 @@
   },
   "source": "The daily price history this programme reads from: 15815 names, 2015-01-02 to 2026-11-11, at most 2983 trading days for any one name, checked for this page. Source file: deep_bars.json.",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Middle forecast percent per name.",
+      "rows": [
+        {
+          "coverage": "range -98.7 to 6.81 percent",
+          "name": "CTNT",
+          "score": -98.43
+        },
+        {
+          "coverage": "range -91.29 to -86.79 percent",
+          "name": "HUBC",
+          "score": -89.39
+        },
+        {
+          "coverage": "range -76.59 to -20.09 percent",
+          "name": "GMEX",
+          "score": -63.98
+        },
+        {
+          "coverage": "range -79.19 to 2.67 percent",
+          "name": "SMX",
+          "score": -58.71
+        },
+        {
+          "coverage": "range -79.28 to -33.04 percent",
+          "name": "VCIG",
+          "score": -58.61
+        },
+        {
+          "coverage": "range -69.11 to -10.63 percent",
+          "name": "LGHL",
+          "score": -57.36
+        },
+        {
+          "coverage": "range -70.98 to 6.56 percent",
+          "name": "IPW",
+          "score": -55.38
+        },
+        {
+          "coverage": "range -52.99 to -52.99 percent",
+          "name": "OILX",
+          "score": -52.99
+        },
+        {
+          "coverage": "range -96.37 to 12.09 percent",
+          "name": "GNLN",
+          "score": -47.11
+        },
+        {
+          "coverage": "range -75.16 to 4.35 percent",
+          "name": "DBGI",
+          "score": -47.05
+        },
+        {
+          "coverage": "range -52.76 to -18.58 percent",
+          "name": "NIVF",
+          "score": -45.13
+        },
+        {
+          "coverage": "range -80.64 to -12.29 percent",
+          "name": "HCTI",
+          "score": -43.82
+        }
+      ],
+      "source": "live.forecasts[].middle_percent",
+      "title": "Forecast middle percent, biggest moves first"
+    },
+    "record": {
+      "items": [
+        {
+          "high": 6.81,
+          "label": "CTNT",
+          "low": -98.7,
+          "mid": -98.43
+        },
+        {
+          "high": -86.79,
+          "label": "HUBC",
+          "low": -91.29,
+          "mid": -89.39
+        },
+        {
+          "high": -20.09,
+          "label": "GMEX",
+          "low": -76.59,
+          "mid": -63.98
+        },
+        {
+          "high": 2.67,
+          "label": "SMX",
+          "low": -79.19,
+          "mid": -58.71
+        },
+        {
+          "high": -33.04,
+          "label": "VCIG",
+          "low": -79.28,
+          "mid": -58.61
+        },
+        {
+          "high": -10.63,
+          "label": "LGHL",
+          "low": -69.11,
+          "mid": -57.36
+        },
+        {
+          "high": 6.56,
+          "label": "IPW",
+          "low": -70.98,
+          "mid": -55.38
+        },
+        {
+          "high": -52.99,
+          "label": "OILX",
+          "low": -52.99,
+          "mid": -52.99
+        }
+      ],
+      "kind": "band",
+      "label": "Low to high forecast percent per name.",
+      "source": "live.forecasts[].low/high_percent",
+      "title": "Forecast ranges on record"
+    },
+    "version": 1
+  },
   "suspension_rule": "If one stock's real returns land inside its published range at a rate more than 15 points away from the stated 80 percent across 100 of that stock's own graded forecasts, that stock is suspended: it stops receiving forecasts, and the suspension is published here, never done quietly.",
   "thin_cell_rule": "Any group with fewer than 30 graded forecasts shows its count only, with no percentage headline.",
   "tool": "Per-Name Self-Analogue",
