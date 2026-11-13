@@ -704,6 +704,42 @@ def _exceedance_page_block(chain_snapshots):
                        "not_recorded, named per name.")}
 
 
+def published_move_verdict(published_move, entry, report_date,
+                           record_updated_date):
+    """Verdict for one priced move on the published calendar
+    (cure PRICED-MOVES-ACCRUAL-20261113). "matches": the priced
+    move record (the raw source) recounts it exactly: same name,
+    same report date, same formatted figure. "rotated": the
+    record carries no such entry, but the name's report date
+    predates the record's own rebuild date, so the entry the
+    calendar priced from rotated out when the name reported
+    (the pre-cure record held only the forward window; ADIG's
+    27.6 percent for 2026-11-12 against the record rebuilt
+    2026-11-13 is the case of record): the figure is refused
+    honestly, named in this leg's output, and never used, but
+    the run does not fail on a source the producer itself
+    destroyed. "unsourced": anything else: a published priced
+    move with no raw source, which must never stand, and the
+    leg fails closed on it as before."""
+    expect = None
+    if isinstance(entry, dict) \
+            and entry.get("report_date") == report_date \
+            and isinstance(entry.get("priced_move_pct"),
+                           (int, float)) \
+            and not isinstance(entry.get("priced_move_pct"), bool):
+        expect = f"{entry['priced_move_pct']:.1f}%"
+    if expect is not None and published_move == expect:
+        return "matches"
+    if expect is None and record_updated_date \
+            and report_date < record_updated_date \
+            and (entry is None
+                 or (isinstance(entry, dict)
+                     and (entry.get("report_date") or "")
+                     > report_date)):
+        return "rotated"
+    return "unsourced"
+
+
 def _exceedance_for(sym, tier, priced_pct, events):
     """Bigger than priced chance from a real priced move: the
     share of the name's group pool past moves (the same pool
@@ -882,24 +918,33 @@ def build():
     if set(pub) != set(raw_dated):
         return fail("the published calendar's names disagree "
                     "with the raw records' dated names")
+    rotated_moves = []
+    _pm_doc = priced_moves()
+    _pm_updated = (_pm_doc.get("updated_ts") or "")[:10]
     for sym, d in raw_dated.items():
         if pub[sym]["date"] != d:
             return fail(f"the published calendar's date for {sym} "
                         "disagrees with the raw record")
         if pub[sym].get("expected_move") is not None:
-            # A published move is allowed only when it recounts
-            # exactly from the priced move record (the raw source):
-            # same name, same report date, same formatted figure.
-            entry = priced_moves().get("names", {}).get(sym)
-            expect = None
-            if isinstance(entry, dict) \
-                    and entry.get("report_date") == d \
-                    and isinstance(entry.get("priced_move_pct"),
-                                   (int, float)) \
-                    and not isinstance(entry.get("priced_move_pct"),
-                                       bool):
-                expect = f"{entry['priced_move_pct']:.1f}%"
-            if expect is None or pub[sym]["expected_move"] != expect:
+            # A published move stands only when it recounts
+            # exactly from the priced move record (the raw
+            # source): same name, same report date, same
+            # formatted figure. A move whose raw entry rotated
+            # out of the record when the name reported (the
+            # record's pre-cure forward-window overwrite; cure
+            # PRICED-MOVES-ACCRUAL-20261113) is refused honestly
+            # instead: named in this leg's output below, never
+            # used by any figure here, and the run does not fail
+            # on a source the producer itself destroyed. Any
+            # other unrecountable move fails closed as before.
+            entry = _pm_doc.get("names", {}).get(sym)
+            verdict = published_move_verdict(
+                pub[sym]["expected_move"], entry, d, _pm_updated)
+            if verdict == "rotated":
+                rotated_moves.append({
+                    "symbol": sym, "date": d,
+                    "published_move": pub[sym]["expected_move"]})
+            elif verdict != "matches":
                 return fail(f"a priced move appeared for {sym} in "
                             "the published calendar without a raw "
                             "source")
@@ -1407,6 +1452,19 @@ def build():
             "no_date_names": raw_undated,
             "priced_moves_on_record": priced_moves().get(
                 "priced_moves_on_record", 0),
+            "priced_moves_without_surviving_raw_source":
+                rotated_moves,
+            "priced_moves_without_surviving_raw_source_note": (
+                "These names carry a priced move on the published "
+                "calendar whose raw entry rotated out of the "
+                "priced move record when the name reported (the "
+                "record's forward-window overwrite, cured by "
+                "accrual retention in priced_moves.py, "
+                "PRICED-MOVES-ACCRUAL-20261113). The figures are "
+                "named here, are not used by any figure on this "
+                "page, and leave the calendar at its next "
+                "republication, which recounts its moves from "
+                "the record as it now stands."),
             "chain_snapshots": chain_snapshots,
             "stale_note": ("The calendar was gathered on "
                            "October 12, 2026 and is out of date "
