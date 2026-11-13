@@ -109,6 +109,14 @@ def resync_panel():
             return 1
     changed = 0
     for sym, row in record["names"].items():
+        if row.get("retained_from_prior_run"):
+            # Retained entries (cure PRICED-MOVES-ACCRUAL-
+            # 20261113) are raw sources for reports already
+            # priced: their spot and figures stay exactly as
+            # priced at capture, never re-derived from a later
+            # panel. The control pass above still verifies them
+            # at their stored spot.
+            continue
         last = panel[sym][-1]
         if row["spot_session"] == last[0] and \
                 row["spot"] == float(last[4]):
@@ -138,6 +146,32 @@ def resync_panel():
     print(f"priced_moves resync: {changed} names re-derived from "
           f"the panel, {len(record['names'])} on record")
     return 0
+
+
+def merge_retained(names, prior_names, upcoming, today_iso):
+    """Accrual merge (cure PRICED-MOVES-ACCRUAL-20261113, see
+    main): carry prior entries this run did not price into the
+    new record, marked retained_from_prior_run. Returns
+    (names, retained_count). An entry is dropped only when it
+    is superseded (the calendar now carries a different date
+    for the name) or when it left the window still unreported
+    (a future date the calendar no longer prices)."""
+    retained = 0
+    for sym, entry in prior_names.items():
+        if sym in names or not isinstance(entry, dict):
+            continue
+        old_date = entry.get("report_date")
+        if upcoming.get(sym) is not None \
+                and old_date != upcoming[sym]:
+            continue  # re-dated future report: superseded
+        if upcoming.get(sym) is None and old_date is not None \
+                and old_date >= today_iso:
+            continue  # left the window unreported: not a source
+        entry = dict(entry)
+        entry["retained_from_prior_run"] = True
+        names[sym] = entry
+        retained += 1
+    return names, retained
 
 
 def main(argv):
@@ -245,6 +279,35 @@ def main(argv):
             }
         except Exception as exc:  # noqa: BLE001 - named per name
             missing.append({"symbol": sym, "error": str(exc)[:160]})
+    # Accrual retention (cure PRICED-MOVES-ACCRUAL-20261113): the
+    # record used to be overwritten with only the forward window
+    # priced on this run, so the moment a name reported, its raw
+    # quotes (the only raw source for the priced move the
+    # calendar had already published for it) rotated out of the
+    # record and every consumer recounting that published move
+    # failed closed on a missing source (ADIG, published at
+    # 27.6 percent for 2026-11-12, absent from the record rebuilt
+    # 2026-11-13T00:14Z; the 2026-11-12 tools run's
+    # earnings-distribution leg failed on exactly that). Entries
+    # now accrue: an existing entry is carried forward, marked
+    # retained, when this run did not price the name for the
+    # calendar's current date for it: past reports keep their raw
+    # source, and a same-date entry whose re-pricing failed keeps
+    # its earlier pricing rather than vanishing. An entry whose
+    # report date the calendar no longer carries for that name
+    # (a re-dated future report) is dropped, never published:
+    # consumers match on report date, so a superseded date could
+    # only confuse the recount.
+    retained = 0
+    if os.path.exists(OUT_PATH):
+        try:
+            with open(OUT_PATH, encoding="utf-8") as fh:
+                prior = json.load(fh)
+        except (OSError, ValueError):
+            prior = {}
+        names, retained = merge_retained(
+            names, prior.get("names") or {}, upcoming,
+            captured.date().isoformat())
     record = {
         "updated_ts": captured.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "source": ("Alpaca options contracts and indicative "
@@ -254,6 +317,7 @@ def main(argv):
         "window_days": days,
         "names_dated_in_window": len(upcoming),
         "priced_moves_on_record": len(names),
+        "retained_from_prior_run": retained,
         "missing": missing,
         "names": names,
     }
