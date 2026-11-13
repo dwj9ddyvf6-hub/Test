@@ -1,5 +1,5 @@
 {
-  "as_of_session": "2026-11-11",
+  "as_of_session": "2026-11-12",
   "calibration_attestation": {
     "attestation": {
       "basis": "46 graded forecasts of 787 recorded on the ledger (mean scores: brier 0.2426, log_loss 0.6783); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
@@ -30,51 +30,51 @@
   "feed": "forecast_ledger",
   "gate_words": "The same heavy trading on a rising stock is treated by an older finding as a warning sign, not a buying sign. So this tool only ever fires on a stock that is already in a fall of its own, and never on a stock that is rising.",
   "history": {
-    "distinct_names": 1462,
-    "episodes": 4291,
+    "distinct_names": 1463,
+    "episodes": 4303,
     "exhaustion_half": {
       "claim_met": false,
       "claim_pct": 60,
-      "episodes": 4291,
+      "episodes": 4303,
       "falsified": false,
-      "graded": 4047,
-      "pending": 244,
+      "graded": 4103,
+      "pending": 200,
       "share_ci95_pct": [
-        55.5,
-        58.6
+        55.9,
+        58.9
       ],
-      "share_pct": 57.1,
-      "successes": 2310
+      "share_pct": 57.4,
+      "successes": 2354
     },
     "label": "History, not live forecasts",
-    "raw_triggers": 7400,
+    "raw_triggers": 7432,
     "return_half": {
       "claim_met": false,
       "claim_points": 1.0,
-      "episodes": 4291,
+      "episodes": 4303,
       "falsified": false,
-      "graded": 3686,
+      "graded": 3708,
       "median_ci95_points": [
-        -0.07,
-        0.59
+        -0.13,
+        0.58
       ],
-      "median_points": 0.28,
-      "pending": 605
+      "median_points": 0.24,
+      "pending": 595
     },
-    "span": "2026-01-09 to 2026-11-11",
-    "suppressed_repeats": 3109,
-    "warmup_note": "Judging a day against a stock's own past needs 200 of its past trading days first, so the first judgeable day is a stock's 201st trading day on record (January 9, 2026 for stocks with a full record) and 13 stocks have too little history to be judged at all. On 212 stock-days the falling-day record was still too short (fewer than 30 past falling days), so those days were set aside and counted. Every stock in this history still trades today; stocks that stopped trading are not in it, which can flatter the numbers."
+    "span": "2026-01-09 to 2026-11-12",
+    "suppressed_repeats": 3129,
+    "warmup_note": "Judging a day against a stock's own past needs 200 of its past trading days first, so the first judgeable day is a stock's 201st trading day on record (January 9, 2026 for stocks with a full record) and 13 stocks have too little history to be judged at all. On 213 stock-days the falling-day record was still too short (fewer than 30 past falling days), so those days were set aside and counted. Every stock in this history still trades today; stocks that stopped trading are not in it, which can flatter the numbers."
   },
   "kill_criterion": "After 200 graded episodes, either half retires on its own if its figures could still plausibly be nothing: for the return half, if the middle gain could still be zero; for the exhaustion half, if the share settling down could still be a coin flip.",
   "live": {
-    "episodes_recorded": 393,
-    "forecasts_recorded": 787,
-    "graded_exhaustion_half": 14,
+    "episodes_recorded": 405,
+    "forecasts_recorded": 811,
+    "graded_exhaustion_half": 46,
     "graded_return_half": 0,
     "note": "Episodes are written down at the close that triggers them, before the days they describe. The return half grades 20 trading days later and the exhaustion half within 10, so the first grades land only after those days pass.",
     "target_episodes": 200
   },
-  "loaded_at_utc": "2026-11-12T01:07:52.065329+00:00",
+  "loaded_at_utc": "2026-11-12T23:16:52.266716+00:00",
   "price_basis": "close",
   "provenance": {
     "execution_pricing": false,
@@ -85,10 +85,10 @@
   "record_surface": {
     "calibration_record": {
       "attestation": {
-        "basis": "14 graded forecasts of 787 recorded on the ledger (mean scores: brier 0.2600, log_loss 0.7136); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "basis": "46 graded forecasts of 787 recorded on the ledger (mean scores: brier 0.2426, log_loss 0.6783); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
         "forecasts_recorded": 787,
-        "graded_forecasts": 14,
-        "ledger_rows_at_write": 376930,
+        "graded_forecasts": 46,
+        "ledger_rows_at_write": 380809,
         "recorded_on": "2026-11-12",
         "status": "not_attested"
       },
@@ -101,13 +101,12 @@
       "zero_forecast_state": null
     },
     "current_reading": {
-      "as_of": "2026-11-11",
+      "as_of": "2026-11-12",
       "keys_present": [
         "as_of_session",
         "calibration_attestation",
         "claims",
         "execution_pricing",
-        "explanation",
         "feed",
         "gate_words",
         "history",
@@ -116,11 +115,9 @@
         "loaded_at_utc",
         "price_basis",
         "provenance",
-        "record_surface",
         "source",
         "state",
         "study_record",
-        "subject_chart",
         "tension_words",
         "thin_cell_rule",
         "today",
@@ -133,12 +130,12 @@
     "live_accrual": {
       "corrections": 0,
       "engine": "engine_16",
-      "forecasts": 787,
-      "grades": 14,
+      "forecasts": 811,
+      "grades": 46,
       "source": "forecast/ledger.jsonl (counted)"
     },
     "missing": {
-      "what_and_when": "More live grades are still to come: 787 forecasts are on record and 14 are graded so far. The rest arrive after each following session close."
+      "what_and_when": "More live grades are still to come: 811 forecasts are on record and 46 are graded so far. The rest arrive after each following session close."
     },
     "provenance": {
       "execution_pricing": false,
@@ -170,7 +167,7 @@
     },
     "version": 1
   },
-  "source": "The daily price and share-volume history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-11, 412 trading days), checked for this page. The longer daily history the parent studies ran on (2016 to 2026) is not on this computer, so the history below runs on the history that exists, which holds only stocks that still trade.",
+  "source": "The daily price and share-volume history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-12, 413 trading days), checked for this page. The longer daily history the parent studies ran on (2016 to 2026) is not on this computer, so the history below runs on the history that exists, which holds only stocks that still trade.",
   "state": "proving",
   "study_record": {
     "f6": "In the long study (2016 to 2026), heavy trading on falling days inside a fall lined up with better days ahead in both stretches of years checked: the link measured +0.040 and +0.020, and the heaviest fifth beat the lightest fifth by 0.95 and 1.28 points.",
@@ -183,34 +180,64 @@
       "label": "Down volume against its line, per triggered name.",
       "rows": [
         {
-          "coverage": "activity 1.41 times its line",
-          "name": "KBR",
-          "score": 1.2
+          "coverage": "activity 1.22 times its line",
+          "name": "BABA",
+          "score": 1.05
         },
         {
-          "coverage": "activity 1.36 times its line",
-          "name": "KWEB",
-          "score": 1.18
+          "coverage": "activity 1.42 times its line",
+          "name": "BXMT",
+          "score": 1.01
         },
         {
-          "coverage": "activity 1.45 times its line",
-          "name": "LWLG",
+          "coverage": "activity 4.98 times its line",
+          "name": "CTRE",
+          "score": 3.95
+        },
+        {
+          "coverage": "activity 2.21 times its line",
+          "name": "ENVX",
+          "score": 1.77
+        },
+        {
+          "coverage": "activity 1.38 times its line",
+          "name": "FCFS",
           "score": 1.16
         },
         {
           "coverage": "activity 1.58 times its line",
-          "name": "MIR",
-          "score": 1.19
+          "name": "FLO",
+          "score": 1.26
         },
         {
-          "coverage": "activity 1.75 times its line",
-          "name": "XYL",
-          "score": 1.44
+          "coverage": "activity 1.87 times its line",
+          "name": "FMC",
+          "score": 1.3
         },
         {
-          "coverage": "activity 1.65 times its line",
-          "name": "YETI",
-          "score": 1.44
+          "coverage": "activity 5.62 times its line",
+          "name": "HWC",
+          "score": 4.92
+        },
+        {
+          "coverage": "activity 1.41 times its line",
+          "name": "NLY",
+          "score": 1.06
+        },
+        {
+          "coverage": "activity 3.74 times its line",
+          "name": "SHY",
+          "score": 2.87
+        },
+        {
+          "coverage": "activity 1.99 times its line",
+          "name": "SO",
+          "score": 1.65
+        },
+        {
+          "coverage": "activity 1.19 times its line",
+          "name": "SYF",
+          "score": 1.0
         }
       ],
       "source": "today.triggers[].down_volume_times_line",
@@ -222,11 +249,11 @@
       "rows": [
         {
           "name": "Exhaustion share, percent",
-          "score": 57.1
+          "score": 57.4
         },
         {
           "name": "Median forward return, points",
-          "score": 0.28
+          "score": 0.24
         }
       ],
       "source": "history.exhaustion_half.share_pct / return_half.median_points",
@@ -238,52 +265,85 @@
   "thin_cell_rule": "Any half with fewer than 30 graded episodes shows its count only, with no middle figure and no share.",
   "today": {
     "gate_blocked": [
-      "APAM",
-      "FA",
-      "GO",
-      "HWC",
-      "LFST",
-      "TTEK",
-      "TWST"
+      "EPR",
+      "FTDR",
+      "GPN",
+      "HAYW",
+      "KDP",
+      "PNW",
+      "SAFT",
+      "SONO",
+      "TWST",
+      "WRBY"
     ],
-    "gate_blocked_count": 7,
+    "gate_blocked_count": 10,
     "names_checked": 1832,
     "names_judged": 1797,
     "names_set_aside": 35,
     "notes": "Names that printed both kinds of heavy trading today but are not in a fall of their own are listed as held back by the gate, and no forecast is made about them. Names in a fall that cleared only one of the two heavy-trading lines are counted too.",
-    "one_line_count": 71,
-    "suppressed_repeats_today": 12,
-    "trigger_count": 6,
+    "one_line_count": 49,
+    "suppressed_repeats_today": 20,
+    "trigger_count": 12,
     "triggers": [
       {
-        "activity_times_line": 1.41,
-        "down_volume_times_line": 1.2,
-        "symbol": "KBR"
+        "activity_times_line": 1.22,
+        "down_volume_times_line": 1.05,
+        "symbol": "BABA"
       },
       {
-        "activity_times_line": 1.36,
-        "down_volume_times_line": 1.18,
-        "symbol": "KWEB"
+        "activity_times_line": 1.42,
+        "down_volume_times_line": 1.01,
+        "symbol": "BXMT"
       },
       {
-        "activity_times_line": 1.45,
+        "activity_times_line": 4.98,
+        "down_volume_times_line": 3.95,
+        "symbol": "CTRE"
+      },
+      {
+        "activity_times_line": 2.21,
+        "down_volume_times_line": 1.77,
+        "symbol": "ENVX"
+      },
+      {
+        "activity_times_line": 1.38,
         "down_volume_times_line": 1.16,
-        "symbol": "LWLG"
+        "symbol": "FCFS"
       },
       {
         "activity_times_line": 1.58,
-        "down_volume_times_line": 1.19,
-        "symbol": "MIR"
+        "down_volume_times_line": 1.26,
+        "symbol": "FLO"
       },
       {
-        "activity_times_line": 1.75,
-        "down_volume_times_line": 1.44,
-        "symbol": "XYL"
+        "activity_times_line": 1.87,
+        "down_volume_times_line": 1.3,
+        "symbol": "FMC"
       },
       {
-        "activity_times_line": 1.65,
-        "down_volume_times_line": 1.44,
-        "symbol": "YETI"
+        "activity_times_line": 5.62,
+        "down_volume_times_line": 4.92,
+        "symbol": "HWC"
+      },
+      {
+        "activity_times_line": 1.41,
+        "down_volume_times_line": 1.06,
+        "symbol": "NLY"
+      },
+      {
+        "activity_times_line": 3.74,
+        "down_volume_times_line": 2.87,
+        "symbol": "SHY"
+      },
+      {
+        "activity_times_line": 1.99,
+        "down_volume_times_line": 1.65,
+        "symbol": "SO"
+      },
+      {
+        "activity_times_line": 1.19,
+        "down_volume_times_line": 1.0,
+        "symbol": "SYF"
       }
     ]
   },
