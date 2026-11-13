@@ -135,12 +135,19 @@ Behaviour: walk-forward history over the shipped daily history
 on the freshest session the price source reaches, ledgered through
 the forecast machinery's append call only, then data.json written
 from the panel plus figures recomputed from the ledger alone.
+The walk-forward sweep checkpoints its loop state every five
+sessions (and on the live session) to gap-destiny/checkpoint.json,
+keyed by the source files' content hashes: a killed run resumes
+inside the sweep instead of discarding it (cure GAPDESTINY-
+CHECKPOINT-20261113); a source change voids the checkpoint and
+the sweep recomputes from zero, exactly as before.
 Idempotent: rerunning with the same panel appends nothing and
 rewrites the same data.json. Timestamps come from the sources,
 never the clock.
 """
 
 import bisect
+import hashlib
 import json
 import math
 import os
@@ -394,6 +401,82 @@ class Cell:
     def rates(self):
         return (self.fills / self.n, self.above / self.n,
                 self.below / self.n)
+
+
+# ---- Walk-forward loop checkpointing (cure GAPDESTINY-
+# CHECKPOINT-20261113, processes hunt PR-1) --------------------
+# The day-by-day walk-forward sweep below is this leg's whole
+# cost (over 110 CPU-minutes on the shipped panel) and it held
+# no state outside the process, so every VM restart discarded
+# it whole: the session 2026-11-12 refresh died inside this leg
+# eight times. The loop's entire state is the cells dict, the
+# three score accumulators, and (on the live day) the live
+# entries and states; all of it is JSON-round-trippable exactly
+# (float64 values in insertion order), so a resumed run
+# continues the identical computation and publishes identical
+# output. The checkpoint is keyed by a fingerprint of the three
+# source files and the as-of session: any source change makes
+# it unreadable and the run recomputes from zero, exactly as
+# before this cure. A corrupt or foreign checkpoint is ignored,
+# never trusted. The per-day decile cache is deliberately NOT
+# state: it is recomputed deterministically inside each day.
+CHECKPOINT_PATH = os.environ.get(
+    "GAPDESTINY_CHECKPOINT_PATH",
+    os.path.join(HERE, "gap-destiny", "checkpoint.json"))
+CHECKPOINT_EVERY_DAYS = 5
+CHECKPOINT_VERSION = 1
+
+
+def dump_loop_state(cells, wf_all, wf_index, wf_by_band,
+                    last_date, live_entries, live_states):
+    return {
+        "version": CHECKPOINT_VERSION,
+        "last_date": last_date,
+        "cells": [[list(k), {"n": c.n, "fills": c.fills,
+                             "above": c.above, "below": c.below,
+                             "ranges": list(c.ranges)}]
+                  for k, c in cells.items()],
+        "wf_all": wf_all, "wf_index": wf_index,
+        "wf_by_band": wf_by_band,
+        "live_entries": live_entries, "live_states": live_states}
+
+
+def load_loop_state(data):
+    cells = {}
+    for key_list, cs in data["cells"]:
+        c = Cell()
+        c.n, c.fills = cs["n"], cs["fills"]
+        c.above, c.below = cs["above"], cs["below"]
+        c.ranges = list(cs["ranges"])
+        cells[tuple(key_list)] = c
+    return (cells, data["wf_all"], data["wf_index"],
+            data["wf_by_band"], data["last_date"],
+            data["live_entries"], data["live_states"])
+
+
+def write_checkpoint(path, fingerprint, state):
+    """Atomic publish: a kill during the write leaves either
+    the previous checkpoint or none, never a torn one."""
+    payload = {"fingerprint": fingerprint, "state": state}
+    tmp = path + ".tmp"
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh)
+    os.replace(tmp, path)
+
+
+def read_checkpoint(path, fingerprint):
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    if payload.get("fingerprint") != fingerprint:
+        return None
+    state = payload.get("state") or {}
+    if state.get("version") != CHECKPOINT_VERSION:
+        return None
+    return state
 
 
 def load_vix():
@@ -655,6 +738,15 @@ def build():
                              e["close"]) < 0.5])
 
     # ---- Walk-forward sweep: history scoring + live estimation ----
+    # Checkpoint fingerprint (GAPDESTINY-CHECKPOINT-20261113):
+    # the loop state is a pure function of these three sources
+    # and the as-of session, so the fingerprint is exactly their
+    # content hashes plus as_of.
+    fingerprint = hashlib.sha256(
+        (ledger_mod.file_sha256(PANEL_PATH) + "|"
+         + ledger_mod.file_sha256(VIX_PATH) + "|"
+         + ledger_mod.file_sha256(PANE_PATH) + "|"
+         + as_of).encode()).hexdigest()
     cells = {}
 
     def cell(key):
@@ -727,7 +819,39 @@ def build():
     wf_by_band = {b: new_score() for b in BANDS}
     live_entries = []
     live_states = None
+    # Resume (GAPDESTINY-CHECKPOINT-20261113): a checkpoint
+    # written by an earlier, killed run of THIS leg over the
+    # same sources restores the loop state whole; days at or
+    # before its last completed date are skipped. A checkpoint
+    # that fails to load leaves the fresh state untouched and
+    # the run recomputes from zero, as before the cure.
+    resume_after = None
+    _restored = read_checkpoint(CHECKPOINT_PATH, fingerprint)
+    if _restored is not None:
+        try:
+            (_rcells, wf_all, wf_index, wf_by_band, resume_after,
+             live_entries, live_states) = load_loop_state(_restored)
+            cells.update(_rcells)
+            print(f"Gap Destiny refresh: resuming the "
+                  f"walk-forward sweep after {resume_after} "
+                  f"from the loop checkpoint",
+                  file=sys.stderr)
+        except (KeyError, TypeError, ValueError):
+            resume_after = None
+            live_entries, live_states = [], None
+    days_done = 0
+
+    def maybe_checkpoint(d):
+        if days_done % CHECKPOINT_EVERY_DAYS == 0 or d == as_of:
+            write_checkpoint(
+                CHECKPOINT_PATH, fingerprint,
+                dump_loop_state(cells, wf_all, wf_index, wf_by_band,
+                                d, live_entries, live_states))
+
     for d in sorted(events_by_date):
+        if resume_after is not None and d <= resume_after:
+            continue
+        days_done += 1
         prev, fear, vol = states_for(d)
         evs = events_by_date[d]
         cache = {}
@@ -796,6 +920,7 @@ def build():
                                         weekday=ev["weekday"],
                                         gap_pct=round(ev["gap_pct"] * 100.0, 3))}
                 live_entries.append(entry)
+            maybe_checkpoint(d)
             continue
         for ev in evs:
             got = forecast(ev["band"], ev["weekday"], fear, vol, cache)
@@ -822,6 +947,7 @@ def build():
                     steps[0] <= ev["range_mult"] <= steps[-1]) else 0
         for ev in evs:
             add_event(ev, fear, vol)
+        maybe_checkpoint(d)
 
     def score_out(acc):
         n = acc["n"]
@@ -1318,6 +1444,12 @@ def build():
         data = _tc.stamp_for_script(data, __file__) if _tc is not None else data
         json.dump(data, fh, indent=2, sort_keys=True)
         fh.write("\n")
+    # The run published; its loop checkpoint is spent
+    # (GAPDESTINY-CHECKPOINT-20261113).
+    try:
+        os.remove(CHECKPOINT_PATH)
+    except OSError:
+        pass
     wf = data["history"]["walk_forward"]
     print(f"Wrote {OUT_PATH}: live {as_of}, {main_recorded} "
           f"recorded sets ({created} new), {len(live_entries)} "
