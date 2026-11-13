@@ -74,15 +74,28 @@ def main() -> int:
         except OSError as exc:
             fails.append("normal acquire/release raised %r" % exc)
 
-        # (2) A fresh lock is respected and left untouched.
-        watch.LOCK.write_text("424242", encoding="utf-8")
+        # (2) A fresh lock held by a LIVE process is respected and
+        # left untouched. Updated 2026-11-13 for
+        # STRIP-LOCK-LIVENESS-20261113: validity now includes holder
+        # liveness, so this arm names a live sleeper's PID; the
+        # original arm's placeholder number is a dead PID under the
+        # new semantics and would be reclaimed (that reclaim is the
+        # 20261113 blocker's own check 1).
+        import subprocess
+        sleeper = subprocess.Popen(["sleep", "60"])
         try:
-            if watch.acquire_lock():
-                fails.append("fresh lock not respected")
-            elif watch.LOCK.read_text(encoding="utf-8") != "424242":
-                fails.append("fresh lock was overwritten")
-        except OSError as exc:
-            fails.append("fresh-lock check raised %r" % exc)
+            watch.LOCK.write_text(str(sleeper.pid), encoding="utf-8")
+            try:
+                if watch.acquire_lock():
+                    fails.append("fresh lock not respected")
+                elif watch.LOCK.read_text(
+                        encoding="utf-8") != str(sleeper.pid):
+                    fails.append("fresh lock was overwritten")
+            except OSError as exc:
+                fails.append("fresh-lock check raised %r" % exc)
+        finally:
+            sleeper.kill()
+            sleeper.wait()
 
         # (3) A stale lock (older than the 25 minute stale bound)
         # is taken over.
