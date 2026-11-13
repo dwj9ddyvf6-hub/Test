@@ -4,8 +4,8 @@ The complete measured file inventory and collection map. [INDEX.json](INDEX.json
 
 Total files indexed: 8359
 
-Indexed commit: `389d8992b0acfa395908cd893dcdff4388897fdc`. Source commit timestamp: 2026-11-13T10:13:02Z.
-Total indexed bytes: 1026616684 (only the two generated index outputs have null hashes and sizes).
+Indexed commit: `fd336163b5b3c54780521f8209bf6e4cf8603f20`. Source commit timestamp: 2026-11-13T11:12:49Z.
+Total indexed bytes: 1026616793 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
 
@@ -46,7 +46,7 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 | indicator | 2 | 9040 | Indicator algorithm contract and supporting explanation. [indicator/AREA.md](indicator/AREA.md) · [indicator/BB_RSI_Divergence_Algorithm.md](indicator/BB_RSI_Divergence_Algorithm.md) algorithm specification; compare with the Pine source before claiming parity |
 | integration | 328 | 361125 | Integration adapters and wiring notes connecting sleeves with desk interfaces. [integration/AREA.md](integration/AREA.md) · [integration/Femto-lean_Wiring.md](integration/Femto-lean_Wiring.md) wiring source and historical guidance; presence is not proof of installed execution |
 | laz_sleeves | 11 | 13767 | Lazarus entry-point wrappers over shared sleeve implementations. [laz_sleeves/AREA.md](laz_sleeves/AREA.md) · [engines/AREA.md](engines/AREA.md) source wrappers; follow the shared implementation and version |
-| master | 106 | 27829504 | Published Master Terminal assets and timestamped data snapshots maintained by an external mirror. [START-HERE.md](START-HERE.md) · [ROADMAP.md](ROADMAP.md) · [master/publish-manifest.json](master/publish-manifest.json) publisher-owned generated snapshot; edit the actual producer for durable behavior changes |
+| master | 106 | 27829613 | Published Master Terminal assets and timestamped data snapshots maintained by an external mirror. [START-HERE.md](START-HERE.md) · [ROADMAP.md](ROADMAP.md) · [master/publish-manifest.json](master/publish-manifest.json) publisher-owned generated snapshot; edit the actual producer for durable behavior changes |
 | packages | 1928 | 117474908 | Complete contributed packages and versioned source snapshots, retained as separate collections. [packages/AREA.md](packages/AREA.md) · [INDEX.md](INDEX.md) historical and contributed packages; preserve provenance and package boundaries |
 | pine | 2 | 10723 | TradingView Pine Script source for the indicator collection. [pine/AREA.md](pine/AREA.md) · [indicator/BB_RSI_Divergence_Algorithm.md](indicator/BB_RSI_Divergence_Algorithm.md) platform-specific source; not independently verified live trading behavior |
 | proof | 23 | 62879 | Dated installation and verification receipts. [proof/AREA.md](proof/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) historical evidence; receipt dates and subject revisions bound every claim |
