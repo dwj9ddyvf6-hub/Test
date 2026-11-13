@@ -12,8 +12,11 @@ the new hashes, so a failed publish is retried on the next cycle
 instead of being forgotten.
 
 A lock file in the program home keeps two cycles from publishing at
-once; a lock younger than 25 minutes is respected, an older one is
-treated as abandoned (a killed run) and taken over.
+once; it records the holder's PID. A lock younger than 25 minutes is
+respected while its recorded holder is alive (or its content cannot
+be read as a PID at all); a young lock whose recorded holder is
+provably dead is reclaimed at once, and an older lock is treated as
+abandoned (a killed run) and taken over.
 
 The publish route is the sync's SCOPED mode (cure
 BOOK-STRIP-SCOPED-PUBLISH-20261109): the watcher names exactly the
@@ -105,12 +108,46 @@ def log_line(text: str) -> None:
         fh.write("- %s · %s\n" % (stamp(), text))
 
 
+def _lock_holder_gone() -> bool:
+    """True only when the lock's recorded holder PID provably does
+    not exist. STRIP-LOCK-LIVENESS-20261113 (PR-4): validity used to
+    be age alone, so the 2026-11-13 08:08 ET cycle, SIGTERM-killed
+    by the 13:08Z VM restart with holder PID 14758 recorded, blocked
+    the lane for the full 25-minute age-out while its lock was still
+    fresh, and the 08:33 cycle stood down unverified. Unreadable or
+    unparseable lock content is NOT proof of death and answers
+    False: a live holder's lock is never broken on a guess."""
+    try:
+        pid = int(LOCK.read_text(encoding="utf-8").strip())
+    except (OSError, ValueError):
+        return False
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return True
+    except PermissionError:
+        return False  # the process exists; it is owned by another user
+    except OSError:
+        return False
+    return False
+
+
 def acquire_lock() -> bool:
     HOME.mkdir(parents=True, exist_ok=True)
     try:
         age = datetime.now().timestamp() - LOCK.stat().st_mtime
         if age < LOCK_STALE_SECONDS:
-            return False
+            if not _lock_holder_gone():
+                return False
+            try:
+                log_line("LOCK-RECLAIMED: previous holder (pid %s) "
+                         "is dead; lock taken over without waiting "
+                         "for the age-out"
+                         % LOCK.read_text(encoding="utf-8").strip())
+            except OSError:
+                pass
     except OSError:
         pass
     try:
