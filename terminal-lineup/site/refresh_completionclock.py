@@ -253,6 +253,25 @@ except ImportError:  # refresh stays runnable standalone
     _ab = None
 
 SHIP_DATE = "2026-10-29"
+# Registered-vintage keep end (cure COMPLETIONCLOCK-KEEP-VINTAGE-
+# 20261113): the composite's 320-bar universe keep ("at least 320
+# bars in total", Engine 25's register) was counted on the panel's
+# FULL current series, so every panel advance that carried a name
+# across 320 bars rewrote already-registered history pools. FLY
+# (first bar 2025-08-07) held 319 bars through the 2026-11-11
+# session and its 320th bar is the freshest session itself
+# (2026-11-12): the 2026-11-12 session's refresh therefore counted
+# FLY into the 2026-10-16 pool (154) that the register froze at
+# 153 when the panel's freshest session was 2026-10-30 (the
+# register was written 2026-10-31, a Saturday). The history
+# replay now counts the keep on the bars on record at the
+# registered vintage (sessions on or before HISTORY_KEEP_END),
+# which is the fixed corpus the register was frozen against; the
+# per-day features themselves are unchanged, and the live leg
+# still counts the keep on the full current series, where the
+# freshest session's own index makes the two counts coincide for
+# names evaluated on their last bar.
+HISTORY_KEEP_END = "2026-10-30"
 ENGINE_ID = "engine_29"
 HORIZONS = (5, 10, 21, 60)
 HAZARD_K = 21
@@ -353,8 +372,17 @@ def down_volumes(closes, vols):
     return out
 
 
-def reset_features(closes, highs, lows, vols, i, spy_r10):
-    if len(closes) < 320 or i < 260 or i < 251 or i < 39 or i < 10:
+def reset_features(closes, highs, lows, vols, i, spy_r10,
+                   bars_on_record=None):
+    # bars_on_record is the composite's 320-bar universe keep,
+    # counted by the caller: the history replay passes the count
+    # at the registered vintage (HISTORY_KEEP_END) so a registered
+    # pool day reproduces exactly no matter how far the panel has
+    # since advanced; the live leg passes nothing and the keep is
+    # the full current series, as before (cure
+    # COMPLETIONCLOCK-KEEP-VINTAGE-20261113).
+    total = len(closes) if bars_on_record is None else bars_on_record
+    if total < 320 or i < 260 or i < 251 or i < 39 or i < 10:
         return None
     close = closes[i]
     hi = max(highs[i - 251:i + 1])
@@ -768,6 +796,12 @@ def build():
             - 1.0
     reset_records = []
     reset_days = []
+    # The keep counted at the registered vintage, per name: bars
+    # with a session on or before HISTORY_KEEP_END (cure
+    # COMPLETIONCLOCK-KEEP-VINTAGE-20261113, see the constant).
+    keep_counts = {sym: bisect.bisect_right(
+        [r[0] for r in rows], HISTORY_KEEP_END)
+        for sym, rows in panel.items()}
     for day in fear_days:
         i = spy_pos[day]
         scored = []
@@ -783,7 +817,8 @@ def build():
             if idx is None:
                 continue
             feat = reset_features(closes[sym], highs[sym], lows[sym],
-                                  vols[sym], idx, spy_r10.get(day))
+                                  vols[sym], idx, spy_r10.get(day),
+                                  bars_on_record=keep_counts[sym])
             if feat:
                 scored.append((sym, feat["f7"], feat["f6"]))
         top = composite_top_fifth(scored)
@@ -804,7 +839,12 @@ def build():
     # each registered pool day reproduces with its registered
     # pool and matching counts under the exact composite. New
     # pool days beyond the register are new settled history and
-    # are published, not refused.
+    # are published, not refused. The keep inside the composite
+    # is counted at the registered vintage (HISTORY_KEEP_END,
+    # cure COMPLETIONCLOCK-KEEP-VINTAGE-20261113): counted on the
+    # live panel it rewrote this register the first time a name
+    # crossed 320 bars on a later advance (FLY, pool 154 against
+    # the registered 153 on the 2026-11-12 session's run).
     _REGISTERED_RESET = {"2026-06-05": (123, 25),
                          "2026-06-10": (127, 26),
                          "2026-07-29": (61, 12),
