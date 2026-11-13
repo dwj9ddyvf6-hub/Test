@@ -377,11 +377,22 @@ def fetch_spot(symbol, now=None):
             None, "unchecked")
 
 
-# Spot re-fetch budget (cure CHAIN-SPOT-RETRY-20261109): a stale
-# verdict gets this many fetches in total, spaced by these sleeps,
-# before the caller's fail-closed refusal fires.
-SPOT_ATTEMPTS = 3
-SPOT_RETRY_SLEEPS = (10, 30)
+# Spot re-fetch budget (cure CHAIN-SPOT-RETRY-20261109, extended by
+# CHAIN-SPOT-OPEN-WAIT-20261113): a stale verdict gets this many
+# fetches in total, spaced by these sleeps, before the caller's
+# fail-closed refusal fires. The 2026-11-13 09:30 ET run refused all
+# three symbols because the run started inside the 5-minute dispatch
+# tolerance (09:29:36 ET) and the source's regularMarketTime still
+# carried the prior session's 16:00 ET close print: the old 3-fetch,
+# 40-second budget expired before the new session's first prints
+# advanced the timestamp. The cure waits through that first-print
+# lag (and the multi-minute source lags seen mid-session, e.g. SPY
+# at 2026-11-12 14:00 ET) with a bounded poll: 8 fetches, up to
+# 285 seconds of sleeps. The 90-second freshness gate is unchanged
+# and the refusal still fires, fail-closed, on the last quote seen
+# if no fetch turns fresh inside the budget.
+SPOT_ATTEMPTS = 8
+SPOT_RETRY_SLEEPS = (10, 20, 30, 45, 60, 60, 60)
 
 
 def fetch_spot_fresh(symbol, fetch=None, sleep=None,
@@ -403,6 +414,12 @@ def fetch_spot_fresh(symbol, fetch=None, sleep=None,
     the 90-second threshold is unchanged, and a quote that is
     still stale after the last attempt is returned stale so the
     caller's refusal fires on the last quote actually seen.
+    The budget was extended by CHAIN-SPOT-OPEN-WAIT-20261113:
+    at the open the source still stamps the prior close until
+    the first prints land, which outlasted the original
+    3-fetch budget on 2026-11-13; the poll now spans up to
+    about five minutes per symbol while staying bounded and
+    fail-closed.
     When freshness is not required (outside the market window,
     the --force seed path, where a closed market's quote can
     never turn fresh) exactly one fetch is made."""
@@ -612,9 +629,11 @@ here supplies a Greek timestamp, so contracts are undated.
 The spot quote is freshness-gated at capture (terminal_common,
 90 seconds, fail-closed): in the market window a stale or missing
 quote timestamp stores no snapshot and lands as a manifest error.
-A stale verdict is re-fetched up to three times in total, spaced
-10 and 30 seconds, before it refuses (CHAIN-SPOT-RETRY-20261109);
-the 90-second gate itself is unchanged.
+A stale verdict is re-fetched up to eight times in total, spaced
+10, 20, 30, 45, 60, 60 and 60 seconds, before it refuses
+(CHAIN-SPOT-RETRY-20261109, extended by
+CHAIN-SPOT-OPEN-WAIT-20261113 so the poll spans the open's
+first-print lag); the 90-second gate itself is unchanged.
 Field honesty (2026-10-29 content cure): the TastyTrade nested
 chain still carries no open interest, volume or implied
 volatility; it remains the layout source of record only. OI is
