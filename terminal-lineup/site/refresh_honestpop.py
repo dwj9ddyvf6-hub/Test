@@ -444,9 +444,37 @@ console.log(JSON.stringify(out));
         raise RuntimeError("synthetic surface is not falling in strike")
     if any(r["benchmark_p"] is None for r in surface["rows"]):
         raise RuntimeError("synthetic benchmark surface is incomplete")
-    corr = corrected_iv_pop(surface["rows"][0]["benchmark_p"])
-    if not (surface["rows"][0]["benchmark_p"] < corr <= 0.99):
-        raise RuntimeError("the IV correction did not lift the IV chance")
+    # IV correction check (HONESTPOP-CAP-PROBE-20261114). The
+    # correction's stated property is exact on every row:
+    # corrected == the IV chance plus 13.5 points, held inside
+    # 1 to 99 percent; and a strict lift wherever the 99 percent
+    # holding cap does not bind (IV chance below 85.5 percent).
+    # The previous probe tested only rows[0], the lowest and
+    # deepest in-the-money strike: when the price panel's vintage
+    # pushed that row's IV chance to 0.9903, above the cap, its
+    # corrected value was held at 0.99 and the probe refused a
+    # correction that lifts every uncapped row by the full
+    # 13.5 points. The probe now checks the property on all
+    # rows and requires at least one uncapped row to prove the
+    # lift on, so the refusal can only fire on a real failure.
+    uncapped = 0
+    for row in surface["rows"]:
+        p_iv = row["benchmark_p"]
+        corr = corrected_iv_pop(p_iv)
+        if abs(corr - min(max(p_iv + IV_CORRECTION_POINTS / 100.0,
+                              0.01), 0.99)) > 1e-9:
+            raise RuntimeError(
+                "the IV correction is not the stated +13.5-point "
+                "correction held inside 1 to 99 percent")
+        if p_iv < 0.855:
+            uncapped += 1
+            if not (p_iv < corr <= 0.99):
+                raise RuntimeError(
+                    "the IV correction did not lift the IV chance")
+    if not uncapped:
+        raise RuntimeError(
+            "the synthetic surface has no uncapped row on which "
+            "to prove the IV correction lifts")
     reg = registry_mod.load()
     with tempfile.TemporaryDirectory() as td:
         scratch = ledger_mod.Ledger(os.path.join(td, "ledger.jsonl"),
