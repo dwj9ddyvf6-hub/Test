@@ -3,10 +3,6 @@
   "convention": "One stated convention, the same for every fund: each call counts positive and each put counts negative, weighted by the contract's gamma and open interest, in dollars for a 1 percent move. The call wall is the strike with the largest positive call figure; the put wall is the strike with the largest put figure by size. The flip level is the price where the total crosses zero, searched on a grid 10 percent either side of the recorded price.",
   "cross_check": "Beside each fund, the modelled ladder's own flip level and walls for the same funds are printed. The two are built under different conventions, so a difference between them is a fact about the conventions, printed as a difference, not resolved into one number.",
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its current reading is from 2026-11-13. No study record is on file for this page; what it shows is its current reading, updated on its normal schedule.",
-    "summary": "The same chain snapshots the modelled ladder is built from, worked under one simple stated convention: calls count positive, puts count negative. Where this page and the ladder disagree, both figures are printed and the difference is the fact."
-  },
   "feed": "tastytrade_chain_snapshot",
   "freshest_snapshot": "2026-11-13",
   "funds": [
@@ -264,96 +260,13 @@
     }
   ],
   "iv_assumption": "On that grid search, each contract's implied volatility is held constant while the price moves: that is an assumption, stated here because gamma near the money is sensitive to it. The band beside each flip level is the range of flip levels the same search finds when every volatility is scaled to 0.80 times and to 1.25 times its recorded value. The recorded volatility itself is modelled from the chain's quotes, not read off an exchange.",
-  "loaded_at_utc": "2026-11-14T02:40:53.729019+00:00",
+  "loaded_at_utc": "2026-11-14T10:07:19.283360+00:00",
   "price_basis": "snapshot",
   "provenance": {
     "execution_pricing": false,
     "feed": "tastytrade_chain_snapshot",
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
-  },
-  "record_surface": {
-    "calibration_record": null,
-    "current_reading": {
-      "as_of": "2026-11-13",
-      "keys_present": [
-        "checked",
-        "convention",
-        "cross_check",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "freshest_snapshot",
-        "funds",
-        "iv_assumption",
-        "loaded_at_utc",
-        "price_basis",
-        "provenance",
-        "record_surface",
-        "source",
-        "state",
-        "tool"
-      ]
-    },
-    "feed": "tastytrade_chain_snapshot",
-    "label": "Study record",
-    "live_accrual": null,
-    "missing": {
-      "what_and_when": "No study record is on file for this page; what it shows is its current reading, updated on its normal schedule."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "tastytrade_chain_snapshot",
-      "price_basis": "snapshot",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [],
-      "total_items_counted": 0
-    },
-    "subject_charts": [
-      {
-        "kind": "ranked",
-        "label": "Net dealer positioning at each of the strongest strikes in the snapshot on record.",
-        "rows": [
-          {
-            "name": "Strike 755.0",
-            "score": -2600748051.7
-          },
-          {
-            "name": "Strike 775.0",
-            "score": 1362110646.24
-          },
-          {
-            "name": "Strike 750.0",
-            "score": -1046812076.98
-          },
-          {
-            "name": "Strike 753.0",
-            "score": -1044855993.32
-          },
-          {
-            "name": "Strike 730.0",
-            "score": -785859851.2
-          },
-          {
-            "name": "Strike 740.0",
-            "score": -692927752.41
-          },
-          {
-            "name": "Strike 754.0",
-            "score": 676270893.52
-          },
-          {
-            "name": "Strike 760.0",
-            "score": -664842729.41
-          }
-        ],
-        "title": "Strongest strikes, SPY, 2026-11-13"
-      }
-    ],
-    "version": 1
   },
   "source": "The options chains kept on file for SPY, QQQ and IWM, one snapshot per trading day, read at each fund's freshest snapshot day on record",
   "state": "snapshots_on_record",
