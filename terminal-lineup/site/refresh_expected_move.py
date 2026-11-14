@@ -52,6 +52,20 @@ Fail-closed cross-checks, all of them:
   is a later recomputation from saved closes and its anchor
   can differ from the traded close by cents, so it never
   displaces the map actually filed when the session was drawn.
+  When two at-time filings for one session both match and one
+  strictly supersedes the other, the superseding filing is
+  the map of record (EMAP-REFILE-SUPERSESSION-20261113):
+  supersession means the later filing was drawn from a
+  strictly fuller evaluation, more bars served for every name
+  the earlier filing served and no fewer for any other, the
+  same last-run-is-the-record rule the tape engines state
+  (an early partial run is superseded by the evening's full
+  run). That is what the log holds for 2026-11-13: the desk
+  filed at 16:11 ET on 8,418 SPY bars with an anchor of
+  757.21, then re-filed at 00:20 ET on 8,439 SPY bars with
+  the anchor revised to 757.20; the two maps agree on the
+  volatility close, the session move and the weekly move and
+  differ only in the anchor and the lines drawn from it.
   Every other tie still stops the refresh.
   The 2026-10-23 session's filings all agree with each other.
 - For the Nasdaq-100 fund, the filed record carries its session
@@ -339,6 +353,26 @@ def check_map(m):
     return None
 
 
+def _supersedes(new, old):
+    """True when one tied filing strictly supersedes another
+    (EMAP-REFILE-SUPERSESSION-20261113): filed later, and its
+    evaluation served strictly more bars in total, with no
+    name served fewer bars than the earlier filing served.
+    Both filings must carry a bars-served record; an absent
+    record supersedes nothing."""
+    n_map, n_epoch, n_served, _nf = new
+    o_map, o_epoch, o_served, _of = old
+    if not n_served or not o_served:
+        return False
+    if not n_epoch > o_epoch:
+        return False
+    names = set(n_served) | set(o_served)
+    if any(n_served.get(s, 0) < o_served.get(s, 0) for s in names):
+        return False
+    return sum(n_served.get(s, 0) for s in names) \
+        > sum(o_served.get(s, 0) for s in names)
+
+
 def resolve_sessions(filed, vix):
     """Resolve each session to its one map of record.
     Returns {session: (map, epoch, bars_served, filing)},
@@ -364,15 +398,30 @@ def resolve_sessions(filed, vix):
                     # filing is the session's map of record and the
                     # reconstructed rebuild (a later recomputation
                     # from saved closes, whose anchor can differ by
-                    # cents) is superseded for that session. The
-                    # refusal below still governs every other tie:
-                    # two at-time filings, or any tie where
-                    # provenance is absent or equal.
+                    # cents) is superseded for that session.
+                    # EMAP-REFILE-SUPERSESSION-20261113: when the
+                    # provenance is equal and one filing strictly
+                    # supersedes the other (later, from a strictly
+                    # fuller evaluation: more bars served, no name
+                    # served fewer), the superseding filing is the
+                    # map of record, in either candidate order.
+                    # The refusal below still governs every other
+                    # tie: provenance absent or equal with no
+                    # supersession either way.
+                    cand = (m, epoch, served, filing)
                     if (chosen[3] == "reconstructed"
                             and filing == "filed_at_time"):
-                        chosen = (m, epoch, served, filing)
-                    elif not (filing == "reconstructed"
-                              and chosen[3] == "filed_at_time"):
+                        chosen = cand
+                    elif (filing == "reconstructed"
+                            and chosen[3] == "filed_at_time"):
+                        pass  # the at-time filing already stands
+                    elif filing == chosen[3] \
+                            and _supersedes(cand, chosen):
+                        chosen = cand
+                    elif filing == chosen[3] \
+                            and _supersedes(chosen, cand):
+                        pass  # the superseding filing stands
+                    else:
                         return fail(f"two different maps filed for "
                                     f"{session} both match the prior "
                                     f"volatility close on record; "
