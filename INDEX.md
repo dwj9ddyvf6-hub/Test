@@ -2,10 +2,10 @@
 
 The complete measured file inventory and collection map. [INDEX.json](INDEX.json) is the machine-readable twin; [docs/REPOSITORY-MAP.json](docs/REPOSITORY-MAP.json) supplies curated meanings and task routes when present. No catalog or prose page substitutes for the full inventory.
 
-Total files indexed: 8370
+Total files indexed: 8374
 
-Indexed commit: `55e45e614a671c98d72177baeccfdb8dbe89f563`. Source commit timestamp: 2026-11-14T02:13:12Z.
-Total indexed bytes: 1028106135 (only the two generated index outputs have null hashes and sizes).
+Indexed commit: `a5b24aaf686c6e7afe73b5062a1e0407d231d9dc`. Source commit timestamp: 2026-11-14T03:16:37Z.
+Total indexed bytes: 1028159254 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
 
@@ -46,7 +46,7 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 | indicator | 2 | 9040 | Indicator algorithm contract and supporting explanation. [indicator/AREA.md](indicator/AREA.md) · [indicator/BB_RSI_Divergence_Algorithm.md](indicator/BB_RSI_Divergence_Algorithm.md) algorithm specification; compare with the Pine source before claiming parity |
 | integration | 328 | 361125 | Integration adapters and wiring notes connecting sleeves with desk interfaces. [integration/AREA.md](integration/AREA.md) · [integration/Femto-lean_Wiring.md](integration/Femto-lean_Wiring.md) wiring source and historical guidance; presence is not proof of installed execution |
 | laz_sleeves | 11 | 13767 | Lazarus entry-point wrappers over shared sleeve implementations. [laz_sleeves/AREA.md](laz_sleeves/AREA.md) · [engines/AREA.md](engines/AREA.md) source wrappers; follow the shared implementation and version |
-| master | 106 | 27589367 | Published Master Terminal assets and timestamped data snapshots maintained by an external mirror. [START-HERE.md](START-HERE.md) · [ROADMAP.md](ROADMAP.md) · [master/publish-manifest.json](master/publish-manifest.json) publisher-owned generated snapshot; edit the actual producer for durable behavior changes |
+| master | 106 | 27589164 | Published Master Terminal assets and timestamped data snapshots maintained by an external mirror. [START-HERE.md](START-HERE.md) · [ROADMAP.md](ROADMAP.md) · [master/publish-manifest.json](master/publish-manifest.json) publisher-owned generated snapshot; edit the actual producer for durable behavior changes |
 | packages | 1928 | 117474908 | Complete contributed packages and versioned source snapshots, retained as separate collections. [packages/AREA.md](packages/AREA.md) · [INDEX.md](INDEX.md) historical and contributed packages; preserve provenance and package boundaries |
 | pine | 2 | 10723 | TradingView Pine Script source for the indicator collection. [pine/AREA.md](pine/AREA.md) · [indicator/BB_RSI_Divergence_Algorithm.md](indicator/BB_RSI_Divergence_Algorithm.md) platform-specific source; not independently verified live trading behavior |
 | proof | 23 | 62879 | Dated installation and verification receipts. [proof/AREA.md](proof/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) historical evidence; receipt dates and subject revisions bound every claim |
@@ -54,7 +54,7 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 | research | 10 | 16948760 | Standalone studies, practice atlases and associated document/archive representations. [research/AREA.md](research/AREA.md) · [research/technical-analysis-study-2026-10-30/README.md](research/technical-analysis-study-2026-10-30/README.md) · [research/master-trader-study-2026-10-29/README.md](research/master-trader-study-2026-10-29/README.md) educational studies and dated evidence; preserve original archives and attribution |
 | sleeves | 571 | 5590203 | Strategy implementations grouped by family and standalone named sleeve modules. [sleeves/AREA.md](sleeves/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) · [docs/VERIFY.md](docs/VERIFY.md) copied source; verify exact variant, dependencies, adapter and validation boundary |
 | strategies | 270 | 528417 | Human-readable strategy cards indexed separately from the rest of the repository. [strategies/AREA.md](strategies/AREA.md) · [docs/CATALOG.json](docs/CATALOG.json) · [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json) source-derived summaries; strategy cards are not performance evidence or the whole-repository index |
-| terminal-lineup | 3266 | 830451804 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
+| terminal-lineup | 3270 | 830505126 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
 | tests | 11 | 130527 | Repository-level regression checks for selected implemented strategy families. [tests/AREA.md](tests/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) bounded regression evidence; passing tests do not establish market profitability or live readiness |
 | tools | 3 | 59884 | Repository navigation and inventory tooling. [tools/AREA.md](tools/AREA.md) · [tools/build_repo_index.py](tools/build_repo_index.py) local tooling and generated metadata; verify indexed revision and working-tree state |
 
@@ -91,8 +91,8 @@ These are independent source collections unless their own records establish a li
 ## Terminal, implementation and evidence routes
 
 - [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) and [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) retain historical titles; the tree and registry determine the captured contents.
-- [terminal-lineup/site/](terminal-lineup/site/) — 2968 files: tool pages, assets, source and dated data.
-- [terminal-lineup/forecast/](terminal-lineup/forecast/) — 132 files: forecast implementations, registry, grading and tests.
+- [terminal-lineup/site/](terminal-lineup/site/) — 2969 files: tool pages, assets, source and dated data.
+- [terminal-lineup/forecast/](terminal-lineup/forecast/) — 135 files: forecast implementations, registry, grading and tests.
 - [terminal-lineup/records/](terminal-lineup/records/) — 16 files: historical build and source-discovery records.
 - [master/](master/) — 106 files: externally mirrored terminal assets and snapshots.
 - [docs/VERIFY.md](docs/VERIFY.md), [docs/verify/](docs/verify/) and [proof/install/](proof/install/): source attribution and historical receipts. Check the captured source, date and exact claim before relying on them.
@@ -102,7 +102,7 @@ These are independent source collections unless their own records establish a li
 
 ## Coverage and preservation contract
 
-INDEX.json has 8370 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
+INDEX.json has 8374 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
 
 A file inventory proves paths and byte identity, not semantic correctness or runtime behavior. Unsupported submodules, truncated snapshots, duplicate paths, unsafe paths and missing hashes/sizes fail explicitly rather than yielding a partial inventory described as complete. The index does not enumerate files inside archives; use their own manifests and the artifact's documented extraction procedure.
 
