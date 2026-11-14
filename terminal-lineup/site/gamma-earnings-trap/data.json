@@ -1,10 +1,10 @@
 {
   "calendar": {
-    "dated": 1155,
+    "dated": 1166,
     "names_on_record": 1838,
-    "no_date": 683,
-    "priced_moves_on_record": 102,
-    "recorded_on": "2026-11-11",
+    "no_date": 672,
+    "priced_moves_on_record": 81,
+    "recorded_on": "2026-11-13",
     "stale_note": "The calendar was gathered on October 12, 2026, more than a week before the newest map session, so by its own page's rule it is old. Its dates are shown as recorded, and any date that has slipped will be caught when the calendar is next gathered.",
     "timing_note": "The calendar carries no report timing, nothing about whether a report lands before the open or after the close. Until a record carries timing, the report date itself is counted as the earnings day. That is a named gap in the record, not a fact about the companies."
   },
@@ -34,10 +34,10 @@
   "forecast": {
     "claim": "For a stock in the index that reports earnings within the next 5 trading days while dealer positioning for the whole index is negative, the size of its earnings-day move, whichever way it goes, will be bigger than the move the options market priced in for at least 55 out of every 100 such reports, and the middle report's actual move will be at least 1.10 times its priced move.",
     "control": "The comparison group: the same measurement for earnings reports that land while index-wide positioning is positive, recorded at the same time and graded in exactly the same way. The claim above has to beat this group, not just a coin flip.",
-    "positioning_level": "Every forecast states the positioning level it used. Today only the index-wide level exists. A per-stock positioning reading would need stored per-stock option chains, and the chain store holds 324 snapshots, so no per-stock reading is used or implied.",
+    "positioning_level": "Every forecast states the positioning level it used. Today only the index-wide level exists. A per-stock positioning reading would need stored per-stock option chains, and the chain store holds 369 snapshots, so no per-stock reading is used or implied.",
     "size_only": "This forecast is about the SIZE of the move only. It never says, and nothing on this page says, which way any stock will move."
   },
-  "grading_note": "Grading waits on two things, both stated plainly: the shared grading machinery cannot yet score this kind of actual-against-priced size result for a group of reports, and the price history on record ends 2026-11-12, before every report date in the window.",
+  "grading_note": "Grading waits on two things, both stated plainly: the shared grading machinery cannot yet score this kind of actual-against-priced size result for a group of reports, and the price history on record ends 2026-11-13, before every report date in the window.",
   "history": {
     "control_arm_graded": 0,
     "detail": "No past report qualifies, in either group. The past-earnings record holds a pooled summary only: 36 reports across 3 names (AAPL, MSFT, NVDA), a pooled average move of -0.23 percent and a pooled middle of -0.37 percent, gathered 2026-11-12. Individual report dates and individual moves are not stored, no priced move exists for any of those reports, and positioning readings exist only for October 2026 sessions, long after them. With any one of the four inputs missing, an event is not graded, so the count is 0, stated plainly.",
@@ -49,48 +49,48 @@
   "live": {
     "control_recorded": 0,
     "forecasts_graded": 0,
-    "forecasts_recorded": 2979,
-    "main_recorded": 2979,
+    "forecasts_recorded": 3038,
+    "main_recorded": 3038,
     "target_events": 60
   },
-  "loaded_at_utc": "2026-11-12T23:44:12.941599+00:00",
+  "loaded_at_utc": "2026-11-14T00:47:53.304944+00:00",
   "membership": {
     "note": "The only index membership list on record is the S&P list: 503 S&P 500 names among 1,503 tagged names. No membership list for the Nasdaq-100 or the Russell 2000 exists on record, so membership is claimed for the S&P 500 only. A name on the list is governed by SPY as its own index; every other calendar name is carried under SPY as the stated fallback, and each report below says which.",
     "sp500_on_record": 503,
     "tagged_names_on_record": 1503
   },
   "missing_input": {
-    "detail": "The calendar's priced-move field is empty for all 1155 dated names. The chain store that could carry a per-stock priced move holds 324 snapshots. The expected-move page covers the index funds only and is not a per-stock earnings price. The per-stock volatility record holds a volatility level, not a priced move, and a level is never turned into a priced move here. The first record that carries a real priced move for a coming report, for example the first stored per-stock option chain, lets this engine record forecasts unchanged.",
+    "detail": "The calendar's priced-move field is empty for all 1166 dated names. The chain store that could carry a per-stock priced move holds 369 snapshots. The expected-move page covers the index funds only and is not a per-stock earnings price. The per-stock volatility record holds a volatility level, not a priced move, and a level is never turned into a priced move here. The first record that carries a real priced move for a coming report, for example the first stored per-stock option chain, lets this engine record forecasts unchanged.",
     "name": "the priced expected move for each report",
     "state": "absent"
   },
   "options_gate": {
-    "admitted": 284972,
+    "admitted": 313786,
     "greek_max_age_seconds": 4500,
     "greek_states": {
       "fresh": 0,
       "future": 0,
       "stale": 0,
-      "undated": 284972
+      "undated": 313786
     },
     "iv_ceiling": 5.0,
     "iv_states": {
-      "absent": 164517,
+      "absent": 181302,
       "invalid": 0,
-      "ok": 120455,
+      "ok": 132484,
       "over_ceiling": 0
     },
     "note": "Candidate gate over the stored chain snapshots: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent refuse a candidate; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted. The current store's source supplies no Greek timestamps and no IV, so its contracts count as undated with IV absent.",
     "refused": 0,
-    "snapshots_scanned": 30,
-    "total": 284972
+    "snapshots_scanned": 33,
+    "total": 313786
   },
-  "panel_last_session": "2026-11-12",
+  "panel_last_session": "2026-11-13",
   "positioning": {
-    "freshest_session": "2026-11-12",
+    "freshest_session": "2026-11-13",
     "level": "index-wide",
     "note": "On every session on record, the positioning reading for each of SPY, QQQ and IWM is negative. No positive session exists yet, so the comparison group has no possible events so far.",
-    "positive_sessions": 1,
+    "positive_sessions": 2,
     "sessions": [
       {
         "funds": {
@@ -375,25 +375,45 @@
       {
         "funds": {
           "IWM": {
-            "run_ts": "2026-11-12T22:22:38.578985+00:00",
+            "run_ts": "2026-11-13T13:52:07.659093+00:00",
             "sign": "negative",
-            "value_usd_per_1pct": -2858802729.587284
+            "value_usd_per_1pct": -2615685544.099616
           },
           "QQQ": {
-            "run_ts": "2026-11-12T22:22:38.578550+00:00",
+            "run_ts": "2026-11-13T13:52:07.658623+00:00",
             "sign": "negative",
-            "value_usd_per_1pct": -1918046175.8218603
+            "value_usd_per_1pct": -1101139129.1602786
           },
           "SPY": {
-            "run_ts": "2026-11-12T22:22:38.568947+00:00",
-            "sign": "negative",
-            "value_usd_per_1pct": -4029077042.319783
+            "run_ts": "2026-11-13T13:52:07.651083+00:00",
+            "sign": "positive",
+            "value_usd_per_1pct": 779739543.4839133
           }
         },
         "session": "2026-11-12"
+      },
+      {
+        "funds": {
+          "IWM": {
+            "run_ts": "2026-11-13T22:23:14.442025+00:00",
+            "sign": "negative",
+            "value_usd_per_1pct": -3406598244.0134187
+          },
+          "QQQ": {
+            "run_ts": "2026-11-13T22:23:14.441442+00:00",
+            "sign": "negative",
+            "value_usd_per_1pct": -3525721591.9106145
+          },
+          "SPY": {
+            "run_ts": "2026-11-13T22:23:14.416532+00:00",
+            "sign": "negative",
+            "value_usd_per_1pct": -6398057248.819802
+          }
+        },
+        "session": "2026-11-13"
       }
     ],
-    "sessions_on_record": 15
+    "sessions_on_record": 16
   },
   "price_basis": "snapshot",
   "provenance": {
@@ -402,15 +422,15 @@
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "published_at_utc": "2026-11-12T22:22:38.568846+00:00",
+  "published_at_utc": "2026-11-13T22:23:14.416354+00:00",
   "record_surface": {
     "calibration_record": {
       "attestation": {
-        "basis": "no graded forecasts on record yet (2923 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 2923,
+        "basis": "no graded forecasts on record yet (2979 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 2979,
         "graded_forecasts": 0,
-        "ledger_rows_at_write": 380809,
-        "recorded_on": "2026-11-12",
+        "ledger_rows_at_write": 396089,
+        "recorded_on": "2026-11-13",
         "status": "not_attested"
       },
       "engine_id": "engine_11",
@@ -422,12 +442,11 @@
       "zero_forecast_state": null
     },
     "current_reading": {
-      "as_of": "2026-11-12",
+      "as_of": "2026-11-13",
       "keys_present": [
         "calendar",
         "calibration_attestation",
         "execution_pricing",
-        "explanation",
         "feed",
         "forecast",
         "grading_note",
@@ -443,11 +462,9 @@
         "price_basis",
         "provenance",
         "published_at_utc",
-        "record_surface",
         "self_test",
         "source",
         "state",
-        "subject_chart",
         "thin_rule",
         "tool",
         "waiting",
@@ -460,12 +477,12 @@
     "live_accrual": {
       "corrections": 0,
       "engine": "engine_11",
-      "forecasts": 2979,
+      "forecasts": 3038,
       "grades": 0,
       "source": "forecast/ledger.jsonl (counted)"
     },
     "missing": {
-      "what_and_when": "Live grades are still building: 2979 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+      "what_and_when": "Live grades are still building: 3038 forecasts are on record and none are graded yet. Grades arrive after each following session close."
     },
     "provenance": {
       "execution_pricing": false,
@@ -497,44 +514,44 @@
       "label": "Positioning dollars per 1 percent move, per event name.",
       "rows": [
         {
-          "name": "DGXX",
-          "score": -4029077042.319783
-        },
-        {
-          "name": "FABC",
-          "score": -4029077042.319783
-        },
-        {
-          "name": "SGML",
-          "score": -4029077042.319783
-        },
-        {
-          "name": "SIDU",
-          "score": -4029077042.319783
-        },
-        {
-          "name": "SKYQ",
-          "score": -4029077042.319783
-        },
-        {
-          "name": "SLNH",
-          "score": -4029077042.319783
-        },
-        {
           "name": "ACM",
-          "score": -4029077042.319783
+          "score": -6398057248.819802
         },
         {
           "name": "ARMK",
-          "score": -4029077042.319783
+          "score": -6398057248.819802
         },
         {
           "name": "BIDU",
-          "score": -4029077042.319783
+          "score": -6398057248.819802
         },
         {
           "name": "BLDP",
-          "score": -4029077042.319783
+          "score": -6398057248.819802
+        },
+        {
+          "name": "BRC",
+          "score": -6398057248.819802
+        },
+        {
+          "name": "GRRR",
+          "score": -6398057248.819802
+        },
+        {
+          "name": "INFQ",
+          "score": -6398057248.819802
+        },
+        {
+          "name": "NPK",
+          "score": -6398057248.819802
+        },
+        {
+          "name": "POET",
+          "score": -6398057248.819802
+        },
+        {
+          "name": "POWL",
+          "score": -6398057248.819802
         }
       ],
       "source": "window.events[].positioning_value_usd_per_1pct",
@@ -574,93 +591,9 @@
   "tool": "Gamma-Pressure Earnings Trap",
   "waiting": true,
   "window": {
-    "after_session": "2026-11-12",
+    "after_session": "2026-11-13",
     "count": 66,
     "events": [
-      {
-        "date": "2026-11-13",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "19.2%",
-        "priced_move_state": "on record",
-        "symbol": "DGXX"
-      },
-      {
-        "date": "2026-11-13",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
-        "symbol": "FABC"
-      },
-      {
-        "date": "2026-11-13",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "13.5%",
-        "priced_move_state": "on record",
-        "symbol": "SGML"
-      },
-      {
-        "date": "2026-11-13",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
-        "symbol": "SIDU"
-      },
-      {
-        "date": "2026-11-13",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
-        "symbol": "SKYQ"
-      },
-      {
-        "date": "2026-11-13",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
-        "symbol": "SLNH"
-      },
       {
         "date": "2026-11-16",
         "governing_basis": "the stated fallback",
@@ -668,10 +601,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "8.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.6%",
         "priced_move_state": "on record",
         "symbol": "ACM"
       },
@@ -682,10 +615,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "7.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.2%",
         "priced_move_state": "on record",
         "symbol": "ARMK"
       },
@@ -696,10 +629,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "8.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.0%",
         "priced_move_state": "on record",
         "symbol": "BIDU"
       },
@@ -710,9 +643,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": "19.3%",
         "priced_move_state": "on record",
         "symbol": "BLDP"
@@ -724,9 +657,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "BRC"
@@ -738,9 +671,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": "18.6%",
         "priced_move_state": "on record",
         "symbol": "GRRR"
@@ -752,10 +685,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "13.7%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "12.5%",
         "priced_move_state": "on record",
         "symbol": "INFQ"
       },
@@ -766,9 +699,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "NPK"
@@ -780,10 +713,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "16.2%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "14.6%",
         "priced_move_state": "on record",
         "symbol": "POET"
       },
@@ -794,10 +727,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "16.4%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "16.0%",
         "priced_move_state": "on record",
         "symbol": "POWL"
       },
@@ -808,10 +741,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "16.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "16.2%",
         "priced_move_state": "on record",
         "symbol": "RCAT"
       },
@@ -822,10 +755,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "22.2%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "19.3%",
         "priced_move_state": "on record",
         "symbol": "SHAZ"
       },
@@ -836,10 +769,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "5.9%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "6.1%",
         "priced_move_state": "on record",
         "symbol": "TSN"
       },
@@ -850,10 +783,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "8.7%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.6%",
         "priced_move_state": "on record",
         "symbol": "XPEV"
       },
@@ -864,10 +797,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "4.5%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "4.0%",
         "priced_move_state": "on record",
         "symbol": "BHP"
       },
@@ -878,10 +811,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "6.2%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "6.0%",
         "priced_move_state": "on record",
         "symbol": "DIS"
       },
@@ -892,10 +825,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "7.3%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.7%",
         "priced_move_state": "on record",
         "symbol": "DLB"
       },
@@ -906,12 +839,26 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "9.8%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "11.3%",
         "priced_move_state": "on record",
         "symbol": "ENR"
+      },
+      {
+        "date": "2026-11-17",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-13",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.6%",
+        "priced_move_state": "on record",
+        "symbol": "GFF"
       },
       {
         "date": "2026-11-17",
@@ -920,10 +867,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "5.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "5.2%",
         "priced_move_state": "on record",
         "symbol": "HD"
       },
@@ -934,10 +881,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "6.9%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.5%",
         "priced_move_state": "on record",
         "symbol": "JD"
       },
@@ -948,10 +895,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "12.5%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "14.1%",
         "priced_move_state": "on record",
         "symbol": "LZB"
       },
@@ -962,10 +909,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "10.2%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "11.0%",
         "priced_move_state": "on record",
         "symbol": "MFP"
       },
@@ -976,10 +923,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "9.7%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.7%",
         "priced_move_state": "on record",
         "symbol": "NVDA"
       },
@@ -990,10 +937,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "6.8%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.0%",
         "priced_move_state": "on record",
         "symbol": "SQM"
       },
@@ -1004,9 +951,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SR"
@@ -1018,9 +965,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": "13.9%",
         "priced_move_state": "on record",
         "symbol": "ASPI"
@@ -1032,10 +979,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "8.5%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.0%",
         "priced_move_state": "on record",
         "symbol": "DY"
       },
@@ -1046,24 +993,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "5.8%",
-        "priced_move_state": "on record",
-        "symbol": "GFF"
-      },
-      {
-        "date": "2026-11-18",
-        "governing_basis": "the stated fallback",
-        "governing_index": "SPY",
-        "in_sp500": false,
-        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
-        "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
-        "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "11.6%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.4%",
         "priced_move_state": "on record",
         "symbol": "HP"
       },
@@ -1074,10 +1007,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "8.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.2%",
         "priced_move_state": "on record",
         "symbol": "JJSF"
       },
@@ -1088,10 +1021,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "13.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "12.3%",
         "priced_move_state": "on record",
         "symbol": "KLIC"
       },
@@ -1102,10 +1035,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "5.6%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "5.4%",
         "priced_move_state": "on record",
         "symbol": "LOW"
       },
@@ -1116,9 +1049,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": "7.1%",
         "priced_move_state": "on record",
         "symbol": "NJR"
@@ -1130,10 +1063,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "16.5%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "16.2%",
         "priced_move_state": "on record",
         "symbol": "P"
       },
@@ -1144,12 +1077,26 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "11.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "11.0%",
         "priced_move_state": "on record",
         "symbol": "PANW"
+      },
+      {
+        "date": "2026-11-18",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-13",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "SNEX"
       },
       {
         "date": "2026-11-18",
@@ -1158,10 +1105,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "8.8%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.9%",
         "priced_move_state": "on record",
         "symbol": "TGT"
       },
@@ -1172,10 +1119,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "5.5%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "5.9%",
         "priced_move_state": "on record",
         "symbol": "TJX"
       },
@@ -1186,9 +1133,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "UGI"
@@ -1200,10 +1147,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "13.4%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "13.2%",
         "priced_move_state": "on record",
         "symbol": "UTI"
       },
@@ -1214,10 +1161,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "7.9%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.7%",
         "priced_move_state": "on record",
         "symbol": "WSM"
       },
@@ -1228,9 +1175,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": "9.4%",
         "priced_move_state": "on record",
         "symbol": "WWD"
@@ -1242,10 +1189,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "7.7%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.6%",
         "priced_move_state": "on record",
         "symbol": "BABA"
       },
@@ -1256,10 +1203,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "12.4%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "11.6%",
         "priced_move_state": "on record",
         "symbol": "BBWI"
       },
@@ -1270,10 +1217,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "5.0%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "4.9%",
         "priced_move_state": "on record",
         "symbol": "CPRT"
       },
@@ -1284,10 +1231,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "7.3%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "6.7%",
         "priced_move_state": "on record",
         "symbol": "ESE"
       },
@@ -1298,10 +1245,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "16.2%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "16.4%",
         "priced_move_state": "on record",
         "symbol": "ESTC"
       },
@@ -1312,10 +1259,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "12.3%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "12.5%",
         "priced_move_state": "on record",
         "symbol": "GAP"
       },
@@ -1326,12 +1273,26 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "15.4%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "14.8%",
         "priced_move_state": "on record",
         "symbol": "GLOB"
+      },
+      {
+        "date": "2026-11-19",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-13",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "HUBG"
       },
       {
         "date": "2026-11-19",
@@ -1340,10 +1301,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "9.3%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "9.1%",
         "priced_move_state": "on record",
         "symbol": "INTU"
       },
@@ -1354,10 +1315,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "10.3%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "9.8%",
         "priced_move_state": "on record",
         "symbol": "KEYS"
       },
@@ -1368,10 +1329,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "8.4%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.7%",
         "priced_move_state": "on record",
         "symbol": "LQDT"
       },
@@ -1382,11 +1343,11 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": null,
-        "priced_move_state": "absent: no record carries one for this name",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "10.2%",
+        "priced_move_state": "on record",
         "symbol": "MATW"
       },
       {
@@ -1396,10 +1357,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "10.3%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "9.1%",
         "priced_move_state": "on record",
         "symbol": "MMS"
       },
@@ -1410,10 +1371,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "8.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.6%",
         "priced_move_state": "on record",
         "symbol": "POST"
       },
@@ -1424,10 +1385,10 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "9.1%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "8.5%",
         "priced_move_state": "on record",
         "symbol": "ROAD"
       },
@@ -1438,10 +1399,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "7.3%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "7.5%",
         "priced_move_state": "on record",
         "symbol": "ROST"
       },
@@ -1452,10 +1413,10 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "4.5%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "4.3%",
         "priced_move_state": "on record",
         "symbol": "VEEV"
       },
@@ -1466,9 +1427,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": "6.4%",
         "priced_move_state": "on record",
         "symbol": "VVV"
@@ -1480,9 +1441,9 @@
         "in_sp500": false,
         "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
+        "positioning_value_usd_per_1pct": -6398057248.819802,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "WMG"
@@ -1494,22 +1455,78 @@
         "in_sp500": true,
         "membership": "S&P 500 constituent on the list on record",
         "positioning_level": "index-wide",
-        "positioning_session": "2026-11-12",
+        "positioning_session": "2026-11-13",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -4029077042.319783,
-        "priced_move_pct": "6.3%",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "6.2%",
         "priced_move_state": "on record",
         "symbol": "WMT"
+      },
+      {
+        "date": "2026-11-20",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-13",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "6.3%",
+        "priced_move_state": "on record",
+        "symbol": "BJ"
+      },
+      {
+        "date": "2026-11-20",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-13",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "6.8%",
+        "priced_move_state": "on record",
+        "symbol": "BKE"
+      },
+      {
+        "date": "2026-11-20",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-13",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "15.6%",
+        "priced_move_state": "on record",
+        "symbol": "IESC"
+      },
+      {
+        "date": "2026-11-20",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-13",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -6398057248.819802,
+        "priced_move_pct": "6.8%",
+        "priced_move_state": "on record",
+        "symbol": "MOG.A"
       }
     ],
-    "forecasts_recorded_today": 56,
+    "forecasts_recorded_today": 59,
     "reason_none": "Every report in the window has its date, its membership and its positioning state on record. What none of them has is a priced expected move, so no forecast could be recorded for any of them. Zero is the count, not a gap in the page.",
     "sessions": [
-      "2026-11-13",
       "2026-11-16",
       "2026-11-17",
       "2026-11-18",
-      "2026-11-19"
+      "2026-11-19",
+      "2026-11-20"
     ],
     "sp500_count": 16
   },
