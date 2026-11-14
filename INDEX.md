@@ -4,7 +4,7 @@ The complete measured file inventory and collection map. [INDEX.json](INDEX.json
 
 Total files indexed: 8376
 
-Indexed commit: `6a05c1a457680e79ab3177b402d2299cd0a4df6e`. Source commit timestamp: 2026-11-14T14:40:15Z.
+Indexed commit: `ac3037bba1828d6cba2bbd6b700034293a8927a1`. Source commit timestamp: 2026-11-14T14:53:50Z.
 Total indexed bytes: 1027932358 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
