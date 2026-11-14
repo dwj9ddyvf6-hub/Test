@@ -30,7 +30,13 @@ Discipline (N1, ledger before display):
 import hashlib
 import json
 import os
+from contextlib import contextmanager
 from datetime import datetime, timezone
+
+try:
+    import fcntl
+except ImportError:  # non-POSIX fallback: no inter-process lock
+    fcntl = None
 
 ROW_TYPES = ("genesis", "forecast", "grade", "correction")
 CLOCK_FIELDS = ("event_time", "publication_time", "first_available_time",
@@ -327,6 +333,54 @@ class Ledger:
         self._cache_stat = None
         self._cache_rows = None
         self._verified_stat = None
+        # Dedupe offset index (LEDGER-DEDUPE-INDEX-20261113):
+        # {dedupe_key: byte offset of the first forecast row
+        # carrying it}, built by one raw scan and refreshed by
+        # scanning only the bytes appended since the last scan
+        # (the ledger is append-only, so earlier offsets never
+        # move). See _dedupe_offsets.
+        self._dedupe_index = None
+        self._dedupe_index_stat = None
+        self._dedupe_index_size = 0
+        self._lock_depth = 0
+
+    @contextmanager
+    def _append_lock(self):
+        """Serialize the short write critical section against
+        other estate processes (cure LEDGER-APPEND-RACE-20261113).
+        The lock is held only for a delta verification plus one
+        row's write, never for a full pass, so a long reader
+        never blocks the evening's appenders; it is reentrant
+        per Ledger instance so the streaming append path can
+        hold it across its extend-and-write step while the write
+        helper takes it again. On a platform without fcntl the
+        lock degrades to the instance guard only."""
+        if self._lock_depth > 0:
+            self._lock_depth += 1
+            try:
+                yield
+            finally:
+                self._lock_depth -= 1
+            return
+        if fcntl is None:
+            self._lock_depth = 1
+            try:
+                yield
+            finally:
+                self._lock_depth = 0
+            return
+        lock_path = self.path + ".lock"
+        fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o666)
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX)
+            self._lock_depth = 1
+            try:
+                yield
+            finally:
+                self._lock_depth = 0
+                fcntl.flock(fd, fcntl.LOCK_UN)
+        finally:
+            os.close(fd)
 
     def _stat(self):
         try:
@@ -567,10 +621,19 @@ class Ledger:
             stat = self._verified_stat
         # If another writer appended between our read and this
         # write, our prev link would be stale: re-check the stat
-        # and start over with the fresh tail when it moved.
-        if self._stat() != stat:
-            return self._append(row)
-        rows = None
+        # and start over with the fresh tail when it moved. The
+        # re-check, the tail read and the write now sit inside
+        # the append lock (cure LEDGER-APPEND-RACE-20261113), so
+        # the window between the tail read and the write, where
+        # two lanes could both link onto the same tail, is
+        # closed; a stat that moved before the lock was taken
+        # still restarts the append exactly as before.
+        with self._append_lock():
+            if self._stat() == stat:
+                return self._append_locked(row, stat)
+        return self._append(row)
+
+    def _append_locked(self, row, stat):
         prev = self._tail_hash()
         row = dict(row)
         row["prev_hash"] = prev
@@ -630,50 +693,146 @@ class Ledger:
         and the dedupe keys of the forecast rows of the one
         (engine_id, issued_ts) batch. Nothing else is retained:
         the resident set is the batch's key set, not the ledger.
-        A pass whose file moves under it is retried; a file that
-        will not sit still is refused."""
+
+        Snapshot form (cure LEDGER-APPEND-RACE-20261113): the
+        pass reads exactly the bytes the file held when the pass
+        opened (stat0's size) and verifies that prefix. The
+        ledger is append-only, so a prefix is itself a complete
+        valid chain, and rows another lane appends during the
+        pass are not a defect: they are picked up afterwards by
+        _extend_stream_state under the append lock, which
+        verifies the delta before anything links onto it. The
+        pre-cure pass demanded the file sit still for the whole
+        read and retried only three times, so on an evening when
+        another lane appended during the proof gate's pass over
+        the grown ledger, all three attempts moved and the lane
+        died on "ledger changed repeatedly during the streaming
+        append pass" (the 2026-11-12 tools run). Verification is
+        not weakened: every row the state is built from, in the
+        snapshot and in every delta, is hash-verified before the
+        state's tail is trusted. A file that shrinks under the
+        pass (a rewrite, never an append) or whose snapshot
+        boundary falls mid-line on every attempt is refused
+        exactly as before."""
         for _attempt in range(3):
             stat0 = self._stat()
+            if stat0 is None:
+                return {"engine_id": engine_id,
+                        "issued_ts": issued_ts, "stat": None,
+                        "size": 0, "tail_hash": "", "seen": set()}
+            size0 = stat0[1]
             seen = set()
             prev = ""
-            if stat0 is not None:
-                with open(self.path, "r", encoding="utf-8") as fh:
-                    for i, line in enumerate(fh, 1):
-                        line = line.strip()
-                        if not line:
-                            continue
-                        try:
-                            row = json.loads(line)
-                        except json.JSONDecodeError as exc:
-                            raise LedgerError(
-                                f"ledger line {i} is not valid JSON "
-                                f"(possible rewrite/corruption): {exc}")
-                        body = {k: v for k, v in row.items()
-                                if k not in ("row_hash", "prev_hash",
-                                             "row_id")}
-                        expect = hashlib.sha256(
-                            (prev + _canonical(body)).encode()
-                        ).hexdigest()
-                        if row.get("prev_hash") != prev \
-                                or row.get("row_hash") != expect:
-                            raise LedgerError(
-                                "ledger hash chain is broken; "
-                                "refusing to append to a ledger whose "
-                                "history does not verify (rewrite "
-                                "detected)")
-                        prev = row["row_hash"]
-                        if row.get("type") == "forecast" \
-                                and row.get("engine_id") == engine_id \
-                                and row.get("issued_ts") == issued_ts \
-                                and row.get("dedupe_key"):
-                            seen.add(row["dedupe_key"])
-            if self._stat() == stat0:
-                return {"engine_id": engine_id,
-                        "issued_ts": issued_ts, "stat": stat0,
-                        "tail_hash": prev, "seen": seen}
+            consumed = 0
+            boundary_ok = True
+            with open(self.path, "rb") as fh:
+                i = 0
+                while consumed < size0:
+                    raw = fh.readline()
+                    if not raw:
+                        boundary_ok = False  # shrank: a rewrite
+                        break
+                    if consumed + len(raw) > size0:
+                        boundary_ok = False  # boundary mid-line
+                        break
+                    consumed += len(raw)
+                    i += 1
+                    line = raw.decode("utf-8").strip()
+                    if not line:
+                        continue
+                    try:
+                        row = json.loads(line)
+                    except json.JSONDecodeError as exc:
+                        raise LedgerError(
+                            f"ledger line {i} is not valid JSON "
+                            f"(possible rewrite/corruption): {exc}")
+                    body = {k: v for k, v in row.items()
+                            if k not in ("row_hash", "prev_hash",
+                                         "row_id")}
+                    expect = hashlib.sha256(
+                        (prev + _canonical(body)).encode()
+                    ).hexdigest()
+                    if row.get("prev_hash") != prev \
+                            or row.get("row_hash") != expect:
+                        raise LedgerError(
+                            "ledger hash chain is broken; "
+                            "refusing to append to a ledger whose "
+                            "history does not verify (rewrite "
+                            "detected)")
+                    prev = row["row_hash"]
+                    if row.get("type") == "forecast" \
+                            and row.get("engine_id") == engine_id \
+                            and row.get("issued_ts") == issued_ts \
+                            and row.get("dedupe_key"):
+                        seen.add(row["dedupe_key"])
+            if not boundary_ok or consumed != size0:
+                continue
+            return {"engine_id": engine_id,
+                    "issued_ts": issued_ts, "stat": stat0,
+                    "size": size0, "tail_hash": prev, "seen": seen}
         raise LedgerError(
             "ledger changed repeatedly during the streaming "
             "append pass; refusing to append")
+
+    def _extend_stream_state(self, state):
+        """Bring a streaming append state current under the
+        append lock (cure LEDGER-APPEND-RACE-20261113): read
+        only the bytes appended since the state's snapshot,
+        verify the delta's chain links onto the state's tail
+        hash exactly as a full pass verifies them, and extend
+        the state's tail, dedupe set, stat and size. A file
+        that shrank (a rewrite) or a delta that does not chain
+        is refused. The caller must hold _append_lock, so no
+        estate writer can be mid-line inside the delta: every
+        estate append writes its whole row inside the lock."""
+        cur = self._stat()
+        if cur == state["stat"]:
+            return
+        if cur is None or cur[1] < state["size"]:
+            raise LedgerError(
+                "ledger shrank under a streaming append state; "
+                "refusing to append (rewrite detected)")
+        prev = state["tail_hash"]
+        consumed = state["size"]
+        with open(self.path, "rb") as fh:
+            fh.seek(state["size"])
+            while consumed < cur[1]:
+                raw = fh.readline()
+                if not raw or consumed + len(raw) > cur[1]:
+                    raise LedgerError(
+                        "ledger delta under a streaming append "
+                        "is not a whole number of rows; refusing "
+                        "to append")
+                consumed += len(raw)
+                line = raw.decode("utf-8").strip()
+                if not line:
+                    continue
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise LedgerError(
+                        f"ledger delta line is not valid JSON "
+                        f"(possible rewrite/corruption): {exc}")
+                body = {k: v for k, v in row.items()
+                        if k not in ("row_hash", "prev_hash",
+                                         "row_id")}
+                expect = hashlib.sha256(
+                    (prev + _canonical(body)).encode()).hexdigest()
+                if row.get("prev_hash") != prev \
+                        or row.get("row_hash") != expect:
+                    raise LedgerError(
+                        "ledger hash chain is broken in the "
+                        "delta past a streaming snapshot; "
+                        "refusing to append")
+                prev = row["row_hash"]
+                if row.get("type") == "forecast" \
+                        and row.get("engine_id") == state["engine_id"] \
+                        and row.get("issued_ts") == state["issued_ts"] \
+                        and row.get("dedupe_key"):
+                    state["seen"].add(row["dedupe_key"])
+        state["tail_hash"] = prev
+        state["stat"] = cur
+        state["size"] = cur[1]
 
     def append_stream_state(self, engine_id, issued_ts):
         """Open a streaming append state for one (engine,
@@ -688,10 +847,20 @@ class Ledger:
     def _append_streaming(self, row, state):
         """_append's streaming form: the caller guarantees the
         stream state's stat is current (append_forecast_streaming
-        re-checks and refreshes it), so the chain link comes from
+        extends it under the append lock; the grading path
+        refreshes its own state), so the chain link comes from
         the state's tail hash instead of a re-read of the whole
         ledger. The hash, the write, the provenance sidecar and
-        the cache discipline are _append's own."""
+        the cache discipline are _append's own. The write itself
+        takes the append lock (cure LEDGER-APPEND-RACE-20261113)
+        so two lanes can never link onto the same tail in the
+        same instant; the lock is reentrant per instance, so a
+        caller already holding it (the streaming forecast path)
+        passes straight through."""
+        with self._append_lock():
+            return self._append_streaming_locked(row, state)
+
+    def _append_streaming_locked(self, row, state):
         row = dict(row)
         row["prev_hash"] = state["tail_hash"]
         body = {k: v for k, v in row.items()
@@ -705,6 +874,8 @@ class Ledger:
         self._write_provenance(row)
         new_stat = self._stat()
         state["stat"] = new_stat
+        if new_stat is not None:
+            state["size"] = new_stat[1]
         state["tail_hash"] = row["row_hash"]
         if row.get("type") == "forecast" and row.get("dedupe_key"):
             state["seen"].add(row["dedupe_key"])
@@ -790,6 +961,85 @@ class Ledger:
             body.update(identity)
         return body, key
 
+    # ---- dedupe offset index (LEDGER-DEDUPE-INDEX-20261113) ------
+    _DEDUPE_MARKER = b'"dedupe_key":"'
+
+    def _dedupe_offsets(self):
+        """{dedupe_key: byte offset of its first forecast row}.
+
+        Why: the classic append paths proved a republication by
+        streaming the whole ledger and parsing every row's JSON
+        (about 9s at 400k rows / 800 MB), and they did it once
+        per append, twice over (append_forecast_declared's
+        legacy scan, then append_forecast's own). A bulk caller
+        recording dozens of forecasts in one run therefore paid
+        minutes of re-parsing per run (insider divergence's
+        appends landed 20 to 50 seconds apart on 2026-11-13 and
+        the leg never finished). The ledger is append-only, so
+        a row's byte offset never changes: this index is built
+        by ONE raw scan that reads each forecast row's stored
+        dedupe key out of the raw line without parsing it, and
+        later calls rescan only the bytes appended since the
+        indexed size. A file that shrank, or whose size stands
+        still while its mtime moved (an in-place rewrite),
+        forces a full rebuild. The index only ever LOCATES a
+        candidate row; the caller parses that one line and
+        applies the exact checks the full scan applied, so the
+        dedupe verdicts are the scan's own."""
+        stat = self._stat()
+        if stat is None:
+            return {}
+        if self._dedupe_index is not None \
+                and self._dedupe_index_stat == stat:
+            return self._dedupe_index
+        index = self._dedupe_index
+        start = 0
+        if index is not None and stat[1] > self._dedupe_index_size:
+            start = self._dedupe_index_size  # pure growth: rescan
+            # only the appended suffix; earlier offsets stand.
+        else:
+            index = {}
+        marker = self._DEDUPE_MARKER
+        with open(self.path, "rb") as fh:
+            fh.seek(start)
+            offset = start
+            for raw in fh:
+                i = raw.find(marker)
+                if i >= 0:
+                    j = raw.find(b'"', i + len(marker))
+                    if j > i:
+                        key = raw[i + len(marker):j].decode(
+                            "utf-8", "replace")
+                        if key not in index:
+                            index[key] = offset
+                offset += len(raw)
+        self._dedupe_index = index
+        self._dedupe_index_size = offset
+        self._dedupe_index_stat = self._stat()
+        return index
+
+    def _find_forecast_row(self, key):
+        """The first forecast row stored under dedupe key `key`,
+        or None: the offset index locates the candidate line and
+        only that line is parsed, with the same invalid-JSON
+        refusal rows() raises."""
+        offset = self._dedupe_offsets().get(key)
+        if offset is None:
+            return None
+        with open(self.path, "r", encoding="utf-8") as fh:
+            fh.seek(offset)
+            line = fh.readline().strip()
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise LedgerError(
+                f"ledger line at byte {offset} is not valid JSON "
+                f"(possible rewrite/corruption): {exc}")
+        if row.get("type") != "forecast" \
+                or row.get("dedupe_key") != key:
+            return None
+        return row
+
     def append_forecast(self, *, engine_id, issued_ts, subject, quantity,
                         value, horizon_open, horizon_close, lineage,
                         families, outcome, absence_state="present",
@@ -829,9 +1079,12 @@ class Ledger:
             label_context=label_context,
             label_transform_id=label_transform_id,
             label_transform_hash=label_transform_hash)
-        for row in self.iter_rows():
-            if row.get("type") == "forecast" and row.get("dedupe_key") == key:
-                return row, False
+        # Dedupe via the offset index (LEDGER-DEDUPE-INDEX-
+        # 20261113): the same first forecast row the iter_rows
+        # scan returned, located without re-parsing the ledger.
+        existing = self._find_forecast_row(key)
+        if existing is not None:
+            return existing, False
         row = self._append(body)
         return row, True
 
@@ -854,11 +1107,17 @@ class Ledger:
                 kwargs["engine_id"], kwargs["subject"],
                 kwargs["horizon_open"], kwargs["horizon_close"],
                 value_hash(kwargs["value"]))
-            for row in self.iter_rows():
-                if row.get("type") == "forecast" \
-                        and row.get("dedupe_key") == plain \
-                        and frozen_label_identity(row) is None:
-                    return row, False
+            # The legacy-row check via the offset index
+            # (LEDGER-DEDUPE-INDEX-20261113): a stored key equal
+            # to the plain key can only sit on an unfrozen row
+            # (a frozen row's stored key carries the label
+            # suffix), and the parsed candidate still goes
+            # through frozen_label_identity exactly as the
+            # streaming scan did.
+            legacy = self._find_forecast_row(plain)
+            if legacy is not None \
+                    and frozen_label_identity(legacy) is None:
+                return legacy, False
             kwargs.update(default_label_identity(
                 subject=kwargs["subject"], quantity=kwargs["quantity"],
                 outcome=kwargs.get("outcome")))
@@ -911,13 +1170,21 @@ class Ledger:
                 "label_transform_hash": None}
         call.update(kwargs)
         body, key = self._forecast_body(**call)
-        while True:
+        if key in state["seen"]:
+            return None, False
+        # Extend-and-write under the append lock (cure
+        # LEDGER-APPEND-RACE-20261113): the state is brought
+        # current over just the delta appended since its
+        # snapshot (each delta row hash-verified onto the
+        # state's tail), the dedupe check runs against the
+        # extended set, and the write itself is serialized, so
+        # another lane's appends during the batch are absorbed
+        # one delta at a time instead of refusing the batch.
+        with self._append_lock():
+            self._extend_stream_state(state)
             if key in state["seen"]:
                 return None, False
-            if self._stat() == state["stat"]:
-                break
-            self._refresh_stream_state(state)
-        return self._append_streaming(body, state), True
+            return self._append_streaming(body, state), True
 
     def append_grade(self, *, forecast_row, grade,
                      label_context_fingerprint=None,
