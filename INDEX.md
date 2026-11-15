@@ -4,8 +4,8 @@ The complete measured file inventory and collection map. [INDEX.json](INDEX.json
 
 Total files indexed: 8376
 
-Indexed commit: `ad4022c048f5358b27b18f1c82c94ef242480306`. Source commit timestamp: 2026-11-15T02:13:04Z.
-Total indexed bytes: 1027961644 (only the two generated index outputs have null hashes and sizes).
+Indexed commit: `b4d2e7840e93b58d975c01906f5431f5881a341e`. Source commit timestamp: 2026-11-15T03:12:54Z.
+Total indexed bytes: 1027961645 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
 
@@ -54,7 +54,7 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 | research | 10 | 16948760 | Standalone studies, practice atlases and associated document/archive representations. [research/AREA.md](research/AREA.md) · [research/technical-analysis-study-2026-10-30/README.md](research/technical-analysis-study-2026-10-30/README.md) · [research/master-trader-study-2026-10-29/README.md](research/master-trader-study-2026-10-29/README.md) educational studies and dated evidence; preserve original archives and attribution |
 | sleeves | 571 | 5590203 | Strategy implementations grouped by family and standalone named sleeve modules. [sleeves/AREA.md](sleeves/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) · [docs/VERIFY.md](docs/VERIFY.md) copied source; verify exact variant, dependencies, adapter and validation boundary |
 | strategies | 270 | 528417 | Human-readable strategy cards indexed separately from the rest of the repository. [strategies/AREA.md](strategies/AREA.md) · [docs/CATALOG.json](docs/CATALOG.json) · [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json) source-derived summaries; strategy cards are not performance evidence or the whole-repository index |
-| terminal-lineup | 3272 | 830208876 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
+| terminal-lineup | 3272 | 830208877 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
 | tests | 11 | 130527 | Repository-level regression checks for selected implemented strategy families. [tests/AREA.md](tests/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) bounded regression evidence; passing tests do not establish market profitability or live readiness |
 | tools | 3 | 59884 | Repository navigation and inventory tooling. [tools/AREA.md](tools/AREA.md) · [tools/build_repo_index.py](tools/build_repo_index.py) local tooling and generated metadata; verify indexed revision and working-tree state |
 
