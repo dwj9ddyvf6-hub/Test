@@ -1,0 +1,29 @@
+{
+ "ab": {
+  "control_intents_at_0937Z_falsefire": 2,
+  "control_intents_at_1337Z": 0,
+  "direction_ok": true,
+  "paired_records": [
+   {
+    "control_window_open": false,
+    "exp_id": "ENH-ETWIN-20261024",
+    "sleeve": "aster_etf_qqq_qld_monthly",
+    "treatment": "et_window",
+    "treatment_window_open": true
+   }
+  ],
+  "treatment_intents_at_1337Z": 2
+ },
+ "decision_record": {
+  "calculation": "13:37Z = 09:37 ET (in window); 09:37Z = 05:37 ET (premarket). Pre-cure: intents at 09:37Z, zero at 13:37Z. Post-cure: inverse.",
+  "comparison": "Live desk cycle stamps (UTC) vs archive 09:35-09:40 ET execution window.",
+  "experiment": "Fixture A/B on identical bars/positions: treatment (switch ON) vs control (switch OFF = legacy raw-hour rule), stamps 13:37Z and 09:37Z.",
+  "mechanism": "Execution timing: window read off raw UTC clock hour fired 05:35-05:40 ET premarket and never during RTH; ET conversion restores the designed execution moment.",
+  "transfer": "Monthly/buy-hold ETF allocation edge is paid by holding the designed exposure; the transfer is lost entirely when the rebalance never executes."
+ },
+ "disposition": "APPLY ENH-ETWIN-20261024",
+ "exp_id": "ENH-ETWIN-20261024",
+ "paper_only": true,
+ "sleeve": "aster_etf_qqq_qld_monthly",
+ "switch": "extra.aster_etf_enh.et_window default ON; OFF restores pre-change rule exactly"
+}
