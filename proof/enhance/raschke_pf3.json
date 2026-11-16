@@ -1,0 +1,15 @@
+{
+ "batch": "edge18",
+ "decision_record": {
+  "calculation": "see evidence",
+  "comparison": "current rule vs candidate leaks (pricing, freshness, exit completeness, sizing)",
+  "experiment": "none \u2014 verify-only; no cosmetic change made",
+  "mechanism": "see evidence",
+  "transfer": "n/a \u2014 no change made"
+ },
+ "evidence": "Entry path is stale-proof by pin: entries only when the latest completed RTH 5m bar is a cluster's FIRST bar of the current session (GP-10/GP-17, no backfill), sig_close must precede the close-10m cutoff, and the intent is a MARKET order (GP-16: price_hint is reference only) so no stale price can be filled at; stop/target are frozen at signal time by design (GP-4) and exits are completed-close evaluations by pin (GP-5) \u2014 changing either would change strategy constants, which this pass may not do without a proven leak. Sizing is ATR-at-signal (GP-12). Evidence: tests.test_port_b5_blockers + batch-6 drive 19/19 GREEN on the final tree; first-look note: sleeve carried no v2 ENH switch and none is warranted.",
+ "leak_checked": "No second binding leak survives scrutiny",
+ "program": "muse-desk-v3-harden-enhance-20261024",
+ "sleeve": "raschke_pf3",
+ "verdict": "verify_only"
+}
