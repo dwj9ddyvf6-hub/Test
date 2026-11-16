@@ -1,0 +1,16 @@
+{
+ "sleeve": "s_q07w_s52_ml_deep70_vix20_wlow",
+ "batch": 23,
+ "verdict": "VERIFY-ONLY",
+ "paper_only": true,
+ "leak": "none binding while parked",
+ "evidence": "Sleeve is parked by spec in desk3/lazarus_q07.py SPECS (CSV-off swing lane): the entry path is unreachable by design, so the batch-23 freshest-first entry leak cannot bind. Exit path traced on fixtures in tests/test_edge_batch23_blockers.py::TestParkedVerifyOnly: a valid swing fire emits NO entry, and a held position at -20% emits the 15% stop exit. The engine-level ENH-Q07FRESH cure lands in the shared engine and will govern the lane if it is ever unparked by owner ruling.",
+ "decision_record": {
+  "transfer": "Parked lane: no entries by design; only exit fidelity can bind.",
+  "comparison": "Entry attempt with full filter evidence vs held-position stop trace, on fixtures.",
+  "mechanism": "Entries refused at the parked gate before any allocation; exits evaluate before the parked return.",
+  "calculation": "Fixture: entries=0 with a fully-passing fire; stop exit=1 at last close 16.00 vs avg 20.00 (-20% <= -15%).",
+  "experiment": "tests/test_edge_batch23_blockers.py::TestParkedVerifyOnly \u2014 passes pre- and post-change (behavior preserved)."
+ },
+ "blocker": "tests/test_edge_batch23_blockers.py::TestParkedVerifyOnly"
+}
