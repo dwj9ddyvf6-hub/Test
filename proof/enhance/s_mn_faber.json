@@ -1,0 +1,19 @@
+{
+  "sleeve": "s_mn_faber",
+  "batch": "edge19",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH19-FABER-STALE-20261024",
+  "leak": "Entry sized off provably stale bar",
+  "decision_record": {
+    "transfer": "Faber's edge is holding an ETF above its 210-session average; the comparison only means something against the latest close -- a stale last bar can show price above an average the current market has already broken.",
+    "comparison": "Control: enter whenever the last bar closes above the 210 SMA, regardless of bar age. Treatment: refuse the entry when the last bar is >4 calendar days before the session. Exits untouched (an owned position's trend exit is never blocked by this gate).",
+    "mechanism": "s_mn_faber required 210 bars but never checked the last bar's date; stale history (producer lag) produced trend entries priced off a weeks-old close.",
+    "calculation": "Fixture: 210 SPY bars, last close $110 > SMA ~$100.05, last bar 2026-10-01 vs session 2026-10-23 -> ON 0 entries + paired journal; OFF 1 entry qty 5; fresh last bar 2026-10-23 -> ON 1 entry.",
+    "experiment": "ENH19-FABER-STALE-20261024 in sleeves/s_mn_faber.py; switch default ON."
+  },
+  "switch": "extra['s_mn_faber_enh19']['stale_gate'] default ON",
+  "shadow": "faithful entry recorded paired in enh19_journal, never emits",
+  "experiment_measurement": "fixture: stale-bar entry 1 -> 0 ON; fresh-bar entry unchanged",
+  "blockers": "tests/test_harden_edge19_blockers.py (15 tests; fail-first 9 failed pre-cure, 15/15 GREEN post-cure)"
+}
