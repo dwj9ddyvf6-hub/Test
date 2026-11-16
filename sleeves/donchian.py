@@ -39,6 +39,22 @@ EXIT_CHANNEL = 10      # exit: close < min(low, last 10)
 WARMUP_BARS = 25
 ATR_PERIOD = 14
 ATR_MULT = 2.0         # trailing stop distance
+
+def _frac_qty(dollars, per_unit):
+    """WS4-FRACTIONAL-20261114 (owner ruling 2026-11-14 17:08 ET:
+    "It needs to buy stuff of any price"). Express a positive
+    dollar budget as a fractional quantity, rounded DOWN to the
+    door's 6dp precision, never up past the budget. Returns 0.0
+    only when the budget itself is not positive or the unit
+    price / per-share risk is not positive — the budget deciding,
+    never the share price. Reconciliation with OBS-1 (2026-10-23,
+    standing): the forced 1-share floor stays forbidden;
+    whole-share rounding was the defect."""
+    if dollars <= 0 or per_unit <= 0:
+        return 0.0
+    import math as _m
+    return _m.floor((dollars / per_unit) * 1_000_000) / 1_000_000
+
 HOLD_DAYS = 20         # time stop
 DISASTER_STOP = 0.25
 RISK_FRACTION = 0.0025
@@ -151,8 +167,8 @@ def size_qty(equity, ref_px, atr):
     bad inputs size to zero (fail closed), never to a share."""
     if not atr or atr <= 0 or not ref_px or ref_px <= 0:
         return 0
-    qty = int((equity * RISK_FRACTION) // (ATR_MULT * atr))
-    return max(0, qty)
+    qty = _frac_qty(equity * RISK_FRACTION, ATR_MULT * atr)
+    return max(0.0, qty)
 
 
 class Donchian(BaseSleeve):
@@ -203,7 +219,7 @@ class Donchian(BaseSleeve):
             dates = _dates(bl)
             last_px = float(bl[-1]["c"])
             if pos:
-                qty = int(float(pos.get("qty") or 0))
+                qty = float(pos.get("qty") or 0)  # WS4: actual held qty
                 if qty <= 0:
                     continue
                 # exits: channel break, ATR trail, or time stop
@@ -234,7 +250,7 @@ class Donchian(BaseSleeve):
                                       round(float(pos["entry_px"]) *
                                             (1 - DISASTER_STOP), 2)),)
                     intents.append(Intent(
-                        "exit", sym, qty_hint=qty, price_hint=round(last_px, 2),
+                        "exit", sym, qty=qty, price_hint=round(last_px, 2),
                         exit_rules=rules,
                         reason="donchian exit: channel=%s trail_hit=%s time_due=%s atr_trail=%s"
                                % (exit_channel_hit(bl), trail_hit, bool(due),
@@ -245,14 +261,14 @@ class Donchian(BaseSleeve):
             if entry_signal(bl):
                 atr = calc_atr(bl)
                 qty = size_qty(equity, last_px, atr)
-                if qty < 1:
-                    continue  # OBS-1: sized to zero — no position
+                if qty <= 0:
+                    continue  # OBS-1/WS4: budget sized to zero — no position
                 if (used_notional + pass_adds + qty * last_px
                         > SLEEVE_NOTIONAL_CAP * equity):
                     continue
                 stop_px = round(last_px * (1 - DISASTER_STOP), 2)
                 intents.append(Intent(
-                    "enter", sym, qty_hint=qty, price_hint=round(last_px, 2),
+                    "enter", sym, qty=qty, price_hint=round(last_px, 2),
                     stop=stop_px,
                     exit_rules=(ExitRule("stop", stop_px),
                                 ExitRule("time_bars", float(HOLD_DAYS)),
