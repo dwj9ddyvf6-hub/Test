@@ -1,0 +1,18 @@
+{
+ "sleeve": "qullamaggie",
+ "exp_id": "ENH-CBAR-20261024",
+ "paper_only": true,
+ "disposition": "APPLY ENH-CBAR-20261024",
+ "switch": "view.extra['qullamaggie_enh2']['completed_bars'] default ON; OFF restores pre-change rule exactly (untrimmed view, no shadow)",
+ "decision_record": {
+  "transfer": "The sleeve's designed edge is computed on completed bars (desk convention, sleeves/momentum.py last_completed); a forming bar is a partial, revisable print \u2014 decisions taken on it pay real spread/slippage for a signal that may not exist at the close.",
+  "comparison": "Same-pass paired A/B: treatment (completed bars only) vs shadow control (untrimmed view) evaluated on identical opportunities in a throwaway state dir; control intents never emitted.",
+  "mechanism": "compute_features, stop-breach and trail checks read bars[-1]; the spec is close-based ('trail breach at close vs 10MA'), so a forming bar's partial close can force a stop exit before the close exists.",
+  "calculation": "Fixture A/B: held 10 @ 100 (stop falls back to entry), 30 completed bars at 100, forming bar at 85. Control: 1 stop-breach exit. Treatment: no exit.",
+  "experiment": "tests/test_harden_edge_batch17_blockers.py: control cases reproduce pre-change behavior (switch OFF), treatment cases assert the changed decision; fail-first proven (4 treatment failures on pre-cure tree, 2026-10-24)."
+ },
+ "ab": {
+  "leak": "stop/trail judged on forming daily close",
+  "fixture": "Fixture A/B: held 10 @ 100 (stop falls back to entry), 30 completed bars at 100, forming bar at 85. Control: 1 stop-breach exit. Treatment: no exit."
+ }
+}
