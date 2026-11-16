@@ -54,11 +54,20 @@ ENTRY_WINDOW_S = 300
 # the paired shadow record (control = no entry) on enhance_exp.
 # OFF restores the exact 300s rule.
 EXP_ID_ABS = "ENH-ABS-WINDOW-20261024"
-TREATMENT_WINDOW_S = 3600  # = config cadence_s for all five sleeves
+TREATMENT_WINDOW_S = 3600  # = config cadence_s for all eleven sleeves
 WINDOW_SIDS = frozenset({
     "aster_abs_base_ada_fullcash", "aster_abs_base_ada_vol1pct",
     "aster_abs_neg_ada_fullcash", "aster_abs_neg_ada_vol1pct",
-    "aster_abs_nonneg_ada_fullcash"})
+    "aster_abs_nonneg_ada_fullcash",
+    # ADA-WINDOW-20261116 (desk full audit Phase E1): the same cure
+    # extended to the six ADA siblings the 2026-10-24 batch never
+    # added — identical 3600s cadence, identical fixture proof
+    # (entry at lag 120s, none at 1800s/3500s, ~8% executable).
+    # aster_pub_rsi2_ada consumes the roster through its own
+    # evaluate_rsi2 window below, same principle.
+    "aster_abs_nonneg_ada_vol1pct", "aster_breakout_ada_fullcash",
+    "aster_breakout_ada_vol1pct", "aster_squeeze_ada_fullcash",
+    "aster_abs_neg_ada_vol1pct_varsg", "aster_pub_rsi2_ada"})
 
 
 def _window_on(view, ctx, sid):
@@ -85,9 +94,56 @@ def _now(view):
     return _stamp(view["now"])
 
 
+def _resample_1h_to_4h(rows):
+    """Local twin of desk3.crypto_bars.resample_1h_to_4h (this
+    package loads standalone): complete UTC 4h buckets only."""
+    from datetime import timezone as _tz
+    buckets = {}
+    for r in rows or []:
+        try:
+            d = datetime.fromisoformat(str(r["t"]).replace("Z", "+00:00"))
+            if d.tzinfo is None:
+                d = d.replace(tzinfo=_tz.utc)
+            ep = d.timestamp()
+        except (TypeError, ValueError, KeyError):
+            continue
+        buckets.setdefault(int(ep // 14400) * 14400, []).append((ep, r))
+    out = []
+    for start in sorted(buckets):
+        hrs = sorted(buckets[start], key=lambda x: x[0])
+        if len(hrs) != 4:
+            continue
+        rs = [r for _, r in hrs]
+        try:
+            out.append({"t": datetime.fromtimestamp(
+                            start, _tz.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                        "o": float(rs[0]["o"]),
+                        "h": max(float(r["h"]) for r in rs),
+                        "l": min(float(r["l"]) for r in rs),
+                        "c": float(rs[-1]["c"]),
+                        "v": sum(float(r["v"]) for r in rs)})
+        except (TypeError, ValueError, KeyError):
+            continue
+    return out
+
+
 def _bars(view, tf):
-    rows = (view.get("bars") or {}).get(f"{SYMBOL}|{tf}") or []
-    return sorted(rows, key=lambda r: str(r["t"]))
+    m = view.get("bars") or {}
+    rows = m.get(f"{SYMBOL}|{tf}") or []
+    if rows:
+        return sorted(rows, key=lambda r: str(r["t"]))
+    # F4-CRYPTO-BARKEY-20261114: no producer serves the archive
+    # ADAUSDT keys; resolve the served Alpaca spot form ADA/USD
+    # (native frame first, then the 1Hour tape resampled to 4Hour).
+    # Semantics identical to desk3/crypto_bars.resolve_bars.
+    spot = SYMBOL[:-4] + "/USD" if SYMBOL.endswith("USDT") else None
+    if spot:
+        rows = m.get(f"{spot}|{tf}") or []
+        if rows:
+            return sorted(rows, key=lambda r: str(r["t"]))
+        if tf in ("4Hour", "4H", "240min"):
+            return _resample_1h_to_4h(m.get(f"{spot}|1Hour") or [])
+    return []
 
 
 def _positions(view, sid):
@@ -161,12 +217,20 @@ def known_funding_rate(view, close_at, now):
 
 
 # ------------------------------------------------------- absorption
-def _absorption_flags(bars):
+def _absorption_flags(bars, shock_mult=Decimal(2)):
     """Port of absorption/signals.py advance(): EMA recurrence
     (vol k=2/21, price k=2/51) seeded on the first bar; a bar is a
-    bearish shock when volume > 2x volume-EMA, close < open and
-    close < price-EMA; the NEXT bar confirms when it closes bullish
-    above the shock bar's midpoint. Returns [(confirmed, count)]."""
+    bearish shock when volume > shock_mult x volume-EMA, close <
+    open and close < price-EMA; the NEXT bar confirms when it
+    closes bullish above the shock bar's midpoint. Returns
+    [(confirmed, count)].
+
+    GATE-CURE-CRYPTO-20261112 (STRICTNESS-CENSUS proposals 10-11):
+    the registered shock multiple is per family:
+    absorption_negative_funding 1.5 (was 2.0), 
+    absorption_nonnegative_funding 1.25 (was 2.0); absorption_base
+    keeps the default 2.0. Rollback: restore Decimal(2) for every
+    family at the evaluate_crypto call site."""
     out = []
     count = 0
     vol_ema = price_ema = None
@@ -181,7 +245,7 @@ def _absorption_flags(bars):
                 (Decimal(2) * v + Decimal(19) * vol_ema) / Decimal(21)
             price_ema = c if price_ema is None else \
                 (Decimal(2) * c + Decimal(49) * price_ema) / Decimal(51)
-            shock = bool(v > Decimal(2) * vol_ema and c < o
+            shock = bool(v > shock_mult * vol_ema and c < o
                          and c < price_ema)
             confirmed = bool(prev and prev[1] and c > o
                              and c > (prev[0]["h"] + prev[0]["l"]) / Decimal(2))
@@ -210,7 +274,14 @@ def _paired(view, ctx, rec):
         ex.setdefault("enhance_paired", []).append(rec)
 
 
-def evaluate_crypto(view, ctx, sid, family, capacity):
+def evaluate_crypto(view, ctx, sid, family, capacity,
+                    drop_funding_sign=False):
+    # VARIATION-ROSTERING-20261115 (2026-11-15): drop_funding_sign is
+    # the registered F4 _varsg form (SIGN_GATE_DROP): the caller admits
+    # entries at any OBSERVED funding rate for the
+    # absorption_negative_funding family. Default False; every parent
+    # caller omits it and keeps the rate < 0 leg exactly. Funding
+    # unobserved still fails closed above for all funding families.
     now = _now(view)
     held = _positions(view, sid)
     out = []
@@ -259,12 +330,29 @@ def evaluate_crypto(view, ctx, sid, family, capacity):
         boundary = max(float(r["h"]) for r in bars[i - 20:i])
         triggered = float(signal_bar["c"]) > boundary
     else:
-        flags = _absorption_flags(bars)
+        # GATE-CURE-CRYPTO-20261112 (proposals 10-11): registered
+        # per-family shock multiples; base keeps 2.0.
+        mult = {"absorption_negative_funding": Decimal("1.5"),
+                "absorption_nonnegative_funding": Decimal("1.25")
+                }.get(family, Decimal(2))
+        flags = _absorption_flags(bars, mult)
         confirmed, count = flags[len(bars) - 2]
         triggered = bool(confirmed and count >= 300)
-    if family in ("negative_funding_squeeze",
-                  "absorption_negative_funding"):
-        triggered = triggered and rate is not None and rate < 0
+    if family == "negative_funding_squeeze":
+        # GATE-CURE-CRYPTO-20261112 (proposal 8): the ADA squeeze
+        # funding leg relaxes < 0 -> < 0.0002 (0 -> 13 entry days).
+        # Rollback: restore rate < 0 here and in the ENH-B11
+        # entry-bar revalidation below.
+        triggered = triggered and rate is not None and rate < 0.0002
+    elif family == "absorption_negative_funding":
+        # Proposal 10 loosens only this family's shock multiple;
+        # its funding leg stays < 0 exactly.
+        # VARIATION-ROSTERING-20261115 (2026-11-15): only a caller
+        # passing drop_funding_sign=True (the registered _varsg
+        # variation module) drops the sign leg; rate is already
+        # known non-None here (unobserved funding returned above).
+        triggered = triggered and rate is not None and \
+            (drop_funding_sign or rate < 0)
     elif family == "absorption_nonnegative_funding":
         triggered = triggered and rate is not None and rate >= 0
     if not triggered:
@@ -299,7 +387,11 @@ def evaluate_crypto(view, ctx, sid, family, capacity):
             family == "negative_funding_squeeze" and \
             _enh_on(view, ctx, sid, "funding_revalidation"):
         rate_entry = known_funding_rate(view, entry_close, now)
-        ok = rate_entry is not None and rate_entry < 0
+        # GATE-CURE-CRYPTO-20261112 (proposal 8): the revalidation
+        # carries the same registered threshold as the signal gate
+        # (funding < 0.0002), or entries in [0, 0.0002) would refuse
+        # here after qualifying at the signal bar.
+        ok = rate_entry is not None and rate_entry < 0.0002
         _paired(view, ctx, {"exp_id": "ENH-B11-" + sid, "sleeve": sid,
                             "control": "enter", "treatment": "enter" if ok else "refuse_funding_normalized",
                             "funding_at_signal": rate, "funding_at_entry": rate_entry,
@@ -393,9 +485,19 @@ def evaluate_rsi2(view, ctx, sid):
     if len(bars) < 200:
         return []
     last_close_dt = _stamp(bars[-1]["t"]) + timedelta(hours=1)
-    if not timedelta(0) <= now - last_close_dt <= timedelta(
-            seconds=ENTRY_WINDOW_S):
-        return []  # decision window: 300s after the completed bar
+    # ADA-WINDOW-20261116: same ENH-ABS-WINDOW-20261024 treatment in
+    # this evaluator's own shape — the archive 300s decision window
+    # at this sleeve's 3600s cadence made ~92% of designed RSI2
+    # signals unexecutable; the window extends to one full cadence
+    # (the decided bar remains bars[-1] throughout: the next bar
+    # completes 1h later), signal/price/sizing unchanged, switch
+    # entry_window_cadence default ON (OFF = exact 300s), paired
+    # shadow record on late entries.
+    lag = now - last_close_dt
+    window_s = max(ENTRY_WINDOW_S, TREATMENT_WINDOW_S) \
+        if _window_on(view, ctx, sid) else ENTRY_WINDOW_S
+    if not timedelta(0) <= lag <= timedelta(seconds=window_s):
+        return []  # decision window after the completed bar
     if not (_WINDOW_START <= _stamp(bars[-1]["t"]) <= _WINDOW_END):
         return []
     rsi = _rsi(closes, 2)
@@ -407,6 +509,14 @@ def evaluate_rsi2(view, ctx, sid):
     qty = math.floor(_cash(view) / closes[-1])
     if qty <= 0:
         return []
-    return [_intent(sid, "entry", qty, closes[-1],
-                    "aster_public_rsi2_filtered",
-                    str(bars[-1]["t"])[:13])]
+    ent = _intent(sid, "entry", qty, closes[-1],
+                  "aster_public_rsi2_filtered",
+                  str(bars[-1]["t"])[:13])
+    if lag.total_seconds() > ENTRY_WINDOW_S:
+        ent["enhance_exp"] = {"exp_id": EXP_ID_ABS, "records": [
+            {"exp_id": EXP_ID_ABS, "sleeve": sid,
+             "lag_s": lag.total_seconds(),
+             "control": "no_entry_outside_300s_window",
+             "treatment": "entry_at_first_cadence_evaluation",
+             "qty": qty}]}
+    return [ent]
