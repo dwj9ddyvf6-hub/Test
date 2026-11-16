@@ -1,0 +1,25 @@
+{
+ "ab": {
+  "control_tranche2_intents": 0,
+  "direction_ok": true,
+  "plan_recorded": {
+   "full_qty": 3,
+   "tranche2_qty": 2
+  },
+  "treatment_tranche2_intents": 1,
+  "treatment_tranche2_qty": 2
+ },
+ "decision_record": {
+  "calculation": "Fixture: tranche-1 fills qty 1 of full 3 -> plan {tranche2_qty: 2, signal_date: entry session, full_qty: 3}; next pass with the 5/20 turn confirmed emits the tranche-2 entry qty 2. Feed OFF at entry -> no plan file, no tranche 2, exactly pre-change.",
+  "comparison": "Pre-change live path: tranche 2 keys off pos[tranche2_qty]/pos[signal_date] \u2014 fields NO desk component writes (the journal position record carries a fixed field list without them; the adapter translates only qty/entry_px/entry_date/intent_id). Measured: on desk-originated positions tranche 2 could never fire.",
+  "experiment": "Two-pass adapters3 drive sharing one state dir (entry pass + held-position pass with turn confirmed): ON fires tranche 2; OFF-at-entry never does. Paired records appended to capitulation_enh2_paired.jsonl beside the journal on every serve.",
+  "mechanism": "Input starvation cured at the source: the v2 adapter records the tranche plan when it translates a tranche-1 entry (the intent reason states the full size verbatim, 'tranche1 (of full N)') into a state file beside the sleeve journal (the bb_rsi_divergence adapter's recorded-entry-plan pattern), and serves it merged into the position until held qty reaches the full size. The pinned sleeve's frozen tranche-2 rule then runs as designed.",
+  "transfer": "The SixSigma scale-in is the strategy: half on the capitulation signal, half on the 5/20 turn confirmation. The second half is where the confirmed reversal pays; without it every position is half-sized forever."
+ },
+ "disposition": "APPLY ENH2-CAPITULATION-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestCapitulationTrancheFeed",
+ "exp_id": "ENH2-CAPITULATION-20261024",
+ "paper_only": true,
+ "sleeve": "capitulation",
+ "switch": "extra.capitulation_improve.tranche_plan_feed (adapter) default ON; OFF serves the pre-change starved record exactly"
+}
