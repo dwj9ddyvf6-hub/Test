@@ -1,0 +1,27 @@
+{
+ "sleeve": "aster_r19_linkusdt_absorption_base_fixed16_volume1pct",
+ "exp_id": "ENH-ASTER-R19-B11-20261024",
+ "batch": "edge-7",
+ "note": "Gate landed engine-wide in desk3/aster_b11_crypto.py by Edge batch 8 (ENH-B8, commit c56a19d); this record is the \u00a72a decision record + A/B proof for the absorption_base pair, which batch 8's proof set did not cover.",
+ "decision_record": {
+  "transfer": "Absorption timing edge on 4h LINKUSDT bars: forced sellers on the shock bar pay for immediacy; the confirmation surplus decays after the confirming close \u2014 a late entry buys the same fixed 16h hold at a stale close after the information is public.",
+  "comparison": "Price-aware baseline = the pre-change sleeve itself (shadow control, ENH-B8 aster_edge_journal): enters on the latest completed bar's signal at any age.",
+  "mechanism": "Stale-signal entry leak: no entry window \u2014 entries fired at any signal age (measured 12h stale, 3 unseen 4h bars) sized off the stale close into a fixed 16h hold.",
+  "calculation": "signal_age_h = (now - (signal_bar_t + 4h)) / 3600. Pre-change measurement (ENH-B8): 12/12 b11/b12 LINK sleeves entered on a 12h-stale signal bar. Treatment refuses age > 4h (one full bar interval: at least one newer completed bar exists that the snapshot never showed, so neither the confirmation nor the price_hint is verifiable).",
+  "experiment": "Pre-registered: fresh (age 0) enters ON and OFF identically; stale (age 12h) enters OFF, refused ON; deadline exit at stale age still fires ON. Rejection rule: any fresh divergence or gated exit kills it. Blockers: tests/test_harden_edge_batch7_blockers.py::TestLinkFreshnessGate + batch-8 blockers (fail-first proven there)."
+ },
+ "switch": "view.extra['aster_edge'][<sid>]['stale_signal_gate'], default ON; OFF (False) restores the pre-change rule exactly",
+ "ab": {
+  "fresh_intents": 1,
+  "stale_age_h": 12,
+  "stale_control_intents": 1,
+  "stale_treatment_intents": 0,
+  "paired_record": {
+   "sleeve": "aster_r19_linkusdt_absorption_base_fixed16_volume1pct",
+   "enhanced": "refuse_stale_signal",
+   "shadow_faithful": "enter",
+   "signal_age_h": 12.0
+  }
+ },
+ "verdict": "ENHANCED \u2014 stale-signal entries refused beyond one bar interval"
+}
