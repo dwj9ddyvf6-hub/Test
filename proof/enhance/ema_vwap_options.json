@@ -1,0 +1,26 @@
+{
+ "ab_drive": {
+  "case": "short leg bid 0.05 / ask 0.95 (spread 180% of mid)",
+  "control_intents": 2,
+  "fresh_intents": 2,
+  "switch_off_intents": 2,
+  "treatment_intents": 0
+ },
+ "batch": 15,
+ "blockers": "tests/test_enhance_batch15_blockers.py",
+ "decision_record": {
+  "calculation": "gate thresholds are the sleeve's own constants/cadence: 2x the 4h bar (basis), 1x the 3600s cadence (ENJ book), 5x the long-leg 10% liquidity gate (short leg), 10 calendar days for a daily bar (covers any long weekend/holiday gap)",
+  "comparison": "price-aware baseline = the sleeve's own pre-change rule evaluated on the same fixture (switch OFF drive)",
+  "experiment": "pre-registered A/B fixture drives in tests/test_enhance_batch15_blockers.py: ON refuses, OFF enters, fresh enters; fail direction proven (5 enhanced tests fail with the cure removed, pass restored)",
+  "mechanism": "refuse call debit spread entries when the short leg's (ask-bid)/mid > 0.50; entry debit is priced off the short bid while exit value is priced off its ask, and only the long leg carried a liquidity gate",
+  "transfer": "counterparties paying for immediacy/reversion on a live print keep the surplus only while the print is live; a stale print transfers the sleeve's capital to whoever holds the live side"
+ },
+ "disposition": "ENHANCED",
+ "e2e": "port-batch fixture drives (test_port_batch2/3_blockers) re-run GREEN with gates ON",
+ "gate": "short_leg_spread_gate",
+ "layer": "v3 adapter entrypoint post-filter (desk3/enhance15.py); sha-pinned sleeves/ + adapters/ and line-pinned desk3/strategies/ untouched; exits never filtered",
+ "mechanism": "refuse call debit spread entries when the short leg's (ask-bid)/mid > 0.50; entry debit is priced off the short bid while exit value is priced off its ask, and only the long leg carried a liquidity gate",
+ "program": "ENH2 second look (v3 Harden+Enhance)",
+ "sleeve": "ema_vwap_options",
+ "switch": "ema_vwap_options_enh2.short_leg_spread_gate (default ON; OFF restores pre-change rule exactly)"
+}
