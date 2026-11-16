@@ -1,0 +1,12 @@
+# Synthesis notes — read 2026-10-16
+- IBD: buy range buy point to +5%; profit zone 20-25% from buy point; loss rule 7-8% below purchase. Sources investors.com (verified live for taking-profits page), search index for others.
+- Leaderboard: stocks moved to Cut List on sell signals — GlobeNewswire IBD release (index).
+- TradingView: ideas locked after 15 min edit window, not deletable, updates via Update Idea — support page (index).
+- MQL5 signal lifecycle guide: PREVIEW/PENDING/ACTIVE/COMPLETED/EXPIRED/CANCELLED; pending auto-expires after 30-50 bars default; expired/cancelled are NOT losses (index).
+- FINRA 2241 / SEC order: analyst must not benefit from knowledge of content/timing ahead of audience; old NASD paradigm 30d before / 5d after discussed; firms set own reasonably designed periods (index, SEC pdf).
+- Options: OIC bull call spread — max loss = net debit, max gain = strike width - net debit, BEP = long strike + net debit (index via InvestorPlace/OIC and Investopedia table). tastytrade order ticket shows PoP, P50, max profit/loss, BP effect, theta, delta (verified live support page).
+- tasty management convention (secondary): close credit spreads at 50% max profit, manage at 21 DTE (index, Nasdaq/tasty summary).
+- Integrity: AWS event sourcing = event store as single source of truth, append-only (index/open landing); dbt tests: unique/not_null/accepted_values/relationships + singular SQL tests returning 0 rows (index); Great Expectations checkpoints (index); Confluent compatibility modes (index).
+- Cadence: Google SRE cascading failures — deadlines, deadline propagation, check remaining time before each stage, no work past deadline (verified live). Airflow: execution_timeout per task, dagrun_timeout, sla (index docs). Dagster partitions/backfills, freshness (index).
+- R:R: breakeven win rate = 1/(1+R); R=0.35 => 74.1%. Ticksprout / FastBull formulas (index). Targets must sit at structure, not invented to make ratio look good.
+- No universal standard found for: closed-idea display duration, T1-T2 minimum spacing, sub-1 R:R ban. Those rules in report are proposed, labelled as such.
