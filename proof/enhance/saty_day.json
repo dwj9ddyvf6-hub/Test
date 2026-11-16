@@ -1,0 +1,16 @@
+{
+ "sleeve": "saty_day",
+ "batch": 25,
+ "verdict": "VERIFY-ONLY",
+ "exp_id": "ENH25-VERIFY-20261024",
+ "paper_only": true,
+ "leak": "none binding; gates trace-proven",
+ "decision_record": {
+  "transfer": "Saty-derived edge is paid for disciplined intraday/0DTE execution of the designer's levels; capture depends on fresh quotes, bounded spreads and hard session clocks - all already gated inside the byte-pinned strategy.",
+  "comparison": "Candidate leak classes (stale quotes, spread crossing, late-session entries, unbounded daily loss) vs the strategy's own gates, read line-level, plus a fail-closed trace on an empty snapshot.",
+  "mechanism": "No binding leak survives scrutiny. Internal gates: completed-bar-only signal reads (bars filtered by close_time <= now), $10K daily stop (his stated rule), 15:55 ET flat-by-design, exits keyed to underlying closes never option premium. Strategy + adapter are byte-identical to the v2 oracle (tests/test_port_b7_blockers.py / test_port_batch6_blockers.py hash pins) - any wrapper change would trade a proven path for an unproven one.",
+  "calculation": "Trace: evaluate on an empty view returns [] for the sleeve (fail closed, no phantom intent); port fixture suites pass on the final tree (see HARDEN-PROGRESS batch 25).",
+  "experiment": "Re-run tests/test_edge_batch25_blockers.py::TestSatyVerifyOnlyTraces + the port b6/b7 suites; any intent emitted on empty input, or a port-suite failure, falsifies this verdict."
+ },
+ "evidence": "tests/test_edge_batch25_blockers.py::TestSatyVerifyOnlyTraces GREEN; gate inventory read from the pinned source this pass"
+}
