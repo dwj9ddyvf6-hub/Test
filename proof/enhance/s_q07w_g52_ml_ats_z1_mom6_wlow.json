@@ -1,0 +1,28 @@
+{
+ "sleeve": "s_q07w_g52_ml_ats_z1_mom6_wlow",
+ "batch": 22,
+ "verdict": "ENHANCED",
+ "exp_id": "ENH-Q07EXEC-20261024",
+ "paper_only": true,
+ "leak": "stale fire price sizes entry",
+ "decision_record": {
+  "transfer": "Tensor 1W confluence edge is paid by dip-buyers on a QQQ-down day within 5 sessions of the signal; capture requires entering at the current price in the designed $1,000 slot with a true 15% stop.",
+  "comparison": "Signal-time fire price (up to 5 sessions stale) vs latest bar close for price-sensitive filters, sizing and stop, on identical fires/bars.",
+  "mechanism": "Execution/risk: the market entry fills at the current price, but pre-change qty/stop/filters used the stale fire price \u2014 fills oversized past the slice and the stop sat far below the designed 15% under the fill.",
+  "calculation": "Fixture fire $10, current $20: control qty=100 stop=8.5 (fill cost $2000, stop 57.5% below fill); treatment qty=50 stop=17.0 (fill cost $1000, stop 15% below fill). deep70 computed sleeves additionally refuse when the current price no longer satisfies deep70.",
+  "experiment": "Pre-registered A/B in tests/test_edge_batch22_blockers.py::TestExecPrice (treatment vs switch-OFF control on identical fixtures). Rejection rule: OFF divergence from pre-change, any treatment entry whose qty*current price exceeds the slot, or stop != 0.85*current \u2014 revert. Forward paired rows in extra.q07_exp_journal."
+ },
+ "change": "Filters (cheap5/deep70 price terms), share sizing and 15% stop revalidated at the latest bar close; fire price is fallback only when no bars exist",
+ "switch": "extra.q07_enh[<sleeve>].exec_price default ON; OFF restores pre-change rule exactly",
+ "shadow_control": "switch OFF on identical fixtures; live paired records in extra.q07_exp_journal",
+ "blocker": "tests/test_edge_batch22_blockers.py::TestExecPrice",
+ "fail_first": "5 failures across batch-22 blockers on pre-change engines (stash-proven); 9/9 GREEN after",
+ "ab": {
+  "control_qty": 100,
+  "control_stop": 8.5,
+  "treatment_qty": 50,
+  "treatment_stop": 17.0,
+  "fixture_fire_price": 10.0,
+  "fixture_current_price": 20.0
+ }
+}
