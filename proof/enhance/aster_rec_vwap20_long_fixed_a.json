@@ -1,0 +1,24 @@
+{
+ "sleeve": "aster_rec_vwap20_long_fixed_a",
+ "exp_id": "ENH-ASTERB3-MIDLIMIT-20261024",
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 10",
+ "status": "pre-registered",
+ "date": "2026-10-24",
+ "binding_leak": "full-spread crossing on market orders",
+ "decision_record_2a": {
+  "transfer": "Liquidity demanders pay the quoted spread to immediacy providers; these sleeves were donating it back by crossing ask-on-entry / bid-on-exit with market orders on a 5-session recovery edge.",
+  "comparison": "Paired shadow control on the same opportunity: control_price = package ask (entry) / package bid (exit) the pre-change market order would have crossed; treatment = limit at package mid.",
+  "mechanism": "Execution / spread capture: replace market orders with a limit at the bid/ask mid of the already-fetched fresh quotes. Selection, sizing (still computed off the ask debit), gates, exits rules unchanged.",
+  "calculation": "saved_per_package = control_price - treatment_mid (entry) or treatment_mid - control_price (exit), recorded per intent in enhance_exp.spread_saved; sleeve P&L uplift = sum over filled paired records minus any mid-limit non-fills.",
+  "experiment": "Forward paper: paired records journaled (extra['aster_enh_exp_journal']) for every treated intent. Reject if mid-limit fill rate < 80% of control-window entries over 20 paired opportunities, or mean spread_saved <= 0. Switch OFF restores the pre-change market order exactly (blocker-proven)."
+ },
+ "engine": "desk3/aster_batch3.py",
+ "switch": {
+  "key": "extra['enh_aster_rec_vwap20_long_fixed_a'] or engine fallback",
+  "field": "mid_limit",
+  "default": true,
+  "off_restores": "pre-change market order exactly"
+ },
+ "shadow_control": "never emits; control price recorded on the treated intent only",
+ "blockers": "tests/test_harden_edge_batch10_blockers.py"
+}
