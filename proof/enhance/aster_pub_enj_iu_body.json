@@ -1,0 +1,18 @@
+{
+ "ab": {
+  "control_exits_no_bars_held": 0,
+  "treatment_exits_no_bars_held": 1
+ },
+ "decision_record": {
+  "calculation": "Fixture (batch-4 ATR geometry): entry 10 bars back via opened_at, peak close 24, ATR ~1.0, stop ~22, final bar low 20.8. Control: 0 exits (bars_held absent). Treatment: ATR trailing-stop exit.",
+  "comparison": "Stop as coded (requires bars_held) vs desk position rows as produced (opened_at, no bars_held) \u2014 the same field gap EDGE batch 6 cured for the sibling LINK ai_volume sleeve in this engine.",
+  "experiment": "Fixture A/B above + switch-OFF restoration; bars_held-carrying fixtures unchanged (batch-4 blockers re-proven). Blockers: TestEnjHeldBarsDerived.",
+  "mechanism": "Risk: the ATR trailing stop is the sleeve's ONLY price stop. On real rows it never evaluated, so a failed impulse could retrace without bound until an opposite-body bar happened to print. Treatment derives bars held from opened_at against bar close stamps (bars are 4h) and the designed stop fires.",
+  "transfer": "Impulse-body momentum on ENJUSDT spot: a body >4x the 21-bar mean marks aggressive taker flow; the sleeve rides it long-only, protected by an ATR14 x2 trailing stop."
+ },
+ "disposition": "ENHANCED",
+ "exp_id": "ENH-B5-ENJ-HELDBARS-20261024",
+ "paper_only": true,
+ "sleeve": "aster_pub_enj_iu_body",
+ "switch": "enhance_held_bars (shared desk3/aster_b4.py helper, EDGE batch 6) default ON; OFF restores field-only rule exactly"
+}
