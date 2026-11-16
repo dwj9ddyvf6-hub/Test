@@ -1,0 +1,22 @@
+{
+ "ab_drive": {
+  "case": "failure bar with delay elapsed, latest bar recovered, funding >= 0",
+  "control_intents": 0,
+  "direction": "treatment exits the normalized-and-failed squeeze the control holds",
+  "treatment_intents": 1
+ },
+ "batch": 6,
+ "decision_record": {
+  "calculation": "Fixture: failure bar (close below prior-3 lowest low) 2 bars before the latest with its 4h execution delay elapsed and funding currently >= 0; latest bar recovered. Baseline exits 0, treatment exits 1. Assumption recorded: funding history is not in the sleeve view, so the latch requires the CURRENT print >= 0 (the baseline's own funding condition) plus a latched price-failure bar.",
+  "comparison": "Frozen baseline (switch OFF): structural exit inspected ONLY the latest completed 4h bar. Comparator at decision time: any post-entry bar, same bars/funding/position fixtures.",
+  "experiment": "Paired A/B (tests/test_edge_batch6_blockers.py): control 0 vs treatment 1; per-bar delay respected (latest-bar failure with delay unmet exits under neither rule); negative current funding blocks the latch.",
+  "mechanism": "Risk-service provision (funding squeeze) with an event-based exit trigger; the leak is responsiveness \u2014 an event print that is no longer the latest bar is invisible to the baseline.",
+  "transfer": "Shorts paying negative funding are squeezed when price breaks out; the sleeve warehouses the long side of that squeeze. Its designed protection is the structural exit: the breakout failing means the squeeze thesis is dead."
+ },
+ "e2e": "tests/test_aster_batch6_blockers.py delay fixtures unchanged; latch A/B in tests/test_edge_batch6_blockers.py",
+ "exp_id": "ENH-B6-LATCH-20261024",
+ "mechanism": "latched post-entry scan for normalization-failure bars, per-bar 4h execution delay kept (was: latest bar only)",
+ "sleeve": "aster_r19_adausdt_negative_funding_squeeze_normalization_failure_volume1pct",
+ "switch": "enhance_trigger_latch default ON; OFF restores latest-bar-only exactly",
+ "verdict": "ENHANCED"
+}
