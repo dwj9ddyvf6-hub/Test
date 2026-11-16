@@ -32,6 +32,13 @@ def evaluate(view, ctx):
         return out
     alt = view.get("alt_data") or {}
     bars_map = view.get("bars") or {}
+    # GATE-CURE-RANDOM-20261112: candidates are collected with the
+    # unchanged filters, then emitted in ranked order — breakout
+    # strength (close / prior-20-session high) descending, then
+    # symbol — replacing alphabetical slot allocation (RULE-LOGIC-
+    # LEDGER-2026-11-12 Section 3 RANDOM row). The ENH19 slot
+    # guard and journal below are unchanged.
+    cands = []
     for key in sorted(bars_map):
         if not key.endswith("|1Day") or key == "QQQ|1Day":
             continue
@@ -49,6 +56,9 @@ def evaluate(view, ctx):
         sma20 = sum(closes[-21:-1]) / 20.0
         if last < 5.0 or last <= prior_high or last > 1.25 * sma20:
             continue
+        cands.append((sym, last, prior_high))
+    cands.sort(key=lambda t: (-(t[1] / t[2]), t[0]))
+    for sym, last, prior_high in cands:
         qty = _qty_for(SLOT_USD, last)
         if qty <= 0:
             continue
