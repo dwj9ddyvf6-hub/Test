@@ -1,0 +1,20 @@
+{
+ "ab_drive": {
+  "fresh_entries": 2,
+  "probe": "blocker TestVerifyOwnIvFreshness",
+  "stale_quote_entries": 0
+ },
+ "batch": 15,
+ "blockers": "tests/test_enhance_batch15_blockers.py (3 sleeves) + port-batch blockers (all)",
+ "decision_record": {
+  "calculation": "no new constants introduced; measurements are intent counts on the recorded fixture drives",
+  "comparison": "fresh vs stale/invalid fixture drives on the sleeve's own first-pass gate (switch/gate semantics unchanged by this batch)",
+  "experiment": "second-look probe drives recorded in this artifact (2026-10-24 batch 15); three of the seven are re-proven by gate-wired blockers in tests/test_enhance_batch15_blockers.py, the rest by the drives whose counts are recorded here",
+  "mechanism": "first-pass forecast/IV gate stands on top of the ported quote_block freshness contract (source <=90s, receipt <=30s, 2s future tolerance); a 3-day-old quote is refused before the package is priced",
+  "transfer": "the sleeve's designed payer/service is unchanged; the binding leak found by the first Edge pass is already gated at the source"
+ },
+ "disposition": "VERIFY-ONLY",
+ "mechanism": "first-pass forecast/IV gate stands on top of the ported quote_block freshness contract (source <=90s, receipt <=30s, 2s future tolerance); a 3-day-old quote is refused before the package is priced",
+ "program": "ENH2 second look (v3 Harden+Enhance)",
+ "sleeve": "free_opt_own_iv"
+}
