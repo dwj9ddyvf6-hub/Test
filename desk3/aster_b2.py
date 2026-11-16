@@ -15,7 +15,16 @@ families pead, core_reserve, recovery + books in options_rules.json:
 - Exits (source _exit_intents): planned session exit at hold_sessions;
   pre-expiry guard (session >= day before expiry); touch sleeves only:
   underlying bid >= entry_spot*1.02 while market open. Core QQQ leg: source
-  emits it once at 95% of capital and NEVER exits it (no rule) — preserved.
+  emits it once at 95% of capital and NEVER exits it (no rule) — preserved
+  until NO-EXIT-CORE-20261116 (owner ruling 2026-11-16: firing means
+  entering, exiting and closing; an entry with no reachable exit is a
+  machinery defect). The core leg now carries the family's own exit in
+  the same shape the options legs use below (planned session exit at
+  hold_sessions; touch exit at entry_spot*1.02 for touch books — the
+  core books are touch books). Pre-expiry guard does not apply (the
+  equity leg has no expiry). Sibling source: this module's options-leg
+  exit block and desk3/aster_batch3.py _exit_intents (RSI2 vertical
+  siblings, same planned/touch rules, hold_sessions=5).
 Fees: source reads snapshot option_fees.per_contract_per_fill; v3 producer
 does not supply it, so $0.65/contract/leg is used (recorded in FIDELITY-LEDGER).
 Inputs not produced by v3 producers (options chain, earnings_events) leave
@@ -24,8 +33,23 @@ the sleeves UNFED in the registry — never fake-fed.
 from __future__ import annotations
 from datetime import date, datetime, timedelta
 
-FEE_PER_CONTRACT = 0.65
+FEE_PER_CONTRACT = 0.65  # CONSTANTS-PROVENANCE-20261116: recorded assumption, FIDELITY-LEDGER (batch-2 row) + header above: source reads snapshot option_fees.per_contract_per_fill, unproduced in v3; fixtures supply $0.65
+# CONSTANTS-DERIVATIONS-20261116: DELIBERATE CONSERVATIVE COST MODEL — retained deliberately at the legacy industry-standard figure as a conservative cost model; Alpaca's published schedule (rev 2026-10-12) pass-through is ~$0.0403/contract/side; the difference is a known conservatism, revisited only with a sizing study.
 SLICE = 10000.0
+
+def _frac_qty(dollars, per_unit):
+    """WS4-FRACTIONAL-20261114 (owner ruling 2026-11-14 17:08 ET):
+    a positive dollar budget expressed as a fractional quantity,
+    rounded DOWN to 6dp, never up past the budget; 0.0 only when
+    the budget or the per-unit price is not positive. Whole-share
+    rounding made names priced above the budget unbuyable while
+    the budget was positive; OBS-1's no-floor rule stands for a
+    zero budget."""
+    if dollars <= 0 or per_unit <= 0:
+        return 0.0
+    import math as _m
+    return _m.floor((dollars / per_unit) * 1_000_000) / 1_000_000
+
 SPECS = {
  "aster_pead_long_a":      dict(book="OPT_PEAD_LONG_A", family="pead", structure="long", risk=0.02, dte=(21,35), delta=(0.5,0.65), hold=10, max_debit_width=0.6, max_premium_spot=0.04, exit_rule="fixed"),
  "aster_pead_long_b":      dict(book="OPT_PEAD_LONG_B", family="pead", structure="long", risk=0.005, dte=(21,35), delta=(0.5,0.65), hold=10, max_debit_width=0.45, max_premium_spot=0.02, exit_rule="fixed"),
@@ -247,7 +271,38 @@ def evaluate(sleeve_id, view, ctx=None):
     # Exits first (source evaluates exits even when entries are blocked)
     for p in positions:
         legs = p.get("legs")
-        if not legs: continue  # equity core leg: source has NO exit rule for it
+        if not legs:
+            # NO-EXIT-CORE-20261116: the QQQ equity core leg of a core
+            # book takes the family's own exit, in the same shape the
+            # options legs take it below: sessions held counted the
+            # same way (sessions_held, else bars after opened_at),
+            # planned session exit at spec["hold"], and for touch
+            # books (both core books are touch) the touch exit when
+            # the QQQ close reaches entry*1.02. Entry price reads
+            # entry_spot, falling back to the broker readback's
+            # avg_price (the core entry fills as an equity position,
+            # whose readback carries avg_price, not entry_spot).
+            if spec.get("core") and p["symbol"] == "QQQ":
+                held = p.get("sessions_held")
+                if held is None:
+                    b = _bars(view, "QQQ")
+                    ed = str(p.get("opened_at") or p.get("entry_date") or "")[:10]
+                    held = sum(1 for x in b if str(x.get("t"))[:10] > ed) if ed else 0
+                reason = None
+                if int(held) >= spec["hold"]: reason = "planned_session_exit"
+                if not reason and spec["exit_rule"] == "touch":
+                    b = _bars(view, "QQQ")
+                    spot = float(b[-1]["c"]) if b else float(p.get("entry_spot") or p.get("avg_price") or 0)
+                    entry_spot = p.get("entry_spot") or p.get("avg_price")
+                    if entry_spot and spot >= float(entry_spot)*1.02: reason = "touch_two_percent_recovery_exit"
+                if reason:
+                    b = _bars(view, "QQQ")
+                    spot = float(b[-1]["c"]) if b else float(p.get("avg_price") or 0)
+                    out.append({"intent_id": f"{sleeve_id}-exit-{p['symbol']}", "kind": "exit", "symbol": p["symbol"], "side": "sell",
+                                "qty": abs(float(p["qty"])), "order_type": "market", "limit_price": None, "stop_price": None,
+                                "reason": f"{sleeve_id} exit: {reason} held={held} leg=qqq_core", "time_in_force": "day", "position_intent": "sell_to_close",
+                                "price_hint": spot or None})
+            continue  # non-core equity position: no rule in this engine
         expiry = str(legs[0].get("expiry") or "")[:10]; held = p.get("sessions_held")
         if held is None:
             sym0 = legs[0].get("underlying"); b = _bars(view, sym0) if sym0 else []
@@ -308,8 +363,8 @@ def evaluate(sleeve_id, view, ctx=None):
     if spec.get("core") and not any(p["symbol"] == "QQQ" and not p.get("legs") for p in positions):
         b = _bars(view, "QQQ")
         if not b: return []
-        spot = float(b[-1]["c"]); qty = int((SLICE*0.95)/(spot*1.0015))
-        if qty < 1: return []
+        spot = float(b[-1]["c"]); qty = _frac_qty(SLICE*0.95, spot*1.0015)
+        if qty <= 0: return []
         return [{"intent_id": f"{sleeve_id}-core-init", "kind": "entry", "symbol": "QQQ", "side": "buy", "qty": qty,
                  "order_type": "market", "limit_price": None, "stop_price": None,
                  "reason": f"{sleeve_id} entry: funded_95_percent_QQQ_core book={spec['book']} reserve=0.05",
