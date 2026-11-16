@@ -266,7 +266,21 @@ class TestInstallWiring(unittest.TestCase):
     def test_config_rows_parked_with_named_reasons(self):
         cfg = json.load(open(os.path.join(ROOT, "config", "sleeves.json")))
         rows = cfg["sleeves"]
-        self.assertEqual(len(rows), 328)
+        # Roster count pin: 359 since CONVERSION-VARIATION-20261115 (2026-11-15): 358 + aster_trader_turtle2010 (CONV-47) rostered beside aster_trader_donchian55 (BUGLOG_2026-11-15.md); previously 358 since VARIATION-ROSTERING-20261115.
+        # 2026-11-09 (was 337 since soxl_pm_breakout landed
+        # 2026-11-03 (was 336 since the three bta_onebar sleeves landed
+        # 2026-10-30 (roster counted from this same config by the
+        # 2026-10-31 night inspection, 336/336). The 333 pin predated
+        # that landing and reddened the gate as GATE-RED-PRZM-PIN.
+        # SSO-PORT-CONV46-20261115: roster count 359 -> 361 (sso_opus, sso_opus_notime25 rostered).
+        # GOING-LIVE-BASKETS-20261115: roster count 361 -> 366 (the five overnight basket sleeves rostered live).
+        # GOING-LIVE-VARIATIONS-20261115: roster count 366 -> 381 (the 15 conversion variation sleeves rostered live).
+        # PF-SPOT-VARIATIONS-20261116: roster count 381 -> 387 (the six free_kraken PF spot variations rostered live).
+        # T474U-CRYPTO-PORT-20261116: roster count 387 -> 396 (the nine t474u crypto twins rostered live).
+        # SEGMENT-CONSTRUCTION-20261116: roster count 396 -> 398 (ls9_midday_short and b3_midday_fade_var rostered live).
+        # CONV57-G4-VARIATION-20261116: roster count 398 -> 399 (aster_tensor_g4_varmk rostered live).
+        # CONV123-REVIVAL-20261116: roster count 399 -> 400 (revival_basket rostered live).
+        self.assertEqual(len(rows), 400)
         ids = [r["id"] for r in rows]
         self.assertEqual(len(ids), len(set(ids)))
         for sid, needle in (("przm_zero", "NO_PRINT_TAPE"),
@@ -275,8 +289,26 @@ class TestInstallWiring(unittest.TestCase):
             self.assertEqual(len(row), 1, sid)
             row = row[0]
             self.assertEqual(row["module"], f"adapters3.{sid}")
-            self.assertTrue(row["parked"], sid)
-            self.assertIn(needle, row["params"]["parked_reason"])
+            if sid == "przm_fade_edges":
+                # FEED80-PRZM-20261114 (commit 5d1ef0f): UNPARKED per
+                # its own stated unpark condition; chain rows now
+                # carry gamma+OI. The row keeps its full provenance
+                # in parked_reason, including the prior NO_GAMMA_LEVELS
+                # stamp; przm_zero below stays parked.
+                self.assertFalse(row["parked"], sid)
+                self.assertIn("UNPARKED 2026-11-14 (FEED80-PRZM-20261114)",
+                              row["params"]["parked_reason"])
+                self.assertIn(needle, row["params"]["parked_reason"])
+            else:
+                # CLEAR-THE-BOARD-20261114: przm_zero is UNPARKED —
+                # PrzmTapeProducer (desk3/przm_tape.py) now serves
+                # the signed print tape from real Alpaca v1beta1
+                # prints; the stamp keeps the NO_PRINT_TAPE
+                # provenance (inside WAITING_NO_PRINT_TAPE).
+                self.assertFalse(row["parked"], sid)
+                self.assertIn("CLEAR-THE-BOARD-20261114",
+                              row["params"]["parked_reason"])
+                self.assertIn(needle, row["params"]["parked_reason"])
             self.assertEqual(row["slice"]["capital_usd"], 10000.0)
             self.assertEqual(row["session"], "rth")
             self.assertEqual(row["cadence_s"], 60)
