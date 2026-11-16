@@ -1,0 +1,27 @@
+{
+ "ab": {
+  "control": {
+   "flip_case": "enters 16650",
+   "funding_read_at": "signal bar (4h stale)"
+  },
+  "direction_ok": true,
+  "paired_record": "ctx['enhance_paired'] + extra['enhance_paired'] carry control/treatment + both funding readings",
+  "treatment": {
+   "flip_case": "refused",
+   "funding_read_at": "entry bar",
+   "still_negative_case": "enters 16650 (unchanged)"
+  }
+ },
+ "decision_record": {
+  "calculation": "Fixture (24x 4h ADA bars, breakout at signal bar): funding -0.001 at signal, +0.002 settled before entry close -> control enters qty 16650 (full cash), treatment refuses with paired record funding_at_signal=-0.001/funding_at_entry=+0.002; with entry funding still -0.003 treatment enters the identical qty 16650 (no size distortion).",
+  "comparison": "Baseline reads funding at the SIGNAL bar close (known_funding_rate at signal_close), 4h before the entry bar completes. Comparator: same bars/funding tape, funding re-read at the entry-bar close; entries proceed only while the freshest eligible receipt is still < 0.",
+  "experiment": "tests/test_harden_edge_batch11_blockers.py TestSqueezeAdaFundingRevalidation: flip refuses, still-negative enters unchanged, switch OFF restores the signal-time entry. Rejection rule: any refusal when the entry-bar funding is unobserved-but-signal-valid AND negative at entry, or any qty change when funding stays negative. Note: the 300s entry-window leak for this sleeve was already cured in-tree by edge batch 1 (ENH-ABS-WINDOW-20261024, window extended to the 3600s cadence); this is the next binding leak.",
+  "mechanism": "Perception (stale defining input): the strategy's defining condition is checked on a 4h-old observation and never revalidated at the moment full cash is deployed.",
+  "transfer": "The negative-funding squeeze's surplus is positioning: shorts paying funding into a breakout. If funding has normalized by the entry bar, the positioning premise \u2014 the scarce information \u2014 is gone."
+ },
+ "disposition": "ENHANCED: entry-bar funding revalidation (funding must still be < 0 at entry)",
+ "exp_id": "ENH-B11-aster_squeeze_ada_fullcash",
+ "paper_only": true,
+ "sleeve": "aster_squeeze_ada_fullcash",
+ "switch": "ctx['aster_squeeze_ada_fullcash_enhance'] / extra['aster_squeeze_ada_fullcash_enhance'] {'funding_revalidation': bool} default ON; OFF restores the pre-change signal-time rule exactly"
+}
