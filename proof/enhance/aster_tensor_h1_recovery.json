@@ -1,0 +1,22 @@
+{
+ "ab": {
+  "control_qty": 19,
+  "current_below_floor_control": "enter",
+  "current_below_floor_treatment": "refuse",
+  "direction_ok": true,
+  "treatment_qty": 39
+ },
+ "blockers": "tests/test_edge_batch13_blockers.py (14 tests, fail-first proven: 7 fail on pre-cure engines, 14/14 pass post-cure)",
+ "decision_record": {
+  "calculation": "Fixture: panel close 50.00, current bar close 25.00: control qty 19 (budget $1000), treatment qty 39 sized off the executable close. Current close 4.00: control enters, treatment refuses (current price < $5 floor).",
+  "comparison": "Pre-change engine sized and priced entries off the Tensor PANEL close; the panel arrives via the tensor bundle channel with an 86400s freshness SLA, while the sleeve also receives current bars for the same symbol/frame that it ignored for pricing.",
+  "experiment": "Fixture A/B (TestTensorRecReprice): treatment vs switch-OFF control on identical panels/bars; paired record (panel_price, current_price, control_qty, treatment_qty) attached to the entry intent's enhance_exp and the edge_exp_journal when supplied.",
+  "mechanism": "Stale-input execution leak: qty = budget//(panel_close*1.001) and price_hint = panel_close, so a moved name was bought at the wrong size and the design's $5 floor was checked against a price up to a day old.",
+  "transfer": "State-repair recovery edge: buying names whose Tensor vote balance repaired >=2 over 4 native bars, sized at min(10% equity, 1% DV20, cash); paid by the repair cohort's continuation over the 20-bar hold."
+ },
+ "disposition": "APPLY ENH-B13-TENSORREC-REPRICE-20261024",
+ "exp_id": "ENH-B13-TENSORREC-REPRICE-20261024",
+ "paper_only": true,
+ "sleeve": "aster_tensor_h1_recovery",
+ "switch": "extra.aster_tensor_rec_enh.exec_reprice default ON; OFF restores panel-close rule exactly"
+}
