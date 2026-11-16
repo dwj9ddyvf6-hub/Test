@@ -1,0 +1,25 @@
+{
+ "sleeve": "s_q07w_g52_ml_ins2_wlow",
+ "batch": 22,
+ "verdict": "ENHANCED",
+ "exp_id": "ENH-Q07WLOW-20261024",
+ "paper_only": true,
+ "leak": "wlow filter fails open unfed",
+ "decision_record": {
+  "transfer": "Green Tensor 1W mid/large edge conditioned on LOW Wikipedia attention (un-crowded names); the transfer exists only when low attention is actually evidenced.",
+  "comparison": "Missing wiki evidence treated as 0 views (pass) vs missing evidence fails closed, as every other filter in desk3/q07_engine.py already does.",
+  "mechanism": "Perception/data integrity: a fire with no wiki_views_30d and no wiki_low tag entered pre-change \u2014 the sleeve traded its defining filter on no data; measured fixture: no-evidence fire entered qty=20 @ $50, high-evidence (50,000 views) correctly refused.",
+  "calculation": "Fixture (ins2=3, price $50, QQQ down, age 0): control (switch OFF) 1 entry on zero wiki evidence; treatment 0 entries; with wiki_views_30d=120 both rules enter 1; with 50,000 both refuse.",
+  "experiment": "Pre-registered A/B in tests/test_edge_batch22_blockers.py::TestWlowEvidence. Rejection rule: OFF divergence, or treatment refusing an evidenced-low fire \u2014 revert. Forward paired rows in extra.q07_exp_journal."
+ },
+ "change": "wlow requires evidence: wiki_low tag true, or a present wiki_views_30d below 1000; absent evidence fails closed (wlow_unfed)",
+ "switch": "extra.q07_enh[s_q07w_g52_ml_ins2_wlow].wlow_evidence default ON; OFF restores pre-change fail-open exactly",
+ "shadow_control": "switch OFF on identical fixtures; live paired records in extra.q07_exp_journal",
+ "blocker": "tests/test_edge_batch22_blockers.py::TestWlowEvidence",
+ "fail_first": "5 failures across batch-22 blockers on pre-change engines (stash-proven); 9/9 GREEN after",
+ "ab": {
+  "control_entries_no_evidence": 1,
+  "treatment_entries_no_evidence": 0,
+  "entries_low_evidence_both": 1
+ }
+}
