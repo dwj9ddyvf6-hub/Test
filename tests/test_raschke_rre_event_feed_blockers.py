@@ -70,9 +70,10 @@ class TestCalendarData(unittest.TestCase):
         self.assertIsNotNone(doc)
         self.assertEqual(doc["coverage_start"], "2026-01-01")
         self.assertEqual(doc["coverage_end"], "2027-12-31")
-        self.assertEqual(len(doc["events"]), 64)
+        self.assertEqual(len(doc["events"]), 88)
         kinds = {e["kind"] for e in doc["events"]}
-        self.assertEqual(kinds, {"FOMC", "CPI", "NFP"})
+        self.assertEqual(kinds, {"FOMC", "CPI", "NFP",
+                                 "ISM_MFG", "ISM_SVC"})
         dates = [e["date"] for e in doc["events"]]
         self.assertEqual(len(dates), len(set(dates)))
 
@@ -125,7 +126,7 @@ class TestProducer(unittest.TestCase):
         self.assertTrue(p["coverage_known"])
         self.assertFalse(p["events_clear"])
         self.assertEqual(p["event"]["kind"], "FOMC")
-        self.assertEqual(len(p["events"]), 64)
+        self.assertEqual(len(p["events"]), 88)
 
     def test_serves_clear_day(self):
         p = _payload("2026-10-26")
