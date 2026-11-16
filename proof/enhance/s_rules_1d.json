@@ -1,0 +1,32 @@
+{
+ "sleeve": "s_rules_1d",
+ "batch": 25,
+ "verdict": "ENHANCED",
+ "exp_id": "ENH25-RULES-FRESH-20261024",
+ "paper_only": true,
+ "leak": "stale fire crowds fresh slot",
+ "decision_record": {
+  "transfer": "Frozen-rules Tensor fires (43-rule books) pay for dip entries on QQQ-down days; the edge decays with fire age inside the 48h (1d) / 8d (1w) acceptance window, so the scarce slot belongs to the freshest signal.",
+  "comparison": "Producer list order (pre-change) vs freshest fired_at first, on identical fires/positions; switch OFF restores list order exactly.",
+  "mechanism": "Responsiveness/selection: slot allocation iterated fires in producer order \u2014 an in-window but stale fire listed first took the last slot and crowded out a same-day fire (Q07FRESH class, cured in the Q07 engines, never applied to desk3/lazarus.py).",
+  "calculation": "Fixture s_rules_1w (6 slots, 5 held): fires OLD 2026-10-16 + NEW 2026-10-23 - control enters OLD, treatment enters NEW. s_rules_1d (44 slots): entry order [OLD, NEW] control vs [NEW, OLD] treatment.",
+  "experiment": "Pre-registered A/B in tests/test_edge_batch25_blockers.py::TestRulesFreshFirst (treatment vs switch-OFF control on identical fixtures). Rejection rule: OFF divergence from producer order, or treatment first-entry not the freshest eligible fire - revert. Forward paired rows in extra.enh25_journal."
+ },
+ "change": "Entry slot allocation sorts eligible fires freshest fired_at first (stable); producer order kept for all non-rules sleeves and when the switch is OFF",
+ "switch": "extra.<sleeve>_enh25.fresh_first default ON; OFF restores pre-change rule exactly",
+ "shadow_control": "switch OFF on identical fixtures; live paired records in extra.enh25_journal",
+ "blocker": "tests/test_edge_batch25_blockers.py::TestRulesFreshFirst",
+ "fail_first": "3 rules tests failed on pre-cure engine (stash-proven); 8/8 GREEN after",
+ "ab": {
+  "s_rules_1w_control_first": "OLD",
+  "s_rules_1w_treatment_first": "NEW",
+  "s_rules_1d_control_order": [
+   "OLD",
+   "NEW"
+  ],
+  "s_rules_1d_treatment_order": [
+   "NEW",
+   "OLD"
+  ]
+ }
+}
