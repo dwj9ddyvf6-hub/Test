@@ -1,0 +1,31 @@
+{
+ "ab": {
+  "control_nvda_entry_stale18d": 1,
+  "treatment_nvda_entry_stale18d": 0,
+  "treatment_other_entries": ">=1"
+ },
+ "binding_leak": "rebalance entries on weeks-old bars never aged",
+ "blockers": "tests/test_edge_batch26_blockers.py TestTsMomentumStaleGate (3 tests)",
+ "date": "2026-10-24",
+ "decision_record_2a": {
+  "calculation": "Fixture A/B: the port suite's 260-bar decile fixture with NVDA's series ending 2026-10-05 (18 days before the 2026-10-23 session): control enters NVDA; treatment refuses NVDA and still enters the rest of the decile.",
+  "comparison": "Paired shadow control: control = pre-change ranking (forming bar dropped, no age check); treatment = refuse the ENTRY when the symbol's newest 1Day bar is more than 7.0 days old at decision time (batch-18 bound; longest legitimate gap ~4.4 days). Rebalance SELLS are never filtered \u2014 a stale name can always leave.",
+  "experiment": "Forward paper: enh26_paired records carry bar_age_days per judged entry. Reject if any treated rebalance refuses a name whose live bar age was <= 7 days (gate misfire) over the first 3 monthly rebalances. Switch OFF restores the unaged rule exactly (blocker-proven).",
+  "mechanism": "Perception at the adapter layer (strategy pinned, frozen spec untouched): age each entry intent's symbol bars against the decision clock. Ranking, decile, sector caps (count + by-value) and sizing are unchanged; only the stale name's entry is refused, its slot stays unspent this rebalance.",
+  "transfer": "A monthly top-decile equal-weight book; each entry is ~9.5% of slice held for a month. A name whose bar feed died still ranks on its last close and is bought at a price weeks old \u2014 a full month of wrong exposure in a possibly halted/delisted name."
+ },
+ "disposition": "ENHANCED (second look; first look IMPROVE-ts_momentum_decile by-value sector cap)",
+ "engine": "desk3/enhance26.py gate stale_bar_gate, wired in adapters3/ts_momentum_decile.py (strategy byte-identical)",
+ "exp_id": "ENH-B26-TSMOM-STALE-20261024",
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "shadow_control": "never emits; control decision recorded paired per entry candidate",
+ "sleeve": "ts_momentum_decile",
+ "status": "pre-registered",
+ "switch": {
+  "default": true,
+  "field": "stale_bar_gate",
+  "key": "extra['ts_momentum_decile_improve2']",
+  "off_restores": "pre-change unaged entries exactly"
+ }
+}
