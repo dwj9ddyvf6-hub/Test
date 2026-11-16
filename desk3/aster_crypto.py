@@ -14,6 +14,8 @@ closes; structural policies carry the installed 96h max deadline
 slice cash net of 10bp fee; volume1pct = min(fullcash, 1% of preceding
 4h bar volume). Funding is a declared producer input: absent => no
 entry and sleeve is UNFED in the registry, never fake-fed."""
+
+# CONSTANTS-PROVENANCE-20261116: the 96h deadline (hold_h/deadline_h=96, non-fixed16 policies) is source-confirmed in the archive source/backend/r19_crypto.py exit_due_at rule (due + 96h unless fixed16), diffed in HARDEN batch-1 2026-10-24 and recorded in FIDELITY-LEDGER ("source code, not an assumption").
 from __future__ import annotations
 from datetime import datetime, timezone, timedelta
 from desk3.contract import Intent
@@ -32,6 +34,17 @@ SPECS={
 }
 INPUTS=("bars","funding","positions")
 EXP_ID="ENH-B6-LATCH-20261024"
+def _broker_symbol(sym):
+    """BLOCKED-EXIT-20261029, CANONICAL-DIALECT-20261030: SPECS carry
+    the perp/funding namespace (ADAUSDT, ENJUSDT, the Coinalyze
+    funding symbols); the Alpaca trading API knows the same pairs
+    only as BASE/USD and 422s the perp form ("asset \"ADAUSDT\" not
+    found", diagnosis E9). Translation resolves through the ONE
+    canonical translator (desk3/broker_dialect.py) shared with
+    aster_batch1 and the dispatcher door defence; bars/funding/state
+    keep the internal dialect."""
+    from desk3.broker_dialect import normalize_broker_symbol
+    return normalize_broker_symbol(sym)
 def _enh_on(sid,view,ctx):
     """EDGE batch 6 switch: enhance_trigger_latch, default ON. OFF
     (ctx/view params/extra naming the sleeve or flat) restores the
@@ -75,10 +88,9 @@ def _latched_trigger(spec,brs,fund,now,opened,lvl):
                     and now>=t+timedelta(hours=8): return j
     return None
 def _bars(view,sym):
-    m=view.get("bars") or {}
-    for k in (f"{sym}|4Hour",f"{sym}|4h",f"{sym}|240min",sym):
-        if m.get(k): return sorted(m[k],key=lambda r:str(r.get("t")))
-    return []
+    # F4-CRYPTO-BARKEY-20261114: archive USDT keys resolve via desk3.crypto_bars (served BASE/USD spot forms; see that module)
+    from .crypto_bars import resolve_bars
+    return resolve_bars(view.get("bars") or {},sym,("4Hour",))
 def _funding(view,sym):
     f=view.get("funding")
     if isinstance(f,dict):
@@ -110,7 +122,14 @@ def _absorption(brs):
 def evaluate(sid,view,ctx=None):
     view=view or {}; spec=SPECS[sid]; sym=spec["sym"]; now=_now(view,ctx)
     brs=_bars(view,sym); fund=_funding(view,sym)
-    poss=[p for p in (view.get("positions") or []) if float(p.get("qty") or 0)!=0]
+    # BLOCKED-EXIT-20261029: only THIS sleeve's own symbol can be
+    # exited here. Before this cure the loop iterated EVERY nonzero
+    # position in the (full broker book) view and stamped this
+    # sleeve's symbol on each exit, emitting ADAUSDT exits sized with
+    # FFIV/SOXL/TWST/VSAT quantities (392 phantom events 2026-10-29).
+    poss=[p for p in (view.get("positions") or [])
+          if float(p.get("qty") or 0)!=0
+          and _broker_symbol(str(p.get("symbol") or ""))==_broker_symbol(sym)]
     out=[]
     for p in poss:
         qty=abs(float(p["qty"])); opened=_ts(p.get("opened_at") or p.get("entry_time") or "")
@@ -140,10 +159,15 @@ def evaluate(sid,view,ctx=None):
                     _shadow_journal(ctx,sid,{"exp_id":EXP_ID,"kind":"exit",
                         "control_exit":False,"treatment_exit":True,
                         "trigger_bar":j,"rule":"normalization_failure_latch"})
-        if reason: out.append(Intent(kind="exit",symbol=sym,qty=qty,price_hint=float(brs[-1]["c"]) if brs else None,reason=f"{sid} exit: {reason}",side="sell",position_intent="sell_to_close"))
+        if reason: out.append(Intent(kind="exit",symbol=_broker_symbol(sym),qty=qty,price_hint=float(brs[-1]["c"]) if brs else None,reason=f"{sid} exit: {reason}",side="sell",position_intent="sell_to_close"))
     if out or poss: return out
     if spec["fam"]=="nfs":
-        if fund is None or fund>=0 or len(brs)<21: return []
+        # GATE-CURE-CRYPTO-20261112 (STRICTNESS-CENSUS proposal 8):
+        # the ADA squeeze funding leg relaxes < 0 -> < 0.0002
+        # (0 -> 13 entry days over the census funding window).
+        # Exit/normalization legs (funding >= 0) are unchanged.
+        # Rollback: restore fund>=0 here.
+        if fund is None or fund>=0.0002 or len(brs)<21: return []
         if not float(brs[-1]["c"])>max(float(b["h"]) for b in brs[-21:-1]): return []
     else:
         if not _absorption(brs): return []
@@ -153,4 +177,4 @@ def evaluate(sid,view,ctx=None):
     if qty<=0: return []
     qty=int(qty)  # v3 dispatcher: ADAUSDT/ENJUSDT are not fractional symbols; whole-unit floor (ledger ASTER-B6)
     if qty<=0: return []
-    return [Intent(kind="enter",symbol=sym,qty=qty,price_hint=price,reason=f"{sid} entry: {spec['fam']} breakout/absorption close={price} funding={fund} cap={spec['cap']}",side="buy",position_intent="buy_to_open")]
+    return [Intent(kind="enter",symbol=_broker_symbol(sym),qty=qty,price_hint=price,reason=f"{sid} entry: {spec['fam']} breakout/absorption close={price} funding={fund} cap={spec['cap']}",side="buy",position_intent="buy_to_open")]
