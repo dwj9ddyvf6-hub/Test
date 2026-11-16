@@ -1,0 +1,15 @@
+{
+  "sleeve": "iron_condor",
+  "batch": "edge16",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "verify_only",
+  "leak_checked": "Credit already executable, spread-gated per leg",
+  "evidence": "build_condor computes credit from executable sides (sell at bid, buy at ask), refuses any leg with (ask-bid)/mid >10%, credit<=0, or expiry mismatch; exits price the close executable-side (condor_close_cost) and first ENH repaired the loss stop (min of 2x credit, half max-loss). Sizing is 1% max-loss. Batch4 oracle condor entry/max-hold scenarios pass. No further binding leak found.",
+  "decision_record": {
+    "transfer": "n/a \u2014 no change made",
+    "comparison": "current rule vs candidate leaks (pricing, freshness, exit completeness, sizing)",
+    "mechanism": "see evidence",
+    "calculation": "see evidence",
+    "experiment": "none \u2014 verify-only; no cosmetic change made"
+  }
+}
