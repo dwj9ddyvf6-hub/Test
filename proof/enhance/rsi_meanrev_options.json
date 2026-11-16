@@ -1,0 +1,19 @@
+{
+ "batch": "edge18",
+ "change_point": "v3 adapter layer only (desk3/enhance18.py post-filter with the adapter's served quotes); sleeves/ untouched",
+ "decision_record": {
+  "calculation": "Fixture: short leg bid 0.10 / ask 0.60 (frac 1.43) \u2014 debit unchanged 0.20, width 9 \u2014 emitted 1 entry pre-change, 0 post-change; tight ask 0.11 enters both ways; switch OFF restores the wide entry.",
+  "comparison": "Short leg (ask-bid)/mid vs the desk's existing 0.50 options spread bound (batch-13 LEAPS precedent); the strategy gates only the long leg at 10%.",
+  "experiment": "Pre-registered: tests/test_harden_edge_batch18_blockers.py TestShortLegSpreadGate (fail-first proven with wiring stashed); paired record carries short_spread_frac per judged entry.",
+  "mechanism": "Unpriced risk / execution: select_debit_spread never reads the short leg's ask; a blown-out short quote passes the debit cap (debit uses bid only) while the exit cost is unknowable.",
+  "transfer": "The debit spread's edge is paid at the exit cross: entry debit is priced off the short leg's bid, exit value off its ask, so an unpriced short-leg spread is a direct leak from entry to exit."
+ },
+ "disposition": "APPLY ENH2-18-SHORTLEG",
+ "exp_id": "ENH2-18-SHORTLEG",
+ "leak": "Second look (first ENH: debit_cap at half width): short leg spread ungated while exit priced off its ask",
+ "paper_only": true,
+ "program": "muse-desk-v3-harden-enhance-20261024",
+ "sleeve": "rsi_meanrev_options",
+ "switch": "extra.rsi_meanrev_options_enh2.short_leg_spread_gate default ON; OFF restores pre-change rule exactly",
+ "verdict": "enhanced"
+}
