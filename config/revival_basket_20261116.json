@@ -1,0 +1,53 @@
+{
+ "accrual_start": "2026-11-16",
+ "conv": "CONV-123",
+ "engine": "desk3/revival_basket.py",
+ "falsifier": "Per pulse, the frozen revival rule as registered: 250 active days or 100 events, published-direction mean positive at t at or above 2. A family whose accrual reaches its count without meeting the rule does not enter the basket, and that non-entry is the falsifier firing, printed at the B5 of that week.",
+ "families": [
+  {
+   "accrual_cron": "w7-tom-accrual-daily",
+   "construction": "long SPY on the last trading day of a month and the first three trading days of the next (Lane B port construction, BUGLOG_2026-11-15.md); desk calendar form decides last/first trading days on business days minus the registered holidays",
+   "evaluator": "desk3/revival_basket.py is_tom_day / tom form",
+   "family": "tom",
+   "ledger": "/home/hatch/workspace/research_notes/decisions-api-leverage-20261114/keepgoing2/wave7/w7d_tom_shadow.jsonl",
+   "leg": "TOM",
+   "producer": "revival_tom",
+   "producer_module": "desk3/revival_producers.py RevivalTomProducer",
+   "threshold": 250,
+   "threshold_kind": "active_days"
+  },
+  {
+   "accrual_cron": "w7-pairs-accrual-daily",
+   "construction": "the rolling-z Gatev distance form on XOM/CVX, JPM/BAC, WMT/COST, MA/V: log-price ratio 252-session trailing z decided at the close, enter at |z| above 2 (z above 0: short A long B), exit at |z| under 0.5 or after 20 sessions, 10bp per pair on entry and exit days in the leg series (Lane B port construction, BUGLOG_2026-11-15.md)",
+   "evaluator": "desk3/revival_basket.py pairs_replay / pairs_desired",
+   "family": "pairs",
+   "ledger": "/home/hatch/workspace/research_notes/decisions-api-leverage-20261114/keepgoing2/wave7/w7d_pairs_shadow.jsonl",
+   "leg": "PAIRS",
+   "producer": "revival_pairs",
+   "producer_module": "desk3/revival_producers.py RevivalPairsProducer",
+   "threshold": 250,
+   "threshold_kind": "active_days"
+  },
+  {
+   "accrual_cron": "w7-pead-accrual-daily",
+   "construction": "the Item 2.02 event drift form at +5 and +21 sessions: surprise is the event session's excess return versus SPY, terciles over the pooled forward events, top tercile long and bottom tercile short held through +21 sessions (Lane B port construction, BUGLOG_2026-11-15.md)",
+   "evaluator": "desk3/revival_basket.py pead_desired",
+   "family": "pead",
+   "ledger": "/home/hatch/workspace/research_notes/decisions-api-leverage-20261114/keepgoing2/wave7/w7d_pead_shadow.jsonl",
+   "leg": "PEAD",
+   "producer": "revival_pead",
+   "producer_module": "desk3/revival_producers.py RevivalPeadProducer",
+   "threshold": 100,
+   "threshold_kind": "events"
+  }
+ ],
+ "first_trade_condition": "First basket entry on the first session after the first pulse family fires its revival rule, at the sizing above, reported as a revival rostering with the rule print attached.",
+ "genesis_basis": "The accruals themselves, running from Mon 2026-11-16. Genesis basis: pairs 1,469 active days at +1.04bp per active day in its genesis sample; that figure is the hypothesis the forward accrual re-earns, not a forward claim.",
+ "id": "revival_basket",
+ "kill_rule": "A family failing its frozen rule at its count stays buried and never enters the basket; the basket itself retires if every fired family grades non-positive over its first 20 basket sessions.",
+ "module": "adapters3.revival_basket",
+ "object": "Graveyard revival pulses, turn-of-month pairs and PEAD",
+ "revival_rule": "a leg is declared REVIVED only if its forward read, at 250 further active days (or 100 further events for PEAD), shows its published-direction mean positive with t at or above 2 in the forward window alone",
+ "sizing": "One standard desk sleeve slice for the basket, split equally across fired families; a single fired family carries the whole slice only at half weight until a second family fires.",
+ "status": "LIVE 2026-11-16 (CONV123-REVIVAL-20261116); paper only, standard $10,000 slice, basket over fired revival families only; every family accruing from Mon 2026-11-16 at this landing, so the basket is flat until the first family fires its frozen rule"
+}
