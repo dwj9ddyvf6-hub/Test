@@ -1,0 +1,53 @@
+{
+ "sleeve": "aster_enj_nfs_fixed96_vol",
+ "exp_id": "ENH-EDGE-B2-aster_enj_nfs_fixed96_vol",
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 2",
+ "status": "pre-registered",
+ "date": "2026-10-24",
+ "binding_leak": "size capped on stale volume",
+ "decision_record_2a": {
+  "transfer": "The 1%-of-volume capacity rule exists to stay a small share of executable liquidity; reading it off the signal bar (4h stale) overstates current liquidity exactly when volume collapses after the signal.",
+  "comparison": "Control caps qty at 1% of the signal bar's volume. Treatment caps at min(signal-bar, entry-bar) 1% volume.",
+  "mechanism": "Sizing/perception: capacity follows the freshest completed bar's volume; entry logic, exits, fee model unchanged.",
+  "calculation": "Decision diff is the calculation: on identical fixture inputs, control vs treatment intents are recorded in ab_fixture_drive; the leak's cost is the full position (refused entries) or the qty delta (volume cap) on opportunities whose defining condition no longer holds at decision time. No P&L figure is invented pre-forward-evidence.",
+  "experiment": "Forward paper: paired shadow records (ctx/enhance_paired, exp_id ENH-EDGE-B2-<sleeve>) journal control vs treatment on every gated opportunity; reject the enhancement if, over 20 paired opportunities, refused entries would have outperformed entered ones net of the sleeve's own fee model, or if the gate refuses >50% of otherwise-valid entries (mis-calibration). Switch OFF restores the pre-change rule exactly (blocker-proven)."
+ },
+ "engine": "desk3/aster_batch8.py",
+ "switch": {
+  "key": "extra['aster_enj_nfs_fixed96_vol_enhance'] (or ctx)",
+  "field": "entry_volume_cap",
+  "default": true,
+  "off_restores": "pre-change rule exactly"
+ },
+ "shadow_control": "paired record only; the control never emits intents",
+ "blockers": "tests/test_harden_edge_batch2_blockers.py",
+ "ab_fixture_drive": {
+  "case": "signal-bar volume 100000, entry-bar volume 10000",
+  "control_switch_off": [
+   {
+    "kind": "entry",
+    "symbol": "ENJUSDT",
+    "qty": 1000.0,
+    "reason": "aster_enj_nfs_fixed96_vol entry: 4h_breakout20 close=1.1 funding=-0.01 capacity=volume1pct"
+   }
+  ],
+  "treatment_switch_on": [
+   {
+    "kind": "entry",
+    "symbol": "ENJUSDT",
+    "qty": 100.0,
+    "reason": "aster_enj_nfs_fixed96_vol entry: 4h_breakout20 close=1.1 funding=-0.01 capacity=volume1pct"
+   }
+  ],
+  "paired_records": [
+   {
+    "exp_id": "ENH-EDGE-B2-aster_enj_nfs_fixed96_vol",
+    "sleeve": "aster_enj_nfs_fixed96_vol",
+    "control": "enter_qty=1000.000000",
+    "treatment": "enter_qty=100.000000",
+    "enhance_switch": true
+   }
+  ]
+ },
+ "decision_diff_nonempty": true
+}
