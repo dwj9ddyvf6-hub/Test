@@ -1,0 +1,61 @@
+H28 FRESH-CLONE GATE — 2026-10-25 (audit OPEN #11, clone half)
+Item: ITEM 7 / R7, workflow v3-decisions-improvements-20261025
+
+SCOPE: fresh copy of muse-desk-v3 exactly as GitHub serves it, in clean
+scratch ~/workspace/.scratch-h28-clone-20261025 (repo at scratch root, so
+the sibling muse-desk-v2 layout the oracle tests resolve is the real
+workspace sibling — the DEPLOY drill layout). No local git objects were
+read for clone content; content came only from the GitHub Git Data API
+via ~/workspace/.scratch-femto-mirror/ghapi.py.
+
+MIRROR (before clone): mirror_v3_branch.py, 1 pass, STABLE —
+  remote Silicon refs/heads/muse-desk-v3 == local HEAD ==
+  3906d0a233e33dc47c8acd598c3581314c51aba6
+  (48 blobs / 28 trees / 6 commits uploaded; the R1–R6 ruling commits)
+
+CLONE ASSEMBLY (GitHub API only):
+  remote head read back fresh before gate: 3906d0a233e33dc47c8acd598c3581314c51aba6
+  recursive tree e2e059fb13f576754769ac74184ae98373e7f12e: 1091 entries,
+  1051 blobs / 40 trees, truncated=false
+  blobs fetched 1051/1051, fails 0; every blob's git SHA-1 re-verified
+  against its content before write; on-disk sha256 re-verified 1051/1051.
+  Diff vs local tree at HEAD (git ls-tree -r): missing 0, extra 0,
+  mode/sha mismatches 0.
+  Files the clone lacks vs the local working tree: NONE beyond
+  gitignored runtime state — local-only entries are exactly the
+  .gitignore set: state/, cache/, __pycache__/ dirs, .pytest_cache/,
+  terminal/terminal_feed.json, vendor/cache/. No exception.
+
+GATE IN CLONE (./run_regression_blockers.sh, to completion):
+  Run 1 (desk repo alone): Ran 1166 tests in 93.090s —
+    FAILED (errors=1, skipped=1). The 1 error was NOT a clone defect:
+    tests/test_aster_batch16_blockers.py reads two oracle JSONs from the
+    external Ausar archive at the absolute path
+    ~/workspace/.scratch-ausar-archive/handoff-20261024/... — the same
+    test errors identically in the local tree (archive local copy was
+    removed 2026-10-25 under the research-storage law; its
+    README-RELOCATED.md documents the GitHub re-fetch). The 1 skip was
+    test_aster_intake_blockers.TestArchiveVerdict, skipUnless the same
+    archive exists.
+  Cure for the proof (documented re-fetch, GitHub alone):
+    quant-research-backup branch handoff/ausar-archive-20261024 @
+    92076ef3a5312dbeca489d440196e9a322b280ea, path ausar-archive/ —
+    209/209 blobs fetched, every blob SHA-1 verified, 0 fails,
+    restored to ~/workspace/.scratch-ausar-archive/handoff-20261024/.
+  Run 2 (official script, after re-fetch): Ran 1166 tests in 88.456s — OK
+    (1166 passed, 0 errors, 0 failures, 0 skipped — the archive-verdict
+    test now runs and passes instead of skipping.)
+
+VERDICT: GREEN with one named dependency — a fresh machine gets a green
+desk from GitHub alone, where "GitHub" is two documented sources: the
+Silicon muse-desk-v3 branch (the desk, 1051/1051 files) plus the
+quant-research-backup Ausar archive branch (209/209 files) that two
+gate blockers read by absolute path. The desk repo alone is not
+self-contained for the gate: test_aster_batch16_blockers (1 error) and
+test_aster_intake_blockers (1 skip-guarded test) depend on that archive.
+No sleeve semantics changed; no code changed by this item.
+
+CLEANUP: the scratch clone (24M incl. gate __pycache__) was removed
+after this log was captured; the restored archive (13M) stays — it is
+the documented local copy the gate's blockers read. Live runner was
+never touched (exactly one run_live pid throughout, by effects).
