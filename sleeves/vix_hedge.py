@@ -221,10 +221,15 @@ def pick_hedge_call(chain, quotes, ref_px, session_iso):
 
 
 def size_contracts(equity, ask):
-    """Contracts fitting 1% of equity at the ask. 0 = skip. Verbatim."""
+    """Contracts fitting 1% of equity at the ask. 0 = skip. Verbatim,
+    plus the R3-VIXHEDGE-20261025 quantization epsilon: at the ruled
+    slice the exact-boundary ratio 110.0 / 110.00000000000001 (ask
+    $1.10 x 100 in binary float) floors to 0 on dust alone; +1e-9
+    flips only ratios within float dust of a whole contract."""
     if equity is None or equity <= 0 or ask <= 0:
         return 0
-    return max(0, int(math.floor((equity * HEDGE_RISK_FRACTION) / (ask * 100))))
+    return max(0, int(math.floor(
+        (equity * HEDGE_RISK_FRACTION) / (ask * 100) + 1e-9)))
 
 
 def exit_due(pos, dte, mid, vix):
