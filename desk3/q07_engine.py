@@ -39,6 +39,41 @@ CAP_BANDS_USD = {"mi": (0.0, 300_000_000.0),
                  "sm": (300_000_000.0, 2_000_000_000.0),
                  "ml": (2_000_000_000.0, float("inf"))}
 
+# FIX-F1-Q07-20261115: the desk fires composer (desk-fires-composer-v1,
+# state/ingest/fires.json) stamps bands in the long vocabulary
+# ("midlarge") and alt-data evidence under fire["tags"], while this
+# engine's specs use the short codes ("ml") and its filters read only
+# flat fire fields. Pre-cure every real composer fire was refused on
+# the band check before any filter ran, and wlow's primary evidence
+# (tags.wiki_low) was invisible. The sibling engine
+# (desk3/lazarus_q07.py) normalizes both; this engine now does the
+# same. Fail-closed is unchanged: absent evidence still fails.
+_BAND_ALIASES = {"ml": "ml", "midlarge": "ml", "mid_large": "ml",
+                 "mid/large": "ml", "sm": "sm", "small": "sm",
+                 "mi": "mi", "micro": "mi"}
+
+
+def _norm_band(raw):
+    if raw is None:
+        return None
+    return _BAND_ALIASES.get(str(raw).strip().lower())
+
+
+def _ev(fire, key, tag_key=None):
+    """Filter evidence: flat fire field first, then fire["tags"]."""
+    v = fire.get(key)
+    if v is not None:
+        return v
+    tags = fire.get("tags") or {}
+    return tags.get(tag_key or key)
+
+
+def _wiki_views(fire):
+    v = _ev(fire, "wiki_views_30d")
+    if v is None:
+        v = _ev(fire, "wiki_views")
+    return v
+
 
 def _bars(view, symbol):
     rows = (view.get("bars") or {}).get(f"{symbol}|1day") or []
@@ -67,7 +102,7 @@ def _sessions_between(qqq_bars, start, end):
 def _filters_pass(spec, fire, bars, vix, wlow_evidence=True):
     px = float(bars[-1]["c"]) if bars else None
     if "ins2" in spec["filters"]:
-        if int(fire.get("insider_buys") or 0) < 2:
+        if int(_ev(fire, "insider_buys") or 0) < 2:
             return False, "ins2"
     if "cheap5" in spec["filters"]:
         if px is None or not px < 5.0:
@@ -79,21 +114,25 @@ def _filters_pass(spec, fire, bars, vix, wlow_evidence=True):
         if not px <= 0.70 * hi:
             return False, "deep70"
     if "wcov" in spec["filters"]:
-        if not float(fire.get("wiki_views_30d") or 0) > 0:
+        if _ev(fire, "wiki_cov", "wiki_cov") is True:
+            pass
+        elif not float(_wiki_views(fire) or 0) > 0:
             return False, "wcov"
     if "wlow" in spec["filters"]:
         # ENH-Q07WLOW-20261024: missing wiki evidence must fail closed
         # (every other filter in this engine does); pre-change a fire
         # with NO wiki data defaulted to 0 views and passed as "low".
+        # FIX-F1-Q07-20261115: the evidence may sit under fire["tags"]
+        # (the composer's serving form); _ev/_wiki_views read both.
         if wlow_evidence:
-            if fire.get("wiki_low") is True:
+            if _ev(fire, "wiki_low") is True:
                 pass
-            elif fire.get("wiki_views_30d") is not None:
-                if not float(fire["wiki_views_30d"]) < WIKI_LOW_MAX_VIEWS:
+            elif _wiki_views(fire) is not None:
+                if not float(_wiki_views(fire)) < WIKI_LOW_MAX_VIEWS:
                     return False, "wlow"
             else:
                 return False, "wlow_unfed"
-        elif not float(fire.get("wiki_views_30d") or 0) < WIKI_LOW_MAX_VIEWS:
+        elif not float(_wiki_views(fire) or 0) < WIKI_LOW_MAX_VIEWS:
             return False, "wlow"
     if "mom6" in spec["filters"]:
         if px is None or len(bars) <= MOM6_SESSIONS:
@@ -164,7 +203,7 @@ def evaluate_q07(spec, view, ctx):
         sym = fire.get("symbol")
         if not sym or sym in held:
             continue
-        band = fire.get("cap_band")
+        band = _norm_band(fire.get("cap_band") or fire.get("band"))
         if band is not None and band != spec["band"]:
             continue
         mcap = fire.get("mcap_usd")
@@ -234,7 +273,14 @@ def evaluate_q07(spec, view, ctx):
         px = float(bars[-1]["c"])
         qty = int(SLOT_USD // px)
         if qty < 1:
-            continue
+            # SILENT-SKIP-SIZING-20261116 (owner price ruling
+            # 2026-11-14, WS4-FRACTIONAL shape): the floor reaching 0
+            # silently killed the fire for price. Same $1,000 slot
+            # expressed fractionally, 6dp floor, never past budget.
+            import math as _m
+            qty = _m.floor((SLOT_USD / px) * 1_000_000) / 1_000_000
+            if qty <= 0:
+                continue
         horizon_bars = spec["horizon_wk"] * 5
         intents.append(Intent(
             kind="enter", symbol=sym, qty=qty, price_hint=px,
