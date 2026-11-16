@@ -1,0 +1,45 @@
+{
+ "ab": {
+  "control_intents_held_fixture": [
+   [
+    "XLK",
+    61
+   ]
+  ],
+  "direction_ok": true,
+  "flat_entry_identical": true,
+  "paired_records": [
+   {
+    "control_desired": {
+     "XLK": 71
+    },
+    "control_nav": 11600.0,
+    "exp_id": "ENH-NAVBASE-20261024",
+    "sleeve": "aster_etf_interval1_c098",
+    "treatment": "capital_nav_basis",
+    "treatment_desired": {
+     "XLK": 61
+    },
+    "treatment_nav": 10000.0
+   }
+  ],
+  "treatment_intents_held_fixture": [
+   [
+    "XLK",
+    51
+   ]
+  ]
+ },
+ "decision_record": {
+  "calculation": "Held XLK 10 @ $160, static slice cash $10,000: legacy nav = 10000+1600 = $11,600 -> target sized on phantom cash; treatment nav = slice capital $10,000. Ratchet fixed point under legacy basis: gross*cash/(1-gross) ($490k at gross 0.98).",
+  "comparison": "Archive NAV formula (live cash remainder + held value) vs v3 snapshot, which carries only the static config slice (cash_usd = full capital) or no slice at all.",
+  "experiment": "Fixture A/B on identical bars/positions/slice: treatment (switch ON, capital basis) vs control (switch OFF, legacy cash+held basis), held-position and flat fixtures.",
+  "mechanism": "Risk/sizing perception: the sleeve measured its risk-bearing capacity with cash it does not have; every rebalance oversized targets and invited dispatcher slice-BP rejects.",
+  "transfer": "The rotation edge pays the designed gross exposure to the selected leader; oversizing transfers the surplus to unpriced leverage and BP-reject execution failure."
+ },
+ "disposition": "APPLY ENH-NAVBASE-20261024",
+ "exp_id": "ENH-NAVBASE-20261024",
+ "paper_only": true,
+ "sleeve": "aster_etf_interval1_c098",
+ "switch": "extra.aster_etf_b9_enh.nav_basis default ON; OFF restores pre-change basis exactly"
+}
