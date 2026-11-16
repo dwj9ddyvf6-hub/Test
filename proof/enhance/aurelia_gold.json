@@ -1,0 +1,16 @@
+{
+ "ab": null,
+ "blockers": "n/a (verify-only); trace reproduced in this artifact",
+ "decision_record": {
+  "calculation": "Trace on the final tree (adapters3.aurelia_gold, GLD $250, held 12 sh, book_gold 0.30): signal 0.30 -> []; signal 0.40 (+0.10, inside band) -> []; signal 0.55 (+0.25, band crossed) -> entry 10 sh; signal 0.0 -> exit 12 sh. Both bands behave exactly as designed.",
+  "comparison": "Candidate leak examined: prices come from the last daily bar close and orders are market, so a stale/forming close could in principle mis-size a rebalance. Compared against the sleeve's own two decision bands.",
+  "experiment": "Verify-only evidence = the trace above plus the source-pinned strategy (tests/test_port_batch1_blockers.py hash-pins sleeves/aurelia_gold.py). Next decisive check rides Monday's live read-back (A9 class), not a cosmetic change.",
+  "mechanism": "No binding leak: resolve_book only moves the held exposure when the signal moves >= EXPOSURE_BAND 0.20, and order_deltas suppresses any rebalance whose notional is < MIN_WEIGHT 0.02 of equity. A stale daily close therefore cannot create a trade unless both designed bands are crossed, at which point the trade is the design's, and share_targets recomputes qty from the same price the delta band used.",
+  "transfer": "Aurelia gold book: GLD held one-for-one with the band-resolved, gross-capped gold exposure from signal aurelia-gc-band20-v1, sized off the $10k slice capital; paid by gold's portfolio role in the Aurelia book, not a standalone forecast."
+ },
+ "disposition": "VERIFY-ONLY \u2014 no binding leak survives scrutiny (Edge batch 13)",
+ "exp_id": null,
+ "paper_only": true,
+ "sleeve": "aurelia_gold",
+ "verify_only": true
+}
