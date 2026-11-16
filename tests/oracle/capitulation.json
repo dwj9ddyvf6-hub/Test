@@ -1,0 +1,68 @@
+{
+ "entry_direct": {
+  "intents": [
+   {
+    "exit_rules": [
+     {
+      "kind": "stop",
+      "value": 75.0
+     },
+     {
+      "kind": "target",
+      "value": 105.0
+     },
+     {
+      "kind": "time_bars",
+      "value": 3.0
+     }
+    ],
+    "intent_id": "capitulation-20261023T140000-1",
+    "kind": "entry",
+    "order_type": "market",
+    "price_hint": 100.0,
+    "qty": 1.5625,
+    "reason": "capitulation: capitulation tranche1 (of full 3.125): rsi=0.0 vol_mult=6.00 ema200=100.00",
+    "side": "buy",
+    "stop_price": null,
+    "symbol": "CAP",
+    "time_in_force": "day"
+   }
+  ]
+ },
+ "exit_drive": {
+  "deterministic": true,
+  "exits": [
+   {
+    "intent_id": "capitulation-20261023T140000-1",
+    "kind": "exit",
+    "order_type": "market",
+    "price_hint": 100.0,
+    "qty": 4,
+    "reason": "capitulation: capitulation exit: vwap_reversion",
+    "side": "sell",
+    "stop_price": null,
+    "symbol": "CAP",
+    "time_in_force": "day"
+   }
+  ],
+  "intents": [
+   {
+    "intent_id": "capitulation-20261023T140000-1",
+    "kind": "exit",
+    "order_type": "market",
+    "price_hint": 100.0,
+    "qty": 4,
+    "reason": "capitulation: capitulation exit: vwap_reversion",
+    "side": "sell",
+    "stop_price": null,
+    "symbol": "CAP",
+    "time_in_force": "day"
+   }
+  ],
+  "passed": true,
+  "sleeve": "capitulation",
+  "status": "ok"
+ },
+ "passed": true,
+ "sleeve": "capitulation"
+}
