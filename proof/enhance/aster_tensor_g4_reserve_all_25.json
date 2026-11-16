@@ -1,0 +1,22 @@
+{
+ "ab": {
+  "control_qty_at_cap_breach": 50.0,
+  "control_qty_mid": 50.0,
+  "direction_ok": true,
+  "treatment_qty_at_cap_breach": 0,
+  "treatment_qty_mid": 44.0
+ },
+ "blockers": "tests/test_edge_batch13_blockers.py (14 tests, fail-first proven: 7 fail on pre-cure engines, 14/14 pass post-cure) + tests/test_harden_edge_batch12_blockers.py (shared engine)",
+ "decision_record": {
+  "calculation": "Fixture (ticket $400): fire 8.00, current close 12.00 (> cap 10): control enters qty 50 AND sells the QQQ reserve leg; treatment enters 0 and sells nothing. Current close 9.00: control qty 50, treatment qty 44 sized off the executable close.",
+  "comparison": "Pre-change engine vs the sleeve's own design gates: gates and sizing used the signal-time fire price, while the market order fills at the current price. Reserve mode executes >=1 session after the fire BY DESIGN, so the fire price is guaranteed stale at execution.",
+  "experiment": "Fixture A/B on identical fires/bars (TestG4ReserveReprice): treatment (switch ON) vs control (switch OFF = pre-change fire-price rule), paired shadow record on the entry intent's enhance_exp; no-current-bar case preserves the legacy path.",
+  "mechanism": "Execution/pricing leak (owner priority #1 class): stale fire price. Above-cap drift bought a name the design refuses; within-cap drift overshot ticket notional at fill (unpriced risk); a fall under-deployed the ticket. The QQQ reserve leg was also sold to fund an entry whose executable terms were never revalidated.",
+  "transfer": "Tensor G4 edge is paid by buying the fired cohort inside the design price cap (<=10) at the designed ticket; the payer is the momentum cohort's continuation, captured only if the executed position matches the design's price/risk terms."
+ },
+ "disposition": "APPLY ENH-TENSOR14-REPRICE-20261024",
+ "exp_id": "ENH-TENSOR14-REPRICE-20261024",
+ "paper_only": true,
+ "sleeve": "aster_tensor_g4_reserve_all_25",
+ "switch": "ctx.enhance[<sleeve>].exec_reprice (or extra.<sleeve>_improve.exec_reprice) default ON; OFF restores fire-price rule exactly"
+}
