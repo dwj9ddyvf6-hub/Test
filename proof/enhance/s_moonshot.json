@@ -1,0 +1,22 @@
+{
+ "sleeve": "s_moonshot",
+ "disposition": "VERIFY-ONLY \u2014 no further binding leak; existing cure re-proven on fixture traces this batch",
+ "exp_id": "ENH-LAZ-REPRICE-20261024 + ENH19-LAZ-BOUND-20261024 (desk3/lazarus.py)",
+ "paper_only": true,
+ "ab": {
+  "reprice_on_qty": 20,
+  "reprice_on_stop": 10.625,
+  "reprice_off_qty": 25,
+  "reprice_off_stop": 8.5,
+  "bound_on_entries": 0,
+  "bound_off_entries": 1
+ },
+ "blockers": "tests/test_edge_batch21_blockers.py (VERIFY-ONLY pins: A/B diff collapses if the existing cure is removed)",
+ "decision_record": {
+  "transfer": "Designed edge (cyan 1W moonshot, max_price $14.94 inclusive, deep60 tag, 15% stop, 252-session hold; parked by catalog (CSV off) \u2014 entries refused at the roster level, exits managed) is paid for acting on the upstream fire at the current price with coherent bounds; both halves of that leak class are already cured at this engine.",
+  "comparison": "Current engine vs the pre-cure engines measured in batches 1/19: the stale-fire pricing and bound-incoherence leaks are closed; this batch re-ran the A/B traces rather than assuming the cures still hold.",
+  "mechanism": "No residual binding leak found: execution price, sizing, stop anchor and entry bounds all read the freshest snapshot close; residual candidates were design rules (frozen catalog), not leaks.",
+  "calculation": "Fixture traces 2026-10-24: {'reprice_on_qty': 20, 'reprice_on_stop': 10.625, 'reprice_off_qty': 25, 'reprice_off_stop': 8.5, 'bound_on_entries': 0, 'bound_off_entries': 1}.",
+  "experiment": "VERIFY-ONLY verdict. Second look after batch-1 reprice + ENH19 bound guard: sizing/stop/price_hint at the fresh close (trace: qty 20/stop 10.625 ON vs 25/8.50 OFF on fire $10 / fresh $12.50, $258.10 slot); bound guard refuses a fresh close already past target_price (trace: target $11, fresh $12.50 \u2014 ON 0 entries with refuse_bound journal, OFF 1 entry) and re-checks max_price at the fresh print. deep60 is a fail-closed tag gate by design. No further binding leak survives."
+ }
+}
