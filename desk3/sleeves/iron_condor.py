@@ -11,7 +11,7 @@ desk3/port4_context.py.
 """
 from desk3.port4_context import evaluate_via
 
-INPUTS = ('bars:*:1Day', 'bars:VIX:1Day', 'options:chains', 'earnings', 'iv')
+INPUTS = ('bars:*:1Day', 'bars:VIX:1Day', 'options', 'earnings', 'iv')
 
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -26,6 +26,32 @@ from desk3.port4_bridge import translate_common as translate_intents
 from desk3.port4_context import load_strategy
 strat = load_strategy("iron_condor")
 SLEEVE_ID = "iron_condor"
+
+def _chains_by_kind(rows):
+    """F2-SHIM-TYPES-20261115: normalize one underlying's chain rows to
+    the vendor strategy's documented extra["chains"] shape,
+    {SYM: {"put": [contracts], "call": [contracts]}}. The live options
+    producers serve {SYM: [flat rows]} (desk3/producers.py
+    build_options_payload; runtime/options_warm.py generic windows);
+    served flat, build_condor's chain_by_kind.get("put") raised
+    AttributeError ('list' object has no attribute 'get') on every
+    entry evaluation that reached it. Kind comes from the row's
+    right/type field, else the OCC symbol's C/P designator. A chain
+    already grouped by kind passes through untouched."""
+    if isinstance(rows, dict):
+        return rows
+    import re as _re
+    out = {"put": [], "call": []}
+    for r in rows or []:
+        if not isinstance(r, dict):
+            continue
+        kind = str(r.get("right") or r.get("type") or "").lower()
+        if kind not in ("put", "call"):
+            m = _re.search(r"\d{6}([CP])\d{8}$", str(r.get("symbol") or ""))
+            kind = {"C": "call", "P": "put"}.get(m.group(1)) if m else None
+        if kind in out:
+            out[kind].append(r)
+    return out
 WARMUP_BARS = {"1Day": 30}
 def _evaluate_v2(ctx):
     syms = list(strat.WATCHLIST)
@@ -44,16 +70,23 @@ def _evaluate_v2(ctx):
                 if isinstance(v, dict):
                     cur = derived.setdefault(k, {})
                     if isinstance(cur, dict):
-                        cur.update(v)
+                        if k == "chains":
+                            for _s, _rows in v.items():
+                                cur[_s] = _chains_by_kind(_rows)
+                        else:
+                            cur.update(v)
     # GAP-CURE: serve the produced inputs the sleeve gates on — VIX from
     # warmed VIX bars (momentum precedent), earnings_in_days from the
     # warmed calendar, iv/iv_history from the warm-time IV ledger.
     if not derived.get("vix"):
         _vb = fetch_bars(ctx, ["VIX"], "1Day", 10).get("VIX") or []
         if len(_vb) >= 2:
-            from datetime import datetime as _dt, timezone as _tz
-            derived["vix"] = (float(_vb[-1]["c"]), float(_vb[-2]["c"]),
-                              _dt.fromtimestamp(float(_vb[-1]["t"]), tz=_tz.utc).date().isoformat(), "cache")
+            # F2-SHIM-TYPES-20261115: the vendor strategy's documented
+            # contract is extra["vix"]: float | None and it calls
+            # float(vix) — stamp the scalar last VIX close, not the
+            # (last, prev, date, source) 4-tuple the GAP-CURE stamped,
+            # which raised TypeError on every session it served.
+            derived["vix"] = float(_vb[-1]["c"])
     try:
         _cal = ctx.earnings_calendar() or {}
         _earn = _cal.get("earnings") or {}
