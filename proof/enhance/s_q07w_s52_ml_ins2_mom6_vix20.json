@@ -1,0 +1,26 @@
+{
+ "sleeve": "s_q07w_s52_ml_ins2_mom6_vix20",
+ "batch": 23,
+ "verdict": "ENHANCED",
+ "exp_id": "ENH-Q07SLOT-20261024",
+ "paper_only": true,
+ "leak": "slot guard never counts entries",
+ "decision_record": {
+  "transfer": "Tensor 1W swing confluence edge is sized as 2 slots at $1,000; capture requires the book to hold at most the designed 2 names.",
+  "comparison": "Pre-change break test on the FIXED held count vs emitted-entry counting (ENH19 mirror), identical fires/bars.",
+  "mechanism": "Risk/execution: with 0 held and slots=2, len(held)+1>=slots was never true, so the loop entered EVERY passing fire \u2014 measured 3 entries against a 2-slot / $2,000 book ($3,000 committed).",
+  "calculation": "Fixture (3 passing swing fires, QQQ-down, VIX 25): control entries=3; treatment entries=2; switch OFF reproduces 3 exactly.",
+  "experiment": "Pre-registered A/B in tests/test_edge_batch23_blockers.py::TestSlotGuardLazB7. Rejection rule: OFF != 3 entries, ON != 2, or any exit change \u2014 revert. Forward paired rows in extra.enh23_journal."
+ },
+ "change": "q07_evaluate in laz_sleeves/_common.py counts entries already emitted this pass toward the slot cap (mirrors the ENH19 mn_hourly cure)",
+ "switch": "extra.<sleeve>_enh23.slot_guard default ON; OFF restores the pre-change fixed-count test exactly",
+ "shadow_control": "switch OFF on identical fixtures; live paired records in extra.enh23_journal",
+ "blocker": "tests/test_edge_batch23_blockers.py::TestSlotGuardLazB7",
+ "fail_first": "slot-guard tests fail with laz_sleeves/_common.py stashed (part of 6 pre-change failures); 10/10 GREEN after",
+ "ab": {
+  "control_entries": 3,
+  "treatment_entries": 2,
+  "slots": 2,
+  "slot_usd": 1000.0
+ }
+}
