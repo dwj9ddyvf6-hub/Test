@@ -1,0 +1,26 @@
+{
+ "ab": {
+  "control": {
+   "limit_price": null,
+   "order_type": "market"
+  },
+  "direction_ok": true,
+  "paired_record": "intent['enhance_exp'] + extra['aster_enh_exp_journal']",
+  "treatment": {
+   "limit_at": "package mid",
+   "order_type": "limit"
+  }
+ },
+ "decision_record": {
+  "calculation": "Verified on the batch-3 fixture chain via B3.entry_view_for('aster_rec_vwap20_long_touch_b'): treatment intent order_type=limit with enhance_exp spread_saved > 0 vs the control crossed price; switch OFF returns order_type=market with no enhance_exp (tests/test_harden_edge_batch11_blockers.py TestLongTouchBMidLimitVerified). This sleeve was NOT in batch 10's test census (its B3_IDS stopped at long_touch_a); batch 11 closes that gap.",
+  "comparison": "Baseline: market package orders priced for risk at the crossed executable side but EXECUTED with no price instruction. Comparator: identical signal/quotes, limit at the package mid of the same already-fetched, freshness-gated (10s OPRA, 2s leg-sync) quotes.",
+  "experiment": "Batch-11 blockers drive entry for this exact sleeve id both ways; rejection rule: limit not strictly inside the crossed package price, or any enhance_exp record when the switch is OFF.",
+  "mechanism": "Execution (spread crossing): the batch-3 engine already fetches and freshness-gates both legs' quotes to price the package; the pre-change intent discarded that price at execution time.",
+  "transfer": "The VWAP20 long recovery book's surplus is a short-horizon dip capture sized by a debit budget; paying the full ask (entry) and taking the full bid (exit) via market orders donates the quoted spread twice per round trip."
+ },
+ "disposition": "ENHANCED (batch-10 treatment, batch-11 verified for this sleeve): entry/exit limit at package mid",
+ "exp_id": "ENH-ASTERB3-MIDLIMIT-20261024",
+ "paper_only": true,
+ "sleeve": "aster_rec_vwap20_long_touch_b",
+ "switch": "extra['enh_aster_rec_vwap20_long_touch_b'] {'mid_limit': bool} default ON; OFF restores the pre-change market order exactly"
+}
