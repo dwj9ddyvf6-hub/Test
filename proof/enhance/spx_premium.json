@@ -1,0 +1,31 @@
+{
+ "ab": {
+  "control_intents_at_1400_et": 1,
+  "treatment_intents_at_1030_et": 1,
+  "treatment_intents_at_1400_et": 0
+ },
+ "binding_leak": "entry window unbounded after designed 10:00 ET",
+ "blockers": "tests/test_edge_batch26_blockers.py TestSpxEntryWindow (4 tests)",
+ "date": "2026-10-24",
+ "decision_record_2a": {
+  "calculation": "Fixture: Monday 14:00 ET entry intent -> control enter / treatment refuse; Monday 10:30 ET -> both enter. The 300s cadence gives ~12 evaluations inside the designed hour, so the gate binds only on a genuinely lost hour.",
+  "comparison": "Paired shadow control: control = pre-change entry_day_ok (any time on the first trading day); treatment = entries only inside the designed entry hour 10:00-10:59 ET. Same credit comparison (first-look floor) still applies inside the hour.",
+  "experiment": "Forward paper: enh26_paired records per judged entry with ET time. Reject if any treated week shows the sleeve missing its entry while an in-hour evaluation existed (gate misfire), measured over 8 weekly cycles. Switch OFF restores the all-day rule exactly (blocker-proven).",
+  "mechanism": "Timing/responsiveness at the adapter layer (strategy pinned): refuse entry intents evaluated at/after 11:00 ET. A first pass delayed past the hour no longer sells prior-week strikes into a moved market hours late; settlement exits are never filtered.",
+  "transfer": "A $500-max-loss weekly put credit spread held to settlement; the transfer is the week's single entry, whose strikes are struck off LAST week's close/ATR for a ~10:00 ET entry moment."
+ },
+ "disposition": "ENHANCED (second look; first look ENH-SPX-PREMIUM-20261024 credit floor)",
+ "engine": "desk3/enhance26.py gate entry_window_gate, wired in adapters3/spx_premium.py (strategy byte-identical)",
+ "exp_id": "ENH-B26-SPX-WINDOW-20261024",
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "shadow_control": "never emits; control decision recorded paired per entry candidate",
+ "sleeve": "spx_premium",
+ "status": "pre-registered",
+ "switch": {
+  "default": true,
+  "field": "entry_window_gate",
+  "key": "extra['spx_premium_enhance2']",
+  "off_restores": "pre-change all-day entry exactly"
+ }
+}
