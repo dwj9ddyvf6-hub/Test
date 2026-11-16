@@ -1,0 +1,216 @@
+{
+ "note": "Rostered variation beside its parent under the GUTTING AS VARIATION rule: the parent is never edited into the variation. The shadow-arm family (CONV-25, 26, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 45) lives in config/conversion_shadow_20261115.json and grades through desk3/conversion_shadow.py; this file carries only the rostered variation. GOING-LIVE-VARIATIONS-20261115 (2026-11-15, owner ruling 22:35 ET: no shadow sleeves, variations go live): 15 further variations rostered live beside their parents (CONV-29 x3, CONV-30 x4, CONV-31, CONV-32 x2, CONV-33, CONV-35 x2, CONV-36, CONV-37), each carrying its register row's falsifier and kill rule byte-identical; the rows that could not be built faithfully tonight (CONV-21, CONV-39, CONV-88, CONV-96, CONV-98, CONV-108, CONV-110, CONV-123, CONV-126, CONV-142, CONV-153, CONV-169) are recorded BLOCKED with their exact constructions in BUGLOG_2026-11-15.md GOING-LIVE-VARIATIONS-20261115, and CONV-40 is verified there as an equivalence count, no build either way.",
+ "registry": "CONVERSION-VARIATIONS-20261115",
+ "source": "CONVERSION-REGISTER-2026-11-15.md CONV-47 (owner order 2026-11-15 19:37 ET)",
+ "variations": [
+  {
+   "chassis_inheritance": [
+    "Universe, slot count (10) and sizing fractions (notional 0.10, dollar-volume cap 0.01, risk 0.005 per 2 x ATR) are donchian55's desk chassis: the variation rosters under existing desk sizing, per the conversion spec's 'existing desk sizing as a variation'.",
+    "The stop is checked on the last close, the desk engine's own stop convention; the retest checked intraday lows. Named divergence, accepted at rostering."
+   ],
+   "conv": "CONV-47",
+   "engine": "desk3/aster_batch16.py kind=turtle (_eval_turtle)",
+   "falsifier": "First 20 forward fires graded against the 55/20 form's fires on the same days.",
+   "form": "Recorded Turtle 20/10 form (GRAVEYARD-DIG Lead 2, retested in pass2/work_graveyard/retests.py): entry on close above the prior-20-bar high, no SMA200 gate, no dollar-volume gate; exit on close below the prior-10-bar low, on the initial stop at entry minus 2 x ATR(20) (ATR = simple mean of the last 20 true ranges, the retest's own definition), or at a 252-bar timeout.",
+   "id": "aster_trader_turtle2010",
+   "kill_rule": "If the paired forward excess of the 20/10 form is not positive, the variation retires and donchian55 is untouched either way.",
+   "module": "adapters3.aster_trader_turtle2010",
+   "parent": "aster_trader_donchian55",
+   "replay_counts": "Retest (pass2/work_graveyard/retests.py, 20 cache names with 300+ daily bars): 129 trades, mean +293.8bp, t 1.84, win rate 0.318; fwd5 excess +47.8bp (t 0.81, n 126), fwd10 +91.2bp (t 1.07, n 122). Watch-grade only at the retest.",
+   "status": "ROSTERED 2026-11-15 (CONVERSION-VARIATION-20261115); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "chassis_inheritance": [
+    "The parent itself is the port: sso_opus is the 2026-11-03 research baseline (trendspider-sso-opus-test-20261103 harness run_sim, trail_from=close) rebuilt as desk3/sso_opus.py and proven against the research trade ledgers before rostering; there was no installed form on any live surface to inherit from (the register row's premise on that point did not survive verification, recorded in CONVERSION-BLOCKED-20261115).",
+    "Sizing is the standard desk slice ($10,000) at full slice per trade, the research form's own 100%-of-equity compounding translated to the desk's fixed slice; the sim's next-bar-open fills are carried by the sleeve's costs (fill_timing next_bar)."
+   ],
+   "conv": "CONV-46",
+   "engine": "desk3/sso_opus.py (simulate core; live evaluate with drop_time25=True for this variation, False for the parent)",
+   "falsifier": "The variation's first 20 forward fires graded against the installed form's same-day fires (the uniform variation falsifier form).",
+   "form": "The installed SSO Opus form minus exactly the TIME_25 exit class: the ported exit priority (STOP_LOSS, TRAILING_STOP, TAKE_PROFIT, TIME_25, TIME_60) with the TIME_25 branch removed, so a bar that would have exited TIME_25 falls through to the TIME_60 check; every other rule, indicator and threshold is the baseline's, shared in one engine so the two forms cannot drift.",
+   "id": "sso_opus_notime25",
+   "kill_rule": "Paired delta not positive retires the variation; the installed form is untouched either way.",
+   "module": "adapters3.sso_opus_notime25",
+   "parent": "sso_opus",
+   "replay_counts": "Fidelity basis (pass2/sso_fidelity_check.py, result in pass2/sso_fidelity_result.json): the original research harness reproduces its own ledgers exactly (265 primary trades at cost 0, 282 at cost 5bp, 0 divergences), and the desk port reproduces both ledgers trade-for-trade at 1e-9 relative tolerance (265/265 and 282/282, 0 divergences) plus the harness's synthetic known-answer series (4/4). Variation historical anatomy on the same frame (context only, never its grade): 242 trades, total +110.7%, avg +0.395%, exit mix TIME_60 175 / STOP_LOSS 42 / TRAILING_STOP 10 / TAKE_PROFIT 15, against the baseline's 265 trades and TIME_25 166 exits.",
+   "status": "ROSTERED 2026-11-15 (SSO-PORT-CONV46-20261115); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-29",
+   "id": "aster_abs_link_4h_varhx2",
+   "parent": "aster_abs_link_4h",
+   "module": "adapters3.aster_abs_link_4h_varhx2",
+   "engine": "desk3/aster_batch1.py kind=absorption (_eval_absorption, SPECS hold_h)",
+   "form": "Horizon-doubled form of the parent: the parent's exit deadline is confirmation close plus 16h (the engine default when the SPECS entry carries no hold_h); the variation's SPECS entry carries hold_h=32, twice the live hold, the registered arm's doubled horizon (Lane C sim basis h 10 to h 20) in this engine's own form. Entry signal, sizing and every other leg are the parent's, shared in one engine. Mapping note (Lane B, GOING-LIVE-VARIATIONS-20261115): the arm's three parents do not share one engine (aster_abs_link_4h is desk3/aster_batch1.py; the two r19 mirrors are desk3/aster_b11_crypto.py), so the stream rosters as one variation sleeve per parent, three in total, not a single variation on aster_abs_link_4h.",
+   "falsifier": "First grade at 15 resolved shadow exits.",
+   "kill_rule": "Paired delta not positive at the grade retires the variation.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-29",
+   "id": "aster_r19_linkusdt_absorption_base_fixed16_fullcash_varhx2",
+   "parent": "aster_r19_linkusdt_absorption_base_fixed16_fullcash",
+   "module": "adapters3.aster_r19_linkusdt_absorption_base_fixed16_fullcash_varhx2",
+   "engine": "desk3/aster_b11_crypto.py SPECS (hold_h)",
+   "form": "Horizon-doubled form of the parent: parent SPECS hold_h=16, variation SPECS hold_h=32, every other SPECS field identical (sym LINKUSDT, fam absorption_base, cap fullcash).",
+   "falsifier": "First grade at 15 resolved shadow exits.",
+   "kill_rule": "Paired delta not positive at the grade retires the variation.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-29",
+   "id": "aster_r19_linkusdt_absorption_base_fixed16_volume1pct_varhx2",
+   "parent": "aster_r19_linkusdt_absorption_base_fixed16_volume1pct",
+   "module": "adapters3.aster_r19_linkusdt_absorption_base_fixed16_volume1pct_varhx2",
+   "engine": "desk3/aster_b11_crypto.py SPECS (hold_h)",
+   "form": "Horizon-doubled form of the parent: parent SPECS hold_h=16, variation SPECS hold_h=32, every other SPECS field identical (sym LINKUSDT, fam absorption_base, cap volume1pct).",
+   "falsifier": "First grade at 15 resolved shadow exits.",
+   "kill_rule": "Paired delta not positive at the grade retires the variation.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-30",
+   "id": "1d_varjx2",
+   "parent": "1d",
+   "module": "adapters3.laz_1d_varjx2",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "JITTER_horizon_x2 arm profile exactly: horizon_sessions 80 (base 40), stop_pct 0.15, target_pct 0.20, spec-fixed via force_spec_horizon. The parent's partial_pct 0.30 is not carried: the registered arm profile (the F1 path-sim basis) prices stop, target and horizon only, as the shadow registry's own note on CONV-30 records. Slots, capital, cadence and the qqq_down gate are the parent's.",
+   "falsifier": "First grade at 20 resolved shadow exits per arm, paired against the base profile on the same entries.",
+   "kill_rule": "An arm whose paired delta is not positive at its grade retires.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-30",
+   "id": "1d_vardh",
+   "parent": "1d",
+   "module": "adapters3.laz_1d_vardh",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "DROP_horizon arm profile exactly: horizon_sessions None (no time exit; exits on stop 0.15 or target 0.20 only), stop_pct 0.15, target_pct 0.20, spec-fixed via force_spec_horizon. The parent's partial_pct 0.30 is not carried, on the same basis as 1d_varjx2. Slots, capital, cadence and the qqq_down gate are the parent's.",
+   "falsifier": "First grade at 20 resolved shadow exits per arm, paired against the base profile on the same entries.",
+   "kill_rule": "An arm whose paired delta is not positive at its grade retires.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-30",
+   "id": "1d_varhx4",
+   "parent": "1d",
+   "module": "adapters3.laz_1d_varhx4",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "EXTREME_horizon_x4 arm profile exactly: horizon_sessions 160 (base 40), stop_pct 0.15, target_pct 0.20, spec-fixed via force_spec_horizon. The parent's partial_pct 0.30 is not carried, on the same basis as 1d_varjx2. Slots, capital, cadence and the qqq_down gate are the parent's.",
+   "falsifier": "First grade at 20 resolved shadow exits per arm, paired against the base profile on the same entries.",
+   "kill_rule": "An arm whose paired delta is not positive at its grade retires.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-30",
+   "id": "1d_vardt",
+   "parent": "1d",
+   "module": "adapters3.laz_1d_vardt",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "DROP_target arm profile exactly: horizon_sessions 40, stop_pct 0.15, target_pct None (target dropped), spec-fixed via force_spec_horizon. The parent's partial_pct 0.30 is not carried, on the same basis as 1d_varjx2. Slots, capital, cadence and the qqq_down gate are the parent's.",
+   "falsifier": "First grade at 20 resolved shadow exits per arm, paired against the base profile on the same entries.",
+   "kill_rule": "An arm whose paired delta is not positive at its grade retires.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-31",
+   "id": "s_1dg_vardh",
+   "parent": "s_1dg",
+   "module": "adapters3.laz_s_1dg_vardh",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "DROP_horizon arm profile exactly: horizon_sessions None (base 21; no time exit, and the parent carries no stop or target), spec-fixed via force_spec_horizon. Family green, tf 1D, ml_pick, slots, capital and cadence are the parent's, and the adapter mirrors the parent's ENH2 stale-bar post-filter.",
+   "falsifier": "First grade at 20 resolved shadow exits (F1 check).",
+   "kill_rule": "Paired delta not positive retires the arm.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-32",
+   "id": "s_rules_1d_vardh",
+   "parent": "s_rules_1d",
+   "module": "adapters3.laz_s_rules_1d_vardh",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "DROP_horizon arm profile exactly: horizon_sessions None (base 22; no time exit, no stop, no target), spec-fixed via force_spec_horizon. The parent's horizon_from_fire and horizon_plus_one are not carried: the registered profile is spec-fixed, and a fire-carried horizon would silently re-impose the dropped horizon. Slots, capital and cadence are the parent's.",
+   "falsifier": "First grade at 20 resolved shadow exits per arm (F1 check).",
+   "kill_rule": "An arm whose paired delta is not positive retires.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-32",
+   "id": "s_rules_1d_varhx4",
+   "parent": "s_rules_1d",
+   "module": "adapters3.laz_s_rules_1d_varhx4",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "EXTREME_horizon_x4 arm profile exactly: horizon_sessions 88 (base 22), no stop, no target, spec-fixed via force_spec_horizon. The parent's horizon_from_fire and horizon_plus_one are not carried, on the same basis as s_rules_1d_vardh. Slots, capital and cadence are the parent's.",
+   "falsifier": "First grade at 20 resolved shadow exits per arm (F1 check).",
+   "kill_rule": "An arm whose paired delta is not positive retires.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-33",
+   "id": "s_1wc_ml_vards",
+   "parent": "s_1wc_ml",
+   "module": "adapters3.laz_s_1wc_ml_vards",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "DROP_stop arm profile exactly: horizon_sessions 252 (the base horizon, spec-fixed), stop_pct None (base 0.15 dropped), target None as the parent. Family cyan, tf 1W, cap tiers, signal tier A, slots, capital and cadence are the parent's.",
+   "falsifier": "First grade at 20 resolved shadow exits (F1 check).",
+   "kill_rule": "Paired delta not positive retires the arm.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-35",
+   "id": "1w_vargd",
+   "parent": "1w",
+   "module": "adapters3.laz_1w_vargd",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "Gateless form: the parent's SPECS entry minus exactly the qqq_down gate (no qqq_down key); stop 0.30, horizon 252, slots, capital and cadence are the parent's, and the entry horizon keeps the parent's fire-carried behavior (no force_spec_horizon). 1dc and s_rules_1w keep their gates and are not in this row.",
+   "falsifier": "20 paired forward fires per sleeve.",
+   "kill_rule": "Paired delta not positive retires the gateless form for that sleeve.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-35",
+   "id": "1wa_vargd",
+   "parent": "1wa",
+   "module": "adapters3.laz_1wa_vargd",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "Gateless form: the parent's SPECS entry minus exactly the qqq_down gate (no qqq_down key); horizon 252, family cyan, tf 1W, cap tier small, signal tier A, slots, capital and cadence are the parent's, and the entry horizon keeps the parent's fire-carried behavior (no force_spec_horizon).",
+   "falsifier": "20 paired forward fires per sleeve.",
+   "kill_rule": "Paired delta not positive retires the gateless form for that sleeve.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-36",
+   "id": "s_rules_1w_varhx2",
+   "parent": "s_rules_1w",
+   "module": "adapters3.laz_s_rules_1w_varhx2",
+   "engine": "desk3/lazarus.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "EXTEND_horizon_x2 against the CURRENT live profile exactly as the arm registers it: horizon_sessions 108 against the live base 54, stop_pct 0.15, target None, spec-fixed via force_spec_horizon. The parent's horizon_from_fire and horizon_plus_one are not carried, on the same basis as s_rules_1d_vardh. The qqq_down gate, slots, capital and cadence are the parent's (this row is not a gate drop).",
+   "falsifier": "First grade at 15 resolved shadow exits.",
+   "kill_rule": "Paired delta not positive against the current live profile retires it.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-37",
+   "id": "s_mn_hourly_1w_varn1",
+   "parent": "s_mn_hourly_1w",
+   "module": "adapters3.s_mn_hourly_1w_varn1",
+   "engine": "desk3/lazarus_midna.py SPECS (adapter re-addresses the parent's fires via desk3/var_fires.py)",
+   "form": "Night-1 exit form exactly as the registered ACTUAL_PAIR arm profiles it: hold_sessions 1, stop None (the parent's own exit is hold 260 with stop 0.15), gate None, family None, tf 1W and budget 1000.0 the parent's. Entries are identical to the parent's on identical fires.",
+   "falsifier": "20 paired forward fires.",
+   "kill_rule": "Night-1 arm not beating the own-exit arm retires the form.",
+   "status": "ROSTERED 2026-11-15 (GOING-LIVE-VARIATIONS-20261115, owner ruling 2026-11-15 22:35 ET: no shadow sleeves, variations go live); forward accrual from Mon 2026-11-16."
+  },
+  {
+   "conv": "CONV-57",
+   "id": "aster_tensor_g4_varmk",
+   "parent": "aster_tensor_g4_cash_all_25 (desk chassis: cash mode, $400 ticket, 25 slots, $10,000 standard slice, 52-week scheduled exit); recorded signal parent: the Tensor G4 conjunction in its R19 register form",
+   "module": "adapters3.aster_tensor_g4_varmk",
+   "engine": "desk3/aster_g4_varmk.py (sleeve-layer consumer of the Tensor bundle's tensor_analysis weekly records; the Tensor engine is untouched and no parent file is edited)",
+   "form": "Form C of pass2/CONV57-G4-VARIATION-PROPOSAL.md, exactly: a week qualifies when native_close at most 10 AND depth60 at least 70 AND ret60 at least 0 AND vol20 at least 0.09 AND dv20 at least $2M AND the marker element is satisfied in either of its two forms (the row carries the buy-green marker, OR the row carries no buy marker and prints the adjacency signature bullishVotes at least 6 AND bearishVotes at most 1). The recorded parent's COOL gate (atr_ratio at most 1) does not apply to this variation. Entry the first session after the signal week, cash mode. Named live-parent relation: the live batch14 G4 parents were gate-cured on 2026-11-12 (marker removed, G4 cool cap 1.5); this variation is registered against the recorded parent form per the proposal, edits no parent gate, and against the live cash_all parent its gate is the marker-conditioned subset its falsifier grades.",
+   "falsifier": "Existence check first, in CONV-56's form: one line per weekly bundle counting qualifying rows; zero qualifiers over a full quarter of forward bundles returns the variation to the desk as an open anatomy row, not a silent sleeve. Behind it, the uniform variation falsifier: retire if mean fwd5 excess versus QQQ is below 0 over the first 20 resolved forward fires.",
+   "kill_rule": "Retire under the falsifier above (existence check first, then the uniform variation falsifier at 20 resolved forward fires); the G4 parents are untouched either way.",
+   "replay_counts": "Proposal printed 2 qualifiers of 428 (SKYQ week ending 2026-09-11; CRML week ending 2026-10-30). Registration recount on the held stream (firestream_work/tensor_stream.jsonl): the proposal's per-conjunct counts reproduce exactly (marker 0, close cap 101, depth floor 358, ret60 floor 94, vol floor 349, dv floor 426, COOL gate 66, non-marker core pool 13, core+COOL 0), but the core pool's composition differs by one row (proposal SKYQ 4 / SATL 5 / CRML 4; held stream SKYQ 3 / SATL 6 / CRML 4) and Form C under the proposal's exact definition yields 3 of 428: the printed two plus SATL, week ending 2026-10-02 (close 5.73, ret60 +24.3, bullishVotes 7, bearishVotes 0, atr_ratio 1.394, no marker). The definition is registered unchanged; the count divergence is named here, not smoothed. The bullishVotes-at-least-5 sensitivity also yields the same 3 on the held stream.",
+   "status": "ROSTERED 2026-11-16 (CONV57-G4-VARIATION-20261116, desk total audit registration decision under the variation doctrine and the all-sleeves-live order); forward accrual from Mon 2026-11-16."
+  }
+ ]
+}
