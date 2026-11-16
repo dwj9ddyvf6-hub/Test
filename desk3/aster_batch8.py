@@ -5,7 +5,11 @@ r19_crypto.py::_signal/evaluate + crypto_rules.json. Entry: completed
 4h close > highest high of prior 20 bars AND an actually available
 funding observation < 0 (funding feed is a v3 producer input; no v3
 funding producer exists yet, so these sleeves declare "funding" and
-land visibly UNFED — never fake-fed, map §4). Exits (archive):
+land visibly UNFED — never fake-fed, map §4). [CLEAR-THE-BOARD-
+20261114: both halves of that stale note are cured — funding IS
+served (CoinalyzeFundingProducer + the snapshot funding key), and
+_bars4 now resolves through desk3/crypto_bars like every other
+Aster crypto engine, onto the Kraken spot ENJ/USD|4Hour series.] Exits (archive):
 fixed96 = 96h deadline only; lost_breakout = close < stored breakout
 level; normalization = funding >= 0; normalization_failure = funding
 >= 0 AND close < lowest low of prior 3 bars, executed +4h after the
@@ -115,10 +119,22 @@ def _now(view,ctx):
     try: return datetime.fromisoformat(str(n).replace("Z","+00:00"))
     except Exception: return datetime(2026,10,24,tzinfo=timezone.utc)
 def _bars4(view):
-    m=view.get("bars") or {}
-    for k in (f"{SYM}|4Hour",f"{SYM}|4H",SYM):
-        if m.get(k): return m[k]
-    return []
+    # CLEAR-THE-BOARD-20261114: the incumbent archive-key read is
+    # preserved BIT-FOR-BIT (keys and order — this family's exit
+    # logic reads bars[-1] as the current bar and its incumbent
+    # never sorted; resolve_bars sorts, which moved a deliberately
+    # back-stamped current bar and broke the norm-failure exit,
+    # caught by test_aster_batch8_blockers). Only when the archive
+    # keys miss does resolution fall through to the one seam
+    # (desk3/crypto_bars.resolve_bars) for the served spot forms:
+    # the ENJ/USD|4Hour Kraken spot series (KrakenProducer,
+    # provenance stamped there) is what feeds this family live.
+    m = view.get("bars") or {}
+    for k in (f"{SYM}|4Hour", f"{SYM}|4H", SYM):
+        if m.get(k):
+            return m[k]
+    from .crypto_bars import resolve_bars
+    return resolve_bars(m, SYM, ("4Hour",))
 def _bars(view,sym):
     m=view.get("bars") or {}
     for k in (f"{sym}|1Day",f"{sym}|1D",sym):
@@ -127,7 +143,15 @@ def _bars(view,sym):
 def _funding(view):
     f=view.get("funding")
     if isinstance(f,dict):
-        if SYM in f: return f[SYM]
+        if SYM in f:
+            # FUNDING-OKX-20261115: unwrap the served funding record
+            # ({SYM: {"rate": x, ...}}) like every other funding
+            # reader (b11/aster_crypto/batch7); returning the record
+            # raw made float() raise on the record form. Scalars
+            # pass through unchanged.
+            v=f[SYM]
+            if isinstance(v,dict): v=v.get("rate", v.get("funding_rate"))
+            return v
         if "rate" in f: return f["rate"]
         if f and all(isinstance(v,(int,float)) for v in f.values()): return None
     if isinstance(f,(int,float)): return f
@@ -199,7 +223,19 @@ def _crypto(sid,view,ctx):
         try:
             bt=datetime.fromisoformat(str(last["t"]).replace("Z","+00:00"))
             if bt.tzinfo is None: bt=bt.replace(tzinfo=timezone.utc)
-            lag_s=(now-(bt+timedelta(hours=4))).total_seconds()
+            # FIX-F4-20261115: bar duration from the served bars' own
+            # spacing, not a hardcoded 4h — on any other served
+            # timeframe the hardcoded close misdated the bar (on a 1D
+            # tape a fresh bar read 20h stale and was refused). On
+            # the native 4H tape the derived spacing is exactly 4h
+            # and behavior is bit-identical; underivable spacing
+            # falls back to 4h.
+            dur=timedelta(hours=4)
+            if len(bars)>=2:
+                _pt=datetime.fromisoformat(str(bars[-2]["t"]).replace("Z","+00:00"))
+                if _pt.tzinfo is None: _pt=_pt.replace(tzinfo=timezone.utc)
+                if (bt-_pt).total_seconds()>0: dur=bt-_pt
+            lag_s=(now-(bt+dur)).total_seconds()
         except Exception:
             lag_s=None
         if lag_s is not None and lag_s>ENTRY_FRESH_S:
@@ -272,8 +308,14 @@ def _etf(sid,view,ctx):
         held=int(float(positions[sym]["qty"])); tgt=targets.get(sym,0)
         if held>tgt:
             px=float(_bars(view,sym)[-1]["c"]) if _bars(view,sym) else float(positions[sym].get("avg_price") or 0)
-            kind="exit" if tgt==0 else "rebalance"
-            out.append(intent(kind,sym,"sell",held-tgt,f"{sid} {kind}: monthly target {tgt} vs held {held} policy={spec['policy']} leader={leader}",px))
+            # REBALANCE-KIND-20261116: see desk3/aster_etf.py;
+            # a partial reduction is a partial exit in the
+            # door's vocabulary (entry/exit only). The kind is
+            # exit; the partial case stays named rebalance in
+            # the reason prose.
+            kind="exit"
+            _word="exit" if tgt==0 else "rebalance"
+            out.append(intent(kind,sym,"sell",held-tgt,f"{sid} {_word}: monthly target {tgt} vs held {held} policy={spec['policy']} leader={leader}",px))
     for sym in sorted(targets):
         held=int(float(positions.get(sym,{}).get("qty") or 0)); tgt=targets[sym]
         if tgt>held:
