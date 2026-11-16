@@ -1,0 +1,21 @@
+{
+ "ab": {
+  "direction_ok": true,
+  "tight_spread_treatment": "enter",
+  "wide_spread_control": "enter",
+  "wide_spread_treatment": "refuse"
+ },
+ "blockers": "tests/test_edge_batch13_blockers.py (14 tests, fail-first proven: 7 fail on pre-cure engines, 14/14 pass post-cure)",
+ "decision_record": {
+  "calculation": "Gate = the desk's existing options spread precedent (laz8_opt 30%): refuse when (ask-bid)/mid > 0.30. Fixture A: ask 1.80/bid 0.90 (0.667 of mid) refused, tight 1.50/1.40 (0.069) enters. Fixture B (micro): ask 0.45/bid 0.15 (1.0 of mid) refused.",
+  "comparison": "Pre-change engine priced the package from the ask (correct side) and capped debit/(spot*100) at 0.5, but never looked at the bid: two contracts with identical asks and wildly different spreads were treated identically.",
+  "experiment": "Fixture A/B (TestLeapsSpreadGate): treatment vs switch-OFF control (ask-only rule restored, wide-spread fixture enters); quotes/greeks freshness gates (<=10s, async <=2s) unchanged.",
+  "mechanism": "Unpriced-risk leak: on illiquid 540-720 DTE LEAPS the bid/ask spread is an immediate, certain mark-to-bid loss of the warehoused premium; a 67%-of-mid spread destroys the position's economics before the thesis can move.",
+  "transfer": "LEAPS expression of a qualified native G4 event: long 540-720 DTE calls, delta 0.6-0.8, risk 2% of the $10k slice; paid by the G4 cohort's multi-quarter continuation, warehoused as premium."
+ },
+ "disposition": "APPLY ENH-B13-LEAPS-SPREAD-20261024",
+ "exp_id": "ENH-B13-LEAPS-SPREAD-20261024",
+ "paper_only": true,
+ "sleeve": "aster_tensor_leaps_a",
+ "switch": "extra.aster_leaps_enh.spread_gate default ON; OFF restores ask-only pricing exactly"
+}
