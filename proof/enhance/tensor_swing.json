@@ -1,0 +1,31 @@
+{
+ "ab": {
+  "control_entries_age22": 1,
+  "treatment_entries_age1": 1,
+  "treatment_entries_age22": 0
+ },
+ "binding_leak": "staged swing decisions never aged before entry",
+ "blockers": "tests/test_edge_batch26_blockers.py TestTensorSwingStaleGate (3 tests)",
+ "date": "2026-10-24",
+ "decision_record_2a": {
+  "calculation": "Fixture A/B: identical staged decision (entry 150/stop 140/target 170, R/R floor passed); bar_date 2026-10-22 (age 1) -> both enter; bar_date 2026-10-01 (age 22) -> control enter / treatment refuse.",
+  "comparison": "Paired shadow control: control = pre-change staging (any bar_date admitted); treatment = refuse entries whose swing_bar_date is more than 7 days before the session date (batch-18 daily-staleness bound; the longest legitimate gap is ~4.4 days). No bar_date on the intent = no evidence = pass, archive behavior.",
+  "experiment": "Forward paper: enh26_paired records carry swing_bar_date + age per judged entry. Reject if the producer's live bar_date distribution shows legitimate signals older than 7 days being refused (producer SLA evidence), over the first 20 treated entries. Switch OFF restores unaged staging exactly (blocker-proven).",
+  "mechanism": "Perception/timing at the adapter layer (strategy pinned; Tensor ENGINE untouched): parse swing_bar_date from the intent reason (SA-17 stamp) and age it against the session. Exits \u2014 bearish trigger, 20-bar time stop, target \u2014 are never filtered: a held position must always be able to leave on a stale view.",
+  "transfer": "A staged Tensor swing entry priced entirely off its own bar's entry/stop/target; the transfer decays with the swing's age \u2014 a weeks-old staged price is a limit order against a market that has moved on."
+ },
+ "disposition": "ENHANCED (second look; first look IMPROVE-tensor_swing reward>=risk floor)",
+ "engine": "desk3/enhance26.py gate stale_signal_gate, wired in adapters3/tensor_swing.py (strategy byte-identical)",
+ "exp_id": "ENH-B26-TSWING-STALE-20261024",
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "shadow_control": "never emits; control decision recorded paired per entry candidate",
+ "sleeve": "tensor_swing",
+ "status": "pre-registered",
+ "switch": {
+  "default": true,
+  "field": "stale_signal_gate",
+  "key": "extra['tensor_swing_improve2']",
+  "off_restores": "pre-change unaged staging exactly"
+ }
+}
