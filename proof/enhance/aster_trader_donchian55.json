@@ -1,0 +1,17 @@
+{
+ "binding_leak": null,
+ "blockers": "tests/test_edge_batch26_blockers.py TestDonchianVerifyOnlyTrace (trace) + tests/test_aster_batch16_blockers.py",
+ "date": "2026-10-24",
+ "disposition": "VERIFY-ONLY (first look) \u2014 no binding sleeve-layer leak survives scrutiny",
+ "evidence": {
+  "cadence": "86400s by design (daily-bar strategy); no intraday execution moment exists to be late for.",
+  "entry": "Fixture trace on the final tree (tests/test_edge_batch26_blockers.py TestDonchianVerifyOnlyTrace + batch-16 suite): ranked breakout entry fires triple-capped (notional 10% / 1% dollar-volume / 0.5% risk at 2xATR), stop_price carried on the intent for the broker stop.",
+  "exits": "All four designed exits traced: initial 2ATR stop (close vs carried stop), close below prior-20 low, close below SMA200, 126-bar timeout (fires at 126, silent at 125).",
+  "stale_input_check": "A bar-age entry gate was considered and REJECTED with evidence: this sleeve's data contract does not carry trustworthy bar dates \u2014 its own blocker fixtures stamp bars with decorative January dates while evaluating in October, and the engine never reads bar timestamps for decisions (only opened_at-relative held counts). Gating on those stamps would refuse every legitimate entry. The binding freshness constraint is the shared bars producer (900s SLA, registry-visible), not this sleeve."
+ },
+ "exp_id": null,
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "sleeve": "aster_trader_donchian55",
+ "status": "verify-only"
+}
