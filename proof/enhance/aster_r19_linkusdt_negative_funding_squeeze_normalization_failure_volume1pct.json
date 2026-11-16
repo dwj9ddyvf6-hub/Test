@@ -1,0 +1,20 @@
+{
+ "sleeve": "aster_r19_linkusdt_negative_funding_squeeze_normalization_failure_volume1pct",
+ "batch": 9,
+ "verdict": "ENHANCED",
+ "leak": "structural exit trigger evaporates on recovery",
+ "decision_record": {
+  "transfer": "Shorts who paid negative funding to hold LINK shorts are squeezed; when funding normalizes AND price breaks the prior-3-bar low the squeeze has failed \u2014 the exit transfers the position back before the failed squeeze bleeds to the 96h deadline.",
+  "comparison": "Pre-change latest-bar-only trigger evaluation vs latched scan of every post-entry bar whose archive execute_at (open+8h) has arrived; same funding gate, same price condition, same deadline backstop.",
+  "mechanism": "Execution/timing: a bar-specific price-failure trigger was evaluated only on the newest bar, so it evaporated when a later bar recovered and was blocked during the newest bar's 4h dead zone.",
+  "calculation": "Fixture: failure bar (close 18.0 < prior-3 lows 19.5) at index -3, recovery bars after, funding +0.002: pre-change 0 exits, enhanced 1 exit; funding -0.002 still 0 exits; switch OFF restores 0 exits.",
+  "experiment": "Pre-registered: tests/test_edge_batch9_blockers.py TestLatchedTrigger. Rejection rule: if OFF != pre-change behavior on any fixture, or the latch fires without funding>=0, revert. Forward: paired enhance_journal.jsonl rows record enhanced exit vs shadow no-exit on live evaluations."
+ },
+ "change": "Latched structural-trigger scan over all executable post-entry bars (desk3/aster_b12_crypto.py)",
+ "switch": "enhance_trigger_latch",
+ "switch_default": true,
+ "shadow_control": "switch OFF = pre-change latest-bar-only rule, evaluated on identical fixtures; live paired rows in enhance_journal.jsonl",
+ "blocker": "tests/test_edge_batch9_blockers.py::TestLatchedTrigger",
+ "fail_first": "8 failures on pre-change engines (stash-proven), 17/17 pass after",
+ "capacity_arm": "volume1pct"
+}
