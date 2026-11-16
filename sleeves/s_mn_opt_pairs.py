@@ -9,7 +9,8 @@ selection), $500 of premium budget per leg; exit both legs
 sell-to-close when |z| <= 0.25. Pairs are s_mn_pairs' PAIRS.
 """
 from sleeves.laz8_common import Intent, SleeveConfig, held_positions, xstale_refused
-from sleeves.laz8_opt import contracts_for, pick_option, underlying_of
+from sleeves.laz8_opt import (contracts_for, pick_option,
+                              sizing_zero_journal, underlying_of)
 from sleeves.s_mn_pairs import PAIRS, EXIT_Z, ENTRY_Z, spread_z
 
 CONFIG = SleeveConfig(sleeve_id="s_mn_opt_pairs", cadence_s=300,
@@ -58,6 +59,12 @@ def signal(bars, slice_state, context):
         np_ = contracts_for(PER_LEG, pk[1])
         nc = contracts_for(PER_LEG, ck[1])
         if np_ <= 0 or nc <= 0:
+            if nc <= 0:
+                sizing_zero_journal(context, "s_mn_opt_pairs", ck[0],
+                                    ck[1], PER_LEG)
+            if np_ <= 0:
+                sizing_zero_journal(context, "s_mn_opt_pairs", pk[0],
+                                    pk[1], PER_LEG)
             continue
         out.append(Intent(
             kind="enter", symbol=ck[0], qty_hint=nc, side="buy",
