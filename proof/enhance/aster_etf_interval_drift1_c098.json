@@ -1,0 +1,24 @@
+{
+ "ab": {
+  "decision_diff_across_fixture_sweep": false,
+  "fixtures_swept": [
+   "flat",
+   "held selected leader",
+   "held non-selected + selected",
+   "held selected 100 shares"
+  ],
+  "window_check": "b9 _in_window converts aware stamps to ET (13:36Z fires, 20:00Z refuses) \u2014 no ETWIN leak"
+ },
+ "decision_record": {
+  "calculation": "NAV term enters only `desired`; drift-retain returns [] when selected == incumbent and held, and sell-then-settle returns sells-only (qty = held - 0 for non-targets) whenever any sell is pending. Every NAV-sensitive path is pre-empted; emitted intents identical across the sweep.",
+  "comparison": "Legacy cash+held basis vs capital basis on identical fixtures for this sleeve's policy class.",
+  "experiment": "Fixture sweep (4 position fixtures x both bases) comparing emitted (symbol, side, qty) tuples; plus window A/B stamps.",
+  "mechanism": "No binding leak survives scrutiny for this policy class: execution window is ET-correct in the b9 engine and the phantom-cash term never reaches an emitted decision.",
+  "transfer": "Drift sleeves are paid by NOT trading when the incumbent still leads; that transfer is intact as designed."
+ },
+ "disposition": "VERIFY-ONLY",
+ "exp_id": "ENH-NAVBASE-20261024",
+ "paper_only": true,
+ "sleeve": "aster_etf_interval_drift1_c098",
+ "switch": "none (no change applied)"
+}
