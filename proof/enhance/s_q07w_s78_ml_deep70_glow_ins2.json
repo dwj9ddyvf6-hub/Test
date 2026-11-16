@@ -1,0 +1,31 @@
+{
+ "sleeve": "s_q07w_s78_ml_deep70_glow_ins2",
+ "batch": 24,
+ "verdict": "ENHANCED",
+ "exp_id": "ENH24-LAZB7-Q07STALE-20261024",
+ "paper_only": true,
+ "leak": "entries priced off dead symbol bars",
+ "decision_record": {
+  "transfer": "Tensor 1W confluence edge (swing/midlarge, 78w, filters deep70+glow+ins2) is paid on a QQQ-down day within 5 sessions of the signal; capture requires entering at a live price in the designed $1,000 slot behind a true 15% stop.",
+  "comparison": "Same fire/alt-data fixture, two bar states: symbol bars ending at the session 2026-10-23 (fresh) vs ending 2026-10-08, 15 calendar days earlier (dead feed).",
+  "mechanism": "Execution/perception: q07_evaluate priced, sized and filter-checked (deep70/mom6/cheap5) entries off bars[-1] with no age check \u2014 the module's own _bar_stale helper (ENH19) was never applied to the Q07 path; a halted name entered at the ancient close and the market fill broke the slot and stop.",
+  "calculation": "Stale fixture: pre-change 1 entry qty 40 @ $25.00 (stale close); treatment 0 entries + paired journal record (age_days=15); switch OFF restores the stale entry exactly; fresh bars enter qty 40; stop exit on stale bars still emitted (exits never gated).",
+  "experiment": "Pre-registered A/B in tests/test_edge_batch24_blockers.py::TestEngineCStaleBar (treatment vs stale_gate=False control vs fresh bars, per sleeve, plus exit-untouched). Rejection rule: OFF diverges from pre-change, any treatment entry on >4-day-stale bars, a refused fresh entry, or a gated exit \u2014 revert. Forward paired rows in extra.enh24_journal."
+ },
+ "change": "Entry refused when the symbol's last daily bar is >4 calendar days before the session (_bar_stale bound, ENH19 precedent: Mon-after-Fri 3d and Tue-after-holiday 4d pass), in laz_sleeves/_common.py q07_evaluate. Exits untouched.",
+ "switch": "extra.s_q07w_s78_ml_deep70_glow_ins2_enh24.stale_gate default ON; OFF restores pre-change rule exactly",
+ "shadow_control": "switch OFF on identical fixtures; live paired records in extra.enh24_journal",
+ "blocker": "tests/test_edge_batch24_blockers.py::TestEngineCStaleBar",
+ "fail_first": "batch-24 blockers FAILED (stale-entry assertion) with the _common.py cure stashed; 6/6 GREEN after; laz_batch7 suite GREEN",
+ "ab": {
+  "fixture_last_bar": "2026-10-08",
+  "fixture_session": "2026-10-23",
+  "age_days": 15,
+  "control_entries": 1,
+  "treatment_entries": 0,
+  "off_entries": 1,
+  "fresh_entries": 1,
+  "fresh_qty": 40,
+  "fresh_price": 25.0
+ }
+}
