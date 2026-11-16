@@ -46,6 +46,18 @@ shares for a fixed $1,000 notional (the spec's contract-at-level
 mechanics need the tape + levels that do not exist yet; the share
 proxy is named here, never silent); exit on flip, drop, or 15:45.
 Paper only; $10,000 slice; no backtest claimed.
+
+PRZM-ZERO-RISKSHAPE-20261116 (owner ruling 2026-11-16 12:46 ET,
+"Make it work"): a session stop at the Saty family standard
+(DAILY_LOSS_FRACTION below) now bounds the session — reaching it
+ends NEW entries for the session; exits (drop/flip and the 15:45
+force-close) continue normally. No Intent stop/target is set:
+the zero-DTE family's tested standard is to leave those unset.
+Long share entries journal their structure-inherent max loss
+(qty x entry price); short share entries are undefined-risk and
+journal risk_bound = "session_stop_only" — the estate search
+recorded in BUGLOG_2026-11-16.md found no transferable
+same-structure short bound, and no level was invented.
 """
 from __future__ import annotations
 
@@ -57,17 +69,28 @@ from core.sleeve import BaseSleeve, ExitRule, Intent, SleeveConfig
 
 ET = ZoneInfo("America/New_York")
 SYMBOL = "SPY"
-ENTRY_SCORE = 25
-FLIP_SCORE = 35
-DROP_SCORE = 8
-MIN_HOLD_MS = 600_000
-GRADE_AFTER_MS = 1_800_000
+ENTRY_SCORE = 25  # CONSTANTS-PROVENANCE-20261116: PRZM-RECREATION-SPEC-2026-10-29 / PRZM-RECREATION-BUILD.md (hysteresis + multipliers as built there) (entry 25)
+FLIP_SCORE = 35  # CONSTANTS-PROVENANCE-20261116: PRZM-RECREATION-SPEC-2026-10-29 / PRZM-RECREATION-BUILD.md (hysteresis + multipliers as built there) (flip 35)
+DROP_SCORE = 8  # CONSTANTS-PROVENANCE-20261116: PRZM-RECREATION-SPEC-2026-10-29 / PRZM-RECREATION-BUILD.md (hysteresis + multipliers as built there) (drop <8)
+MIN_HOLD_MS = 600_000  # CONSTANTS-PROVENANCE-20261116: PRZM-RECREATION-SPEC-2026-10-29 / PRZM-RECREATION-BUILD.md (hysteresis + multipliers as built there) (600,000 ms hold with the drop rule)
+GRADE_AFTER_MS = 1_800_000  # CONSTANTS-PROVENANCE-20261116: derived — the spec's sign-only 30-minute grading (30*60*1000 ms), PRZM-RECREATION-BUILD.md
 WINDOW_START = dtime(9, 45)
 WINDOW_END = dtime(15, 45)
-NOTIONAL_PER_CALL = 1000.0
-CHASING_MULT = 0.55
-CONTRARIAN_MULT = 1.25
-CHASING_M5_MIN = 0.8
+NOTIONAL_PER_CALL = 1000.0  # CONSTANTS-PROVENANCE-20261116: docstring above (fixed $1,000 notional per call, recreated share proxy under the spec)
+DAILY_LOSS_FRACTION = 0.01  # PRZM-ZERO-RISKSHAPE-20261116 (owner ruling
+                            # 2026-11-16 12:46 ET): the Saty family
+                            # standard daily stop, fraction of slice
+                            # equity (sleeves/saty_magnum.py
+                            # SESSION_STOP_PCT = 0.01;
+                            # sleeves/saty_sol_0dte.py
+                            # DAILY_LOSS_FRACTION = 0.01) — $100.00
+                            # on this sleeve's $10,000 slice, applied
+                            # to session P&L accumulated in
+                            # przm_state (see _session_pnl). Session
+                            # stop only: no Intent stop/target.
+CHASING_MULT = 0.55  # CONSTANTS-PROVENANCE-20261116: PRZM-RECREATION-SPEC-2026-10-29 / PRZM-RECREATION-BUILD.md (hysteresis + multipliers as built there) (chasing x0.55 at |m5| > 0.8)
+CONTRARIAN_MULT = 1.25  # CONSTANTS-PROVENANCE-20261116: PRZM-RECREATION-SPEC-2026-10-29 / PRZM-RECREATION-BUILD.md (hysteresis + multipliers as built there) (contrarian x1.25 at |m5| > 0.8)
+CHASING_M5_MIN = 0.8  # CONSTANTS-PROVENANCE-20261116: PRZM-RECREATION-BUILD.md (chasing/contrarian multipliers apply at |m5| > 0.8)
 
 CONFIG = SleeveConfig(
     sleeve_id="przm_zero",
@@ -302,6 +325,30 @@ def _bars_today(raw, session):
     return out
 
 
+def _session_pnl(state, spot):
+    """Session P&L for the daily stop (PRZM-ZERO-RISKSHAPE-20261116):
+    realized P&L recorded on the session's closed calls in
+    przm_state (each closed call carries realized_pnl, priced at
+    its exit intent's price_hint at the moment that intent was
+    emitted) plus the open call marked at the current spot.
+    Calls recorded before this cure carry no realized_pnl and
+    contribute 0."""
+    total = 0.0
+    for c in state.get("calls") or []:
+        if isinstance(c, dict):
+            rp = _num(c.get("realized_pnl"))
+            if rp is not None:
+                total += rp
+    oc = state.get("open_call")
+    if isinstance(oc, dict) and spot:
+        qty = _num(oc.get("qty"))
+        px = _num(oc.get("px"))
+        d = oc.get("direction")
+        if qty and px and d in (1, -1):
+            total += d * qty * (spot - px)
+    return total
+
+
 class PrzmZeroSleeve(BaseSleeve):
     CONFIG = CONFIG
 
@@ -356,11 +403,42 @@ class PrzmZeroSleeve(BaseSleeve):
             "sleeve": CONFIG.sleeve_id, "session": session,
             "state": call_word(new_dir, extra.get("przm_regime")),
             "drivers": drv, "score": drv["score"]}
+        # Session stop at the Saty family standard
+        # (PRZM-ZERO-RISKSHAPE-20261116; sources at the constant):
+        # reaching it ends NEW entries for the rest of the
+        # session; exits below are unaffected. Slice equity is
+        # ctx.equity — the serving adapter (adapters/przm_zero.py)
+        # builds this sleeve's Context with equity = the config
+        # slice's capital_usd ($10,000), the same source saty_day
+        # reads. The halt is journaled on the stamp with
+        # saty_day's field names, every halt, every time.
+        equity = _num(getattr(ctx, "equity", None)) or 0.0
+        session_pnl = _session_pnl(state, spot)
+        halted = equity > 0 and \
+            session_pnl <= -DAILY_LOSS_FRACTION * equity
+        self.last_evaluation["session_pnl"] = round(session_pnl, 2)
+        if halted:
+            self.last_evaluation["daily_stop_halt"] = True
+            self.last_evaluation["daily_stop_fraction"] = \
+                DAILY_LOSS_FRACTION
+            self.last_evaluation["daily_stop_usd"] = round(
+                DAILY_LOSS_FRACTION * equity, 2)
         intents = []
         # Force-close at 15:45 (recreated) or on drop/flip.
         must_exit = qty_open != 0 and (
             now_dt.time() >= WINDOW_END or (changed and new_dir != (1 if qty_open > 0 else -1)))
         if must_exit:
+            # Record the closed call's realized P&L in the state
+            # at the moment its exit intent is emitted, priced at
+            # that intent's price_hint (the current spot).
+            oc = state.get("open_call")
+            if isinstance(oc, dict):
+                q = _num(oc.get("qty"))
+                px = _num(oc.get("px"))
+                d = oc.get("direction")
+                if q and px and d in (1, -1):
+                    oc["exit_px"] = spot
+                    oc["realized_pnl"] = round(d * q * (spot - px), 2)
             intents.append(Intent(
                 "exit", SYMBOL, qty=abs(qty_open), price_hint=spot,
                 reason="przm_zero exit: call dropped/flipped or 15:45 force-close",
@@ -368,12 +446,25 @@ class PrzmZeroSleeve(BaseSleeve):
                 position_intent="sell_to_close" if qty_open > 0 else "buy_to_close",
                 signal_date=session))
             state["open_call"] = None
-        if changed and new_dir != 0 and qty_open == 0 and not intents:
+        if changed and new_dir != 0 and qty_open == 0 and not intents \
+                and not halted:
+            qty = max(1, int(NOTIONAL_PER_CALL // spot))
             call = {"t_ms": int(ctx.now * 1000), "px": spot,
-                    "direction": new_dir}
+                    "direction": new_dir, "qty": qty}
+            if new_dir == 1:
+                # Long SPY shares are defined-risk: the
+                # structure's own max loss is qty x entry price.
+                call["max_loss_usd"] = round(qty * spot, 2)
+            else:
+                # Short SPY shares are undefined-risk. The estate
+                # search in BUGLOG_2026-11-16.md
+                # (PRZM-ZERO-RISKSHAPE-20261116) found no
+                # transferable same-structure bound, so the short
+                # is bounded by the session stop alone, named as
+                # such — no level invented.
+                call["risk_bound"] = "session_stop_only"
             state.setdefault("calls", []).append(call)
             state["open_call"] = call
-            qty = max(1, int(NOTIONAL_PER_CALL // spot))
             intents.append(Intent(
                 "enter", SYMBOL, qty=qty, price_hint=spot,
                 reason=(f"przm_zero {'long' if new_dir == 1 else 'short'}: "
