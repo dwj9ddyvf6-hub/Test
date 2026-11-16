@@ -1,0 +1,31 @@
+{
+ "ab": {
+  "control_price": 49.9,
+  "spread_saved_per_share": 0.05,
+  "treatment_limit": 49.95
+ },
+ "binding_leak": "scheduled exit crosses full bid at open",
+ "blockers": "tests/test_edge_batch26_blockers.py TestOvernight5bpExitMidLimit (3 tests)",
+ "date": "2026-10-24",
+ "decision_record_2a": {
+  "calculation": "Fixture: quotes bid 49.90 / ask 50.00 at the scheduled exit: control receives 49.90; treatment limit 49.95, spread_saved 0.05/share recorded per exit. On a 19-share fixture position that is $0.95 per round trip against a 5bp-fee book whose expected capture is bp-class.",
+  "comparison": "Paired shadow control: control = witnessed bid the pre-change market exit receives; treatment = DAY limit at the quoted bid/ask mid for the scheduled_time_exit only. Stop/target exits keep market immediacy. An unfilled limit is re-emitted at the next cycle's fresh mid by the same exit loop, exactly as the market exit was re-emitted until filled.",
+  "experiment": "Forward paper: paired enhance_exp records on every treated exit. Reject if the mid-limit fill rate within the exit session is < 80% of control exits over 20 paired exits, or mean spread_saved <= 0. Switch OFF restores the market exit exactly (blocker-proven).",
+  "mechanism": "Execution/spread capture at exit, scoped to sid aster_r19_timing_overnight_5bp in the shared batch-15 engine; the 25bp book is untouched by this cure (blocker-proven). Signal, window 15:30-15:35 ET, sizing and fee class unchanged.",
+  "transfer": "An overnight capture on the thinnest book in the R19 family (5bp fee class): entry already pays only the mid (batch-10 cure, shared engine), but the scheduled 09:30 exit still crosses the full bid \u2014 the spread is paid on the side where the entire edge is a few bp."
+ },
+ "disposition": "ENHANCED (first look for the 5bp book; entry mid-limit inherited from batch 10's shared engine cure)",
+ "engine": "desk3/aster_batch15.py _eval_timing exit loop (scoped sid + reason + kind)",
+ "exp_id": "ENH-B26-ONEXIT-20261024",
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "shadow_control": "never emits; control bid recorded paired on the treated exit intent + journal",
+ "sleeve": "aster_r19_timing_overnight_5bp",
+ "status": "pre-registered",
+ "switch": {
+  "default": true,
+  "field": "exit_mid_limit",
+  "key": "extra['enh_aster_r19_timing_overnight_5bp'] or extra['aster_b26_enh']",
+  "off_restores": "pre-change market exit exactly"
+ }
+}
