@@ -42,6 +42,20 @@ from datetime import date, datetime, timezone
 from zoneinfo import ZoneInfo
 ET = ZoneInfo('America/New_York')
 EXP_ID_XSP_ETWIN = 'ENH-B13-XSP-ETWIN-20261024'
+def _frac_qty(dollars, per_unit):
+    """WS4-FRACTIONAL-20261114 (owner ruling 2026-11-14 17:08 ET):
+    a positive dollar budget expressed as a fractional quantity,
+    rounded DOWN to 6dp, never up past the budget; 0.0 only when
+    the budget or the per-unit price is not positive. Whole-share
+    rounding made names priced above the budget unbuyable while
+    the budget was positive; OBS-1's no-floor rule stands for a
+    zero budget."""
+    if dollars <= 0 or per_unit <= 0:
+        return 0.0
+    import math as _m
+    return _m.floor((dollars / per_unit) * 1_000_000) / 1_000_000
+
+
 def _xsp_etwin_on(view, ctx, sid):
     extra = {}
     if isinstance(ctx, dict): extra.update(ctx.get('extra') or {})
@@ -442,11 +456,9 @@ def _atr_series(bars, n):
 
 
 def _spot_bars(view, sym):
-    m = view.get("bars") or {}
-    for k in (f"{sym}|4Hour", f"{sym}|4H", sym):
-        if m.get(k):
-            return m[k]
-    return []
+    # F4-CRYPTO-BARKEY-20261114: archive USDT keys resolve via desk3.crypto_bars (served BASE/USD spot forms; see that module)
+    from .crypto_bars import resolve_bars
+    return resolve_bars(view.get("bars") or {}, sym, ("4Hour",))
 
 
 def _spot_position(view, sid, sym):
@@ -596,8 +608,8 @@ def evaluate_link_ai_volume(view, ctx=None, sid="aster_pub_link_ai_volume"):
         return []
     if not long_sig:
         return []
-    qty = int(_spot_cash(view) // closes[-1])
-    if qty < 1:
+    qty = _frac_qty(_spot_cash(view), closes[-1])
+    if qty <= 0:
         return []
     return [_spot_intent(sid, sym, "entry", qty, closes[-1],
                          "source_entry_long volume_spike trend_up bullish",
@@ -670,8 +682,8 @@ def evaluate_enj_iu_body(view, ctx=None, sid="aster_pub_enj_iu_body"):
         return []
     if not long_sig:
         return []
-    qty = int(_spot_cash(view) // float(b["c"]))
-    if qty < 1:
+    qty = _frac_qty(_spot_cash(view), float(b["c"]))
+    if qty <= 0:
         return []
     return [_spot_intent(sid, sym, "entry", qty, float(b["c"]),
                          "source_body_impulse_long", "entry")]
