@@ -33,15 +33,22 @@ Only a routed RRE2 candidate may become a desk entry Intent
 journaled BASELINE_ONLY — the preserved in-port baseline his
 edge contract's comparison requires — and never trades.
 
-EVENT SEAM (spec section 7). The desk has NO authenticated
-point-in-time event-calendar feed. The wrapper therefore
-supplies his ContextGates honestly — event_coverage_known=
-False, events_clear=False, evidence_id naming the absence —
-so his context book reports DATA_BLOCK on every pass, his
-router vetoes routing (candidates preserved and consumed),
-and the sleeve evaluates, journals and ABSTAINS. It does not
-trade until a real compatible event source is integrated
-through this same seam. No waiver, no invented all-clear.
+EVENT SEAM (spec section 7; MIDNA RULING R2-RRE-20261025).
+The gates are MACRO-release typed: this sleeve trades SPY
+only, and the desk record (BUGLOG 2026-10-24, HARDEN-B4)
+established that the earnings calendar is equity events, not
+the SPY session blackout calendar his admission checks. The
+wrapper therefore resolves (event_coverage_known,
+events_clear) per session from the desk's macro-release
+calendar producer (desk3/macro_calendar.py; FOMC decision /
+CPI / Employment Situation release dates as committed data
+from the official Federal Reserve + BLS schedules), served
+through ctx.extra["macro_events"]. Coverage is known only
+inside the calendar's committed coverage window; a listed
+release date is a session blackout (events_clear=False);
+anything absent or malformed stays (False, False) with
+evidence_id naming the absence — fail closed, no invented
+all-clear, exactly as before the ruling.
 
 WARMUP (spec section 6.4). blocked_warmup is stamped only for
 his REQUIRED elements: a complete frozen prior-session
@@ -132,13 +139,46 @@ _LIMITS = adm.canonical_limits(
     max_crossing_cost_fraction=0.2,
     allowed_linear_feeds=("sip", "iex"))
 _COSTS = adm.Costs(0.01, 0.01, 0.01, 2.0)
-# The section-7 event seam, as data: (event_coverage_known,
-# events_clear) for admission. Production value is (False,
-# False) — ABSENT, blocking, per the spec pin. Labeled
-# synthetic test fixtures may monkeypatch this module
-# constant to exercise the admission path; no configuration
-# surface reads it, and the trap blocker pins this literal.
-_EVENT_GATES = (False, False)
+# The section-7 event seam (MIDNA RULING R2-RRE-20261025):
+# (event_coverage_known, events_clear) resolved per session
+# from the desk macro calendar payload in
+# ctx.extra["macro_events"] (producer: desk3.macro_calendar,
+# source id below). No payload / malformed payload / session
+# outside the committed coverage window => (False, False),
+# the pre-ruling absent posture, fail closed.
+MACRO_SOURCE_ID = "desk-macro-calendar-v2"
+# v1 payloads (pre-widening snapshots) stay readable; the
+# blackout seam is identical on both (see below).
+MACRO_SOURCE_IDS = ("desk-macro-calendar-v1", MACRO_SOURCE_ID)
+# BLACKOUT SEAM, EXPLICITLY UNCHANGED by the v2 widening
+# (Midna ruling, Week Ahead macro calendar v2, 2026-10-31):
+# only FOMC, CPI and NFP events black a session out. The v2
+# calendar's informational kinds (ISM_MFG, ISM_SVC) never do.
+BLACKOUT_KINDS = ("FOMC", "CPI", "NFP")
+
+
+def _event_gates(extra, session_iso):
+    """(coverage_known, events_clear, event|None, evidence_id)
+    for one session, purely from the served macro payload."""
+    doc = (extra or {}).get("macro_events")
+    if not isinstance(doc, dict) \
+            or doc.get("source") not in MACRO_SOURCE_IDS \
+            or not isinstance(doc.get("events"), list):
+        return False, False, None, EVENT_ABSENT_ID
+    try:
+        iso = date.fromisoformat(str(session_iso)[:10]).isoformat()
+        start = date.fromisoformat(str(doc["coverage_start"])).isoformat()
+        end = date.fromisoformat(str(doc["coverage_end"])).isoformat()
+    except (KeyError, TypeError, ValueError):
+        return False, False, None, EVENT_ABSENT_ID
+    if not (start <= iso <= end):
+        return False, False, None, EVENT_ABSENT_ID
+    for e in doc["events"]:
+        if isinstance(e, dict) and e.get("date") == iso \
+                and e.get("kind") in BLACKOUT_KINDS:
+            return True, False, e, \
+                f"{doc['source']}:{e.get('kind')}:{iso}"
+    return True, True, None, doc["source"]
 _FINGERPRINT = hashlib.sha256(json.dumps({
     "version": "0.2.0", "router": str(sorted(
         vars(_ROUTER_CFG).items())),
@@ -346,6 +386,16 @@ class RaschkeRre(BaseSleeve):
                  "warmup": {}}
         self.last_evaluation = stamp
         extra = ctx.extra or {}
+        ev_known, ev_clear, ev_event, ev_id = _event_gates(
+            extra, ctx.session)
+        stamp["event_coverage_known"] = ev_known
+        stamp["event_state"] = (
+            "macro_event_blackout" if ev_known and not ev_clear
+            else "macro_clear" if ev_known
+            else "event_absent_strict_block")
+        if ev_event is not None:
+            stamp["event"] = {"kind": ev_event.get("kind"),
+                              "date": ev_event.get("date")}
         journal, rejected = _journal(extra, slice_state)
         stamp["rre_journal"] = journal
         if rejected:
@@ -480,7 +530,7 @@ class RaschkeRre(BaseSleeve):
                 if ref is None or not ref.complete:
                     continue
                 self._feed(router, by_day[d], sess_objs[iso], ref,
-                           journal, stamp)
+                           journal, stamp, extra)
                 journal["warmup_sessions_fed"].append(iso)
             journal["session"] = ctx.session
 
@@ -499,12 +549,13 @@ class RaschkeRre(BaseSleeve):
             "complete": bool(ref and ref.complete),
             "reference_id": ref.reference_id if ref else None}
 
-        # gates: honest absence (spec section 7)
+        # gates: the section-7 seam, resolved from the desk
+        # macro calendar for this session (ruling R2-RRE)
         sess = sess_objs[ctx.session]
         gates = ContextGates(
-            EVENT_ABSENT_ID, ctx.session, sess.open,
+            ev_id, ctx.session, sess.open,
             sess.close + timedelta(days=1),
-            True, False, False, True, True)
+            True, ev_known, ev_clear, True, True)
 
         # 5. feed this session's new bars exactly once,
         # harvesting routed AND vetoed candidates per bar
@@ -596,11 +647,13 @@ class RaschkeRre(BaseSleeve):
     # ------------------------------------------------------------
     # bar feeding
     # ------------------------------------------------------------
-    def _feed(self, router, rows, sess, ref, journal, stamp):
+    def _feed(self, router, rows, sess, ref, journal, stamp,
+              extra=None):
+        f_known, f_clear, _f_ev, f_id = _event_gates(extra, sess.id)
         gates = ContextGates(
-            EVENT_ABSENT_ID, sess.id, sess.open,
+            f_id, sess.id, sess.open,
             sess.close + timedelta(days=1),
-            True, False, False, True, True)
+            True, f_known, f_clear, True, True)
         for r in rows:
             end_epoch = r[0] + 300
             if end_epoch > sess.close.timestamp():
@@ -724,13 +777,15 @@ class RaschkeRre(BaseSleeve):
             now_dt + timedelta(seconds=60),
             equity, equity, equity, equity, equity,
             10000, 10000, 0.0, 0)
-        gates = adm.Gates(True, True, _EVENT_GATES[0],
-                          _EVENT_GATES[1], True, False, False)
-        # event gates are False by the section-7 seam: his
-        # _common rejects EVENT_COVERAGE_UNKNOWN before any
-        # quote/geometry term runs. The synthetic all-clear
-        # path exists only in labeled test fixtures, which
-        # call admit_linear directly.
+        a_known, a_clear, _a_ev, _a_id = _event_gates(
+            extra, ctx.session)
+        gates = adm.Gates(True, True, a_known,
+                          a_clear, True, False, False)
+        # event gates ride the section-7 seam (ruling
+        # R2-RRE-20261025): unknown coverage rejects
+        # EVENT_COVERAGE_UNKNOWN and a macro release date
+        # rejects EVENT_BLACKOUT in his _common, before any
+        # quote/geometry term runs.
         depth_unknown = (bs == 0 and asz == 0)
         if depth_unknown:
             stamp["quote_depth_unknown"] = True
@@ -766,7 +821,7 @@ class RaschkeRre(BaseSleeve):
                     f"context_id={item.context_id} "
                     f"rank={list(item.rank)} "
                     f"net_rr={rec.underlying_net_rr} "
-                    f"event_state=event_absent_strict_block"),
+                    f"event_state={stamp.get('event_state', 'macro_clear')}"),
             signal_date=ctx.session)
         return rec, desk
 
