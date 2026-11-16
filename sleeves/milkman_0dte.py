@@ -42,12 +42,18 @@ Channels (ctx.extra, built by adapters/milkman_0dte.py):
                  authored sleeve reads it as equity-now less
                  equity-at-first-pass of its own book)
 
-PARKED + UNFED at install (PROVENANCE gaps 1-2): the adapter leaves
-lane_signals empty because the Milkman intraday study
-(desk/sleeves/milkman/intraday.py) is not ported, and this account
-tier's chain carries no delta, so pick_contract names "no delta" on
-every live row. The strategy is pure: clock only via Context.now, no
-files, no broker.
+Install state was PARKED + UNFED (PROVENANCE gaps 1-2). Both gaps
+have since closed: the chain is served in-window by
+MilkmanChainProducer with computed delta (MILKMAN-CHAIN-20261114),
+and the Milkman intraday study is ported
+(MILKMAN-0DTE-PORT-20261116, desk3/milkman_0dte/intraday_study.py):
+the adapter now fills lane_signals / lane_exits from the study's
+authored lane trades over the snapshot's SPY panel, so this
+sleeve's entry path runs on authored signals. One lane-level
+data-depth limitation stands, named in PROVENANCE.md: the study's
+LEMA lane needs a 2000-2012 daily threshold the snapshot's daily
+history does not carry, so that lane alone stays dark. The
+strategy is pure: clock only via Context.now, no files, no broker.
 """
 from __future__ import annotations
 
@@ -60,15 +66,27 @@ from core.sleeve import BaseSleeve, Intent, SleeveConfig
 ET = ZoneInfo("America/New_York")
 
 SID = "mk_zerodte_spx"
+# CONFIG-TRUTH-20261116: CAPITAL below is INERT -- it is defined
+# once for provenance parity with the vendored authored source
+# (desk3/milkman_0dte/milkman_0dte.py, where its own copy feeds a
+# SleeveConfig) and is never consumed anywhere in THIS module.
+# It does not size, cap, or authorize any order. Sizing in this
+# module is PREMIUM_PER_TRADE in whole contracts (contracts_for);
+# live orders are governed by the dispatcher's per-slice
+# buying-power check against the config slice of record
+# (config/sleeves.json mk_zerodte_spx: slice capital_usd 10000.0,
+# bp_buffer_frac 0.02). The value is left unchanged on purpose:
+# annotating the inert constant is a truthfulness cure, not a
+# sizing change.
 CAPITAL = 1_000_000.0
 DAILY_STOP = -10_000.0
 PREMIUM_PER_TRADE = 2_500.0
 MAX_OPEN = 4
-TARGET_DELTA = 0.40
-MAX_SPREAD = 0.20
-QUOTE_MAX_AGE_S = 180.0
-NO_ENTRY_S = 30 * 60
-HARD_EXIT_S = 15 * 60
+TARGET_DELTA = 0.40  # CONSTANTS-PROVENANCE-20261116: header Rules-as-authored above + desk3/milkman_0dte/PROVENANCE.md (vendored source byte-exact) (|delta| nearest 0.40)
+MAX_SPREAD = 0.20  # CONSTANTS-PROVENANCE-20261116: header Rules-as-authored above + desk3/milkman_0dte/PROVENANCE.md (vendored source byte-exact) (quotes at most 20% wide)
+QUOTE_MAX_AGE_S = 180.0  # CONSTANTS-PROVENANCE-20261116: header Rules-as-authored above + desk3/milkman_0dte/PROVENANCE.md (vendored source byte-exact) (fresh <= 180s quotes)
+NO_ENTRY_S = 30 * 60  # CONSTANTS-PROVENANCE-20261116: header Rules-as-authored above + desk3/milkman_0dte/PROVENANCE.md (vendored source byte-exact) (no entry in the last 30 minutes)
+HARD_EXIT_S = 15 * 60  # CONSTANTS-PROVENANCE-20261116: header Rules-as-authored above + desk3/milkman_0dte/PROVENANCE.md (vendored source byte-exact) (hard flat 15 minutes before the close)
 EXCLUDED = ("ESMON", "OPX4")
 ROOTS = ("SPXW", "SPX")
 INERT = "SPX 0DTE chain not available"
