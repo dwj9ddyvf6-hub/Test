@@ -1,0 +1,17 @@
+{
+  "sleeve": "free_opt_release",
+  "batch": "edge16",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH2-RELEASE-EXPIRY-COHERENCE-20261024",
+  "leak": "Straddle legs expiring different dates incoherent",
+  "decision_record": {
+    "transfer": "An event straddle pays for one event window; legs expiring on different dates pay for two different windows and cannot both capture the verified event move.",
+    "comparison": "Control: enter any call+put package on a verified event. Treatment: refuse when leg OCC expiries differ/unparseable.",
+    "mechanism": "First ENH checked cross-leg stamp skew/freshness but never expiry coherence; the exit stack groups legs by entry_date and closes at min(expiries), stranding the longer leg.",
+    "calculation": "Fixture: CALL 261030 + PUT 261106 -> 0 intents ON, 2 OFF; matched pair still enters 2.",
+    "experiment": "Adapter filter filter_package_expiry_coherence; paired on extra['enh2_paired']; blockers in tests/test_harden_edge16_blockers.py, fail-first proven."
+  },
+  "switch": "extra['free_opt_release_enh2']['enabled'] default ON",
+  "shadow": "pre-change rule recorded paired, never emits"
+}
