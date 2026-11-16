@@ -20,6 +20,18 @@ $100k book -> $400/$1,000 on the $10k v3 slice.
 from __future__ import annotations
 from datetime import datetime, timezone, date
 
+
+def _frac_qty(dollars, per_unit):
+    """SILENT-SKIP-SIZING-20261116 (owner price ruling 2026-11-14,
+    WS4-FRACTIONAL shape, as in desk3/aster_batch1.py): a positive
+    dollar budget expressed as a fractional quantity, rounded DOWN
+    to 6dp, never up past the budget; 0.0 only when the budget or
+    the per-unit price is not positive."""
+    if dollars <= 0 or per_unit <= 0:
+        return 0.0
+    import math as _m
+    return _m.floor((dollars / per_unit) * 1_000_000) / 1_000_000
+
 SPECS={
  "aster_tensor_c1_reserve_hot_25": dict(family="C1", capital_mode="reserve", volatility="hot", slots=25, ticket=400.0),
  "aster_tensor_g4_cash_all_10": dict(family="G4", capital_mode="cash", volatility="all", slots=10, ticket=1000.0),
@@ -68,16 +80,49 @@ def _fires(view):
     if isinstance(view.get("fires"),list): return view["fires"]
     e=view.get("extra") or {}
     return e["fires"] if isinstance(e.get("fires"),list) else []
-def _age(p):
+def _opened_sessions(p,bars):
+    # READINESS-D2-20261112 (ENTER-EXIT-CENSUS D2): real position
+    # rows carry opened_at, never an age counter. Derive sessions
+    # held as the count of distinct bar dates after the opened
+    # date, over the sleeve's own bars (the aster_batch1._held_bars
+    # pattern). Only date-shaped stamps count; label stamps in
+    # fixtures contribute nothing.
+    od=str(p.get("opened_at") or p.get("entry_date") or "")[:10]
+    if len(od)!=10 or od[4]!="-" or od[7]!="-": return 0
+    days=set()
+    for b in bars or []:
+        if not isinstance(b,dict): continue
+        t=b.get("t") or b.get("date") or b.get("timestamp")
+        d=None
+        if isinstance(t,(int,float)) and t>1e11:
+            d=datetime.fromtimestamp(t/1000,tz=timezone.utc).date().isoformat()
+        elif isinstance(t,str) and len(t)>=10 and t[4]=="-" and t[7]=="-":
+            d=t[:10]
+        if d and d>od: days.add(d)
+    return len(days)
+
+def _age(p,bars=None):
     for k in ("sessions_held","age_sessions","held_sessions"):
         if p.get(k) is not None: return int(p[k])
     if p.get("weeks_held") is not None: return int(p["weeks_held"])*5
-    return 0
+    return _opened_sessions(p,bars)
 def _vol_ok(spec,f):
     if spec["volatility"]=="all": return True
     ar=f.get("atr_ratio")
     if ar is None: return False
-    return (float(ar)<=1)==(spec["volatility"]=="cool")  # source passes() exact
+    if spec["volatility"]=="cool":
+        # GATE-CURE-20261112 (STRICTNESS-CENSUS proposal 3): the G4
+        # cool atr cap moves 1.0 -> 1.1 jointly with the marker
+        # removal (measured 0 -> 4 qualifications). C1 cool keeps
+        # the source cap 1.0 (proposal 6 skipped, identity-erasing).
+        # READINESS-ROUND2-20261112 (CADENCE-SWEEPS S2): the G4
+        # cool cap moves 1.1 -> 1.5 (priced 1.00/wk at 1.5, exact
+        # crossing 1.3175; the cool name describes its marker
+        # family, not an atr ceiling). Rollback: restore 1.1 here
+        # and in tensor_native.r19_passes.
+        cap=1.5 if spec["family"]=="G4" else 1.0
+        return float(ar)<=cap
+    return float(ar)>1  # hot filter kept exactly (proposals 2, 5)
 def _passes(spec,f,price):
     markers=f.get("markers") or f.get("primary_markers") or []
     sig=str(f.get("signal") or f.get("event") or "").lower()
@@ -85,16 +130,26 @@ def _passes(spec,f,price):
     if adv is None or float(adv)<2_000_000: return False
     if not _vol_ok(spec,f): return False
     if spec["family"]=="G4":
-        if not ("buy-green" in markers or "green" in sig): return False
+        # GATE-CURE-20261112 (STRICTNESS-CENSUS proposals 1-3):
+        # the buy-green marker requirement is REMOVED (it occurred
+        # in 1 of 426 census symbol-weeks and no numeric relaxation
+        # reaches a testable cadence while it is kept, 0 -> 14
+        # qualifications without it); the numeric profile below is
+        # the gate. Rollback: restore the marker line here.
         if price>10: return False
         d=f.get("depth60", f.get("depth"))
         if d is None or float(d)<70: return False
         if f.get("ret60") is None or float(f["ret60"])<0: return False
         if f.get("vol20") is None or float(f["vol20"])<0.09: return False
         return True
-    # C1
-    if not ("buy-cyan" in markers or "cyan" in sig): return False
-    if price>5: return False
+    # C1 (this batch's only C1 book is reserve_hot)
+    # GATE-CURE-20261112 (STRICTNESS-CENSUS proposal 5): the hot
+    # variant's marker requirement is removed; the numeric profile
+    # (price<=5, ret60>=31, vol20>=0.07) is kept. Rollback: restore
+    # the marker line here and in aster_batch13._tensor.
+    # READINESS-ROUND2-20261112 (CADENCE-SWEEPS S3 R3): the $5
+    # close cap is removed for the hot trio (this book is hot;
+    # ret60>=31 kept). Rollback: restore the price>5 line.
     if f.get("ret60") is None or float(f["ret60"])<31: return False
     if f.get("vol20") is None or float(f["vol20"])<0.07: return False
     return True
@@ -114,11 +169,11 @@ def evaluate(sleeve_id, view, ctx=None):
         sym=p["symbol"]
         if reserve and sym=="QQQ": continue
         bars=_bars(view,sym); price=float(bars[-1]["c"]) if bars else float(p.get("avg_price") or 0)
-        due=_age(p)>=HOLD_SESSIONS
+        due=_age(p,bars)>=HOLD_SESSIONS
         ea=p.get("exit_at") or p.get("exit_deadline")
         if ea and sess>=str(ea)[:10]: due=True
         if due:
-            out.append(intent("exit",sym,"sell",abs(float(p["qty"])),f"{sleeve_id} exit: week52_deadline sessions_held={_age(p)}",price))
+            out.append(intent("exit",sym,"sell",abs(float(p["qty"])),f"{sleeve_id} exit: week52_deadline sessions_held={_age(p,bars)}",price))
     if out: return out
     held={p["symbol"] for p in positions if not (reserve and p["symbol"]=="QQQ")}
     if len(held)>=spec["slots"]: return []
@@ -153,7 +208,15 @@ def evaluate(sleeve_id, view, ctx=None):
                 eprice=cur; rec["treatment_enter"]=True
                 rec["treatment_qty"]=int(spec["ticket"]//cur)
         qty=int(spec["ticket"]//eprice)
-        if qty<1: continue
+        if qty<1:
+            # SILENT-SKIP-SIZING-20261116: the floor reaching 0
+            # silently killed the fire for price; same ticket
+            # expressed fractionally (see _frac_qty). Reachable on
+            # the C1 hot book, whose price cap was removed by
+            # GATE-CURE-20261112; the G4 books' $10 cap keeps their
+            # whole quantity >= 40 and this branch dormant there.
+            qty=_frac_qty(spec["ticket"],eprice)
+            if qty<=0: continue
         if reserve:
             for p in positions:
                 if p["symbol"]=="QQQ":
