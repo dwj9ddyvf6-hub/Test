@@ -9,7 +9,7 @@ producer (ledger substitution LAZ-B7)."""
 from laz_sleeves._common import q07_evaluate
 
 SLEEVE_ID = "s_q07w_s78_ml_deep70_glow_ins2"
-INPUTS = ("bars_1day", "positions", "tensor_fires", "alt_data", "vix")
+INPUTS = ("bars_1day", "positions", "tensor_fires", "alt_data", "vix", "fires")  # fires: FIX-F1-Q07-20261115 composer alt-tag fallback channel
 
 
 def evaluate(view, ctx):
