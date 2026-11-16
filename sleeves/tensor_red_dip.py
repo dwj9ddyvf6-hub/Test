@@ -224,6 +224,21 @@ class TensorRedDip(BaseSleeve):
             qty = size_qty(equity, px)
             if qty < 1:
                 skips["sized_zero"] = skips.get("sized_zero", 0) + 1
+                # SILENT-SKIP-SIZING-20261116: size_qty is the
+                # verbatim port and this sleeve's door path rides
+                # the shared batch-7 bridge (int(round(qty))), which
+                # also serves the pinned saty_sol, so a fractional
+                # quantity cannot be carried to the door from here.
+                # The fail-closed row is therefore NAMED in the
+                # evaluation stamp (the DMAC sizing_zero_or_cap
+                # shape; dispatch merges last_evaluation into the
+                # evaluation journal row) instead of resting as a
+                # bare skip count.
+                stamp.setdefault("sizing_zero_or_cap", []).append({
+                    "sleeve": "tensor_red_dip", "symbol": sym,
+                    "price": px, "equity": equity,
+                    "risk_fraction": RISK_FRACTION,
+                    "stop_loss_pct": STOP_LOSS_PCT})
                 continue
             stop_px = round(px * (1 - STOP_LOSS_PCT), 2)
             intents.append(Intent(
