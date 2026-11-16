@@ -1,0 +1,21 @@
+{
+ "ab": {
+  "direction_ok": true,
+  "exit_filtered": false,
+  "fresh_passes": true,
+  "stale_refused": true
+ },
+ "decision_record": {
+  "calculation": "Filter fixture: 5Min series ending 14:55Z judged at 18:00Z (close age ~2.9h > 4x300s) -> entry refused; series ending 17:55Z -> passes; an exit intent on the stale view passes untouched.",
+  "comparison": "Pre-change rule: the sleeve's time gate reads the BAR's timestamp (time_gate_ok on the episode's entry_t), never the decision clock \u2014 a stale feed's in-window bar passes every gate.",
+  "experiment": "Filter-level A/B (the gate is the unit under test; entry production is oracle-covered by the port suite): stale/fresh/exit cases above.",
+  "mechanism": "Execution freshness: span-adaptive stale-bar gate on the served 5Min series (newest close > 4 spans old -> refuse entries; exits never gated).",
+  "transfer": "The box-break entry is a claim on the CURRENT hour's first bar out of a frozen box. On a dead 5-minute feed, the 'first bar out' is a print from hours ago; the box, the EMA21 gate and the entry-hour gate are all evaluated on that corpse."
+ },
+ "disposition": "APPLY ENH2-BILBO-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestStaleGateUnits::test_bilbo_stale_5min_refused_fresh_passes_exit_untouched",
+ "exp_id": "ENH2-BILBO-20261024",
+ "paper_only": true,
+ "sleeve": "bilbo_options",
+ "switch": "extra.bilbo_options_enh2.stale_bar_gate default ON; OFF restores the pre-change rule exactly"
+}
