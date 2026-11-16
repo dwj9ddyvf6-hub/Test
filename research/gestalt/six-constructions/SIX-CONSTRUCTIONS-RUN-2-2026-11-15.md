@@ -1,0 +1,75 @@
+# SIX CONSTRUCTIONS, EXECUTION RUN 2, 2026-11-15
+
+SCOPE: Six strategy constructions from Astra's report of 2026-11-15, treated as a peer's work under the owner's direction of Sun 2026-11-15 17:22 ET. Surface: pre-registrations, data inventories, and first discriminators only, in this program home. Constraints: light compute (a sibling run shared the box), no desk, book, or trading changes, no live orders, typed spend $0.00. Outcome: every construction carries a frozen runfile or a verdict with its unblocker named; one construction (C5) carries a completed live audit with a verdict in numbers. Proof: the runfiles and the audit file in this folder, read back after writing; save receipts in section 8. Edges: Astra's cited prototype sources do not exist on this estate (verified on disk by two independent workers); nothing from the report was reproduced from memory or treated as a local result.
+
+STATUS: PARTIAL. Five of six constructions are pre-registered with their data honestly inventoried; C1 is BLOCKED on both of its routes with unblockers named; C5's first audit is complete and negative in numbers. No construction is GREEN, because no construction has a proven surplus or a graded local result tonight, and none was entitled to one on tonight's scope.
+
+## 1. C1, Buy panic; hedge reassurance: BLOCKED, both routes
+
+Runfile: C1-RUNFILE.md (frozen fresh-data protocol, sections 1 to 7; Route 2 inventory and verdict, section 8).
+
+Route 1 (audit of Astra's own numbers) stands BLOCKED. The cited sources, the alpha-invention-local folder with two_clocks.py, results.json, event_paths.json, and static_fraction_comparison.json, plus the parent event file CL-03226-detail.json in the edge-audit repos, do not exist on this estate. Verified twice: directory listings at every cited path returned no such file, and name searches over the workspace returned no paths. Unblocker: those artifacts landing on this estate.
+
+Route 2 (rebuild from the report's own frozen specification) was run as an active solve under the amendment and is also BLOCKED, on data. An estate-wide inventory (10,804 candidate files walked, candidates inspected, large files chunk scanned) found: BTC spot exists only at daily frame everywhere it appears; BTC perpetual bars are held nowhere (one instrument metadata file and one single ticker snapshot from 2026-10-24 are not a series); BTC perpetual funding history is held nowhere. Spot four-hour bars are held for ADA and LINK only (546 bars each, 2026-08-17 to 2026-11-15); ETH is daily only; DOGE and XRP exist at no frame; SOL is 15-minute only. The frozen rule needs, per asset, spot four-hour bars and BTC four-hour bars over a common window with at least 180 warmup bars, plus BTC perpetual prices and funding for the hedged policies. All three BTC inputs are absent, so not even the ADA and LINK subset can produce one faithful event. Proxies were considered and rejected as deviations, none used: BTC daily for BTC four-hour, asset perpetuals for the BTC hedge leg, the single ticker snapshot for a bar series. Unblocker for Route 2, named exactly: BTC spot four-hour bars over a common window with the asset legs, BTC perpetual four-hour bars over the same window, and BTC perpetual funding prints covering every holding window.
+
+The claimed table therefore stands exactly where Route 1 left it: an unverified external claim, not reproduced, not contradicted, not graded, because no faithful local sample exists. The fresh-data protocol is frozen in the runfile regardless: the rule as specified, the four comparators (no hedge, fixed half hedge, fixed-time delay at entry plus 24 hours, and a pre-specified random activation clock with a seeded draw rule), executable-quote and funding requirements, and the falsifier (any simple comparator matching the signal-delayed hedge at comparable exposure, or failure to beat the immediate hedge on mean net outcome, kills the timing claim).
+
+Trial ledger, C1: 12 inherited trials from the claimed prototype (8 initial policies plus 4 inverse policies added after viewing first results), labeled inherited and unverified, events inherited from an earlier broad search, no untouched holdout. Tonight's pre-registration charged as 1. Route 2 charged 0 reconstruction trials, because no reconstruction was run and no policy comparison was computed. C1 family total charged: 13, of which 12 are inherited and unverified.
+
+## 2. C2 and C6, one band liability, two holdings contexts: PARTIAL, pre-registered
+
+Runfile: C2C6-RUNFILE.md. One cell, one liability object L = min(max(ST - K1, 0), K2 - K1), two contexts: C2 sells the band against a held recovery stock, C6 sells it on bearish-flagged names with no stock position. The runfile prints the standing rule: their premiums are never counted as separate diversification and their results never as two independent streams. The liability estimator is a physical conditional tail curve, E[L | I] as the integral of the physical survival curve over the strike interval, fitted on development data only with a cluster bootstrap band; implied or modelled probabilities are never used as physical. Strike and expiry family selection locks in a dated addendum before the first read. Comparators, costs, assignment handling, dividend and earnings treatment, adjusted-deliverable exclusion, and the missing-options cohort with fixed reason codes are all registered.
+
+Chain inventory, the deciding fact: no usable single-name production chain history exists yet. The production chain panel store is empty; its cron (chain-panel-close-capture, weekdays 16:46 ET) makes its first production capture Mon 2026-11-16 over 31 symbols. One dry capture from Sat 2026-11-14 proves the collector works and is not history. The index chain store holds SPY, QQQ, and IWM only, 11 sessions, and cannot price a single-name spread. First read date: Tue 2026-11-17, coverage and executability only; no efficacy read is lawful on one capture or before the lock addendum exists.
+
+Trial ledger, C2/C6: 1 (tonight's registration, one cell).
+
+## 3. C3, Repair, then rotate: PARTIAL, pre-registered, replay deferred
+
+Runfile: C3-RUNFILE.md (421 lines). The replay is pre-registered exactly as specified: SPY benchmark, beta from the 252 sessions before the shock window, a five-session shock with d at least 0.10, repair fraction on market-adjusted log returns with the rho = 1 transition, a point-in-time leadership basket formed at the decision close from dated bar rules alone (top 20 by trailing 126-session log return, equal weight, static), five same-capital policies (hold, cash at repair, rotate at repair, basket from entry, fixed-time switch at session 21), both transfer sides charged at 5 basis points primary with 0 and 15 registered as sensitivities, at most 10 concurrent positions on a normalized book, skipped events logged and counted. Falsifier printed: no incremental post-repair value after costs, or the basket from entry or the fixed-time switch matching the rotation, means the switching mechanism has not earned its complexity.
+
+Data inventory: the deep panel (morgue/data_cache/deep_bars.json) is the only candidate replay source, a combined 15,815 names and about 22.3 million rows at the last audited count (the file grew on 2026-11-13 and the later run must recount before use). Delisting coverage is partial and named as a limitation: the universe came from Alpaca asset snapshots of 2026-10-30; the inactive leg holds bars for 2,240 of 18,419 requested names, with 16,179 named as no-bars; spot checks found XLNX and AABA present and BBBY, TWTR, SIVB, FRC, and ATVI absent. No point-in-time constituent table exists anywhere on the estate, which is why the registered basket uses dated bar rules alone. The replay itself is deferred to a later run, by design and stated in the runfile.
+
+Trial ledger, C3: 1 (tonight's registration).
+
+## 4. C4, Volatility forecast spent on execution: PARTIAL, pre-registered
+
+Runfile: C4-RUNFILE.md. The intent-level study is pre-registered before any result: implementation shortfall exactly as specified, including the unfilled term charging missed participation and a completion-mandated variant; a mirrored sell form registered in advance; eligible actions cross, rest, stage, wait, and abstain only where the mandate permits; a competent price-aware baseline router against the identical router plus the numeric movement forecast; grading across all intents including no fills and partials, fill-conditioned markouts at 1, 5, and 30 minutes and at the deadline, queue and latency sensitivity mandatory, simulated fills labeled as simulations in every output. Replay and paper shadow come first; any randomized routing needs logged assignment probabilities and separate authorization, which the runfile does not grant.
+
+Data inventory, the deciding fact: the estate's order record is rich and its quote record is absent. The dispatcher record holds 67,612 lines across five generations and the derived fill ledger holds 8,930 fills, but most dispatcher rows carry no timestamp field, submission rows are sparse, the desk quote cache is an empty object, the only true NBBO archive (14 symbols, sampled days 2026-05-06 to 2026-10-28, capped ticks) has zero overlap with the November intent window, there is no depth archive beyond per-session medians, and no artifact joins a numeric movement forecast to an intent at intent time. Execution-quality replay of historical desk intents is therefore not possible from what the estate holds, and the runfile bars a bar-based pass as evidence. C4 evidence can only come from prospective paper shadow behind a new intent-time capture, or from a methods check confined to the sampled NBBO days with no transfer claim to desk flow. The construction is untested, not falsified.
+
+Trial ledger, C4: 1 (tonight's registration).
+
+## 5. C5, Verified history for prediction-market hedges: audit complete, NO SURPLUS
+
+Runfile: C5-RUNFILE.md, registered 2026-11-15T22:20:40Z before any pair price was read. Audit: C5-PAIR-AUDIT.md.
+
+The pair, from the estate's Kalshi snapshot corpus of 2026-11-15 (639 markets, 163 series), completed from the snapshot's own source, the Kalshi public API: lower leg KXLCPIMAXYOY-27-P4.5 (year-over-year CPI at least 4.5 percent in any month of 2026), higher leg KXHIGHINFLATION-26DEC-T5.0 (a CPI YoY report above 5.0 percent for 2026). Honest classification: these are discrete extremum contracts on monthly BLS CPI reports, not continuous price-touch contracts; the state logic maps without modification, with a hit meaning a monthly report crossing the threshold.
+
+Rules audit: both legs settle on the BLS seasonally unadjusted CPI-U 12-month percent change; thresholds are strictly monotone (above 5.0 implies at least 4.5); the higher contract opened later (2026-06-03) than the lower (2026-01-15) but its counting window covers reports attributed to 2026 regardless of release date, so its window is not truncated at the start and ends no later than the lower window; revisions after expiration do not count on either leg. Two immaterial tensions are named in the audit (a strike_type wording mismatch on the lower leg, a generic template expiration on the higher).
+
+History verification: VERIFIED. BLS 12-month values for 2026 reports released to date run 2.4 to 4.2 percent, maximum 4.2 in May; none above 5.0 and none reaching 4.5, including every report released before the higher contract existed. One source fact is named: October 2026 has no BLS 12-month figure at all, because the lapse in appropriations prevented October 2025 data collection (BLS release USDL-26-1685), so no stipulated-source October report can be a hit on either leg.
+
+State enumeration: (0,0) pays 1, admissible; (1,0) pays 2, admissible; (1,1) pays 1, admissible; (0,1) pays 0, ELIMINATED on the rule agreement plus the verified history. The pair floor is $1.00, arriving by about 2027-01-01, 47 days out; financed at 5 percent the floor is worth $0.9936 today.
+
+Prices, read fresh at 2026-11-15T22:24Z only after the rules, history, and states were recorded: lower YES ask $0.089 with depth 134.98 contracts; higher NO ask $0.980 with depth 122.63 contracts; executable size at top of book 122.63 pairs. Verdict in numbers: NO SURPLUS, PRICES CONSISTENT. Acquisition $1.0690, fees $0.0200, capital cost $0.0069, settlement deductions $0.00; net per pair minus $0.0959 undiscounted, a shortfall of $0.0954 against the financed floor. The gross gap alone is $0.0690, so the negative result depends on no fee or capital assumption. The $1 floor is real; the market charges about nine and a half cents more than it is worth. The state-elimination machinery works end to end on a live pair; this pair is simply priced past it.
+
+Trial ledger, C5: 2 (one pre-registration, one pair audit, counted once regardless of its negative outcome).
+
+## 6. Trial ledger, program total
+
+Charged tonight: C1 registration 1, C2/C6 registration 1, C3 registration 1, C4 registration 1, C5 registration plus audit 2. Program total charged tonight: 6. Carried separately and never merged into that total: C1's 12 inherited trials, labeled inherited and unverified. Typed spend: $0.00 across all cells; no selection surface appeared that would have justified a typed call, and the absence is stated rather than smoothed.
+
+## 7. Open rows, owners, dates
+
+- C1 Route 1: Astra's prototype artifacts landing on this estate. Owner: external (Astra's side, through the owner). No date; the audit cannot start before they land.
+- C1 Route 2: BTC four-hour spot bars, BTC perpetual four-hour bars, and BTC perpetual funding capture. Owner: desk data lane, as a build row. Undated tonight; named as the exact unblocker.
+- C2/C6: development lock addendum due before Tue 2026-11-17; first production chain capture Mon 2026-11-16 16:46 ET (cron, outside tonight's control); first read Tue 2026-11-17, coverage and executability only. Owner: C2/C6 cell, next run.
+- C3: replay deferred to a later run; the deep panel recount is its first step. Owner: C3 cell, next run.
+- C4: prospective intent-time capture build (instrument, side, quantity, deadline, reason, bid and ask, depth where available, numeric forecasts, recent order flow) is the gate to any evidence. Owner: desk lane. Randomized routing remains unauthorized.
+- C5: sequel audits as the daily Kalshi snapshots accrue, on any new pair whose windows diverge. Owner: C5 cell. The CPI pair itself is closed: floor real, price past it.
+- Combined-policy question (all six): the report's own warning stands on this program's record. The constructions are not six independent streams; C2 and C6 share one liability, C1 and C3 share recovery exposure, and no combined policy has been tested or is claimed.
+
+## 8. Saves
+
+Light save of this program home to the Midna repository and one dead-drop share to the Triad are executed with this report; receipts are carried in the coordinator's delivery message, and the drop marker for this run is midna-inbox:2026-11-15-six-constructions.
