@@ -1,0 +1,19 @@
+{
+  "sleeve": "s_mn_d_green_band",
+  "batch": "edge19",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH19-MN-GREENBAND-REPRICE-20261024",
+  "leak": "Band gate priced off stale fire",
+  "decision_record": {
+    "transfer": "The green-band edge is buying green Tensor names while they trade inside the $10-$20 band; the band is a property of the current price, not of the fire print up to 10 days earlier.",
+    "comparison": "Control: gate + size off the fire print. Treatment: gate + size off the freshest bar close in the same snapshot (the lazarus.py reprice cure, which never reached this engine).",
+    "mechanism": "lazarus_midna priced entries fire-first (bars only as fallback), so a name that ran $15 -> $25 still passed the band gate and was sized 66 shares off $15 while the fill printed $25 (~$1,650 notional on a $1,000 budget).",
+    "calculation": "Fixture: fire $15, fresh $25 -> ON 0 entries; OFF 1 entry qty 66. Fire $15, fresh $18 (in band) -> ON qty 55 at $18 with enhance_exp paired record; OFF qty 66 at $15.",
+    "experiment": "ENH19-MN-GREENBAND-REPRICE-20261024 in desk3/lazarus_midna.py; switch fresh_price default ON; paired record on the entry intent (enhance_exp)."
+  },
+  "switch": "extra['s_mn_d_green_band_enh19']['fresh_price'] default ON",
+  "shadow": "fire-price decision kept as paired enhance_exp record on the entry intent",
+  "experiment_measurement": "fixture: out-of-band fresh entry 1 -> 0 ON; in-band qty 66 (fire) -> 55 (fresh)",
+  "blockers": "tests/test_harden_edge19_blockers.py (15 tests; fail-first 9 failed pre-cure, 15/15 GREEN post-cure)"
+}
