@@ -1,0 +1,18 @@
+{
+ "sleeve": "qqq_put_ladder",
+ "exp_id": "ENH-CBAR-20261024",
+ "paper_only": true,
+ "disposition": "VERIFY-ONLY",
+ "decision_record": {
+  "transfer": "Second-look Edge pass (batch 17): the sleeve already carries its v2-era ENH cure for its first binding leak; this pass searched for the NEXT leak across execution, timing, risk, responsiveness, adaptability and perception.",
+  "comparison": "Candidate leaks tested against the strategy's own design rules and, where a pure function exists, by direct trace on the final tree.",
+  "mechanism": "No next binding leak survives: contract choice is spread-honest \u2014 _tradable refuses bid < 0.05 and ask-bid > max(0.10, 25% of mid); trace: a 2.00/3.00 quote is refused (pick=None) while 2.00/2.10 is picked (qty 3). The challenged-layer timing leak was already cured by the v2 ENH (challenged at any DTE); the 5-DTE buy-back emits an unpriced close on a missing quote (D-B5) rather than skipping.",
+  "calculation": "See trace (measured on the final tree, 2026-10-24).",
+  "experiment": "Traces in this artifact; no change implemented \u2014 a cosmetic change is refused per the Edge program law."
+ },
+ "trace": {
+  "wide_spread_pick": null,
+  "tight_spread_pick_qty": 3,
+  "note": "_tradable refuses ask-bid > max(0.10, 25% of mid) and bid < 0.05; challenged-any-DTE already ENH'd in v2 pass"
+ }
+}
