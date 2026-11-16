@@ -1,0 +1,17 @@
+{
+  "sleeve": "free_opt_pair",
+  "batch": "edge16",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH2-PAIR-EXPIRY-COHERENCE-20261024",
+  "leak": "Package legs expiring different dates unhedged",
+  "decision_record": {
+    "transfer": "A two-leg cross-underlying package priced as one simultaneous hedge; whoever takes the residual after the first leg expires bears unhedged directional risk the hedge ratio never priced.",
+    "comparison": "Pre-change rule (shadow control): enter 1-and-hedge-qty regardless of leg expiries. Treatment: refuse when leg OCC expiries differ or are unparseable.",
+    "mechanism": "pair_legs() checks underlyings/hedge_frozen only; no expiry coherence check exists in the strategy, so a SPY leg expiring Oct 30 paired with a QQQ leg expiring Nov 6 leaves 7 days of naked QQQ exposure after the SPY leg settles.",
+    "calculation": "Fixture: legs SPY261030C/QQQ261106C -> treatment 0 entries, control (switch OFF) 2 entries; matched-expiry fixture still enters 2 (tests/test_harden_edge16_blockers.py).",
+    "experiment": "Pre-registered: adapter filter in desk3/sleeves/free_opt_pair.py via desk3/enh2_edge16.filter_package_expiry_coherence; paired records on extra['enh2_paired']; blockers fail-first proven (5 refused_on failures pre-cure across batch, incl. this sleeve)."
+  },
+  "switch": "extra['free_opt_pair_enh2']['enabled'] default ON; OFF restores pre-change exactly",
+  "shadow": "pre-change rule recorded paired, never emits"
+}
