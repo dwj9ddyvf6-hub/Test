@@ -1,0 +1,17 @@
+{
+  "sleeve": "free_opt_tail",
+  "batch": "edge16",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH2-TAIL-MIN-LIFE-20261024",
+  "leak": "Put life shorter than designed exit stack",
+  "decision_record": {
+    "transfer": "The -3% day tail put's payer is gap/continuation risk over the following sessions; a put with <5 days to expiry mostly sells back theta \u2014 the buyer (us) pays premium for life the 5-session/50%-loss exit stack can never use.",
+    "comparison": "Control: enter any put with expiry > session (first ENH). Treatment: refuse expiry <5 calendar days after session.",
+    "mechanism": "First ENH only refused expiry <= session; a Monday-expiring put bought Friday still dies before the five-session hold or a premium-loss exit can be evaluated on schedule.",
+    "calculation": "Fixture: SPY261026P bought 2026-10-23 (3 days) -> 0 ON, 1 OFF; SPY261030P (7 days) still enters ON.",
+    "experiment": "Adapter filter filter_min_days_to_expiry(min_days=5); paired on extra['enh2_paired']; blockers fail-first proven."
+  },
+  "switch": "extra['free_opt_tail_enh2']['enabled'] default ON",
+  "shadow": "pre-change rule recorded paired, never emits"
+}
