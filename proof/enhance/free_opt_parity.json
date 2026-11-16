@@ -1,0 +1,17 @@
+{
+  "sleeve": "free_opt_parity",
+  "batch": "edge16",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH2-PARITY-MAX-DTE-20261024",
+  "leak": "Long-dated box locks capital until expiry",
+  "decision_record": {
+    "transfer": "A box spread's edge (width - executable debit) is a locked payout received only at expiry; the payer is time \u2014 the same 0.30/share edge at 119 DTE earns ~1/8 the annualized return of the 14-DTE box and locks the $10k slice meanwhile.",
+    "comparison": "Control: take largest edge over all expiries >=7 DTE. Treatment: refuse entry packages expiring >60 DTE; exits never filtered.",
+    "mechanism": "parity_decision scans every expiry and picks max per-share edge with no term weighting, so a far expiry with a marginally larger edge wins and traps the capital.",
+    "calculation": "Fixture: identical prices at exp 2027-02-19 (119 DTE) -> 0 legs ON, 4 OFF; exp 2026-11-06 (14 DTE) still enters 4 ON. Edge threshold (0.30) unchanged.",
+    "experiment": "Adapter filter filter_parity_max_dte(max_dte=60) on package_id expiry; paired on extra['enh2_paired']; blockers fail-first proven."
+  },
+  "switch": "extra['free_opt_parity_enh2']['enabled'] default ON",
+  "shadow": "pre-change rule recorded paired, never emits"
+}
