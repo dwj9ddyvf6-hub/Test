@@ -1,0 +1,16 @@
+{
+ "sleeve": "s_q07w_s78_ml_deep70_mom6_wlow",
+ "batch": 24,
+ "verdict": "VERIFY-ONLY",
+ "exp_id": "ENH24-VERIFY-20261024",
+ "paper_only": true,
+ "leak": "no binding leak parked by spec",
+ "decision_record": {
+  "transfer": "Q07 lane (swing/midlarge, 78w, filters deep70+mom6+wlow) is OFF by catalog ruling: entries are refused by design and only position exits are managed; the edge is reserved, not lost, while parked.",
+  "comparison": "Entry path vs exit path on identical fixtures: a fully qualifying fire (in-window, all filters passing, fresh bars, QQQ down) vs held positions driven through the stop and horizon exits.",
+  "mechanism": "Candidate leaks scrutinized and non-binding: (1) stale-bar entry (the A/C-engine leak) cannot bind \u2014 SPECS parked=True and evaluate_sleeve returns after exits before any entry logic; (2) ENH-Q07EXEC's cs[-1] staleness likewise sits behind the parked return. The binding constraint is the owner CSV ruling, not sleeve logic; ENH-Q07EXEC/Q07FRESH already wait in the engine for an unpark ruling.",
+  "calculation": "Traces (tests/test_edge_batch24_blockers.py::TestEngineBParkedVerifyOnly): qualifying fire -> 0 entries for all 4 lanes; held TEST avg $10.00 with last close $8.00 on 14-day-stale bars -> 15% stop exit emitted; positions opened 2025-01-02 -> horizon exit emitted for all 4 lanes.",
+  "experiment": "Re-run the parked traces plus the batch-22/23 Q07 blockers; any entry emitted while parked, or a missing stop/horizon exit, falsifies this verdict."
+ },
+ "evidence": "tests/test_edge_batch24_blockers.py::TestEngineBParkedVerifyOnly GREEN (3 tests, 4 lanes); SPECS parked=True read directly; batch-23 VERIFY-ONLY precedent for the parked swing lanes"
+}
