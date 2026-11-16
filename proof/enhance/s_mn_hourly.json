@@ -1,0 +1,19 @@
+{
+  "sleeve": "s_mn_hourly",
+  "batch": "edge19",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH19-LAZB7-20261024",
+  "leak": "Slot cap never actually counted entries",
+  "decision_record": {
+    "transfer": "These books are fixed-slot designs (slot count x $1,000 = the whole slice); entries past the slot count are unbudgeted exposure, not extra edge.",
+    "comparison": "Control: break test len(held)+1 >= slots, which uses the fixed held count and never fires while held < slots. Treatment: count entries already emitted this pass.",
+    "mechanism": "The loop appended one entry per qualifying symbol and tested a constant, so a broad signal day emitted every qualifier -- measured 10 into 8 slots (qm) and 15 into 12 slots (hourly) on fixture.",
+    "calculation": "15 signalled symbols -> ON 12 entries ($12,000 book), OFF 15 entries ($15,000)",
+    "experiment": "ENH19-LAZB7-20261024 slot_guard in laz_sleeves/s_cl_qm_small.py / laz_sleeves/_common.py mn_hourly_evaluate; switch default ON; OFF restores the constant test exactly."
+  },
+  "switch": "extra['s_mn_hourly_enh19']['slot_guard'] default ON",
+  "shadow": "faithful overflow decision recorded paired in enh19_journal (qm) / OFF arm reproduces it exactly",
+  "experiment_measurement": "15 signalled symbols -> ON 12 entries ($12,000 book), OFF 15 entries ($15,000)",
+  "blockers": "tests/test_harden_edge19_blockers.py (15 tests; fail-first 9 failed pre-cure, 15/15 GREEN post-cure)"
+}
