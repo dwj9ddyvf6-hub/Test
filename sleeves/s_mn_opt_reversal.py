@@ -10,7 +10,8 @@ the options form (the equity form runs 3).
 """
 from sleeves.laz8_common import (Intent, SleeveConfig, closes,
                                   held_positions, sessions_held, xstale_refused)
-from sleeves.laz8_opt import contracts_for, pick_option, underlying_of
+from sleeves.laz8_opt import (contracts_for, pick_option,
+                              sizing_zero_journal, underlying_of)
 
 CONFIG = SleeveConfig(sleeve_id="s_mn_opt_reversal", cadence_s=300,
                       state_schema={"position": "dict|None"})
@@ -52,6 +53,8 @@ def signal(bars, slice_state, context):
     occ, ask = picked
     n = contracts_for(BUDGET, ask)
     if n <= 0:
+        sizing_zero_journal(context, "s_mn_opt_reversal", occ, ask,
+                            BUDGET)
         return out
     out.append(Intent(
         kind="enter", symbol=occ, qty_hint=n, side="buy",
