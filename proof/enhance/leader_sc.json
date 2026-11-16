@@ -1,0 +1,39 @@
+{
+ "sleeve": "leader_sc",
+ "exp_id": "ENH-CBAR-20261024",
+ "paper_only": true,
+ "disposition": "VERIFY-ONLY",
+ "decision_record": {
+  "transfer": "Second-look Edge pass (batch 17): the sleeve already carries its v2-era ENH cure for its first binding leak; this pass searched for the NEXT leak across execution, timing, risk, responsiveness, adaptability and perception.",
+  "comparison": "Candidate leaks tested against the strategy's own design rules and, where a pure function exists, by direct trace on the final tree.",
+  "mechanism": "No next binding leak: the small-cap band is point-in-time by construction \u2014 band_symbols includes only weeks strictly before the current Monday (bisect_left(mons, M)-1). Trace: a current-week bar with 1e9 volume leaves the band byte-identical ({S0..S8} both ways), while a spike in the last completed week correctly moves it. Entries additionally require a dated core leader event + SPY down-regime; v2 ENH volume-cap sizing already landed. Entry price uses last close for sizing only (1% equity / volume cap), bounded by OBS-1.",
+  "calculation": "See trace (measured on the final tree, 2026-10-24).",
+  "experiment": "Traces in this artifact; no change implemented \u2014 a cosmetic change is refused per the Edge program law."
+ },
+ "trace": {
+  "band_with_current_week_spike": [
+   "S0",
+   "S1",
+   "S2",
+   "S3",
+   "S4",
+   "S5",
+   "S6",
+   "S7",
+   "S8"
+  ],
+  "band_without_spike": [
+   "S0",
+   "S1",
+   "S2",
+   "S3",
+   "S4",
+   "S5",
+   "S6",
+   "S7",
+   "S8"
+  ],
+  "identical": true,
+  "note": "band uses bisect_left(mons, current Monday)-1: strictly prior weeks only; ENH volume-cap sizing already landed in v2 pass"
+ }
+}
