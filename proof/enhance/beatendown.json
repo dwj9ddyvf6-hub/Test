@@ -1,0 +1,22 @@
+{
+ "ab": {
+  "control_px": 50.0,
+  "control_qty": 6,
+  "direction_ok": true,
+  "treatment_px": 60.0,
+  "treatment_qty": 5
+ },
+ "decision_record": {
+  "calculation": "Fixture: qualifier close 50 (signal week), current bar close 60 (+20% drift), per-name budget 3000. Control: qty 6 at hint 50 -> fills ~3600 of notional, 20% over budget. Treatment: qty 5 at hint 60 -> 3000, on budget.",
+  "comparison": "Pre-change rule: qty and price_hint computed from the qualifier's signal-week close (the M2 study close, up to a week old), while the market order fills at the current price.",
+  "experiment": "Adapters3 A/B on identical qualifier+bars: treatment reprices off the last served 1Day close; control (OFF) reproduces qty 6 / hint 50 exactly. Falsifier: no bars served for the symbol \u2014 gate leaves the intent untouched (qualifier basis remains the fallback, as pre-change).",
+  "mechanism": "Execution pricing: stale sizing price. Selection (is_beaten_down on the qualifier record) is the frozen law and is untouched; only the sizing/price basis moves to the served current bar.",
+  "transfer": "The sleeve's per-name budget (30% sleeve cap / 10 names = 3% of equity) is the risk contract; it is honored only if sizing uses the price the market will actually fill at."
+ },
+ "disposition": "APPLY ENH2-BEATENDOWN-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestBeatendownReprice",
+ "exp_id": "ENH2-BEATENDOWN-20261024",
+ "paper_only": true,
+ "sleeve": "beatendown",
+ "switch": "extra.beatendown_enh2.current_bar_pricing default ON; OFF restores qualifier-close sizing exactly"
+}
