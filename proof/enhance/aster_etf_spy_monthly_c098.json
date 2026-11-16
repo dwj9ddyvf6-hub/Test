@@ -1,0 +1,19 @@
+{
+ "ab": {
+  "control_intents_at_1030": 0,
+  "treatment_intents_at_1030": 1,
+  "treatment_qty": 98
+ },
+ "decision_record": {
+  "calculation": "P(at least the one in-window cycle is lost) is the desk's observed per-cycle failure rate (21 watchdog kills on 2026-10-24's predecessor record); cost of a miss = 1 month x full-slice exposure error. Catch-up raises executable evaluations from 1 to ~75 per rebalance day at zero change to targets, sizing, or gates.",
+  "comparison": "Designed execution moment 09:35-09:40 ET on rebalance day vs the desk's 300s cadence: exactly one evaluation falls in the window.",
+  "experiment": "Fixture A/B, identical bars/positions at 10:30 ET on rebalance day: control (catchup OFF) = 0 intents; treatment (ON) = 1 entry at designed qty; same-month and buy-hold controls stay empty; 15:55 cutoff pinned. Blockers: tests/test_edge_batch5_blockers.py TestEtfMonthlyCatchup.",
+  "mechanism": "Execution/timing (responsiveness): single-shot window x 300s cadence = one chance per month; any wedged/late/unfed cycle loses the month. Same-session catch-up (09:40-15:55 ET) executes identical targets; at a monthly horizon the intraday delay is immaterial vs a month of wrong exposure.",
+  "transfer": "Monthly SPY allocation: the transfer is a month of designed index exposure (gross 0.98); it is forfeited in full when the single monthly rebalance never executes."
+ },
+ "disposition": "ENHANCED (second look; first look ENH-ETWIN-20261024 by Edge batch 4)",
+ "exp_id": "ENH-B5-ETF-CATCHUP-20261024",
+ "paper_only": true,
+ "sleeve": "aster_etf_spy_monthly_c098",
+ "switch": "extra.aster_etf_enh.catchup default ON; OFF restores window-only rule exactly"
+}
