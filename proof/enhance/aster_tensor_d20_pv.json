@@ -1,0 +1,31 @@
+{
+ "ab": {
+  "control_entries_row_age_18d": 1,
+  "treatment_entries_row_age_18d": 0,
+  "treatment_entries_row_age_1d": 1
+ },
+ "binding_leak": "decision series freshness never checked vs bars",
+ "blockers": "tests/test_edge_batch26_blockers.py TestD20FreshRowGate (4 tests)",
+ "date": "2026-10-24",
+ "decision_record_2a": {
+  "calculation": "Fixture A/B (batch-16 RECIPE rows, selected by both models): ref bar 18 days after the last row -> control 1 entry / treatment 0 with a refuse_stale_row paired record (row_age_days 18); ref bar 1 day after -> both enter; switch OFF -> stale enters exactly as pre-change.",
+  "comparison": "Paired shadow control: control = _d20_decision's internal consistency checks only (ordinal, origin, phase, readiness \u2014 no clock); treatment = refuse selection when the last row predates the symbol's own newest 1Day bar by more than 4 days (the longest legitimate gap: a Friday row read Tuesday after a Monday holiday). No bars for the symbol = no evidence = pass (archive behavior, batch-16 fixture shape).",
+  "experiment": "Forward paper: aster_enh_exp_journal records per selected candidate with row/ref dates. Reject if any treated refusal coincides with a producer-fresh bundle (row age <= 4d against the desk's bars) over the first 20 selections. Switch OFF restores the ungated rule exactly (blocker-proven).",
+  "mechanism": "Perception/stale-input gate at entry selection in desk3/aster_batch16.py _eval_d20; the frozen model, its assets (hash-pinned) and the 20-bar exit are untouched \u2014 exits are never gated. Per-sleeve switch; the sibling d20 sleeve carries its own switch and record.",
+  "transfer": "A frozen-price_volume daily20 selection commits the sleeve to a 20-bar hold sized off the decision row's close; if the tensor_daily20 producer stalls, the sleeve keeps entering fresh 20-bar holds at a days-old close on a score computed from a dead series."
+ },
+ "disposition": "ENHANCED (first look)",
+ "engine": "desk3/aster_batch16.py _eval_d20 + _d20_row_age_days",
+ "exp_id": "ENH-B26-D20FRESH-20261024",
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "shadow_control": "never emits; control decision recorded paired per selected candidate in aster_enh_exp_journal",
+ "sleeve": "aster_tensor_d20_pv",
+ "status": "pre-registered",
+ "switch": {
+  "default": true,
+  "field": "fresh_row_gate",
+  "key": "extra['enh_aster_tensor_d20_pv'] or extra['aster_b16_enh']",
+  "off_restores": "pre-change ungated selection exactly"
+ }
+}
