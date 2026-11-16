@@ -1,0 +1,29 @@
+{
+ "ab": {
+  "control": {
+   "confirm_on_last_bar": 1,
+   "confirm_one_bar_old": 0
+  },
+  "direction_ok": true,
+  "paired_record_on_intent": "enhance_exp.records[0] carries control=no_entry_confirmation_bar_missed and the original confirmation bar time (shadow control, never emits)",
+  "treatment": {
+   "catchup_price": 0.99,
+   "catchup_qty": 10090.9,
+   "confirm_on_last_bar": 1,
+   "confirm_one_bar_old": 1,
+   "invalidated_catchup": 0
+  }
+ },
+ "decision_record": {
+  "calculation": "Measured on the fixture: confirmation on bars[-1] -> entry qty 10193.9 @ 0.98 under both rules; the same confirmation one bar older -> control 0 intents (forever: no later evaluation can see it), treatment 1 catch-up entry qty 10090.9 @ 0.99 (current close), deadline still anchored to the original confirmation close + 16h. Catch-up is refused when the current close breaks the shock bar's midpoint (0.94 < 0.95 fixture) \u2014 the absorption thesis is already invalidated there.",
+  "comparison": "Baseline reads the confirmation only while the confirmation bar is the last completed bar; the sleeve cadence (14400s) equals the 4h bar period, so each confirmation is visible to exactly one evaluation span. Comparator: identical 310-bar fixture with the confirmation on bars[-1] vs one bar older (bars[-2]).",
+  "experiment": "Fixture A/B in tests/test_edge_batch1_blockers.py (Abs4hCatchup): ON catches up one bar late with the paired record and the original deadline in state; OFF emits nothing; invalidated variant emits nothing under either rule; on-time confirmation is unchanged and carries no shadow record. Rejection rule: any catch-up beyond one bar, or any deadline that moves with the catch-up entry time.",
+  "mechanism": "Access/implementation (responsiveness): one missed, wedged or UNFED cycle \u2014 the failure class this desk was rebuilt to survive \u2014 permanently destroys a correctly decided trade; there is no second look.",
+  "transfer": "Same absorption transfer as the ADA books: buying the confirmed reversal from urgent sellers on ENJUSDT; the rent is lost in full whenever the single evaluation that can see the confirmation is missed."
+ },
+ "disposition": "APPLY ENH-ABS4H-CATCHUP-20261024",
+ "exp_id": "ENH-ABS4H-CATCHUP-20261024",
+ "paper_only": true,
+ "sleeve": "aster_abs_enj_4h",
+ "switch": "ctx.enhance / extra['aster_abs_enj_4h_improve'].catchup_entry default ON; OFF restores the single-look rule exactly"
+}
