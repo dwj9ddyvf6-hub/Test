@@ -1,0 +1,26 @@
+{
+ "sleeve": "s_q07w_g78_mi_cheap5_deep70_ins2",
+ "batch": 23,
+ "verdict": "ENHANCED",
+ "exp_id": "ENH-Q07FRESH-20261024",
+ "paper_only": true,
+ "leak": "oldest fire takes single slot",
+ "decision_record": {
+  "transfer": "Tensor 1W confluence edge decays across the 5-session entry window; capture requires the single $1,000 slot to take the freshest live signal, not the producer's list order.",
+  "comparison": "Producer list order (control) vs sessions-since-signal ascending (treatment), identical fires/bars/filters.",
+  "mechanism": "Timing/perception: pre-change the first-listed eligible fire consumed the only slot; measured fixture: age-5 fire listed first entered while the age-0 fire was crowded out, its window expiring unused.",
+  "calculation": "Fixture (QQQ-down, both fires pass all filters): control entry = OLD (age_sessions=5); treatment entry = NEW (age_sessions=0). Switch OFF reproduces control exactly.",
+  "experiment": "Pre-registered A/B in tests/test_edge_batch23_blockers.py (TestFreshFirstLazarus / TestFreshFirstEngine). Rejection rule: OFF divergence from list order, treatment not minimal-age, or any exit change \u2014 revert. Forward paired rows (control_first/treatment_first/ages) in extra.q07_exp_journal."
+ },
+ "change": "Eligible entry candidates allocated freshest-signal-first (stable sort by sessions since signal) in desk3/q07_engine.py",
+ "switch": "extra.q07_enh[<sleeve>].fresh_first default ON; OFF restores producer list order exactly",
+ "shadow_control": "switch OFF on identical fixtures; live paired records in extra.q07_exp_journal (appended only when >=2 candidates contest the slot)",
+ "blocker": "tests/test_edge_batch23_blockers.py",
+ "fail_first": "6 failures across batch-23 blockers with the three engines stashed (pre-change); 10/10 GREEN after",
+ "ab": {
+  "control_entry": "OLD",
+  "control_age_sessions": 5,
+  "treatment_entry": "NEW",
+  "treatment_age_sessions": 0
+ }
+}
