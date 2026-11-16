@@ -93,16 +93,33 @@ SPECS = {
  P+"absorption_negative_funding_fixed16_volume1pct": dict(sym="LINKUSDT", fam="absorption_negative_funding", cap="volume1pct", hold_h=16),
  P+"absorption_nonnegative_funding_fixed16_fullcash": dict(sym="LINKUSDT", fam="absorption_nonnegative_funding", cap="fullcash", hold_h=16),
  P+"absorption_nonnegative_funding_fixed16_volume1pct": dict(sym="LINKUSDT", fam="absorption_nonnegative_funding", cap="volume1pct", hold_h=16),
+ # VARIATION-ROSTERING-20261115 (2026-11-15): the two F4 _varsg forms
+ # of the absorption_negative_funding pair, rostered as first-class
+ # sleeves. drop_funding_sign=True drops ONLY the funding sign leg
+ # (any observed rate admits; unobserved funding still fails closed);
+ # absorption bar condition (incl. the family's 1.25 shock multiple),
+ # 16h hold and sizing are their parents'. Parent entries omit the key
+ # and keep the < 0 leg exactly. Falsifier (uniform F4): retire if,
+ # over its first 20 resolved forward fires, the mean fwd5 excess vs
+ # QQQ is below 0bp. Rollback: delete these two entries.
+ P+"absorption_negative_funding_fixed16_fullcash_varsg": dict(sym="LINKUSDT", fam="absorption_negative_funding", cap="fullcash", hold_h=16, drop_funding_sign=True),
+ P+"absorption_negative_funding_fixed16_volume1pct_varsg": dict(sym="LINKUSDT", fam="absorption_negative_funding", cap="volume1pct", hold_h=16, drop_funding_sign=True),
  P+"breakout_base_fixed16_fullcash": dict(sym="LINKUSDT", fam="breakout_base", cap="fullcash", hold_h=16),
+ # GOING-LIVE-VARIATIONS-20261115 (CONV-29): horizon-doubled forms of
+ # the two absorption_base parents, beside them under GUTTING AS
+ # VARIATION; the parent entries above are byte-untouched. The
+ # registered arm doubles the stream's hold; the live parents hold
+ # 16h, so the variations hold 32h in this engine's own hold_h form.
+ # Falsifier in config/conversion_variations_20261115.json.
+ P+"absorption_base_fixed16_fullcash_varhx2": dict(sym="LINKUSDT", fam="absorption_base", cap="fullcash", hold_h=32),
+ P+"absorption_base_fixed16_volume1pct_varhx2": dict(sym="LINKUSDT", fam="absorption_base", cap="volume1pct", hold_h=32),
 }
 INPUTS = ("bars", "funding", "positions")
 
 def _bars(view, sym):
-    m = view.get("bars") or {}
-    for k in (f"{sym}|4Hour", f"{sym}|4h", f"{sym}|240min", sym):
-        if m.get(k):
-            return sorted(m[k], key=lambda r: str(r.get("t")))
-    return []
+    # F4-CRYPTO-BARKEY-20261114: archive USDT keys resolve via desk3.crypto_bars (served BASE/USD spot forms; see that module)
+    from .crypto_bars import resolve_bars
+    return resolve_bars(view.get("bars") or {}, sym, ("4Hour",))
 
 def _funding(view, sym):
     f = view.get("funding")
@@ -134,12 +151,12 @@ def _ema(vals, n):
         out.append(v if i == 0 else v * k + out[-1] * (1 - k))
     return out
 
-def _absorption(brs):
+def _absorption(brs, shock_mult=2.0):
     if len(brs) < 300:
         return False
     vols = [float(b["v"]) for b in brs]; closes = [float(b["c"]) for b in brs]
     ev = _ema(vols, 20); ec = _ema(closes, 50); s = brs[-2]; c = brs[-1]
-    shock = float(s["v"]) > 2 * ev[-2] and float(s["c"]) < float(s["o"]) and float(s["c"]) < ec[-2]
+    shock = float(s["v"]) > shock_mult * ev[-2] and float(s["c"]) < float(s["o"]) and float(s["c"]) < ec[-2]
     mid = (float(s["h"]) + float(s["l"])) / 2
     return shock and float(c["c"]) > float(c["o"]) and float(c["c"]) > mid
 
@@ -168,9 +185,21 @@ def evaluate(sid, view, ctx=None):
         if not _breakout(brs):
             return []
     else:
-        if not _absorption(brs):
+        # GATE-CURE-CRYPTO-20261112 (STRICTNESS-CENSUS proposal
+        # 12): the LINK absorption_negative_funding pair's shock
+        # multiple relaxes 2.0 -> 1.25 (1 -> 3 days); every other
+        # family here keeps 2.0, and this family's funding leg
+        # stays < 0 exactly. Rollback: restore the bare call.
+        mult = 1.25 if fam == "absorption_negative_funding" else 2.0
+        if not _absorption(brs, mult):
             return []
-        if fam == "absorption_negative_funding" and (fund is None or fund >= 0):
+        # VARIATION-ROSTERING-20261115 (2026-11-15): the two _varsg
+        # SPECS carry drop_funding_sign=True and admit any OBSERVED
+        # rate; unobserved funding (None) still fails closed for
+        # every spec, and parent specs omit the key, keeping the
+        # < 0 leg exactly. Rollback: restore the bare condition.
+        if fam == "absorption_negative_funding" and (
+                fund is None or (fund >= 0 and not spec.get("drop_funding_sign"))):
             return []
         if fam == "absorption_nonnegative_funding" and (fund is None or fund < 0):
             return []
