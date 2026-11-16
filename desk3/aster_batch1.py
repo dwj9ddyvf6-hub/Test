@@ -67,6 +67,15 @@ SPECS = {
                           cadence_s=14400, session="24h"),
  "aster_abs_link_4h": dict(kind="absorption", symbol="LINKUSDT",
                            cadence_s=14400, session="24h"),
+ # GOING-LIVE-VARIATIONS-20261115 (CONV-29): horizon-doubled form of
+ # aster_abs_link_4h beside its parent under GUTTING AS VARIATION;
+ # the parent entry above is byte-untouched and carries no hold_h
+ # key, so _eval_absorption's default of 16h governs it exactly as
+ # before. The variation carries hold_h=32 (twice the live 16h
+ # deadline, the registered arm's doubled hold in this engine's own
+ # form). Falsifier in config/conversion_variations_20261115.json.
+ "aster_abs_link_4h_varhx2": dict(kind="absorption", symbol="LINKUSDT",
+                           cadence_s=14400, session="24h", hold_h=32),
  "aster_native_btc_eth_sma200": dict(kind="native",
     weights=(("BTC-USD", 0.5), ("ETH-USD", 0.5)),
     cadence_s=86400, session="24h"),
@@ -181,6 +190,12 @@ def _bars(view, sym, tfs):
                 return list(m[k])
     if m.get(sym):
         return list(m[sym])
+    # F4-CRYPTO-BARKEY-20261114: archive USDT keys resolve via desk3.crypto_bars (served BASE/USD spot forms; see that module): only an archive USDT name that
+    # resolved nothing above falls through to the served spot
+    # forms; every other symbol keeps the exact pre-cure result.
+    if isinstance(sym, str) and sym.endswith("USDT"):
+        from .crypto_bars import resolve_bars
+        return resolve_bars(m, sym, tuple(t for t in tfs if t))
     return []
 
 
@@ -205,7 +220,35 @@ def _positions(view):
         except (TypeError, ValueError):
             continue
         if q != 0 and p.get("symbol"):
-            out[p["symbol"]] = p
+            # POSITION-DIALECT-READBACK-20261108: the snapshot
+            # serves the broker positions endpoint's BARE symbol
+            # form ("BTCUSD"); this engine's books are keyed in
+            # the internal dashed form ("BTC-USD") and its
+            # read-back fallback (_broker_symbol) produces the
+            # slash form ("BTC/USD"). Keyed raw, all three forms
+            # missed each other and the native rebalance read
+            # held qty 0 forever: it re-bought its full target
+            # every evaluation (aster_native_btc_eth_sma200:
+            # 41 filled BTC buys on 2026-11-07, one per cycle,
+            # identical qty). The re-key applies ONLY to the
+            # bare broker form (no dash, no slash, not the USDT
+            # internal form): it is the one form the broker
+            # emits that no sleeve's internal book uses, so
+            # translating it through the ONE canonical
+            # translator (desk3.broker_dialect) cannot disturb
+            # the internal-dialect contracts (the absorption
+            # family's USDT keys stay exactly as keyed; the
+            # first cure draft re-keyed those too and the
+            # absorption blockers caught it). Equities and OCC
+            # pass through the translator untouched, and a row's
+            # own fields are never rewritten (the row is
+            # re-keyed, not edited).
+            from .broker_dialect import normalize_broker_symbol
+            _sym = p["symbol"]
+            if "/" not in _sym and "-" not in _sym \
+                    and not _sym.endswith("USDT"):
+                _sym = normalize_broker_symbol(_sym)
+            out[_sym] = p
     return out
 
 
@@ -249,12 +292,33 @@ def _held_bars(view, pos, sym, tfs, bar_count_now=None):
     return None
 
 
+def _broker_symbol(sym):
+    """BROKER-422-ASTER-CRYPTO-20261027: this engine's internal
+    dialect names crypto pairs Coinbase-style ("BTC-USD"); the
+    Alpaca trading API knows the same pair only as "BTC/USD" and
+    422s the dashed form ("asset \\"BTC-USD\\" not found", body
+    captured live 2026-10-27). Translate at intent creation (and
+    mirror it on position read-back in the native evaluator) so
+    bars/positions/state keep the internal dialect while every
+    emitted order carries the broker's symbol. Non-crypto symbols
+    (equities, OCC, USDT archive names) pass through untouched."""
+    if isinstance(sym, str) and sym.endswith("-USD") and "/" not in sym:
+        return sym[:-4] + "/USD"
+    return sym
+
+
 def _intent(sleeve_id, stamp, n, kind, sym, side, qty, reason,
             price=None, stop=None, legs=None):
+    bsym = _broker_symbol(sym)
     d = {"intent_id": f"{sleeve_id}-{stamp}-{n}-{sym}",
-         "kind": kind, "symbol": sym, "side": side, "qty": qty,
+         "kind": kind, "symbol": bsym, "side": side, "qty": qty,
          "order_type": "market", "limit_price": None,
-         "stop_price": stop, "reason": reason, "time_in_force": "day"}
+         "stop_price": stop, "reason": reason,
+         # BROKER-422-ASTER-CRYPTO-20261027: Alpaca rejects
+         # time_in_force "day" on crypto orders outright (422
+         # "invalid crypto time_in_force", body captured live
+         # 2026-10-27); "gtc" is the session-less equivalent.
+         "time_in_force": "gtc" if "/" in bsym else "day"}
     if price is not None:
         d["price_hint"] = float(price)
     if legs is not None:
@@ -507,11 +571,11 @@ def _eval_trader(sleeve_id, spec, view, ctx, now):
         if len(out) >= free:
             break
         cap = min(0.10 * equity, 0.01 * f["dollar_volume20"], cash)
-        shares = int(cap // f["close"]) if f["close"] > 0 else 0
+        shares = _frac_qty(cap, f["close"]) if f["close"] > 0 else 0
         if f["stop_distance"]:
             shares = min(shares,
-                         int((0.005 * equity) // f["stop_distance"]))
-        if shares < 1:
+                         _frac_qty(0.005 * equity, f["stop_distance"]))
+        if shares <= 0:
             continue
         n += 1
         stop_price = (round(f["close"] - f["stop_distance"], 4)
@@ -553,6 +617,22 @@ def _tensor_panels(view, frame):
                 rows = val["features"]
             elif val.get("votes") is not None or val.get("balance") is not None:
                 rows = [val]
+        if rows:
+            # READINESS-TENSOR-PANELS-20261112: a panel is a list of
+            # bar/feature DICTS. The bundle also carries non-panel
+            # top-level lists (tensor_universe: symbol strings; fires:
+            # signal dicts without panel fields). Admitting the string
+            # list made its strings panel "rows"; _eval_tensor then
+            # died on 'str' object has no attribute 'get' (an
+            # AttributeError its guard does not catch) and both
+            # recovery sleeves errored every cycle. Keep only dict
+            # rows; an entry with no dict row is not a panel.
+            rows = [r for r in rows if isinstance(r, dict)]
+            if rows and not any(
+                    any(k in r for k in ("votes", "balance",
+                                         "total_votes", "frame"))
+                    for r in rows):
+                rows = None  # dict rows, but not feature rows
         if rows:
             fr = None
             if isinstance(val, dict):
@@ -674,7 +754,20 @@ def _eval_tensor(sleeve_id, spec, view, ctx, now):
             if repair < 2 or increasing < 2:
                 continue
             idx = cur.get("bar_index", cur.get("index"))
-            if idx is not None and int(idx) + 1 < 234:
+            if spec["frame"] == "1wk":
+                # GATE-CURE-W1-20261112 (STRICTNESS-CENSUS proposal
+                # 7): the 234-bar minimum applies to the underlying
+                # DAILY source series, not the weekly panel index.
+                # A real weekly panel tops out near 70 bars, so the
+                # panel-index form could never clear: 0 lifetime
+                # entries by construction. Census replay with the
+                # minimum re-based: 48 candidates, 21 slot-simulated
+                # entries. The hourly spec keeps the panel-index
+                # rule exactly. Rollback: restore the single
+                # panel-index check below for both frames.
+                if len(_bars(view, sym, ("1Day", "1D"))) < 234:
+                    continue  # warming: minimum source bars (archive)
+            elif idx is not None and int(idx) + 1 < 234:
                 continue  # warming: minimum source bars (archive)
             nxt = state.get(sym, {}).get("next_eligible_bar_index")
             extra_next = (view.get("extra") or {}).get(
@@ -769,6 +862,12 @@ def _catchup_on(view, ctx, sid):
 
 def _eval_absorption(sleeve_id, spec, view, ctx, now):
     sym = spec["symbol"]
+    # GOING-LIVE-VARIATIONS-20261115 (CONV-29): the exit deadline is
+    # the spec's hold_h when the SPECS entry carries one (only the
+    # new aster_abs_link_4h_varhx2 entry does, at 32); every
+    # pre-existing absorption entry omits the key and keeps the
+    # historical 16h deadline exactly.
+    hold_h = spec.get("hold_h", 16)
     stamp = now.strftime("%Y%m%dT%H%M%S")
     positions = _positions(view)
     state, spath = _state(ctx, sleeve_id)
@@ -784,14 +883,14 @@ def _eval_absorption(sleeve_id, spec, view, ctx, now):
                     t = _parse_ts(src[k])
                     if t is not None:
                         deadline = (t if k != "confirm_close_at"
-                                    else t + timedelta(hours=16))
+                                    else t + timedelta(hours=hold_h))
                         break
             if deadline:
                 break
         if deadline is None:
             opened = _parse_ts(p.get("opened_at"))
             if opened is not None:
-                deadline = opened + timedelta(hours=16)
+                deadline = opened + timedelta(hours=hold_h)
         if deadline is not None and now >= deadline:
             price = None
             if rows:
@@ -804,7 +903,7 @@ def _eval_absorption(sleeve_id, spec, view, ctx, now):
                 price = float(q["bid"])
             out.append(_intent(sleeve_id, stamp, 1, "exit", sym, "sell",
                                float(p["qty"]),
-                               f"{sleeve_id}:deadline_16h", price=price))
+                               f"{sleeve_id}:deadline_{hold_h}h", price=price))
             state.pop(sym, None)
             _save_state(spath, state)
         return out
@@ -867,7 +966,7 @@ def _eval_absorption(sleeve_id, spec, view, ctx, now):
                               else bars[-1]["t"])
     state[sym] = {"confirm_close_at":
                   confirm_close.isoformat() if confirm_close else None,
-                  "exit_due_at": ((confirm_close + timedelta(hours=16)
+                  "exit_due_at": ((confirm_close + timedelta(hours=hold_h)
                                    ).isoformat() if confirm_close
                                   else None),
                   "entry_at": now.isoformat()}
@@ -993,7 +1092,7 @@ def _eval_native(sleeve_id, spec, view, ctx, now):
                 and _native_enh_on(view, ctx, sleeve_id, "per_leg_warmup"):
             sym = next(iter(closes))
             w = dict(spec["weights"])[sym]
-            held = positions.get(sym)
+            held = positions.get(sym) or positions.get(_broker_symbol(sym))
             return _native_single_leg(
                 sleeve_id, stamp, sym, w, closes[sym], prices[sym],
                 float(held["qty"]) if held else 0.0, _cash(view, ctx),
@@ -1003,7 +1102,10 @@ def _eval_native(sleeve_id, spec, view, ctx, now):
     for sym, w in spec["weights"]:
         sma200 = math.fsum(closes[sym][-200:]) / 200
         weights.append(w if closes[sym][-1] > sma200 else 0.0)
-        held = positions.get(sym)
+        # Broker read-back keys positions by the BROKER symbol
+        # ("BTC/USD"); the book's weights use the internal dialect
+        # ("BTC-USD") — check both (BROKER-422-ASTER-CRYPTO-20261027).
+        held = positions.get(sym) or positions.get(_broker_symbol(sym))
         quantities.append(float(held["qty"]) if held else 0.0)
     # The single-asset book still needs the pair dimension for the
     # archive rebalance() shape: pad with the other asset at weight 0
@@ -1267,6 +1369,20 @@ def _eval_gamma(sleeve_id, spec, view, ctx, now):
 _DISPATCH = {"rsi2": _eval_trader, "squeeze": _eval_trader,
              "tensor": _eval_tensor, "absorption": _eval_absorption,
              "native": _eval_native, "gamma": _eval_gamma}
+
+
+def _frac_qty(dollars, per_unit):
+    """WS4-FRACTIONAL-20261114 (owner ruling 2026-11-14 17:08 ET):
+    a positive dollar budget expressed as a fractional quantity,
+    rounded DOWN to 6dp, never up past the budget; 0.0 only when
+    the budget or the per-unit price is not positive. Whole-share
+    rounding made names priced above the budget unbuyable while
+    the budget was positive; OBS-1's no-floor rule stands for a
+    zero budget."""
+    if dollars <= 0 or per_unit <= 0:
+        return 0.0
+    import math as _m
+    return _m.floor((dollars / per_unit) * 1_000_000) / 1_000_000
 
 
 def evaluate(sleeve_id, view, ctx=None):
