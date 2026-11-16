@@ -78,6 +78,22 @@ def percentile90(values):
 MIN_PX = 5.0
 MIN_DV20 = 1_000_000  # old MIN_DV20 desk filter on the signal day
 MAX_POSITIONS = 10  # sleeve_core.MAX_POSITIONS (old capacity law)
+
+def _frac_qty(dollars, per_unit):
+    """WS4-FRACTIONAL-20261114 (owner ruling 2026-11-14 17:08 ET:
+    "It needs to buy stuff of any price"). Express a positive
+    dollar budget as a fractional quantity, rounded DOWN to the
+    door's 6dp precision, never up past the budget. Returns 0.0
+    only when the budget itself is not positive or the unit
+    price / per-share risk is not positive — the budget deciding,
+    never the share price. Reconciliation with OBS-1 (2026-10-23,
+    standing): the forced 1-share floor stays forbidden;
+    whole-share rounding was the defect."""
+    if dollars <= 0 or per_unit <= 0:
+        return 0.0
+    import math as _m
+    return _m.floor((dollars / per_unit) * 1_000_000) / 1_000_000
+
 NOTIONAL_FRACTION = 0.01  # A2-06: executed sizing law (see above)
 DISASTER_STOP = 0.25  # old SL.disaster_stop_pct (source line 44)
 
@@ -124,10 +140,10 @@ class DailyCyanGbm(BaseSleeve):
             bl = bars.get(sym) or []
             n = sessions_since(bl, p.get("entry_date")) if p.get("entry_date") else None
             if n is not None and n >= HOLD_BARS - 1:
-                qty = int(float(p.get("qty") or 0))
+                qty = float(p.get("qty") or 0)  # WS4: actual held qty
                 if qty > 0 and bl:
                     intents.append(Intent(
-                        "exit", sym, qty_hint=qty,
+                        "exit", sym, qty=qty,
                         price_hint=round(float(bl[-1]["c"]), 2),
                         reason="daily_cyan_gbm: %d sessions held >= %d (staged early)"
                                % (n, HOLD_BARS)))
@@ -181,15 +197,15 @@ class DailyCyanGbm(BaseSleeve):
             dv = dv20(bl)
             if dv is None or dv < MIN_DV20:
                 continue  # $1M dv20 desk filter (old MIN_DV20)
-            qty = int((equity * NOTIONAL_FRACTION) // px)
-            if qty < 1:
-                # OBS-1 (ruling 2026-10-22): the sleeve's own
-                # sizing is the law — a budget that buys
-                # nothing takes no position. No forced floor.
+            qty = _frac_qty(equity * NOTIONAL_FRACTION, px)
+            if qty <= 0:
+                # OBS-1 as reconciled by WS4-FRACTIONAL-20261114:
+                # a ZERO BUDGET takes no position, no floor is
+                # forced; price alone no longer zeroes the qty.
                 continue
             stop_px = round(px * (1 - DISASTER_STOP), 2)
             intents.append(Intent(
-                "enter", sym, qty_hint=qty, price_hint=round(px, 2),
+                "enter", sym, qty=qty, price_hint=round(px, 2),
                 stop=stop_px,
                 exit_rules=(ExitRule("stop", stop_px),
                             ExitRule("time_bars", float(HOLD_BARS))),
