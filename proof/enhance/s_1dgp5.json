@@ -1,0 +1,19 @@
+{
+ "batch": "edge18",
+ "change_point": "v3 adapter layer only (desk3/enhance18.py post-filter); sleeves/ strategy files sha256-pinned to v2, untouched",
+ "decision_record": {
+  "calculation": "Fixture: fresh fire (24h) + ACME bars 22 days old at $2 vs fire print $3: pre-change entry sized off the stale bar; post-change refused, fresh $2 bars enter qty 500.",
+  "comparison": "Newest bar timestamp vs the decision clock (view now): pre-change no comparison existed at any sleeve in this family.",
+  "experiment": "Pre-registered: tests/test_harden_edge_batch18_blockers.py stale fixtures per sleeve (fail-first proven, 9 failures with wiring stashed); paired control/treatment records appended per judged entry (desk3.enhance18 LAST_PAIRED + view extra enh2_paired).",
+  "mechanism": "Stale inputs / execution: with a dead bars feed the sleeve kept entering days later, sized and priced off the stale close; the gate refuses entries whose newest bar is >7 days old (longest legitimate gap, Fri bar read Tue after a Mon holiday, is ~4.4 days). Exits are never filtered.",
+  "transfer": "The sleeve's designed daily-bar edge (signal on the last completed bar) is paid only when that bar is current; a stale bar's close is no longer the market the order will fill in."
+ },
+ "disposition": "APPLY ENH2-18-STALEBAR",
+ "exp_id": "ENH2-18-STALEBAR",
+ "leak": "Stale-bar gate: newest bar never checked against decision clock (fire-print sizing is the scoped baseline for these sleeves \u2014 ENH-LAZ reprice covers REPRICE_SIDS only)",
+ "paper_only": true,
+ "program": "muse-desk-v3-harden-enhance-20261024",
+ "sleeve": "s_1dgp5",
+ "switch": "extra.s_1dgp5_enh2.stale_bar_gate default ON; OFF restores pre-change rule exactly",
+ "verdict": "enhanced"
+}
