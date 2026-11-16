@@ -1,11 +1,30 @@
-"""BB-touch RSI-divergence sleeve for the Femto-lean trading desk.
+"""BB-touch RSI-divergence sleeve — muse-desk-v2 port + expansion.
 
-This module is deliberately parked. It consumes completed 1-hour RTH
-bars and only emits a long entry after the exact pivot-confirmation
-bar is new, fresh, quoteable, and risk-sized. A bearish divergence
-closes an existing long; this version does not open short positions.
+Ported faithfully from the Test package sleeve v2.2
+(dwj9ddyvf6-hub/Test @ 39a200a4, sleeves/bb_rsi_divergence.py): the
+indicator math, pivot/divergence detection, adaptive context, gates
+and sizing are the source's, byte-for-byte in the frozen constants;
+only the context plumbing is re-expressed in v2 terms by
+adapters/bb_rsi_divergence.py (slice positions, dispatcher lifecycle
+records, journal-persisted bar cursor, warm-cache SIP quotes).
 
-Integration requirements are recorded in integration/Femto-lean_Wiring.md.
+EXPANSION (owner's order 2026-10-24, behind the sleeve switch
+extra["bb_rsi_divergence_expansion"]["enabled"], default ON; OFF
+restores the original v2.2 behavior exactly):
+  X1 universe: 40 verified-liquid US-listed symbols (UNIVERSE below;
+     the original 12 first) instead of the original 12 ETFs.
+  X2 shorts: the bearish upper-band divergence the original computes
+     (and used only as a long exit) OPENS shorts with mirrored rules —
+     entry limit at the bid rounded down to a cent, stop = pivot high
+     + 0.5*ATR, target = Bollinger basis, R:R >= 1.2, a bullish
+     divergence closes the short, 24-bar time exit, same gates, and
+     risk_scale from the direction=-1 adaptive context.
+  X3 concurrency: one filled entry per session PER SYMBOL; at most
+     MAX_CONCURRENT_POSITIONS (3) open positions sleeve-wide.
+  X4 window: entries on any completed RTH hourly close (the original
+     restricts closes to 10:00-15:00 ET).
+Paper only, like the source (CONFIG.parked=False in the source meant
+paper-enabled on a paper-only desk; v2 is paper/simulated throughout).
 """
 from datetime import datetime, time as dtime, timezone
 from zoneinfo import ZoneInfo
@@ -15,15 +34,31 @@ from core.sleeve import BaseSleeve, ExitRule, Intent, SleeveConfig
 
 ET = ZoneInfo("America/New_York")
 
-# Broad, liquid default universe. Add/remove supported US-listed equities
-# or ETFs here; no ticker-specific price scale or indicator constants exist.
-UNIVERSE = (
+# Original v2.2 universe (12 ETFs) — the control-mode default.
+UNIVERSE_12 = (
     "SPY", "QQQ", "IWM", "DIA",
     "GLD", "SLV",
     "TLT", "IEF",
     "USO", "UUP",
     "XLF", "XLK",
 )
+
+# X1 expanded universe (40): the original 12 plus 28 more of the most
+# liquid US-listed names. Every name was verified against the desk's
+# Alpaca SIP door with a completed-1H-history probe at install time
+# (200-day window, feed=sip); names the door did not serve with
+# complete history were dropped, never padded. The probe record is in
+# proof/install/bb_rsi_divergence.json ("universe_probe").
+UNIVERSE = UNIVERSE_12 + (
+    "XLE", "XLV", "XLI", "XLP", "XLY", "XLB", "XLRE", "XLC",
+    "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "AVGO", "JPM",
+    "UNH", "HD", "COST", "LLY", "XOM", "CVX", "MA", "V",
+    "BAC", "AMD", "TSLA", "CRM",
+)
+
+# X3: maximum concurrent open positions sleeve-wide in expanded mode
+# (the original effectively holds 1: any open position blocks entries).
+MAX_CONCURRENT_POSITIONS = 3
 
 BB_LENGTH = 20
 BB_MULTIPLIER = 2.0
@@ -55,10 +90,22 @@ CONFIG = SleeveConfig(
     sleeve_id="bb_rsi_divergence",
     cadence_s=300,
     universe=UNIVERSE,
-    state_schema={"meta.last_evaluated_bar_by_symbol": "dict"},
+    state_schema={"meta.last_evaluated_bar_by_symbol": "dict",
+                  "position": "dict|None"},
     risk_pct=RISK_PCT,
     parked=False,
 )
+
+
+def expansion_enabled(extra):
+    """The expansion switch (context extra): default ON (expanded);
+    OFF restores the original v2.2 behavior exactly."""
+    ov = (extra or {}).get("bb_rsi_divergence_expansion")
+    if isinstance(ov, dict) and "enabled" in ov:
+        return bool(ov["enabled"])
+    if isinstance(ov, bool):
+        return ov
+    return True
 
 
 def _number(value):
@@ -493,6 +540,12 @@ def _limit_cents(price):
     return math.ceil((price * 100.0) - 1e-9) / 100.0
 
 
+def _limit_cents_down(price):
+    """Round a sell limit downward to a cent so it remains marketable
+    (the X2 mirror of _limit_cents for short entries at the bid)."""
+    return math.floor((price * 100.0) + 1e-9) / 100.0
+
+
 def _open_positions(slice_state, extra):
     out = {}
     for symbol, raw_qty in (slice_state or {}).items():
@@ -540,11 +593,70 @@ def _entry_activity_today(fills, orders):
             return "working_order"
     return False
 
+def _record_symbol(record):
+    value = record.get("symbol") or record.get("submit_symbol")
+    return str(value).upper() if value else None
+
+
+def _entry_activity_for_symbol(fills, orders, symbol):
+    """X3 per-symbol form of _entry_activity_today: the day's entry
+    lifecycle restricted to one symbol. Lifecycle records are this
+    sleeve's own (the adapter serves only its records); a record with
+    no symbol field is sleeve-scoped and counts for every symbol,
+    exactly as the original treated its sleeve-scoped feeds."""
+    if fills is None or orders is None:
+        return None
+    for fill in fills:
+        if not isinstance(fill, dict):
+            continue
+        if _record_symbol(fill) not in (None, symbol):
+            continue
+        if fill.get("position_intent") in ("buy_to_open", "sell_to_open"):
+            return "filled"
+
+    active_statuses = {
+        "accepted", "pending_new", "new", "partially_filled",
+        "pending_cancel", "pending_replace", "held",
+    }
+    completed_fill_statuses = {"filled"}
+    for order in orders:
+        if not isinstance(order, dict):
+            continue
+        if _record_symbol(order) not in (None, symbol):
+            continue
+        if order.get("position_intent") not in ("buy_to_open", "sell_to_open"):
+            continue
+        status = str(order.get("status", "")).lower().replace("-", "_").replace(" ", "_")
+        filled_qty = _number(order.get("filled_qty", order.get("filled_qty_total")))
+        if (filled_qty is not None and filled_qty > 0) or status in completed_fill_statuses:
+            return "filled"
+        if status in active_statuses:
+            return "working_order"
+    return False
+
+
 _WORKING_EXIT_STATUSES = {
     "accepted", "pending_new", "new", "partially_filled",
     "pending_cancel", "pending_replace", "held",
 }
 _PROTECTIVE_ORDER_TYPES = {"stop", "stop_limit", "trailing_stop"}
+
+
+def _working_close_order(order, symbol=None, position_intent="sell_to_close"):
+    """_working_exit_order generalized to the closing intent a position
+    needs (sell_to_close for a long, buy_to_close for a short — X2)."""
+    if not isinstance(order, dict):
+        return False
+    if order.get("position_intent") != position_intent:
+        return False
+    if str(order.get("type", "")).lower() in _PROTECTIVE_ORDER_TYPES:
+        return False
+    if symbol is not None and str(
+            order.get("symbol") or order.get("submit_symbol") or ""
+    ).upper() != symbol:
+        return False
+    status = str(order.get("status", "")).lower().replace("-", "_").replace(" ", "_")
+    return status in _WORKING_EXIT_STATUSES
 
 
 def _working_exit_order(order, symbol=None):
@@ -598,9 +710,11 @@ class BbRsiDivergenceSleeve(BaseSleeve):
 
     def signal(self, bars, slice_state, ctx):
         extra = ctx.extra or {}
+        expanded = expansion_enabled(extra)
         self.last_evaluation = {
             "sleeve": CONFIG.sleeve_id,
-            "policy_version": "2.2.0",
+            "policy_version": "2.2.0+expanded1" if expanded else "2.2.0",
+            "expansion_enabled": expanded,
             "session": ctx.session,
             "state": "scanning",
             "universe_size": 0,
@@ -616,8 +730,11 @@ class BbRsiDivergenceSleeve(BaseSleeve):
                 for symbol in configured
                 if isinstance(symbol, str) and symbol.strip()
             ))
-        else:
+        elif expanded:
             requested_universe = CONFIG.universe
+        else:
+            # Control: the original v2.2 default universe (12 ETFs).
+            requested_universe = UNIVERSE_12
         open_positions = _open_positions(slice_state, extra)
         universe = tuple(dict.fromkeys(
             tuple(requested_universe) + tuple(open_positions.keys())
@@ -674,11 +791,16 @@ class BbRsiDivergenceSleeve(BaseSleeve):
                 return []
             state = extra.get("sleeve_state") or {}
             had_working_exit = False
+            exit_intents = []
             for symbol, qty in sorted(open_positions.items()):
-                if qty <= 0:
+                if not expanded and qty <= 0:
                     continue
+                is_long = qty > 0
+                close_intent = "sell_to_close" if is_long else "buy_to_close"
                 working_exit = any(
-                    _working_exit_order(order, symbol) for order in orders
+                    _working_close_order(order, symbol, close_intent)
+                    if expanded else _working_exit_order(order, symbol)
+                    for order in orders
                 )
                 if working_exit:
                     had_working_exit = True
@@ -712,27 +834,44 @@ class BbRsiDivergenceSleeve(BaseSleeve):
                     and bar["t"] + BAR_SECONDS > entry_t
                 )
                 latest = frame["latest"]
+                # A long is closed by a bearish divergence (the original
+                # rule); a short by the mirror bullish divergence (X2).
                 setup = next(
-                    (item for item in frame["setups"] if item["direction"] < 0),
+                    (item for item in frame["setups"]
+                     if item["direction"] == (-1 if is_long else 1)),
                     None,
                 )
                 exit_reason = None
                 # Conservative same-bar ordering: if both levels traded,
                 # record the stop outcome before the target outcome.
-                if stop is not None and latest["l"] <= stop:
-                    exit_reason = f"primary_stop_touched stop={stop:.4f}"
-                elif target is not None and latest["h"] >= target:
-                    exit_reason = f"basis_target_touched target={target:.4f}"
-                elif bars_held >= MAX_HOLD_BARS:
+                if is_long:
+                    if stop is not None and latest["l"] <= stop:
+                        exit_reason = f"primary_stop_touched stop={stop:.4f}"
+                    elif target is not None and latest["h"] >= target:
+                        exit_reason = f"basis_target_touched target={target:.4f}"
+                else:
+                    if stop is not None and latest["h"] >= stop:
+                        exit_reason = f"primary_stop_touched stop={stop:.4f}"
+                    elif target is not None and latest["l"] <= target:
+                        exit_reason = f"basis_target_touched target={target:.4f}"
+                if exit_reason is None and bars_held >= MAX_HOLD_BARS:
                     exit_reason = f"time_exit bars_held={bars_held}"
-                elif setup is not None:
+                elif exit_reason is None and setup is not None:
                     pivot_t = frame["bars"][setup["pivot_index"]]["t"]
-                    exit_reason = (
-                        "bearish upper-band divergence; "
-                        f"rsi_now={setup['pivot_rsi']:.2f}; "
-                        f"rsi_prev={setup['previous_rsi']:.2f}; "
-                        f"pivot_t={pivot_t:.0f}"
-                    )
+                    if is_long:
+                        exit_reason = (
+                            "bearish upper-band divergence; "
+                            f"rsi_now={setup['pivot_rsi']:.2f}; "
+                            f"rsi_prev={setup['previous_rsi']:.2f}; "
+                            f"pivot_t={pivot_t:.0f}"
+                        )
+                    else:
+                        exit_reason = (
+                            "bullish lower-band divergence; "
+                            f"rsi_now={setup['pivot_rsi']:.2f}; "
+                            f"rsi_prev={setup['previous_rsi']:.2f}; "
+                            f"pivot_t={pivot_t:.0f}"
+                        )
                 if exit_reason is None:
                     continue
 
@@ -740,24 +879,38 @@ class BbRsiDivergenceSleeve(BaseSleeve):
                     frame["latest_close_t"], tz=ET
                 ).date().isoformat()
                 reason = (
-                    f"bb_rsi_divergence exit long: {exit_reason}; "
+                    f"bb_rsi_divergence exit "
+                    f"{'long' if is_long else 'short'}: {exit_reason}; "
                     f"confirmed_at={frame['latest_close_t']:.0f}"
                 )
                 self.last_evaluation["state"] = "exit_triggered"
-                return [Intent(
+                intent = Intent(
                     "exit", symbol, qty=abs(qty),
                     price_hint=latest["c"],
-                    reason=reason, side="sell",
-                    position_intent="sell_to_close",
+                    reason=reason,
+                    side="sell" if is_long else "buy",
+                    position_intent=close_intent,
                     signal_date=signal_date,
-                )]
-            self.last_evaluation["state"] = (
-                "working_exit_order" if had_working_exit else "position_open"
-            )
-            return []
+                )
+                if not expanded:
+                    return [intent]
+                exit_intents.append(intent)
+            if exit_intents:
+                return exit_intents
+            if not expanded:
+                self.last_evaluation["state"] = (
+                    "working_exit_order" if had_working_exit else "position_open"
+                )
+                return []
+            # Expanded: open positions no longer block entries outright;
+            # fall through to the entry scan under the X3 caps. A working
+            # exit on a symbol still blocks a new entry in that symbol
+            # (handled per-symbol below).
 
         fills = extra.get("session_fills")
         orders = extra.get("session_orders")
+        if expanded:
+            return self._signal_expanded_entries(bars, ctx, frames, open_positions)
         entry_activity = _entry_activity_today(fills, orders)
         if entry_activity is None:
             self.last_evaluation["state"] = "blocked_order_or_fill_state_unavailable"
@@ -908,3 +1061,190 @@ class BbRsiDivergenceSleeve(BaseSleeve):
             position_intent="buy_to_open",
             signal_date=signal_date,
         )]
+
+    def _signal_expanded_entries(self, bars, ctx, frames, open_positions):
+        """Expanded entry scan (X2 shorts, X3 per-symbol/concurrency,
+        X4 any RTH close). Reached only when the expansion switch is ON
+        and no exit intent fired this pass."""
+        extra = ctx.extra or {}
+        fills = extra.get("session_fills")
+        orders = extra.get("session_orders")
+        if fills is None or orders is None:
+            self.last_evaluation["state"] = "blocked_order_or_fill_state_unavailable"
+            return []
+        if extra.get("bar_cursor_ready") is not True:
+            self.last_evaluation["state"] = "blocked_bar_cursor_unavailable"
+            return []
+
+        slots = MAX_CONCURRENT_POSITIONS - len(open_positions)
+        if slots <= 0:
+            self.last_evaluation["state"] = "blocked_concurrency_cap"
+            return []
+
+        candidates = []
+        for symbol, frame in frames.items():
+            if frame["same_bar_consumed"]:
+                continue
+            if symbol in open_positions:
+                continue
+            if not frame["setups"]:
+                continue
+            activity = _entry_activity_for_symbol(fills, orders, symbol)
+            if activity == "filled":
+                self.last_evaluation["symbol_states"][symbol] = "one_filled_entry_per_session_symbol"
+                continue
+            if activity == "working_order":
+                self.last_evaluation["symbol_states"][symbol] = "blocked_working_entry_order"
+                continue
+            if any(_working_close_order(order, symbol, "sell_to_close")
+                   or _working_close_order(order, symbol, "buy_to_close")
+                   for order in orders):
+                self.last_evaluation["symbol_states"][symbol] = "blocked_working_exit_order"
+                continue
+            # X4: no entry-window restriction — any completed RTH close.
+            for setup in frame["setups"]:
+                quote = _fresh_quote(
+                    extra.get("latest_quote"), symbol, ctx.now
+                )
+                if quote is None:
+                    self.last_evaluation["symbol_states"][symbol] = "blocked_quote_missing_or_stale"
+                    continue
+                if quote["spread_bps"] > MAX_SPREAD_BPS:
+                    self.last_evaluation["symbol_states"][symbol] = "blocked_spread"
+                    continue
+
+                if setup["direction"] == 1:
+                    entry = _limit_cents(quote["ask"])
+                    stop = setup["pivot_price"] - STOP_ATR_BUFFER * setup["atr"]
+                    target = setup["basis"]
+                    risk_per_share = entry - stop
+                    reward_per_share = target - entry
+                else:
+                    entry = _limit_cents_down(quote["bid"])
+                    stop = setup["pivot_price"] + STOP_ATR_BUFFER * setup["atr"]
+                    target = setup["basis"]
+                    risk_per_share = stop - entry
+                    reward_per_share = entry - target
+                if risk_per_share <= 0 or reward_per_share <= 0:
+                    self.last_evaluation["symbol_states"][symbol] = "blocked_nonpositive_payoff"
+                    continue
+                reward_risk = reward_per_share / risk_per_share
+                if reward_risk < MIN_REWARD_RISK:
+                    self.last_evaluation["symbol_states"][symbol] = "blocked_reward_risk"
+                    continue
+                self.last_evaluation["symbol_states"][symbol] = "qualified_candidate"
+                candidates.append({
+                    "symbol": symbol,
+                    "frame": frame,
+                    "setup": setup,
+                    "quote": quote,
+                    "entry": entry,
+                    "stop": stop,
+                    "target": target,
+                    "risk_per_share": risk_per_share,
+                    "reward_risk": reward_risk,
+                })
+
+        if not candidates:
+            if self.last_evaluation["state"] == "scanning":
+                self.last_evaluation["state"] = "no_qualified_setup"
+            return []
+
+        candidates.sort(key=lambda x: (
+            -x["setup"]["risk_scale"],
+            -x["reward_risk"],
+            -x["setup"]["rsi_delta"],
+            -x["setup"]["touch_depth_atr"],
+            x["quote"]["spread_bps"],
+            x["symbol"],
+        ))
+
+        equity = _number(ctx.equity)
+        if equity is None or equity <= 0:
+            self.last_evaluation["state"] = "blocked_equity_unavailable"
+            return []
+
+        intents = []
+        chosen_symbols = set()
+        for chosen in candidates:
+            if len(intents) >= slots:
+                break
+            if chosen["symbol"] in chosen_symbols:
+                continue
+            setup = chosen["setup"]
+            risk_budget = equity * RISK_PCT * setup["risk_scale"]
+            notional_cap = equity * MAX_NOTIONAL_PCT
+            qty = int(math.floor(min(
+                risk_budget / chosen["risk_per_share"],
+                notional_cap / chosen["entry"],
+            )))
+            if qty <= 0:
+                continue
+            chosen_symbols.add(chosen["symbol"])
+            frame = chosen["frame"]
+            quote = chosen["quote"]
+            is_long = setup["direction"] == 1
+            pivot_t = frame["bars"][setup["pivot_index"]]["t"]
+            signal_date = datetime.fromtimestamp(
+                frame["latest_close_t"], tz=ET
+            ).date().isoformat()
+            reason = (
+                "bb_rsi_divergence v2 "
+                f"{'long' if is_long else 'short'}: confirmed "
+                f"{'lower-band bullish' if is_long else 'upper-band bearish'} "
+                f"divergence; regime={setup['regime']}; "
+                f"er={setup['efficiency_ratio']:.3f}; "
+                f"bandwalk={setup['band_walk_count']}; "
+                f"atr_pct={setup['atr_pct']:.5f}; "
+                f"atr_ratio={setup['atr_ratio']:.3f}; "
+                f"vol_scale={setup['vol_scale']:.3f}; "
+                f"trend_scale={setup['trend_scale']:.3f}; "
+                f"risk_scale={setup['risk_scale']:.3f}; "
+                f"rsi_now={setup['pivot_rsi']:.2f}; "
+                f"rsi_prev={setup['previous_rsi']:.2f}; "
+                f"rsi_delta={setup['rsi_delta']:.2f}; "
+                f"pivot_t={pivot_t:.0f}; "
+                f"confirmed_at={frame['latest_close_t']:.0f}; "
+                f"quote_t={quote['t']:.3f}; bid={quote['bid']:.4f}; "
+                f"ask={quote['ask']:.4f}; spread_bps={quote['spread_bps']:.2f}; "
+                f"entry_limit={chosen['entry']:.2f}; stop={chosen['stop']:.4f}; "
+                f"target_basis={chosen['target']:.4f}; "
+                f"rr={chosen['reward_risk']:.2f}; qty={qty}"
+            )
+            intents.append(Intent(
+                "enter",
+                chosen["symbol"],
+                qty=qty,
+                limit_price=chosen["entry"],
+                price_hint=chosen["entry"],
+                stop=chosen["stop"],
+                target=chosen["target"],
+                exit_rules=(
+                    ExitRule("stop", chosen["stop"]),
+                    ExitRule("target", chosen["target"]),
+                    ExitRule("time_bars", float(MAX_HOLD_BARS)),
+                ),
+                reason=reason,
+                side="buy" if is_long else "sell",
+                position_intent="buy_to_open" if is_long else "sell_to_open",
+                signal_date=signal_date,
+            ))
+        if not intents:
+            self.last_evaluation["state"] = "blocked_size_zero"
+            return []
+        self.last_evaluation["state"] = "entry_intent"
+        self.last_evaluation["selected_symbol"] = intents[0].symbol
+        self.last_evaluation["selected_symbols"] = [i.symbol for i in intents]
+        return intents
+
+
+# Module-level signal() shape (the v2 checker accepts either form):
+# delegate to the class so adapters may call the module like the other
+# ported sleeves.
+_INSTANCE = BbRsiDivergenceSleeve()
+
+
+def signal(bars, slice_state, context):
+    out = _INSTANCE.signal(bars, slice_state, context)
+    signal.last_evaluation = _INSTANCE.last_evaluation
+    return out
