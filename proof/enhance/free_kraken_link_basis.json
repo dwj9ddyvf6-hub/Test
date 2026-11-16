@@ -1,0 +1,26 @@
+{
+ "ab_drive": {
+  "case": "basis +40bps, newest pair completed 60h before now",
+  "control_intents": 1,
+  "fresh_intents": 1,
+  "switch_off_intents": 1,
+  "treatment_intents": 0
+ },
+ "batch": 15,
+ "blockers": "tests/test_enhance_batch15_blockers.py",
+ "decision_record": {
+  "calculation": "gate thresholds are the sleeve's own constants/cadence: 2x the 4h bar (basis), 1x the 3600s cadence (ENJ book), 5x the long-leg 10% liquidity gate (short leg), 10 calendar days for a daily bar (covers any long weekend/holiday gap)",
+  "comparison": "price-aware baseline = the sleeve's own pre-change rule evaluated on the same fixture (switch OFF drive)",
+  "experiment": "pre-registered A/B fixture drives in tests/test_enhance_batch15_blockers.py: ON refuses, OFF enters, fresh enters; fail direction proven (5 enhanced tests fail with the cure removed, pass restored)",
+  "mechanism": "same pair-freshness leak as the ADA basis sleeve (family-shared decision code): no upper bound on completed-pair age at entry",
+  "transfer": "counterparties paying for immediacy/reversion on a live print keep the surplus only while the print is live; a stale print transfers the sleeve's capital to whoever holds the live side"
+ },
+ "disposition": "ENHANCED",
+ "e2e": "port-batch fixture drives (test_port_batch2/3_blockers) re-run GREEN with gates ON",
+ "gate": "pair_freshness_gate",
+ "layer": "v3 adapter entrypoint post-filter (desk3/enhance15.py); sha-pinned sleeves/ + adapters/ and line-pinned desk3/strategies/ untouched; exits never filtered",
+ "mechanism": "same pair-freshness leak as the ADA basis sleeve (family-shared decision code): no upper bound on completed-pair age at entry",
+ "program": "ENH2 second look (v3 Harden+Enhance)",
+ "sleeve": "free_kraken_link_basis",
+ "switch": "free_kraken_link_basis_enh2.pair_freshness_gate (default ON; OFF restores pre-change rule exactly)"
+}
