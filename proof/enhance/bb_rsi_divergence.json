@@ -1,0 +1,23 @@
+{
+ "decision_record": {
+  "calculation": "Measured: entry drive -> 1 entry (oracle-matched). Same fixture with the quote aged ~300s -> 0 entries (fresh-quote gate binds). Same fixture with the quote spread widened to ~1075bps -> 0 entries (spread gate binds). Bar-cursor-not-ready -> 0 entries (oracle refusal drive). Stop-exit drive -> oracle-matched exit.",
+  "comparison": "First look examined: entry pricing currency, quote freshness, spread discipline, exit field starvation, bar integrity.",
+  "experiment": "Evidence drives in tests/test_edge_batch14_blockers.py::TestVerifyOnlyEvidence::test_bb_rsi_gates_bind plus the port suite's entry/stop-exit/cursor-refusal oracle drives.",
+  "mechanism": "No change. Every candidate leak is already gated at the sleeve's own constants, with traces: entries require a quote <= 60s old (QUOTE_MAX_AGE_S), spread <= 15bps, R:R >= 1.2 recomputed on that live quote, a ready bar cursor, no intraday gap in the recent frame, and a bar <= 600s old (BAR_MAX_AGE_S) \u2014 the stale-input class is closed at tighter bounds than this program's adapter gates. Exits read stop/target/entry-bar from the adapter-recorded entry plan (no capitulation-style field starvation), and the entry intent itself carries stop/target/time ExitRules for the dispatcher.",
+  "transfer": "Confirmed BB-touch RSI divergences on hourly closes, entered at a limit priced off a live quote, exited at the adapter-recorded plan (stop/target/24-bar time). The expansion (X1-X4) is the sleeve's defining change and was owner-ordered at install."
+ },
+ "disposition": "VERIFY-ONLY",
+ "evidence": {
+  "bar_max_age_s": 600.0,
+  "cursor_not_ready_entries": 0,
+  "entry_drive_entries": 1,
+  "max_spread_bps": 15.0,
+  "quote_max_age_s": 60.0,
+  "stale_quote_entries": 0,
+  "wide_spread_entries": 0
+ },
+ "exp_id": "VERIFY-ONLY",
+ "paper_only": true,
+ "sleeve": "bb_rsi_divergence",
+ "verdict": "VERIFY-ONLY \u2014 no binding leak survives scrutiny"
+}
