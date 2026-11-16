@@ -306,10 +306,13 @@ def g4_passes(spec, f):
     if not f:
         return False
     try:
-        markers = f.get("markers") or f.get("primaryMarkers") or []
+        # GATE-CURE-20261112 (STRICTNESS-CENSUS proposals 1-2):
+        # the buy-green marker requirement is REMOVED (1 of 426
+        # census symbol-weeks; 0 -> 14 qualifications without it,
+        # hot arm 0 -> 13); the numeric profile is the gate.
+        # Rollback: restore the marker conjunct here.
         return bool(
-            "buy-green" in markers
-            and float(f["native_close"]) <= 10
+            float(f["native_close"]) <= 10
             and float(f["depth60"]) >= 70
             and float(f["ret60"]) >= 0
             and float(f["vol20"]) >= 0.09
@@ -519,7 +522,16 @@ def _eval_g4(sid, spec, view, ctx):
             units = math.floor(min(spec["ticket"], cash)
                                / (price * (1 + fee)))
             if units <= 0:
-                continue
+                # SILENT-SKIP-SIZING-20261116 (owner price ruling
+                # 2026-11-14, WS4-FRACTIONAL shape): the floor
+                # reaching 0 silently killed the pending fire for
+                # price. Same ticket expressed fractionally, 6dp
+                # floor, never past the ticket.
+                units = math.floor((min(spec["ticket"], cash)
+                                    / (price * (1 + fee)))
+                                   * 1_000_000) / 1_000_000
+                if units <= 0:
+                    continue
             n += 1
             out.append(_intent(sid, stamp, n, "enter", c["symbol"], units,
                                f"{sid} entry: frozen_weekly_G4 mode="
@@ -883,7 +895,21 @@ def _eval_timing(sid, spec, view, ctx):
             qty = min(qty, math.floor(SLICE * spec["risk"]
                                       / (price - float(stop))))
         if qty <= 0:
-            continue
+            # SILENT-SKIP-SIZING-20261116 (owner price ruling
+            # 2026-11-14, WS4-FRACTIONAL shape): the floors reaching
+            # 0 silently killed the qualified signal for price. The
+            # same two caps (budget, risk) expressed fractionally,
+            # 6dp floor, never past either cap.
+            qty_f = budget / (price * (1 + fee))
+            if stop is not None:
+                if price - float(stop) <= 0:
+                    qty_f = 0.0
+                else:
+                    qty_f = min(qty_f, SLICE * spec["risk"]
+                                / (price - float(stop)))
+            qty = math.floor(qty_f * 1_000_000) / 1_000_000
+            if qty <= 0:
+                continue
         meta_exit = None
         if kind == "cloud":
             forced = datetime.combine(et.date(), time(15, 50), ET)
