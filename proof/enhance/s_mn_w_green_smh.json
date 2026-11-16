@@ -1,0 +1,20 @@
+{
+ "sleeve": "s_mn_w_green_smh",
+ "disposition": "VERIFY-ONLY \u2014 no further binding leak; existing cure re-proven on fixture traces this batch",
+ "exp_id": "ENH19-MN-GREENBAND-REPRICE-20261024 (desk3/lazarus_midna.py)",
+ "paper_only": true,
+ "ab": {
+  "on_qty": 80,
+  "on_price_hint": 12.5,
+  "off_qty": 100,
+  "off_price_hint": 10.0
+ },
+ "blockers": "tests/test_edge_batch21_blockers.py (VERIFY-ONLY pins: A/B diff collapses if the existing cure is removed)",
+ "decision_record": {
+  "transfer": "Designed edge (green 1W, SMH-calm gate (20-session |return| <= 5%), 126-session hold, no stop by design) is paid for acting on the upstream fire at the current price with coherent bounds; both halves of that leak class are already cured at this engine.",
+  "comparison": "Current engine vs the pre-cure engines measured in batches 1/19: the stale-fire pricing and bound-incoherence leaks are closed; this batch re-ran the A/B traces rather than assuming the cures still hold.",
+  "mechanism": "No residual binding leak found: execution price, sizing, stop anchor and entry bounds all read the freshest snapshot close; residual candidates were design rules (frozen catalog), not leaks.",
+  "calculation": "Fixture traces 2026-10-24: {'on_qty': 80, 'on_price_hint': 12.5, 'off_qty': 100, 'off_price_hint': 10.0}.",
+  "experiment": "VERIFY-ONLY verdict. Second look after ENH19: SMH-calm gate computed from fresh SMH bars at entry, sizing/price_hint at the fresh close; time-only exit is the frozen catalog rule. No second binding leak survives scrutiny (see s_mn_w_cyan_vix record \u2014 same engine, same trace shape)."
+ }
+}
