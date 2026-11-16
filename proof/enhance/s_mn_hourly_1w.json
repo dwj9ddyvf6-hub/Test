@@ -1,0 +1,22 @@
+{
+ "ab_fixture": {
+  "control_entries_off": 1,
+  "note": "s_mn_reversal: AAA (worst, stale) excluded ON, included OFF; s_mn_nostop: ON enters the fresh symbol, OFF enters the stale one (1 slot).",
+  "treatment_entries_on": 0
+ },
+ "binding_leak": "cross-symbol stale feed entry",
+ "decision_record_2a": {
+  "calculation": "lag_days = max_over_universe(last_bar_date) - last_bar_date(sym); refuse if lag_days > 4 (hourly: lag_hours > 4). Threshold = ENH19's proven 4-day stale bound; Mon-after-Fri (3d) and post-holiday Tue (4d) pass.",
+  "comparison": "Faithful: enter on the symbol's last bar regardless of its age vs the snapshot's other symbols. Enhanced: refuse the entry when the symbol's last bar lags the universe's latest bar by >4 calendar days (daily sleeves) / >4h (s_mn_nostop hourly).",
+  "experiment": "Fixture A/B in tests/test_edge_batch20_blockers.py: stale-signal fixture emits 0 entries ON and the faithful count OFF (switch OFF = pre-change exactly); paired shadow record appended to enh20_journal on every refusal. Fail-first: 9 laz8 tests failed with the cure stashed.",
+  "mechanism": "Per-symbol feed lag (halt, delisting, producer gap) leaves a frozen cross/breakout/ranking in place; the sleeve enters days late at a dead price_hint and sizes off it, while every other symbol's feed proves the snapshot clock has moved on.",
+  "transfer": "Faber ENH19 stale-bar gate + batch8/9 freshness gates transfer: a decision bar/feed that stopped before the rest of the snapshot is not a live signal."
+ },
+ "disposition": "ENHANCED",
+ "exp_id": "ENH20-XSTALE-20261024",
+ "paper_only": true,
+ "shadow_control": "paired enh20_journal record per refusal: {exp_id, sleeve, symbol, enhanced: refuse_xstale_entry, shadow_faithful: enter, lag}",
+ "sleeve": "s_mn_hourly_1w",
+ "switch": "extra.s_mn_hourly_1w_enh20.stale_gate (laz8/midna) or .xstale_gate (nostop/midna engines), default ON; OFF restores pre-change rule exactly",
+ "verdict": "ENHANCED \u2014 cross-symbol stale-feed entries refused"
+}
