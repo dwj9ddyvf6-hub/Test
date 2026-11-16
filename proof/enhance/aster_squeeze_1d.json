@@ -1,0 +1,20 @@
+{
+ "ab": {
+  "control": "features over forming-inclusive bars",
+  "direction_ok": true,
+  "paired_record": "extra['aster_enh_exp_journal'].records[] carries control_enter/treatment_enter + control_exit/treatment_exit per differing symbol",
+  "treatment": "features over completed bars only"
+ },
+ "decision_record": {
+  "calculation": "Fixture (tests/test_harden_edge_batch11_blockers.py): RSI2 \u2014 uptrend + two drops, last bar dated the session date: control (forming-inclusive) emits NO entry (partial close dragged through the SMA200 gate), treatment (completed only) emits the designed SPY entry; journal pair control_enter=false/treatment_enter=true. Squeeze \u2014 declining completed bars + a forming spike bar, position held: control emits NO exit, treatment emits the close_below_ema20/momentum_nonpositive exit.",
+  "comparison": "Baseline computes RSI2/SMA/squeeze features over bars[-1] even while that bar is still forming (desk evaluates every ~86s through RTH). Comparator: identical bars, features over completed bars only (last bar dated < current ET session dropped).",
+  "experiment": "tests/test_harden_edge_batch11_blockers.py TestTraderCompletedBar: treatment binds both directions (entry + exit), switch OFF reproduces the pre-change forming-bar decisions exactly, paired records land in extra['aster_enh_exp_journal']. Rejection rule: any fixture where ON and OFF agree while a forming bar is present and decision-relevant.",
+  "mechanism": "Perception (stale/partial input): a forming bar's close is not a close \u2014 it moves all session, so entries fire and vanish intraday and exits are hidden by a partial print.",
+  "transfer": "The frozen public trader rules (trader_rsi2_public_v1 / trader_squeeze20_public_v1) earn their surplus on completed daily bars; the surplus is captured only if the desk's decision bar is the bar the rule was specified on."
+ },
+ "disposition": "ENHANCED: completed-bar feature gate (forming bar excluded)",
+ "exp_id": "ENH-B11-TRADER-COMPLETEDBAR-20261024",
+ "paper_only": true,
+ "sleeve": "aster_squeeze_1d",
+ "switch": "extra['enh_aster_squeeze_1d'] / ctx.enhance['aster_squeeze_1d'] {'completed_bar': bool} default ON; OFF restores the pre-change last-bar rule exactly"
+}
