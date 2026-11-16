@@ -1,0 +1,16 @@
+{
+ "sleeve": "s_q07w_s78_sm_deep70_wcov",
+ "batch": 25,
+ "verdict": "VERIFY-ONLY",
+ "exp_id": "ENH25-VERIFY-20261024",
+ "paper_only": true,
+ "leak": "none binding; parked by design",
+ "decision_record": {
+  "transfer": "Q07 swing wcov lane edge is reserved by the catalog CSV ruling: the lane is OFF (parked) - entries are refused by design and only position exits are managed.",
+  "comparison": "Entry path vs exit path on identical fixtures: a fully-qualified fire (swing/small, wiki_cov tag true, QQQ down) produces zero entries; a held position at -20% produces the designed 15% stop exit.",
+  "mechanism": "No sleeve-level leak survives scrutiny: SPECS parked=True in desk3/lazarus_q07.py and config parked=True agree; the binding constraint is the owner CSV ruling, not sleeve logic. The engine already carries batch-22 EXEC (fresh-price revalidation) and FRESH cures for when the lane is unparked.",
+  "calculation": "Trace (tests/test_edge_batch25_blockers.py::TestWcovParkedTraces): fire fixture -> []; position avg $10.00, last close $8.00 -> one exit intent, reason stop_15pct, qty 10.",
+  "experiment": "Re-run the trace plus the batch-22 Q07 blockers; any entry emitted while parked, or a missing stop exit, falsifies this verdict."
+ },
+ "evidence": "tests/test_edge_batch25_blockers.py::TestWcovParkedTraces GREEN; SPECS/config parked agreement read directly"
+}
