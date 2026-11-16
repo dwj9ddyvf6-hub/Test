@@ -1,0 +1,18 @@
+{
+ "ab": {
+  "control_entries_at_1030": 0,
+  "treatment_entries_at_1030": 1
+ },
+ "decision_record": {
+  "calculation": "Fixture: qualified ACME event (surprise -0.05 <= threshold -0.02, spot 50, $5M mean20 $vol) at 10:30 ET on entry_session. Control: 0 entries. Treatment: 1 entry. Next-session control stays 0 under both.",
+  "comparison": "Designed entry moment (entry_session = event_date+3, 09:35-09:40) vs the payoff horizon (10 sessions): the entry window is 5 minutes of a 10-session trade \u2014 0.03%% of the holding period gates 100%% of the capture.",
+  "experiment": "Fixture A/B for all four books + switch-OFF restoration + next-session refusal. Blockers: TestPeadCatchup.",
+  "mechanism": "Execution/timing (responsiveness): one session, one 5-min window, 300s cadence = a single evaluation decides the whole trade; a wedged/unfed cycle forfeits the drift entirely. Treatment allows the SAME qualified event to enter later the same session (09:40-15:55); every qualification, contract, sizing and pricing gate is unchanged, and the catch-up never extends to a later session.",
+  "transfer": "Post-earnings-announcement drift: after a bottom-quintile surprise the market under-reacts for sessions; book OPT_PEAD_VERTICAL_A (risk 0.020) buys puts on the drift continuation over a 10-session hold."
+ },
+ "disposition": "ENHANCED (second look; first look ENH-ASTERB2-MIDLIMIT-20261024 entry pricing)",
+ "exp_id": "ENH-B5-PEAD-CATCHUP-20261024",
+ "paper_only": true,
+ "sleeve": "aster_pead_vertical_a",
+ "switch": "extra.aster_b2_enh.pead_catchup (or extra.enh_<sleeve>) default ON; OFF restores window-only rule exactly"
+}
