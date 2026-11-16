@@ -1,0 +1,23 @@
+{
+ "ab": {
+  "bound_s": 3600.0,
+  "control_entries_stale": 1,
+  "direction_ok": true,
+  "stale_close_age_s": 10800.0,
+  "treatment_entries_fresh": 1,
+  "treatment_entries_stale": 0
+ },
+ "decision_record": {
+  "calculation": "Fixture (span 900s): last bar close 3h old at decision (10800s > 4x900=3600) -> refused; last bar close 0s old -> enters. Control (OFF) enters the stale fixture.",
+  "comparison": "Pre-change rule: the sleeve never compares the newest bar's timestamp to the decision clock; a dead Kraken/SIP feed leaves entries firing on the last printed bar indefinitely.",
+  "experiment": "Adapters3 A/B on identical bars at stale/fresh stamps; OFF reproduces the stale entry exactly.",
+  "mechanism": "Execution freshness: refuse entries when the newest served bar's CLOSE is more than 4 of the series' own bar-spans old at decision time (span-adaptive; exits never gated). First look cured the chase premium (price distance); this look cures the time distance.",
+  "transfer": "A 15-minute breakout is a minutes-scale claim on the current price. Entered hours after the bar printed, the sleeve pays the current (unknown) price for a signal whose premise \u2014 the just-broken channel \u2014 may already have failed."
+ },
+ "disposition": "APPLY ENH2-DONCHIAN-CRYPTO-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestDonchianCryptoStaleGate",
+ "exp_id": "ENH2-DONCHIAN-CRYPTO-20261024",
+ "paper_only": true,
+ "sleeve": "donchian_crypto",
+ "switch": "extra.donchian_crypto_enh2.stale_bar_gate default ON; OFF restores the pre-change rule exactly"
+}
