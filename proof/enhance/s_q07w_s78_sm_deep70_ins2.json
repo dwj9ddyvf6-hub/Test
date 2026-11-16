@@ -1,0 +1,26 @@
+{
+ "sleeve": "s_q07w_s78_sm_deep70_ins2",
+ "batch": 25,
+ "verdict": "ENHANCED",
+ "exp_id": "ENH25-Q07-STALEBARS-20261024",
+ "paper_only": true,
+ "leak": "entry sized on ancient close",
+ "decision_record": {
+  "transfer": "Tensor 1W swing confluence edge is paid on a QQQ-down day within 5 sessions of the signal; capture requires the symbol itself to be trading at a current price - a halted/delisted name has no executable price at all.",
+  "comparison": "Entry evaluated on bars[-1] however old (pre-change) vs refusal when the symbol's last bar predates the 5-session signal window, on identical fires/bars; switch OFF restores the pre-change entry exactly.",
+  "mechanism": "Perception/execution: filters (cheap5/deep70) and sizing ran on the last available close with no staleness check - a name whose bars end 2026-09-25 still entered on 2026-10-23 at that ancient close (qty sized off a price that no longer exists).",
+  "calculation": "Fixture: fire dated 2026-10-23, symbol bars ending 2026-09-25 (20 sessions stale): control enters (cheap5 lane qty 250 @ $4.00; deep70 lane qty 166 @ $6.00); treatment refuses. Fresh bars (ending 2026-10-23) enter identically in both arms.",
+  "experiment": "Pre-registered A/B in tests/test_edge_batch25_blockers.py::TestQ07StaleBars. Rejection rule: OFF divergence, any treatment entry on bars older than the window, or any fresh-bar entry changed - revert. Forward paired rows in extra.q07_exp_journal."
+ },
+ "change": "Entry refused when the symbol's last daily bar is more than 5 sessions (the designed signal window) older than today, measured on QQQ session dates; exits untouched",
+ "switch": "extra.q07_enh[<sleeve>].fresh_bars default ON; OFF restores pre-change rule exactly",
+ "shadow_control": "switch OFF on identical fixtures; live paired records in extra.q07_exp_journal",
+ "blocker": "tests/test_edge_batch25_blockers.py::TestQ07StaleBars",
+ "fail_first": "2 stale-bar tests failed on pre-cure engine (stash-proven); 8/8 GREEN after",
+ "ab": {
+  "fixture_last_bar": "2026-09-25",
+  "fixture_today": "2026-10-23",
+  "control_enter": true,
+  "treatment_enter": false
+ }
+}
