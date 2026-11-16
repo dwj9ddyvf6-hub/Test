@@ -1,0 +1,18 @@
+{
+ "ab": {
+  "control_intents_eth_short": 0,
+  "treatment_intents_eth_short": 1
+ },
+ "decision_record": {
+  "calculation": "Fixture: BTC 210 completed bars in uptrend, ETH 100 bars. Control: 0 intents. Treatment: 1 BTC entry at its 0.5 weight target. Both legs qualified: decisions identical to control (existing batch-1 blockers re-proven).",
+  "comparison": "All-or-nothing warmup (any leg <200 bars freezes the whole book) vs per-leg qualification used by every other multi-leg reader on the desk.",
+  "experiment": "Fixture A/B above + switch-OFF restoration. Blockers: TestNativePairPerLeg.",
+  "mechanism": "Perception/responsiveness: one leg's data gap (ETH feed lag, pair listing history) silently froze the qualified leg's designed trade. Treatment trades the qualified leg on its own fee-funded target and never trades the unqualified leg blind.",
+  "transfer": "SMA200 trend allocation BTC/ETH 50/50: the transfer is the trend premium on each leg, earned only while that leg is actually held above its SMA200."
+ },
+ "disposition": "ENHANCED",
+ "exp_id": "ENH-B5-NATIVE-PERLEG-20261024",
+ "paper_only": true,
+ "sleeve": "aster_native_btc_eth_sma200",
+ "switch": "extra.enh_aster_native_btc_eth_sma200.per_leg_warmup default ON; OFF restores all-or-nothing warmup exactly"
+}
