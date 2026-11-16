@@ -29,6 +29,8 @@ signal close. Funding is a declared producer input: funding-filtered
 sleeves are UNFED without it, never fake-fed. See FIDELITY-LEDGER
 ASTER-B7.
 """
+
+# CONSTANTS-PROVENANCE-20261116: the 96h deadline (hold_h/deadline_h=96, non-fixed16 policies) is source-confirmed in the archive source/backend/r19_crypto.py exit_due_at rule (due + 96h unless fixed16), diffed in HARDEN batch-1 2026-10-24 and recorded in FIDELITY-LEDGER ("source code, not an assumption").
 from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from desk3.contract import Intent
@@ -77,9 +79,30 @@ def _paired(view, record):
         j["records"].append(record)
 
 
+def _bar_duration_s(brs):
+    """Served bars' own spacing in seconds (last two bar opens), or
+    None when it cannot be derived. FIX-F4-20261115: the freshness
+    gate below hardcoded the native 4H bar duration, so on any other
+    served timeframe (e.g. the 1H tape) every signal read as -3h old
+    and the ENH window refused every entry — a serving-form defect,
+    not signal logic. The duration is derived from the served bars
+    themselves; on the native 4H tape the derived spacing is exactly
+    BAR_H and behavior is bit-identical."""
+    if len(brs) < 2:
+        return None
+    t1 = _ts(brs[-1].get("t"))
+    t0 = _ts(brs[-2].get("t"))
+    if t1 is None or t0 is None:
+        return None
+    d = (t1 - t0).total_seconds()
+    return d if d > 0 else None
+
+
 def _signal_age_s(brs, now):
     """Age (s) of the signal bar's CLOSE: bar 't' is the bar OPEN
-    (fixture + Alpaca convention), so close = t + 4h. None when the
+    (fixture + Alpaca convention), so close = t + bar duration.
+    Bar duration is the served bars' own spacing (FIX-F4-20261115),
+    falling back to the native BAR_H when underivable. None when the
     bar carries no parseable stamp — treatment fails closed."""
     if not brs:
         return None
@@ -88,7 +111,10 @@ def _signal_age_s(brs, now):
         return None
     if t.tzinfo is None:
         t = t.replace(tzinfo=timezone.utc)
-    return (now - (t + timedelta(hours=BAR_H))).total_seconds()
+    dur = _bar_duration_s(brs)
+    close = t + (timedelta(seconds=dur) if dur is not None
+                 else timedelta(hours=BAR_H))
+    return (now - close).total_seconds()
 _P = "aster_r19_enjusdt_"
 SPECS = {
  _P+"absorption_base_fixed16_volume1pct": dict(sym="ENJUSDT", fam="absorption_base", exit="fixed16", cap="volume1pct", hold_h=16),
@@ -116,11 +142,17 @@ def inputs_for(sid):
 
 
 def _bars(view, sym):
-    m = view.get("bars") or {}
-    for k in (f"{sym}|4Hour", f"{sym}|4h", f"{sym}|240min", sym):
-        if m.get(k):
-            return sorted(m[k], key=lambda r: str(r.get("t")))
-    return []
+    # F4-CRYPTO-BARKEY-20261114: archive USDT keys resolve via desk3.crypto_bars (served BASE/USD spot forms; see that module)
+    # ENJ-FEED-CONV27-20261115: batch7 was the one Aster crypto engine
+    # still reading archive keys only (its own key loop, carried from
+    # the port), so it resolved 0 bars on every live snapshot while
+    # every sibling engine resolved the served spot tape through this
+    # resolver: the Kraken spot tape is served as ENJ/USD|4Hour, never
+    # as ENJUSDT|4Hour. Archive keys still win inside the resolver
+    # (step 1), so any view carrying them behaves exactly as before;
+    # signal logic, exits and sizing are untouched.
+    from .crypto_bars import resolve_bars
+    return resolve_bars(view.get("bars") or {}, sym, ("4Hour",))
 
 
 def _funding(view, sym):
