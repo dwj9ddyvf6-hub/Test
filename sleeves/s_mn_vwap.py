@@ -56,17 +56,29 @@ def signal(bars, slice_state, context):
                 reason="s_mn_vwap exit: price_cross_below_vwap20"))
     if out or held:
         return out
-    for sym in sorted(bars):
+    # GATE-CURE-RANDOM-20261112: up-crossing symbols are ranked by
+    # the cross's own strength (close / rolling VWAP20 - 1 on the
+    # cross bar) descending, then symbol, replacing alphabetical
+    # first-cross allocation (RULE-LOGIC-LEDGER-2026-11-12
+    # Section 3 RANDOM row). The stale gate, sizing and the
+    # single-entry break below are unchanged.
+    ranked = []
+    for sym in bars:
         up, _ = _cross(bars[sym])
-        if up and xstale_refused(context, "s_mn_vwap", bars, sym):
-            continue  # ENH20
         if up:
-            px = float(bars[sym][-1]["c"])
-            q = qty_for(SLOT_BUDGET, px)
-            if q > 0:
-                out.append(Intent(
-                    kind="enter", symbol=sym, qty_hint=q, side="buy",
-                    position_intent="buy_to_open", price_hint=px,
-                    reason="s_mn_vwap entry: price_cross_above_vwap20 slot_budget=1000"))
-            break
+            v = rolling_vwap(bars[sym], len(bars[sym]) - 1)
+            strength = (float(bars[sym][-1]["c"]) / v - 1.0) if v else 0.0
+            ranked.append((sym, strength))
+    ranked.sort(key=lambda t: (-t[1], t[0]))
+    for sym, _strength in ranked:
+        if xstale_refused(context, "s_mn_vwap", bars, sym):
+            continue  # ENH20
+        px = float(bars[sym][-1]["c"])
+        q = qty_for(SLOT_BUDGET, px)
+        if q > 0:
+            out.append(Intent(
+                kind="enter", symbol=sym, qty_hint=q, side="buy",
+                position_intent="buy_to_open", price_hint=px,
+                reason="s_mn_vwap entry: price_cross_above_vwap20 slot_budget=1000"))
+        break
     return out
