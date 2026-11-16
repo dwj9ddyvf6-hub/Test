@@ -8,7 +8,7 @@ from desk3.bridge import ViewCtx, build_extra, old_bars, old_context, to_v2_inte
 from desk3.strategies.free_opt_parity import signal as _signal
 from desk3.enh2_edge16 import filter_parity_max_dte
 SLEEVE_ID = "free_opt_parity"
-INPUTS = ("options.chain", "bars")
+INPUTS = ("options", "bars")
 
 def _parity_extra(c):
     extra = build_extra(c)
