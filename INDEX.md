@@ -2,10 +2,10 @@
 
 The complete measured file inventory and collection map. [INDEX.json](INDEX.json) is the machine-readable twin; [docs/REPOSITORY-MAP.json](docs/REPOSITORY-MAP.json) supplies curated meanings and task routes when present. No catalog or prose page substitutes for the full inventory.
 
-Total files indexed: 8377
+Total files indexed: 8918
 
-Indexed commit: `465f61952073b5789d88c135b01e122fbf58cf9f`. Source commit timestamp: 2026-11-16T19:13:28Z.
-Total indexed bytes: 1028021472 (only the two generated index outputs have null hashes and sizes).
+Indexed commit: `0e687906466986340659571a0f712f1184f2e778`. Source commit timestamp: 2026-11-16T20:13:58Z.
+Total indexed bytes: 1039124456 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
 
@@ -32,29 +32,34 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 
 | Area | Files | Bytes | Purpose and entrypoints |
 | --- | ---: | ---: | --- |
-| (root) | 14 | 275999 | Repository orientation, instructions, inventories, front-door page and selected build records. [START-HERE.md](START-HERE.md) · [AGENTS.md](AGENTS.md) · [INDEX.md](INDEX.md) · [ROADMAP.md](ROADMAP.md) · [README.md](README.md) navigation and source snapshots; the README is a strategy front page, not an exhaustive catalog |
+| (root) | 48 | 1010537 | Repository orientation, instructions, inventories, front-door page and selected build records. [START-HERE.md](START-HERE.md) · [AGENTS.md](AGENTS.md) · [INDEX.md](INDEX.md) · [ROADMAP.md](ROADMAP.md) · [README.md](README.md) navigation and source snapshots; the README is a strategy front page, not an exhaustive catalog |
 | .github | 1 | 2539 | Repository-integrity automation for the offline source library. [.github/workflows/repository-integrity.yml](.github/workflows/repository-integrity.yml) CI checks source contracts, navigation pointers, exact guide preservation, isolated onboarding and generated inventory freshness; no deployment, current-runtime or profitability proof. |
-| adapters | 31 | 118837 | Standalone adapters for selected strategy sleeves. [adapters/AREA.md](adapters/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) copied adapter source; runtime wiring requires separate verification |
-| adapters3 | 266 | 133931 | Aster adapter collection connecting named sleeve variants. [adapters3/AREA.md](adapters3/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) versioned adapter source; match each exact sleeve and integration boundary |
+| adapters | 90 | 420435 | Standalone adapters for selected strategy sleeves. [adapters/AREA.md](adapters/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) copied adapter source; runtime wiring requires separate verification |
+| adapters3 | 330 | 211619 | Aster adapter collection connecting named sleeve variants. [adapters3/AREA.md](adapters3/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) versioned adapter source; match each exact sleeve and integration boundary |
 | agentic-trade-desk | 56 | 293028 | Operational engineering guide, templates and dependency-free simulated desk skeleton. [agentic-trade-desk/README.md](agentic-trade-desk/README.md) · [agentic-trade-desk/AGENTS.md](agentic-trade-desk/AGENTS.md) · [agentic-trade-desk/skeleton/README.md](agentic-trade-desk/skeleton/README.md) offline example and operating guidance; not an authorized broker runtime |
-| aster_sleeves | 12 | 22813 | Thin Aster sleeve entry points over shared engine implementations. [aster_sleeves/AREA.md](aster_sleeves/AREA.md) · [engines/AREA.md](engines/AREA.md) source wrappers; follow imports before describing the algorithm |
-| config | 2 | 147700 | Published roster configuration snapshots. [config/AREA.md](config/AREA.md) · [config/sleeves.json](config/sleeves.json) snapshot configuration; does not establish a currently running desk |
-| desk3 | 51 | 432587 | Versioned desk engine, sleeve and portfolio-book source collections. [desk3/AREA.md](desk3/AREA.md) · [engines/SANITIZATION-NOTE.md](engines/SANITIZATION-NOTE.md) source snapshots; establish version, dependencies and state ownership before reuse |
+| aster_sleeves | 14 | 29355 | Thin Aster sleeve entry points over shared engine implementations. [aster_sleeves/AREA.md](aster_sleeves/AREA.md) · [engines/AREA.md](engines/AREA.md) source wrappers; follow imports before describing the algorithm |
+| best_setups | 7 | 5531681 | New or unclassified area: inspect its files and add a curated route. |
+| candidates | 4 | 2399 | New or unclassified area: inspect its files and add a curated route. [candidates/README.md](candidates/README.md) |
+| config | 11 | 330176 | Published roster configuration snapshots. [config/AREA.md](config/AREA.md) · [config/sleeves.json](config/sleeves.json) snapshot configuration; does not establish a currently running desk |
+| core | 32 | 438434 | New or unclassified area: inspect its files and add a curated route. |
+| desk3 | 184 | 3872764 | Versioned desk engine, sleeve and portfolio-book source collections. [desk3/AREA.md](desk3/AREA.md) · [engines/SANITIZATION-NOTE.md](engines/SANITIZATION-NOTE.md) source snapshots; establish version, dependencies and state ownership before reuse |
+| desk_sleeves | 11 | 29139 | New or unclassified area: inspect its files and add a curated route. |
 | docs | 1222 | 21421462 | Catalogs, strategy accountings, reconstruction notes, guides, research studies and verification records. [docs/LLM-OPERATING-GUIDE.md](docs/LLM-OPERATING-GUIDE.md) · [docs/AREA.md](docs/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) · [docs/THREE-GUIDES-RECONCILIATION.md](docs/THREE-GUIDES-RECONCILIATION.md) mixed current navigation, source-derived descriptions and dated research evidence |
 | educational | 40 | 687906 | Standalone educational engine exports with caller-input contracts and synthetic checks. [educational/AREA.md](educational/AREA.md) · [educational/shipyard-engines/2026-11-02/README.md](educational/shipyard-engines/2026-11-02/README.md) offline research kernels; synthetic parity is not calibration or operational eligibility |
 | engines | 20 | 314575 | Shared engine implementations, bridges and common components used by sleeve wrappers. [engines/AREA.md](engines/AREA.md) · [engines/SANITIZATION-NOTE.md](engines/SANITIZATION-NOTE.md) sanitized source snapshot with explicit dependency boundaries |
 | indicator | 2 | 9040 | Indicator algorithm contract and supporting explanation. [indicator/AREA.md](indicator/AREA.md) · [indicator/BB_RSI_Divergence_Algorithm.md](indicator/BB_RSI_Divergence_Algorithm.md) algorithm specification; compare with the Pine source before claiming parity |
 | integration | 328 | 361125 | Integration adapters and wiring notes connecting sleeves with desk interfaces. [integration/AREA.md](integration/AREA.md) · [integration/Femto-lean_Wiring.md](integration/Femto-lean_Wiring.md) wiring source and historical guidance; presence is not proof of installed execution |
-| laz_sleeves | 11 | 13767 | Lazarus entry-point wrappers over shared sleeve implementations. [laz_sleeves/AREA.md](laz_sleeves/AREA.md) · [engines/AREA.md](engines/AREA.md) source wrappers; follow the shared implementation and version |
-| master | 106 | 27677034 | Published Master Terminal assets and timestamped data snapshots maintained by an external mirror. [START-HERE.md](START-HERE.md) · [ROADMAP.md](ROADMAP.md) · [master/publish-manifest.json](master/publish-manifest.json) publisher-owned generated snapshot; edit the actual producer for durable behavior changes |
+| laz_sleeves | 12 | 14660 | Lazarus entry-point wrappers over shared sleeve implementations. [laz_sleeves/AREA.md](laz_sleeves/AREA.md) · [engines/AREA.md](engines/AREA.md) source wrappers; follow the shared implementation and version |
+| master | 106 | 27673624 | Published Master Terminal assets and timestamped data snapshots maintained by an external mirror. [START-HERE.md](START-HERE.md) · [ROADMAP.md](ROADMAP.md) · [master/publish-manifest.json](master/publish-manifest.json) publisher-owned generated snapshot; edit the actual producer for durable behavior changes |
 | packages | 1928 | 117474908 | Complete contributed packages and versioned source snapshots, retained as separate collections. [packages/AREA.md](packages/AREA.md) · [INDEX.md](INDEX.md) historical and contributed packages; preserve provenance and package boundaries |
 | pine | 2 | 10723 | TradingView Pine Script source for the indicator collection. [pine/AREA.md](pine/AREA.md) · [indicator/BB_RSI_Divergence_Algorithm.md](indicator/BB_RSI_Divergence_Algorithm.md) platform-specific source; not independently verified live trading behavior |
-| proof | 23 | 62879 | Dated installation and verification receipts. [proof/AREA.md](proof/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) historical evidence; receipt dates and subject revisions bound every claim |
+| port | 2 | 18141 | New or unclassified area: inspect its files and add a curated route. |
+| proof | 206 | 405548 | Dated installation and verification receipts. [proof/AREA.md](proof/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) historical evidence; receipt dates and subject revisions bound every claim |
 | psychology-engine | 124 | 5023354 | Standalone market-psychology research, source, public validation and audit records. [psychology-engine/README.md](psychology-engine/README.md) · [psychology-engine/PUBLIC_VALIDATION.md](psychology-engine/PUBLIC_VALIDATION.md) · [psychology-engine/engine/README.md](psychology-engine/engine/README.md) bounded research implementation and dated receipts; separate from the nine-gauge collection |
 | research | 10 | 16948760 | Standalone studies, practice atlases and associated document/archive representations. [research/AREA.md](research/AREA.md) · [research/technical-analysis-study-2026-10-30/README.md](research/technical-analysis-study-2026-10-30/README.md) · [research/master-trader-study-2026-10-29/README.md](research/master-trader-study-2026-10-29/README.md) educational studies and dated evidence; preserve original archives and attribution |
 | sleeves | 571 | 5590203 | Strategy implementations grouped by family and standalone named sleeve modules. [sleeves/AREA.md](sleeves/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) · [docs/VERIFY.md](docs/VERIFY.md) copied source; verify exact variant, dependencies, adapter and validation boundary |
 | strategies | 270 | 528417 | Human-readable strategy cards indexed separately from the rest of the repository. [strategies/AREA.md](strategies/AREA.md) · [docs/CATALOG.json](docs/CATALOG.json) · [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json) source-derived summaries; strategy cards are not performance evidence or the whole-repository index |
-| terminal-lineup | 3273 | 830279474 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
+| terminal-lineup | 3273 | 830279493 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
 | tests | 11 | 130527 | Repository-level regression checks for selected implemented strategy families. [tests/AREA.md](tests/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) bounded regression evidence; passing tests do not establish market profitability or live readiness |
 | tools | 3 | 59884 | Repository navigation and inventory tooling. [tools/AREA.md](tools/AREA.md) · [tools/build_repo_index.py](tools/build_repo_index.py) local tooling and generated metadata; verify indexed revision and working-tree state |
 
@@ -102,7 +107,7 @@ These are independent source collections unless their own records establish a li
 
 ## Coverage and preservation contract
 
-INDEX.json has 8377 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
+INDEX.json has 8918 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
 
 A file inventory proves paths and byte identity, not semantic correctness or runtime behavior. Unsupported submodules, truncated snapshots, duplicate paths, unsafe paths and missing hashes/sizes fail explicitly rather than yielding a partial inventory described as complete. The index does not enumerate files inside archives; use their own manifests and the artifact's documented extraction procedure.
 
