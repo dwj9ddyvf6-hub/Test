@@ -1,0 +1,18 @@
+{
+ "ab": {
+  "control_exits_at_100h_no_funding": 0,
+  "treatment_exits_at_100h_no_funding": 1
+ },
+ "decision_record": {
+  "calculation": "Fixture: position opened 100h before evaluation, funding absent. Control: 0 exits (hours unknown). Treatment: deadline exit fires. A position 10h old stays open under both.",
+  "comparison": "Deadline exit as coded (hours_held/bars_held fields) vs desk position rows as produced (dispatcher/broker rows carry opened_at; cf. desk3/aster_crypto.py deriving age from opened_at).",
+  "experiment": "Fixture A/B on identical bars/positions/funding: ON = deadline exit with paired enhance_exp record; OFF = no exit. Blockers: TestLinkDeadlineDerived.",
+  "mechanism": "Risk/execution: the 96h deadline is the ONLY exit when funding is absent; on real position rows it was dead code, so the position \u2014 and its funding bleed \u2014 could run forever.",
+  "transfer": "Negative-funding squeeze on LINKUSDT: shorts pay funding while the breakout holds; the sleeve warehouses the squeeze for up to 96h, after which the design mandates exit regardless of funding data."
+ },
+ "disposition": "ENHANCED",
+ "exp_id": "ENH-B5-LINK-DEADLINE-20261024",
+ "paper_only": true,
+ "sleeve": "aster_link_nfs_norm_vol",
+ "switch": "extra.enh_aster_link_nfs_norm_vol.deadline_from_opened_at (or ctx.enhance) default ON; OFF restores field-only rule exactly"
+}
