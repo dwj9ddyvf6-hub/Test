@@ -1,0 +1,43 @@
+{
+ "ab": {
+  "control": {
+   "px": 100.0,
+   "qty": 3,
+   "stop": 92.0
+  },
+  "treatment_at_-50pct": {
+   "px": 50.0,
+   "qty": 6,
+   "stop": 46.0
+  },
+  "treatment_at_-9pct": {
+   "px": 91.0,
+   "qty": 3,
+   "stop": 83.72
+  }
+ },
+ "binding_leak": "entry stop placed off yesterday's close, above market",
+ "blockers": "tests/test_edge_batch26_blockers.py TestRedDipReprice (2 tests)",
+ "date": "2026-10-24",
+ "decision_record_2a": {
+  "calculation": "Fixture A/B: close $100, day_return -50%: control qty 3 / stop 92.00; treatment qty 6 @ $50 / stop 46.00 \u2014 risk held at the designed 0.25% of slice in both arms, but only the treatment's bracket geometry is real at the fill.",
+  "comparison": "Paired shadow control: control = adapter-fed 1Day last close (yesterday); treatment = close x (1 + day_return) \u2014 the executable estimate from the sleeve's own intraday input, already consumed for the red gate. qty, stop and target all re-derived from the treatment price with the sleeve's own constants (0.25% risk, 8% stop, +3% target).",
+  "experiment": "Forward paper: enh26_paired records carry control/treatment px, qty, stop per entry. Reject if any treated entry's placed stop is not 8% (+/- 0.1pt) below its fill, or if treated per-trade risk at fill exceeds 0.25% of slice on any paired record. Switch OFF restores the 1Day-close rule exactly (blocker-proven).",
+  "mechanism": "Execution/risk at the adapter layer (strategy pinned): reprice price_hint, stop_price and the stop/target ExitRules; re-size qty by size_qty's formula at the executable price. Measured worst case: day_return -9% -> control stop $92.00 vs market $91.00 (instant stop-out at the fill); treatment stop $83.72, a true 8% below the fill.",
+  "transfer": "A 0.25%-risk fear-day dip entry with an 8% stop / +3% target bracket; the transfer is the bracket itself, which must be struck off the price the fill actually prints at."
+ },
+ "disposition": "ENHANCED (second look; first look IMPROVE-tensor_red_dip fear-magnitude gate)",
+ "engine": "desk3/enhance26.py gate exec_price_reprice, wired in adapters3/tensor_red_dip.py (strategy byte-identical)",
+ "exp_id": "ENH-B26-RDIP-REPRICE-20261024",
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "shadow_control": "never emits; control px/qty/stop recorded paired per entry",
+ "sleeve": "tensor_red_dip",
+ "status": "pre-registered",
+ "switch": {
+  "default": true,
+  "field": "exec_price_reprice",
+  "key": "extra['tensor_red_dip_improve2']",
+  "off_restores": "pre-change 1Day-close pricing exactly"
+ }
+}
