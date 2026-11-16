@@ -18,8 +18,22 @@ Rows (ASTER-BUILD-MAP batch 13, TSV 126-135):
   price stop / profit cap (TSV). capital_mode delay/reserve wait one extra
   session; reserve sleeves fund entries by selling the QQQ reserve leg.
 """
+
+# CONSTANTS-PROVENANCE-20261116: the 96h deadline (hold_h/deadline_h=96, non-fixed16 policies) is source-confirmed in the archive source/backend/r19_crypto.py exit_due_at rule (due + 96h unless fixed16), diffed in HARDEN batch-1 2026-10-24 and recorded in FIDELITY-LEDGER ("source code, not an assumption").
 from __future__ import annotations
 from datetime import datetime, timezone, date
+
+
+def _frac_qty(dollars, per_unit):
+    """SILENT-SKIP-SIZING-20261116 (owner price ruling 2026-11-14,
+    WS4-FRACTIONAL shape, as in desk3/aster_batch1.py): a positive
+    dollar budget expressed as a fractional quantity, rounded DOWN
+    to 6dp, never up past the budget; 0.0 only when the budget or
+    the per-unit price is not positive."""
+    if dollars <= 0 or per_unit <= 0:
+        return 0.0
+    import math as _m
+    return _m.floor((dollars / per_unit) * 1_000_000) / 1_000_000
 
 CRYPTO_ID="aster_link_nfs_norm_vol"
 SPECS={
@@ -33,6 +47,16 @@ SPECS={
  "aster_tensor_c1_reserve_cool_25": dict(kind="tensor", family="C1", capital_mode="reserve", volatility="cool"),
  "aster_tensor_c1_cash_hot_25": dict(kind="tensor", family="C1", capital_mode="cash", volatility="hot"),
  "aster_tensor_c1_delay_hot_25": dict(kind="tensor", family="C1", capital_mode="delay", volatility="hot"),
+ # VARIATION-ROSTERING-20261115 (2026-11-15): the two F4 _varpx C1
+ # variations, rostered as first-class sleeves. They are their parents
+ # in every field except ret60_min=0 (the registered PARAM_EXTREME
+ # form: ret60 floor 31 -> 0; vol20>=0.07, adv>=2e6, atr and marker
+ # conjuncts unchanged). Parent entries above omit ret60_min and keep
+ # the floor at 31 via the .get default in _tensor. Falsifier (uniform
+ # F4): retire if, over its first 20 resolved forward fires, the mean
+ # fwd5 excess vs QQQ is below 0bp. Rollback: delete these two entries.
+ "aster_tensor_c1_cash_all_25_varpx": dict(kind="tensor", family="C1", capital_mode="cash", volatility="all", ret60_min=0),
+ "aster_tensor_c1_cash_hot_25_varpx": dict(kind="tensor", family="C1", capital_mode="cash", volatility="hot", ret60_min=0),
 }
 TICKET=400.0; SLOTS=25; HOLD_SESSIONS=260
 INPUTS_CRYPTO=("bars","funding","positions")
@@ -40,8 +64,9 @@ INPUTS_TENSOR=("tensor","bars","positions")
 PRODUCERS=({"name":"bars","outputs":("bars",),"freshness_sla_s":900},
  {"name":"tensor_bundle","outputs":("tensor",),"freshness_sla_s":86400},
  {"name":"broker_readback","outputs":("positions",),"freshness_sla_s":900})
-# NOTE: no "funding" producer is registered in v3 yet -> crypto sleeve is
-# visibly UNFED in the registry until the funding producer lands (map S4).
+# NOTE (FUNDING-OKX-20261115): the funding producer has landed:
+# desk3.producers.OkxFunding is registered for the "funding" key
+# and serves the record form this module's _funding unwraps.
 
 def _now(view,ctx):
     n=(view.get("now") or (ctx or {}).get("now") or "2026-10-24T15:00:00")
@@ -52,14 +77,22 @@ def _sess(view,ctx):
     s=(ctx or {}).get("session") if isinstance(ctx,dict) else None
     return str(s or _now(view,ctx).date().isoformat())[:10]
 def _bars(view,sym):
-    m=view.get("bars") or {}
-    for k in (f"{sym}|4Hour",f"{sym}|4H",f"{sym}|1Day",f"{sym}|1D",sym):
-        if m.get(k): return m[k]
-    return []
+    # F4-CRYPTO-BARKEY-20261114: archive USDT keys resolve via desk3.crypto_bars (served BASE/USD spot forms; see that module) (non-USDT symbols pass through untouched)
+    from .crypto_bars import resolve_bars
+    return resolve_bars(view.get("bars") or {},sym,
+                        ("4Hour","4H","1Day","1D"))
 def _funding(view,sym):
     f=view.get("funding")
     if isinstance(f,dict):
-        if sym in f: return f[sym]
+        if sym in f:
+            # FUNDING-OKX-20261115: unwrap the served funding record
+            # ({SYM: {"rate": x, ...}}) like every other funding
+            # reader (b11/aster_crypto/batch7); returning the record
+            # raw made float() raise on the record form. Scalars
+            # pass through unchanged.
+            v=f[sym]
+            if isinstance(v,dict): v=v.get("rate", v.get("funding_rate"))
+            return v
         if "rate" in f: return f["rate"]
     if isinstance(f,(int,float)): return f
     e=view.get("extra") or {}
@@ -139,7 +172,14 @@ def _crypto(spec,view,positions,intent,now=None,ctx=None):
         if funding is not None and float(funding)>=0:
             out.append(intent("exit",sym,"sell",abs(float(p["qty"])),f"{CRYPTO_ID} exit: funding_normalization rate={float(funding)}",float(bars[-1]["c"]) if bars else float(p.get("avg_price") or 0)))
     if out or positions: return out
-    if funding is None or float(funding)>=0: return []
+    # GATE-CURE-CRYPTO-20261112 (STRICTNESS-CENSUS proposal 9):
+    # the LINK squeeze entry funding leg relaxes < 0 -> < 0.00005;
+    # the funding_normalization exit above (funding >= 0) is
+    # unchanged. READINESS-ROUND2-20261112 (CADENCE-SWEEPS S4):
+    # the leg relaxes further to < 0.00015 (1.42/wk priced past
+    # the 0.0001 cap print). Rollback: restore >=0.00005 here
+    # (round 2) or >=0 (original).
+    if funding is None or float(funding)>=0.00015: return []
     if len(bars)<21: return []
     last=bars[-1]; prior=bars[-21:-1]
     if not float(last["c"])>max(float(b["h"]) for b in prior): return []
@@ -163,8 +203,12 @@ def _reprice_on(view,ctx,sid):
     return True
 
 EXP_ID_B11="ENH-B11-TENSOR-FIREAGE-20261024"
+# VARIATION-ROSTERING-20261115 (2026-11-15): the two _varpx cash
+# variations join ENH11_TENSOR so they inherit their parents' fire-age
+# treatment exactly; parent membership is unchanged.
 ENH11_TENSOR=("aster_tensor_beta_cash_all_25","aster_tensor_c1_cash_all_25",
-              "aster_tensor_c1_cash_cool_25","aster_tensor_c1_cash_hot_25")
+              "aster_tensor_c1_cash_cool_25","aster_tensor_c1_cash_hot_25",
+              "aster_tensor_c1_cash_all_25_varpx","aster_tensor_c1_cash_hot_25_varpx")
 def _fire_age_on(view,ctx,sid):
     """ENH batch 11 switch: ctx['enhance'][sid]['fire_age'] or
     view.extra[f'{sid}_improve']['fire_age'], default ON; OFF restores
@@ -180,12 +224,33 @@ def _b11_paired(view,rec):
     if isinstance(j,dict) and isinstance(j.get("records"),list):
         j["records"].append(rec)
 
+def _opened_sessions(p,bars):
+    # READINESS-D2-20261112 (ENTER-EXIT-CENSUS D2): real position
+    # rows carry opened_at, never an age counter. Derive sessions
+    # held as the count of distinct bar dates after the opened
+    # date, over the sleeve's own bars (the aster_batch1._held_bars
+    # pattern). Only date-shaped stamps count; label stamps in
+    # fixtures contribute nothing.
+    od=str(p.get("opened_at") or p.get("entry_date") or "")[:10]
+    if len(od)!=10 or od[4]!="-" or od[7]!="-": return 0
+    days=set()
+    for b in bars or []:
+        if not isinstance(b,dict): continue
+        t=b.get("t") or b.get("date") or b.get("timestamp")
+        d=None
+        if isinstance(t,(int,float)) and t>1e11:
+            d=datetime.fromtimestamp(t/1000,tz=timezone.utc).date().isoformat()
+        elif isinstance(t,str) and len(t)>=10 and t[4]=="-" and t[7]=="-":
+            d=t[:10]
+        if d and d>od: days.add(d)
+    return len(days)
+
 def _age_sessions(p,bars):
     for k in ("sessions_held","age_sessions","held_sessions"):
         if p.get(k) is not None: return int(p[k])
     if p.get("weeks_held") is not None: return int(p["weeks_held"])*5
     if p.get("age_weeks") is not None: return int(p["age_weeks"])*5
-    return 0
+    return _opened_sessions(p,bars)
 
 def _tensor(sid,spec,view,ctx,positions,intent):
     sess=_sess(view,ctx); out=[]
@@ -209,9 +274,42 @@ def _tensor(sid,spec,view,ctx,positions,intent):
         price=float(f.get("price") or 0)
         if price<=0: continue
         if spec["family"]=="C1":
-            if "cyan" not in sig: continue
-            if price>5: continue
-            if f.get("ret60") is None or float(f["ret60"])<31: continue
+            # GATE-CURE-20261112 (STRICTNESS-CENSUS proposals 4-6):
+            # all variants take the registered marker-kept pair:
+            # the close cap is removed entirely and ret60 relaxes
+            # 31 -> 0, buy-cyan kept (0 -> 3 qualifications: TEM,
+            # AXTI, CLS). Hot variants drop the marker requirement
+            # and keep the numeric profile (proposal 5, 0 -> 3).
+            # Cool variants are UNCHANGED: proposal 6 is skipped
+            # as identity-erasing (its registered atr move
+            # 1.0 -> 1.75 erases the cool variant's distinction).
+            vol=spec["volatility"]
+            # STRICTNESS-ROUND2-COMPLETION-20261114 (CADENCE-AUDIT
+            # R2, priced in CADENCE-SWEEPS S3): the ALL trio takes
+            # the swept registered form — the buy-cyan marker
+            # requirement is REMOVED for "all" (the marker-kept
+            # ceiling is 3 symbol-weeks, 0.30/wk, at every cap and
+            # ret60) and its ret60 floor is restored 0 -> 31, so
+            # the gate is the (off, removed, 31) cell: 31
+            # symbol-weeks, 3.10/wk, MEETS-WEEKLY. Only "cool"
+            # still requires the marker (proposal 6 skipped; the
+            # cool trio's disposition is the identity decision
+            # named in CALIBRATION-ROUND2-2026-11-14.md).
+            # Rollback: restore the marker
+            # line for "all" and ret60_min 0 for "all".
+            if vol=="cool" and "cyan" not in sig: continue
+            # READINESS-ROUND2-20261112 (CADENCE-SWEEPS S3 R3):
+            # the C1 HOT trio's $5 close cap is removed (ret60
+            # kept at 31; 2.90/wk priced). Cool keeps its cap.
+            # Rollback: cap 5.0 for hot again.
+            cap=None if vol in ("all","hot") else 5.0
+            if cap is not None and price>cap: continue
+            # VARIATION-ROSTERING-20261115 (2026-11-15): the floor is
+            # read from the sleeve's own SPECS entry; every parent
+            # omits ret60_min and keeps 31 exactly, the two _varpx
+            # variations carry ret60_min=0 (registered PARAM_EXTREME).
+            ret60_min=spec.get("ret60_min", 31)
+            if f.get("ret60") is None or float(f["ret60"])<ret60_min: continue
             if f.get("vol20") is None or float(f["vol20"])<0.07: continue
             adv=f.get("adv_usd", f.get("avg_dollar_volume"))
             if adv is None or float(adv)<2_000_000: continue
@@ -264,14 +362,23 @@ def _tensor(sid,spec,view,ctx,positions,intent):
                 rec={"exp_id":EXP_ID,"symbol":sym,"fire_price":price,
                      "current_price":cur,"control_enter":True,
                      "control_qty":int(TICKET//price),"switch_on":True}
-                if spec["family"]=="C1" and cur>5:
+                # GATE-CURE-20261112: the revalidation cap follows
+                # the entry gate's registered cap (None for the C1
+                # all variants after proposal 4 removed it).
+                c1_cap=None if spec["volatility"]=="all" else 5.0
+                if spec["family"]=="C1" and c1_cap is not None and cur>c1_cap:
                     rec["treatment_enter"]=False; rec["treatment_qty"]=0
                     rec["refusal"]="current_price>5_cap"
                     exp_records.append(rec); continue
                 eprice=cur; rec["treatment_enter"]=True
                 rec["treatment_qty"]=int(TICKET//cur)
         qty=int(TICKET//eprice)
-        if qty<1: continue
+        if qty<1:
+            # SILENT-SKIP-SIZING-20261116: the floor reaching 0
+            # silently killed the fire for price; same $400 ticket
+            # expressed fractionally (see _frac_qty).
+            qty=_frac_qty(TICKET,eprice)
+            if qty<=0: continue
         if reserve:
             for p in positions:
                 if p["symbol"]=="QQQ":
