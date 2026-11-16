@@ -1,0 +1,26 @@
+{
+ "ab": {
+  "atr": 3.3571,
+  "chase_close": 120.0,
+  "chase_premium": 19.0,
+  "control_entries_chase": 1,
+  "control_entries_ordinary": 1,
+  "direction_ok": true,
+  "level": 101.0,
+  "treatment_entries_chase": 0,
+  "treatment_entries_ordinary": 1
+ },
+ "decision_record": {
+  "calculation": "Fixture: close 120 vs level 101 (premium 19.0), ATR 3.357 -> stop distance 6.71; premium = 2.83x the stop distance -> refused. Ordinary breakout fixture (close 105, premium 4.0 < 4.71) enters under both rules.",
+  "comparison": "Pre-change rule: any close above the 20-day high enters, however far it ran. The sleeve's crypto twin got this exact refusal in its first Edge pass (ENH-DONCHIAN-CRYPTO); the equity twin never did.",
+  "experiment": "Adapters3 A/B on identical bars: ON refuses the chase fixture, OFF enters it; the ordinary-breakout fixture enters under both (no over-refusal).",
+  "mechanism": "Execution timing / chase refusal, with the twin's own yardstick: refuse when close - level > ATR_MULT (2.0) x ATR(14), recomputed at the adapter layer from the served bars and the intent's price_hint (the breakout close).",
+  "transfer": "The breakout edge is paid for entering NEAR the channel level, where the coded stop (2xATR) is ~1R away. A close that has already run several R past the level buys the same stop distance at a far worse basis."
+ },
+ "disposition": "APPLY ENH2-DONCHIAN-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestDonchianChaseGate",
+ "exp_id": "ENH2-DONCHIAN-20261024",
+ "paper_only": true,
+ "sleeve": "donchian",
+ "switch": "extra.donchian_enh2.chase_gate default ON; OFF restores the pre-change entry rule exactly"
+}
