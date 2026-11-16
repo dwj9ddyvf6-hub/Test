@@ -1,0 +1,19 @@
+{
+ "sleeve": "aster_r19_timing_hour_floor1_delay1",
+ "batch": 9,
+ "verdict": "ENHANCED",
+ "leak": "actionable window equals cadence, single-shot fills",
+ "decision_record": {
+  "transfer": "Confirmed-swing / EMA-cloud-reclaim momentum: late sellers/hedgers pay for immediacy after confirmation; capture requires acting inside the signal's first minutes.",
+  "comparison": "5-minute actionable window (== the 300s cadence: exactly one evaluation chance) vs 15-minute window, with the sleeve's own stop<bid<=price<target and cloud 2R guards re-checked at the actual entry price.",
+  "mechanism": "Execution/responsiveness: window == cadence means one delayed cycle silently kills every signal; the price guards, not the clock, are what keep a stale signal safe.",
+  "calculation": "Fixtures: hourly entry at actionable+10min: pre-change 0, enhanced 1 (all four floor/delay arms); at +20min still 0; cloud entry at signal_end+10min: pre-change 0, enhanced 1 (base+aggressive); OFF restores 0.",
+  "experiment": "Pre-registered: TestHourlyGrace + TestCloudGrace. Rejection rule: entry with dead geometry (price outside stop/target) in grace, or OFF divergence, revert. Forward paired rows in enhance_journal.jsonl."
+ },
+ "change": "Actionable window 5 -> 15 min after actionable_at/signal_end; all price geometry guards re-checked at entry",
+ "switch": "enhance_actionable_grace",
+ "switch_default": true,
+ "shadow_control": "switch OFF = 5-minute rule on identical fixtures; live paired enhance_journal.jsonl rows",
+ "blocker": "tests/test_edge_batch9_blockers.py::TestHourlyGrace/TestCloudGrace",
+ "fail_first": "8 failures on pre-change engines (stash-proven), 17/17 pass after"
+}
