@@ -1,0 +1,33 @@
+{
+ "ab": {
+  "direction_ok": true,
+  "long_consumed": {
+   "refused": true,
+   "spot": 515.0,
+   "target": 512.3
+  },
+  "long_open": {
+   "refused": false,
+   "spot": 505.0,
+   "target": 512.3
+  },
+  "short_consumed": {
+   "refused": true,
+   "spot": 485.0,
+   "target": 487.7
+  }
+ },
+ "decision_record": {
+  "calculation": "Filter fixtures: long break, target 512.30 \u2014 spot 515.00 -> refused, spot 505.00 -> enters; short break, target 487.70 \u2014 spot 485.00 -> refused. Switch OFF -> the consumed long enters, exactly pre-change.",
+  "comparison": "Pre-change rule: a signal stays actionable for ENTRY_FRESH_S (1800s) with no re-check of where spot stands against the setup's own target; the sleeve evaluates every 60s, so a break at 10:00 can be entered at 10:29 with the target already touched.",
+  "experiment": "Filter-level A/B on translated intent dicts in the sleeve's exact reason format (entry production oracle-covered by the port suite): consumed/unconsumed/short/OFF cases above.",
+  "mechanism": "Execution timing: at the adapter layer, refuse an entry intent whose price_hint (the spot the sleeve itself picked the contract off) has already reached the target parsed from the intent's own reason (break: the next map line; fade: the magnet), in the trade's direction.",
+  "transfer": "The Three-Ticker Break is paid the room between the break and the next map line (>= 8 SPX points of room and >= 1R are entry conditions). That room is the trade; once spot has consumed it, the buyer of a 0DTE contract pays full premium for a move that already happened."
+ },
+ "disposition": "APPLY ENH2-EM1587-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestStaleGateUnits::test_em1587_target_consumed_refused",
+ "exp_id": "ENH2-EM1587-20261024",
+ "paper_only": true,
+ "sleeve": "em_1587",
+ "switch": "extra.em_1587_enh2.target_consumed default ON; OFF restores the freshness-only rule exactly"
+}
