@@ -34,6 +34,7 @@ SLICE = 10000.0
 
 OVERNIGHT_ID = "aster_r19_timing_overnight_5bp"
 DONCHIAN_ID = "aster_trader_donchian55"
+TURTLE_ID = "aster_trader_turtle2010"
 D20_TENSOR_ID = "aster_tensor_d20_tensor"
 D20_PV_ID = "aster_tensor_d20_pv"
 SATY_ID = "aster_saty_research"
@@ -60,6 +61,7 @@ PRODUCERS = (
 SPECS = {
     OVERNIGHT_ID: dict(kind="overnight", inputs=TIMING_INPUTS, cadence_s=300),
     DONCHIAN_ID: dict(kind="donchian", inputs=DONCHIAN_INPUTS, cadence_s=86400),
+    TURTLE_ID: dict(kind="turtle", inputs=DONCHIAN_INPUTS, cadence_s=86400),
     D20_TENSOR_ID: dict(kind="d20", model="price_volume_plus_tensor",
                         inputs=D20_INPUTS, cadence_s=86400),
     D20_PV_ID: dict(kind="d20", model="price_volume",
@@ -275,6 +277,123 @@ def _eval_donchian(sid, view, ctx):
     return out
 
 
+# ------------------------------------------------- turtle 20/10 (CONV-47)
+# CONVERSION-VARIATION-20261115: the recorded Turtle 20/10 form
+# (GRAVEYARD-DIG Lead 2, retested in pass2/work_graveyard/retests.py)
+# rostered as a named variation beside aster_trader_donchian55 under
+# the GUTTING AS VARIATION rule: the 55/20 parent above is never
+# edited into it, and this evaluator shares none of its code path.
+# The recorded form, exactly: entry on close above the prior-20-bar
+# high (no SMA200 gate, no dollar-volume gate); exit on close below
+# the prior-10-bar low, on the initial 2 x ATR(20) stop, or at a
+# 252-bar timeout. ATR is the retest's own: the simple mean of the
+# last 20 true ranges. Two desk-chassis inheritances, named so they
+# are never mistaken for the recorded form: the universe, slots and
+# sizing fractions are donchian55's (the variation rosters under
+# existing desk sizing), and the stop is checked on the last close,
+# the desk's own stop convention (the retest checked intraday lows).
+TUR_ENTRY_CH, TUR_EXIT_CH, TUR_ATR_N = 20, 10, 20
+TUR_MAX_HOLD = 252
+
+
+def _tur_features(bars):
+    closes = [float(b["c"]) for b in bars]
+    trs = [max(float(b["h"]) - float(b["l"]),
+               abs(float(b["h"]) - float(bars[i - 1]["c"])),
+               abs(float(b["l"]) - float(bars[i - 1]["c"]))) if i
+           else float(b["h"]) - float(b["l"]) for i, b in enumerate(bars)]
+    atr = math.fsum(trs[-TUR_ATR_N:]) / TUR_ATR_N \
+        if len(trs) >= TUR_ATR_N else None
+    dv = math.fsum(float(b["c"]) * float(b.get("v") or 0)
+                   for b in bars[-20:]) / 20
+    prior20 = max(float(b["h"]) for b in bars[-1 - TUR_ENTRY_CH:-1])
+    prior10lo = min(float(b["l"]) for b in bars[-1 - TUR_EXIT_CH:-1])
+    return {"close": closes[-1], "atr20": atr, "dollar_volume20": dv,
+            "prior20_high": prior20, "prior10_low": prior10lo}
+
+
+def _eval_turtle(sid, view, ctx):
+    now = _now(view, ctx)
+    stamp = now.strftime("%Y%m%dT%H%M%S")
+    positions = _positions(view)
+    cash = float(((view.get("slice") or {}).get("cash_usd")) or SLICE)
+    equity = float(((view.get("slice") or {}).get("capital_usd"))
+                   or SLICE)
+    out, n = [], 0
+    held = {}
+    for p in positions:
+        held[p["symbol"]] = p
+        cash -= abs(float(p["qty"])) * float(p.get("avg_price") or 0)
+
+    # ---- exits (recorded form: 2N stop, prior-10-low close, 252 bars)
+    for sym, p in held.items():
+        qty = abs(float(p["qty"]))
+        bars = _bars(view, sym, "1Day")
+        last = float(bars[-1]["c"]) if bars else float(
+            p.get("avg_price") or 0)
+        reason = None
+        stop = p.get("stop_price",
+                     (p.get("meta") or {}).get("stop_price"))
+        if stop is not None and last <= float(stop):
+            reason = (f"{sid} exit: observed_quote_initial_2atr20_stop "
+                      f"stop={float(stop):.2f} last={last:.2f}")
+        elif _bars_held(p, view, sym) >= TUR_MAX_HOLD:
+            reason = f"{sid} exit: 252_completed_holding_bars"
+        elif len(bars) >= DON_MIN_BARS:
+            f = _tur_features(bars)
+            if f["close"] < f["prior10_low"]:
+                reason = f"{sid} exit: close_below_prior10_low"
+        if reason:
+            n += 1
+            out.append(_intent(sid, stamp, n, "exit", sym, qty,
+                               reason, last))
+    if out:
+        return out
+
+    # ---- entries: close above the prior-20 high, ranked as chassis
+    cands = []
+    for sym in DON_UNIVERSE:
+        if sym in held:
+            continue
+        bars = _bars(view, sym, "1Day")
+        if len(bars) < DON_MIN_BARS:
+            continue
+        try:
+            f = _tur_features(bars)
+        except Exception:
+            continue
+        if not f["atr20"] or f["atr20"] <= 0:
+            continue
+        if f["close"] > f["prior20_high"]:
+            cands.append((-(f["close"] - f["prior20_high"])
+                          / f["atr20"], sym, f))
+    cands.sort(key=lambda x: (x[0], x[1]))
+    slots = DON_SLOTS - len(held)
+    for _, sym, f in cands:
+        if slots <= 0:
+            break
+        price = f["close"]
+        cap = min(equity * DON_NOTIONAL_FRAC,
+                  f["dollar_volume20"] * DON_DV_FRAC, cash)
+        shares = int(cap // price) if cap > 0 else 0
+        risk_shares = int((equity * DON_RISK_FRAC)
+                          // (DON_STOP_ATR * f["atr20"]))
+        shares = min(shares, risk_shares)
+        if shares < 1:
+            continue
+        n += 1
+        stop = price - DON_STOP_ATR * f["atr20"]
+        out.append(_intent(
+            sid, stamp, n, "entry", sym, shares,
+            f"{sid} entry: close > max(previous_20_high) "
+            f"close={price:.2f} prior20={f['prior20_high']:.2f} "
+            f"atr20={f['atr20']:.4f}",
+            price, stop_price=round(stop, 4)))
+        cash -= shares * price
+        slots -= 1
+    return out
+
+
 # --- ENH (Edge batch 26, 2026-10-24) --------------------------------
 # ENH-B26-D20FRESH: _d20_decision validates a candidate series'
 # internal consistency (ordinal, origin, phase, readiness) but
@@ -321,12 +440,19 @@ def _d20_row_age_days(view, sym, rows):
     or unparseable (no evidence -> the gate passes)."""
     if not rows:
         return None
+    return _d20_row_age_days_at(view, sym, rows[-1].get("timestamp"))
+
+
+def _d20_row_age_days_at(view, sym, last_timestamp):
+    """_d20_row_age_days with the last row's timestamp supplied
+    directly (by-reference delivery: the evaluator holds the store
+    decision and the last row's timestamp, not the rows)."""
     bars = _bars(view, sym, "1Day")
     if not bars:
         return None
     ref = _parse_ts(bars[-1].get("t"))
     try:
-        row_dt = datetime.fromtimestamp(float(rows[-1].get("timestamp")),
+        row_dt = datetime.fromtimestamp(float(last_timestamp),
                                         tz=timezone.utc)
     except (TypeError, ValueError, OverflowError, OSError):
         return None
@@ -632,17 +758,33 @@ def _eval_d20(sid, spec, view, ctx):
     except Exception:
         return []  # frozen-asset integrity failure: fail closed, no intents
     rowsmap = view.get("tensor_daily20") or {}
+    # TENSOR-DAILY20-SERVE-20261031 (serve by reference): when the
+    # snapshot carries a rows-store REFERENCE instead of the rows
+    # map, decisions come from desk3.daily20_store.store_decisions,
+    # which streams one symbol's rows at a time from disk and runs
+    # the untouched _d20_decision on them. A reference that does not
+    # resolve raises and the worker names the sleeve error (fail
+    # closed, no intents) — the plain-map path below is unchanged.
+    from desk3.daily20_store import is_reference, store_decisions
+    ref_mode = is_reference(rowsmap)
+    decisions = (store_decisions(rowsmap, spec["model"], held=held)
+                 if ref_mode else None)
     cands = []
-    for sym in sorted(rowsmap):
+    for sym in sorted(decisions if ref_mode else rowsmap):
         if sym in held:
             continue
-        try:
-            d = _d20_decision(bundle, spec["model"], sym, rowsmap[sym] or [])
-        except Exception:
-            continue
+        if ref_mode:
+            d = decisions[sym]
+        else:
+            try:
+                d = _d20_decision(bundle, spec["model"], sym, rowsmap[sym] or [])
+            except Exception:
+                continue
         if d["selected"]:
             if _enh_on_b16(view, sid, "fresh_row_gate"):
-                age = _d20_row_age_days(view, sym, rowsmap[sym] or [])
+                age = (_d20_row_age_days_at(view, sym, d.get("last_timestamp"))
+                       if ref_mode else
+                       _d20_row_age_days(view, sym, rowsmap[sym] or []))
                 if age is not None:
                     stale = age[0] > D20_ROW_MAX_AGE_DAYS
                     _paired_b16(view, {
@@ -664,7 +806,16 @@ def _eval_d20(sid, spec, view, ctx):
         cap = min(equity * D20_CAP_EQUITY, d["dollar_volume20"] * D20_CAP_DV, cash)
         shares = int(cap // price) if cap > 0 and price > 0 else 0
         if shares < 1:
-            continue
+            # SILENT-SKIP-SIZING-20261116 (owner price ruling
+            # 2026-11-14, WS4-FRACTIONAL shape): the floor reaching 0
+            # silently killed the model's selected name for price.
+            # Same dollar cap expressed fractionally, 6dp floor,
+            # never past the cap.
+            import math as _m
+            shares = (_m.floor((cap / price) * 1_000_000) / 1_000_000
+                      if cap > 0 and price > 0 else 0)
+            if shares <= 0:
+                continue
         n += 1
         out.append(_intent(
             sid, stamp, n, "entry", sym, shares,
@@ -852,6 +1003,8 @@ def evaluate(sleeve_id, view, ctx=None):
         return _eval_overnight(sleeve_id, view, ctx)
     if kind == "donchian":
         return _eval_donchian(sleeve_id, view, ctx)
+    if kind == "turtle":
+        return _eval_turtle(sleeve_id, view, ctx)
     if kind == "d20":
         return _eval_d20(sleeve_id, spec, view, ctx)
     return _eval_saty(sleeve_id, view, ctx)
