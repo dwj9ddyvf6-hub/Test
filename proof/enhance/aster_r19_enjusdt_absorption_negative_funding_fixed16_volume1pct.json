@@ -1,0 +1,29 @@
+{
+ "sleeve": "aster_r19_enjusdt_absorption_negative_funding_fixed16_volume1pct",
+ "exp_id": "ENH-ASTER-R19-B7-20261024",
+ "batch": "edge-7",
+ "decision_record": {
+  "transfer": "Absorption/breakout timing edge on 4h ENJUSDT bars: forced sellers (shock bar) / breakout buyers pay for immediacy; the surplus exists only near the confirming close \u2014 a late entry buys the same fixed 16h/96h hold after the information is public and the price_hint is stale.",
+  "comparison": "Price-aware baseline = the pre-change sleeve itself (shadow control): enters on the latest completed bar's signal at any age. Treatment differs only inside the gate below.",
+  "mechanism": "Stale-signal entry leak: the source design entered inside a 300s window after its entry delay; the v3 translation dropped the window and no producer/dispatcher layer enforces it, so entries fired up to 4h late in normal cycling and indefinitely on a stale snapshot (outage/restart replay), sized full-cash/volume-capped off the stale close.",
+  "calculation": "signal_age_s = now - (signal_bar_t + 4h) (bar t = open). Measured pre-change: entry fired at age 7200s and 43200s on the fixture signal (10/10 ENJ sleeves). Treatment window [0, 900s] = the sleeves' own declared producer freshness SLA (aster_batch7 PRODUCERS freshness_sla_s=900) at the 300s cadence (first 3 cycles after close). Cost of refusal = the missed late entries the shadow control keeps scoring; cost of the leak = full slice deployed at a stale close into a fixed hold.",
+  "experiment": "Pre-registered: fixture A/B on identical opportunities \u2014 fresh (age 0) must enter ON and OFF identically; stale (age 7200s) must enter OFF (control) and refuse ON (treatment); boundary 900s enters / 901s refuses; deadline exit at stale age must still fire ON. Rejection rule: any fresh-entry divergence ON vs OFF, or any gated exit, kills the enhancement. Blockers: tests/test_harden_edge_batch7_blockers.py (fail-first proven: 4 ENJ tests fail with the engine change stashed)."
+ },
+ "switch": "view.extra['aster_r19_improve'][<sid>]['signal_window'], default ON; OFF restores the pre-change rule exactly",
+ "ab": {
+  "fresh_control_intents": 1,
+  "fresh_treatment_intents": 1,
+  "stale_age_s": 7200,
+  "stale_control_intents": 1,
+  "stale_treatment_intents": 0,
+  "paired_record": {
+   "exp_id": "ENH-ASTER-R19-B7-20261024",
+   "sleeve": "aster_r19_enjusdt_absorption_negative_funding_fixed16_volume1pct",
+   "signal_age_s": 7200.0,
+   "control": "enter",
+   "treatment": "refused_stale_signal",
+   "switch": "on"
+  }
+ },
+ "verdict": "ENHANCED \u2014 stale-signal entries refused inside freshness window"
+}
