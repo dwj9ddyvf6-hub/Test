@@ -1,0 +1,19 @@
+{
+  "sleeve": "s_1wsw_stress",
+  "batch": "edge19",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH19-LAZ-BOUND-20261024",
+  "leak": "Entry fills already past its target",
+  "decision_record": {
+    "transfer": "A Lazarus fire's edge is the move from its print toward its target over its horizon; once the current price is already at/past the target (or past a designed max-price cap), that move is spent -- the remaining expectancy is the spread/slippage of an immediate exit.",
+    "comparison": "Control (shadow/faithful): enter whenever the fire print passes the spec gates. Treatment: revalidate target_price and spec max_price at the fresh execution price (batch-1 reprice price) and refuse breaches.",
+    "mechanism": "Batch-1 reprice sized off the fresh close but never re-checked the designed bounds against it: max_price was tested on the fire print only, and target_price was stored for exits but never tested on entry, so a gapped-up name entered already past its own target and exited on the next evaluation.",
+    "calculation": "Fixture (blockers): s_1wc_micro fire $10 target $11, fresh close $12.50 -> ON 0 entries + paired journal refuse_bound; OFF 1 entry qty 80. s_1wsw_stress fire $4.00 (passes <$5 gate), fresh $6.00 -> ON 0, OFF 1. s_1wlab fire target $20, fresh $12 -> ON still enters.",
+    "experiment": "ENH19-LAZ-BOUND-20261024 in desk3/lazarus.py; per-sleeve switch bound_guard default ON; paired record appended to extra['enh19_journal'] on refusal."
+  },
+  "switch": "extra['s_1wsw_stress_enh19']['bound_guard'] default ON (OFF = pre-change exactly)",
+  "shadow": "faithful entry decision recorded paired in enh19_journal, never emits",
+  "experiment_measurement": "fixture: target-passed entry 1 -> 0 ON; max-price breach 1 -> 0 ON; below-target entry unchanged",
+  "blockers": "tests/test_harden_edge19_blockers.py (15 tests; fail-first 9 failed pre-cure, 15/15 GREEN post-cure)"
+}
