@@ -1,0 +1,48 @@
+{
+ "sleeve": "aster_breakout_ada_vol1pct",
+ "exp_id": "ENH-EDGE-B2-aster_breakout_ada_vol1pct",
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 2",
+ "status": "pre-registered",
+ "date": "2026-10-24",
+ "binding_leak": "stale breakout chased after 4h delay",
+ "decision_record_2a": {
+  "transfer": "Same transfer as the fullcash arm: a breakout already lost on the entry bar leaves no payer urgency; the 1%-volume cap limits size, not staleness.",
+  "comparison": "Control buys (capped) on the signal bar's close alone. Treatment requires the entry bar's close to hold above the same prior-20 boundary.",
+  "mechanism": "Execution/perception: entry-bar revalidation of the 4h-old signal before the volume-capped entry fires.",
+  "calculation": "Decision diff is the calculation: on identical fixture inputs, control vs treatment intents are recorded in ab_fixture_drive; the leak's cost is the full position (refused entries) or the qty delta (volume cap) on opportunities whose defining condition no longer holds at decision time. No P&L figure is invented pre-forward-evidence.",
+  "experiment": "Forward paper: paired shadow records (ctx/enhance_paired, exp_id ENH-EDGE-B2-<sleeve>) journal control vs treatment on every gated opportunity; reject the enhancement if, over 20 paired opportunities, refused entries would have outperformed entered ones net of the sleeve's own fee model, or if the gate refuses >50% of otherwise-valid entries (mis-calibration). Switch OFF restores the pre-change rule exactly (blocker-proven)."
+ },
+ "engine": "aster_sleeves/_common.py",
+ "switch": {
+  "key": "extra['aster_breakout_ada_vol1pct_enhance'] (or ctx)",
+  "field": "entry_revalidation",
+  "default": true,
+  "off_restores": "pre-change rule exactly"
+ },
+ "shadow_control": "paired record only; the control never emits intents",
+ "blockers": "tests/test_harden_edge_batch2_blockers.py",
+ "ab_fixture_drive": {
+  "case": "signal bar breaks out (close 1.05 > prior-20 high 1.01); entry bar closes back at 1.00, below the boundary",
+  "control_switch_off": [
+   {
+    "kind": "entry",
+    "symbol": "ADAUSDT",
+    "qty": 500,
+    "reason": "aster_breakout_base_volume1pct"
+   }
+  ],
+  "treatment_switch_on": [],
+  "paired_records": [
+   {
+    "exp_id": "ENH-EDGE-B2-aster_breakout_ada_vol1pct",
+    "sleeve": "aster_breakout_ada_vol1pct",
+    "control": "enter",
+    "treatment": "refuse_stale_breakout",
+    "entry_close": 1.0,
+    "boundary": 1.01,
+    "enhance_switch": true
+   }
+  ]
+ },
+ "decision_diff_nonempty": true
+}
