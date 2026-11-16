@@ -21,7 +21,7 @@ CONFIG = SleeveConfig(sleeve_id="s_mn_kronos", cadence_s=300,
 TOP_N = 4
 PER_NAME = 500.0
 MIN_HOLD = 5
-MAX_FIRE_AGE_DAYS = 7
+MAX_FIRE_AGE_DAYS = 7  # CONSTANTS-DERIVATIONS-20261116: DERIVED (route-4, 2026-11-16): 7 calendar days = one calendar week of freshness for a 1D forecast fire; a daily Kronos forecast older than a week no longer describes the current ranking. INCONSISTENCY NAMED: desk3/lazarus_midna.py bounds the same fire-freshness concept at 10 days (its engine also serves 1W sleeves); values deliberately NOT harmonized here (a harmonization is a behavior change outside this lane).
 
 
 def _forecast(context, session):
