@@ -31,9 +31,12 @@ Source rules preserved (etf_rules.json + r19_etf.py):
   a later evaluation. No price stop/target — the designed exit is the
   next monthly selection reducing/replacing a holding.
 Inputs: bars (primary ALPACA daily histories) + positions; INTERVAL rows
-also declare bars_secondary (YAHOO histories). No v3 producer produces
-bars_secondary yet, so INTERVAL sleeves land visibly UNFED in the
-registry — never fake-fed (FIDELITY-LEDGER ASTER-B9).
+also declare bars_secondary (YAHOO histories), produced by
+desk3/producers_g4.py SecondaryBars (state/bars_secondary.json).
+CR-2 (2026-11-11): an INTERVAL refusal is never silent — every
+refused in-window evaluation records its reason (bars_secondary
+absent, or the select() verdict verbatim) as an adapter_eval
+record on the exp-journal channel below.
 """
 from __future__ import annotations
 import math
@@ -112,7 +115,10 @@ def inputs_for(sleeve_id):
 
 PRODUCERS = ({"name": "bars", "outputs": ("bars",), "freshness_sla_s": 900},
              {"name": "broker_readback", "outputs": ("positions",), "freshness_sla_s": 900})
-# NOTE: bars_secondary has NO v3 producer yet -> INTERVAL sleeves UNFED by design.
+# NOTE: bars_secondary is produced by desk3/producers_g4.py
+# (SecondaryBars, registered in register_all); INTERVAL sleeves
+# read FED when it serves and refuse BY NAME when it does not
+# (CR-2 refusal records, below).
 
 def _bars_map(view, key):
     m = view.get(key) or {}
@@ -170,9 +176,26 @@ def _in_window(view, ctx):
     local = dt.astimezone(ET) if dt.tzinfo else dt
     return _time(9, 35) <= local.time() < _time(9, 40)
 
+def _refusal(extra, sleeve_id, reason, **fields):
+    """CR-2 (2026-11-11, DIAGNOSIS.md S2): a refused evaluation
+    names itself on the engine's exp-journal channel — the same
+    channel the ENH-NAVBASE paired records ride — instead of
+    returning a silent []."""
+    j = (extra or {}).get("aster_etf_b9_exp_journal")
+    if isinstance(j, dict) and isinstance(j.get("records"), list):
+        rec = {"event": "adapter_eval", "sleeve": sleeve_id,
+               "refusal": True, "reason": reason}
+        rec.update(fields)
+        j["records"].append(rec)
+
+
 def evaluate(sleeve_id, view, ctx=None):
     view = view or {}; ctx = ctx or {}
     spec = SPECS[sleeve_id]; policy = spec["policy"]; gross = spec["gross"]
+    _extra = {}
+    if isinstance(ctx, dict):
+        _extra.update(ctx.get("extra") or {})
+    _extra.update(view.get("extra") or {})
     if not _in_window(view, ctx):
         return []
     barsmap = _bars_map(view, "bars")
@@ -199,11 +222,16 @@ def evaluate(sleeve_id, view, ctx=None):
     if policy.startswith("INTERVAL"):
         sec = _bars_map(view, "bars_secondary")
         if not sec:
+            _refusal(_extra, sleeve_id, "bars_secondary_absent",
+                     primary_eligible=len(own))
             return []
         other, _ = _scores(sec, exclude=exclude)
     try:
         selected = select(policy, own, other, incumbent)
-    except ValueError:
+    except ValueError as e:
+        _refusal(_extra, sleeve_id, str(e),
+                 primary_eligible=len(own),
+                 secondary_eligible=len(other or {}))
         return []
     last_dates = [str(barsmap[s][-1].get("t", ""))[:10] for s in own if barsmap.get(s)]
     signal_month = max(last_dates)[:7] if last_dates else ""
@@ -227,10 +255,6 @@ def evaluate(sleeve_id, view, ctx=None):
     cash = float(sl.get("cash_usd", 10000.0))
     held_value = sum(q * price[s] for s, q in held.items())
     legacy_nav = cash + held_value
-    _extra = {}
-    if isinstance(ctx, dict):
-        _extra.update(ctx.get("extra") or {})
-    _extra.update(view.get("extra") or {})
     _enh = _navbase_enabled(sleeve_id, _extra)
     if _enh:
         capital = sl.get("capital_usd")
