@@ -1,0 +1,20 @@
+{
+ "ab": {
+  "band_usd": 50.0,
+  "control_dust_trades": 1,
+  "drift_usd": 39.92,
+  "treatment_dust_trades": 0
+ },
+ "decision_record": {
+  "calculation": "Fixture: book $10,000, held ETH value $9,960 at target ~$9,999.92 (drift $39.92 < $50 band). Control: 1 dust buy of ~$39.92. Treatment: 0 intents. Full-exit and flat-entry fixtures unchanged (batch-1 blockers).",
+  "comparison": "Rebalance-on-any-drift (>$0.01) vs fee-aware no-trade band: at 0.2% one-way fee, an adjustment below 0.5% of book pays 2.5x its own size in fees over a round trip to correct <0.5% of exposure.",
+  "experiment": "Fixture A/B above + switch-OFF restoration showing the dust trade itself (<$50 notional). Blockers: TestNativeEthDeadband.",
+  "mechanism": "Execution cost: daily evaluation + price jitter around the target generated a dust trade nearly every session while invested. Treatment refuses drift adjustments within 0.5% of book while invested; initial entries and full SMA200 exits are never banded.",
+  "transfer": "SMA200 trend allocation ETH 100%: the transfer is the trend premium; it is consumed at the margin by the sleeve's own 0.2% rebalance fee when it trades dust."
+ },
+ "disposition": "ENHANCED",
+ "exp_id": "ENH-B5-NATIVE-DEADBAND-20261024",
+ "paper_only": true,
+ "sleeve": "aster_native_eth_sma200",
+ "switch": "extra.enh_aster_native_eth_sma200.deadband default ON; OFF restores any-drift rebalance exactly"
+}
