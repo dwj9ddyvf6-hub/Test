@@ -1,0 +1,19 @@
+{
+ "sleeve": "aster_r19_tensor_g4_red_timeout_25",
+ "batch": 9,
+ "verdict": "ENHANCED",
+ "leak": "five-minute entry window misses kill trades",
+ "decision_record": {
+  "transfer": "Tensor buy-green weekly candidates pay for recovery exposure; the desk supplies patience capital. The entry is worthless if the single 5-minute open window is missed \u2014 pending then expires unfilled.",
+  "comparison": "09:30-09:35 ET window vs 09:30-10:30 ET window on the same entry_date, same ticket/slot/fee math; quote/last-close pricing unchanged.",
+  "mechanism": "Execution: cadence 86400s vs a 300s executable window = single-shot; any delayed/wedged cycle kills the trade.",
+  "calculation": "Fixture: delay sleeve pending on signal, evaluated 10:00 ET on entry_date: pre-change 0 entries, enhanced 1 entry; 11:00 ET still 0; OFF restores 0 at 10:00.",
+  "experiment": "Pre-registered: TestG4Grace. Rejection rule: any entry after 10:30 or with OFF, revert. Forward paired rows in enhance_journal.jsonl (enhanced entry vs shadow no_entry_window_expired_0935)."
+ },
+ "change": "G4 entry window 09:30-09:35 -> 09:30-10:30 ET (mode=red_timeout; reserve funding sale/purchase share the window)",
+ "switch": "enhance_window_grace",
+ "switch_default": true,
+ "shadow_control": "switch OFF = 09:35 rule on identical fixtures; live paired enhance_journal.jsonl rows",
+ "blocker": "tests/test_edge_batch9_blockers.py::TestG4Grace",
+ "fail_first": "8 failures on pre-change engines (stash-proven), 17/17 pass after"
+}
