@@ -1,0 +1,237 @@
+{
+ "id": "IU-BODY-ORDER-LOGIC-20261116",
+ "archive_source": "/home/hatch/workspace/.scratch-ausar-archive/handoff-20261024/source/strategies/public_recipes/public_source_sleeves.py",
+ "archive_source_sha256": "e64c995dd451ac0fd0a32f8a1bcc22624a76362c58d607ee9edecc2d99722e6b",
+ "archive_sha_verified": true,
+ "implementation": "desk3/iu_body.py::IuBodyReducer + source_features",
+ "book_config": {
+  "strategy": "iu_body",
+  "symbol": "ENJUSDT",
+  "market_kind": "spot",
+  "initial_cash": 100000.0,
+  "quantity_mode": "equity_percent",
+  "quantity_value": 100.0,
+  "params": {
+   "big_body_threshold": 4.0,
+   "atr_length": 14,
+   "atr_factor": 2.0,
+   "body_baseline": "source_inclusive21_div20"
+  }
+ },
+ "scenarios": [
+  {
+   "scenario": "A_long_lifecycle",
+   "steps": 38,
+   "counts": {
+    "bars": 33,
+    "orders": 2,
+    "stop_plans": 5,
+    "triggers": 1,
+    "vetoes": 0
+   },
+   "divergences": [],
+   "final": {
+    "pending_target": null,
+    "position": null,
+    "cash": 100358.66391339504,
+    "obligations": []
+   }
+  },
+  {
+   "scenario": "B_short_lifecycle",
+   "steps": 34,
+   "counts": {
+    "bars": 29,
+    "orders": 2,
+    "stop_plans": 2,
+    "triggers": 1,
+    "vetoes": 0
+   },
+   "divergences": [],
+   "final": {
+    "pending_target": null,
+    "position": null,
+    "cash": 100365.40020408163,
+    "obligations": [
+     "borrow:2026-01-05T02:15:03+00:00:2026-01-05T02:25:05+00:00"
+    ]
+   }
+  },
+  {
+   "scenario": "C_warmup_boundary",
+   "steps": 22,
+   "counts": {
+    "bars": 22,
+    "orders": 0,
+    "stop_plans": 0,
+    "triggers": 0,
+    "vetoes": 0
+   },
+   "divergences": [],
+   "final": {
+    "pending_target": {
+     "side": "long",
+     "reason": "source_body_impulse"
+    },
+    "position": null,
+    "cash": 100000.0,
+    "obligations": []
+   }
+  },
+  {
+   "scenario": "D_veto_ttl_quote_clock",
+   "steps": 33,
+   "counts": {
+    "bars": 29,
+    "orders": 1,
+    "stop_plans": 0,
+    "triggers": 0,
+    "vetoes": 1
+   },
+   "divergences": [],
+   "final": {
+    "pending_target": {
+     "side": "long",
+     "reason": "source_body_impulse"
+    },
+    "position": null,
+    "cash": 100000.0,
+    "obligations": []
+   }
+  },
+  {
+   "scenario": "E_nonpositive_stop",
+   "steps": 30,
+   "counts": {
+    "bars": 28,
+    "orders": 1,
+    "stop_plans": 0,
+    "triggers": 0,
+    "vetoes": 0
+   },
+   "divergences": [],
+   "final": {
+    "pending_target": null,
+    "position": {
+     "side": "long",
+     "qty": 29296.2,
+     "avg_price": 3.41,
+     "opened_at": "2026-01-05T02:10:03+00:00",
+     "stop": null,
+     "stop_active_from": null
+    },
+    "cash": 0.05795800000487361,
+    "obligations": []
+   }
+  },
+  {
+   "scenario": "R_recorded_kraken_tape",
+   "steps": 300,
+   "counts": {
+    "bars": 145,
+    "orders": 9,
+    "stop_plans": 45,
+    "triggers": 4,
+    "vetoes": 5
+   },
+   "divergences": [],
+   "final": {
+    "pending_target": null,
+    "position": {
+     "side": "long",
+     "qty": 4906858.8,
+     "avg_price": 0.019883099999999997,
+     "opened_at": "2026-11-16T17:30:03+00:00",
+     "stop": null,
+     "stop_active_from": null
+    },
+    "cash": 0.0004555380583042279,
+    "obligations": []
+   },
+   "snapshot": "/home/hatch/workspace/muse-desk-v3/state/snapshots/6e3a3e9e9a543801690be144be1a2cab190f040f24e58795d11602b19b178f27.json",
+   "snapshot_asof": "2026-11-16T17:10:01.540335+00:00",
+   "bars_1min": 721,
+   "bars_5min": 144
+  }
+ ],
+ "fixture_cycle": {
+  "scenario": "F_fixture_cycle_recorded_tape",
+  "snapshot": "/home/hatch/workspace/muse-desk-v3/state/snapshots/6e3a3e9e9a543801690be144be1a2cab190f040f24e58795d11602b19b178f27.json",
+  "snapshot_asof": "2026-11-16T17:10:01.540335+00:00",
+  "eval_steps": 15,
+  "entry": {
+   "bar_close": "2026-11-16T07:35:00+00:00",
+   "intent": {
+    "intent_id": "fwd_alpaca_enj_iu_body-ENJ/USD-entry",
+    "kind": "entry",
+    "symbol": "ENJ/USD",
+    "side": "buy",
+    "qty": 525789,
+    "order_type": "market",
+    "limit_price": null,
+    "stop_price": null,
+    "reason": "fwd_alpaca_enj_iu_body entry: source_body_impulse",
+    "time_in_force": "gtc",
+    "position_intent": "buy_to_open",
+    "price_hint": 0.019018999999999998
+   },
+   "dispatch": {
+    "status": "filled",
+    "intent_id": "fwd_alpaca_enj_iu_body-ENJ/USD-entry",
+    "client_order_id": "v3-fwd_alpaca_enj_iu_body-ENJ/USD-entry",
+    "qty": 525789.0,
+    "price": 0.019018999999999998,
+    "venue": "kraken_paper"
+   }
+  },
+  "exit": {
+   "bar_close": "2026-11-16T08:20:00+00:00",
+   "intent": {
+    "intent_id": "fwd_alpaca_enj_iu_body-ENJ/USD-exit-quote-stop",
+    "kind": "exit",
+    "symbol": "ENJ/USD",
+    "side": "sell",
+    "qty": 525789,
+    "order_type": "market",
+    "limit_price": null,
+    "stop_price": null,
+    "reason": "fwd_alpaca_enj_iu_body exit: observed_quote_stop_trigger stop=0.01896782341",
+    "time_in_force": "gtc",
+    "position_intent": "sell_to_close",
+    "price_hint": 0.01879119
+   },
+   "dispatch": {
+    "status": "filled",
+    "intent_id": "fwd_alpaca_enj_iu_body-ENJ/USD-exit-quote-stop",
+    "client_order_id": "v3-fwd_alpaca_enj_iu_body-ENJ/USD-exit-quote-stop",
+    "qty": 525789.0,
+    "price": 0.01879119,
+    "venue": "kraken_paper"
+   }
+  },
+  "journal_fills": [
+   {
+    "venue": "kraken_paper",
+    "qty": 525789.0,
+    "price": 0.019018999999999998
+   },
+   {
+    "venue": "kraken_paper",
+    "qty": 525789.0,
+    "price": 0.01879119
+   }
+  ],
+  "submit_count": 0,
+  "roundtrip_complete": true
+ },
+ "total_steps_compared": 457,
+ "total_divergences": 0,
+ "verdict": "MATCH",
+ "notes": [
+  "Every event's observable state (pending target, position, cash), decision intents and diagnostics compared exactly (float equality; both sides run the archive's own formulas).",
+  "Scenario A includes a bar whose low pierces the trailing stop with no quote trigger: neither side exits (the source has no bar-low exit; the desk sibling's bar-low/opposite-body exits are divergences and are not in this port).",
+  "Scenario B exercises the source's short side in the core reducer; the desk sleeve itself is long-only under the runtime's spot overlay (evaluate() suppression proven in tests/test_iu_body_order_logic_20261116_blockers.py).",
+  "No archive step was inexecutable: the reducer is pure stdlib Python and every branch above ran on both sides; no hand-computed substitutions were needed.",
+  "The recorded-tape scenario caught a branch the synthetic scenarios missed: a closed spot short leaves a borrow accounting obligation in the archive, vetoing every later entry (unreconciled_funding_or_borrow_cashflow) until a cashflow covers it. The core reducer now carries that obligation exactly, and scenario R's tail covers it and proves entries resume identically."
+ ]
+}
