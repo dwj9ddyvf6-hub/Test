@@ -1,0 +1,32 @@
+{
+ "program": "SEGMENT-CONSTRUCTION-20261116",
+ "source_register": "pass2/CONVERSION-REGISTER-2026-11-15.jsonl (falsifier/kill_rule carried byte-identical)",
+ "segments": {
+  "OPEN_DRIVE": "09:30-10:30 ET",
+  "MIDDAY": "10:30-15:00 ET",
+  "CLOSE_HOUR": "15:00-16:00 ET",
+  "basis": "KG-4 (kg4_compute seg_bounds, minutes ET 570/630/900/960; joints priced at open of 09:30 bar, close of 10:29 bar, close of 14:59 bar, close of 15:59 bar; session complete at >=380 RTH bars)"
+ },
+ "sleeves": [
+  {
+   "conv": "CONV-88",
+   "id": "ls9_midday_short",
+   "object": "LS9 Short the midday segment, only after an up drive",
+   "falsifier": "Re-grade the conditioned split at 40 sessions on the cluster basis (the registered check): the sleeve dies if the conditioned short-midday cluster mean is not positive net of 5bp, or if the down-drive control separates equally (which would kill the conditioner claim even if the segment paid). Historical basis: unconditioned short-midday cluster t 1.53; conditioned on an up drive, pooled +34.79bp (t 2.74, 149 symbol-sessions) and session-cluster +55.62bp (t 2.01, 13 sessions); after a down drive the cluster read fades (t 0.81). Thirteen sessions is the named limit.",
+   "kill_rule": "Conditioned cluster mean not positive net of 5bp at 40 sessions, or the down-drive control separating equally, retires the sleeve specification.",
+   "expression": "On a Focus name whose morning segment prints an up drive (as defined in LEAD-STACKING's session split), short the name for the midday segment only, flat before the close segment; after a down drive, no trade (the control arm is logged in shadow on the 1Min cache).",
+   "sizing": "One standard desk sleeve slice, equal weight across the session's qualifying names, paper only; intraday only, no overnight carry, so no borrow beyond the intraday short, priced from the daily IB snapshot archive on the Focus names.",
+   "status": "LIVE 2026-11-16 (SEGMENT-CONSTRUCTION-20261116); paper only, one standard $10,000 slice, equal weight across the session's qualifying (up-drive) names, intraday only, flat before the close segment"
+  },
+  {
+   "conv": "CONV-108",
+   "id": "b3_midday_fade_var",
+   "object": "C03 Session-segment shape (midday leg)",
+   "falsifier": "Forward panel re-run at 20 study nights (early December 2026, the registered check): if the forward midday segment mean, net of a 6bp round-trip cost standard, is at or above 0, or the segment-forced placebo sleeves (A6 archetypes, the registered null) match its magnitude, the variation retires.",
+   "kill_rule": "Forward midday mean net of 6bp at or above 0 at 20 nights, or placebo parity, retires b3_midday_fade_var. The parent shape claim returns to WATCH; nothing else is touched.",
+   "expression": "Short the Focus 29 basket equal weight at the end of the open-drive segment and cover at the start of the close hour, paper, shadow, on sessions where the full basket is present. Segment boundaries are the Lane 3 / KG-4 phase decomposition's own segment definitions, copied at wiring time from KG-4-PHASE-DECOMPOSITION.md, not re-derived.",
+   "sizing": "One standard desk sleeve slice, equal weight across names present, paper only, no leverage.",
+   "status": "LIVE 2026-11-16 (SEGMENT-CONSTRUCTION-20261116); paper only, one standard $10,000 slice, equal weight across the full Focus 29 basket when present, intraday only"
+  }
+ ]
+}
