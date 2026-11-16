@@ -1,0 +1,931 @@
+{
+ "as_of": "2026-10-24",
+ "scored_at": "2026-10-24T13:44:50.973321+00:00",
+ "generated_from": "desk ledger + slice book + sleeve records + ChartsLector ranks + daily bars (SIP)",
+ "scoring_method": {
+  "scale": "0-100",
+  "minimum_score": 35,
+  "bands": [
+   {
+    "min": 75,
+    "tier": "Top tier"
+   },
+   {
+    "min": 55,
+    "tier": "Strong"
+   },
+   {
+    "min": 35,
+    "tier": "Watch"
+   }
+  ],
+  "rows": [
+   {
+    "factor": "family_confluence",
+    "label": "Independent strategy families agreeing",
+    "source": "desk",
+    "citation": null,
+    "note": "The rule that independent families each get one vote comes from the desk's combined read. The point steps are desk-set: the combined read gives no numbers, and the dip method's 30-point block is a different quantity (agreement between levels), so it is not borrowed here.",
+    "values": [
+     {
+      "families": 1,
+      "points": 6
+     },
+     {
+      "families": 2,
+      "points": 16
+     },
+     {
+      "families": 3,
+      "points": 24
+     },
+     {
+      "families": 4,
+      "points": 30
+     }
+    ]
+   },
+   {
+    "factor": "tensor_confirmed",
+    "label": "Tensor pattern engine confirms a swing",
+    "source": "method",
+    "citation": "DIP_SCORE_SPEC.md, Component 4 (strategy evidence)",
+    "note": "Tensor evidence is graded by freshness: a fresh trade signal 8 of 15, a fresh watch 4, a stale signal (4-10 sessions) 2. The desk maps those proportions onto its own scale, where the fresh weight is 14.",
+    "points": 14,
+    "values": [
+     {
+      "max_age_sessions": 3,
+      "points": 14
+     },
+     {
+      "max_age_sessions": 10,
+      "points": 4
+     },
+     {
+      "max_age_sessions": null,
+      "points": 0
+     }
+    ]
+   },
+   {
+    "factor": "tensor_context_only",
+    "label": "Tensor dip context (no confirmed swing)",
+    "source": "method",
+    "citation": "DIP_SCORE_SPEC.md, Component 4 (strategy evidence)",
+    "note": "Tensor's dip strategy selected the name without a confirmed swing trade signal \u2014 half the fresh confirmation weight, the same proportion the method gives a fresh watch.",
+    "points": 7
+   },
+   {
+    "factor": "lector_tiers",
+    "label": "ChartsLector strength (context only)",
+    "source": "desk",
+    "citation": null,
+    "note": "A context layer: it can add points but never creates a setup (the desk's combined read). The tier numbers are desk-set. When the ranks are more than 3 sessions old, the points are halved.",
+    "values": [
+     {
+      "min_score": 75.0,
+      "points": 10
+     },
+     {
+      "min_score": 65.0,
+      "points": 7
+     },
+     {
+      "min_score": 55.0,
+      "points": 4
+     },
+     {
+      "min_score": 0.0,
+      "points": 2
+     }
+    ]
+   },
+   {
+    "factor": "entered",
+    "label": "The desk actually entered today",
+    "source": "desk",
+    "citation": null,
+    "note": "A filled entry is the desk's revealed conviction and outranks a plan that was only evaluated. A position the desk already holds earns the same credit \u2014 the money is committed either way: one rule covers a fill today, an entry recorded today, or a position held now, with options holdings counted for the stock underneath. The reasoning is the desk's doctrine; the number is desk-set.",
+    "points": 12
+   },
+   {
+    "factor": "attempted_rejected",
+    "label": "A strategy tried to enter and was turned away",
+    "source": "desk",
+    "citation": null,
+    "note": "Paid only when the broker's own rejection says the account could not fund the order (buying power). A rejection for any other reason earns nothing.",
+    "points": 4
+   },
+   {
+    "factor": "regime_fear_dip_family",
+    "label": "Fear day \u2014 dip-habitat family",
+    "source": "desk",
+    "citation": null,
+    "note": "A recorded difference: the dip method's fear bonus is +10, paid inside a dip-depth measure this score does not compute. The desk merges fear into this single market factor and sets the dip-family credit at 8. The fear-day test itself follows the method \u2014 SPY down more than 1.5% or VIX up more than 15% \u2014 with the desk's additions: VIX at 25 or higher, or a red index day with VIX at 20 or higher.",
+    "points": 8
+   },
+   {
+    "factor": "regime_fear_other_family",
+    "label": "Fear day \u2014 other family",
+    "source": "desk",
+    "citation": null,
+    "note": "A smaller credit: fear days are the dip buyers' validated habitat rather than this family's.",
+    "points": 3
+   },
+   {
+    "factor": "regime_uptrend_momentum",
+    "label": "Uptrend \u2014 momentum family",
+    "source": "desk",
+    "citation": null,
+    "note": "The dip method's market-context measure pays 10 in an uptrend and 0 in a downtrend, without splitting by family. The desk splits by family habitat \u2014 its standing rule is that swing signals do well in falling markets \u2014 and sets its own numbers.",
+    "points": 6
+   },
+   {
+    "factor": "regime_uptrend_dip",
+    "label": "Uptrend \u2014 dip family",
+    "source": "desk",
+    "citation": null,
+    "note": "The desk's method buys dips inside uptrends, not against them. Desk-set number; see the uptrend note above.",
+    "points": 3
+   },
+   {
+    "factor": "regime_downtrend_dip",
+    "label": "Downtrend \u2014 reversal-class family",
+    "source": "desk",
+    "citation": null,
+    "note": "Only reversal-class setups keep support in a downtrend. Desk-set number; the dip method's market-context measure pays 0 in a downtrend and does not make this exception \u2014 the desk's falling-market rule does.",
+    "points": 2
+   },
+   {
+    "factor": "regime_downtrend_other",
+    "label": "Downtrend \u2014 other family",
+    "source": "desk",
+    "citation": null,
+    "note": "Trend-following entries are penalised until the regime turns. Desk-set number.",
+    "points": -6
+   },
+   {
+    "factor": "regime_chop",
+    "label": "Chop (sideways) market",
+    "source": "desk",
+    "citation": null,
+    "note": "No tailwind either way; the setup stands on its own evidence. Desk-set number.",
+    "points": 2
+   },
+   {
+    "factor": "reset_at_support",
+    "label": "Reset at support \u2014 at the 20-day average",
+    "source": "method",
+    "citation": "DIP_SCORE_SPEC.md, Component 2 (at the 20 EMA = 8, tolerance \u00b11.0%)",
+    "note": "Paid only when the close is within 1% of the 20-day average \u2014 the tolerance the method itself sets.",
+    "points": 8
+   },
+   {
+    "factor": "reset_near_support",
+    "label": "Reset near support \u2014 wider pullback",
+    "source": "desk",
+    "citation": null,
+    "note": "A wider, weaker condition the desk credits at half the method's route: the close within about a day's range of the 20-day average, or reset onto the recent swing-low zone. Desk-set.",
+    "points": 4
+   },
+   {
+    "factor": "stop_ideal",
+    "label": "Stop distance 1.5-2.5x the daily range",
+    "source": "desk",
+    "citation": null,
+    "note": "The distance bands follow the desk's chart-reading method \u2014 stops at least 1.5x the daily range, 1.5-2.5x preferred. The point values are desk-set.",
+    "points": 8
+   },
+   {
+    "factor": "stop_wide_ok",
+    "label": "Stop distance 2.5-4x the daily range",
+    "source": "desk",
+    "citation": null,
+    "note": "Wider than the ideal band, so the position must ride out more noise. Desk-set points; band per the chart-reading method.",
+    "points": 5
+   },
+   {
+    "factor": "stop_tight",
+    "label": "Stop distance 1-1.5x the daily range",
+    "source": "desk",
+    "citation": null,
+    "note": "Below the method's 1.5x floor \u2014 noise can shake it out. Desk-set points.",
+    "points": 2
+   },
+   {
+    "factor": "stop_inside_noise",
+    "label": "Stop inside one day's range",
+    "source": "desk",
+    "citation": null,
+    "note": "A stop inside the normal daily range is very likely to be noise-stopped, so it deducts. Desk-set points.",
+    "points": -4
+   },
+   {
+    "factor": "stop_very_wide",
+    "label": "Stop distance beyond 4x the daily range",
+    "source": "desk",
+    "citation": null,
+    "note": "The level is defined, but a great deal of room sits between entry and exit. Desk-set points.",
+    "points": 1
+   },
+   {
+    "factor": "extension_run_25",
+    "label": "Parabolic-spike guard (up 25% or more in 10 sessions)",
+    "points": "x0.7",
+    "source": "method",
+    "citation": "DIP_SCORE_SPEC.md, regime modifier (parabolic-spike guard)",
+    "note": "Not a flat deduction: when a name has run 25% or more in 10 sessions, the whole finished score is multiplied by 0.7 \u2014 the first red day of a spike is not the buy."
+   },
+   {
+    "factor": "extension_run_15",
+    "label": "Stretched (up 15-25% in 10 sessions)",
+    "source": "desk",
+    "citation": null,
+    "note": "A lesser extension warning below the spike line. Desk-set; the method has no such tier.",
+    "points": -10
+   },
+   {
+    "factor": "extension_above_ema",
+    "label": "Far above the 20-day average",
+    "source": "desk",
+    "citation": null,
+    "note": "Close more than 2.5x the daily range above the 20-day average \u2014 poor initiation quality even when the trend is intact. Desk-set.",
+    "points": -8
+   },
+   {
+    "factor": "broken_structure",
+    "label": "Broken structure (closed below the swing low)",
+    "source": "desk",
+    "citation": null,
+    "note": "Broken structure is one of the desk's named setup-ending faults \u2014 the others are heavy extension and no reset at support. The point value is desk-set.",
+    "points": -15
+   }
+  ]
+ },
+ "market_context": {
+  "regime": "Downtrend",
+  "regime_evidence": [
+   "QQQ closed below its 50-day average (-3.0%) with a 20-day slope of -5.4% \u2014 the desk's regime rule reads downtrend.",
+   "VIX closed at 19.45 (+2.2% on the day) (VIX reading as of 2026-10-23).",
+   "Both indexes were red on 2026-10-23."
+  ],
+  "vix": {
+   "close": 19.45,
+   "change_pct": 2.2,
+   "as_of": "2026-10-23"
+  },
+  "spy": {
+   "close": 759.97,
+   "day_pct": -0.52,
+   "vs_sma50_pct": -1.02,
+   "as_of": "2026-10-23"
+  },
+  "qqq": {
+   "close": 704.4,
+   "day_pct": -0.01,
+   "vs_sma50_pct": -2.95,
+   "as_of": "2026-10-23"
+  },
+  "fear_day": false
+ },
+ "lector_top": [
+  {
+   "symbol": "NOW",
+   "score": 95.9,
+   "rank": 1
+  },
+  {
+   "symbol": "CRM",
+   "score": 91.5,
+   "rank": 2
+  },
+  {
+   "symbol": "OKTA",
+   "score": 84.9,
+   "rank": 3
+  },
+  {
+   "symbol": "CRWD",
+   "score": 78.5,
+   "rank": 4
+  },
+  {
+   "symbol": "NTAP",
+   "score": 76.6,
+   "rank": 5
+  },
+  {
+   "symbol": "PANW",
+   "score": 71.7,
+   "rank": 6
+  },
+  {
+   "symbol": "NET",
+   "score": 68.7,
+   "rank": 7
+  },
+  {
+   "symbol": "QCOM",
+   "score": 68.1,
+   "rank": 8
+  },
+  {
+   "symbol": "ADI",
+   "score": 67.8,
+   "rank": 9
+  },
+  {
+   "symbol": "SPCX",
+   "score": 65.6,
+   "rank": 10
+  }
+ ],
+ "setups": [
+  {
+   "symbol": "NTAP",
+   "rank": 1,
+   "score": 26,
+   "tier": "Watch",
+   "side": "long",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #5 of 55 with an opportunity score of 77 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset at support \u2014 it closed $215.48, within 1% of its 20-day average at $215.19 \u2014 inside the tight 1% reset test.",
+    "Defined stop 2.1\u00d7 the daily range below entry \u2014 inside the desk's 1.5\u20132.5 range band."
+   ],
+   "entry": 215.48,
+   "stop": 196.24,
+   "target": 240.87,
+   "last_close": 215.48,
+   "lector_rank": 5,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 196.24,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:NTAP",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "b6efe6abbea52e66"
+   }
+  },
+  {
+   "symbol": "NET",
+   "rank": 2,
+   "score": 23,
+   "tier": "Watch",
+   "side": "long",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #7 of 55 with an opportunity score of 69 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset at support \u2014 it closed $325.73, within 1% of its 20-day average at $323.76 \u2014 inside the tight 1% reset test.",
+    "Defined stop 2.2\u00d7 the daily range below entry \u2014 inside the desk's 1.5\u20132.5 range band."
+   ],
+   "entry": 325.73,
+   "stop": 285.05,
+   "target": 370.35,
+   "last_close": 325.73,
+   "lector_rank": 7,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 285.05,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:NET",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "8e621689a7051254"
+   }
+  },
+  {
+   "symbol": "PANW",
+   "rank": 3,
+   "score": 19,
+   "tier": "Watch",
+   "side": "above",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #6 of 55 with an opportunity score of 72 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $380.55, 2.0% above its 20-day average at $373.10. That is inside about a day's range of the average but outside the tight 1% reset test, so it earns a smaller credit.",
+    "Defined stop 2.3\u00d7 the daily range below entry \u2014 inside the desk's 1.5\u20132.5 range band."
+   ],
+   "entry": 380.55,
+   "stop": 334.75,
+   "target": 432.32,
+   "last_close": 380.55,
+   "lector_rank": 6,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 334.75,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:PANW",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "ff01b54afaa77ef8"
+   }
+  },
+  {
+   "symbol": "QCOM",
+   "rank": 4,
+   "score": 17,
+   "tier": "Watch",
+   "side": "long",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #8 of 55 with an opportunity score of 68 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset at support \u2014 it closed $175.91, within 1% of its 20-day average at $177.47 \u2014 inside the tight 1% reset test.",
+    "Stop is only 1.2\u00d7 the daily range \u2014 tighter than the desk's 1.5\u00d7 floor, so noise can shake it out."
+   ],
+   "entry": 175.91,
+   "stop": 168.84,
+   "target": 205.85,
+   "last_close": 175.91,
+   "lector_rank": 8,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 168.84,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:QCOM",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "d4ba5d78ac94b52a"
+   }
+  },
+  {
+   "symbol": "MSTR",
+   "rank": 5,
+   "score": 13,
+   "tier": "Watch",
+   "side": "below",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #11 of 55 with an opportunity score of 65 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $146.01, 1.3% below its 20-day average at $147.95. That is inside about a day's range of the average but outside the tight 1% reset test, so it earns a smaller credit.",
+    "Stop is only 1.3\u00d7 the daily range \u2014 tighter than the desk's 1.5\u00d7 floor, so noise can shake it out."
+   ],
+   "entry": 146.01,
+   "stop": 133.59,
+   "target": 170.17,
+   "last_close": 146.01,
+   "lector_rank": 11,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 133.59,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:MSTR",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "c613c3a0c225f684"
+   }
+  },
+  {
+   "symbol": "SNOW",
+   "rank": 6,
+   "score": 10,
+   "tier": "Watch",
+   "side": "below",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #13 of 55 with an opportunity score of 57 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $325.43, 1.5% below its 20-day average at $330.48. That is inside about a day's range of the average but outside the tight 1% reset test, so it earns a smaller credit.",
+    "Stop is only 1.3\u00d7 the daily range \u2014 tighter than the desk's 1.5\u00d7 floor, so noise can shake it out."
+   ],
+   "entry": 325.43,
+   "stop": 302.24,
+   "target": 370.55,
+   "last_close": 325.43,
+   "lector_rank": 13,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 302.24,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:SNOW",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "6849be4ab61427e1"
+   }
+  },
+  {
+   "symbol": "ADI",
+   "rank": 7,
+   "score": 7,
+   "tier": "Watch",
+   "side": "below",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #9 of 55 with an opportunity score of 68 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $391.07, 1.6% below its 20-day average at $397.41. That is inside about a day's range of the average but outside the tight 1% reset test, so it earns a smaller credit.",
+    "Stop sits inside one day's normal range \u2014 very likely to be noise-stopped."
+   ],
+   "entry": 391.07,
+   "stop": 381.53,
+   "target": 422.67,
+   "last_close": 391.07,
+   "lector_rank": 9,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 381.53,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:ADI",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "c043fb52e6683feb"
+   }
+  },
+  {
+   "symbol": "SPCX",
+   "rank": 8,
+   "score": 7,
+   "tier": "Watch",
+   "side": "below",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #10 of 55 with an opportunity score of 66 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $147.49, 3.3% below its 20-day average at $152.46. That is inside about a day's range of the average but outside the tight 1% reset test, so it earns a smaller credit.",
+    "Stop sits inside one day's normal range \u2014 very likely to be noise-stopped."
+   ],
+   "entry": 147.49,
+   "stop": 140.66,
+   "target": 176.42,
+   "last_close": 147.49,
+   "lector_rank": 10,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 140.66,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:SPCX",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "7932700dff980a92"
+   }
+  },
+  {
+   "symbol": "TSM",
+   "rank": 9,
+   "score": 4,
+   "tier": "Watch",
+   "side": "long",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #12 of 55 with an opportunity score of 57 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $418.51, just above its recent swing low at $407.13. The reset is at the swing-low zone rather than at the 20-day average the tight test measures, so it earns fewer points.",
+    "Stop sits inside one day's normal range \u2014 very likely to be noise-stopped."
+   ],
+   "entry": 418.51,
+   "stop": 407.13,
+   "target": 487.47,
+   "last_close": 418.51,
+   "lector_rank": 12,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 407.13,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:TSM",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "f89be68145f0046e"
+   }
+  },
+  {
+   "symbol": "AMD",
+   "rank": 10,
+   "score": 2,
+   "tier": "Watch",
+   "side": "long",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #15 of 55 with an opportunity score of 54 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $516.79, just above its recent swing low at $502.60. The reset is at the swing-low zone rather than at the 20-day average the tight test measures, so it earns fewer points.",
+    "Stop sits inside one day's normal range \u2014 very likely to be noise-stopped."
+   ],
+   "entry": 516.79,
+   "stop": 502.6,
+   "target": 658.52,
+   "last_close": 516.79,
+   "lector_rank": 15,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 502.6,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:AMD",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "76818937f72c7e60"
+   }
+  },
+  {
+   "symbol": "HPE",
+   "rank": 11,
+   "score": 2,
+   "tier": "Watch",
+   "side": "long",
+   "status": "watch",
+   "entered": false,
+   "exited_today": false,
+   "sources": [],
+   "families": [],
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #14 of 55 with an opportunity score of 54 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $56.69, just above its recent swing low at $53.91. The reset is at the swing-low zone rather than at the 20-day average the tight test measures, so it earns fewer points.",
+    "Stop sits inside one day's normal range \u2014 very likely to be noise-stopped."
+   ],
+   "entry": 56.69,
+   "stop": 53.91,
+   "target": 73.56,
+   "last_close": 56.69,
+   "lector_rank": 14,
+   "tensor": "none",
+   "primary_sleeve": null,
+   "attempted_rejected": false,
+   "rejection_cause": null,
+   "instrument": null,
+   "stop_problem": null,
+   "target_problem": null,
+   "entry_source": "market_screen",
+   "exit_rules": null,
+   "exit_target": null,
+   "exit_rules_origin": null,
+   "trading_stop": 53.91,
+   "backstop_stop": null,
+   "plan_sleeve": null,
+   "family_win_rate": null,
+   "scored_at": "2026-10-24T13:44:50.973321+00:00",
+   "provenance": {
+    "source_system": "market_screen_geometry",
+    "source_record_id": "lector:HPE",
+    "source_timestamp": "2026-10-24",
+    "source_hash": "b8b1e1e4fa643802"
+   }
+  }
+ ],
+ "entered": [],
+ "off_board": [],
+ "completed": [],
+ "considered": [
+  {
+   "symbol": "CRM",
+   "score": 30,
+   "tier": "Watch",
+   "side": "long",
+   "status": "considered",
+   "sources": [
+    "phase_daily"
+   ],
+   "families": [
+    "momentum & trend"
+   ],
+   "lector_rank": 2,
+   "last_close": 248.57,
+   "reasons": [
+    "Selected by one strategy family (momentum & trend) \u2014 no independent confirmation yet.",
+    "ChartsLector ranks it #2 of 55 with an opportunity score of 92 \u2014 an independent momentum/breakout screen agrees.",
+    "The desk holds a position in it \u2014 money already committed ranks above ideas that were only evaluated.",
+    "Market downtrend \u2014 trend-following entries are penalised until the regime turns.",
+    "No target was recorded by the entering strategy \u2014 the plan shows no target rather than borrowing another strategy's.",
+    "Defined stop 1.7\u00d7 the daily range below entry \u2014 inside the desk's 1.5\u20132.5 range band."
+   ],
+   "shortfall": "Scored 30 \u2014 under the board's 35-point bar.",
+   "scored_at": "2026-10-24T13:44:50.973321+00:00"
+  },
+  {
+   "symbol": "OKTA",
+   "score": 22,
+   "tier": "Watch",
+   "side": "above",
+   "status": "considered",
+   "sources": [],
+   "families": [],
+   "lector_rank": 3,
+   "last_close": 213.05,
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #3 of 55 with an opportunity score of 85 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $213.05, 4.0% above its 20-day average at $204.91. That is inside about a day's range of the average but outside the tight 1% reset test, so it earns a smaller credit.",
+    "Defined stop 2.4\u00d7 the daily range below entry \u2014 inside the desk's 1.5\u20132.5 range band."
+   ],
+   "shortfall": "The measured plan pays 0.7 for 1 risked \u2014 under the desk's 1-for-1 floor.",
+   "scored_at": "2026-10-24T13:44:50.973321+00:00"
+  },
+  {
+   "symbol": "CRWD",
+   "score": 19,
+   "tier": "Watch",
+   "side": "above",
+   "status": "considered",
+   "sources": [],
+   "families": [],
+   "lector_rank": 4,
+   "last_close": 257.57,
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #4 of 55 with an opportunity score of 78 \u2014 an independent momentum/breakout screen agrees.",
+    "Price has reset near support \u2014 it closed $257.57, 4.0% above its 20-day average at $247.62. That is inside about a day's range of the average but outside the tight 1% reset test, so it earns a smaller credit.",
+    "Defined stop 2.7\u00d7 the daily range below entry \u2014 wider than the desk's ideal band, so the position must ride out more noise to work."
+   ],
+   "shortfall": "The measured plan pays 0.8 for 1 risked \u2014 under the desk's 1-for-1 floor.",
+   "scored_at": "2026-10-24T13:44:50.973321+00:00"
+  },
+  {
+   "symbol": "NOW",
+   "score": 11,
+   "tier": "Watch",
+   "side": "long",
+   "status": "considered",
+   "sources": [],
+   "families": [],
+   "lector_rank": 1,
+   "last_close": 158.96,
+   "reasons": [
+    "It comes from the desk's market-wide screen, not from a sleeve trade today \u2014 no strategy family has selected it, so no confluence points are claimed for it.",
+    "ChartsLector ranks it #1 of 55 with an opportunity score of 96 \u2014 an independent momentum/breakout screen agrees.",
+    "The recorded target ($157.60) sits below the entry ($158.96), so it could not be used as a profit objective \u2014 no target is shown rather than a wrong one.",
+    "Defined stop 5.2\u00d7 the daily range below entry \u2014 very wide: the level is defined, but a great deal of room sits between entry and exit."
+   ],
+   "shortfall": "No complete plan could be built from its own price history \u2014 missing: target.",
+   "scored_at": "2026-10-24T13:44:50.973321+00:00"
+  }
+ ],
+ "notes": [
+  "ChartsLector ranks as of 2026-10-23."
+ ],
+ "freshness": []
+}
