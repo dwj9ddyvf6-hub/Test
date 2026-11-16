@@ -4,7 +4,7 @@ INPUTS is the producer-registry declaration for this sleeve."""
 from ._ctx import run as _run
 
 SLEEVE_ID = "phase_daily"
-INPUTS = ('bars', 'positions', 'earnings', 'journal')
+INPUTS = ('bars', 'positions', 'earnings')
 CADENCE_S = 300
 
 
