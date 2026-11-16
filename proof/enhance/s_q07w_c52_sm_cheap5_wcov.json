@@ -1,0 +1,24 @@
+{
+ "sleeve": "s_q07w_c52_sm_cheap5_wcov",
+ "disposition": "APPLY ENH-Q07EXEC-20261024 (shared engine cure, desk3/lazarus_q07.py; batch 21 supplies this sleeve's \u00a72a record + A/B proof)",
+ "exp_id": "ENH-Q07EXEC-20261024",
+ "paper_only": true,
+ "switch": "extra.q07_enh[<sleeve>].exec_price default ON; False restores the pre-change fire-price rule exactly",
+ "blockers": "tests/test_edge_batch21_blockers.py (6 tests, gate-wired via discover; fail direction: pre-cure engine made ON==OFF \u2014 measured in this batch's first drive, qty 100/stop 8.50 both arms, cheap5 entered)",
+ "ab": {
+  "control_entries": 1,
+  "treatment_entries": 0,
+  "control_qty": 250,
+  "treatment_qty": 0,
+  "control_stop": 3.4,
+  "treatment_stop": null,
+  "control_fill_notional_usd": 1500.0
+ },
+ "decision_record": {
+  "transfer": "Q07 weekly edge (cyan 1W small, filters cheap5+wcov, 52w horizon): pay for the Tensor 1W signal's named alt-data state (filters in the sleeve name) bought on a QQQ-down day within 5 sessions; the payer is the weekly-horizon continuation, captured only if the named state still holds when the order fills.",
+  "comparison": "Pre-change engine vs the fill reality: _last_price preferred the FIRE print for filters, sizing and the 15% stop anchor, while the market order fills at the latest close \u2014 the same stale-fire class cured in lazarus.py (ENH-LAZ) and lazarus_midna.py (ENH19), which never reached this engine.",
+  "mechanism": "Stale-input execution leak (owner priority #1 class): signal-time price (up to 5 sessions old) drives the cheap5/deep70 price gates, slot sizing and stop placement; every price-derived decision is made on a price the fill will not print at.",
+  "calculation": "Fixture 2026-10-24 (QQQ-down day, fire 1 session old): fire $4.00 (passes cheap5 on the signal print) vs latest close $6.00 (NOT < $5). Control entered qty 250 \u2014 $1500 fill notional against the $1,000 slot (+50%) for a name that is not cheap at execution. Treatment refuses: the designed cheap5 gate is revalidated at the price the fill would actually print.",
+  "experiment": "Fixture A/B in tests/test_edge_batch21_blockers.py: treatment (switch ON, default) vs shadow control evaluated on the same fire (paired records in extra.q07_exp_journal, control never emits); switch OFF reproduces the pre-change numbers exactly. Rejection rule: any treatment sizing/stop off the fire price, or any cheap5 entry above $5 at the latest close, fails the experiment."
+ }
+}
