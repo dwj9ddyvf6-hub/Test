@@ -68,6 +68,17 @@ def _normalize_bars(bars):
     surfaced under its plain name so coverage is never lost."""
     out = {}
     for sym, rows in (bars or {}).items():
+        if sym.startswith("PF_"):
+            # CURE1-UNLISTED-20261102: PF_* keys are Kraken perp
+            # CONTRACT keys served in the shared bars map, not plain
+            # symbols in the laz8 contract (same leak class as the
+            # timeframe-suffix cure below: s_mn_macd ranked a MACD
+            # cross on PF_LINKUSD bars and emitted it to the Alpaca
+            # door, 42210000 asset-not-found, 2026-10-31). The
+            # kraken sleeves that own these instruments do not read
+            # bars through this adapter, so dropping the keys here
+            # changes no kraken execution.
+            continue
         if "|" in sym:
             plain = sym.split("|", 1)[0]
             if plain in (bars or {}) or plain in out:
@@ -137,13 +148,28 @@ def make_evaluate(sleeve_id, default_equity):
         for it in intents:
             seq += 1
             qty = it.qty if it.qty is not None else it.qty_hint
-            if qty is None or int(round(float(qty))) <= 0:
+            if qty is None or float(qty) <= 0:
                 continue
             kind = "entry" if it.kind == "enter" else "exit"
+            # SILENT-SKIP-SIZING-20261116: an ENTRY quantity in (0, 1)
+            # is the fractional cure from sleeves.laz8_common.qty_for
+            # (same dollar budget, 6dp floor); carry it fractionally
+            # instead of rounding it to 0 (the silent skip) or up to
+            # 1 (past the budget). Quantities >= 1 and every exit keep
+            # the pre-cure int(round()) form exactly.
+            if kind == "entry" and 0 < float(qty) < 1:
+                import math as _m
+                row_qty = _m.floor(float(qty) * 1_000_000) / 1_000_000
+                if row_qty <= 0:
+                    continue
+            else:
+                row_qty = int(round(float(qty)))
+                if row_qty <= 0:
+                    continue
             side = it.side or ("sell" if kind == "exit" else "buy")
             row = {"intent_id": f"{sleeve_id}-{stamp}-{seq}",
                    "kind": kind, "symbol": it.symbol, "side": side,
-                   "qty": int(round(float(qty))), "order_type": "market",
+                   "qty": row_qty, "order_type": "market",
                    "limit_price": None,
                    "stop_price": float(it.stop) if it.stop else None,
                    "reason": (it.reason or it.kind)[:500],
