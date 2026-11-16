@@ -1,0 +1,20 @@
+{
+ "ab": {
+  "direction_ok": true,
+  "fresh_passes": true,
+  "stale_refused": true
+ },
+ "decision_record": {
+  "calculation": "Filter fixture: 1Hour series whose last close is 10h old at decision (> 4x3600s) -> refused; last close 0h old -> passes.",
+  "comparison": "Pre-change rule: detect_capitulation reads the served 1H bars with no comparison of the last bar's timestamp to the decision clock; the ENH1 look fixed WHICH expiry is bought (DTE>=2), never WHEN the signal was printed.",
+  "experiment": "Filter-level A/B (gate is the unit; entry production oracle-covered by the port suite): stale/fresh cases above.",
+  "mechanism": "Execution freshness: span-adaptive stale-bar gate on the served 1Hour series (newest close > 4 spans old -> refuse entries; exits never gated).",
+  "transfer": "The capitulation signature (RSI<20 climax + first green bar turning up) is a claim about the LAST closed hour. Entered on a signature printed hours ago, the sleeve buys a 2-7 DTE call on a reversal that has already resolved \u2014 one way or the other \u2014 without it."
+ },
+ "disposition": "APPLY ENH2-CAPOPT-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestStaleGateUnits::test_capopt_stale_1hour_refused",
+ "exp_id": "ENH2-CAPOPT-20261024",
+ "paper_only": true,
+ "sleeve": "capitulation_options",
+ "switch": "extra.capitulation_options_enh2.stale_bar_gate default ON; OFF restores the pre-change rule exactly"
+}
