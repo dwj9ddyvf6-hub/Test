@@ -1,0 +1,31 @@
+{
+ "sleeve": "qullamaggie_paper",
+ "exp_id": "ENH-CBAR-20261024",
+ "paper_only": true,
+ "disposition": "VERIFY-ONLY",
+ "decision_record": {
+  "transfer": "Second-look Edge pass (batch 17): the sleeve already carries its v2-era ENH cure for its first binding leak; this pass searched for the NEXT leak across execution, timing, risk, responsiveness, adaptability and perception.",
+  "comparison": "Candidate leaks tested against the strategy's own design rules and, where a pure function exists, by direct trace on the final tree.",
+  "mechanism": "No next binding leak survives: acceptance refuses a missing/unreadable stop (V-07), refuses stop >= entry (v2 ENH), dedupes by client id, and enforces the cumulative $100k budget; trace: missing stop -> (False,'missing_stop'), stop==entry -> (False,'stop_not_below_entry'), valid -> (True,'accepted',1500.0). The adapter serves proposals only when the persisted session equals today, so a stale proposal file can never trade.",
+  "calculation": "See trace (measured on the final tree, 2026-10-24).",
+  "experiment": "Traces in this artifact; no change implemented \u2014 a cosmetic change is refused per the Edge program law."
+ },
+ "trace": {
+  "missing_stop": [
+   false,
+   "missing_stop",
+   0.0
+  ],
+  "stop_ge_entry": [
+   false,
+   "stop_not_below_entry",
+   0.0
+  ],
+  "valid": [
+   true,
+   "accepted",
+   1500.0
+  ],
+  "note": "V-07 missing-stop refusal + ENH stop<entry gate already landed; adapter serves proposals only when persisted session == today"
+ }
+}
