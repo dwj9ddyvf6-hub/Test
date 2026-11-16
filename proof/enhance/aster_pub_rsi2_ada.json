@@ -1,0 +1,13 @@
+{
+ "attribution": "Entry already carries the archive anti-stale discipline: a 300s window after the completed hourly bar (a 1h-late evaluation refuses, measured). Exit is STATE-based (close > SMA5, re-read hourly) \u2014 no event bar to latch. Sizing = floor(100% cash / close) per the installed source spec (qty 72 on the measured fixture). Stop disabled by design. No binding leak survives: forecasting/selection/entry/exit/execution/sizing were each traced.",
+ "batch": 6,
+ "experiments": "Measured traces on the final tree (trace scripts in workflow work dir; pins in tests/test_edge_batch6_blockers.py TestVerifyOnlyPins)",
+ "measurements": {
+  "entry_in_window_qty": 72,
+  "entry_stale_1h_late": 0,
+  "exit_close_above_sma5": 1,
+  "no_exit_close_below_sma5": 0
+ },
+ "sleeve": "aster_pub_rsi2_ada",
+ "verdict": "VERIFY-ONLY"
+}
