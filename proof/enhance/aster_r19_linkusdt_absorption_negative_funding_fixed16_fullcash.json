@@ -1,0 +1,22 @@
+{
+ "ab": {
+  "boundary_age4h_entries_treatment": 1,
+  "fresh_entries_control": 1,
+  "fresh_entries_treatment": 1,
+  "stale12h_entries_control": 1,
+  "stale12h_entries_treatment": 0
+ },
+ "blockers": "tests/test_harden_edge_batch8_blockers.py (6 tests, gate-wired via discover; fail-first proven: 2 fail on pre-change engines)",
+ "decision_record": {
+  "calculation": "Fixture measurement 2026-10-24 (identical bars/funding, now fixed): fresh signal (age 0h) entries=1; stale signal (age 12h) entries=1 pre-change at price_hint=stale close; post-change stale entries=0, fresh entries=1, age exactly 4.0h entries=1 (boundary = one bar interval).",
+  "comparison": "Pre-change engine vs the archive decision clock: the archive evaluates the signal at its bar close (+availability); the v3 engine entered on the latest snapshot bar regardless of age, so a stalled warm cache turned a days-old close into a live entry price_hint.",
+  "experiment": "Fixture A/B per sleeve in tests/test_harden_edge_batch8_blockers.py: treatment (switch ON, default) vs shadow faithful arm recorded paired in extra['aster_edge_journal'] ({enhanced, shadow_faithful, signal_age_h}); switch OFF restores the pre-change entry exactly; exit-deadline drives on stale bars prove exits untouched. Rejection rule: any fresh-signal refusal or stale-signal entry with the switch ON fails the experiment.",
+  "mechanism": "Stale-input execution leak (owner priority #1 class): no recency bound on the signal bar. Measured pre-change: a signal bar closed 12h earlier (3 unseen 4h bars) still entered at the stale close \u2014 the confirmation/breakout, the funding window and the price are all unverifiable by then.",
+  "transfer": "LINKUSDT R19 edge (absorption (shock+confirm, funding-gated), 4h bars, fixed/structural exits) is paid for acting on a FRESH completed-bar signal at its close; the payer is the post-shock/post-breakout continuation, captured only while the signal bar is the latest completed bar."
+ },
+ "disposition": "APPLY ENH-B8-STALE-SIGNAL-GATE-20261024",
+ "exp_id": "ENH-B8-STALE-SIGNAL-GATE-20261024",
+ "paper_only": true,
+ "sleeve": "aster_r19_linkusdt_absorption_negative_funding_fixed16_fullcash",
+ "switch": "extra.aster_edge[<sleeve>].stale_signal_gate default ON; False restores pre-change rule exactly"
+}
