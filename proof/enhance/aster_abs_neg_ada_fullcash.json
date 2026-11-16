@@ -1,0 +1,29 @@
+{
+ "ab": {
+  "control_intents_by_lag_s": {
+   "120": 1,
+   "1800": 0,
+   "3500": 0
+  },
+  "direction_ok": true,
+  "paired_record_on_intent": "enhance_exp.records[0] carries lag_s and control=no_entry_outside_300s_window on every entry taken past the archive window (shadow control, never emits)",
+  "treatment_intents_by_lag_s": {
+   "120": 1,
+   "1800": 1,
+   "3500": 1
+  },
+  "treatment_qty_at_lag_1800": 9990
+ },
+ "decision_record": {
+  "calculation": "Measured on the fixture (310 4h bars, shock + confirmation, entry-bar volume cap where applicable): control enters at lag 120s and at NO later lag; treatment enters at 120s, 1800s and 3500s with the identical qty (9990) and the identical entry-bar price reference, because bars[-1] remains the entry bar for the whole cadence span (next bar completes 4h later). Capture 300/3600 = 8.3% -> 3600/3600 = 100% of first evaluations.",
+  "comparison": "Archive rule (300s entry window, written for a dedicated process polling at the bar close) vs the v3 runtime fact: this sleeve evaluates on a 3600s cadence. Comparator: identical 310-bar fixture, identical funding, evaluated at lags 120s / 1800s / 3500s after the entry bar closes.",
+  "experiment": "Fixture A/B in tests/test_edge_batch1_blockers.py (AbsWindow) over family absorption_negative_funding / capacity fullcash / funding -0.001: ON enters within one cadence carrying the paired shadow record (control = no entry); OFF reproduces the 300s rule exactly; lag 3700s refused under both. Rejection rule: any entry whose signal/entry bar pair is not bars[-2]/bars[-1], or any qty change vs the in-window control on identical bars.",
+  "mechanism": "Access/implementation (execution timing): the decision is correct but structurally unexecutable \u2014 an evaluation lands inside a 300s slice of each 3600s cadence only ~8% of the time at arbitrary phase; the other ~92% of designed signals are missed fills.",
+  "transfer": "Absorption after a bearish volume shock is a risk/service transfer: the sleeve buys from forced/urgent sellers at the confirmed reversal; the surplus exists only if the sleeve can actually transact at the designed entry bar."
+ },
+ "disposition": "APPLY ENH-ABS-WINDOW-20261024",
+ "exp_id": "ENH-ABS-WINDOW-20261024",
+ "paper_only": true,
+ "sleeve": "aster_abs_neg_ada_fullcash",
+ "switch": "ctx.enhance / extra['aster_abs_neg_ada_fullcash_improve'].entry_window_cadence default ON; OFF restores the archive 300s window exactly"
+}
