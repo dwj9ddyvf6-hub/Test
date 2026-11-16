@@ -4,7 +4,7 @@ INPUTS is the producer-registry declaration for this sleeve."""
 from ._ctx import run as _run
 
 SLEEVE_ID = "raschke_pf3"
-INPUTS = ('bars', 'positions', 'journal')
+INPUTS = ('bars', 'positions')
 CADENCE_S = 60
 
 
