@@ -1,0 +1,18 @@
+{
+ "sleeve": "morning_dip",
+ "exp_id": "ENH-CBAR-20261024",
+ "paper_only": true,
+ "disposition": "APPLY ENH-CBAR-20261024",
+ "switch": "view.extra['morning_dip_enh2']['completed_bars'] default ON; OFF restores pre-change rule exactly (untrimmed view, no shadow)",
+ "decision_record": {
+  "transfer": "The sleeve's designed edge is computed on completed bars (desk convention, sleeves/momentum.py last_completed); a forming bar is a partial, revisable print \u2014 decisions taken on it pay real spread/slippage for a signal that may not exist at the close.",
+  "comparison": "Same-pass paired A/B: treatment (completed bars only) vs shadow control (untrimmed view) evaluated on identical opportunities in a throwaway state dir; control intents never emitted.",
+  "mechanism": "indicators() is documented 'on the last closed candle' and the exit stop/target test reads candles[-1], but the served 3Min series includes the still-forming candle.",
+  "calculation": "Fixture A/B: held QQQ 10 @ 500 stop 490, four closed candles at 495, forming candle (14:27Z, now 14:29Z) closing 480. Control: 1 stop exit. Treatment: no exit (last closed candle 495).",
+  "experiment": "tests/test_harden_edge_batch17_blockers.py: control cases reproduce pre-change behavior (switch OFF), treatment cases assert the changed decision; fail-first proven (4 treatment failures on pre-cure tree, 2026-10-24)."
+ },
+ "ab": {
+  "leak": "arm/exit read unclosed 3-minute candle",
+  "fixture": "Fixture A/B: held QQQ 10 @ 500 stop 490, four closed candles at 495, forming candle (14:27Z, now 14:29Z) closing 480. Control: 1 stop exit. Treatment: no exit (last closed candle 495)."
+ }
+}
