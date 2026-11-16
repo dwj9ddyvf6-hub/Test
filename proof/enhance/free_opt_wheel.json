@@ -1,0 +1,17 @@
+{
+  "sleeve": "free_opt_wheel",
+  "batch": "edge16",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH2-WHEEL-ZERO-LIFE-PUT-20261024",
+  "leak": "Selling put expiring today, premium unmanageable",
+  "decision_record": {
+    "transfer": "The wheel sells assignment risk for premium over a holding period; a put expiring the same session offers no management window \u2014 assignment/settle happens before any exit evaluation can run.",
+    "comparison": "Control: sell any cash-covered put with bp>0. Treatment: refuse sell_to_open puts with expiry <= session.",
+    "mechanism": "Entry path checked OCC type, cash cover and bp only; the expiry check existed only on the exit side (AUDIT3-C), so a same-day-expiry put could be sold and instantly settle.",
+    "calculation": "Fixture: SPY261023P on 2026-10-23 -> 0 entries ON, 1 OFF; SPY261030P still enters ON. Covered-call entries untouched (right=C filter).",
+    "experiment": "Adapter filter filter_wheel_zero_life_put; paired on extra['enh2_paired']; blockers fail-first proven."
+  },
+  "switch": "extra['free_opt_wheel_enh2']['enabled'] default ON",
+  "shadow": "pre-change rule recorded paired, never emits"
+}
