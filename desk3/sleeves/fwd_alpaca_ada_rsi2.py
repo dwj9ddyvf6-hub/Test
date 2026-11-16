@@ -13,7 +13,7 @@ from desk3.port4_context import evaluate_via
 
 INPUTS = ('bars:ADA/USD:1Hour', 'positions')
 
-from desk3.port4_bridge import build_extra
+from desk3.port4_bridge import build_extra, held_map
 from desk3.port4_bridge import bars_v2 as old_bars
 from desk3.port4_bridge import old_context_v2 as old_context
 from desk3.port4_bridge import to_v2_intents
@@ -25,6 +25,15 @@ WARMUP_BARS = {"1Hour": 200}
 
 def _evaluate_v2(ctx):
     extra = build_extra(ctx)
+    # Symbol-specific held state (FIRING-LINE cure, 2026-11-11):
+    # the strategy reads extra["held_qty"] for ADA/USD only; derive
+    # it from this sleeve's own symbol, never from a generic anchor.
+    held = held_map(ctx)
+    if "ADA/USD" in held:
+        extra["held_qty"] = held["ADA/USD"]
+        for p in ctx.positions or []:
+            if p["symbol"] == "ADA/USD" and p.get("opened_at"):
+                extra["entry_close_at"] = str(p["opened_at"])
     bars = {"ADA/USD": old_bars(ctx, "ADA/USD", "1Hour", 400)}
     return to_v2_intents(ctx, SLEEVE_ID, _signal(bars, {}, old_context(ctx, extra)))
 
