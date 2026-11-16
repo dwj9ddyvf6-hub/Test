@@ -473,7 +473,25 @@ class FreeEtf(BaseSleeve):
                 if spread > 20:
                     continue
                 qty = int(slice_usd * weight / float(ask))
-                if owned < qty:
+                if qty == 0 and owned == 0:
+                    # SILENT-SKIP-SIZING-20261116 (owner price ruling
+                    # 2026-11-14, WS4-FRACTIONAL shape): the whole-share
+                    # target floored to 0 and, with nothing held, the
+                    # rebalance emitted neither entry nor exit: the
+                    # signal died for price in silence. Enter the same
+                    # dollar target fractionally (6dp floor, never past
+                    # the target or the day cap). Held-name behavior
+                    # (the exit branch below) is unchanged.
+                    frac = math.floor((slice_usd * weight / float(ask))
+                                      * 1_000_000) / 1_000_000
+                    if frac > 0 and used + frac * float(ask) <= DAY_CAP_USD:
+                        used += frac * float(ask)
+                        intents.append(Intent(
+                            "enter", symbol, qty=frac,
+                            price_hint=round(float(ask), 2),
+                            reason="free_etf entry row=%s account=%s DAY limit at ask "
+                                   "spread_bps=%.1f" % (row_id, ACCOUNT, spread)))
+                elif owned < qty:
                     if qty - owned < 1 or used + (qty - owned) * float(ask) > DAY_CAP_USD:
                         continue
                     used += (qty - owned) * float(ask)
