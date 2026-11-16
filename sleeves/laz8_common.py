@@ -39,8 +39,12 @@ class Intent:
     def __post_init__(self):
         if self.kind not in ("enter", "exit"):
             raise ValueError(f"intent kind must be enter|exit, got {self.kind!r}")
-        if self.qty_hint is not None and (int(self.qty_hint) != self.qty_hint or self.qty_hint <= 0):
-            raise ValueError("qty_hint must be a positive whole number")
+        if self.qty_hint is not None and self.qty_hint <= 0:
+            raise ValueError("qty_hint must be positive")
+        # SILENT-SKIP-SIZING-20261116: a fractional qty_hint is the
+        # cured form of a whole-share floor that reached 0 (see
+        # qty_for below); the whole-number rule above would have
+        # raised on the cure itself. Whole hints are unchanged.
 
 
 def bar_dates(bars):
@@ -101,7 +105,16 @@ def held_positions(slice_state):
 def qty_for(budget, price):
     if price is None or price <= 0 or budget <= 0:
         return 0
-    return int(math.floor(budget / price))
+    whole = int(math.floor(budget / price))
+    if whole >= 1:
+        return whole
+    # SILENT-SKIP-SIZING-20261116 (owner price ruling 2026-11-14,
+    # WS4-FRACTIONAL shape): the whole-share floor reaching 0 made a
+    # fired signal unbuyable for price and every caller skipped it
+    # silently. Express the same dollar budget fractionally, rounded
+    # DOWN to the door's 6dp precision, never past the budget. 0.0
+    # only when budget/price is itself below 1e-6.
+    return math.floor((budget / price) * 1_000_000) / 1_000_000
 
 
 EXP_ID_ENH20 = "ENH20-LAZ8-XSTALE-20261024"
