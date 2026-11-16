@@ -1,0 +1,39 @@
+[Unit]
+Description=muse-desk-v3 watchdog (supervises the desk runner; the runner is relaunched by the watchdog, never by this unit)
+After=network-online.target
+Wants=network-online.target
+# SUPERVISION-HARDEN-20261114: a watchdog that crash-loops at start
+# must surface as a failed unit, not respawn silently forever.
+StartLimitIntervalSec=600
+StartLimitBurst=10
+
+[Service]
+Type=notify
+TimeoutStartSec=600
+NotifyAccess=main
+# System units do not import environment.d; this runtime-maintained file holds the egress proxy + CA config (no values in the repo).
+EnvironmentFile=-/etc/environment.d/80-hatch-egress.conf
+# Service env has no HOME; without this every ~-relative credential/key path in the desk resolves to /root and misses (EGRESS-1).
+Environment=HOME=/home/hatch
+WorkingDirectory=/home/hatch/workspace/muse-desk-v3
+ExecStart=/usr/bin/python3 -u -m desk3.watchdog --loop
+Restart=always
+RestartSec=10
+# SUPERVISION-HARDEN-20261114: the watchdog loop pings WATCHDOG=1
+# after every completed 30 s check pass (desk3.watchdog._sd_notify,
+# tied to a completed check_once, never a bare timer). Four missed
+# passes (120 s) means the loop is wedged, not slow: systemd kills
+# and Restart=always relaunches it. The runner is unaffected
+# (KillMode=process; it is adopted by the incoming watchdog).
+WatchdogSec=120
+KillMode=process
+# KillMode=process: the runner is setsid-detached BY DESIGN so a
+# watchdog stop/restart must not cgroup-kill it; the incoming
+# watchdog adopts it via its heartbeat / launch record.
+# The watchdog verifies the runner by effects and relaunches it
+# detached; this unit only has to keep the watchdog itself alive
+# across crashes and VM reboots (proven gap: VM reboot 2026-10-25
+# 02:54Z killed runner+watchdog together, BUGLOG HARDEN-WD2).
+
+[Install]
+WantedBy=multi-user.target
