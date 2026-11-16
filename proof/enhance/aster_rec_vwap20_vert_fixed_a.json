@@ -1,0 +1,28 @@
+{
+ "ab": {
+  "control": {
+   "cross_credit_ps": 1.7,
+   "order_type": "market",
+   "price_hint": "avg_price (cost)"
+  },
+  "direction_ok": true,
+  "paired_record": "intent['enhance_exp'] + extra['aster_enh_exp_journal'] carry control_price_ps/treatment_limit_ps/spread_saved_ps",
+  "treatment": {
+   "limit_price": 1.8,
+   "order_type": "limit",
+   "price_hint": 1.8
+  }
+ },
+ "decision_record": {
+  "calculation": "Fixture chain long 2.90/3.00, wing 1.10/1.20: mid credit 1.80 vs market-cross credit 1.70 -> spread_saved_ps = 0.10/share = $10/package on every exit; limit at mid refuses fills below the mid instead of crossing.",
+  "comparison": "Baseline exit: market order, price_hint = position cost basis (avg_price) \u2014 not a market price at all. Comparator: same exit trigger, chain-priced package: control cross = bid(long) - ask(short) = 1.70/share on the fixture chain; treatment limit = package mid = (2.95 - 1.15) = 1.80/share.",
+  "experiment": "tests/test_harden_edge_batch11_blockers.py TestVertExitMid: all four books exit limit@1.80 with paired record when the chain prices both legs; unpriceable chain keeps the exact pre-change market exit; switch OFF restores market/avg_price-hint exactly. Rejection rule: any exit whose limit exceeds the executable cross or fires without both legs priced.",
+  "mechanism": "Execution (unpriced exit): a market exit on a two-leg vertical pays the whole spread; the intent's price_hint misstates the expected proceeds as cost.",
+  "transfer": "The VWAP20 recovery vertical's surplus is a 5-session mean-reversion capture; crossing the full quoted spread twice (entry cured by batch 10, exit not) donates a fixed slice of that capture to the spread on every round trip."
+ },
+ "disposition": "ENHANCED: exit limit at package mid (entries already cured by batch-10 ENH-ASTERB2-MIDLIMIT)",
+ "exp_id": "ENH-B11-VWAP20VERT-EXITMID-20261024",
+ "paper_only": true,
+ "sleeve": "aster_rec_vwap20_vert_fixed_a",
+ "switch": "extra['enh_aster_rec_vwap20_vert_fixed_a'] {'exit_mid_limit': bool} default ON; OFF restores the pre-change market exit exactly"
+}
