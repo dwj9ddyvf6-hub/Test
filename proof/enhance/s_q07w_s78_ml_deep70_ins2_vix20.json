@@ -1,0 +1,31 @@
+{
+ "sleeve": "s_q07w_s78_ml_deep70_ins2_vix20",
+ "batch": 24,
+ "verdict": "ENHANCED",
+ "exp_id": "ENH25-Q07-STALEBARS-20261024",
+ "paper_only": true,
+ "leak": "entries priced off dead symbol bars",
+ "decision_record": {
+  "transfer": "Tensor 1W confluence edge (swing/midlarge, 78w, filters deep70+ins2+vix20) is paid on a QQQ-down day within 5 sessions of the signal; capture requires entering at a live price in the designed $1,000 slot behind a true 15% stop.",
+  "comparison": "Same qualifying fire, two bar states: symbol bars ending at the session (fresh) vs ending 2026-10-09, 10 QQQ sessions earlier (dead feed), on identical fires/QQQ/VIX.",
+  "mechanism": "Execution/perception: cheap5/deep70/mom6 filters, slot sizing and the stop were all computed off bars[-1] however old it was; a halted or delisted name still entered at the ancient close and the market fill at the real price silently broke the slot and the stop distance.",
+  "calculation": "Stale fixture (last bar 2026-10-09, signal age 0): pre-cure engine (git 0999351^) emits 1 entry, qty 100 @ $10.00 stale close; treatment emits 0 and journals control_enter=true/treatment_enter=false; switch OFF restores the stale entry exactly; fresh bars enter qty 100.",
+  "experiment": "Pre-registered A/B in tests/test_edge_batch24_blockers.py::TestEngineAStaleBars (treatment vs fresh_bars=False control vs fresh bars, per sleeve). Rejection rule: OFF diverges from pre-change, any treatment entry on >5-session-stale bars, or a refused fresh entry \u2014 revert. Forward paired rows in extra.q07_exp_journal."
+ },
+ "change": "Entry refused when the symbol's last daily bar is >5 QQQ sessions before the decision date (ENH25-Q07-STALEBARS, desk3/q07_engine.py, landed by batch 25; batch 24 supplies this lane's s2a record and A/B proof). Exits untouched.",
+ "switch": "extra.q07_enh[<sleeve>].fresh_bars default ON; OFF restores pre-change rule exactly",
+ "shadow_control": "switch OFF on identical fixtures; live paired records in extra.q07_exp_journal",
+ "blocker": "tests/test_edge_batch24_blockers.py::TestEngineAStaleBars",
+ "fail_first": "pre-cure engine extracted from git 0999351^ enters all 4 lanes on the stale fixture (1 entry each); batch-24 A/B GREEN on the final tree",
+ "ab": {
+  "fixture_last_bar": "2026-10-09",
+  "fixture_session": "2026-10-23",
+  "stale_sessions": 10,
+  "control_entries": 1,
+  "treatment_entries": 0,
+  "off_entries": 1,
+  "fresh_entries": 1,
+  "control_qty": 100,
+  "control_price": 10.0
+ }
+}
