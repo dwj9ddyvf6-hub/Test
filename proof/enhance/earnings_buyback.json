@@ -1,0 +1,22 @@
+{
+ "ab": {
+  "bound_days": 7.0,
+  "direction_ok": true,
+  "fresh_passes": true,
+  "stale_age_days": 22.0,
+  "stale_refused": true
+ },
+ "decision_record": {
+  "calculation": "Filter fixture: newest bar 2026-10-01 judged 2026-10-23 (22 days) -> refused; newest bar 2026-10-22 -> passes.",
+  "comparison": "Pre-change rule: spot = last daily close, however old; the sleeve gates the SCAN's age (8 days, fail-closed) but never the bar's. ENH1 fixed which expiry qualifies (>= earnings+26d); the price basis went unaged.",
+  "experiment": "Filter-level A/B (gate is the unit; structure selection oracle-covered): stale/fresh cases above.",
+  "mechanism": "Execution freshness: refuse entries when the symbol's newest served 1Day bar is more than 7 days old at decision time (the batch-18 stale-bar bound; longest legitimate gap ~4.4 days). Exits never gated.",
+  "transfer": "The defined-risk structure is selected and sized off spot: the spread's strikes bracket the CURRENT price and the debit band is judged against it. A spot read off a weeks-old daily bar builds the structure around a price the stock no longer trades at."
+ },
+ "disposition": "APPLY ENH2-EARNINGS-BUYBACK-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestStaleGateUnits::test_earnings_buyback_stale_daily_refused",
+ "exp_id": "ENH2-EARNINGS-BUYBACK-20261024",
+ "paper_only": true,
+ "sleeve": "earnings_buyback",
+ "switch": "extra.earnings_buyback_enh2.stale_bar_gate default ON; OFF restores the pre-change rule exactly"
+}
