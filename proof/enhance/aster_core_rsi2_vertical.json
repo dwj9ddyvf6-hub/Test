@@ -1,0 +1,48 @@
+{
+ "sleeve": "aster_core_rsi2_vertical",
+ "exp_id": "ENH-EDGE-B2-aster_core_rsi2_vertical",
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 2",
+ "status": "pre-registered",
+ "date": "2026-10-24",
+ "binding_leak": "spread-blind contract execution cost",
+ "decision_record_2a": {
+  "transfer": "Liquidity demanders pay the quoted spread; selection sorted by expiry/delta/strike distance only, and the debit was computed at the ask for a market order, so a wide-spread contract silently consumed the sleeve's small risk budget (0.5% of slice).",
+  "comparison": "Control enters any contract inside the DTE/delta bands whose debit passes the premium caps. Treatment refuses when the long leg's spread exceeds 25% of its ask (pre-registered threshold, MODEL ASSUMPTION).",
+  "mechanism": "Execution: an executable-spread gate at selection time; sizing, bands and caps unchanged. (Second look alongside batch-10's mid-limit pricing, which prices the fill; this gate refuses the untradeable quote.)",
+  "calculation": "Decision diff is the calculation: on identical fixture inputs, control vs treatment intents are recorded in ab_fixture_drive; the leak's cost is the full position (refused entries) or the qty delta (volume cap) on opportunities whose defining condition no longer holds at decision time. No P&L figure is invented pre-forward-evidence.",
+  "experiment": "Forward paper: paired shadow records (ctx/enhance_paired, exp_id ENH-EDGE-B2-<sleeve>) journal control vs treatment on every gated opportunity; reject the enhancement if, over 20 paired opportunities, refused entries would have outperformed entered ones net of the sleeve's own fee model, or if the gate refuses >50% of otherwise-valid entries (mis-calibration). Switch OFF restores the pre-change rule exactly (blocker-proven)."
+ },
+ "engine": "desk3/aster_b2.py",
+ "switch": {
+  "key": "extra['aster_core_rsi2_vertical_enhance'] (or ctx)",
+  "field": "spread_gate",
+  "default": true,
+  "off_restores": "pre-change rule exactly"
+ },
+ "shadow_control": "paired record only; the control never emits intents",
+ "blockers": "tests/test_harden_edge_batch2_blockers.py",
+ "ab_fixture_drive": {
+  "case": "RSI2-qualified QQQ call, long leg quoted bid 0.05 / ask 0.40 (spread 87.5% of ask)",
+  "control_switch_off": [
+   {
+    "kind": "entry",
+    "symbol": "QQQ251023C00180000",
+    "qty": 2,
+    "reason": "aster_core_rsi2_vertical entry: core_reserve_qualified_entry book=OPT_QQQ95_RSI2_VERTICAL signal=QQQ:2025-10-06 debit=0.20 risk_budget=50"
+   }
+  ],
+  "treatment_switch_on": [],
+  "paired_records": [
+   {
+    "exp_id": "ENH-EDGE-B2-aster_core_rsi2_vertical",
+    "sleeve": "aster_core_rsi2_vertical",
+    "control": "enter",
+    "treatment": "refuse_wide_spread",
+    "ask": 0.4,
+    "bid": 0.05,
+    "enhance_switch": true
+   }
+  ]
+ },
+ "decision_diff_nonempty": true
+}
