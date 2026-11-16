@@ -4,7 +4,9 @@ INPUTS is the producer-registry declaration for this sleeve."""
 from ._ctx import run as _run
 
 SLEEVE_ID = "qullamaggie_paper"
-INPUTS = ('positions', 'qulla')
+# QULLA-EXIT-CANON-20261116: 'bars' added — the in-signal exit
+# management (MA trail) consumes daily bars for the held symbols.
+INPUTS = ('positions', 'qulla', 'bars')
 CADENCE_S = 300
 
 
