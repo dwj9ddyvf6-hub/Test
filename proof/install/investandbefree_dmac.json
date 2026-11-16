@@ -27,10 +27,10 @@
   "observed_at_build": "state/warm_bars.json fetched 2026-10-29T15:05:50Z: SPY/QQQ 1Day 346 rows each (>= 300 needed), 1Week 72 rows each (short of 120), 1Hour 359 rows each (~51 sessions, short of 120 sessions)"
  },
  "files": {
-  "adapters/investandbefree_dmac.py": "6c39ed5f7750b3cca838fa1865394410bcbe847328452ca7af2243a6345b0061",
+  "adapters/investandbefree_dmac.py": "3c83bb4e44c7c9f34ec31d1a88619824dfc00dd21b3b50ab54c39b7acb01f3a3",
   "adapters3/investandbefree_dmac.py": "5aee4407cc0ed21e22a325645feb250ea1773c30a7f6ef4bce8f107979732d04",
-  "sleeves/investandbefree_dmac.py": "9f6268daec6520e67ffa95da4d971b6c6ad76ee41362a4afd1ab31ee635daf9f",
-  "tests/test_investandbefree_dmac_blockers.py": "9f2211e6fef540c36afbb7424fdb82a9c0d9850b08cb4a53116481114f8e34eb"
+  "sleeves/investandbefree_dmac.py": "2909dc8a208b3b84ecf1c4b4ce01d705b93cc5fc5bdd68dc2017d04949d18086",
+  "tests/test_investandbefree_dmac_blockers.py": "4340eb52840724192bc88b4bd900a34054a583d02d4398f0e5ba1addbc130980"
  },
  "frozen_parameters": {
   "macd_e": "standard exponential smoothing for every component",
@@ -55,20 +55,25 @@
   "variant": "long-term (daily entry timeframe)"
  },
  "gate": {
-  "note": "After the 2026-10-29 closed-bars repair: run_regression_blockers.sh rc=0 on the final tree; unittest discover 'Ran 1406 tests' (1401 at install + 5 repair blockers).",
+  "note": "After the 2026-10-29 F1 slice-fallback repair: run_regression_blockers.sh rc=0 on the final tree; unittest discover 'Ran 1434 tests, OK' (1428 at the variants verification + 6 new F1 blockers).",
   "result": "GREEN",
-  "tests": 1406
+  "tests": 1434
  },
  "installed": "2026-10-29",
+ "paper_only": true,
+ "provenance": "Clean-room extraction of a public double-MACD method (source SPEC: opt/rea-teardowns/investandbefree/SPEC.md), installed by owner order 2026-10-29. Extracted: double-MACD pair (Wilder + exponential), long-term stack 4H/daily/weekly, alignment/dominance concepts, crossover and curl triggers, long-premium-only, +100% partial into a runner, daily-layer hold, USD 2,000 worked-example budget. Recreated defaults: 12/26/9 periods, ATM strike, 30-day expiry bound, 50% premium stop, budget/cap sizing, 10% spread gate, exact step forms, 5-DTE runner bound.",
  "repairs": [
   {
    "date": "2026-10-29",
    "id": "INVESTANDBEFREE-DMAC-CLOSEDBARS-20261029",
    "what": "Verifier failure 1 (blocking): closed-bars-only was violated at the live boundary (forming daily/weekly/hourly bars consumed). Cure: core closed_bars() period-end filter applied in signal() to daily/weekly/1Hour and again in the adapter; bars without a readable timestamp are dropped. Failure 2: total alignment loss (dominant_dir None) produced no exit; _manage now treats None as a break in both the dominant-break and runner daily-break branches. 5 new gate-wired blockers, fail-first proven; BUGLOG_2026-10-29.md entry INVESTANDBEFREE-DMAC-CLOSEDBARS-20261029."
+  },
+  {
+   "date": "2026-10-29",
+   "id": "INVESTANDBEFREE-DMAC-SLICE-FALLBACK-20261029",
+   "what": "Verifier finding F1 (BLOCKING): every family adapter sized solely from ctx.slice, but the live cycle snapshot carries no 'slice' key, so live sizing equity was 0 and entries blocked as sizing_zero_or_cap. Cure in the adapter only: SLICE_FALLBACK_USD = 10000.0 fallback (capital_usd or cash_usd or 10000.0); a supplied slice still governs. Gate-wired slice-less blockers added; fail-first proven (all 5 slice-less drives emitted zero intents pre-cure). BUGLOG_2026-10-29.md entry INVESTANDBEFREE-DMAC-SLICE-FALLBACK-20261029. F2 (intraday UNFED on the stale live runner) remains OPEN as a desk-operations runner restart, outside family files."
   }
  ],
- "paper_only": true,
- "provenance": "Clean-room extraction of a public double-MACD method (source SPEC: opt/rea-teardowns/investandbefree/SPEC.md), installed by owner order 2026-10-29. Extracted: double-MACD pair (Wilder + exponential), long-term stack 4H/daily/weekly, alignment/dominance concepts, crossover and curl triggers, long-premium-only, +100% partial into a runner, daily-layer hold, USD 2,000 worked-example budget. Recreated defaults: 12/26/9 periods, ATM strike, 30-day expiry bound, 50% premium stop, budget/cap sizing, 10% spread gate, exact step forms, 5-DTE runner bound.",
  "sleeve": "investandbefree_dmac",
  "slice_usd": 10000.0,
  "spec": {
@@ -76,10 +81,10 @@
   "version": "FROZEN 2026-10-29"
  },
  "test_evidence": {
-  "fail_first": "QUOTE_GATE_FRAC 0.10 -> 0.50 fails the spread-gate test; PREMIUM_STOP_FRAC 0.50 -> 0.10 fails the premium-stop test; both restored byte-identical and 23/23 re-proven (a stale .pyc from a same-second restore was cleared first). Repair blockers (2026-10-29): the 5 closed-bars / alignment-loss tests all failed on the pre-cure code (the mid-session adapter drive emitted the opposite-direction put off the forming daily bar) and pass after the cure.",
+  "fail_first": "QUOTE_GATE_FRAC 0.10 -> 0.50 fails the spread-gate test; PREMIUM_STOP_FRAC 0.50 -> 0.10 fails the premium-stop test; both restored byte-identical and 23/23 re-proven (a stale .pyc from a same-second restore was cleared first). Repair blockers (2026-10-29): the 5 closed-bars / alignment-loss tests all failed on the pre-cure code (the mid-session adapter drive emitted the opposite-direction put off the forming daily bar) and pass after the cure. F1 repair (2026-10-29): all 5 new slice-less live-view blocker drives FAILED on the pre-cure adapters (zero intents each) and pass after the cure; mutation SLICE_FALLBACK_USD 10000 -> 4000 failed exactly the base slice-less test and was restored byte-identical.",
   "file": "tests/test_investandbefree_dmac_blockers.py",
   "golden": "Independent in-test MACD implementation plus hand-embedded goldens for the crafted 35-close series (MACD-E line 3.552095 / signal 3.506225; MACD-W line 3.008849 / signal 2.305244; the two smoothings diverge by 0.543 on the line). Crossover fixture: quadratic bull run, 3 bars of -5, +30 close (independent check: MACD-E diff prev <= 0 < last). Curl fixture: 2 bars of -5, +15 close, no signal cross. Entry math: ask 5.0 -> qty floor(2000/500) = 4 under the 2500 cap. Partial: qty 4 at 2x entry sells ceil(4*5/10) = 2 leaving 2; qty 1 is a full exit.",
-  "result": "28/28 OK",
-  "tests": 28
+  "result": "30/30 OK",
+  "tests": 30
  }
 }
