@@ -1,0 +1,15 @@
+{
+  "sleeve": "fwd_coinbase_sma200",
+  "batch": "edge16",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "verify_only",
+  "leak_checked": "Daily fixed-size trend decision, complete exits",
+  "evidence": "ENH-defined strategy: enter 0.01 BTC only when just-closed close > SMA200, exit full held qty when close < SMA200, one decision/day in the 00:00-00:05 UTC window on 200 consecutive completed bars. Fixed 0.01 size makes sizing/spread leaks non-binding (adapter serves bid=ask=last close; at 0.01 BTC the dollar spread exposure is de minimis and no alternative served quote exists). No further binding leak found.",
+  "decision_record": {
+    "transfer": "n/a \u2014 no change made",
+    "comparison": "current rule vs candidate leaks (pricing, freshness, exit completeness, sizing)",
+    "mechanism": "see evidence",
+    "calculation": "see evidence",
+    "experiment": "none \u2014 verify-only; no cosmetic change made"
+  }
+}
