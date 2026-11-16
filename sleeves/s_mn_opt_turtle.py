@@ -11,7 +11,8 @@ at/below entry-day close - 2xATR14). One position (catalog slots=1).
 """
 from sleeves.laz8_common import (Intent, SleeveConfig, atr, closes,
                                   held_positions, xstale_refused)
-from sleeves.laz8_opt import contracts_for, pick_option, underlying_of
+from sleeves.laz8_opt import (contracts_for, pick_option,
+                              sizing_zero_journal, underlying_of)
 
 CONFIG = SleeveConfig(sleeve_id="s_mn_opt_turtle", cadence_s=300,
                       state_schema={"position": "dict|None"})
@@ -53,10 +54,17 @@ def signal(bars, slice_state, context):
                 reason=f"s_mn_opt_turtle exit: turtle_exit {exit_why} occ={occ}"))
     if out or held:
         return out
-    for sym in sorted(bars):
+    # GATE-CURE-RANDOM-20261112: breakout symbols are ranked by
+    # the breakout's own strength (close / prior-20-close high
+    # - 1) descending, then symbol, replacing alphabetical
+    # first-breakout allocation (RULE-LOGIC-LEDGER-2026-11-12
+    # Section 3 RANDOM row). The stale gate, option pick and the
+    # single-entry break below are unchanged.
+    ranked = [sym for sym in bars if _breakout(bars[sym])]
+    ranked.sort(key=lambda s: (
+        -(closes(bars[s])[-1] / max(closes(bars[s])[-21:-1]) - 1.0), s))
+    for sym in ranked:
         b = bars[sym]
-        if not _breakout(b):
-            continue
         if xstale_refused(context, "s_mn_opt_turtle", bars, sym):
             continue  # ENH20
         spot = float(b[-1]["c"])
@@ -66,6 +74,8 @@ def signal(bars, slice_state, context):
         occ, ask = picked
         n = contracts_for(BUDGET, ask)
         if n <= 0:
+            sizing_zero_journal(context, "s_mn_opt_turtle", occ, ask,
+                                BUDGET)
             continue
         out.append(Intent(
             kind="enter", symbol=occ, qty_hint=n, side="buy",
