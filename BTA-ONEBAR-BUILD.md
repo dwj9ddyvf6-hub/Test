@@ -1,7 +1,7 @@
 # BTA-ONEBAR-BUILD: one-bar family install report
 
 Date: 2026-10-30. Analysis: workspace research_notes/onebar-family-2026-10-30/ANALYSIS.md.
-Provenance: X post by Breakout Trading Academy (verified account, handle shown truncated as @onl... in the screenshot supplied), installed by owner order 2026-10-30.
+Provenance: X post by Breakout Trading Academy (verified account, handle shown truncated as @onl... in the screenshot the owner supplied), installed by owner order 2026-10-30.
 Edge status: UNPROVEN. The live paper record is the test; no backtest is claimed or implied by this install. The post's profitability claim and its equity curve (about $210,000) are not verifiable from the post: no trades, dates, contract count, costs or test period are supplied. See the claim audit in ANALYSIS.md.
 
 ## Scope (InfinityBlade)
