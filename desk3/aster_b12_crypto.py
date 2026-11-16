@@ -41,6 +41,8 @@ Faithful rules:
 - Funding is a declared producer input: no v3 funding producer is wired
   yet, so the NFS sleeves land visibly UNFED, never fake-fed.
 """
+
+# CONSTANTS-PROVENANCE-20261116: the 96h deadline (hold_h/deadline_h=96, non-fixed16 policies) is source-confirmed in the archive source/backend/r19_crypto.py exit_due_at rule (due + 96h unless fixed16), diffed in HARDEN batch-1 2026-10-24 and recorded in FIDELITY-LEDGER ("source code, not an assumption").
 from __future__ import annotations
 from datetime import timedelta
 from desk3.contract import Intent
@@ -161,7 +163,15 @@ def evaluate(sid, view, ctx=None):
         return out
     if not _breakout(brs):
         return []
-    if spec["fam"] == "nfs" and (fund is None or fund >= 0):
+    # GATE-CURE-CRYPTO-20261112 (STRICTNESS-CENSUS proposal 9):
+    # the LINK squeeze funding leg relaxes < 0 -> < 0.00005
+    # (0 -> 5 entry days over the census funding window).
+    # READINESS-ROUND2-20261112 (CADENCE-SWEEPS S4): the leg
+    # relaxes further to < 0.00015 (any threshold above the
+    # 0.0001 cap print reaches 1.42/wk; landed at the smallest
+    # supported step past the print). Rollback: restore
+    # fund >= 0.00005 here (round 2) or >= 0 (original).
+    if spec["fam"] == "nfs" and (fund is None or fund >= 0.00015):
         return []
     if _stale_blocked(view, sid, brs, now):  # ENH-B8 stale-signal gate (see aster_b11_crypto)
         return []
