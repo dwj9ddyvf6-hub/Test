@@ -1,0 +1,17 @@
+{
+ "binding_leak": null,
+ "blockers": "tests/test_edge_batch26_blockers.py TestVixHedgeVerifyOnlyTrace (2 traces)",
+ "date": "2026-10-24",
+ "disposition": "VERIFY-ONLY (second look; first look IMPROVE-vix_hedge adopted-import position)",
+ "evidence": {
+  "binding_constraint_named": "Contract granularity vs the sleeve's OWN risk constant (1% of the $10k slice per hedge, max 1 hedge) \u2014 on the old account-level book that budget was ~$880 (the adopted 8-contract import). Curing this inside the sleeve would mean breaking its 1% spec or sizing off another sleeve's capital: an owner sizing ruling, not an Edge change. Recorded OPEN-BY-NAME for the owner, not silently worked around.",
+  "entry_feasibility_measured": "Strategy-level trace (TestVixHedgeVerifyOnlyTrace): complacent VIX 15.0, 90-DTE strike nearest 1.20x spot, spread inside the 20% gate. At ask $1.10 the sleeve's own sizing floor($10,000 x 1% / ($1.10 x 100)) = 0 contracts -> no entry; at ask $0.95 -> 1 contract enters. The sleeve CAN enter exactly when its own 1%-of-slice budget affords a contract.",
+  "exits": "All three designed exits wired and traced: VIX spike > 30 (traced: exit qty 8 on the adopted import at closes [...15, 31]), +100% profit target (entry_debit fallback arithmetic cured 2026-10-15), 21-DTE floor. Exits never gated.",
+  "vehicle_selection": "pick_hedge_call walks expiries closest-to-90-DTE first and takes the first two-sided quote inside the spread gate \u2014 no stale-quote or wrong-expiry leak found; quotes carry no timestamps in this sleeve's input contract, so no freshness gate is constructible at the sleeve layer (producer SLA 900s is registry-visible)."
+ },
+ "exp_id": null,
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "sleeve": "vix_hedge",
+ "status": "verify-only"
+}
