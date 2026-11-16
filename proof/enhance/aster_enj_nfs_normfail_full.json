@@ -1,0 +1,47 @@
+{
+ "sleeve": "aster_enj_nfs_normfail_full",
+ "exp_id": "ENH-EDGE-B2-aster_enj_nfs_normfail_full",
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 2",
+ "status": "pre-registered",
+ "date": "2026-10-24",
+ "binding_leak": "entries fire on stale bars",
+ "decision_record_2a": {
+  "transfer": "A negative-funding squeeze breakout is a short-lived dislocation; this engine (unlike the ADA engine's 300s window) had NO entry window, so a wedged or lagging snapshot entered hours after the dislocation ended, paying chase prices for a dead signal.",
+  "comparison": "Control enters on the last completed 4h bar whenever it is evaluated. Treatment refuses when that bar closed more than 3600s (one cadence hour) before evaluation.",
+  "mechanism": "Execution/timing: a freshness bound at the entry gate; exits (incl. the 96h deadline) are untouched and still fire on stale data by design.",
+  "calculation": "Decision diff is the calculation: on identical fixture inputs, control vs treatment intents are recorded in ab_fixture_drive; the leak's cost is the full position (refused entries) or the qty delta (volume cap) on opportunities whose defining condition no longer holds at decision time. No P&L figure is invented pre-forward-evidence.",
+  "experiment": "Forward paper: paired shadow records (ctx/enhance_paired, exp_id ENH-EDGE-B2-<sleeve>) journal control vs treatment on every gated opportunity; reject the enhancement if, over 20 paired opportunities, refused entries would have outperformed entered ones net of the sleeve's own fee model, or if the gate refuses >50% of otherwise-valid entries (mis-calibration). Switch OFF restores the pre-change rule exactly (blocker-proven)."
+ },
+ "engine": "desk3/aster_batch8.py",
+ "switch": {
+  "key": "extra['aster_enj_nfs_normfail_full_enhance'] (or ctx)",
+  "field": "entry_freshness",
+  "default": true,
+  "off_restores": "pre-change rule exactly"
+ },
+ "shadow_control": "paired record only; the control never emits intents",
+ "blockers": "tests/test_harden_edge_batch2_blockers.py",
+ "ab_fixture_drive": {
+  "case": "breakout bar closed 8h before evaluation (stale snapshot); funding -0.01",
+  "control_switch_off": [
+   {
+    "kind": "entry",
+    "symbol": "ENJUSDT",
+    "qty": 9081.818182,
+    "reason": "aster_enj_nfs_normfail_full entry: 4h_breakout20 close=1.1 funding=-0.01 capacity=fullcash"
+   }
+  ],
+  "treatment_switch_on": [],
+  "paired_records": [
+   {
+    "exp_id": "ENH-EDGE-B2-aster_enj_nfs_normfail_full",
+    "sleeve": "aster_enj_nfs_normfail_full",
+    "control": "enter",
+    "treatment": "refuse_stale_entry",
+    "lag_s": 28800.0,
+    "enhance_switch": true
+   }
+  ]
+ },
+ "decision_diff_nonempty": true
+}
