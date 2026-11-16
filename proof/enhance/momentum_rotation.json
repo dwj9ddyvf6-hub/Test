@@ -1,0 +1,18 @@
+{
+ "sleeve": "momentum_rotation",
+ "exp_id": "ENH-CBAR-20261024",
+ "paper_only": true,
+ "disposition": "APPLY ENH-CBAR-20261024",
+ "switch": "view.extra['momentum_rotation_enh2']['completed_bars'] default ON; OFF restores pre-change rule exactly (untrimmed view, no shadow)",
+ "decision_record": {
+  "transfer": "The sleeve's designed edge is computed on completed bars (desk convention, sleeves/momentum.py last_completed); a forming bar is a partial, revisable print \u2014 decisions taken on it pay real spread/slippage for a signal that may not exist at the close.",
+  "comparison": "Same-pass paired A/B: treatment (completed bars only) vs shadow control (untrimmed view) evaluated on identical opportunities in a throwaway state dir; control intents never emitted.",
+  "mechanism": "compute_ranks/momentum_60d, buy pricing and disaster-stop checks all read bars[-1] with no completed-bar filter; intraday passes rank and trade on a partial close.",
+  "calculation": "Fixture A/B: AAA completed 100->160 with forming bar crashed to 100; BBB completed 100->130 flat forming. Control entries {BBB} (AAA mom60 negative on forming close, floor-refused); treatment entries {AAA, BBB}; paired record trimmed={AAA|1Day:1, BBB|1Day:1}.",
+  "experiment": "tests/test_harden_edge_batch17_blockers.py: control cases reproduce pre-change behavior (switch OFF), treatment cases assert the changed decision; fail-first proven (4 treatment failures on pre-cure tree, 2026-10-24)."
+ },
+ "ab": {
+  "leak": "ranks computed on forming daily close",
+  "fixture": "Fixture A/B: AAA completed 100->160 with forming bar crashed to 100; BBB completed 100->130 flat forming. Control entries {BBB} (AAA mom60 negative on forming close, floor-refused); treatment entries {AAA, BBB}; paired record trimmed={AAA|1Day:1, BBB|1Day:1}."
+ }
+}
