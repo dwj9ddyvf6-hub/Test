@@ -1,0 +1,18 @@
+{
+ "sleeve": "momentum",
+ "exp_id": "ENH-CBAR-20261024",
+ "paper_only": true,
+ "disposition": "APPLY ENH-CBAR-20261024",
+ "switch": "view.extra['momentum_enh2']['completed_bars'] default ON; OFF restores pre-change rule exactly (untrimmed view, no shadow)",
+ "decision_record": {
+  "transfer": "The sleeve's designed edge is computed on completed bars (desk convention, sleeves/momentum.py last_completed); a forming bar is a partial, revisable print \u2014 decisions taken on it pay real spread/slippage for a signal that may not exist at the close.",
+  "comparison": "Same-pass paired A/B: treatment (completed bars only) vs shadow control (untrimmed view) evaluated on identical opportunities in a throwaway state dir; control intents never emitted.",
+  "mechanism": "The -40% circuit breaker (and book-notional reference) read bl[-1] raw while rank/pricing filter through last_completed \u2014 the sleeve's own completed-bar law. A forming bar dipping 40% under entry fires an exit the completed series does not support.",
+  "calculation": "Fixture A/B: 139 completed bars 200->130 (breaker level 120), forming session bar at 100, held 3 @ 200. Control (switch OFF): 1 breaker exit. Treatment (ON): no exit.",
+  "experiment": "tests/test_harden_edge_batch17_blockers.py: control cases reproduce pre-change behavior (switch OFF), treatment cases assert the changed decision; fail-first proven (4 treatment failures on pre-cure tree, 2026-10-24)."
+ },
+ "ab": {
+  "leak": "breaker reads raw forming bar close",
+  "fixture": "Fixture A/B: 139 completed bars 200->130 (breaker level 120), forming session bar at 100, held 3 @ 200. Control (switch OFF): 1 breaker exit. Treatment (ON): no exit."
+ }
+}
