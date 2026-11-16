@@ -88,6 +88,7 @@ PRODUCERS = (
 )
 
 # book id -> archive options_rules.json book, verbatim fields.
+# CONSTANTS-PROVENANCE-20261116: _BOOKS values (hold_sessions=5, max_debit_width 0.6/0.45, max_premium_spot, dte/delta bands) are the archive books in source/strategies/r19/options_rules.json via source/backend/r19_options.py, per the FAITHFUL PORT header above (TSV rows 26-35).
 _BOOKS = {
     "OPT_RSI2_VERTICAL_FIXED_A": dict(signal="RSI2", structure="vertical",
         exit_rule="fixed", risk_fraction=0.02, max_debit_width=0.6,
