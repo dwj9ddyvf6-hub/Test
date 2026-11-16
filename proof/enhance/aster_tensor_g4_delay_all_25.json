@@ -1,0 +1,22 @@
+{
+ "ab": {
+  "control_qty_at_cap_breach": 50.0,
+  "control_qty_mid": 50.0,
+  "direction_ok": true,
+  "treatment_qty_at_cap_breach": 0,
+  "treatment_qty_mid": 44
+ },
+ "blockers": "tests/test_harden_edge_batch12_blockers.py (5 tests, fail-first proven: 3 fail on pre-change engines)",
+ "decision_record": {
+  "calculation": "Fixture: fire price 8.00, current close 10.50 (> cap 10): control enters qty 50.0; treatment enters 0. Current close 9.00: control qty 50.0 (notional 450 at fill), treatment qty 44.0 (notional 396).",
+  "comparison": "Pre-change engine vs the sleeve's own design gates: gates and sizing were evaluated on the signal-time fire price, while the market order fills at the current price (dispatcher price_lookup/BP charge at execution). Delay/reserve modes execute >=1 session after the fire by design.",
+  "experiment": "Fixture A/B on identical fires/bars per sleeve (tests/test_harden_edge_batch12_blockers.py): treatment (switch ON) vs control (switch OFF = pre-change fire-price rule), paired shadow record on the entry intent's enhance_exp; no-bar case proves the legacy path is preserved.",
+  "mechanism": "Execution/pricing leak: stale fire price. If the name ran past the cap since the fire, the sleeve bought a name the design refuses; if it rose within the cap, qty=ticket//fire_price overshot the ticket notional at fill (unpriced risk); if it fell, the ticket was under-deployed.",
+  "transfer": "Tensor G4 edge is paid by buying the fired cohort inside the design price cap (<= 10) at the designed $400 ticket; the payer is the momentum cohort's continuation, captured only if the executed position matches the design's price/risk terms."
+ },
+ "disposition": "APPLY ENH-TENSOR14-REPRICE-20261024",
+ "exp_id": "ENH-TENSOR14-REPRICE-20261024",
+ "paper_only": true,
+ "sleeve": "aster_tensor_g4_delay_all_25",
+ "switch": "ctx.enhance[<sleeve>].exec_reprice (or extra.<sleeve>_improve.exec_reprice) default ON; OFF restores fire-price rule exactly"
+}
