@@ -47,10 +47,10 @@ from core.sleeve import BaseSleeve, ExitRule, Intent, SleeveConfig
 
 ET = ZoneInfo("America/New_York")
 SYMBOL = "SPY"
-EDGE_TOL_FRAC = 0.0005
-INVALID_FRAC = 0.0015
-NOTIONAL_PER_FADE = 2000.0
-MAX_OPEN_FADES = 2
+EDGE_TOL_FRAC = 0.0005  # CONSTANTS-PROVENANCE-20261116: docstring Frozen mechanics above (recreated under PRZM-RECREATION-SPEC-2026-10-29) (SPY within 0.05% of the session edge)
+INVALID_FRAC = 0.0015  # CONSTANTS-PROVENANCE-20261116: docstring Frozen mechanics above (recreated under PRZM-RECREATION-SPEC-2026-10-29) (invalidation 0.15% beyond the faded edge)
+NOTIONAL_PER_FADE = 2000.0  # CONSTANTS-PROVENANCE-20261116: docstring Frozen mechanics above (recreated under PRZM-RECREATION-SPEC-2026-10-29) (fixed $2,000 notional)
+MAX_OPEN_FADES = 2  # CONSTANTS-PROVENANCE-20261116: docstring Frozen mechanics above (recreated under PRZM-RECREATION-SPEC-2026-10-29) (max two open fades)
 EDGES_FROM = dtime(10, 0)
 ENTRY_START = dtime(9, 45)
 ENTRY_END = dtime(15, 15)
