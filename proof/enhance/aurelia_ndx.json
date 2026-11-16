@@ -1,0 +1,33 @@
+{
+ "ab": {
+  "control_intents_missing_bil": 1,
+  "direction_ok": true,
+  "paired_records": [
+   {
+    "control_decision": "enter",
+    "exp_id": "ENH2-AURELIA-NDX-20261024",
+    "gate": "complete_plan",
+    "missing_bars": [
+     "BIL"
+    ],
+    "treatment": "deferred_unpriced_plan",
+    "treatment_decision": "refuse"
+   }
+  ],
+  "treatment_intents_missing_bil": 0,
+  "treatment_intents_on_completion_pass": 2
+ },
+ "decision_record": {
+  "calculation": "Fixture (equity 10000, ndx 0.5): complete bars -> 2 intents (QQQ 10, BIL 55). BIL bars missing -> control emits 1 intent (QQQ only) and freezes; treatment emits 0, does not consume the freeze, and emits the full 2-intent plan on the next pass with complete bars.",
+  "comparison": "Pre-change rule on the same first pass of the session: emits the priced subset and consumes the ENH first-evaluation freeze; the unpriced leg is never revisited that session.",
+  "experiment": "Adapters3 A/B on identical views: treatment (switch ON) vs control (switch OFF = legacy subset emit), plus a completion pass proving the freeze survives the deferral. Falsifier: a pass where the subset emit would have been the complete plan (no leg unpriced) \u2014 gate passes it through untouched.",
+  "mechanism": "Execution completeness: the ENH freeze makes the first pass the ONLY pass, so a transient missing bar (one leg unserved on that cycle) converts a 5-minute data gap into a full-session missed rebalance.",
+  "transfer": "The book's Nasdaq exposure is the edge; it is paid only when the FULL rebalance (QQQ/TQQQ/BIL legs) executes. A partially priced plan that executes its priced subset leaves the book at an unintended exposure for the whole session."
+ },
+ "disposition": "APPLY ENH2-AURELIA-NDX-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestAureliaCompletePlan (3 tests)",
+ "exp_id": "ENH2-AURELIA-NDX-20261024",
+ "paper_only": true,
+ "sleeve": "aurelia_ndx",
+ "switch": "extra.aurelia_ndx_enh2.complete_plan default ON; OFF restores the pre-change emit-and-freeze rule exactly"
+}
