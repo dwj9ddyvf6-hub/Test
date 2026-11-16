@@ -1,0 +1,19 @@
+{
+ "sleeve": "po10_qqq",
+ "exp_id": "ENH-CBAR-20261024",
+ "paper_only": true,
+ "disposition": "VERIFY-ONLY",
+ "decision_record": {
+  "transfer": "Second-look Edge pass (batch 17): the sleeve already carries its v2-era ENH cure for its first binding leak; this pass searched for the NEXT leak across execution, timing, risk, responsiveness, adaptability and perception.",
+  "comparison": "Candidate leaks tested against the strategy's own design rules and, where a pure function exists, by direct trace on the final tree.",
+  "mechanism": "No binding leak: only COMPLETED 10m bars can signal (span >= 10m and end <= now \u2014 trace: a partial bucket yields 0 completed bars), entries die 1800s after the signal close, quotes older than 60s are refused, one entry per session is proven from broker session fills, and exits fall back to an unpriced desk door when data is blocked (READINESS F-B1). Every intent path is freshness-gated.",
+  "calculation": "See trace (measured on the final tree, 2026-10-24).",
+  "experiment": "Traces in this artifact; no change implemented \u2014 a cosmetic change is refused per the Edge program law."
+ },
+ "trace": {
+  "unfinished_bucket_completed_bars": 0,
+  "entry_fresh_s": 1800.0,
+  "quote_stale_s": 60.0,
+  "note": "completed-10m-only + 1800s signal freshness + 60s quote gate already in the strategy; no un-gated intent path found"
+ }
+}
