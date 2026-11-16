@@ -1,6 +1,6 @@
 # TRULLAS-VARIANTS-BUILD — variant family build checkpoint
 
-Commission (the desk owner, 2026-10-29): build multiple variants of the Trullas
+Commission (the owner, 2026-10-29): build multiple variants of the Trullas
 divergence algorithm, varying the manual/discretionary joints to sample
 the space his eye moves through. Frozen primary spec:
 `~/workspace/goals/ai-top50-pattern-study/files/TRULLAS-SPEC-2026-10-25.md`
@@ -12,7 +12,7 @@ report `TRULLAS-SLEEVE-BUILD.md`, proof `proof/install/trullas_divergence.json`)
 Hard rails for every phase: primary behavior must not change (byte-identical
 preferred; a shared-code refactor only if truly necessary, with primary
 outputs proven identical before/after on a fixed bar fixture, stated
-plainly). NO BACKTEST for any variant (the desk owner cancelled the Trullas
+plainly). NO BACKTEST for any variant (the owner cancelled the Trullas
 backtest; the live paper record is the test). Paper only. Each variant is
 its own roster sleeve, own $10,000 slice, own state, own record. Each
 variant differs from the primary in exactly ONE named joint.
