@@ -1,0 +1,27 @@
+{
+ "ab": {
+  "control": {
+   "fire_age_bound": null,
+   "stale_fire_7d": "enters"
+  },
+  "direction_ok": true,
+  "paired_record": "extra['aster_enh_exp_journal'].records[] + intent['enhance_exp'] carry control_enter/treatment_enter/age_days",
+  "treatment": {
+   "fire_age_bound": "1 session",
+   "fresh_fire": "enters unchanged",
+   "stale_fire_7d": "refused + paired record"
+  }
+ },
+ "decision_record": {
+  "calculation": "Fixture: C1 fire (price 4.00, ret60 40, vol20 0.10, adv $3M, atr_ratio per book) dated 2026-10-19 vs session 2026-10-26 (age 7d): control enters 100 shares ($400 ticket), treatment refuses with paired record age_days=7; fire dated the session date enters identically under both. BETA fire (price 50, m2_qualified) age 7d: control enters 8 shares, treatment refuses.",
+  "comparison": "Baseline (after batch-12 repricing): a fire dated any number of sessions before the current session still deploys the $400 ticket at the current price. Comparator: identical fire/bars; fires with age outside [0, 1] sessions (the delay mode's own constant) refused, future-dated refused.",
+  "experiment": "tests/test_harden_edge_batch11_blockers.py TestTensorFireAge: stale refused + journal record for all four sleeves, fresh enters, switch OFF restores any-age entry exactly. Rejection rule: refusal of a fire aged 0-1 sessions, or entry on a fire aged >1 session with the switch ON.",
+  "mechanism": "Responsiveness/perception (unbounded signal age): the tensor producer's freshness SLA (86400s) bounds the bundle FILE, not the fire's date inside it; a stale bundle or a backlog fire passes every gate and buys days after the signal died.",
+  "transfer": "A Tensor fire is a perishable signal (buy-cyan / M2 cohort qualification at a point in time); its surplus decays with age. The sleeve's own design acknowledges this \u2014 delay/reserve modes wait exactly one session \u2014 yet cash mode placed no bound on fire age at all."
+ },
+ "disposition": "ENHANCED: fire-age bound (<=1 session) on cash Tensor entries (second look after batch-12 repricing)",
+ "exp_id": "ENH-B11-TENSOR-FIREAGE-20261024",
+ "paper_only": true,
+ "sleeve": "aster_tensor_beta_cash_all_25",
+ "switch": "ctx.enhance['aster_tensor_beta_cash_all_25'] / extra['aster_tensor_beta_cash_all_25_improve'] {'fire_age': bool} default ON; OFF restores the pre-change any-age rule exactly"
+}
