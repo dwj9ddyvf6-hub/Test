@@ -1,0 +1,31 @@
+{
+ "ab": {
+  "control_qty_at_mid_601": 12,
+  "qty_at_planned_600": 12,
+  "treatment_qty_at_mid_601": 8
+ },
+ "binding_leak": "risk sizing off planned entry, not executable price",
+ "blockers": "tests/test_edge_batch26_blockers.py TestSatyExecRiskSizing (3 tests)",
+ "date": "2026-10-24",
+ "decision_record_2a": {
+  "calculation": "Fixture: plan entry 600 / invalidation 598 (planned risk $2.00, control qty 12); quote mid chased to 601 (exec risk $3.00) -> treatment qty 8, restoring the $25 budget (8 x $3 = $24 <= $25 vs control's 12 x $3 = $36). At the planned price both arms agree (qty 12).",
+  "comparison": "Paired shadow control: control qty = floor(risk_usd / |planned_entry - invalidation|); treatment qty = floor(risk_usd / |exec_price - invalidation|) where exec_price is the quote mid the intent itself carries. Ranking (room at current price), deadlines, freshness gate and structural exits unchanged.",
+  "experiment": "Forward paper (once fed): enhance_exp records carry planned vs exec risk-per-share and both qtys per entry. Reject if any treated entry's qty x |fill - invalidation| exceeds the $25 budget. Switch OFF restores planned-entry sizing exactly (blocker-proven).",
+  "mechanism": "Risk sizing at the fill price in desk3/aster_batch16.py _eval_saty. Note: the sleeve is visibly UNFED today (no v3 producer emits saty_setups, freshness SLA 60s) \u2014 the cure is fixture-proven now and binds the first session the producer lands; the unfed state is upstream, named in HARDEN-CENSUS, not a sleeve leak.",
+  "transfer": "A 0.25%-of-slice (1R = $25) SPY trade ranked by net room at the CURRENT price, but sized by the risk-per-share of the setup's PLANNED entry \u2014 when price has chased away from the plan, the real risk per share is wider and the position silently exceeds its 1R budget (and the shell's 1R correlated cap arithmetic with it)."
+ },
+ "disposition": "ENHANCED (first look)",
+ "engine": "desk3/aster_batch16.py _eval_saty",
+ "exp_id": "ENH-B26-SATYEXEC-20261024",
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "shadow_control": "never emits; control qty recorded paired on the treated intent (enhance_exp) + journal",
+ "sleeve": "aster_saty_research",
+ "status": "pre-registered",
+ "switch": {
+  "default": true,
+  "field": "exec_risk_sizing",
+  "key": "extra['enh_aster_saty_research'] or extra['aster_b16_enh']",
+  "off_restores": "pre-change planned-entry sizing exactly"
+ }
+}
