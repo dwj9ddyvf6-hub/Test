@@ -1,0 +1,24 @@
+{
+ "sleeve": "aster_r19_timing_overnight_25bp",
+ "exp_id": "ENH-ASTERB15-MIDLIMIT-20261024",
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 10",
+ "status": "pre-registered",
+ "date": "2026-10-24",
+ "binding_leak": "full-spread crossing on market orders",
+ "decision_record_2a": {
+  "transfer": "Overnight-return harvesters pay the closing spread for immediacy at 15:30 ET; this sleeve crossed the full ask on entry and full bid at the next open for a 25bp-class, ~18h edge \u2014 spread paid twice can exceed expected capture.",
+  "comparison": "Paired shadow control on the same opportunity: control_price = quoted ask the pre-change market order would have paid; treatment = entry limit at the quoted bid/ask mid.",
+  "mechanism": "Execution / spread capture at entry (the binding crossing; exit stays the pre-change scheduled open exit, named as the next leak candidate). Sizing, signal (12:30->14:30 return >= p80 of 126+ sessions), window 15:30-15:35 ET unchanged.",
+  "calculation": "saved_per_share = ask - mid = spread/2, recorded per intent in enhance_exp.spread_saved; uplift = sum over filled paired records minus non-fill opportunity cost.",
+  "experiment": "Forward paper: paired records journaled for every treated entry. Reject if mid-limit fill rate < 80% of control-window entries over 20 paired opportunities, or mean spread_saved <= 0. Switch OFF restores the market order exactly (blocker-proven)."
+ },
+ "engine": "desk3/aster_batch15.py",
+ "switch": {
+  "key": "extra['enh_aster_r19_timing_overnight_25bp'] or engine fallback",
+  "field": "mid_limit",
+  "default": true,
+  "off_restores": "pre-change market order exactly"
+ },
+ "shadow_control": "never emits; control price recorded on the treated intent only",
+ "blockers": "tests/test_harden_edge_batch10_blockers.py"
+}
