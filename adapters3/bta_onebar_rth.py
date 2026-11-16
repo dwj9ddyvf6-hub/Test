@@ -10,7 +10,7 @@ import os
 from adapters3._snapshot_ctx import SnapshotSleeveContext
 
 SLEEVE_ID = "bta_onebar_rth"
-INPUTS = ['bars', 'bars_30min', 'bars:QQQ:30Min', 'positions', 'quotes', 'session_fills']
+INPUTS = ['bars', 'bars:QQQ:30Min', 'positions', 'quotes', 'session_fills']
 
 
 def evaluate(view, ctx):
