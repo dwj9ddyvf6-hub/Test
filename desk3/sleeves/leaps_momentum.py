@@ -11,7 +11,7 @@ desk3/port4_context.py.
 """
 from desk3.port4_context import evaluate_via
 
-INPUTS = ('bars:*:1Day', 'options:chains', 'positions', 'journal:momentum')
+INPUTS = ('bars:*:1Day', 'options', 'positions', 'journal:momentum')
 
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
