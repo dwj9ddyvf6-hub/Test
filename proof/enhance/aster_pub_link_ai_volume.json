@@ -1,0 +1,22 @@
+{
+ "ab_drive": {
+  "case": "position opened 10 bars ago, opened_at only, flat bars",
+  "control_intents": 0,
+  "direction": "treatment fires the designed 5-bar time exit the control never fires",
+  "treatment_intents": 1
+ },
+ "batch": 6,
+ "decision_record": {
+  "calculation": "Fixture: opened_at 10 bars before the latest close, no bars_held, flat bars. Baseline exits 0 (held read as 0), treatment exits 1 at the designed 5-bar deadline. bars_held present: identical decisions under both rules (2 -> hold, 5 -> exit).",
+  "comparison": "Frozen baseline: time exit consumed only the bars_held field. Comparator: same bars/position, held count derived from opened_at (bars closing after the open).",
+  "experiment": "Paired A/B in tests/test_edge_batch6_blockers.py; rejection rule = derived count disagreeing with an explicit bars_held field, or any entry decision change (entry qty pinned 476 both rules).",
+  "mechanism": "Information (volume shock) with a time-based exit; the leak is a missing designed exit \u2014 positions whose journal row carries opened_at but no bars_held could only exit on a bearish spike, i.e. unbounded holding of a 5-bar trade.",
+  "transfer": "Volume-spike momentum on LINK: the sleeve supplies immediacy into a genuine volume shock; the designed holding period is 5 bars, after which the shock information is stale."
+ },
+ "e2e": "tests/test_aster_batch4_blockers.py public-spot fixtures unchanged and GREEN",
+ "exp_id": "ENH-B6-HELDBARS-20261024",
+ "mechanism": "derive bars_held from opened_at over the 4h bar series when the position row carries no bars_held (was: held=0 forever, 5-bar time exit dead)",
+ "sleeve": "aster_pub_link_ai_volume",
+ "switch": "enhance_held_bars default ON; OFF restores bars_held-or-0 exactly",
+ "verdict": "ENHANCED"
+}
