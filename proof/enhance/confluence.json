@@ -1,0 +1,20 @@
+{
+ "ab": {
+  "control_entries": 2,
+  "direction_ok": true,
+  "treatment_entries": 1
+ },
+ "decision_record": {
+  "calculation": "Fixture: one qualifier (count 5) delivered twice -> control 2 entry intents for CONF in one pass (2x 3000 notional); treatment 1.",
+  "comparison": "Pre-change rule: each duplicate row ranks and enters; the sleeve's own book test reads the pre-pass book, never its own staged intents, so both rows emit in one pass.",
+  "experiment": "Adapters3 A/B: ON drops the repeat; OFF reproduces both entries exactly. Falsifier: two DIFFERENT symbols \u2014 both pass.",
+  "mechanism": "Execution integrity: duplicate-intent suppression at the adapter layer (first entry per symbol kept, repeats dropped), paired record per drop.",
+  "transfer": "One qualifier row = one 3%-of-equity slot. A duplicated row in the weekly qualifier product is a data-pipeline hiccup, not two signals; honoring it doubles one name's risk past its slot."
+ },
+ "disposition": "APPLY ENH2-CONFLUENCE-20261024",
+ "e2e": "tests/test_edge_batch14_blockers.py::TestConfluenceDedupe",
+ "exp_id": "ENH2-CONFLUENCE-20261024",
+ "paper_only": true,
+ "sleeve": "confluence",
+ "switch": "extra.confluence_enh2.dedupe_entries default ON; OFF restores the duplicate-row rule exactly"
+}
