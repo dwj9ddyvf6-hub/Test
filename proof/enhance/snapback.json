@@ -1,0 +1,36 @@
+{
+ "ab": {
+  "control": {
+   "px": 80.0,
+   "qty": 1
+  },
+  "treatment": {
+   "px": 40.0,
+   "qty": 2
+  }
+ },
+ "binding_leak": "entries sized/priced off stale weekly close",
+ "blockers": "tests/test_edge_batch26_blockers.py TestSnapbackReprice (2 tests)",
+ "date": "2026-10-24",
+ "decision_record_2a": {
+  "calculation": "Fixture A/B: weekly close $80 vs latest daily $40 after a further post-signal slide: control qty 1 @ $80 hint; treatment qty 2 @ $40 hint \u2014 identical $100 budget, executable price. Reverse direction (bounce) shrinks qty symmetrically, capping fill notional at the designed 1%.",
+  "comparison": "Paired shadow control on the same flagged opportunity: control = the signal week's weekly close (row close, up to a week stale); treatment = the symbol's latest daily close from the same bars feed the sleeve already consumes.",
+  "experiment": "Forward paper: enh26_paired records carry control/treatment px+qty per entry. Reject if treated entries' mean |fill - hint| is not strictly smaller than control's over 20 paired entries, or if any treated qty exceeds the 1% budget at its fill. Switch OFF restores the weekly-close rule exactly (blocker-proven).",
+  "mechanism": "Execution/perception at the adapter layer (strategy file is sha256-pinned): reprice the entry intent and re-size with the sleeve's own rule (1% of slice equity per name) at the fresh close; a budget that buys nothing at the fresh price takes no position (OBS-1). Cap, flags, exits untouched.",
+  "transfer": "Each flagged name is a 1%-of-slice position held 91 days; the transfer is the position itself, sized on a price the market no longer offers."
+ },
+ "disposition": "ENHANCED (second look; first look ENH-SNAPBACK-20261024 position cap)",
+ "engine": "desk3/enhance26.py gate fresh_price_reprice, wired in adapters3/snapback.py (sleeves/snapback.py byte-identical, pin intact)",
+ "exp_id": "ENH-B26-SNAP-REPRICE-20261024",
+ "paper_only": true,
+ "program": "muse-desk-v3 harden+enhance Edge pass batch 26",
+ "shadow_control": "never emits; control px/qty recorded paired per entry in enh26_paired / LAST_PAIRED",
+ "sleeve": "snapback",
+ "status": "pre-registered",
+ "switch": {
+  "default": true,
+  "field": "fresh_price_reprice",
+  "key": "extra['snapback_enhance2']",
+  "off_restores": "pre-change weekly-close sizing exactly"
+ }
+}
