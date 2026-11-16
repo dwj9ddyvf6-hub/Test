@@ -46,7 +46,16 @@ def _evaluate_v2(ctx):
             last_close = hist[-1]["close"]
             derived["quote"] = {"as_of": ctx.now.isoformat(), "bid": last_close, "ask": last_close}
     held_extra = build_extra(ctx)
-    for k in ("held_qty", "sleeve_state", "sleeve_state_flat"):
+    # Symbol-specific held state (FIRING-LINE cure, 2026-11-11):
+    # the strategy's held claim for BTC-USD must come from the BTC
+    # row of the book (served as BTCUSD / BTC/USD), never from a
+    # generic first-position anchor.
+    held = held_map(ctx)
+    for _k in ("BTC-USD", "BTC/USD", "BTCUSD"):
+        if _k in held:
+            derived["held_qty"] = held[_k]
+            break
+    for k in ("sleeve_state", "sleeve_state_flat"):
         if k in held_extra:
             derived.setdefault(k, held_extra[k])
     served = serve_journal(ctx, "coinbase_sma200_exp_journal")
