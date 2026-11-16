@@ -1,0 +1,19 @@
+{
+  "sleeve": "s_mn_hedge",
+  "batch": "edge19",
+  "program": "muse-desk-v3-harden-enhance-20261024",
+  "verdict": "enhanced",
+  "exp_id": "ENH19-LAZB7-20261024",
+  "leak": "Entry sized off provably stale bar",
+  "decision_record": {
+    "transfer": "A daily decision made on the last close only transfers when that close is the market's latest word; a bar 11 calendar days old prices the entry off a market that no longer exists while the fill prints current.",
+    "comparison": "Control: enter on the last bar regardless of age. Treatment: refuse entry when the decision bar is >4 calendar days before the session (Mon-after-Fri = 3d and post-holiday Tue = 4d both pass). Exits untouched.",
+    "mechanism": "Neither sleeve stamped or checked bar age; producer lag or a holiday gap silently turned the entry price_hint/sizing stale (same class cured desk-wide in Edge batch 8).",
+    "calculation": "Fixture: TZA last bar 2026-10-12, session 2026-10-23, signal on -> ON 0 entries + paired refuse_stale_bar journal; OFF 1 entry; fresh bar 2026-10-23 -> ON 1 entry.",
+    "experiment": "ENH19-LAZB7-20261024 stale_gate via laz_sleeves/_common.py _bar_stale; switch default ON."
+  },
+  "switch": "extra['s_mn_hedge_enh19']['stale_gate'] default ON",
+  "shadow": "faithful entry recorded paired in enh19_journal, never emits",
+  "experiment_measurement": "fixture: stale-bar entry 1 -> 0 ON; fresh-bar entry unchanged",
+  "blockers": "tests/test_harden_edge19_blockers.py (15 tests; fail-first 9 failed pre-cure, 15/15 GREEN post-cure)"
+}
