@@ -1,0 +1,23 @@
+{
+ "decision_record": {
+  "calculation": "Measured on fixture drives: entry drive (score 0.01, flat bars dv20 1.5M) -> 1 entry; exit drive (fill 2026-09-01, session 2026-10-23) -> 1 exit; p90 record on a 10-name population {0.001..0.009, 0.01}: p90 = 0.0091, treatment_eligible = [TOP] only, control (SCORE_CUT 0.00208) eligible = 8 names.",
+  "comparison": "Second look examined: exit reliability, entry pricing basis, eligibility population, capacity handling.",
+  "experiment": "Evidence drives in tests/test_edge_batch14_blockers.py::TestVerifyOnlyEvidence::test_daily_cyan_gbm_entry_exit_and_p90_record (entry/exit oracle-matched drives + the strategy-layer p90 paired record).",
+  "mechanism": "No change. Candidate leaks examined and discharged with evidence (below): (1) a held name whose bars stop being served never exits sleeve-side \u2014 but every entry intent carries ExitRule time_bars=HOLD_BARS, which the dispatcher enforces independently of the sleeve's bar view, so the exit does not depend on the sleeve seeing bars; the sleeve-side staged exit (HOLD_BARS-1) is a second, earlier path, not the only one. (2) p90 computed over all delivered scores including names that later fail MIN_PX/dv20 \u2014 that population IS the sleeve's stated law ('top tenth of delivered scores', ENH1 decision record), not a leak. (3) Sizing uses the last served close \u2014 entries are market intents on daily bars re-evaluated every 300s; no stale-price sizing basis like a weekly qualifier close exists here.",
+  "transfer": "Top-decile GBM scores, 1% notional each, 21-session hold. ENH1 replaced the frozen absolute cut with the session's own p90 (the sleeve's stated top-tenth law)."
+ },
+ "disposition": "VERIFY-ONLY",
+ "evidence": {
+  "control_eligible_count": 8,
+  "entry_drive_entries": 1,
+  "exit_drive_exits": 1,
+  "p90": 0.0091,
+  "treatment_eligible": [
+   "TOP"
+  ]
+ },
+ "exp_id": "VERIFY-ONLY",
+ "paper_only": true,
+ "sleeve": "daily_cyan_gbm",
+ "verdict": "VERIFY-ONLY \u2014 no second binding leak survives scrutiny"
+}
