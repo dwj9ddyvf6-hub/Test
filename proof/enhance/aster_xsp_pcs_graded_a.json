@@ -1,0 +1,21 @@
+{
+ "ab": {
+  "direction_ok": true,
+  "utc_1002z_treatment": "no_entry",
+  "utc_inside_et_window_control": "no_entry",
+  "utc_inside_et_window_treatment": "entry"
+ },
+ "blockers": "tests/test_edge_batch13_blockers.py (14 tests, fail-first proven: 7 fail on pre-cure engines, 14/14 pass post-cure)",
+ "decision_record": {
+  "calculation": "Fixture: now=2025-10-06T14:02:00+00:00 (=10:02 ET, EDT): control window_open=False (raw slice 14:02), treatment window_open=True and all four sleeves emit their designed entry; now=10:02Z (=06:02 ET) treatment refuses. Naive ET stamps keep the source reading.",
+  "comparison": "Designed entry window 10:00-10:05 ET on the first session of the week vs the implemented gate, which sliced hour/minute raw out of the timestamp string. Live cycle snapshots are UTC-stamped (14:02Z = 10:02 ET), so the implemented gate read 14:02 and NEVER opened in live trading; a 10:02Z stamp would have opened it at 06:02 ET premarket.",
+  "experiment": "Fixture A/B (TestXspEtWindow): treatment vs switch-OFF control on identical chains/state; paired shadow record (control_window_open, treatment_window_open) appended to the edge_exp_journal on every evaluation that reaches the window gate.",
+  "mechanism": "Execution/timing leak of the purest class (owner priority #1): the sleeve decided correctly but could not execute at all on live-stamped snapshots - a total, silent missed-fill on every live opportunity.",
+  "transfer": "XSP weekly put-credit graded structure, risk 3% of the $10k slice; paid by weekly digital-regime sellers of downside insurance when the prior-week digital sits below its 52-week p75 (and below median for calm)."
+ },
+ "disposition": "APPLY ENH-B13-XSP-ETWIN-20261024",
+ "exp_id": "ENH-B13-XSP-ETWIN-20261024",
+ "paper_only": true,
+ "sleeve": "aster_xsp_pcs_graded_a",
+ "switch": "extra.aster_xsp_enh.et_window default ON; OFF restores the raw timestamp slice exactly"
+}
