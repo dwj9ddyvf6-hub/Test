@@ -1,0 +1,14 @@
+{
+ "sleeve": "aster_r19_linkusdt_negative_funding_squeeze_normalization_fullcash",
+ "batch": 9,
+ "verdict": "VERIFY_ONLY",
+ "leak": "none binding survives scrutiny",
+ "evidence": "Exit trigger is the funding STATE (rate>=0), not a bar event: it persists across bars, so the evaporation mechanism proven for normalization_failure cannot occur; the archive execute_at delay is pinned by pre-existing blocker test_normalization_no_exit_before_delay (batch12) and re-verified in TestLatchedTrigger::test_normalization_verify_only_behavior (fires at delay on rate 0.0, refuses at -0.01, refuses before delay). 96h deadline backstop intact. An attempted dead-zone latch was reverted for contradicting that fidelity blocker.",
+ "decision_record": {
+  "transfer": "Squeeze exhaustion: funding normalization itself is the designed exit signal.",
+  "comparison": "Current rule vs hypothetical latched variant: no decision difference except in the archive-pinned delay window, where the archive rule governs.",
+  "mechanism": "Risk/service: short-squeeze carry ends when shorts stop paying.",
+  "calculation": "See evidence fixtures.",
+  "experiment": "No change shipped; monitoring = existing batch12 blockers + batch9 verify-only test."
+ }
+}
