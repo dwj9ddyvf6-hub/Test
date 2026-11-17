@@ -63,6 +63,29 @@ Fail-closed rules:
   family re-sync (refresh_tools.py re-runs the family after
   the Second Opinion advances in its assemblies) brings it
   current the same evening.
+- Session-join amendment (AGENTDEBATE-SESSION-JOIN-20261117):
+  the generation stamp is not a stable join key for any session
+  older than the freshest. The Flow Board's cells carry the
+  tape card's generation stamp only for the freshest session;
+  for every older session they carry the tape run log's run-end
+  stamp (refresh_premiummeter.py), while the Second Opinion
+  carries the card generation stamp of the session it was built
+  from. The two stamps therefore never match for the session
+  the Second Opinion is built from whenever that session is not
+  the freshest, which is its designed state at the 17:30 tape
+  lane run every evening (the Second Opinion advances in the
+  19:00 tools lane): the generation join fail-closed every
+  17:30 run from 2026-11-10 through 2026-11-16 even though the
+  figures agreed exactly. The join now falls back, when no cell
+  carries the generation stamp, to the cell for the Second
+  Opinion's own session, and the exact parity checks below
+  (call-side, put-side, their sum against the published net,
+  and the print count, all integer equalities on every figure
+  this page consumes from the cell) are the like-for-like
+  proof for that cell: a figure disagreement still stops the
+  refresh, and a session with no cell at all still stops it.
+  A debate joined at an older session is stamped stale against
+  the tape, exactly as the SYS-2 arbitration provided.
 - If the Second Opinion's positioning figures disagree with the
   Morning Map's spot, walls or flip level for the same fund, or
   their above/below relationship disagrees, the refresh stops.
@@ -146,6 +169,27 @@ def long_date(iso):
 
 def side_of_stance(stance):
     return {"positive": "rising", "cautious": "falling"}.get(stance, "neither")
+
+
+def select_prints_cell(cells, so_card, so_session):
+    """The Flow Board cell the Second Opinion's prints join to.
+
+    Returns (cell, joined_by) or (None, None). The generation
+    join comes first (SYS-2): the cell carrying the exact tape
+    card generation stamp the Second Opinion's prints were
+    built from. When no cell carries that stamp, the session
+    join (AGENTDEBATE-SESSION-JOIN-20261117): the cell for the
+    Second Opinion's own session, whose figures the caller's
+    exact parity checks then prove like for like or stop the
+    refresh. A session with no cell joins to nothing."""
+    if so_card:
+        for c in cells:
+            if c.get("published_at_utc") == so_card:
+                return c, "generation"
+    for c in cells:
+        if c.get("session") == so_session:
+            return c, "session"
+    return None, None
 
 
 def main():
@@ -256,24 +300,15 @@ def main():
         # positioning gate below already follows: agreement
         # with the session the source itself carries
         # (AGENTDEBATE-CARD-SESSION-20261031).
-        cell = None
         so_card = so.get("prints_published_at_utc")
-        if so_card:
-            for c in row.get("cells", []):
-                if c.get("published_at_utc") == so_card:
-                    cell = c
-            if not cell:
-                fail("Flow Board carries no figures from the "
-                     "tape card the Second Opinion's prints "
-                     "were built from (" + str(so_card) + ") for "
-                     + sym + "; the records cannot be compared "
-                     "like for like")
-        else:
-            for c in row.get("cells", []):
-                if c.get("session") == fb.get("freshest_session"):
-                    cell = c
-            if not cell:
-                fail("Flow Board carries no freshest-session figures for " + sym)
+        cell, _joined_by = select_prints_cell(
+            row.get("cells", []), so_card, session)
+        if not cell:
+            fail("Flow Board carries no figures from the "
+                 "tape card the Second Opinion's prints "
+                 "were built from (" + str(so_card) + ") for "
+                 + sym + "; the records cannot be compared "
+                 "like for like")
         prints_join_sessions.append(cell.get("session"))
 
         price, prints, pos = n.get("price"), n.get("prints"), n.get("positioning")
