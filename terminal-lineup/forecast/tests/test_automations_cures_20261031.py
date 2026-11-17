@@ -128,7 +128,14 @@ def test_agentdebate_published_and_premium_parity():
     # consumer exit 0, session 2026-11-10, tape_freshness
     # current); the parity checks below are re-proven at the
     # new session.
-    assert d["session"] == "2026-11-10"
+    # Re-pinned 2026-11-17 (SUITE-RED-CURE-20261117): the
+    # published debate advanced to the 2026-11-16 session when
+    # the lanes completed the 2026-11-11 through 2026-11-16
+    # sessions (second-opinion and flow-board also at
+    # 2026-11-16, counted from site/agent-debate/data.json on
+    # this date); the parity checks below are re-proven at the
+    # new session by this same test.
+    assert d["session"] == "2026-11-16"
     assert d["tape_freshness"]["state"] == "current"
     so = _data("second-opinion")
     fb = _data("flow-board")
