@@ -220,10 +220,16 @@ def build():
     }
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
-    with open(OUT_PATH, "w", encoding="utf-8") as fh:
+    # Atomic publication (cure TORN-PUBLISH-20261117): write the
+    # complete file to a temp path in the same directory and
+    # os.replace it onto OUT_PATH, so readers never see a torn
+    # partial write. Bytes unchanged: indent=2, sort_keys, newline.
+    tmp = OUT_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
         data = _tc.stamp_for_script(data, __file__) if _tc is not None else data
         json.dump(data, fh, indent=2, sort_keys=True)
         fh.write("\n")
+    os.replace(tmp, OUT_PATH)
     print(f"Wrote {OUT_PATH} ({len(alerts)} alerts kept for "
           f"session {flow_session}, {len(coverage)} recorded "
           f"sessions in coverage, published "
