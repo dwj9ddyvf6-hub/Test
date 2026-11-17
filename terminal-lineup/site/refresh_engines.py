@@ -578,6 +578,22 @@ def _run(panel_through=None, cp: _Checkpoint = None) -> int:
         else:
             cp.mark("board-republish", r.returncode, time.time() - t0)
     slugs = engine_slugs()
+    # Entrant-order cure (CALIBRATION-ENTRANT-ORDER-20261117):
+    # calibration-league's published as_of is the max of two
+    # entrant pages' own dates (refresh_calibrationleague.py:
+    # honest-pop's as_of, earnings-distribution's
+    # decision_as_of). Alphabetically the league runs BEFORE
+    # both entrants in this loop, so every evening it published
+    # the entrants' previous-session dates and its reading stood
+    # one session behind its own sources forever (2026-11-16:
+    # league as_of 2026-11-13 while both entrants stood at
+    # 2026-11-16 by lane end). Run the league immediately after
+    # the later of its two as_of sources (honest-pop); no extra
+    # run, no other engine's order changes.
+    if "calibration-league" in slugs and "honest-pop" in slugs:
+        slugs.remove("calibration-league")
+        slugs.insert(slugs.index("honest-pop") + 1,
+                     "calibration-league")
     order += slugs + list(FINAL_STEPS)
     for slug in slugs:
         script = scripts.get(norm(slug))
