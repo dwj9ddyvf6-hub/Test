@@ -144,7 +144,13 @@ def test_refresh_engines_passes_explicit_through_to_both_lanes():
     src = _read(os.path.join(SITE, "refresh_engines.py"))
     assert "freshest_completed_session" in src
     assert '"--through", panel_through' in src
-    assert 'str(HERE / "advance_deep_panel.py"),\n         *through_args' \
+    # Amended 2026-11-17 (SUITE-RED-CURE-20261117): cure
+    # REFRESH-RESUME-20261111 wrapped the deep-panel advance in
+    # its checkpoint skip block, deepening that argv list's
+    # indentation by one level; the price-panel lane below keeps
+    # the spine-tuple shape. The durable claim is unchanged:
+    # both lanes splat the explicit through_args.
+    assert 'str(HERE / "advance_deep_panel.py"),\n             *through_args' \
         in src
     assert 'str(HERE / "advance_price_panel.py"),\n              *through_args' \
         in src
