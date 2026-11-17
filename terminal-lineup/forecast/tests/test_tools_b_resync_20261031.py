@@ -71,6 +71,38 @@ def test_priced_moves_spot_matches_panel_last_row_per_name():
                                      "priced_moves.json"))
     assert record["priced_moves_on_record"] >= 1
     for sym, row in record["names"].items():
+        if row.get("retained_from_prior_run"):
+            # Amended 2026-11-17 (SUITE-RED-CURE-20261117):
+            # PRICED-MOVES-ACCRUAL-20261113 (which postdates this
+            # test) changed the record's contract: an entry this
+            # run did not price is carried, marked retained, with
+            # its spot and figures exactly as priced at capture,
+            # and priced_moves.resync_panel exempts retained
+            # entries from re-derivation by name. The blanket
+            # last-row pin therefore indicted the accrual class
+            # itself (17 retained of 95 names on 2026-11-17;
+            # BLDP, priced 2026-11-13T00:14Z at the 2026-11-12
+            # panel close 1.40 for its 2026-11-16 report, was
+            # carried when its later re-pricing attempts landed
+            # on the lane's missing path, the same lawful skip
+            # the current record names for MFP and NJR as
+            # no_indicative_quote_mid; BLDP is not halted or
+            # delisted, the panel carries it trading on
+            # 2026-11-13 and 2026-11-16). A retained entry is
+            # instead pinned to its own capture: its spot must
+            # be the panel close of its own spot_session, so a
+            # retained entry re-derived from a later panel, or
+            # stamped with a session its spot did not come
+            # from, still fails. Fresh entries keep the original
+            # last-row pin at full strength below, so the
+            # PANEL-RESYNC defect (a fresh name left one session
+            # behind the panel) still fails exactly as before;
+            # on the pre-accrual record no entry was retained,
+            # so the original assertion applied to every name.
+            closes = {r[0]: r[4] for r in panel[sym]}
+            assert row["spot_session"] in closes, sym
+            assert row["spot"] == closes[row["spot_session"]], sym
+            continue
         assert row["spot_session"] == panel[sym][-1][0], sym
         assert row["spot"] == panel[sym][-1][4], sym
 
