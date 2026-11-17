@@ -160,7 +160,20 @@ def test_consumers_do_not_demand_cross_producer_session_equality():
     assert "if tape_session < session:" in so
     debate = read("refresh_agentdebate.py")
     assert 'fb.get("freshest_session")' in debate
-    assert 'c.get("session") == fb.get("freshest_session")' in debate
+    # Amended 2026-11-17 (SUITE-RED-CURE-20261117): cure
+    # AGENTDEBATE-SESSION-JOIN-20261117 rewrote the prints join,
+    # so no cell is demanded to sit at the Flow Board's freshest
+    # session any more. select_prints_cell joins by tape card
+    # generation first, then by the Second Opinion's own session
+    # (c.get("session") == so_session), with the exact figure
+    # parity checks as the like-for-like proof; the Flow Board
+    # gate is freshness only (its freshest session must not be
+    # older than the scored session), never equality. That is
+    # the durable claim of this blocker, stated directly now.
+    assert 'c.get("session") == fb.get("freshest_session")' \
+        not in debate
+    assert 'c.get("session") == so_session' in debate
+    assert '(fb.get("freshest_session") or "") < session' in debate
     tape_run = read("tape_family_run.py")
     assert "JOINED_CONSUMERS" in tape_run
 
