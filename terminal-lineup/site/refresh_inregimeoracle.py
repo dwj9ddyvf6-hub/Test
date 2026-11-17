@@ -929,7 +929,9 @@ def main():
         # filter either way (TRM-1 residual cure).
         engine_forecasts = [r for r in ledger.iter_rows()
                             if r.get("type") == "forecast"
-                            and r.get("engine_id") == ENGINE_ID]
+                            and r.get("engine_id") == ENGINE_ID
+                            and (r.get("outcome") or {}).get("kind")
+                            == "next_window_hit_rate_exceeds_trailing"]
         for row in engine_forecasts:
             if row.get("type") != "forecast" \
                     or row.get("engine_id") != ENGINE_ID \
