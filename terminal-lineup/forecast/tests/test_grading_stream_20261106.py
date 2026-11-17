@@ -297,6 +297,13 @@ def test_grading_stream_state_refuses_broken_chain(tmp_path, reg):
 
 def test_reports_child_loads_rows_exactly_once(tmp_path, reg,
                                                monkeypatch, capsys):
+    # Superseded invariant (GRADING-REPORTS-STREAM-20261116):
+    # the 2026-11-06 form of this test asserted the child calls
+    # Ledger.rows() exactly once. At 435,910 rows that one load
+    # was itself OOM-killed, so the child now streams instead:
+    # rows() is never called and the ledger is walked exactly
+    # once through iter_rows() (compact_rows). The output
+    # assertions below are unchanged from the original test.
     path = _prefix(tmp_path, rows=6000)
     monkeypatch.setattr(run_grading_reports, "LEDGER_PATH", path)
     calls = []
@@ -307,8 +314,18 @@ def test_reports_child_loads_rows_exactly_once(tmp_path, reg,
         return original(self)
 
     monkeypatch.setattr(ledger_mod.Ledger, "rows", counting)
+    iter_calls = []
+    original_iter = ledger_mod.Ledger.iter_rows
+
+    def counting_iter(self):
+        iter_calls.append(1)
+        yield from original_iter(self)
+
+    monkeypatch.setattr(ledger_mod.Ledger, "iter_rows",
+                        counting_iter)
     assert run_grading_reports.main() == 0
-    assert len(calls) == 1
+    assert len(calls) == 0
+    assert len(iter_calls) == 1
     out = capsys.readouterr().out
     assert "overlap engine_" in out
     assert "family engine_" in out or "har control" in out
