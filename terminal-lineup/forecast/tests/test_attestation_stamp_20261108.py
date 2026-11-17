@@ -63,7 +63,12 @@ def test_stamp_written_only_when_position_passed():
 def test_regenerate_stamps_the_full_ledger_position():
     src = open(os.path.join(FORECAST, "refresh_attestations.py"),
                encoding="utf-8").read()
-    assert "ledger_rows=len(rows)" in src
+    # Mechanism updated (GRADING-REPORTS-STREAM-20261116):
+    # regenerate() streams the ledger and stamps the row count
+    # tracked on that pass, instead of len() of a held rows
+    # list; the behavioural assertion below (the stamp equals
+    # the fixture ledger's full row count) is unchanged.
+    assert "ledger_rows=stats[\"rows\"]" in src
     # Behavioural: regenerate a one-engine fixture registry
     # against a fixture ledger; the stamp must equal the
     # ledger's full row count and the figures must recount from
