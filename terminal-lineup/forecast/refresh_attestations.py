@@ -154,7 +154,24 @@ def regenerate(recorded_on=None, registry_path=REGISTRY_PATH,
     # the hourly gated Test sync carries off this machine, so
     # the head is anchored externally at sync cadence rather
     # than only in records on this box.
-    write_checkpoint(None, count=stats["rows"], head=stats["head"])
+    # The checkpoint belongs to the ledger actually recounted:
+    # its path is derived from ledger_path, never the live
+    # default (SUITE-RED-CURE-20261117). Before this cure a
+    # regeneration against a fixture ledger (the form
+    # test_attestation_stamp_20261108 uses, with tmp registry
+    # and ledger paths) still wrote through write_checkpoint's
+    # default path, overwriting the live anchor with the
+    # fixture's stats (2 rows, fixture head 807b8bb4 on
+    # 2026-11-17T14:13:46Z, during that morning's suite run)
+    # and failing test_ledger_checkpoint_matches_live_ledger_head
+    # in every later suite file. For the default ledger_path
+    # the derived path is exactly CHECKPOINT_PATH, so the
+    # production anchor is unchanged.
+    checkpoint_path = os.path.join(
+        os.path.dirname(os.path.abspath(ledger_path)),
+        "ledger-checkpoint.json")
+    write_checkpoint(None, count=stats["rows"], head=stats["head"],
+                     checkpoint_path=checkpoint_path)
     return changed
 
 
