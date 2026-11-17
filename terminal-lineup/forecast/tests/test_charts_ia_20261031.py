@@ -1539,7 +1539,28 @@ def test_subject_earnings_calendar_realised_moves():
             # defined: the same symbol priced for the SAME report
             # date with a different figure still fails.
             if priced_dates.get(r["symbol"]) == r["report_date"]:
-                assert priced[r["symbol"]] == r["expected_move_pct"], r
+                # Amended 2026-11-17 (SUITE-RED-CURE-20261117):
+                # the calendar's stored expected figure is the
+                # priced record's own figure at the precision the
+                # calendar publishes it. refresh_earningscal's
+                # priced_move_for publishes f"{pct:.1f}%", and
+                # build_realised parses that string back for
+                # calendar-sourced rows, so those rows carry the
+                # 1-decimal figure (181 of 184 non-null rows on
+                # 2026-11-17; DGXX: stored 15.6 from priced
+                # 15.5702, SGML: stored 9.2 from priced 9.2233);
+                # rows seeded directly from the priced record
+                # carry full precision (3 of 184: CG, ECHO, HUBG).
+                # Both are the same quantity; the exact-equality
+                # pin indicted the rounding, not a wrong figure.
+                # The guard keeps its strength: a stored figure
+                # that is neither the priced figure nor its
+                # published 1-decimal form (a different name's
+                # figure, or a genuinely different move for the
+                # same date) still fails.
+                _p = priced[r["symbol"]]
+                assert r["expected_move_pct"] == _p or \
+                    r["expected_move_pct"] == float(f"{_p:.1f}"), r
     # No name that has not yet reported appears among realised rows.
     future = {n["symbol"] for n in d["names"]
               if n["date"] >= d["recorded_on"]}
