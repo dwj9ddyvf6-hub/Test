@@ -492,8 +492,16 @@ class Ledger:
     # row itself (grade_forecast's context scans). The streaming
     # grading state pre-collects exactly these rows: 28 exist in
     # the 253,163-row ledger of 2026-11-06.
+    # wall_break_close_through rows are context for a context kind:
+    # first_failure_side (Engine 8) resolves from its sibling wall
+    # outcomes, so they are pre-collected too
+    # (FORECAST-GRADING-CONTRACT-20261116: without them the
+    # streaming path starved the resolver and every matured
+    # first_failure_side row skipped with "no call/put wall
+    # levels").
     GRADING_CONTEXT_KINDS = ("first_failure_side", "league_interval",
-                             "league_ranking")
+                             "league_ranking",
+                             "wall_break_close_through")
 
     def grading_stream_state(self):
         """One streaming pass over the ledger collecting the
@@ -1317,9 +1325,10 @@ def recompute_figures(rows):
     silently produced empty figures. Callers holding a Ledger
     can pass ledger.iter_rows() instead of the parsed whole;
     the verdicts are identical on the same file and resident
-    memory stays at one parsed row plus the forecast rows
-    themselves, which the grade pass must look up by id in
-    any implementation.
+    memory stays at one parsed row plus the compact forecast
+    stubs the grade pass looks up by id (row_id, engine_id,
+    the scored_zero marker and the frozen label identity
+    fields only; GRADING-REPORTS-STREAM-20261116).
 
     Void exclusion (defect 8 cure, 2026-10-30): a forecast voided
     by a correction row is counted in forecasts_voided and its
@@ -1341,11 +1350,39 @@ def recompute_figures(rows):
     for r in rows:
         kind = r.get("type")
         if kind == "forecast":
-            forecasts[r["row_id"]] = r
+            # Compact retention (GRADING-REPORTS-STREAM-20261116):
+            # the counting below reads only row_id, engine_id,
+            # the scored_zero marker and the three frozen label
+            # identity fields of a forecast row, so only those
+            # are retained. Retaining the full parsed rows made
+            # this recount the ledger's second full resident
+            # copy and OOM-killed the attestation regeneration
+            # (and, in-process, the grading runner) once the
+            # ledger passed ~436k rows. The stub carries each
+            # identity field iff the row carries it, so
+            # frozen_label_identity's partial-identity refusal
+            # behaves exactly as on the full row.
+            stub = {"row_id": r["row_id"],
+                    "engine_id": r["engine_id"],
+                    "scored_zero": r.get("scored_zero")}
+            for _f in ("label_context_fingerprint",
+                       "label_transform_id", "label_transform_hash"):
+                if r.get(_f) is not None:
+                    stub[_f] = r[_f]
+            forecasts[r["row_id"]] = stub
         elif kind == "correction":
             corrects.append(r.get("corrects_row_id"))
         elif kind == "grade":
-            grade_rows.append(r)
+            # Same compaction for grade rows: the counting reads
+            # only engine_id, forecast_row_id and the numeric
+            # score values.
+            grade_rows.append({
+                "engine_id": r["engine_id"],
+                "forecast_row_id": r.get("forecast_row_id"),
+                "grade": {"scores": {
+                    _k: _v for _k, _v in
+                    (r["grade"].get("scores") or {}).items()
+                    if isinstance(_v, (int, float))}}})
     voided_ids = {c for c in corrects if c in forecasts}
     figures = {}
     groups = {}  # engine_id -> group key -> {"scores": {}, ...}
