@@ -11,15 +11,19 @@
         "terminal-weekly-lane",
         "terminal-tools-daily-refresh"
       ],
-      "cadence_class": "weekly",
+      "cadence_class": "exception",
       "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
       "reading_date_field": "as_of",
-      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 9 days of load age",
-      "warn_threshold": "No successful load by the Tue 06:46 ET maintenance pass following the Mon 08:00 ET lane",
-      "strict_threshold": "No load by the next Mon 08:00 ET lane (one full missed cycle); absolute backstop 9 days of load age",
-      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
-      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
-      "exception": null,
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "source-publication-anchored reading (SEC quarterly 13F data set), weekly load",
+        "authority": "The producer reads exactly two stored SEC Form 13F data sets from ~/workspace/morgue/data_cache/13f and refuses any other count; the newest set on record is the June-August 2026 window (01jun2026-31aug2026_form13f.zip, downloaded 2026-10-26), whose freshest filing date is 2026-08-14 for the period ended 2026-06-30. The SEC's Form 13F Data Sets page (checked 2026-11-17, Lane 1 terminal perfection pass) lists that same June-August 2026 set as its newest download, data through August 2026, last updated 2026-08-31: no September-November 2026 set exists yet, so no newer filing can be on record. Loads are fresh (loaded_at_utc 2026-11-17T00:00Z in the Mon 19:00 ET tools lane). The 2026-08-14 reading date is the source's own newest date, not a producer failure.",
+        "re_review_trigger": "The SEC publishes a newer quarterly 13F data set (the September-November 2026 window); the cache then rotates (new set in, oldest set out, exactly two sets kept) and the reading advances to that set's freshest filing date. This contract is re-reviewed at that rotation."
+      },
       "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Content is quarterly SEC 13F filings, so the reading date lagging the calendar is expected; the missed weekly load is the breach that matters"
     },
     {
@@ -29,15 +33,19 @@
         "terminal-weekly-lane",
         "terminal-tools-daily-refresh"
       ],
-      "cadence_class": "weekly",
+      "cadence_class": "exception",
       "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
       "reading_date_field": "as_of",
-      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 9 days of load age",
-      "warn_threshold": "No successful load by the Tue 06:46 ET maintenance pass following the Mon 08:00 ET lane",
-      "strict_threshold": "No load by the next Mon 08:00 ET lane (one full missed cycle); absolute backstop 9 days of load age",
-      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
-      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
-      "exception": null,
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "source-publication-anchored reading (SEC quarterly 13F data set), weekly load",
+        "authority": "Same stored SEC Form 13F data sets as the 13F Tracker (its declared dependency): the producer refuses any count other than the two sets on record, and its as_of is the newest filing date in the newest set (current_filed_last 2026-08-31 in the June-August 2026 set). The SEC's Form 13F Data Sets page (checked 2026-11-17) lists no newer set. Loads are fresh (loaded_at_utc 2026-11-17T00:05Z). The reading date is the source's own newest filing date, not a producer failure.",
+        "re_review_trigger": "The SEC publishes a newer quarterly 13F data set (the September-November 2026 window) and the shared cache rotates; the reading then advances with the 13F Tracker's and this contract is re-reviewed."
+      },
       "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Dependency rule (spec verbatim): a load whose input 13f-tracker load is older than its own previous load is a quality failure, not a fresh load"
     },
     {
@@ -47,15 +55,19 @@
         "terminal-weekly-lane",
         "terminal-tools-daily-refresh"
       ],
-      "cadence_class": "weekly",
+      "cadence_class": "exception",
       "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
       "reading_date_field": "record_surface.current_reading.as_of",
-      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 9 days of load age",
-      "warn_threshold": "No successful load by the Tue 06:46 ET maintenance pass following the Mon 08:00 ET lane",
-      "strict_threshold": "No load by the next Mon 08:00 ET lane (one full missed cycle); absolute backstop 9 days of load age",
-      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
-      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
-      "exception": null,
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "source-anchored reading (annual company filings on record), weekly load",
+        "authority": "The page republishes the yearly financial reports on record for 83 companies from the stored company-facts files; its reading date is the freshest annual filing among them (freshest_filed 2026-10-16) while its own check stamp is current (checked 2026-11-16, loaded_at_utc 2026-11-17T00:05Z in the Mon 19:00 ET tools lane). Annual reports arrive on each company's own fiscal-year schedule, so the freshest filed date moves only when a company on record files a newer annual report; a weekly check that finds none does not move it (FILINGS-WIRE-READING-DATE-20261104 already pins the reading to freshest_filed for exactly this reason).",
+        "re_review_trigger": "A company on record files an annual report newer than 2026-10-16 into the company-facts store; the reading then advances to that filing date and this contract is re-reviewed."
+      },
       "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Reading field pinned to record_surface.current_reading.as_of; the top-level as_of reads newer and does not describe the readings, and is documented here in the registry entry per the spec-mandated builder choice (documented, not retired)"
     },
     {
@@ -188,15 +200,19 @@
       "producing_lanes": [
         "terminal-tools-daily-refresh"
       ],
-      "cadence_class": "daily-weekday",
+      "cadence_class": "exception",
       "load_anchor": "loaded_at_utc stamped by terminal_common.write_data_json (durable form; B0 stamp build sequenced, not yet landed at declaration time); interim anchor: data.json mtime as used by lane_run.py freshest(), with the mtime-reset-on-copy hazard named",
       "reading_date_field": "published_date",
-      "freshness_sla": "Missed load windows counted against the completed-session calendar in completed_session.py; absolute backstop 96 hours of load age",
-      "warn_threshold": "No successful load by 21:00 ET on a scheduled weekday",
-      "strict_threshold": "Second consecutive missed load window; absolute backstop 96 hours of load age",
-      "serving_on_warn": "Serve with dated banner: \"Data as of <reading date>. Refresh overdue since <window>.\"",
-      "serving_on_strict": "Fail closed: figures replaced by the dated stale notice (book-strip pattern); no numbers rendered",
-      "exception": null,
+      "freshness_sla": "No SLA on the reading date (exception class); the exception object itself is the contract state. Load surveillance continues through the producing lane's own run records: a missed or failed load in that lane is a defect of the lane, named there.",
+      "warn_threshold": "Not applicable (exception class)",
+      "strict_threshold": "Not applicable (exception class)",
+      "serving_on_warn": "Serve as-is; excluded from stale counts",
+      "serving_on_strict": "Serve as-is; excluded from stale counts",
+      "exception": {
+        "kind": "source-publication-anchored reading (FINRA twice-monthly short interest), daily load",
+        "authority": "The page's published_date is the latest publication date among readings at the freshest settlement on record (producer rule in refresh_squeeze.py): settlement 2026-10-30, published 2026-11-15. FINRA publishes a settlement's readings about two weeks after the settlement (the store's own delay statement), and the short-interest store was re-fetched 2026-11-16 with 2026-10-30 still its freshest settlement. Loads are fresh (loaded_at_utc 2026-11-17T00:05Z). The reading date is the source's publication date, not a producer failure.",
+        "re_review_trigger": "FINRA publishes the next settlement's readings (the mid-November 2026 settlement, expected about 2026-11-25); the reading then advances to that publication date and this contract is re-reviewed."
+      },
       "quality_rules": "T12 core set at load: key uniqueness; critical-field nullability; volume bounds within a declared band of the trailing median; the freshness SLA itself; Upstream dependency rule: the short-interest store is fed by ~/workspace/morgue/si_daily.py inside terminal-daily-stores-refresh (18:46), so a squeeze load stamped before that day's store load is a quality failure. Settlement dates inside names[] are content, not freshness"
     },
     {
