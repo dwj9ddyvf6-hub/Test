@@ -229,6 +229,22 @@ def test_engine10_plan_block_honest_state():
     # 562 labelled footnotes with 45 plan calls, precision
     # still 1.0 (45 of 45), 43 names classified, recounted
     # through this test's own code path (the block itself).
+    # Re-pinned 2026-11-17 (SUITE-RED-CURE-20261117): the
+    # record was re-collected again on 2026-11-16T22:53:19Z
+    # by the refresh_engines session-2026-11-16 run (same
+    # 170 filings, same window since 2026-05-01, same 7
+    # no-CIK errors) and now carries 518 labelled footnotes
+    # with 42 plan calls, precision still 1.0 (42 of 42),
+    # 43 names classified. The decrease is the collector's
+    # per-name-4 most-recent rotation, not a truncation:
+    # against the 2026-11-12 collection on record in git
+    # (557 labelled), 14 newer filings (filed 2026-11-13
+    # and 2026-11-16) displaced 14 older ones, every filing
+    # present in both collections recounts to the identical
+    # labelled count, and the record is internally
+    # consistent (labelled_footnotes field == len(labelled)
+    # == a recount from the filings the record itself
+    # carries == 518), recounted through the block itself.
     block = e10.plan_adjustment_block({"AAA": {}, "BBB": {}})
     assert block["state"] == "recorded"
     assert block["classifier_state"] == "standing"
@@ -238,7 +254,7 @@ def test_engine10_plan_block_honest_state():
     assert block["precision_kill_floor"] == \
         ad.PLAN_CLASSIFIER_PRECISION_FLOOR
     assert block["precision"]["precision"] == pytest.approx(1.0)
-    assert block["precision"]["labelled"] == 562
+    assert block["precision"]["labelled"] == 518
     assert block["footnote_record"]["filings_on_record"] > 0
 
 
