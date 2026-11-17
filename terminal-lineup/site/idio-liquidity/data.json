@@ -1,275 +1,275 @@
 {
- "as_of_session": "2026-11-16",
- "calibration_attestation": {
-  "attestation": {
-   "basis": "no graded forecasts on record yet (477 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-   "forecasts_recorded": 477,
-   "graded_forecasts": 0,
-   "ledger_rows_at_write": 474840,
-   "recorded_on": "2026-11-16",
-   "status": "not_attested"
+  "as_of_session": "2026-11-16",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "no graded forecasts on record yet (477 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 477,
+      "graded_forecasts": 0,
+      "ledger_rows_at_write": 480188,
+      "recorded_on": "2026-11-16",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_13",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": null
   },
-  "engine_id": "engine_13",
-  "probability_rendering": {
-   "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-   "render_as_probability": false,
-   "rendered_as": "uncalibrated_score"
+  "claims": {
+    "falsified_words": "Either forecast is proven wrong if its middle outcome lands on the other side of zero.",
+    "persist": "When a stock drops hard on its own while the market is flat or up, the drop tends to stick: the middle such stock is at least 0.5 points behind the market 20 trading days later.",
+    "reverse": "When the same size of drop lands on a fear day, with the market falling hard around it, the drop tends to unwind: the middle such stock is at least 0.5 points ahead of the market 20 trading days later."
   },
-  "zero_forecast_state": null
- },
- "claims": {
-  "falsified_words": "Either forecast is proven wrong if its middle outcome lands on the other side of zero.",
-  "persist": "When a stock drops hard on its own while the market is flat or up, the drop tends to stick: the middle such stock is at least 0.5 points behind the market 20 trading days later.",
-  "reverse": "When the same size of drop lands on a fear day, with the market falling hard around it, the drop tends to unwind: the middle such stock is at least 0.5 points ahead of the market 20 trading days later."
- },
- "execution_pricing": false,
- "explanation": {
-  "body": "Its forecast takes this form: direction, over 20 sessions. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if a leg is retired independently if its median confidence interval includes zero after 150 episodes. It counts as proven at 150 episodes per leg.",
-  "summary": "When a stock drops hard, tell apart the drops that were the stock's own bad news, which tend to stick, from the drops that were just a bad day for the whole market, which tend to bounce back."
- },
- "feed": "forecast_ledger",
- "history": {
-  "fear_days_judged": 31,
-  "fear_days_total_in_history": 42,
-  "hard_drops_total": 13317,
-  "label": "History, not live forecasts",
-  "legs_never_combined": "The two groups are always shown separately. Their numbers are never added together or averaged into one figure.",
-  "neither_cases": 4224,
-  "persist": {
-   "claim_met": true,
-   "claim_points": -0.5,
-   "days": 151,
-   "episodes": 7215,
-   "falsified": false,
-   "graded": 6655,
-   "median_ci95_points": [
-    -0.824,
-    -0.172
-   ],
-   "median_points": -0.517,
-   "missing_closes": 8,
-   "with_forward_session": 6663
-  },
-  "reverse": {
-   "claim_met": true,
-   "claim_points": 0.5,
-   "days": 31,
-   "episodes": 1878,
-   "falsified": false,
-   "graded": 1581,
-   "median_ci95_points": [
-    0.252,
-    1.059
-   ],
-   "median_points": 0.687,
-   "missing_closes": 1,
-   "with_forward_session": 1582
-  },
-  "span": "2025-09-25 to 2026-11-16",
-  "warmup_note": "Judging a drop against a stock's own usual move needs 126 of its past trading days first, so the first judgeable day in this history is 2025-09-25 and 288 trading days are judged. Every stock that still trades is in this history; stocks that stopped trading are not, which can flatter the numbers."
- },
- "how_the_split_works": "Each stock's drop is first stripped of the market's move that day; what is left is the stock's own move. The drop counts only if it is at least twice the size of that stock's own usual daily move, measured over its past 126 trading days. No fixed percent drop is used anywhere: a quiet stock and a jumpy stock are each judged against themselves.",
- "kill_criterion": "Either forecast retires on its own if, after 150 of its cases have been graded, the middle outcome could still plausibly be zero.",
- "live": {
-  "forecasts_graded": 0,
-  "forecasts_recorded": 477,
-  "note": "The live record starts empty. Forecasts are written down before the 20 trading days they describe, and the first grades land only after those days have passed.",
-  "target_graded_per_leg": 150
- },
- "loaded_at_utc": "2026-11-17T00:16:22.996608+00:00",
- "market_today": {
-  "kind": "a fear day (down at least 1 percent)",
-  "note": "Neither forecast fires on a day like this: the keep-falling forecast needs the market flat or up, and the bounce-back forecast needs a fear day (the market down at least 1 percent).",
-  "return_pct": -1.91
- },
- "price_basis": "close",
- "provenance": {
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: direction, over 20 sessions. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if a leg is retired independently if its median confidence interval includes zero after 150 episodes. It counts as proven at 150 episodes per leg.",
+    "summary": "When a stock drops hard, tell apart the drops that were the stock's own bad news, which tend to stick, from the drops that were just a bad day for the whole market, which tend to bounce back."
+  },
   "feed": "forecast_ledger",
+  "history": {
+    "fear_days_judged": 31,
+    "fear_days_total_in_history": 42,
+    "hard_drops_total": 13317,
+    "label": "History, not live forecasts",
+    "legs_never_combined": "The two groups are always shown separately. Their numbers are never added together or averaged into one figure.",
+    "neither_cases": 4224,
+    "persist": {
+      "claim_met": true,
+      "claim_points": -0.5,
+      "days": 151,
+      "episodes": 7215,
+      "falsified": false,
+      "graded": 6655,
+      "median_ci95_points": [
+        -0.824,
+        -0.172
+      ],
+      "median_points": -0.517,
+      "missing_closes": 8,
+      "with_forward_session": 6663
+    },
+    "reverse": {
+      "claim_met": true,
+      "claim_points": 0.5,
+      "days": 31,
+      "episodes": 1878,
+      "falsified": false,
+      "graded": 1581,
+      "median_ci95_points": [
+        0.252,
+        1.059
+      ],
+      "median_points": 0.687,
+      "missing_closes": 1,
+      "with_forward_session": 1582
+    },
+    "span": "2025-09-25 to 2026-11-16",
+    "warmup_note": "Judging a drop against a stock's own usual move needs 126 of its past trading days first, so the first judgeable day in this history is 2025-09-25 and 288 trading days are judged. Every stock that still trades is in this history; stocks that stopped trading are not, which can flatter the numbers."
+  },
+  "how_the_split_works": "Each stock's drop is first stripped of the market's move that day; what is left is the stock's own move. The drop counts only if it is at least twice the size of that stock's own usual daily move, measured over its past 126 trading days. No fixed percent drop is used anywhere: a quiet stock and a jumpy stock are each judged against themselves.",
+  "kill_criterion": "Either forecast retires on its own if, after 150 of its cases have been graded, the middle outcome could still plausibly be zero.",
+  "live": {
+    "forecasts_graded": 0,
+    "forecasts_recorded": 477,
+    "note": "The live record starts empty. Forecasts are written down before the 20 trading days they describe, and the first grades land only after those days have passed.",
+    "target_graded_per_leg": 150
+  },
+  "loaded_at_utc": "2026-11-17T00:16:22.996608+00:00",
+  "market_today": {
+    "kind": "a fear day (down at least 1 percent)",
+    "note": "Neither forecast fires on a day like this: the keep-falling forecast needs the market flat or up, and the bounce-back forecast needs a fear day (the market down at least 1 percent).",
+    "return_pct": -1.91
+  },
   "price_basis": "close",
-  "stamped_by": "terminal_common.stamp_provenance"
- },
- "record_surface": {
-  "calibration_record": {
-   "attestation": {
-    "basis": "no graded forecasts on record yet (466 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-    "forecasts_recorded": 466,
-    "graded_forecasts": 0,
-    "ledger_rows_at_write": 439535,
-    "recorded_on": "2026-11-16",
-    "status": "not_attested"
-   },
-   "engine_id": "engine_13",
-   "probability_rendering": {
-    "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-    "render_as_probability": false,
-    "rendered_as": "uncalibrated_score"
-   },
-   "zero_forecast_state": null
-  },
-  "current_reading": {
-   "as_of": "2026-11-16",
-   "keys_present": [
-    "as_of_session",
-    "calibration_attestation",
-    "claims",
-    "execution_pricing",
-    "explanation",
-    "feed",
-    "history",
-    "how_the_split_works",
-    "kill_criterion",
-    "live",
-    "loaded_at_utc",
-    "market_today",
-    "price_basis",
-    "provenance",
-    "record_surface",
-    "source",
-    "state",
-    "subject_chart",
-    "thin_cell_rule",
-    "today",
-    "tool"
-   ]
-  },
-  "feed": "forecast_ledger",
-  "label": "Study record",
-  "live_accrual": {
-   "corrections": 0,
-   "engine": "engine_13",
-   "forecasts": 477,
-   "grades": 0,
-   "source": "forecast/ledger.jsonl (counted)"
-  },
-  "missing": {
-   "what_and_when": "Live grades are still building: 477 forecasts are on record and none are graded yet. Grades arrive after each following session close."
-  },
   "provenance": {
-   "execution_pricing": false,
-   "feed": "forecast_ledger",
-   "price_basis": "close",
-   "stamped_by": "terminal_common.stamp_provenance"
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
   },
-  "study_record": {
-   "label": "Study record",
-   "locations": [
-    {
-     "items": 4,
-     "path": "/history"
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (477 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 477,
+        "graded_forecasts": 0,
+        "ledger_rows_at_write": 480188,
+        "recorded_on": "2026-11-16",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_13",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
     },
-    {
-     "items": 2,
-     "path": "/history/persist"
+    "current_reading": {
+      "as_of": "2026-11-16",
+      "keys_present": [
+        "as_of_session",
+        "calibration_attestation",
+        "claims",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "history",
+        "how_the_split_works",
+        "kill_criterion",
+        "live",
+        "loaded_at_utc",
+        "market_today",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_cell_rule",
+        "today",
+        "tool"
+      ]
     },
-    {
-     "items": 2,
-     "path": "/history/reverse"
-    }
-   ],
-   "total_items_counted": 8
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_13",
+      "forecasts": 477,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "Live grades are still building: 477 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 4,
+          "path": "/history"
+        },
+        {
+          "items": 2,
+          "path": "/history/persist"
+        },
+        {
+          "items": 2,
+          "path": "/history/reverse"
+        }
+      ],
+      "total_items_counted": 8
+    },
+    "version": 1
   },
-  "version": 1
- },
- "source": "The daily price history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-16, 415 trading days), checked for this page. The longer daily history the design names (2016 to 2026) is not on this computer, so the history below runs on the history that exists.",
- "state": "proving",
- "subject_chart": {
-  "lead": null,
-  "record": {
-   "kind": "ranked",
-   "label": "Median forward points for the persist and reverse arms.",
-   "rows": [
-    {
-     "name": "Persist arm",
-     "score": -0.517
+  "source": "The daily price history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-16, 415 trading days), checked for this page. The longer daily history the design names (2016 to 2026) is not on this computer, so the history below runs on the history that exists.",
+  "state": "proving",
+  "subject_chart": {
+    "lead": null,
+    "record": {
+      "kind": "ranked",
+      "label": "Median forward points for the persist and reverse arms.",
+      "rows": [
+        {
+          "name": "Persist arm",
+          "score": -0.517
+        },
+        {
+          "name": "Reverse arm",
+          "score": 0.687
+        }
+      ],
+      "source": "history.persist/reverse.median_points",
+      "title": "The split's study record, median points"
     },
-    {
-     "name": "Reverse arm",
-     "score": 0.687
-    }
-   ],
-   "source": "history.persist/reverse.median_points",
-   "title": "The split's study record, median points"
+    "version": 1
   },
-  "version": 1
- },
- "thin_cell_rule": "Any group with fewer than 30 graded cases shows its count only, with no middle figure.",
- "today": {
-  "hard_drops": 11,
-  "names_checked": 1832,
-  "names_judged": 1801,
-  "names_set_aside_short_history": 31,
-  "neither": [],
-  "neither_note": "These stocks dropped hard enough today, but the market's in-between day (down, not a fear day) puts them in neither group. They are counted and named, and no forecast is made about them.",
-  "persist": [],
-  "reverse": [
-   {
-    "drop_own_units": 2.75,
-    "own_move_pct": -7.73,
-    "share_pct": 80.2,
-    "symbol": "AI"
-   },
-   {
-    "drop_own_units": 2.35,
-    "own_move_pct": -8.0,
-    "share_pct": 80.7,
-    "symbol": "BBWI"
-   },
-   {
-    "drop_own_units": 2.2,
-    "own_move_pct": -8.8,
-    "share_pct": 82.2,
-    "symbol": "BLDP"
-   },
-   {
-    "drop_own_units": 2.15,
-    "own_move_pct": -10.81,
-    "share_pct": 85.0,
-    "symbol": "DGXX"
-   },
-   {
-    "drop_own_units": 3.16,
-    "own_move_pct": -8.27,
-    "share_pct": 81.2,
-    "symbol": "MPT"
-   },
-   {
-    "drop_own_units": 2.3,
-    "own_move_pct": -6.07,
-    "share_pct": 76.1,
-    "symbol": "NSIT"
-   },
-   {
-    "drop_own_units": 2.27,
-    "own_move_pct": -8.12,
-    "share_pct": 80.9,
-    "symbol": "PLG"
-   },
-   {
-    "drop_own_units": 2.65,
-    "own_move_pct": -20.08,
-    "share_pct": 91.3,
-    "symbol": "TE"
-   },
-   {
-    "drop_own_units": 2.04,
-    "own_move_pct": -10.71,
-    "share_pct": 84.9,
-    "symbol": "USAR"
-   },
-   {
-    "drop_own_units": 2.56,
-    "own_move_pct": -4.86,
-    "share_pct": 71.8,
-    "symbol": "VALE"
-   },
-   {
-    "drop_own_units": 2.47,
-    "own_move_pct": -8.7,
-    "share_pct": 82.0,
-    "symbol": "VSOL"
-   }
-  ]
- },
- "tool": "Idiosyncratic-or-Liquidity Splitter"
+  "thin_cell_rule": "Any group with fewer than 30 graded cases shows its count only, with no middle figure.",
+  "today": {
+    "hard_drops": 11,
+    "names_checked": 1832,
+    "names_judged": 1801,
+    "names_set_aside_short_history": 31,
+    "neither": [],
+    "neither_note": "These stocks dropped hard enough today, but the market's in-between day (down, not a fear day) puts them in neither group. They are counted and named, and no forecast is made about them.",
+    "persist": [],
+    "reverse": [
+      {
+        "drop_own_units": 2.75,
+        "own_move_pct": -7.73,
+        "share_pct": 80.2,
+        "symbol": "AI"
+      },
+      {
+        "drop_own_units": 2.35,
+        "own_move_pct": -8.0,
+        "share_pct": 80.7,
+        "symbol": "BBWI"
+      },
+      {
+        "drop_own_units": 2.2,
+        "own_move_pct": -8.8,
+        "share_pct": 82.2,
+        "symbol": "BLDP"
+      },
+      {
+        "drop_own_units": 2.15,
+        "own_move_pct": -10.81,
+        "share_pct": 85.0,
+        "symbol": "DGXX"
+      },
+      {
+        "drop_own_units": 3.16,
+        "own_move_pct": -8.27,
+        "share_pct": 81.2,
+        "symbol": "MPT"
+      },
+      {
+        "drop_own_units": 2.3,
+        "own_move_pct": -6.07,
+        "share_pct": 76.1,
+        "symbol": "NSIT"
+      },
+      {
+        "drop_own_units": 2.27,
+        "own_move_pct": -8.12,
+        "share_pct": 80.9,
+        "symbol": "PLG"
+      },
+      {
+        "drop_own_units": 2.65,
+        "own_move_pct": -20.08,
+        "share_pct": 91.3,
+        "symbol": "TE"
+      },
+      {
+        "drop_own_units": 2.04,
+        "own_move_pct": -10.71,
+        "share_pct": 84.9,
+        "symbol": "USAR"
+      },
+      {
+        "drop_own_units": 2.56,
+        "own_move_pct": -4.86,
+        "share_pct": 71.8,
+        "symbol": "VALE"
+      },
+      {
+        "drop_own_units": 2.47,
+        "own_move_pct": -8.7,
+        "share_pct": 82.0,
+        "symbol": "VSOL"
+      }
+    ]
+  },
+  "tool": "Idiosyncratic-or-Liquidity Splitter"
 }
