@@ -1,850 +1,853 @@
 {
- "as_of": "2026-11-16",
- "calibration_attestation": {
-  "attestation": {
-   "basis": "no graded forecasts on record yet (16 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-   "forecasts_recorded": 16,
-   "graded_forecasts": 0,
-   "ledger_rows_at_write": 474840,
-   "recorded_on": "2026-11-16",
-   "status": "not_attested"
+  "as_of": "2026-11-16",
+  "calibration_attestation": {
+    "attestation": {
+      "basis": "no graded forecasts on record yet (16 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 16,
+      "graded_forecasts": 0,
+      "ledger_rows_at_write": 480188,
+      "recorded_on": "2026-11-16",
+      "status": "not_attested"
+    },
+    "engine_id": "engine_26",
+    "probability_rendering": {
+      "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+      "render_as_probability": false,
+      "rendered_as": "uncalibrated_score"
+    },
+    "zero_forecast_state": {
+      "first_possible": "2026-11-02",
+      "first_possible_words": "The earliest next formation point is the week of Monday, November 2, 2026 (weekly dark refresh); the quarterly holdings publication is the other formation point.",
+      "forecasts_recorded": 0,
+      "reason": "No name passes all three legs at once today: the dark leg can be judged (5,721 names over 723 sessions), but only 2 names pass the insider and filings legs together, so no group has formed.",
+      "trigger": "A name passing all three legs at once at a quarterly holdings publication or the weekly dark refresh; groups form at those points and the verdict needs 100 recorded group names."
+    }
   },
-  "engine_id": "engine_26",
-  "probability_rendering": {
-   "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-   "render_as_probability": false,
-   "rendered_as": "uncalibrated_score"
+  "claim": {
+    "baseline_pct": 25.0,
+    "points_explained": "Beating the market is measured in points: a stock up 5 percent while the market is up 2 percent scores +3 points over 21 trading days.",
+    "top_quartile_claim_pct": 30.0,
+    "words": "When a stock's off-exchange reading is in the top fifth, its insiders show no sales at all in the record window, and its big holders grew between the two quarters on record, then over the next 21 trading days the middle stock in that group will beat the broad market, and the share of the group reaching the top quarter of all stocks will be at least 30 percent, against the 25 percent that happens by construction across all stocks."
   },
-  "zero_forecast_state": {
-   "first_possible": "2026-11-02",
-   "first_possible_words": "The earliest next formation point is the week of Monday, November 2, 2026 (weekly dark refresh); the quarterly holdings publication is the other formation point.",
-   "forecasts_recorded": 0,
-   "reason": "No name passes all three legs at once today: the dark leg can be judged (5,721 names over 723 sessions), but only 2 names pass the insider and filings legs together, so no group has formed.",
-   "trigger": "A name passing all three legs at once at a quarterly holdings publication or the weekly dark refresh; groups form at those points and the verdict needs 100 recorded group names."
-  }
- },
- "claim": {
-  "baseline_pct": 25.0,
-  "points_explained": "Beating the market is measured in points: a stock up 5 percent while the market is up 2 percent scores +3 points over 21 trading days.",
-  "top_quartile_claim_pct": 30.0,
-  "words": "When a stock's off-exchange reading is in the top fifth, its insiders show no sales at all in the record window, and its big holders grew between the two quarters on record, then over the next 21 trading days the middle stock in that group will beat the broad market, and the share of the group reaching the top quarter of all stocks will be at least 30 percent, against the 25 percent that happens by construction across all stocks."
- },
- "execution_pricing": false,
- "explanation": {
-  "body": "Its forecast takes this form: distribution, over 21 sessions, per 13F publication plus weekly DIX refresh. It is graded on a loss score on each of its stated percentile lines, where lower is better. It would be ended if after 100 cohort names, the interaction adds less than 2 points over the best single condition. It counts as proven at 100 cohort names.",
-  "summary": "Test whether stocks showing three quiet footprints of buying at once (heavy off-exchange trading, insiders not selling, and big holders building) go on to beat the market over the next 21 trading days."
- },
- "feed": "forecast_ledger",
- "groups_today": {
-  "dark_only": [
-   "AIZ",
-   "AMPH",
-   "COLM",
-   "CON",
-   "CSL",
-   "CVCO",
-   "DCOM",
-   "EG",
-   "FCN",
-   "FTDR",
-   "MD",
-   "MHK",
-   "PCRX",
-   "PGNY",
-   "RHP",
-   "SIGI",
-   "SKY",
-   "VLY",
-   "WMG"
-  ],
-  "dark_only_state": "formed",
-  "filings_only": [
-   "CON",
-   "GO",
-   "VLY",
-   "VRNS"
-  ],
-  "insider_and_filings": [
-   "CON",
-   "VRNS"
-  ],
-  "insider_only": [
-   "ACHC",
-   "APLE",
-   "CON",
-   "COTY",
-   "CSL",
-   "DXC",
-   "ED",
-   "JKHY",
-   "KMPR",
-   "MD",
-   "NWE",
-   "OZK",
-   "POOL",
-   "RHP",
-   "RLI",
-   "SPNT",
-   "UPBD",
-   "VFC",
-   "VRNS",
-   "WMG",
-   "XHR"
-  ],
-  "interaction": [
-   "CON"
-  ],
-  "interaction_state": "formed"
- },
- "idea": "Some stocks are being quietly built up in ways that leave no mark on the price chart. Trading moves off the public exchanges. The people who run the company stop selling their own shares. And between one quarterly holdings report and the next, more big holders own the stock, or the ones who own it own more of it. Any one of those can happen by accident. This page tests what happens when all three point the same way at once, and it is graded against each one on its own, so the combination has to earn its place. One of the three readings is an absence: insiders not selling is treated as a reading in its own right.",
- "kill_criterion": "After 100 group names have been recorded and graded, if the three-way group's share reaching the top quarter adds less than 2 points over the best single condition on its own, this tool retires. Beating the plain all-stocks rate is not enough: the combination must beat its own best part.",
- "live": {
-  "cohort_days": [
-   "2026-11-02",
-   "2026-11-05",
-   "2026-11-09",
-   "2026-11-16"
-  ],
-  "cohort_names_graded": 0,
-  "cohort_names_recorded": 4,
-  "created_this_run": 4,
-  "graded_this_run": 0,
-  "kill_margin_points": null,
-  "missed_sessions": [],
-  "pooled": {},
-  "proving_target_names": 100,
-  "records_graded": 0,
-  "records_written": 16,
-  "wait": "No group has been recorded yet. The per-stock dark record is on record (5960 names over 786 sessions, freshest 2026-11-16), so the dark leg can be judged; today no name passes all three legs at once (formed). Groups then form at each quarterly holdings publication and at the weekly dark refresh. The verdict needs 100 recorded group names, and the other two legs are narrow today (2 names pass the insider and filings legs together), so this record will build slowly and only widens as the records behind it grow."
- },
- "loaded_at_utc": "2026-11-17T00:57:26.215703+00:00",
- "price_basis": "close",
- "price_history": {
-  "from": "2025-03-25",
-  "names": 1833,
-  "sessions": 415,
-  "to": "2026-11-16"
- },
- "provenance": {
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: distribution, over 21 sessions, per 13F publication plus weekly DIX refresh. It is graded on a loss score on each of its stated percentile lines, where lower is better. It would be ended if after 100 cohort names, the interaction adds less than 2 points over the best single condition. It counts as proven at 100 cohort names.",
+    "summary": "Test whether stocks showing three quiet footprints of buying at once (heavy off-exchange trading, insiders not selling, and big holders building) go on to beat the market over the next 21 trading days."
+  },
   "feed": "forecast_ledger",
+  "groups_today": {
+    "dark_only": [
+      "AIZ",
+      "AMPH",
+      "COLM",
+      "CON",
+      "CSL",
+      "CVCO",
+      "DCOM",
+      "EG",
+      "FCN",
+      "FTDR",
+      "MD",
+      "MHK",
+      "PCRX",
+      "PGNY",
+      "RHP",
+      "SIGI",
+      "SKY",
+      "VLY",
+      "WMG"
+    ],
+    "dark_only_state": "formed",
+    "filings_only": [
+      "CON",
+      "GO",
+      "VLY",
+      "VRNS"
+    ],
+    "insider_and_filings": [
+      "CON",
+      "VRNS"
+    ],
+    "insider_only": [
+      "ACHC",
+      "APLE",
+      "CON",
+      "COTY",
+      "CSL",
+      "DXC",
+      "ED",
+      "JKHY",
+      "KMPR",
+      "MD",
+      "NWE",
+      "OZK",
+      "POOL",
+      "RHP",
+      "RLI",
+      "SPNT",
+      "UPBD",
+      "VFC",
+      "VRNS",
+      "WMG",
+      "XHR"
+    ],
+    "interaction": [
+      "CON"
+    ],
+    "interaction_state": "formed"
+  },
+  "idea": "Some stocks are being quietly built up in ways that leave no mark on the price chart. Trading moves off the public exchanges. The people who run the company stop selling their own shares. And between one quarterly holdings report and the next, more big holders own the stock, or the ones who own it own more of it. Any one of those can happen by accident. This page tests what happens when all three point the same way at once, and it is graded against each one on its own, so the combination has to earn its place. One of the three readings is an absence: insiders not selling is treated as a reading in its own right.",
+  "kill_criterion": "After 100 group names have been recorded and graded, if the three-way group's share reaching the top quarter adds less than 2 points over the best single condition on its own, this tool retires. Beating the plain all-stocks rate is not enough: the combination must beat its own best part.",
+  "live": {
+    "cohort_days": [
+      "2026-11-02",
+      "2026-11-05",
+      "2026-11-09",
+      "2026-11-16"
+    ],
+    "cohort_names_graded": 0,
+    "cohort_names_recorded": 4,
+    "created_this_run": 4,
+    "graded_this_run": 0,
+    "kill_margin_points": null,
+    "missed_sessions": [],
+    "pooled": {},
+    "proving_target_names": 100,
+    "records_graded": 0,
+    "records_written": 16,
+    "wait": "No group has been recorded yet. The per-stock dark record is on record (5960 names over 786 sessions, freshest 2026-11-16), so the dark leg can be judged; today no name passes all three legs at once (formed). Groups then form at each quarterly holdings publication and at the weekly dark refresh. The verdict needs 100 recorded group names, and the other two legs are narrow today (2 names pass the insider and filings legs together), so this record will build slowly and only widens as the records behind it grow."
+  },
+  "loaded_at_utc": "2026-11-17T00:57:26.215703+00:00",
   "price_basis": "close",
-  "stamped_by": "terminal_common.stamp_provenance"
- },
- "readings": {
-  "dark": {
-   "combined_context": {
-    "funds": [
-     {
-      "pct": 68.4,
-      "session": "2026-11-16",
-      "symbol": "SPY"
-     },
-     {
-      "pct": 46.6,
-      "session": "2026-11-16",
-      "symbol": "QQQ"
-     },
-     {
-      "pct": 63.0,
-      "session": "2026-11-16",
-      "symbol": "IWM"
-     }
-    ],
-    "history": [
-     {
-      "funds": {
-       "IWM": 52.5,
-       "QQQ": 40.0,
-       "SPY": 53.5
-      },
-      "index_pct": 43.7,
-      "index_total": 503,
-      "index_used": 501,
-      "session": "2026-10-23"
-     },
-     {
-      "funds": {
-       "IWM": 48.6,
-       "QQQ": 57.7,
-       "SPY": 45.1
-      },
-      "index_pct": 47.3,
-      "index_total": 503,
-      "index_used": 501,
-      "session": "2026-10-26"
-     },
-     {
-      "funds": {
-       "IWM": 46.6,
-       "QQQ": 31.8,
-       "SPY": 53.4
-      },
-      "index_pct": 43.9,
-      "index_total": 503,
-      "index_used": 501,
-      "session": "2026-10-27"
-     },
-     {
-      "funds": {
-       "IWM": 44.2,
-       "QQQ": 67.2,
-       "SPY": 52.7
-      },
-      "index_pct": 44.2,
-      "index_total": 503,
-      "index_used": 499,
-      "session": "2026-10-28"
-     },
-     {
-      "funds": {
-       "IWM": 91.9,
-       "QQQ": 60.1,
-       "SPY": 39.2
-      },
-      "index_pct": 41.6,
-      "index_total": 503,
-      "index_used": 498,
-      "session": "2026-10-29"
-     },
-     {
-      "funds": {
-       "IWM": 55.5,
-       "QQQ": 50.4,
-       "SPY": 52.2
-      },
-      "index_pct": 37.7,
-      "index_total": 503,
-      "index_used": 501,
-      "session": "2026-10-30"
-     },
-     {
-      "funds": {
-       "IWM": 61.6,
-       "QQQ": 47.4,
-       "SPY": 47.9
-      },
-      "index_pct": 40.9,
-      "index_total": 503,
-      "index_used": 499,
-      "session": "2026-11-02"
-     },
-     {
-      "funds": {
-       "IWM": 61.6,
-       "QQQ": 34.4,
-       "SPY": 36.6
-      },
-      "index_pct": 42.5,
-      "index_total": 503,
-      "index_used": 497,
-      "session": "2026-11-03"
-     },
-     {
-      "funds": {
-       "IWM": 56.1,
-       "QQQ": 48.5,
-       "SPY": 49.1
-      },
-      "index_pct": 40.3,
-      "index_total": 503,
-      "index_used": 500,
-      "session": "2026-11-04"
-     },
-     {
-      "funds": {
-       "IWM": 45.5,
-       "QQQ": 46.8,
-       "SPY": 56.9
-      },
-      "index_pct": 33.9,
-      "index_total": 503,
-      "index_used": 500,
-      "session": "2026-11-05"
-     },
-     {
-      "funds": {
-       "IWM": 19.2,
-       "QQQ": 38.3,
-       "SPY": 28.4
-      },
-      "index_pct": 41.1,
-      "index_total": 503,
-      "index_used": 500,
-      "session": "2026-11-06"
-     },
-     {
-      "funds": {
-       "IWM": 68.1,
-       "QQQ": 46.7,
-       "SPY": 46.0
-      },
-      "index_pct": 46.0,
-      "index_total": 503,
-      "index_used": 499,
-      "session": "2026-11-09"
-     },
-     {
-      "funds": {
-       "IWM": 71.6,
-       "QQQ": 48.0,
-       "SPY": 49.7
-      },
-      "index_pct": 42.9,
-      "index_total": 503,
-      "index_used": 499,
-      "session": "2026-11-10"
-     },
-     {
-      "funds": {
-       "IWM": 75.6,
-       "QQQ": 53.3,
-       "SPY": 50.2
-      },
-      "index_pct": 42.4,
-      "index_total": 503,
-      "index_used": 500,
-      "session": "2026-11-11"
-     },
-     {
-      "funds": {
-       "IWM": 60.6,
-       "QQQ": 46.9,
-       "SPY": 45.2
-      },
-      "index_pct": 36.1,
-      "index_total": 503,
-      "index_used": 499,
-      "session": "2026-11-12"
-     },
-     {
-      "funds": {
-       "IWM": 79.3,
-       "QQQ": 46.2,
-       "SPY": 63.2
-      },
-      "index_pct": 40.1,
-      "index_total": 503,
-      "index_used": 499,
-      "session": "2026-11-13"
-     },
-     {
-      "funds": {
-       "IWM": 63.0,
-       "QQQ": 46.6,
-       "SPY": 68.4
-      },
-      "index_pct": 36.8,
-      "index_total": 503,
-      "index_used": 499,
-      "session": "2026-11-16"
-     }
-    ],
-    "name": "S&P 500 stocks combined",
-    "pct": 36.8,
-    "session": "2026-11-16",
-    "stocks_total": 503,
-    "stocks_used": 499,
-    "words": "For context only: the dark record does hold a combined reading for the whole index and the three index funds' own ratios, shown here exactly as published. Neither is a reading for any single stock, and neither is ever used in this engine's test."
-   },
-   "gap_words": null,
-   "name": "Off-exchange pressure, per stock",
-   "names_on_record": 5960,
-   "session": "2026-11-16",
-   "sessions_on_record": 786,
-   "state": "on_record",
-   "top_fifth": [
-    "MHK",
-    "PCRX",
-    "RHP",
-    "SIGI",
-    "COLM",
-    "AIZ",
-    "PGNY",
-    "FCN",
-    "WMG",
-    "MD",
-    "CSL",
-    "VLY",
-    "CVCO",
-    "FTDR",
-    "EG",
-    "SKY",
-    "CON",
-    "AMPH",
-    "DCOM"
-   ],
-   "top_fifth_count": 19
-  },
-  "filings": {
-   "filers_current": 8857,
-   "filers_prior": 8871,
-   "name": "Big holders building",
-   "periods": [
-    "2026-06-30",
-    "2026-03-31"
-   ],
-   "resolved_both": 5,
-   "resolved_current": 15,
-   "resolved_prior": 8,
-   "rise_by_count": [
-    "CON",
-    "VLY",
-    "VRNS"
-   ],
-   "rise_names": [
-    "CON",
-    "GO",
-    "VLY",
-    "VRNS"
-   ],
-   "table": [
-    {
-     "count_rose": true,
-     "holders_current": 15,
-     "holders_prior": 14,
-     "rose": true,
-     "shares_change_pct": -3.1,
-     "shares_current": 626420.0,
-     "shares_prior": 646183.0,
-     "shares_rose": false,
-     "symbol": "CON"
-    },
-    {
-     "count_rose": false,
-     "holders_current": 4,
-     "holders_prior": 19,
-     "rose": false,
-     "shares_change_pct": -86.7,
-     "shares_current": 330751.0,
-     "shares_prior": 2479380.0,
-     "shares_rose": false,
-     "symbol": "DCOM"
-    },
-    {
-     "count_rose": false,
-     "holders_current": 35,
-     "holders_prior": 35,
-     "rose": true,
-     "shares_change_pct": 21.2,
-     "shares_current": 14521159.0,
-     "shares_prior": 11980222.0,
-     "shares_rose": true,
-     "symbol": "GO"
-    },
-    {
-     "count_rose": true,
-     "holders_current": 54,
-     "holders_prior": 50,
-     "rose": true,
-     "shares_change_pct": 43.2,
-     "shares_current": 40415135.0,
-     "shares_prior": 28230187.0,
-     "shares_rose": true,
-     "symbol": "VLY"
-    },
-    {
-     "count_rose": true,
-     "holders_current": 59,
-     "holders_prior": 49,
-     "rose": true,
-     "shares_change_pct": 44.6,
-     "shares_current": 21353703.0,
-     "shares_prior": 14766901.0,
-     "shares_rose": true,
-     "symbol": "VRNS"
-    }
-   ],
-   "tracked_names": 100,
-   "words": "A name passes when its holder count rose or its total reported shares rose between the two quarters. A name is judged only when it can be matched in both quarters: matching is by company name, and large widely held names often fail the strict match, so most tracked names carry no judgement at all. An unmatched name is never read as a fall."
-  },
-  "insider": {
-   "gathered": "2026-11-15",
-   "name": "Insiders not selling",
-   "names_covered": 100,
-   "names_with_summary": 97,
-   "no_summary_names": [
-    "BLFS",
-    "CRNX",
-    "WBD"
-   ],
-   "open_buys": 57,
-   "open_sells": 968,
-   "silent_on_all_open_trades": [
-    "ACHC",
-    "APLE",
-    "CON",
-    "COTY",
-    "CSL",
-    "DXC",
-    "JKHY",
-    "MD",
-    "NWE",
-    "OZK",
-    "POOL",
-    "RHP",
-    "SPNT",
-    "WMG",
-    "XHR"
-   ],
-   "window": "Filings filed in the six months before the gathering date, up to the 20 most recent filings per name",
-   "window_start": "2026-05-16",
-   "words": "A name passes when its summary shows zero open-market sells in the window. The 7 names with no summary at all are never counted as passing: having no record is not the same as insiders not selling.",
-   "zero_sell_detail": [
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 2,
-     "open_transactions": 0,
-     "symbol": "ACHC"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 8,
-     "open_transactions": 0,
-     "symbol": "APLE"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 25,
-     "open_transactions": 0,
-     "symbol": "CON"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 0,
-     "open_transactions": 0,
-     "symbol": "COTY"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 2,
-     "open_transactions": 0,
-     "symbol": "CSL"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 26,
-     "open_transactions": 0,
-     "symbol": "DXC"
-    },
-    {
-     "buy_value_usd": 221.28,
-     "buys": 2,
-     "entries": 16,
-     "open_transactions": 2,
-     "symbol": "ED"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 26,
-     "open_transactions": 0,
-     "symbol": "JKHY"
-    },
-    {
-     "buy_value_usd": 367880.0,
-     "buys": 5,
-     "entries": 11,
-     "open_transactions": 5,
-     "symbol": "KMPR"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 22,
-     "open_transactions": 0,
-     "symbol": "MD"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 16,
-     "open_transactions": 0,
-     "symbol": "NWE"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 0,
-     "open_transactions": 0,
-     "symbol": "OZK"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 4,
-     "open_transactions": 0,
-     "symbol": "POOL"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 2,
-     "open_transactions": 0,
-     "symbol": "RHP"
-    },
-    {
-     "buy_value_usd": 858955.0,
-     "buys": 6,
-     "entries": 11,
-     "open_transactions": 6,
-     "symbol": "RLI"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 9,
-     "open_transactions": 0,
-     "symbol": "SPNT"
-    },
-    {
-     "buy_value_usd": 1840818.17,
-     "buys": 11,
-     "entries": 11,
-     "open_transactions": 11,
-     "symbol": "UPBD"
-    },
-    {
-     "buy_value_usd": 1302362.12,
-     "buys": 3,
-     "entries": 14,
-     "open_transactions": 3,
-     "symbol": "VFC"
-    },
-    {
-     "buy_value_usd": 26105.8,
-     "buys": 1,
-     "entries": 3,
-     "open_transactions": 1,
-     "symbol": "VRNS"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 15,
-     "open_transactions": 0,
-     "symbol": "WMG"
-    },
-    {
-     "buy_value_usd": 0,
-     "buys": 0,
-     "entries": 0,
-     "open_transactions": 0,
-     "symbol": "XHR"
-    }
-   ],
-   "zero_sell_names": [
-    "ACHC",
-    "APLE",
-    "CON",
-    "COTY",
-    "CSL",
-    "DXC",
-    "ED",
-    "JKHY",
-    "KMPR",
-    "MD",
-    "NWE",
-    "OZK",
-    "POOL",
-    "RHP",
-    "RLI",
-    "SPNT",
-    "UPBD",
-    "VFC",
-    "VRNS",
-    "WMG",
-    "XHR"
-   ]
-  }
- },
- "record_surface": {
-  "calibration_record": {
-   "attestation": {
-    "basis": "no graded forecasts on record yet (12 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-    "forecasts_recorded": 12,
-    "graded_forecasts": 0,
-    "ledger_rows_at_write": 439535,
-    "recorded_on": "2026-11-16",
-    "status": "not_attested"
-   },
-   "engine_id": "engine_26",
-   "probability_rendering": {
-    "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-    "render_as_probability": false,
-    "rendered_as": "uncalibrated_score"
-   },
-   "zero_forecast_state": {
-    "first_possible": "2026-11-02",
-    "first_possible_words": "The earliest next formation point is the week of Monday, November 2, 2026 (weekly dark refresh); the quarterly holdings publication is the other formation point.",
-    "forecasts_recorded": 0,
-    "reason": "No name passes all three legs at once today: the dark leg can be judged (5,721 names over 723 sessions), but only 2 names pass the insider and filings legs together, so no group has formed.",
-    "trigger": "A name passing all three legs at once at a quarterly holdings publication or the weekly dark refresh; groups form at those points and the verdict needs 100 recorded group names."
-   }
-  },
-  "current_reading": {
-   "as_of": "2026-11-16",
-   "keys_present": [
-    "as_of",
-    "calibration_attestation",
-    "claim",
-    "execution_pricing",
-    "feed",
-    "groups_today",
-    "idea",
-    "kill_criterion",
-    "live",
-    "loaded_at_utc",
-    "price_basis",
-    "price_history",
-    "provenance",
-    "readings",
-    "retired",
-    "self_test",
-    "source",
-    "state",
-    "thin_cell_rule",
-    "tool"
-   ]
-  },
-  "feed": "forecast_ledger",
-  "label": "Study record",
-  "live_accrual": {
-   "corrections": 0,
-   "engine": "engine_26",
-   "forecasts": 16,
-   "grades": 0,
-   "source": "forecast/ledger.jsonl (counted)"
-  },
-  "missing": {
-   "what_and_when": "Live grades are still building: 16 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+  "price_history": {
+    "from": "2025-03-25",
+    "names": 1833,
+    "sessions": 415,
+    "to": "2026-11-16"
   },
   "provenance": {
-   "execution_pricing": false,
-   "feed": "forecast_ledger",
-   "price_basis": "close",
-   "stamped_by": "terminal_common.stamp_provenance"
+    "execution_pricing": false,
+    "feed": "forecast_ledger",
+    "price_basis": "close",
+    "stamped_by": "terminal_common.stamp_provenance"
   },
-  "study_record": {
-   "label": "Study record",
-   "locations": [],
-   "total_items_counted": 0
-  },
-  "version": 1
- },
- "retired": false,
- "self_test": {
-  "feature_cases_checked": 6,
-  "ledger_arms_checked": 4,
-  "state": "passed"
- },
- "source": "The insider record gathered 2026-11-15 (filings filed 2026-05-16 to 2026-11-15), the published dark record, the quarterly holdings filings for the periods ended 2026-03-31 and 2026-06-30, and the daily price history on record (2025-03-25 to 2026-11-16), which is used only to grade, never as an input.",
- "state": "proving",
- "subject_chart": {
-  "lead": {
-   "kind": "ranked",
-   "label": "Dark share percent per index fund, the footprint reading.",
-   "rows": [
-    {
-     "name": "SPY",
-     "score": 68.4
+  "readings": {
+    "dark": {
+      "combined_context": {
+        "funds": [
+          {
+            "pct": 68.4,
+            "session": "2026-11-16",
+            "symbol": "SPY"
+          },
+          {
+            "pct": 46.6,
+            "session": "2026-11-16",
+            "symbol": "QQQ"
+          },
+          {
+            "pct": 63.0,
+            "session": "2026-11-16",
+            "symbol": "IWM"
+          }
+        ],
+        "history": [
+          {
+            "funds": {
+              "IWM": 52.5,
+              "QQQ": 40.0,
+              "SPY": 53.5
+            },
+            "index_pct": 43.7,
+            "index_total": 503,
+            "index_used": 501,
+            "session": "2026-10-23"
+          },
+          {
+            "funds": {
+              "IWM": 48.6,
+              "QQQ": 57.7,
+              "SPY": 45.1
+            },
+            "index_pct": 47.3,
+            "index_total": 503,
+            "index_used": 501,
+            "session": "2026-10-26"
+          },
+          {
+            "funds": {
+              "IWM": 46.6,
+              "QQQ": 31.8,
+              "SPY": 53.4
+            },
+            "index_pct": 43.9,
+            "index_total": 503,
+            "index_used": 501,
+            "session": "2026-10-27"
+          },
+          {
+            "funds": {
+              "IWM": 44.2,
+              "QQQ": 67.2,
+              "SPY": 52.7
+            },
+            "index_pct": 44.2,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-10-28"
+          },
+          {
+            "funds": {
+              "IWM": 91.9,
+              "QQQ": 60.1,
+              "SPY": 39.2
+            },
+            "index_pct": 41.6,
+            "index_total": 503,
+            "index_used": 498,
+            "session": "2026-10-29"
+          },
+          {
+            "funds": {
+              "IWM": 55.5,
+              "QQQ": 50.4,
+              "SPY": 52.2
+            },
+            "index_pct": 37.7,
+            "index_total": 503,
+            "index_used": 501,
+            "session": "2026-10-30"
+          },
+          {
+            "funds": {
+              "IWM": 61.6,
+              "QQQ": 47.4,
+              "SPY": 47.9
+            },
+            "index_pct": 40.9,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-11-02"
+          },
+          {
+            "funds": {
+              "IWM": 61.6,
+              "QQQ": 34.4,
+              "SPY": 36.6
+            },
+            "index_pct": 42.5,
+            "index_total": 503,
+            "index_used": 497,
+            "session": "2026-11-03"
+          },
+          {
+            "funds": {
+              "IWM": 56.1,
+              "QQQ": 48.5,
+              "SPY": 49.1
+            },
+            "index_pct": 40.3,
+            "index_total": 503,
+            "index_used": 500,
+            "session": "2026-11-04"
+          },
+          {
+            "funds": {
+              "IWM": 45.5,
+              "QQQ": 46.8,
+              "SPY": 56.9
+            },
+            "index_pct": 33.9,
+            "index_total": 503,
+            "index_used": 500,
+            "session": "2026-11-05"
+          },
+          {
+            "funds": {
+              "IWM": 19.2,
+              "QQQ": 38.3,
+              "SPY": 28.4
+            },
+            "index_pct": 41.1,
+            "index_total": 503,
+            "index_used": 500,
+            "session": "2026-11-06"
+          },
+          {
+            "funds": {
+              "IWM": 68.1,
+              "QQQ": 46.7,
+              "SPY": 46.0
+            },
+            "index_pct": 46.0,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-11-09"
+          },
+          {
+            "funds": {
+              "IWM": 71.6,
+              "QQQ": 48.0,
+              "SPY": 49.7
+            },
+            "index_pct": 42.9,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-11-10"
+          },
+          {
+            "funds": {
+              "IWM": 75.6,
+              "QQQ": 53.3,
+              "SPY": 50.2
+            },
+            "index_pct": 42.4,
+            "index_total": 503,
+            "index_used": 500,
+            "session": "2026-11-11"
+          },
+          {
+            "funds": {
+              "IWM": 60.6,
+              "QQQ": 46.9,
+              "SPY": 45.2
+            },
+            "index_pct": 36.1,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-11-12"
+          },
+          {
+            "funds": {
+              "IWM": 79.3,
+              "QQQ": 46.2,
+              "SPY": 63.2
+            },
+            "index_pct": 40.1,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-11-13"
+          },
+          {
+            "funds": {
+              "IWM": 63.0,
+              "QQQ": 46.6,
+              "SPY": 68.4
+            },
+            "index_pct": 36.8,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-11-16"
+          }
+        ],
+        "name": "S&P 500 stocks combined",
+        "pct": 36.8,
+        "session": "2026-11-16",
+        "stocks_total": 503,
+        "stocks_used": 499,
+        "words": "For context only: the dark record does hold a combined reading for the whole index and the three index funds' own ratios, shown here exactly as published. Neither is a reading for any single stock, and neither is ever used in this engine's test."
+      },
+      "gap_words": null,
+      "name": "Off-exchange pressure, per stock",
+      "names_on_record": 5960,
+      "session": "2026-11-16",
+      "sessions_on_record": 786,
+      "state": "on_record",
+      "top_fifth": [
+        "MHK",
+        "PCRX",
+        "RHP",
+        "SIGI",
+        "COLM",
+        "AIZ",
+        "PGNY",
+        "FCN",
+        "WMG",
+        "MD",
+        "CSL",
+        "VLY",
+        "CVCO",
+        "FTDR",
+        "EG",
+        "SKY",
+        "CON",
+        "AMPH",
+        "DCOM"
+      ],
+      "top_fifth_count": 19
     },
-    {
-     "name": "QQQ",
-     "score": 46.6
+    "filings": {
+      "filers_current": 8857,
+      "filers_prior": 8871,
+      "name": "Big holders building",
+      "periods": [
+        "2026-06-30",
+        "2026-03-31"
+      ],
+      "resolved_both": 5,
+      "resolved_current": 15,
+      "resolved_prior": 8,
+      "rise_by_count": [
+        "CON",
+        "VLY",
+        "VRNS"
+      ],
+      "rise_names": [
+        "CON",
+        "GO",
+        "VLY",
+        "VRNS"
+      ],
+      "table": [
+        {
+          "count_rose": true,
+          "holders_current": 15,
+          "holders_prior": 14,
+          "rose": true,
+          "shares_change_pct": -3.1,
+          "shares_current": 626420.0,
+          "shares_prior": 646183.0,
+          "shares_rose": false,
+          "symbol": "CON"
+        },
+        {
+          "count_rose": false,
+          "holders_current": 4,
+          "holders_prior": 19,
+          "rose": false,
+          "shares_change_pct": -86.7,
+          "shares_current": 330751.0,
+          "shares_prior": 2479380.0,
+          "shares_rose": false,
+          "symbol": "DCOM"
+        },
+        {
+          "count_rose": false,
+          "holders_current": 35,
+          "holders_prior": 35,
+          "rose": true,
+          "shares_change_pct": 21.2,
+          "shares_current": 14521159.0,
+          "shares_prior": 11980222.0,
+          "shares_rose": true,
+          "symbol": "GO"
+        },
+        {
+          "count_rose": true,
+          "holders_current": 54,
+          "holders_prior": 50,
+          "rose": true,
+          "shares_change_pct": 43.2,
+          "shares_current": 40415135.0,
+          "shares_prior": 28230187.0,
+          "shares_rose": true,
+          "symbol": "VLY"
+        },
+        {
+          "count_rose": true,
+          "holders_current": 59,
+          "holders_prior": 49,
+          "rose": true,
+          "shares_change_pct": 44.6,
+          "shares_current": 21353703.0,
+          "shares_prior": 14766901.0,
+          "shares_rose": true,
+          "symbol": "VRNS"
+        }
+      ],
+      "tracked_names": 100,
+      "words": "A name passes when its holder count rose or its total reported shares rose between the two quarters. A name is judged only when it can be matched in both quarters: matching is by company name, and large widely held names often fail the strict match, so most tracked names carry no judgement at all. An unmatched name is never read as a fall."
     },
-    {
-     "name": "IWM",
-     "score": 63.0
+    "insider": {
+      "gathered": "2026-11-15",
+      "name": "Insiders not selling",
+      "names_covered": 100,
+      "names_with_summary": 97,
+      "no_summary_names": [
+        "BLFS",
+        "CRNX",
+        "WBD"
+      ],
+      "open_buys": 57,
+      "open_sells": 968,
+      "silent_on_all_open_trades": [
+        "ACHC",
+        "APLE",
+        "CON",
+        "COTY",
+        "CSL",
+        "DXC",
+        "JKHY",
+        "MD",
+        "NWE",
+        "OZK",
+        "POOL",
+        "RHP",
+        "SPNT",
+        "WMG",
+        "XHR"
+      ],
+      "window": "Filings filed in the six months before the gathering date, up to the 20 most recent filings per name",
+      "window_start": "2026-05-16",
+      "words": "A name passes when its summary shows zero open-market sells in the window. The 7 names with no summary at all are never counted as passing: having no record is not the same as insiders not selling.",
+      "zero_sell_detail": [
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 2,
+          "open_transactions": 0,
+          "symbol": "ACHC"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 8,
+          "open_transactions": 0,
+          "symbol": "APLE"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 25,
+          "open_transactions": 0,
+          "symbol": "CON"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 0,
+          "open_transactions": 0,
+          "symbol": "COTY"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 2,
+          "open_transactions": 0,
+          "symbol": "CSL"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 26,
+          "open_transactions": 0,
+          "symbol": "DXC"
+        },
+        {
+          "buy_value_usd": 221.28,
+          "buys": 2,
+          "entries": 16,
+          "open_transactions": 2,
+          "symbol": "ED"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 26,
+          "open_transactions": 0,
+          "symbol": "JKHY"
+        },
+        {
+          "buy_value_usd": 367880.0,
+          "buys": 5,
+          "entries": 11,
+          "open_transactions": 5,
+          "symbol": "KMPR"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 22,
+          "open_transactions": 0,
+          "symbol": "MD"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 16,
+          "open_transactions": 0,
+          "symbol": "NWE"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 0,
+          "open_transactions": 0,
+          "symbol": "OZK"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 4,
+          "open_transactions": 0,
+          "symbol": "POOL"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 2,
+          "open_transactions": 0,
+          "symbol": "RHP"
+        },
+        {
+          "buy_value_usd": 858955.0,
+          "buys": 6,
+          "entries": 11,
+          "open_transactions": 6,
+          "symbol": "RLI"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 9,
+          "open_transactions": 0,
+          "symbol": "SPNT"
+        },
+        {
+          "buy_value_usd": 1840818.17,
+          "buys": 11,
+          "entries": 11,
+          "open_transactions": 11,
+          "symbol": "UPBD"
+        },
+        {
+          "buy_value_usd": 1302362.12,
+          "buys": 3,
+          "entries": 14,
+          "open_transactions": 3,
+          "symbol": "VFC"
+        },
+        {
+          "buy_value_usd": 26105.8,
+          "buys": 1,
+          "entries": 3,
+          "open_transactions": 1,
+          "symbol": "VRNS"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 15,
+          "open_transactions": 0,
+          "symbol": "WMG"
+        },
+        {
+          "buy_value_usd": 0,
+          "buys": 0,
+          "entries": 0,
+          "open_transactions": 0,
+          "symbol": "XHR"
+        }
+      ],
+      "zero_sell_names": [
+        "ACHC",
+        "APLE",
+        "CON",
+        "COTY",
+        "CSL",
+        "DXC",
+        "ED",
+        "JKHY",
+        "KMPR",
+        "MD",
+        "NWE",
+        "OZK",
+        "POOL",
+        "RHP",
+        "RLI",
+        "SPNT",
+        "UPBD",
+        "VFC",
+        "VRNS",
+        "WMG",
+        "XHR"
+      ]
     }
-   ],
-   "source": "readings.dark.combined_context.funds[].pct",
-   "title": "Off-exchange share per fund, percent"
   },
-  "record": {
-   "kind": "curve",
-   "label": "Combined index dark percent by session.",
-   "points": [
-    {
-     "x": "2026-10-23",
-     "y": 43.7
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "no graded forecasts on record yet (16 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 16,
+        "graded_forecasts": 0,
+        "ledger_rows_at_write": 480188,
+        "recorded_on": "2026-11-16",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_26",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": {
+        "first_possible": "2026-11-02",
+        "first_possible_words": "The earliest next formation point is the week of Monday, November 2, 2026 (weekly dark refresh); the quarterly holdings publication is the other formation point.",
+        "forecasts_recorded": 0,
+        "reason": "No name passes all three legs at once today: the dark leg can be judged (5,721 names over 723 sessions), but only 2 names pass the insider and filings legs together, so no group has formed.",
+        "trigger": "A name passing all three legs at once at a quarterly holdings publication or the weekly dark refresh; groups form at those points and the verdict needs 100 recorded group names."
+      }
     },
-    {
-     "x": "2026-10-26",
-     "y": 47.3
+    "current_reading": {
+      "as_of": "2026-11-16",
+      "keys_present": [
+        "as_of",
+        "calibration_attestation",
+        "claim",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "groups_today",
+        "idea",
+        "kill_criterion",
+        "live",
+        "loaded_at_utc",
+        "price_basis",
+        "price_history",
+        "provenance",
+        "readings",
+        "record_surface",
+        "retired",
+        "self_test",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_cell_rule",
+        "tool"
+      ]
     },
-    {
-     "x": "2026-10-27",
-     "y": 43.9
+    "feed": "forecast_ledger",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_26",
+      "forecasts": 16,
+      "grades": 0,
+      "source": "forecast/ledger.jsonl (counted)"
     },
-    {
-     "x": "2026-10-28",
-     "y": 44.2
+    "missing": {
+      "what_and_when": "Live grades are still building: 16 forecasts are on record and none are graded yet. Grades arrive after each following session close."
     },
-    {
-     "x": "2026-10-29",
-     "y": 41.6
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "forecast_ledger",
+      "price_basis": "close",
+      "stamped_by": "terminal_common.stamp_provenance"
     },
-    {
-     "x": "2026-10-30",
-     "y": 37.7
+    "study_record": {
+      "label": "Study record",
+      "locations": [],
+      "total_items_counted": 0
     },
-    {
-     "x": "2026-11-02",
-     "y": 40.9
-    },
-    {
-     "x": "2026-11-03",
-     "y": 42.5
-    },
-    {
-     "x": "2026-11-04",
-     "y": 40.3
-    },
-    {
-     "x": "2026-11-05",
-     "y": 33.9
-    },
-    {
-     "x": "2026-11-06",
-     "y": 41.1
-    },
-    {
-     "x": "2026-11-09",
-     "y": 46.0
-    },
-    {
-     "x": "2026-11-10",
-     "y": 42.9
-    },
-    {
-     "x": "2026-11-11",
-     "y": 42.4
-    },
-    {
-     "x": "2026-11-12",
-     "y": 36.1
-    },
-    {
-     "x": "2026-11-13",
-     "y": 40.1
-    },
-    {
-     "x": "2026-11-16",
-     "y": 36.8
-    }
-   ],
-   "source": "readings.dark.combined_context.history[].index_pct",
-   "title": "Off-exchange share over the sessions on record"
+    "version": 1
   },
-  "version": 1
- },
- "thin_cell_rule": "Any group with fewer than 30 graded stocks shows its count only, with no middle and no share headline.",
- "tool": "Silent Accumulation"
+  "retired": false,
+  "self_test": {
+    "feature_cases_checked": 6,
+    "ledger_arms_checked": 4,
+    "state": "passed"
+  },
+  "source": "The insider record gathered 2026-11-15 (filings filed 2026-05-16 to 2026-11-15), the published dark record, the quarterly holdings filings for the periods ended 2026-03-31 and 2026-06-30, and the daily price history on record (2025-03-25 to 2026-11-16), which is used only to grade, never as an input.",
+  "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "ranked",
+      "label": "Dark share percent per index fund, the footprint reading.",
+      "rows": [
+        {
+          "name": "SPY",
+          "score": 68.4
+        },
+        {
+          "name": "QQQ",
+          "score": 46.6
+        },
+        {
+          "name": "IWM",
+          "score": 63.0
+        }
+      ],
+      "source": "readings.dark.combined_context.funds[].pct",
+      "title": "Off-exchange share per fund, percent"
+    },
+    "record": {
+      "kind": "curve",
+      "label": "Combined index dark percent by session.",
+      "points": [
+        {
+          "x": "2026-10-23",
+          "y": 43.7
+        },
+        {
+          "x": "2026-10-26",
+          "y": 47.3
+        },
+        {
+          "x": "2026-10-27",
+          "y": 43.9
+        },
+        {
+          "x": "2026-10-28",
+          "y": 44.2
+        },
+        {
+          "x": "2026-10-29",
+          "y": 41.6
+        },
+        {
+          "x": "2026-10-30",
+          "y": 37.7
+        },
+        {
+          "x": "2026-11-02",
+          "y": 40.9
+        },
+        {
+          "x": "2026-11-03",
+          "y": 42.5
+        },
+        {
+          "x": "2026-11-04",
+          "y": 40.3
+        },
+        {
+          "x": "2026-11-05",
+          "y": 33.9
+        },
+        {
+          "x": "2026-11-06",
+          "y": 41.1
+        },
+        {
+          "x": "2026-11-09",
+          "y": 46.0
+        },
+        {
+          "x": "2026-11-10",
+          "y": 42.9
+        },
+        {
+          "x": "2026-11-11",
+          "y": 42.4
+        },
+        {
+          "x": "2026-11-12",
+          "y": 36.1
+        },
+        {
+          "x": "2026-11-13",
+          "y": 40.1
+        },
+        {
+          "x": "2026-11-16",
+          "y": 36.8
+        }
+      ],
+      "source": "readings.dark.combined_context.history[].index_pct",
+      "title": "Off-exchange share over the sessions on record"
+    },
+    "version": 1
+  },
+  "thin_cell_rule": "Any group with fewer than 30 graded stocks shows its count only, with no middle and no share headline.",
+  "tool": "Silent Accumulation"
 }
