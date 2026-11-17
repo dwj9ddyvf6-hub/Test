@@ -93,9 +93,16 @@ def stamp(path, doc, tape_session, consumer_session, note=None):
             "do not combine its figures with a fresher tape "
             "consumer as if they confirmed each other"),
     }
-    with open(path, "w", encoding="utf-8") as fh:
+    # Atomic publication (cure TORN-PUBLISH-20261117): the stamp
+    # rewrites every consumer's data file at the end of each family
+    # cycle, so it publishes through a temp file in the same
+    # directory plus os.replace, like the producers. Bytes
+    # unchanged: indent=2, sort_keys, trailing newline.
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
         json.dump(doc, fh, indent=2, sort_keys=True)
         fh.write("\n")
+    os.replace(tmp, path)
     return state
 
 
@@ -199,9 +206,13 @@ def main():
             if verdict == "deferred":
                 doc["tape_freshness"]["family_deferred_for"] = \
                     tape_session
-                with open(data_path, "w", encoding="utf-8") as fh:
+                # Atomic publication (cure TORN-PUBLISH-20261117),
+                # same pattern as stamp() above.
+                tmp = data_path + ".tmp"
+                with open(tmp, "w", encoding="utf-8") as fh:
                     json.dump(doc, fh, indent=2, sort_keys=True)
                     fh.write("\n")
+                os.replace(tmp, data_path)
                 deferred.append(
                     f"{data_rel} at {session} vs tape "
                     f"{tape_session}")
