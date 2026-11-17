@@ -188,8 +188,32 @@ def test_proof_gate_streaming_matches_classic(tmp_path, reg, prices):
     cal = prices.calendars[sym]
     mut["horizon_open"] = cal[5]
     mut["issued_ts"] = cal[5]
+    # Amended 2026-11-17 (SUITE-RED-CURE-20261117): the waiting
+    # record is now CONSTRUCTED to wait, the same way the
+    # candidate above is constructed to grade. The original
+    # form used the second live provisional row unmutated
+    # (symbol AA, horizon_open 2026-10-28): it counted as
+    # waiting only because on 2026-11-06 the price panel ended
+    # within the frozen 10-session forward window of that
+    # horizon. As the panel advanced (it ends 2026-11-16, 415
+    # sessions; 2026-10-28 sits at index 401 and 401 + 10 < 415)
+    # the row matured (forward_return +0.0171, not None) and
+    # both paths graded it: counts [2, 0, 1] in the classic AND
+    # the streaming path alike, with byte-identical appended
+    # ledgers, proven by targeted twin reproduction on
+    # 2026-11-17. No streaming/classic divergence; the
+    # expectation rotted with the live panel. Moving the
+    # waiting row's horizon to its calendar's last session
+    # makes forward_return return None on every future run,
+    # so all three classes stay exercised deterministically.
+    wait_mut = copy.deepcopy(waiting)
+    w_sym = (wait_mut.get("outcome") or {}).get("symbol") \
+        or wait_mut.get("subject")
+    w_cal = prices.calendars[w_sym]
+    wait_mut["horizon_open"] = w_cal[-1]
+    wait_mut["issued_ts"] = w_cal[-1]
     rows = [{"type": "genesis", "note": "blocker fixture"},
-            mut, waiting, nopanel]
+            mut, wait_mut, nopanel]
 
     def run(path, streaming):
         led = ledger_mod.Ledger(path, registry=reg)
