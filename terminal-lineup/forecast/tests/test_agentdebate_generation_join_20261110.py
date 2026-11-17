@@ -147,9 +147,37 @@ def test_current_case_completes_stamped_current(tmp_path, monkeypatch):
 
 
 def test_unmatched_generation_still_fails_closed(tmp_path, monkeypatch):
+    # Amended 2026-11-17 (AGENTDEBATE-JOIN-BLOCKER-RECONCILE-20261117):
+    # the session-join cure (AGENTDEBATE-SESSION-JOIN-20261117)
+    # superseded this case's original premise. A generation stamp
+    # no cell carries no longer fails closed by itself when the
+    # Second Opinion's own session cell exists and the exact
+    # parity checks prove it like-for-like; that is the 17:30
+    # state the cure was built for. Fail-closed now requires
+    # that neither join exists: this case therefore also removes
+    # the 2026-11-09 cell from the Flow Board fixture, leaving
+    # no generation cell and no session cell.
+    so, mm, fb, rd, pg = _records("2026-11-09",
+                                  "2026-11-08T00:00:00+00:00",
+                                  -100, -200, 1000)
+    fb = {**fb, "rows": [{**row, "cells": [
+        c for c in row["cells"] if c["session"] != "2026-11-09"]}
+        for row in fb["rows"]]}
+    _stage(tmp_path, monkeypatch, (so, mm, fb, rd, pg))
+    with pytest.raises(SystemExit):
+        ad.main()
+
+
+def test_session_join_parity_tamper_still_fails_closed(
+        tmp_path, monkeypatch):
+    # Added 2026-11-17 with the amendment above: on the session
+    # join path the parity checks remain the like-for-like proof,
+    # so a Second Opinion figure that disagrees with its own
+    # session's cell stops the refresh exactly as the generation
+    # path's parity stop always did.
     _stage(tmp_path, monkeypatch,
            _records("2026-11-09", "2026-11-08T00:00:00+00:00",
-                    -100, -200, 1000))
+                    -101, -200, 1000))
     with pytest.raises(SystemExit):
         ad.main()
 
