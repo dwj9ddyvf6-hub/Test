@@ -101,7 +101,8 @@ LOCK_PATH = ROOT / "refresh_engines.lock"
 # the final tree of the session. Any upstream completion after
 # one of them invalidates it and everything after it.
 FINAL_STEPS = ("attestation-refresh-final", "attestation-reattach",
-               "record", "record-enrich", "smoke", "publish-live")
+               "record", "holly-resync", "record-enrich", "smoke",
+               "publish-live")
 
 
 def _now_iso() -> str:
@@ -332,10 +333,10 @@ def _run(panel_through=None, cp: _Checkpoint = None) -> int:
     # the checkpoint's tail invalidation bookkeeping.
     order = ["deep-panel-advance", "vix-capture", "deep-binary-store",
              "earnings-record", "first-minutes", "fair-gap-model",
-             "form4-footnotes", "session-quality", "leadlag-record",
+             "form4-footnotes", "leadlag-record",
              "xbrl-route", "news-leg-estimation",
              "price-panel-advance", "forecast-grading",
-             "attestation-refresh", "priced-moves",
+             "attestation-refresh", "session-quality", "priced-moves",
              "earnings-calendar", "board-republish"]
 
     def skip(key: str) -> bool:
@@ -443,14 +444,15 @@ def _run(panel_through=None, cp: _Checkpoint = None) -> int:
              [sys.executable, str(HERE / "fair_gap_model.py")]),
             ("form4-footnotes",
              [sys.executable, str(HERE / "form4_footnotes.py")]),
-            # Stream C record lanes (2026-10-30): the FE12
-            # session quality record (Engine 1's guard inputs),
-            # the FE07 lead-lag estimation record and the FE21
-            # XBRL route record. Same non-fatal pattern: a
-            # failed lane leaves the prior record on disk and
-            # consumers publish their named states.
-            ("session-quality",
-             [sys.executable, str(HERE / "build_session_quality.py")]),
+            # Stream C record lanes (2026-10-30): the FE07
+            # lead-lag estimation record and the FE21 XBRL
+            # route record. Same non-fatal pattern: a failed
+            # lane leaves the prior record on disk and
+            # consumers publish their named states. The FE12
+            # session quality record lane no longer runs here:
+            # it moved after the price panel advance
+            # (SESSION-QUALITY-PANEL-RESYNC-20261117, in the
+            # panel-derived lanes block below).
             ("leadlag-record",
              [sys.executable, str(HERE / "build_leadlag_record.py")]),
             ("xbrl-route",
@@ -530,7 +532,21 @@ def _run(panel_through=None, cp: _Checkpoint = None) -> int:
     # by the record lane pattern above: a failed lane leaves the
     # prior record on disk and consumers publish from it, with the
     # failure named in the log.
+    # Session quality joins this block
+    # (SESSION-QUALITY-PANEL-RESYNC-20261117): build_session_
+    # quality.py selects the sessions it builds from the panel's
+    # own last rows, so running it in the pre-advance record
+    # block froze its freshest session at the previous panel
+    # session whenever the advance landed a new one (2026-11-16:
+    # the record stood at 2026-11-13 while Corrected Band
+    # published as of 2026-11-16, and its FE12 guard, which reads
+    # the record only for its own as-of session, flipped to
+    # not_recorded with all four inputs missing beside a
+    # complete record). The same defect class PANEL-RESYNC-
+    # 20261031 cured for priced-moves, cured the same way.
     for label, argv in (
+            ("session-quality",
+             [sys.executable, str(HERE / "build_session_quality.py")]),
             ("priced-moves",
              [sys.executable, str(HERE / "priced_moves.py")]),
             ("earnings-calendar",
@@ -663,6 +679,40 @@ def _run(panel_through=None, cp: _Checkpoint = None) -> int:
             cp.mark("record", rec.returncode, time.time() - t0, fstr)
         else:
             cp.mark("record", rec.returncode, time.time() - t0)
+    # Holly resync (cure HOLLY-RECORD-RESYNC-20261117): Holly
+    # Ideas is a consumer of The Record (its record_sessions and
+    # board_session_in_record are read from record/data.json),
+    # but it runs in the tools chain, whose Holly leg ran at
+    # 2026-11-16T23:59:58Z against a Record that still ended at
+    # the 2026-11-13 session; this chain's record step only
+    # landed the 2026-11-16 board session at 2026-11-17T01:59:36Z
+    # (after an earlier attempt was killed, exit -9, and resumed),
+    # and no leg anywhere re-ran Holly afterwards, so Holly kept
+    # publishing board_session_in_record false and grading words
+    # stating the lag after the lag itself had closed. The
+    # producer of Holly's final Record vintage is this chain's
+    # record step, so Holly re-runs here, immediately after it
+    # and before the record-surface enrich below re-attaches its
+    # blocks. Same shape as the tools chain's ONEPAGE-RESYNC-
+    # 20261117 cure for the same defect class.
+    if skip("holly-resync"):
+        holly_code = 0
+    else:
+        t0 = time.time()
+        holly = subprocess.run(
+            [sys.executable, str(HERE / "refresh_hollyideas.py")],
+            capture_output=True, text=True)
+        holly_code = holly.returncode
+        print(f"holly resync exit {holly.returncode}", flush=True)
+        if holly.returncode != 0:
+            fstr = ("holly resync (refresh_hollyideas.py exited "
+                    f"{holly.returncode})")
+            failures.append(fstr)
+            cp.mark("holly-resync", holly.returncode,
+                    time.time() - t0, fstr)
+        else:
+            cp.mark("holly-resync", holly.returncode,
+                    time.time() - t0)
     # Record-surface cure (2026-10-31): every page's data must carry
     # its full record before the smoke check verifies the tree.
     if skip("record-enrich"):
