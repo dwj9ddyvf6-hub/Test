@@ -236,6 +236,29 @@ def main():
             failures.append(script)
         else:
             ran += 1
+    # One-Page re-sync (cure ONEPAGE-RESYNC-20261117): the
+    # One-Page Report runs in the assemblies group above and
+    # copies each dated name's earnings entry, priced move
+    # included, verbatim from the Earnings Calendar page. The
+    # panel consumer re-sync group has just re-priced the priced
+    # move record and republished the calendar from it, so the
+    # assembled One-Page Report is one calendar vintage behind
+    # whenever that re-sync changes any move: on the 2026-11-16
+    # evening chain the report was assembled at 00:08:34Z from a
+    # calendar carrying 83 priced moves, the re-sync's priced
+    # move run at 00:13:04Z advanced the record to 95 (the
+    # 2026-12-01 names entered its 14-day window as the UTC date
+    # rolled, and WSM, reporting 2026-11-19, was priced at
+    # 7.7 percent), the calendar republished all 95, and no leg
+    # re-ran the report, so the page kept publishing null moves
+    # for all 12 names. The report's producer of the final
+    # calendar vintage runs here, after that republication and
+    # before the hub refresh below reads the page files.
+    print("group: one-page re-sync", flush=True)
+    if run_one("refresh_onepagereport.py") != 0:
+        failures.append("refresh_onepagereport.py (re-sync)")
+    else:
+        ran += 1
     # Source clock diagnostic last: it reads the refresh logs the
     # day's runs have written, so it can only go current after them.
     print("group: source clock diagnostic", flush=True)
