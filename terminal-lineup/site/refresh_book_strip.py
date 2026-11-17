@@ -566,6 +566,7 @@ def build_state(now: datetime) -> dict:
         return {
             "state": "unavailable",
             "generated_at_et": generated,
+            "as_of": now.astimezone(ET).date().isoformat(),
             "title": "Midna's Book",
             "unavailable_line":
                 "Book data unavailable as of %s: the book's own "
@@ -611,6 +612,12 @@ def build_state(now: datetime) -> dict:
     state = {
         "state": "ok",
         "generated_at_et": generated,
+        # Machine-readable reading date (NO-DATE-CURE-20261117):
+        # this strip carried only the prose generated_at_et
+        # stamp, so the canonical freshness resolver found no
+        # date on it at all. as_of is the generation date in ET,
+        # the same instant generated_at_et states in words.
+        "as_of": now.astimezone(ET).date().isoformat(),
         "title": "Midna's Book",
         "simulated_note":
             "A simulated $100,000 paper trading book, run by Midna, "
