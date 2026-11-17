@@ -27,13 +27,26 @@ ORIGINALS = {
 REISSUES = set(ORIGINALS.values())
 
 
-def _rows():
-    return L.Ledger(LEDGER_PATH).rows()
+def _stream():
+    # Streamed read (LEDGER-MATERIALIZE-KILL-20261117): this
+    # blocker used to materialise the whole ledger through
+    # Ledger.rows() once per test. The ledger passed ~480k rows
+    # / 968 MB on disk, the parsed whole is ~3 GB resident, and
+    # the suite runner began OOM-killing this file (morning and
+    # evening runs, 2026-11-17) as the box's other residents
+    # grew. Ledger.iter_rows() is the library's own streaming
+    # read (GRADING-STREAM-20261106: same parse, same
+    # LedgerError, one row resident), and recompute_figures
+    # accepts it directly (LEDGER-STREAM-FIGURES-20261109).
+    # Every assertion below is unchanged; only the read form
+    # moved, and each test now retains only the rows its claim
+    # is about.
+    return L.Ledger(LEDGER_PATH).iter_rows()
 
 
 def test_supn_originals_voided_exactly_once_pointing_at_reissue():
-    rows = _rows()
-    corrections = [r for r in rows if r.get("type") == "correction"
+    corrections = [r for r in _stream()
+                   if r.get("type") == "correction"
                    and r.get("corrects_row_id") in ORIGINALS]
     assert len(corrections) == 3, (
         f"expected exactly 3 corrections voiding the SUPN originals, "
@@ -47,17 +60,22 @@ def test_supn_originals_voided_exactly_once_pointing_at_reissue():
 
 
 def test_supn_reissue_rows_stand_unvoided():
-    rows = _rows()
-    voided = {r["corrects_row_id"] for r in rows
-              if r.get("type") == "correction"}
+    voided = set()
+    present = set()
+    for r in _stream():
+        if r.get("type") == "correction" \
+                and r.get("corrects_row_id") in REISSUES:
+            voided.add(r["corrects_row_id"])
+        elif r.get("type") == "forecast" \
+                and r.get("row_id") in REISSUES:
+            present.add(r["row_id"])
     assert not (REISSUES & voided), (
         f"reissue rows must stand valid; voided: {REISSUES & voided}")
-    present = {r["row_id"] for r in rows if r.get("type") == "forecast"}
     assert REISSUES <= present, "reissue rows missing from the ledger"
 
 
 def test_engine06_void_aware_recount():
-    figures = L.recompute_figures(_rows())
+    figures = L.recompute_figures(_stream())
     eng = figures["engine_06"]
     assert eng["forecasts_voided"] == 3, eng
     assert eng["forecasts_valid"] == eng["forecasts"] - 3, eng
