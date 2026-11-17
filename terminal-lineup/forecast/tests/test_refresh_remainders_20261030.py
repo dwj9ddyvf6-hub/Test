@@ -190,7 +190,23 @@ def test_abstention_published_decision_record():
     # 2026-11-04 sessions under the frozen-at-first-issue
     # rule); 18 minus 10 is the 8 recorded, which did not
     # move.
-    assert data["live"]["forecasts_voided"] == 10
+    # Re-pinned 2026-11-17 (SUITE-RED-CURE-20261117):
+    # forecasts_voided 10 to 20, from the ledger's own
+    # arithmetic recounted the same day: engine_30 now
+    # carries 28 forecast rows, exactly 20 voided by
+    # correction rows (20 distinct corrects_row_id values,
+    # every one a duplicate re-issue void under the same
+    # frozen-at-first-issue rule), and the 8 valid rows are
+    # exactly the first-issue pair (21 and 5 sessions) for
+    # each of 2026-10-28, 2026-10-29, 2026-10-30 and
+    # 2026-11-03: no valid forecast was voided. The 10 new
+    # voids are 5 re-issue pairs for the closed window's
+    # last day, 2026-11-03, issued 2026-11-10 (2 pairs),
+    # 2026-11-11 (2 pairs) and 2026-11-13 (1 pair) as the
+    # advancing panel changed each re-run's threshold and
+    # lineage inputs; 28 minus 20 is the 8 recorded, which
+    # did not move.
+    assert data["live"]["forecasts_voided"] == 20
     # The narrative must agree with the block it rides in (it once
     # described the previous census day, fired, 0 of 1, 6 days,
     # while the block carried the new day; cured 2026-10-31 by
