@@ -31,6 +31,23 @@ def load(slug):
         return json.load(fh)
 
 
+def _ledger_stream():
+    # Streamed read (LEDGER-MATERIALIZE-KILL-20261117): the two
+    # ledger tests below used to parse the whole ledger into a
+    # list of dicts ([json.loads(l) for l in open(LEDGER)]). At
+    # ~480k rows / 968 MB on disk the parsed whole is ~3 GB
+    # resident, and the suite runner OOM-killed this file at
+    # exactly the first materialising test on 2026-11-17 as the
+    # box's other residents grew. This generator yields the
+    # same parsed rows one at a time (the same json.loads per
+    # line the list form ran); each test retains only the rows
+    # its claim is about, and every assertion is unchanged.
+    with open(LEDGER) as fh:
+        for line in fh:
+            if line.strip():
+                yield json.loads(line)
+
+
 def test_pin_watch_page_fields_exist_in_data():
     d = load("expiry-pin-watch")
     page = open(os.path.join(SITE, "expiry-pin-watch",
@@ -217,8 +234,8 @@ def test_engine10_pername_heat_source_and_ledger_rows():
     pn = d["pername_today"]
     assert pn is not None and pn["overlap"]
     assert d["coverage"]["both_pername"] == len(pn["overlap"])
-    rows = [json.loads(l) for l in open(LEDGER)]
-    e10 = [r for r in rows if r.get("engine_id") == "engine_10"
+    e10 = [r for r in _ledger_stream()
+           if r.get("engine_id") == "engine_10"
            and r.get("type") == "forecast"]
     assert e10, "Engine 10 has ledgered no forecasts"
     assert all((r["value"] or {}).get("heat_source")
@@ -228,21 +245,25 @@ def test_engine10_pername_heat_source_and_ledger_rows():
 
 def test_engine19_live_record_counts_only_its_own_windows():
     d = load("in-regime-oracle")
-    rows = [json.loads(l) for l in open(LEDGER)]
-    windows = [r for r in rows if r.get("engine_id") == "engine_19"
-               and r.get("type") == "forecast"
-               and (r.get("outcome") or {}).get("kind")
-               == "next_window_hit_rate_exceeds_trailing"]
-    assert d["live_record"]["forecasts_recorded"] == len(windows)
-    proof = [r for r in rows if r.get("engine_id") == "engine_19"
-             and r.get("type") == "forecast"
-             and (r.get("outcome") or {}).get("kind")
-             == "provisional_proof_forward_check"]
+    # Only the two counts are ever asserted, so the stream is
+    # counted, not retained (same cure as above: the proof
+    # class alone is ~31k full rows).
+    n_windows = 0
+    n_proof = 0
+    for r in _ledger_stream():
+        if r.get("engine_id") == "engine_19" \
+                and r.get("type") == "forecast":
+            kind = (r.get("outcome") or {}).get("kind")
+            if kind == "next_window_hit_rate_exceeds_trailing":
+                n_windows += 1
+            elif kind == "provisional_proof_forward_check":
+                n_proof += 1
+    assert d["live_record"]["forecasts_recorded"] == n_windows
     # Re-taken durably (health loop R2, 2026-10-31): the count is
     # the total the page's own proof_gate block reports, not the
     # 4,641 borrowed when this test was written (the block's
     # duplicate derivation is cured D-R1-16: 31,649 total rows).
-    assert len(proof) == d["proof_gate"]["ledger_rows_total"]
+    assert n_proof == d["proof_gate"]["ledger_rows_total"]
 
 
 class _Prices:
