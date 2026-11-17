@@ -90,8 +90,25 @@ def regenerate(recorded_on=None, registry_path=REGISTRY_PATH,
     with open(registry_path, "r", encoding="utf-8") as fh:
         data = json.load(fh)
     led = ledger_mod.Ledger(ledger_path)
-    rows = led.rows()
-    figures = ledger_mod.recompute_figures(rows)
+    # Streaming form (GRADING-REPORTS-STREAM-20261116): the
+    # recount used to start from led.rows(), the whole parsed
+    # ledger held beside recompute_figures' own retention;
+    # at 439,535 rows that resident set was OOM-killed
+    # (exit -9) both in-process in the grading runner and as
+    # this module's own spine step. The recount now streams
+    # (iter_rows, the form the engine refreshers already use
+    # for the same function), counting rows and tracking the
+    # head hash on the same pass for the checkpoint anchor
+    # and the attestation records' ledger_rows figure.
+    stats = {"rows": 0, "head": None}
+
+    def _counted(source):
+        for r in source:
+            stats["rows"] += 1
+            stats["head"] = r.get("row_hash")
+            yield r
+
+    figures = ledger_mod.recompute_figures(_counted(led.iter_rows()))
     changed = []
     for eng in data["engines"]:
         fig = figures.get(eng["id"]) or {
@@ -100,22 +117,26 @@ def regenerate(recorded_on=None, registry_path=REGISTRY_PATH,
         counting_basis = None
         foreign = FOREIGN_OUTCOME_KINDS.get(eng["id"])
         if foreign:
-            excluded = {r["row_id"] for r in rows
+            excluded = {r["row_id"] for r in led.iter_rows()
                         if r.get("type") == "forecast"
                         and r.get("engine_id") == eng["id"]
                         and (r.get("outcome") or {}).get("kind")
                         in foreign}
-            own_rows = [r for r in rows
-                        if r.get("row_id") not in excluded
-                        and r.get("forecast_row_id") not in excluded]
-            fig = ledger_mod.recompute_figures(own_rows).get(
-                eng["id"]) or {
+
+            def _own(source):
+                for r in source:
+                    if r.get("row_id") not in excluded \
+                            and r.get("forecast_row_id") not in excluded:
+                        yield r
+
+            fig = ledger_mod.recompute_figures(
+                _own(led.iter_rows())).get(eng["id"]) or {
                     "forecasts": 0, "forecasts_valid": 0,
                     "graded": 0, "mean_scores": {}}
             counting_basis = COUNTING_BASIS[eng["id"]]
         record = grading.attestation_record(
             eng, fig, recorded_on, counting_basis=counting_basis,
-            ledger_rows=len(rows))
+            ledger_rows=stats["rows"])
         if eng.get("calibration_attestation") != record:
             eng["calibration_attestation"] = record
             changed.append(eng["id"])
@@ -133,18 +154,26 @@ def regenerate(recorded_on=None, registry_path=REGISTRY_PATH,
     # the hourly gated Test sync carries off this machine, so
     # the head is anchored externally at sync cadence rather
     # than only in records on this box.
-    write_checkpoint(rows)
+    write_checkpoint(None, count=stats["rows"], head=stats["head"])
     return changed
 
 
 CHECKPOINT_PATH = os.path.join(HERE, "ledger-checkpoint.json")
 
 
-def write_checkpoint(rows, checkpoint_path=CHECKPOINT_PATH):
-    """Write the ledger head/row-count anchor when it moved."""
-    head = rows[-1]["row_hash"] if rows else None
+def write_checkpoint(rows=None, checkpoint_path=CHECKPOINT_PATH,
+                     count=None, head=None):
+    """Write the ledger head/row-count anchor when it moved.
+
+    Callers may pass the parsed rows (the original form) or the
+    row count and head hash tracked on a streaming pass
+    (GRADING-REPORTS-STREAM-20261116); the written record is
+    the same either way."""
+    if rows is not None:
+        count = len(rows)
+        head = rows[-1]["row_hash"] if rows else None
     record = {
-        "ledger_rows": len(rows),
+        "ledger_rows": count,
         "ledger_head": head,
         "checked_at_utc": datetime.now(timezone.utc).strftime(
             "%Y-%m-%dT%H:%M:%SZ"),
@@ -159,7 +188,7 @@ def write_checkpoint(rows, checkpoint_path=CHECKPOINT_PATH):
         with open(checkpoint_path, encoding="utf-8") as fh:
             prior = json.load(fh)
         if prior.get("ledger_head") == head and \
-                prior.get("ledger_rows") == len(rows):
+                prior.get("ledger_rows") == count:
             return False
     except (OSError, ValueError):
         pass
