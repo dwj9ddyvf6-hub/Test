@@ -2,10 +2,10 @@
  "as_of": "2026-11-16",
  "calibration_attestation": {
   "attestation": {
-   "basis": "no graded forecasts on record yet (32 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-   "forecasts_recorded": 32,
+   "basis": "no graded forecasts on record yet (34 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+   "forecasts_recorded": 34,
    "graded_forecasts": 0,
-   "ledger_rows_at_write": 439535,
+   "ledger_rows_at_write": 474840,
    "recorded_on": "2026-11-16",
    "status": "not_attested"
   },
@@ -492,6 +492,10 @@
   "unsettled_at_60": 160
  },
  "execution_pricing": false,
+ "explanation": {
+  "body": "Its forecast takes this form: timing and distribution, over 5, 10, 21 and 60 sessions (cap 60). It is graded on whether its timing calls resolve by each stated horizon, with unresolved cases still counted. It would be ended if after 30 matured cohorts, its timing Brier is no better than the unconditional hazard. It counts as proven at 30 matured cohorts.",
+  "summary": "When a defined event gathers a group of stocks, say how long its move is likely to take and which side, up or down, is likely to give way first."
+ },
  "feed": "forecast_ledger",
  "grading_words": "Every group is written down at entry, before its first race day opens. It is scored at 5, 10, 21 and 60 trading days on how well its timing chances matched what happened, against the plain past rate for its kind of event. Groups still unsettled at 60 stay in the count as their own outcome.",
  "history": {
@@ -611,6 +615,91 @@
   "price_basis": "close",
   "stamped_by": "terminal_common.stamp_provenance"
  },
+ "record_surface": {
+  "calibration_record": {
+   "attestation": {
+    "basis": "no graded forecasts on record yet (32 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+    "forecasts_recorded": 32,
+    "graded_forecasts": 0,
+    "ledger_rows_at_write": 439535,
+    "recorded_on": "2026-11-16",
+    "status": "not_attested"
+   },
+   "engine_id": "engine_29",
+   "probability_rendering": {
+    "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+    "render_as_probability": false,
+    "rendered_as": "uncalibrated_score"
+   },
+   "zero_forecast_state": null
+  },
+  "current_reading": {
+   "as_of": "2026-11-16",
+   "keys_present": [
+    "as_of",
+    "calibration_attestation",
+    "classes",
+    "depth_cohort_timing_deep_panel",
+    "execution_pricing",
+    "explanation",
+    "feed",
+    "grading_words",
+    "history",
+    "idea",
+    "kill_criterion",
+    "live",
+    "loaded_at_utc",
+    "price_basis",
+    "provenance",
+    "record_surface",
+    "self_test",
+    "shared_family_note",
+    "ship_date",
+    "source",
+    "state",
+    "subject_chart",
+    "thin_cell_rule",
+    "tool"
+   ]
+  },
+  "feed": "forecast_ledger",
+  "label": "Study record",
+  "live_accrual": {
+   "corrections": 0,
+   "engine": "engine_29",
+   "forecasts": 34,
+   "grades": 0,
+   "source": "forecast/ledger.jsonl (counted)"
+  },
+  "missing": {
+   "what_and_when": "Live grades are still building: 34 forecasts are on record and none are graded yet. Grades arrive after each following session close."
+  },
+  "provenance": {
+   "execution_pricing": false,
+   "feed": "forecast_ledger",
+   "price_basis": "close",
+   "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "study_record": {
+   "label": "Study record",
+   "locations": [
+    {
+     "items": 8,
+     "path": "/history"
+    },
+    {
+     "items": 8,
+     "path": "/history/deep_reset_days"
+    },
+    {
+     "items": 0,
+     "path": "/history/em_check"
+    }
+   ],
+   "total_items_counted": 16
+  },
+  "version": 1
+ },
  "self_test": {
   "passed": true,
   "words": "A made-up group whose middle stock climbs steadily reaches the upper barrier first, and the timing value this page publishes is read correctly by the shared scoring rule."
@@ -619,6 +708,134 @@
  "ship_date": "2026-10-29",
  "source": "the shipped daily price history (1,833 names, March 25, 2025 to October 23, 2026), the settled fear-day record, the earnings calendar on record, and the morning map card record",
  "state": "proving",
+ "subject_chart": {
+  "lead": {
+   "kind": "curve",
+   "label": "Share of groups completing at each step.",
+   "points": [
+    {
+     "x": "step 1",
+     "y": 0.0
+    },
+    {
+     "x": "step 2",
+     "y": 0.0
+    },
+    {
+     "x": "step 3",
+     "y": 0.0
+    },
+    {
+     "x": "step 4",
+     "y": 0.0
+    },
+    {
+     "x": "step 5",
+     "y": 0.0
+    },
+    {
+     "x": "step 6",
+     "y": 0.0
+    },
+    {
+     "x": "step 7",
+     "y": 0.0
+    },
+    {
+     "x": "step 8",
+     "y": 2.1
+    },
+    {
+     "x": "step 9",
+     "y": 4.3
+    },
+    {
+     "x": "step 10",
+     "y": 4.4
+    },
+    {
+     "x": "step 11",
+     "y": 0.0
+    },
+    {
+     "x": "step 12",
+     "y": 0.0
+    },
+    {
+     "x": "step 13",
+     "y": 0.0
+    },
+    {
+     "x": "step 14",
+     "y": 2.3
+    },
+    {
+     "x": "step 15",
+     "y": 4.8
+    },
+    {
+     "x": "step 16",
+     "y": 7.5
+    },
+    {
+     "x": "step 17",
+     "y": 2.7
+    },
+    {
+     "x": "step 18",
+     "y": 2.8
+    },
+    {
+     "x": "step 19",
+     "y": 0.0
+    },
+    {
+     "x": "step 20",
+     "y": 2.9
+    },
+    {
+     "x": "step 21",
+     "y": 5.9
+    }
+   ],
+   "source": "classes[0].hazard_pct",
+   "title": "When completions actually land"
+  },
+  "record": {
+   "kind": "ranked",
+   "label": "Up-first percent at the longest race step, per class.",
+   "rows": [
+    {
+     "coverage": "down first 4.3 percent",
+     "name": "Fear day",
+     "score": 55.3
+    },
+    {
+     "coverage": "down first 4.9 percent",
+     "name": "Deep reset",
+     "score": 29.4
+    },
+    {
+     "coverage": "down first 7.7 percent",
+     "name": "Wall break",
+     "score": 26.6
+    },
+    {
+     "coverage": "down first 5.2 percent",
+     "name": "Earnings day",
+     "score": 25.3
+    },
+    {
+     "coverage": "down first 5.4 percent",
+     "name": "Big gap day",
+     "score": 19.7
+    }
+   ],
+   "source": "classes[].race[].up_first_pct",
+   "title": "Which side finished first, per class"
+  },
+  "version": 1
+ },
  "thin_cell_rule": "Any picture built on fewer than 30 past groups shows its count and is labelled thin. A class with no past groups shows no picture at all.",
  "tool": "Completion Clock"
 }
