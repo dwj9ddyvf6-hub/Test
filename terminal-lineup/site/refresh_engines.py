@@ -506,6 +506,17 @@ def _run(panel_through=None, cp: _Checkpoint = None) -> int:
         if r.stdout:
             print(r.stdout.strip()[-2000:], flush=True)
         if r.returncode != 0:
+            # Name the failure's own words, not just its exit
+            # code (GRADING-REPORTS-STREAM-20261116): the spine
+            # loop used to discard stderr, so the grading step's
+            # FAIL line (the reports child's exit) was
+            # unrecoverable from the run log and the 2026-11-16
+            # forecast-grading failure carried no cause. The
+            # engine loop below already prints failure output
+            # by the G17 pattern; the spine now does the same.
+            etail = (r.stderr or "").strip()[-800:]
+            if etail:
+                print(f"failure output {label}: {etail}", flush=True)
             fstr = f"{label} (exited {r.returncode})"
             failures.append(fstr)
             cp.mark(label, r.returncode, time.time() - t0, fstr)
