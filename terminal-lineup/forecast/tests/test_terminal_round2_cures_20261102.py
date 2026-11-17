@@ -182,6 +182,23 @@ def test_attestation_resync_wired_after_engine_loop():
     src = _src("refresh_engines.py")
     assert "attestation-refresh-final" in src
     assert "reattach_attestations.py" in src
-    # the resync must sit after the per-engine loop, not before it
-    assert src.index("attestation-refresh-final") > src.index(
-        "for slug in engine_slugs()")
+    # The resync must sit after the per-engine loop, not before it.
+    # Amended 2026-11-17 (ROUND2-ATTESTATION-LOOP-PIN-20261117): the
+    # original pin anchored on the literal loop header
+    # "for slug in engine_slugs()" and on the first occurrence of
+    # "attestation-refresh-final". Both anchors were superseded by
+    # documented cures: CALIBRATION-ENTRANT-ORDER-20261117
+    # materialised the slug list (slugs = engine_slugs(), with the
+    # league reinserted after honest-pop) so the loop now reads
+    # "for slug in slugs:", and REFRESH-RESUME-20261111 added the
+    # FINAL_STEPS tuple near the top of the file, so the name's
+    # first occurrence is that declaration, not the execution site.
+    # The amended pin anchors on the loop as it now runs and on the
+    # resync's execution tuple searched for after the loop. Fail
+    # direction: a resync block moved before the loop, or removed,
+    # leaves no execution tuple after the loop and this test fails;
+    # the pre-amendment pin fails on the current source with
+    # ValueError (the recorded 2026-11-17 failure).
+    loop_at = src.index("for slug in slugs:")
+    assert src.index('("attestation-refresh-final",', loop_at) > loop_at
+    assert src.index("reattach_attestations.py") > loop_at
