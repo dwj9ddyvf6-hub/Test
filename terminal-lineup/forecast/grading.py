@@ -2013,50 +2013,67 @@ def _summarise_cell(pairs):
     return cell
 
 
+class _AuditSide:
+    """Incremental form of _audit_side (cure RECORD-STREAM-20261116):
+    one row at a time, retaining only the graded (realised,
+    favourable) pairs and the counts — never the rows themselves.
+    result() returns exactly what _audit_side returns for the same
+    rows in the same order."""
+
+    def __init__(self):
+        self.graded_pairs = {}   # outcome kind -> [(realised, favourable)]
+        self.not_yet_matured = 0
+        self.reasons = {}
+        self.unresolvable = 0
+
+    def add(self, row, prices, as_of):
+        outcome = row.get("outcome") or {}
+        reason = _static_unresolvable_reason(outcome)
+        if reason is not None:
+            self.unresolvable += 1
+            self.reasons[reason] = self.reasons.get(reason, 0) + 1
+            return
+        try:
+            matured = is_matured(row, prices, as_of=as_of)
+        except Exception as exc:  # malformed row: name it, never crash
+            self.unresolvable += 1
+            r = f"maturity cannot be checked: {type(exc).__name__}: {exc}"
+            self.reasons[r] = self.reasons.get(r, 0) + 1
+            return
+        if not matured:
+            self.not_yet_matured += 1
+            return
+        try:
+            realised, binary = resolve_outcome(outcome, prices)
+        except Exception as exc:
+            self.unresolvable += 1
+            r = f"{type(exc).__name__}: {exc}"
+            self.reasons[r] = self.reasons.get(r, 0) + 1
+            return
+        self.graded_pairs.setdefault(outcome["kind"], []).append(
+            (realised, _favourable(outcome["kind"], realised, binary)))
+
+    def result(self):
+        cells = [{"kind": kind, **_summarise_cell(pairs)}
+                 for kind, pairs in sorted(self.graded_pairs.items())]
+        return {"graded": sum(c["graded"] for c in cells),
+                "not_yet_matured": self.not_yet_matured,
+                "unresolvable": self.unresolvable,
+                "unresolvable_reasons": [
+                    {"reason": r, "count": n}
+                    for r, n in sorted(self.reasons.items())],
+                "outcomes": cells}
+
+
 def _audit_side(rows_for_side, prices, as_of):
     """Resolve one side (taken or refused) of one engine's attempts.
     Returns counts, per-kind cells and named unresolvable reasons.
     Every row lands in exactly one bucket: graded, not_yet_matured,
     or unresolvable (with a reason)."""
-    graded_pairs = {}   # outcome kind -> [(realised, favourable)]
-    not_yet_matured = 0
-    reasons = {}
-    unresolvable = 0
+    acc = _AuditSide()
     for row in rows_for_side:
-        outcome = row.get("outcome") or {}
-        reason = _static_unresolvable_reason(outcome)
-        if reason is not None:
-            unresolvable += 1
-            reasons[reason] = reasons.get(reason, 0) + 1
-            continue
-        try:
-            matured = is_matured(row, prices, as_of=as_of)
-        except Exception as exc:  # malformed row: name it, never crash
-            unresolvable += 1
-            r = f"maturity cannot be checked: {type(exc).__name__}: {exc}"
-            reasons[r] = reasons.get(r, 0) + 1
-            continue
-        if not matured:
-            not_yet_matured += 1
-            continue
-        try:
-            realised, binary = resolve_outcome(outcome, prices)
-        except Exception as exc:
-            unresolvable += 1
-            r = f"{type(exc).__name__}: {exc}"
-            reasons[r] = reasons.get(r, 0) + 1
-            continue
-        graded_pairs.setdefault(outcome["kind"], []).append(
-            (realised, _favourable(outcome["kind"], realised, binary)))
-    cells = [{"kind": kind, **_summarise_cell(pairs)}
-             for kind, pairs in sorted(graded_pairs.items())]
-    return {"graded": sum(c["graded"] for c in cells),
-            "not_yet_matured": not_yet_matured,
-            "unresolvable": unresolvable,
-            "unresolvable_reasons": [
-                {"reason": r, "count": n}
-                for r, n in sorted(reasons.items())],
-            "outcomes": cells}
+        acc.add(row, prices, as_of)
+    return acc.result()
 
 
 def abstention_coverage_audit(rows, prices, as_of=None):
@@ -2069,20 +2086,33 @@ def abstention_coverage_audit(rows, prices, as_of=None):
     Refused outcomes never enter any grade. Engines whose abstentions
     cannot be outcome-resolved are reported with the reason, per
     engine, never skipped."""
+    # Streaming form (cure RECORD-STREAM-20261116): the audit used
+    # to retain every forecast row in per-engine taken/refused
+    # lists before resolving any of them — the whole parsed ledger
+    # resident beside the price source, which OOM-killed
+    # refresh_record.py (exit -9) inside the full refresh. Rows
+    # are now resolved one at a time into per-side accumulators
+    # as they stream past; only counts, reason tallies and the
+    # graded (realised, favourable) pairs are retained, and the
+    # returned structure is unchanged.
     by_engine = {}
     for row in rows:
         if row.get("type") != "forecast":
             continue
         eng = by_engine.setdefault(row["engine_id"],
-                                   {"taken_rows": [], "refused_rows": [],
+                                   {"taken_n": 0, "refused_n": 0,
+                                    "taken_acc": _AuditSide(),
+                                    "refused_acc": _AuditSide(),
                                     "by_absence_state": {},
                                     "by_reason": {},
                                     "without_reasons": 0})
         state = row.get("absence_state")
         if state in (None, "present"):
-            eng["taken_rows"].append(row)
+            eng["taken_n"] += 1
+            eng["taken_acc"].add(row, prices, as_of)
         else:
-            eng["refused_rows"].append(row)
+            eng["refused_n"] += 1
+            eng["refused_acc"].add(row, prices, as_of)
             eng["by_absence_state"][state] = \
                 eng["by_absence_state"].get(state, 0) + 1
             # Per feature reason codes (DEEP-PASS 3.1 item 6): the
@@ -2099,9 +2129,9 @@ def abstention_coverage_audit(rows, prices, as_of=None):
                 eng["without_reasons"] += 1
     engines = {}
     for engine_id, eng in sorted(by_engine.items()):
-        taken = _audit_side(eng["taken_rows"], prices, as_of)
-        refused = _audit_side(eng["refused_rows"], prices, as_of)
-        n_refused = len(eng["refused_rows"])
+        taken = eng["taken_acc"].result()
+        refused = eng["refused_acc"].result()
+        n_refused = eng["refused_n"]
         if n_refused == 0:
             state, reason = "no_abstentions", (
                 "the ledger records no abstention for this engine")
@@ -2120,7 +2150,7 @@ def abstention_coverage_audit(rows, prices, as_of=None):
                 "no refused attempt has reached its horizon close in "
                 "the price source yet")
         engines[engine_id] = {
-            "taken": len(eng["taken_rows"]),
+            "taken": eng["taken_n"],
             "refused": n_refused,
             "refused_by_absence_state": eng["by_absence_state"],
             "refused_by_reason": eng["by_reason"],
