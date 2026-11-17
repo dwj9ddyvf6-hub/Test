@@ -143,8 +143,15 @@ def test_runner_regenerates_attestations_after_grading():
     assert "refresh_attestations.py" in src
     assert src.index("run_grading.py") < src.index(
         "refresh_attestations.py")
+    # Amended 2026-11-17 (SUITE-RED-CURE-20261117): the engine
+    # loop no longer iterates engine_slugs() inline; cure
+    # CALIBRATION-ENTRANT-ORDER-20261117 materialised the slugs
+    # into a list (slugs = engine_slugs()) so calibration-league
+    # can be reinserted after honest-pop before the loop runs.
+    # The durable claim is unchanged: the attestation recount
+    # runs after grading and before any engine page refreshes.
     assert src.index("refresh_attestations.py") < src.index(
-        "for slug in engine_slugs()")
+        "for slug in slugs")
 
 
 def test_runner_writes_dated_proof_log_on_every_run():
