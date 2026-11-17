@@ -36,6 +36,20 @@ def main(argv):
             texts.append(fh.read())
     data = diagnostic_over_refresh_logs(texts)
     data["tool"] = "Source Clock Diagnostic"
+    # Reading date (NO-DATE-CURE-20261117): the diagnostic's
+    # evidence is the refresh logs it just read; its reading
+    # date is the latest date those logs carry, stated plainly
+    # so the canonical freshness resolver finds a date on this
+    # store. Before this the store carried no date field at all.
+    import re as _re
+    _dates = [d for t in texts
+              for d in _re.findall(r"\d{4}-\d{2}-\d{2}", t)]
+    if _dates:
+        data["as_of"] = max(_dates)
+        data["as_of_note"] = (
+            "The latest date in the refresh logs this diagnostic "
+            "read; its estimates are computed over those logs "
+            "through that date.")
     if _tc is not None:
         data = _tc.stamp_provenance(
             data, feed="terminal_refresh_logs",
