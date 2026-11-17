@@ -477,10 +477,12 @@ def build():
     graded_rows = [r for r in led.iter_rows() if r.get("type") == "grade"
                    and r.get("engine_id") == ENGINE_ID]
     graded_by_q = {}
-    fc_by_id = {r["row_id"]: r for r in led.iter_rows()
-                if r.get("type") == "forecast"}
+    fc_qty_by_id = {r["row_id"]: r.get("quantity", "?")
+                    for r in led.iter_rows()
+                    if r.get("type") == "forecast"
+                    and r.get("engine_id") == ENGINE_ID}
     for r in graded_rows:
-        q = fc_by_id.get(r["forecast_row_id"], {}).get("quantity", "?")
+        q = fc_qty_by_id.get(r["forecast_row_id"], "?")
         graded_by_q[q] = graded_by_q.get(q, 0) + 1
 
     today_out = [{k: v for k, v in t.items()
