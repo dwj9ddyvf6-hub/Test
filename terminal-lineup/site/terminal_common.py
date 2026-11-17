@@ -310,13 +310,22 @@ def stamp_for_script(data, script_path, **kwargs):
 def write_data_json(path, data, feed, price_basis, **kwargs):
     """Stamp provenance (including the T12 ``loaded_at_utc`` load
     anchor) and write ``data`` as the tool's data.json in the house
-    style. Returns the stamped dict."""
+    style. Returns the stamped dict.
+
+    Publication is atomic (cure TORN-PUBLISH-20261117): the stamped
+    dict is serialized fully, written to a temp file in the same
+    directory, and os.replace()d onto the target, so a concurrent
+    reader sees either the previous complete file or the new
+    complete file, never a torn partial write. The bytes published
+    are unchanged: indent=2, sort_keys, trailing newline."""
     stamped = stamp_provenance(data, feed=feed, price_basis=price_basis,
                                **kwargs)
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as fh:
-        json.dump(stamped, fh, indent=2, sort_keys=True)
-        fh.write("\n")
+    text = json.dumps(stamped, indent=2, sort_keys=True) + "\n"
+    tmp = str(path) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(text)
+    os.replace(tmp, path)
     return stamped
 
 
