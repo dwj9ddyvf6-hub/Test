@@ -230,6 +230,13 @@ NON_PRICE_RESOLVABLE_KINDS = {
         "path grades it from a cohort race record supplied to "
         "the grading pass (RC-19 cure, 2026-10-30), and without "
         "that record there is nothing to grade against",
+    "pin_event_passed":
+        "a pin whose expiry had already passed at issuance is "
+        "resolved on the row itself at issuance under the FE26 "
+        "scored-zero convention (its scored zero carries drivers "
+        "event_passed=1.0, time_weight=0.0), not by a price, so "
+        "no grading pass grades it again "
+        "(FORECAST-GRADING-CONTRACT-20261116)",
 }
 
 
@@ -472,6 +479,48 @@ def resolve_outcome(outcome, prices, forecast_value=None,
     if kind == "close_above":
         val = prices.close(sym, close_date)
         return val, 1.0 if val > outcome["threshold"] else 0.0
+    if kind == "earnings_ratio":
+        # Engine 11's realised-to-priced earnings move ratio, with
+        # the engine's own arithmetic (refresh_gammaearningstrap's
+        # move_ratio): the earnings session is the report date, the
+        # base is the last panel close before it, and the binary is
+        # the exceedance the engine's kill criterion grades (ratio
+        # above 1.0). FORECAST-GRADING-CONTRACT-20261116.
+        report_date = outcome["report_date"]
+        # The priced move is ledgered in the form the engine
+        # carries it from the earnings record: the feed's
+        # expected-move field, a percent string ("13.2%") on
+        # live rows, a plain number in the engine's own worked
+        # cases. Both forms state the same percent number.
+        raw_priced = outcome["priced_move_pct"]
+        if isinstance(raw_priced, str):
+            text = raw_priced.strip()
+            if text.endswith("%"):
+                text = text[:-1]
+            try:
+                priced = float(text)
+            except ValueError:
+                raise GradingError(
+                    "earnings_ratio outcome carries an unreadable "
+                    f"priced_move_pct {raw_priced!r}")
+        else:
+            priced = float(raw_priced)
+        if priced <= 0:
+            raise GradingError(
+                "earnings_ratio outcome carries a non-positive "
+                f"priced_move_pct {outcome['priced_move_pct']!r}")
+        cal = prices.calendars.get(sym) or []
+        prior = [d for d in cal if d < report_date]
+        if not prior:
+            raise GradingError(
+                f"no panel session before {report_date} for {sym} "
+                "to base an earnings_ratio outcome on")
+        prev_close = prices.close(sym, prior[-1])
+        earnings_close = prices.close(sym, report_date)
+        actual_pct = abs(earnings_close - prev_close) \
+            / prev_close * 100.0
+        ratio = actual_pct / priced
+        return ratio, 1.0 if ratio > 1.0 else 0.0
     if kind == "touch":
         level = outcome["level"]
         hit = 0.0
@@ -871,6 +920,22 @@ def grade_forecast(ledger_obj, forecast_row, prices, registry, as_of=None,
                  "in_band": bool(binary)}
         return ledger_obj.append_grade(forecast_row=forecast_row,
                                        grade=grade, **frozen_identity)
+    if kind_now == "earnings_ratio":
+        # Engine 11's ratio leg (FORECAST-GRADING-CONTRACT-20261116):
+        # the registered rule is "coverage", but the value states
+        # claim thresholds (a share at least, a median ratio at
+        # least), not a coverage band, so no shared scorer applies;
+        # the grade is the exceedance itself, the binary the
+        # engine's own kill criterion is stated on, in the shared
+        # grade schema, with the arm stamped as Engine 27's grades
+        # are stamped because the engine's page reads it.
+        grade = {"rule_id": rule["id"], "realised": realised,
+                 "binary_outcome": binary,
+                 "scores": {"exceedance": binary},
+                 "price_source": prices.path,
+                 "arm": value.get("arm")}
+        return ledger_obj.append_grade(forecast_row=forecast_row,
+                                       grade=grade, **frozen_identity)
     if kind_now == "league_interval":
         hit = 1.0 if float(value["err_low_pts"]) <= realised \
             <= float(value["err_high_pts"]) else 0.0
@@ -935,6 +1000,41 @@ def grade_forecast(ledger_obj, forecast_row, prices, registry, as_of=None,
         scores = {"brier": (1.0 - binary) ** 2 if binary in (0.0, 1.0)
                   else 1.0,
                   "sign_correct": binary}
+        grade = {"rule_id": rule["id"], "realised": realised,
+                 "binary_outcome": binary, "scores": scores,
+                 "price_source": prices.path}
+        return ledger_obj.append_grade(forecast_row=forecast_row,
+                                       grade=grade, **frozen_identity)
+    if rule["scorer"] == "survival_brier" \
+            and "resolved_by" not in value \
+            and "medians_pct" in value and binary is None:
+        # Engine 4's stage_3 leg (FORECAST-GRADING-CONTRACT-20261116):
+        # stages 1 and 2 carry the registered resolved_by timing
+        # form and grade through the survival scorer; stage_3's
+        # value is a set of median cumulative returns in percent
+        # (plus_1 / plus_3 / plus_5) with no resolved_by map, and
+        # its issuing record states its event plainly: the name's
+        # own return over the row's window. The forecast is a
+        # point estimate of that return, so its score is the
+        # distance error against the median at the row's own
+        # horizon, on the realised (fraction) scale.
+        sym = outcome_spec.get("symbol")
+        cal = prices.calendars.get(sym) or []
+        try:
+            sessions = cal.index(outcome_spec["at_date"]) \
+                - cal.index(outcome_spec["base_date"])
+        except (KeyError, ValueError):
+            raise GradingError(
+                "stage_3 medians row's window is not on the price "
+                f"calendar for {sym}")
+        key = f"plus_{sessions}"
+        meds = value.get("medians_pct") or {}
+        if key not in meds:
+            raise GradingError(
+                f"stage_3 medians carry no {key} median for a "
+                f"{sessions}-session window")
+        scores = score_abs_error(
+            {"estimate": float(meds[key]) / 100.0}, realised, binary)
         grade = {"rule_id": rule["id"], "realised": realised,
                  "binary_outcome": binary, "scores": scores,
                  "price_source": prices.path}
