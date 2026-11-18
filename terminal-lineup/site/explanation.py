@@ -214,9 +214,9 @@ def enrich_file(path):
     # publish-ceiling cure) survives the enrich pass instead of
     # being silently re-inflated to indent=2.
     import terminal_common as _tc
-    tmp = path.with_suffix(".json.tmp")
-    tmp.write_text(_tc.dumps_like_existing(raw, data))
-    os.replace(tmp, path)
+    # CLOSE-TMP-RACE-20261118: unique temp via the shared writer;
+    # the fixed ".json.tmp" name was shared by concurrent lanes.
+    _tc.atomic_write_text(path, _tc.dumps_like_existing(raw, data))
     return True
 
 
