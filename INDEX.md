@@ -2,10 +2,10 @@
 
 The complete measured file inventory and collection map. [INDEX.json](INDEX.json) is the machine-readable twin; [docs/REPOSITORY-MAP.json](docs/REPOSITORY-MAP.json) supplies curated meanings and task routes when present. No catalog or prose page substitutes for the full inventory.
 
-Total files indexed: 9920
+Total files indexed: 9921
 
-Indexed commit: `3538e70ac3f1372f1c7e57dd1cadcad00309b1f0`. Source commit timestamp: 2026-11-18T11:12:57Z.
-Total indexed bytes: 1057316362 (only the two generated index outputs have null hashes and sizes).
+Indexed commit: `9d0f90c567925efba6990ac99f826d7701ada85a`. Source commit timestamp: 2026-11-18T12:12:57Z.
+Total indexed bytes: 1057318639 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
 
@@ -61,7 +61,7 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 | sleeves | 578 | 5819273 | Strategy implementations grouped by family and standalone named sleeve modules. [sleeves/AREA.md](sleeves/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) · [docs/VERIFY.md](docs/VERIFY.md) copied source; verify exact variant, dependencies, adapter and validation boundary |
 | strategies | 270 | 528417 | Human-readable strategy cards indexed separately from the rest of the repository. [strategies/AREA.md](strategies/AREA.md) · [docs/CATALOG.json](docs/CATALOG.json) · [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json) source-derived summaries; strategy cards are not performance evidence or the whole-repository index |
 | terminal | 1 | 4822 | New or unclassified area: inspect its files and add a curated route. |
-| terminal-lineup | 3324 | 834240913 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
+| terminal-lineup | 3325 | 834243190 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
 | tests | 289 | 2941825 | Repository-level regression checks for selected implemented strategy families. [tests/AREA.md](tests/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) bounded regression evidence; passing tests do not establish market profitability or live readiness |
 | tools | 79 | 392434 | Repository navigation and inventory tooling. [tools/AREA.md](tools/AREA.md) · [tools/build_repo_index.py](tools/build_repo_index.py) local tooling and generated metadata; verify indexed revision and working-tree state |
 | vendor | 11 | 164504 | New or unclassified area: inspect its files and add a curated route. |
@@ -112,7 +112,7 @@ These are independent source collections unless their own records establish a li
 
 ## Coverage and preservation contract
 
-INDEX.json has 9920 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
+INDEX.json has 9921 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
 
 A file inventory proves paths and byte identity, not semantic correctness or runtime behavior. Unsupported submodules, truncated snapshots, duplicate paths, unsafe paths and missing hashes/sizes fail explicitly rather than yielding a partial inventory described as complete. The index does not enumerate files inside archives; use their own manifests and the artifact's documented extraction procedure.
 
