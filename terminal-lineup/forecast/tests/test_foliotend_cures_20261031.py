@@ -36,7 +36,7 @@ def test_d1_pipeline_never_prints_none_percentile():
     # 2026-11-17 session no gauge sits in a 0 to 5 or 95 to
     # 100 zone, so the section prints its designed prose
     # sentence "None. No gauge is in a 0 to 5 or 95 to 100
-    # zone." — the English word, not a leaked value. The
+    # zone.", the English word, not a leaked value. The
     # ban stands at full strength for every other
     # occurrence: the designed sentence is stripped and
     # "None" must still be absent from the remainder.
