@@ -32,7 +32,7 @@ stamped (look-ahead; its point-in-time rebuild stands FAIL, family PBO 0.222
 against a 0.2 bar), the insider-cluster build (rejected, DSR 0.579 against a
 0.95 bar), and FX-01 (rejected on paper, forward watch only).
 
-## Map of the collection (344 files)
+## Map of the collection (343 files)
 
 | Area | Files | What it is | First read |
 | --- | ---: | --- | --- |
@@ -42,7 +42,7 @@ against a 0.2 bar), the insider-cluster build (rejected, DSR 0.579 against a
 | [consensus-circumvention/](consensus-circumvention/) | 4 | The framework source the lens examination rests on | The framework note in this folder |
 | [decisions-api-incorporation/](decisions-api-incorporation/) | 5 | How the typed-panel machinery was incorporated into standing work | The notes in this folder |
 | [six-constructions/](six-constructions/) | 18 | A visiting researcher's six constructions, pre-registered and graded here (one falsified on all three registered conditions, one standing as a daily screen, the rest accruing) | The construction files and capture records in this folder |
-| [astra-six-constructions/](astra-six-constructions/) | 27 | The audited mirror of the six-constructions package (copies verified file by file) | The audit record in this folder |
+| [astra-six-constructions/](astra-six-constructions/) | 26 | The audited mirror of the six-constructions package (copies verified file by file) | The audit record in this folder |
 | [alpha-hunt-dive-three/](alpha-hunt-dive-three/), [alpha-hunt-dive-four/](alpha-hunt-dive-four/), [alpha-hunt-x10-dive/](alpha-hunt-x10-dive/) | 5 | The widening dives that fed the family exams | The dive reports in each folder |
 | Root files | 3 | This area's orientation and the two Tensor alpha reports | [tensor-full-alpha-report.md](tensor-full-alpha-report.md) |
 
