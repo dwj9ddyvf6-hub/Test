@@ -245,6 +245,16 @@ def test_engine10_plan_block_honest_state():
     # consistent (labelled_footnotes field == len(labelled)
     # == a recount from the filings the record itself
     # carries == 518), recounted through the block itself.
+    # Re-pinned 2026-11-18 (SUITE-RED-CURE-20261117, closing
+    # pair): the record was re-collected again on
+    # 2026-11-17T22:53:50Z by the refresh_engines
+    # session-2026-11-17 run (same 170 filings, same window
+    # since 2026-05-01) and now carries 581 labelled
+    # footnotes with 60 plan calls, precision still 1.0
+    # (60 of 60), 43 names classified, 2 names with
+    # summaries; the record's own labelled_footnotes field
+    # reads 581, matching the block's recount through this
+    # test's own code path.
     block = e10.plan_adjustment_block({"AAA": {}, "BBB": {}})
     assert block["state"] == "recorded"
     assert block["classifier_state"] == "standing"
@@ -254,7 +264,7 @@ def test_engine10_plan_block_honest_state():
     assert block["precision_kill_floor"] == \
         ad.PLAN_CLASSIFIER_PRECISION_FLOOR
     assert block["precision"]["precision"] == pytest.approx(1.0)
-    assert block["precision"]["labelled"] == 518
+    assert block["precision"]["labelled"] == 581
     assert block["footnote_record"]["filings_on_record"] > 0
 
 
