@@ -100,14 +100,27 @@ def estimate_edge(leader_returns_by_date, follower_returns_by_date):
         stability = max(0.0, 1.0 - abs(b1 - b2) / scale) \
             if (b1 > 0) == (b2 > 0) else 0.0
     edge = beta * stability * soft_threshold(r2)
+    # Selection binds to the published edge (cure
+    # LEADLAG-ROUNDED-SELECTION-20261118): the frozen form
+    # publishes the edge rounded to 6 places, so a pair whose
+    # unrounded edge is nonzero only in floating point (the
+    # 2026-11-17 window's QQQ->TLT pair: beta -0.035509,
+    # stability 0.0041, soft threshold 0.00016, unrounded
+    # edge about -2.3e-8) was selected while its published
+    # edge read -0.0, a zero-edge pair in the selected set,
+    # against the frozen form's own selection rule. The
+    # selection now tests the rounded value the record
+    # carries, so a selected pair's published edge is never
+    # zero.
+    published_edge = round(edge, 6)
     return {
         "lag_beta": round(beta, 6),
         "r2": round(r2, 6),
         "stability": round(stability, 4),
         "soft_threshold": round(soft_threshold(r2), 4),
-        "edge": round(edge, 6),
+        "edge": published_edge,
         "aligned_sessions": len(pairs),
-        "selected": edge != 0.0,
+        "selected": published_edge != 0.0,
     }
 
 
