@@ -1,6 +1,6 @@
 # Start here: turn the library into a useful answer
 
-**Test is the public source and research library.** It preserves strategy cards, implementation copies, reconstruction notes, independent studies, educational engines, terminal snapshots and paper-desk engineering guides. [InfinityBlade Engineering Doctrine](https://github.com/dwj9ddyvf6-hub/InfinityBlade-Engineering-Doctrine) is the companion operating discipline: how an agent scopes, investigates, verifies and reports work. Use the two together without confusing a research record with an installed capability.
+**Test is the public source and research library.** It preserves strategy cards, implementation copies, reconstruction notes, independent studies, educational engines, terminal snapshots and paper-desk engineering guides. [InfinityBlade Engineering Doctrine](https://github.com/dwj9ddyvf6-hub/InfinityBlade-Engineering-Doctrine) is the companion operating discipline: how an agent scopes, investigates, verifies and reports work. Use the two together without confusing a research record with an installed capability. The method canon distilled from this library's research is [Edge](https://github.com/dwj9ddyvf6-hub/Edge): the skill and protocol for finding, measuring and auditing trading edge. Test is the evidence; Edge is the method; use them together the same way.
 
 The library is larger than its strategy catalog. The complete measured inventory is [INDEX.md](INDEX.md), with every path, Git blob hash and size in [INDEX.json](INDEX.json). Counts belong to that captured source tree; this page deliberately does not maintain a competing total. The catalog's strategy cards are one collection, not the denominator for the repository.
 
@@ -72,7 +72,7 @@ The complete current area set, exact counts and package breakdowns are generated
 | `pine/` | Pine indicator source | [AREA.md](pine/AREA.md) |
 | `proof/` | Historical install receipts | [AREA.md](proof/AREA.md) |
 | `psychology-engine/` | Standalone research/reference engine | [README.md](psychology-engine/README.md), [public validation](psychology-engine/PUBLIC_VALIDATION.md) |
-| `research/` | Standalone studies and practice archives | [AREA.md](research/AREA.md) |
+| `research/` | Standalone studies, the gestalt edge-hunt record and practice archives | [AREA.md](research/AREA.md), [gestalt section index](research/gestalt/INDEX.md) |
 | `sleeves/` | Strategy implementation copies | [AREA.md](sleeves/AREA.md) |
 | `strategies/` | The strategy-card collection | [AREA.md](strategies/AREA.md) |
 | `terminal-lineup/` | Tool snapshots, forecast research and build records | [AREA.md](terminal-lineup/AREA.md) |
