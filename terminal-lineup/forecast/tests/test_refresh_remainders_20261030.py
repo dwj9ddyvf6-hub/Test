@@ -206,7 +206,16 @@ def test_abstention_published_decision_record():
     # advancing panel changed each re-run's threshold and
     # lineage inputs; 28 minus 20 is the 8 recorded, which
     # did not move.
-    assert data["live"]["forecasts_voided"] == 20
+    # Re-pinned 2026-11-18 (SUITE-RED-CURE-20261117,
+    # closing pair): forecasts_voided 20 to 22, recounted
+    # from the ledger the same way: engine_30 now carries
+    # 30 forecast rows, exactly 22 voided by 22 distinct
+    # correction rows under the same frozen-at-first-issue
+    # rule (the 2026-11-17 session's pair was re-issued
+    # under advanced census inputs and voided the same
+    # way), and the 8 valid rows are unchanged: 30 minus
+    # 22 is the 8 recorded, which did not move.
+    assert data["live"]["forecasts_voided"] == 22
     # The narrative must agree with the block it rides in (it once
     # described the previous census day, fired, 0 of 1, 6 days,
     # while the block carried the new day; cured 2026-10-31 by
