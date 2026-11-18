@@ -1125,9 +1125,9 @@ def enrich_file(path):
     if raw == text:
         return False  # unchanged: do not touch the file (freshness cure:
         # hourly enrich must not re-stamp every data file's mtime)
-    tmp = path.with_suffix(".json.tmp")
-    tmp.write_text(text)
-    os.replace(tmp, path)
+    # CLOSE-TMP-RACE-20261118: unique temp via the shared writer;
+    # the fixed ".json.tmp" name was shared by concurrent lanes.
+    _tc.atomic_write_text(path, text)
     return True
 
 
