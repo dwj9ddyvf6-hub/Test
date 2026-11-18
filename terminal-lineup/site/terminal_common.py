@@ -307,6 +307,41 @@ def stamp_for_script(data, script_path, **kwargs):
     return stamp_provenance(data, feed=feed, price_basis=basis, **kwargs)
 
 
+def atomic_write_text(path, text):
+    """Write ``text`` onto ``path`` atomically with a UNIQUE temp
+    file (cure CLOSE-TMP-RACE-20261118).
+
+    The temp name must never be a fixed function of the target:
+    the hourly and intraday lanes run the same close steps
+    concurrently, and with a fixed ``<target>.tmp`` the first
+    writer's os.replace moves the shared temp away, so the
+    second writer's rename dies with FileNotFoundError (the
+    2026-11-18 17:21Z and 18:21Z lane failures: data.json.tmp
+    and asset-manifest.json.tmp renames missing; the same class
+    as HUB-ATOMIC-WRITE-RACE-20261110, cured there per-process).
+    mkstemp in the target's own directory gives every writer a
+    private temp on the same filesystem, so os.replace stays
+    atomic and concurrent writers each rename their own file:
+    the target is always one writer's complete text."""
+    import tempfile
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(
+        dir=directory,
+        prefix="." + os.path.basename(str(path)) + ".",
+        suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(text)
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
 def write_data_json(path, data, feed, price_basis, **kwargs):
     """Stamp provenance (including the T12 ``loaded_at_utc`` load
     anchor) and write ``data`` as the tool's data.json in the house
@@ -320,12 +355,8 @@ def write_data_json(path, data, feed, price_basis, **kwargs):
     are unchanged: indent=2, sort_keys, trailing newline."""
     stamped = stamp_provenance(data, feed=feed, price_basis=price_basis,
                                **kwargs)
-    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     text = json.dumps(stamped, indent=2, sort_keys=True) + "\n"
-    tmp = str(path) + ".tmp"
-    with open(tmp, "w", encoding="utf-8") as fh:
-        fh.write(text)
-    os.replace(tmp, path)
+    atomic_write_text(path, text)
     return stamped
 
 
@@ -413,11 +444,9 @@ def _sync_manifest_on_exit():
             current = None
         if current == manifest:
             return
-        tmp = _MANIFEST_PATH + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as fh:
-            json.dump(manifest, fh, indent=2, sort_keys=True)
-            fh.write("\n")
-        os.replace(tmp, _MANIFEST_PATH)
+        atomic_write_text(
+            _MANIFEST_PATH,
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     except Exception as exc:  # noqa: BLE001 - never fail the host
         print(f"terminal_common: manifest sync failed: {exc}",
               file=_sys.stderr)
