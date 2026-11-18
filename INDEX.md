@@ -4,8 +4,8 @@ The complete measured file inventory and collection map. [INDEX.json](INDEX.json
 
 Total files indexed: 9920
 
-Indexed commit: `024e121e5a7546ab990118ef6863bd87c052884c`. Source commit timestamp: 2026-11-18T08:13:10Z.
-Total indexed bytes: 1057316368 (only the two generated index outputs have null hashes and sizes).
+Indexed commit: `80693fc4c85e3511bc69bcbf25ab6999b28b377d`. Source commit timestamp: 2026-11-18T09:12:58Z.
+Total indexed bytes: 1057316365 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
 
@@ -61,7 +61,7 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 | sleeves | 578 | 5819273 | Strategy implementations grouped by family and standalone named sleeve modules. [sleeves/AREA.md](sleeves/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) · [docs/VERIFY.md](docs/VERIFY.md) copied source; verify exact variant, dependencies, adapter and validation boundary |
 | strategies | 270 | 528417 | Human-readable strategy cards indexed separately from the rest of the repository. [strategies/AREA.md](strategies/AREA.md) · [docs/CATALOG.json](docs/CATALOG.json) · [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json) source-derived summaries; strategy cards are not performance evidence or the whole-repository index |
 | terminal | 1 | 4822 | New or unclassified area: inspect its files and add a curated route. |
-| terminal-lineup | 3324 | 834240919 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
+| terminal-lineup | 3324 | 834240916 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
 | tests | 289 | 2941825 | Repository-level regression checks for selected implemented strategy families. [tests/AREA.md](tests/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) bounded regression evidence; passing tests do not establish market profitability or live readiness |
 | tools | 79 | 392434 | Repository navigation and inventory tooling. [tools/AREA.md](tools/AREA.md) · [tools/build_repo_index.py](tools/build_repo_index.py) local tooling and generated metadata; verify indexed revision and working-tree state |
 | vendor | 11 | 164504 | New or unclassified area: inspect its files and add a curated route. |
