@@ -29,8 +29,10 @@ is in the published page, and data.json is written.
 """
 import hashlib
 import json
+import os
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -64,6 +66,46 @@ WIRING = ('<link rel="stylesheet" href="../shared.css">\n'
 
 def _sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _unique_tmp(path):
+    fd, tmp = tempfile.mkstemp(
+        dir=str(path.parent), prefix="." + path.name + ".",
+        suffix=".tmp")
+    os.close(fd)
+    return Path(tmp)
+
+
+def _atomic_write_text(path, text):
+    """Unique-temp + os.replace write (cure CLOSE-TMP-RACE-20261118).
+    The truncating write_text this replaces let a concurrent lane's
+    enrich_all read desk/data.json mid-write and fail with a JSON
+    parse error (2026-11-18 18:21Z hourly run)."""
+    tmp = _unique_tmp(path)
+    try:
+        tmp.write_text(text, encoding="utf-8")
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass
+        raise
+
+
+def _copy_atomic(src, out):
+    """Copy via a unique temp + os.replace, so a concurrent reader
+    never sees the destination truncated mid-copy."""
+    tmp = _unique_tmp(out)
+    try:
+        shutil.copyfile(src, tmp)
+        os.replace(tmp, out)
+    except BaseException:
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass
+        raise
 
 
 def _num(v):
@@ -511,7 +553,7 @@ def publish():
             print(f"FAIL: desk source missing: {src}")
             return 1
         out = dest / name
-        shutil.copyfile(src, out)
+        _copy_atomic(src, out)
         if _sha(src) != _sha(out):
             print(f"FAIL: desk copy does not match source: {name}")
             return 1
@@ -538,16 +580,16 @@ def publish():
         page = page.replace(" — ", ": ")
         changed = True
     if changed:
-        page_path.write_text(page, encoding="utf-8")
+        _atomic_write_text(page_path, page)
     feed = json.loads((dest / "terminal_feed.json").read_text(
         encoding="utf-8"))
     # AMAZING attractions on the published copy (built above from the
     # copied snapshot and the board panel; idempotent via markers).
     try:
         attractions, section = build_attractions(feed)
-        (dest / "attractions.json").write_text(
-            json.dumps(attractions, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8")
+        _atomic_write_text(
+            dest / "attractions.json",
+            json.dumps(attractions, indent=2, sort_keys=True) + "\n")
         page = page_path.read_text(encoding="utf-8")
         if ATTRACTIONS_BEGIN in page:
             pre, rest = page.split(ATTRACTIONS_BEGIN, 1)
@@ -555,14 +597,14 @@ def publish():
             page = pre + section + post
         elif "</main>" in page:
             page = page.replace("</main>", section + "\n</main>", 1)
-        page_path.write_text(page, encoding="utf-8")
+        _atomic_write_text(page_path, page)
     except Exception as exc:
         print(f"FAIL: desk attractions build failed: {exc}")
         return 1
     data = build_data(feed)
-    (dest / "data.json").write_text(
-        json.dumps(data, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8")
+    _atomic_write_text(
+        dest / "data.json",
+        json.dumps(data, indent=2, sort_keys=True) + "\n")
     # Self-enrich tail (cure 2026-10-31, Wave 2): every other hub
     # page carries its record_surface block from enrich_all, but a
     # bare republication of the desk page must not strip it. The
