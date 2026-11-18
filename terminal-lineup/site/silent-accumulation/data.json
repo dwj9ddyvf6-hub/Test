@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-16",
+  "as_of": "2026-11-17",
   "calibration_attestation": {
     "attestation": {
       "basis": "no graded forecasts on record yet (16 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
@@ -30,32 +30,28 @@
     "words": "When a stock's off-exchange reading is in the top fifth, its insiders show no sales at all in the record window, and its big holders grew between the two quarters on record, then over the next 21 trading days the middle stock in that group will beat the broad market, and the share of the group reaching the top quarter of all stocks will be at least 30 percent, against the 25 percent that happens by construction across all stocks."
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: distribution, over 21 sessions, per 13F publication plus weekly DIX refresh. It is graded on a loss score on each of its stated percentile lines, where lower is better. It would be ended if after 100 cohort names, the interaction adds less than 2 points over the best single condition. It counts as proven at 100 cohort names.",
-    "summary": "Test whether stocks showing three quiet footprints of buying at once (heavy off-exchange trading, insiders not selling, and big holders building) go on to beat the market over the next 21 trading days."
-  },
   "feed": "forecast_ledger",
   "groups_today": {
     "dark_only": [
       "AIZ",
-      "AMPH",
-      "COLM",
       "CON",
-      "CSL",
       "CVCO",
-      "DCOM",
-      "EG",
       "FCN",
-      "FTDR",
+      "HAYW",
+      "JKHY",
+      "KMPR",
       "MD",
       "MHK",
-      "PCRX",
-      "PGNY",
+      "OZK",
       "RHP",
+      "RLI",
+      "RYAN",
+      "SBH",
       "SIGI",
-      "SKY",
-      "VLY",
-      "WMG"
+      "VRNS",
+      "WMG",
+      "WTFC",
+      "WTRG"
     ],
     "dark_only_state": "formed",
     "filings_only": [
@@ -92,7 +88,8 @@
       "XHR"
     ],
     "interaction": [
-      "CON"
+      "CON",
+      "VRNS"
     ],
     "interaction_state": "formed"
   },
@@ -103,10 +100,11 @@
       "2026-11-02",
       "2026-11-05",
       "2026-11-09",
-      "2026-11-16"
+      "2026-11-16",
+      "2026-11-17"
     ],
     "cohort_names_graded": 0,
-    "cohort_names_recorded": 4,
+    "cohort_names_recorded": 6,
     "created_this_run": 4,
     "graded_this_run": 0,
     "kill_margin_points": null,
@@ -114,16 +112,16 @@
     "pooled": {},
     "proving_target_names": 100,
     "records_graded": 0,
-    "records_written": 16,
-    "wait": "No group has been recorded yet. The per-stock dark record is on record (5960 names over 786 sessions, freshest 2026-11-16), so the dark leg can be judged; today no name passes all three legs at once (formed). Groups then form at each quarterly holdings publication and at the weekly dark refresh. The verdict needs 100 recorded group names, and the other two legs are narrow today (2 names pass the insider and filings legs together), so this record will build slowly and only widens as the records behind it grow."
+    "records_written": 20,
+    "wait": "No group has been recorded yet. The per-stock dark record is on record (5614 names over 787 sessions, freshest 2026-11-17), so the dark leg can be judged; today no name passes all three legs at once (formed). Groups then form at each quarterly holdings publication and at the weekly dark refresh. The verdict needs 100 recorded group names, and the other two legs are narrow today (2 names pass the insider and filings legs together), so this record will build slowly and only widens as the records behind it grow."
   },
-  "loaded_at_utc": "2026-11-17T00:57:26.215703+00:00",
+  "loaded_at_utc": "2026-11-18T01:02:49.537963+00:00",
   "price_basis": "close",
   "price_history": {
     "from": "2025-03-25",
     "names": 1833,
-    "sessions": 415,
-    "to": "2026-11-16"
+    "sessions": 416,
+    "to": "2026-11-17"
   },
   "provenance": {
     "execution_pricing": false,
@@ -136,18 +134,18 @@
       "combined_context": {
         "funds": [
           {
-            "pct": 68.4,
-            "session": "2026-11-16",
+            "pct": 58.7,
+            "session": "2026-11-17",
             "symbol": "SPY"
           },
           {
-            "pct": 46.6,
-            "session": "2026-11-16",
+            "pct": 63.3,
+            "session": "2026-11-17",
             "symbol": "QQQ"
           },
           {
-            "pct": 63.0,
-            "session": "2026-11-16",
+            "pct": 64.1,
+            "session": "2026-11-17",
             "symbol": "IWM"
           }
         ],
@@ -334,45 +332,56 @@
               "QQQ": 46.6,
               "SPY": 68.4
             },
-            "index_pct": 36.8,
+            "index_pct": 36.9,
             "index_total": 503,
             "index_used": 499,
             "session": "2026-11-16"
+          },
+          {
+            "funds": {
+              "IWM": 64.1,
+              "QQQ": 63.3,
+              "SPY": 58.7
+            },
+            "index_pct": 36.6,
+            "index_total": 503,
+            "index_used": 499,
+            "session": "2026-11-17"
           }
         ],
         "name": "S&P 500 stocks combined",
-        "pct": 36.8,
-        "session": "2026-11-16",
+        "pct": 36.6,
+        "session": "2026-11-17",
         "stocks_total": 503,
         "stocks_used": 499,
         "words": "For context only: the dark record does hold a combined reading for the whole index and the three index funds' own ratios, shown here exactly as published. Neither is a reading for any single stock, and neither is ever used in this engine's test."
       },
       "gap_words": null,
       "name": "Off-exchange pressure, per stock",
-      "names_on_record": 5960,
-      "session": "2026-11-16",
-      "sessions_on_record": 786,
+      "names_on_record": 5614,
+      "session": "2026-11-17",
+      "sessions_on_record": 787,
       "state": "on_record",
       "top_fifth": [
-        "MHK",
-        "PCRX",
+        "HAYW",
+        "RLI",
         "RHP",
-        "SIGI",
-        "COLM",
-        "AIZ",
-        "PGNY",
-        "FCN",
-        "WMG",
-        "MD",
-        "CSL",
-        "VLY",
+        "RYAN",
         "CVCO",
-        "FTDR",
-        "EG",
-        "SKY",
+        "SBH",
         "CON",
-        "AMPH",
-        "DCOM"
+        "SIGI",
+        "KMPR",
+        "WTFC",
+        "AIZ",
+        "FCN",
+        "VRNS",
+        "MHK",
+        "JKHY",
+        "MD",
+        "OZK",
+        "WMG",
+        "WTRG"
       ],
       "top_fifth_count": 19
     },
@@ -664,190 +673,14 @@
       ]
     }
   },
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "no graded forecasts on record yet (16 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 16,
-        "graded_forecasts": 0,
-        "ledger_rows_at_write": 486359,
-        "recorded_on": "2026-11-17",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_26",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": {
-        "first_possible": "2026-11-02",
-        "first_possible_words": "The earliest next formation point is the week of Monday, November 2, 2026 (weekly dark refresh); the quarterly holdings publication is the other formation point.",
-        "forecasts_recorded": 0,
-        "reason": "No name passes all three legs at once today: the dark leg can be judged (5,721 names over 723 sessions), but only 2 names pass the insider and filings legs together, so no group has formed.",
-        "trigger": "A name passing all three legs at once at a quarterly holdings publication or the weekly dark refresh; groups form at those points and the verdict needs 100 recorded group names."
-      }
-    },
-    "current_reading": {
-      "as_of": "2026-11-16",
-      "keys_present": [
-        "as_of",
-        "calibration_attestation",
-        "claim",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "groups_today",
-        "idea",
-        "kill_criterion",
-        "live",
-        "loaded_at_utc",
-        "price_basis",
-        "price_history",
-        "provenance",
-        "readings",
-        "record_surface",
-        "retired",
-        "self_test",
-        "source",
-        "state",
-        "subject_chart",
-        "thin_cell_rule",
-        "tool"
-      ]
-    },
-    "feed": "forecast_ledger",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_26",
-      "forecasts": 16,
-      "grades": 0,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "Live grades are still building: 16 forecasts are on record and none are graded yet. Grades arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "forecast_ledger",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [],
-      "total_items_counted": 0
-    },
-    "version": 1
-  },
   "retired": false,
   "self_test": {
     "feature_cases_checked": 6,
     "ledger_arms_checked": 4,
     "state": "passed"
   },
-  "source": "The insider record gathered 2026-11-15 (filings filed 2026-05-16 to 2026-11-15), the published dark record, the quarterly holdings filings for the periods ended 2026-03-31 and 2026-06-30, and the daily price history on record (2025-03-25 to 2026-11-16), which is used only to grade, never as an input.",
+  "source": "The insider record gathered 2026-11-15 (filings filed 2026-05-16 to 2026-11-15), the published dark record, the quarterly holdings filings for the periods ended 2026-03-31 and 2026-06-30, and the daily price history on record (2025-03-25 to 2026-11-17), which is used only to grade, never as an input.",
   "state": "proving",
-  "subject_chart": {
-    "lead": {
-      "kind": "ranked",
-      "label": "Dark share percent per index fund, the footprint reading.",
-      "rows": [
-        {
-          "name": "SPY",
-          "score": 68.4
-        },
-        {
-          "name": "QQQ",
-          "score": 46.6
-        },
-        {
-          "name": "IWM",
-          "score": 63.0
-        }
-      ],
-      "source": "readings.dark.combined_context.funds[].pct",
-      "title": "Off-exchange share per fund, percent"
-    },
-    "record": {
-      "kind": "curve",
-      "label": "Combined index dark percent by session.",
-      "points": [
-        {
-          "x": "2026-10-23",
-          "y": 43.7
-        },
-        {
-          "x": "2026-10-26",
-          "y": 47.3
-        },
-        {
-          "x": "2026-10-27",
-          "y": 43.9
-        },
-        {
-          "x": "2026-10-28",
-          "y": 44.2
-        },
-        {
-          "x": "2026-10-29",
-          "y": 41.6
-        },
-        {
-          "x": "2026-10-30",
-          "y": 37.7
-        },
-        {
-          "x": "2026-11-02",
-          "y": 40.9
-        },
-        {
-          "x": "2026-11-03",
-          "y": 42.5
-        },
-        {
-          "x": "2026-11-04",
-          "y": 40.3
-        },
-        {
-          "x": "2026-11-05",
-          "y": 33.9
-        },
-        {
-          "x": "2026-11-06",
-          "y": 41.1
-        },
-        {
-          "x": "2026-11-09",
-          "y": 46.0
-        },
-        {
-          "x": "2026-11-10",
-          "y": 42.9
-        },
-        {
-          "x": "2026-11-11",
-          "y": 42.4
-        },
-        {
-          "x": "2026-11-12",
-          "y": 36.1
-        },
-        {
-          "x": "2026-11-13",
-          "y": 40.1
-        },
-        {
-          "x": "2026-11-16",
-          "y": 36.8
-        }
-      ],
-      "source": "readings.dark.combined_context.history[].index_pct",
-      "title": "Off-exchange share over the sessions on record"
-    },
-    "version": 1
-  },
   "thin_cell_rule": "Any group with fewer than 30 graded stocks shows its count only, with no middle and no share headline.",
   "tool": "Silent Accumulation"
 }
