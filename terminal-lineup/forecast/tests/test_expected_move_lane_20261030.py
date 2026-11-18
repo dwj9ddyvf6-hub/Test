@@ -219,19 +219,31 @@ class TestLiveDataCurrent(unittest.TestCase):
         # 2026-11-16T00:07:35Z from the 2026-11-13 priors) is
         # an at-time filing; every field below was re-derived
         # from site/expected-move/data.json on this date.
+        # Re-pinned 2026-11-18 (SUITE-RED-CURE-20261117,
+        # closing pair): the lane filed the 2026-11-17 session
+        # at the time and drew the 2026-11-18 map from the
+        # 2026-11-17 close (SPY receipt computed
+        # 2026-11-18T00:30:56Z, measured from 2026-11-17,
+        # VIX close 25.46), so the page session stands at
+        # 2026-11-18, the latest completed session at
+        # 2026-11-17, no session is missing, the
+        # reconstructed list is unchanged, and the current
+        # SPY map is an at-time filing; every field below was
+        # re-derived from site/expected-move/data.json on
+        # this date.
         data = json.load(open(os.path.join(
             SITE, "expected-move", "data.json")))
-        self.assertEqual(data["session"], "2026-11-16")
+        self.assertEqual(data["session"], "2026-11-18")
         lane = data["filing_lane"]
         self.assertEqual(lane["missing_sessions"], [])
         self.assertEqual(lane["latest_completed_session"],
-                         "2026-11-16")
+                         "2026-11-17")
         self.assertEqual(
             lane["reconstructed_sessions"],
             ["2026-10-26", "2026-10-27", "2026-10-28",
              "2026-10-29", "2026-10-30"])
         spy = [n for n in data["names"] if n["symbol"] == "SPY"][0]
-        self.assertEqual(spy["receipt"]["session"], "2026-11-16")
+        self.assertEqual(spy["receipt"]["session"], "2026-11-18")
         self.assertFalse(spy["reconstructed"])
         self.assertEqual(spy["receipt"]["filing"], "filed_at_time")
 
