@@ -69,9 +69,20 @@ MONTHS = ["January", "February", "March", "April", "May", "June",
 
 
 def _atomic_write(path: Path, text: str) -> None:
-    tmp = path.with_name(path.name + ".atomic-tmp")
-    tmp.write_text(text, encoding="utf-8")
-    os.replace(tmp, path)
+    # Per-process temp (cure CLOSE-TMP-RACE-20261118): the fixed
+    # ".atomic-tmp" name was shared by concurrent lane closes, the
+    # HUB-ATOMIC-WRITE-RACE-20261110 class. The name still ends
+    # with ".atomic-tmp" so the sync exclusion keeps working.
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.atomic-tmp")
+    try:
+        tmp.write_text(text, encoding="utf-8")
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            pass
+        raise
 
 
 def money(v) -> str:
