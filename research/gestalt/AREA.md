@@ -2,6 +2,10 @@
 
 The Full Gestalt research corpus: the written record of the desk's gestalt research program from November 2026, published as knowledge, not as raw data. The underlying data files, ledgers, and machine state stay in the private workspace; what is published here is the reasoning, the methods, the findings, and the falsifiers, in the form another LLM or researcher can read cold and use.
 
+## Start here
+
+The section index is [INDEX.md](INDEX.md): the hunt's record stated with its limiting numbers, the map of every collection in this folder, and the reading order. The method distilled from this corpus lives in the companion repository [Edge](https://github.com/dwj9ddyvf6-hub/Edge), in `skills/engineer-trading-edge/`; this folder is the evidence that method rests on.
+
 ## Collections
 
 - `tensor-full-alpha-report.md` and `tensor-positive-alpha-brief.md`: the headline reports of the gestalt alpha sweep over the Tensor engine's signal complex.
