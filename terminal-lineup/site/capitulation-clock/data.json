@@ -1,12 +1,12 @@
 {
-  "as_of_session": "2026-11-18",
+  "as_of_session": "2026-11-19",
   "calibration_attestation": {
     "attestation": {
-      "basis": "202 graded forecasts of 879 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "basis": "355 graded forecasts of 879 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
       "forecasts_recorded": 879,
-      "graded_forecasts": 202,
-      "ledger_rows_at_write": 565694,
-      "recorded_on": "2026-11-18",
+      "graded_forecasts": 355,
+      "ledger_rows_at_write": 572976,
+      "recorded_on": "2026-11-19",
       "status": "not_attested"
     },
     "engine_id": "engine_16",
@@ -23,58 +23,54 @@
     "separate_words": "The two halves are graded separately. Either half can fail on its own, and a failed half is retired on its own."
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: direction and probability, over 20 sessions (return leg); 10 sessions (exhaustion leg). It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 200 episodes, either leg's confidence interval includes its null. It counts as proven at 200 episodes.",
-    "summary": "When a stock that is already falling prints its own heaviest falling-day trading, say what tends to happen next: how it does against the market over 20 trading days, and how fast the heavy trading dies down."
-  },
   "feed": "forecast_ledger",
   "gate_words": "The same heavy trading on a rising stock is treated by an older finding as a warning sign, not a buying sign. So this tool only ever fires on a stock that is already in a fall of its own, and never on a stock that is rising.",
   "history": {
-    "distinct_names": 1466,
-    "episodes": 4337,
+    "distinct_names": 1469,
+    "episodes": 4372,
     "exhaustion_half": {
       "claim_met": false,
       "claim_pct": 60,
-      "episodes": 4337,
+      "episodes": 4372,
       "falsified": false,
-      "graded": 4228,
-      "pending": 109,
+      "graded": 4269,
+      "pending": 103,
       "share_ci95_pct": [
-        55.9,
-        58.8
+        55.4,
+        58.4
       ],
-      "share_pct": 57.4,
-      "successes": 2425
+      "share_pct": 56.9,
+      "successes": 2429
     },
     "label": "History, not live forecasts",
-    "raw_triggers": 7525,
+    "raw_triggers": 7579,
     "return_half": {
       "claim_met": false,
       "claim_points": 1.0,
-      "episodes": 4337,
+      "episodes": 4372,
       "falsified": false,
-      "graded": 3767,
+      "graded": 3814,
       "median_ci95_points": [
-        -0.07,
-        0.6
+        -0.06,
+        0.61
       ],
       "median_points": 0.29,
-      "pending": 570
+      "pending": 558
     },
-    "span": "2026-01-09 to 2026-11-18",
-    "suppressed_repeats": 3188,
-    "warmup_note": "Judging a day against a stock's own past needs 200 of its past trading days first, so the first judgeable day is a stock's 201st trading day on record (January 9, 2026 for stocks with a full record) and 13 stocks have too little history to be judged at all. On 217 stock-days the falling-day record was still too short (fewer than 30 past falling days), so those days were set aside and counted. Every stock in this history still trades today; stocks that stopped trading are not in it, which can flatter the numbers."
+    "span": "2026-01-09 to 2026-11-19",
+    "suppressed_repeats": 3207,
+    "warmup_note": "Judging a day against a stock's own past needs 200 of its past trading days first, so the first judgeable day is a stock's 201st trading day on record (January 9, 2026 for stocks with a full record) and 13 stocks have too little history to be judged at all. On 218 stock-days the falling-day record was still too short (fewer than 30 past falling days), so those days were set aside and counted. Every stock in this history still trades today; stocks that stopped trading are not in it, which can flatter the numbers."
   },
   "kill_criterion": "After 200 graded episodes, either half retires on its own if its figures could still plausibly be nothing: for the return half, if the middle gain could still be zero; for the exhaustion half, if the share settling down could still be a coin flip.",
   "live": {
-    "episodes_recorded": 429,
-    "forecasts_recorded": 879,
-    "graded_exhaustion_half": 202,
+    "episodes_recorded": 449,
+    "forecasts_recorded": 949,
+    "graded_exhaustion_half": 355,
     "graded_return_half": 0,
     "note": "Episodes are written down at the close that triggers them, before the days they describe. The return half grades 20 trading days later and the exhaustion half within 10, so the first grades land only after those days pass.",
     "target_episodes": 200
   },
-  "loaded_at_utc": "2026-11-18T23:13:29.414897+00:00",
+  "loaded_at_utc": "2026-11-19T23:08:03.878627+00:00",
   "price_basis": "close",
   "provenance": {
     "execution_pricing": false,
@@ -82,268 +78,219 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "202 graded forecasts of 879 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 879,
-        "graded_forecasts": 202,
-        "ledger_rows_at_write": 565694,
-        "recorded_on": "2026-11-18",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_16",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-18",
-      "keys_present": [
-        "as_of_session",
-        "calibration_attestation",
-        "claims",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "gate_words",
-        "history",
-        "kill_criterion",
-        "live",
-        "loaded_at_utc",
-        "price_basis",
-        "provenance",
-        "record_surface",
-        "source",
-        "state",
-        "study_record",
-        "subject_chart",
-        "tension_words",
-        "thin_cell_rule",
-        "today",
-        "tool",
-        "trigger_words"
-      ]
-    },
-    "feed": "forecast_ledger",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_16",
-      "forecasts": 879,
-      "grades": 202,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "More live grades are still to come: 879 forecasts are on record and 202 are graded so far. The rest arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "forecast_ledger",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 4,
-          "path": "/history"
-        },
-        {
-          "items": 0,
-          "path": "/study_record"
-        },
-        {
-          "items": 2,
-          "path": "/history/exhaustion_half"
-        },
-        {
-          "items": 2,
-          "path": "/history/return_half"
-        }
-      ],
-      "total_items_counted": 8
-    },
-    "version": 1
-  },
-  "source": "The daily price and share-volume history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-18, 417 trading days), checked for this page. The longer daily history the parent studies ran on (2016 to 2026) is not on this computer, so the history below runs on the history that exists, which holds only stocks that still trade.",
+  "source": "The daily price and share-volume history on record (1,832 stocks plus the broad market fund they are measured against, 2025-03-25 to 2026-11-19, 418 trading days), checked for this page. The longer daily history the parent studies ran on (2016 to 2026) is not on this computer, so the history below runs on the history that exists, which holds only stocks that still trade.",
   "state": "proving",
   "study_record": {
     "f6": "In the long study (2016 to 2026), heavy trading on falling days inside a fall lined up with better days ahead in both stretches of years checked: the link measured +0.040 and +0.020, and the heaviest fifth beat the lightest fifth by 0.95 and 1.28 points.",
     "label": "The earlier studies this tool is built from",
     "n6": "A second study of volume-confirmed falls found the same direction: the link measured +0.016 and +0.015 in its two samples."
   },
-  "subject_chart": {
-    "lead": {
-      "kind": "ranked",
-      "label": "Down volume against its line, per triggered name.",
-      "rows": [
-        {
-          "coverage": "activity 1.36 times its line",
-          "name": "AAOI",
-          "score": 1.22
-        },
-        {
-          "coverage": "activity 1.27 times its line",
-          "name": "ARR",
-          "score": 1.0
-        },
-        {
-          "coverage": "activity 1.27 times its line",
-          "name": "CLH",
-          "score": 1.02
-        },
-        {
-          "coverage": "activity 2.46 times its line",
-          "name": "CTVA",
-          "score": 1.04
-        },
-        {
-          "coverage": "activity 1.45 times its line",
-          "name": "GDX",
-          "score": 1.2
-        },
-        {
-          "coverage": "activity 1.45 times its line",
-          "name": "HE",
-          "score": 1.33
-        },
-        {
-          "coverage": "activity 1.32 times its line",
-          "name": "NVR",
-          "score": 1.1
-        },
-        {
-          "coverage": "activity 1.21 times its line",
-          "name": "PODD",
-          "score": 1.05
-        },
-        {
-          "coverage": "activity 2.64 times its line",
-          "name": "SCI",
-          "score": 2.09
-        },
-        {
-          "coverage": "activity 1.77 times its line",
-          "name": "STWD",
-          "score": 1.24
-        },
-        {
-          "coverage": "activity 2.18 times its line",
-          "name": "SUPN",
-          "score": 1.99
-        },
-        {
-          "coverage": "activity 1.87 times its line",
-          "name": "WPM",
-          "score": 1.64
-        }
-      ],
-      "source": "today.triggers[].down_volume_times_line",
-      "title": "Today's capitulation triggers, by falling-day volume"
-    },
-    "record": {
-      "kind": "ranked",
-      "label": "Exhaustion share and median forward return from the history run.",
-      "rows": [
-        {
-          "name": "Exhaustion share, percent",
-          "score": 57.4
-        },
-        {
-          "name": "Median forward return, points",
-          "score": 0.29
-        }
-      ],
-      "source": "history.exhaustion_half.share_pct / return_half.median_points",
-      "title": "The study record, as outcomes"
-    },
-    "version": 1
-  },
   "tension_words": "One earlier study points the other way. It measured a nearby but different thing, trading drying up after a fall rather than trading surging on falling days, and it found the drying-up version predicted worse, not better, days ahead, in both stretches of years it checked. This tool follows the surging version, the one two other studies found pointed up, and prints the disagreement here rather than hiding it. The live record below is what will settle which reading is right for this exact definition.",
   "thin_cell_rule": "Any half with fewer than 30 graded episodes shows its count only, with no middle figure and no share.",
   "today": {
     "gate_blocked": [
       "ACIW",
-      "EXPD",
-      "HUM",
-      "P",
-      "PRVA",
-      "TRMK",
+      "AMD",
+      "AWI",
+      "BANF",
+      "BMRN",
+      "CHH",
+      "DRH",
+      "ESTC",
+      "FA",
+      "ITT",
+      "OFG",
+      "SFNC",
+      "SYNA",
+      "UPBD",
+      "WMG",
+      "WSM",
+      "WTS",
       "XLP"
     ],
-    "gate_blocked_count": 7,
+    "gate_blocked_count": 18,
     "names_checked": 1832,
     "names_judged": 1793,
     "names_set_aside": 39,
     "notes": "Names that printed both kinds of heavy trading today but are not in a fall of their own are listed as held back by the gate, and no forecast is made about them. Names in a fall that cleared only one of the two heavy-trading lines are counted too.",
-    "one_line_count": 94,
-    "suppressed_repeats_today": 12,
-    "trigger_count": 12,
+    "one_line_count": 93,
+    "suppressed_repeats_today": 19,
+    "trigger_count": 35,
     "triggers": [
       {
-        "activity_times_line": 1.36,
-        "down_volume_times_line": 1.22,
-        "symbol": "AAOI"
-      },
-      {
-        "activity_times_line": 1.27,
-        "down_volume_times_line": 1.0,
-        "symbol": "ARR"
-      },
-      {
-        "activity_times_line": 1.27,
-        "down_volume_times_line": 1.02,
-        "symbol": "CLH"
-      },
-      {
-        "activity_times_line": 2.46,
+        "activity_times_line": 1.42,
         "down_volume_times_line": 1.04,
-        "symbol": "CTVA"
+        "symbol": "ANDE"
       },
       {
-        "activity_times_line": 1.45,
-        "down_volume_times_line": 1.2,
-        "symbol": "GDX"
-      },
-      {
-        "activity_times_line": 1.45,
-        "down_volume_times_line": 1.33,
-        "symbol": "HE"
-      },
-      {
-        "activity_times_line": 1.32,
-        "down_volume_times_line": 1.1,
-        "symbol": "NVR"
-      },
-      {
-        "activity_times_line": 1.21,
+        "activity_times_line": 1.1,
         "down_volume_times_line": 1.05,
-        "symbol": "PODD"
+        "symbol": "ASPI"
       },
       {
-        "activity_times_line": 2.64,
-        "down_volume_times_line": 2.09,
-        "symbol": "SCI"
+        "activity_times_line": 2.84,
+        "down_volume_times_line": 2.1,
+        "symbol": "BRC"
+      },
+      {
+        "activity_times_line": 1.58,
+        "down_volume_times_line": 1.15,
+        "symbol": "CG"
+      },
+      {
+        "activity_times_line": 1.38,
+        "down_volume_times_line": 1.07,
+        "symbol": "CI"
+      },
+      {
+        "activity_times_line": 1.43,
+        "down_volume_times_line": 1.2,
+        "symbol": "CMI"
+      },
+      {
+        "activity_times_line": 1.49,
+        "down_volume_times_line": 1.12,
+        "symbol": "CRWV"
+      },
+      {
+        "activity_times_line": 1.55,
+        "down_volume_times_line": 1.32,
+        "symbol": "DMC"
       },
       {
         "activity_times_line": 1.77,
+        "down_volume_times_line": 1.36,
+        "symbol": "GAP"
+      },
+      {
+        "activity_times_line": 1.25,
+        "down_volume_times_line": 1.05,
+        "symbol": "GL"
+      },
+      {
+        "activity_times_line": 1.2,
+        "down_volume_times_line": 1.06,
+        "symbol": "HSY"
+      },
+      {
+        "activity_times_line": 1.97,
+        "down_volume_times_line": 1.57,
+        "symbol": "IREN"
+      },
+      {
+        "activity_times_line": 1.44,
+        "down_volume_times_line": 1.3,
+        "symbol": "IRT"
+      },
+      {
+        "activity_times_line": 1.29,
+        "down_volume_times_line": 1.05,
+        "symbol": "KEYS"
+      },
+      {
+        "activity_times_line": 1.69,
+        "down_volume_times_line": 1.48,
+        "symbol": "LPX"
+      },
+      {
+        "activity_times_line": 3.92,
+        "down_volume_times_line": 2.51,
+        "symbol": "LQDT"
+      },
+      {
+        "activity_times_line": 1.36,
+        "down_volume_times_line": 1.05,
+        "symbol": "MOD"
+      },
+      {
+        "activity_times_line": 2.12,
+        "down_volume_times_line": 1.93,
+        "symbol": "MSA"
+      },
+      {
+        "activity_times_line": 1.46,
         "down_volume_times_line": 1.24,
-        "symbol": "STWD"
+        "symbol": "MSM"
       },
       {
-        "activity_times_line": 2.18,
-        "down_volume_times_line": 1.99,
-        "symbol": "SUPN"
+        "activity_times_line": 1.4,
+        "down_volume_times_line": 1.13,
+        "symbol": "NJR"
       },
       {
-        "activity_times_line": 1.87,
-        "down_volume_times_line": 1.64,
-        "symbol": "WPM"
+        "activity_times_line": 1.39,
+        "down_volume_times_line": 1.01,
+        "symbol": "OI"
+      },
+      {
+        "activity_times_line": 1.26,
+        "down_volume_times_line": 1.11,
+        "symbol": "RXRX"
+      },
+      {
+        "activity_times_line": 1.7,
+        "down_volume_times_line": 1.49,
+        "symbol": "SNA"
+      },
+      {
+        "activity_times_line": 3.3,
+        "down_volume_times_line": 2.59,
+        "symbol": "SNEX"
+      },
+      {
+        "activity_times_line": 1.77,
+        "down_volume_times_line": 1.39,
+        "symbol": "SOXL"
+      },
+      {
+        "activity_times_line": 2.56,
+        "down_volume_times_line": 1.68,
+        "symbol": "STC"
+      },
+      {
+        "activity_times_line": 2.38,
+        "down_volume_times_line": 2.0,
+        "symbol": "SXI"
+      },
+      {
+        "activity_times_line": 1.24,
+        "down_volume_times_line": 1.03,
+        "symbol": "TRMK"
+      },
+      {
+        "activity_times_line": 2.1,
+        "down_volume_times_line": 1.72,
+        "symbol": "UGI"
+      },
+      {
+        "activity_times_line": 2.39,
+        "down_volume_times_line": 1.6,
+        "symbol": "UTI"
+      },
+      {
+        "activity_times_line": 1.17,
+        "down_volume_times_line": 1.04,
+        "symbol": "VMI"
+      },
+      {
+        "activity_times_line": 1.25,
+        "down_volume_times_line": 1.05,
+        "symbol": "VMRK"
+      },
+      {
+        "activity_times_line": 2.35,
+        "down_volume_times_line": 2.15,
+        "symbol": "WGO"
+      },
+      {
+        "activity_times_line": 1.44,
+        "down_volume_times_line": 1.19,
+        "symbol": "WRBY"
+      },
+      {
+        "activity_times_line": 1.31,
+        "down_volume_times_line": 1.13,
+        "symbol": "WSC"
       }
     ]
   },
