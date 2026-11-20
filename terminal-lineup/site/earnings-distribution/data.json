@@ -1,9 +1,9 @@
 {
   "calendar": {
-    "chain_snapshots": 502,
-    "dated": 1166,
+    "chain_snapshots": 547,
+    "dated": 1171,
     "names_on_record": 1838,
-    "no_date": 672,
+    "no_date": 667,
     "no_date_names": [
       "AA",
       "AAL",
@@ -70,7 +70,6 @@
       "BLKB",
       "BMI",
       "BNL",
-      "BNY",
       "BOH",
       "BOOT",
       "BOTZ",
@@ -118,7 +117,6 @@
       "CNMD",
       "CNP",
       "CNS",
-      "CNXC",
       "CNXN",
       "COCO",
       "COF",
@@ -144,7 +142,6 @@
       "CWT",
       "CYBR",
       "CZR",
-      "DAL",
       "DAN",
       "DAR",
       "DBA",
@@ -329,7 +326,6 @@
       "JLL",
       "JNJ",
       "JOE",
-      "JPM",
       "KALU",
       "KBE",
       "KEX",
@@ -462,7 +458,6 @@
       "PI",
       "PICK",
       "PII",
-      "PKE",
       "PKG",
       "PLD",
       "PLXS",
@@ -678,11 +673,11 @@
       "ZION",
       "ZWS"
     ],
-    "priced_moves_on_record": 108,
+    "priced_moves_on_record": 126,
     "priced_moves_without_surviving_raw_source": [],
     "priced_moves_without_surviving_raw_source_note": "These names carry a priced move on the published calendar whose raw entry rotated out of the priced move record when the name reported (the record's forward-window overwrite, cured by accrual retention in priced_moves.py, PRICED-MOVES-ACCRUAL-20261113). The figures are named here, are not used by any figure on this page, and leave the calendar at its next republication, which recounts its moves from the record as it now stands.",
-    "recorded_at": "2026-11-17T23:54:31Z",
-    "recorded_on": "2026-11-17",
+    "recorded_at": "2026-11-18T23:49:59Z",
+    "recorded_on": "2026-11-18",
     "second_list_note": "A second list of upcoming dates disagrees with the calendar on a few names. It never governs an upcoming report here; the calendar does. Days from that second list that already sit inside the price history are counted only as past observations in the group history.",
     "stale_note": "The calendar was gathered on October 12, 2026 and is out of date by its own page's rule. Its dates are used exactly as recorded.",
     "timing_note": "Report timing now comes from the earnings record lane, which keeps the calendar source's own time class for each dated name (pre market, after hours, or not supplied by the source). Names whose class is not supplied keep the report date itself as the earnings day, named as a partial reading, not a fact about the company."
@@ -710,10 +705,10 @@
     "claim_low": 75,
     "text": "For each company about to report, this page publishes how big its earnings-day move is likely to be, as a range built from its own past reports and from similar-sized companies. The promise it is graded on, season by season: the range that is meant to hold 80 out of every 100 reports will hold between 75 and 85 of them."
   },
-  "decision_as_of": "2026-11-18",
+  "decision_as_of": "2026-11-19",
   "exceedance": {
-    "detail": "A per name priced move record now exists (108 upcoming reporters priced from stored at the money straddle quotes, priced_moves.py). Each priced name's bigger than priced chance is recorded on its own block as the share of its group pool past moves bigger than that priced move. Names with no priced move on record stay not_recorded, named per name.",
-    "priced_moves_on_record": 108,
+    "detail": "A per name priced move record now exists (126 upcoming reporters priced from stored at the money straddle quotes, priced_moves.py). Each priced name's bigger than priced chance is recorded on its own block as the share of its group pool past moves bigger than that priced move. Names with no priced move on record stay not_recorded, named per name.",
+    "priced_moves_on_record": 126,
     "state": "recorded"
   },
   "execution_pricing": false,
@@ -724,22 +719,22 @@
   "fe04_fair_gap_remainder": {
     "counts": {
       "full_residual": 0,
-      "gap_names": 1141,
-      "market_leg": 1136,
-      "market_sector_residual": 1135,
+      "gap_names": 1075,
+      "market_leg": 1071,
+      "market_sector_residual": 1071,
       "news_leg": 0,
-      "news_on_record": 4,
-      "sector_leg_cluster": 188,
-      "sector_leg_gics": 947,
-      "sector_leg_missing": 1
+      "news_on_record": 0,
+      "sector_leg_cluster": 223,
+      "sector_leg_gics": 848,
+      "sector_leg_missing": 0
     },
-    "detail": "The FE04 fair gap model now exists (fair_gap_model.py) and its record for session 2026-11-17 decomposes 1141 gap names into a market leg (rolling overnight beta times the index overnight gap) and a sector leg (sector median gap, orthogonalised, with a labelled correlation cluster fallback for names with no sector on record), publishing a market and sector residual per name in gap-destiny/fair_gap_record.json. The news leg carries no registered coefficient, and the model's own record now proves why none can be estimated from the records on hand: for this session 4 of the 1141 gap names have an overnight article on record, and the news store's articles carry no signed direction field at all, so the missing inputs are a signed per article direction record and coverage beyond the tracked universe (named in the record's news_leg_evidence block). Residuals are published as market and sector residuals, never as full fair gap residuals. Engine 28's raw gap legs continue unchanged so the residual leg can be graded against them. The FE04 failed gap sign flip half already stands as Engine 28's separately graded sub claim.",
+    "detail": "The FE04 fair gap model now exists (fair_gap_model.py) and its record for session 2026-11-18 decomposes 1075 gap names into a market leg (rolling overnight beta times the index overnight gap) and a sector leg (sector median gap, orthogonalised, with a labelled correlation cluster fallback for names with no sector on record), publishing a market and sector residual per name in gap-destiny/fair_gap_record.json. The news leg carries no registered coefficient, and the model's own record now proves why none can be estimated from the records on hand: for this session 0 of the 1075 gap names have an overnight article on record, and the news store's articles carry no signed direction field at all, so the missing inputs are a signed per article direction record and coverage beyond the tracked universe (named in the record's news_leg_evidence block). Residuals are published as market and sector residuals, never as full fair gap residuals. Engine 28's raw gap legs continue unchanged so the residual leg can be graded against them. The FE04 failed gap sign flip half already stands as Engine 28's separately graded sub claim.",
     "news_leg_evidence": {
-      "gap_names": 1141,
-      "gap_names_with_overnight_news": 4,
+      "gap_names": 1075,
+      "gap_names_with_overnight_news": 0,
       "missing_inputs": [
         "a signed per article direction record (sentiment or event direction) in the news store: its articles carry only id, headline, source, created_at, url and symbols, so no signed news variable exists to estimate a coefficient against",
-        "news coverage beyond the tracked universe: the store covers 94 symbols, and 1137 of the 1141 gap names have no overnight article on record for this session"
+        "news coverage beyond the tracked universe: the store covers 94 symbols, and 1075 of the 1075 gap names have no overnight article on record for this session"
       ],
       "news_store_fields": [
         "created_at",
@@ -754,25 +749,25 @@
       ],
       "news_store_symbols": 94,
       "note": "No news coefficient is registered, because the records on hand cannot estimate one honestly: an unsigned article count would enter an award headline and a fraud headline with the same sign. The news leg and the full residual stay at 0 until a signed news record exists.",
-      "overnight_articles_on_gap_names": 13,
+      "overnight_articles_on_gap_names": 0,
       "signed_direction_field_present": false,
       "state": "not_estimable_on_records_on_hand",
       "window_utc": [
-        "2026-11-16T20:00:00Z",
-        "2026-11-17T13:30:00Z"
+        "2026-11-17T20:00:00Z",
+        "2026-11-18T13:30:00Z"
       ]
     },
-    "session": "2026-11-17",
+    "session": "2026-11-18",
     "state": "recorded_market_sector"
   },
   "fe17_centre": {
-    "detail": "FE17's blend (0.60 of the priced implied move plus 0.40 of the historical event move, adjusted for dispersion and timing quality) is registered as this engine's centre, and it takes over on each name whose inputs exist. All three inputs are on record: a per name priced move record (108 upcoming reporters priced from stored at the money straddle quotes), a report timing record from the earnings record lane (166 names with a timing quality), and a dispersion record (1601 names). The dispersion input is forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names, carried by the earnings record. It is not cross analyst estimate dispersion, which no free source carries; the two quantities are different and neither is renamed into the other. The registered definition originally named cross analyst estimate dispersion as this input. By the registry amendment of 2026-10-30, made under the owner's decision delegated to Midna that day, the registered dispersion input is the forecast error dispersion on record, adopted under its own true name. A name missing any other input keeps the historical middle as its centre, labelled as such, with the missing input named.",
+    "detail": "FE17's blend (0.60 of the priced implied move plus 0.40 of the historical event move, adjusted for dispersion and timing quality) is registered as this engine's centre, and it takes over on each name whose inputs exist. All three inputs are on record: a per name priced move record (126 upcoming reporters priced from stored at the money straddle quotes), a report timing record from the earnings record lane (151 names with a timing quality), and a dispersion record (1601 names). The dispersion input is forecast error dispersion: the standard deviation of the name's own prior forecast errors, z scored across reporting names, carried by the earnings record. It is not cross analyst estimate dispersion, which no free source carries; the two quantities are different and neither is renamed into the other. The registered definition originally named cross analyst estimate dispersion as this input. By the registry amendment of 2026-10-30, made under the owner's decision delegated to Midna that day, the registered dispersion input is the forecast error dispersion on record, adopted under its own true name. A name missing any other input keeps the historical middle as its centre, labelled as such, with the missing input named.",
     "dispersion_definition": "forecast error dispersion: sd of the name's own prior forecast errors, z scored across reporting names. Not cross analyst dispersion.",
     "dispersion_input": "forecast_error_dispersion",
     "missing": [],
     "names_with_dispersion_on_record": 1601,
-    "names_with_timing": 166,
-    "priced_moves_on_record": 108,
+    "names_with_timing": 151,
+    "priced_moves_on_record": 126,
     "state": "inputs_recorded"
   },
   "fe18_pead": {
@@ -784,7 +779,7 @@
     "surprise_recorded_names": 1601
   },
   "feed": "tastytrade_chain_snapshot",
-  "grading_note": "Grading uses the shared scoring machinery once the price history passes each report date; the price history on record ends 2026-11-18. 1064 live forecasts are graded so far; the rest grade as their report dates pass. The bigger-than-priced part has no grade until a priced move exists for a name.",
+  "grading_note": "Grading uses the shared scoring machinery once the price history passes each report date; the price history on record ends 2026-11-19. 1102 live forecasts are graded so far; the rest grade as their report dates pass. The bigger-than-priced part has no grade until a priced move exists for a name.",
   "history": {
     "label": "History: every past report day on record, forecast only from the report days before it",
     "note": "Each past report below was forecast using only report days recorded before it, under the same half-and-half rule and the same thin rule as the live ranges. Early seasons had little history to draw on, so many of their reports are counted as skipped rather than graded. A season's share is printed only when at least 30 of its reports were graded. There are no report days on record in 2025. This is history, labelled as history; it is not the live record.",
@@ -908,22 +903,22 @@
     }
   },
   "how_built": "Half of each range comes from the company's own past report days and half from companies in its size group, but the company's own half only counts when at least 8 of its past reports are on record; below that, the range is built from its group alone and its own count is printed. The 5-day range after the report is centred on no drift at all, because the record holds no evidence that reports drift one way or the other. Nothing is stretched or shrunk by a priced expected move, because no priced move is on record to scale by.",
-  "issue_day": "2026-11-18",
-  "issued_ts": "2026-11-18T22:32:03.339895+00:00",
+  "issue_day": "2026-11-19",
+  "issued_ts": "2026-11-19T13:52:28.702578+00:00",
   "kill_criterion": "After two full seasons, this engine is retired if a season's middle-80-percent range covers less than 70 percent or more than 90 percent of that season's reports, or if the score for its bigger-than-priced chances is no better than simply quoting the priced move's own implied chance.",
   "live": {
-    "distribution_forecasts_recorded": 2093,
-    "forecasts_graded": 1064,
-    "names_recorded": 811,
-    "not_recorded_rows": 676,
+    "distribution_forecasts_recorded": 2103,
+    "forecasts_graded": 1102,
+    "names_recorded": 815,
+    "not_recorded_rows": 681,
     "season_all_names": 1838,
-    "season_dated_names": 1166,
+    "season_dated_names": 1171,
     "seasons_completed": 0,
     "target": "two full seasons"
   },
-  "loaded_at_utc": "2026-11-18T23:19:34.418468+00:00",
+  "loaded_at_utc": "2026-11-19T23:13:23.054481+00:00",
   "missed": {
-    "count": 999,
+    "count": 1018,
     "names": [
       {
         "date": "2026-10-29",
@@ -5733,6 +5728,11 @@
       {
         "date": "2026-11-16",
         "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "ASPI"
+      },
+      {
+        "date": "2026-11-16",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
         "symbol": "BIDU"
       },
       {
@@ -5744,11 +5744,6 @@
         "date": "2026-11-16",
         "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
         "symbol": "BRC"
-      },
-      {
-        "date": "2026-11-16",
-        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
-        "symbol": "GRRR"
       },
       {
         "date": "2026-11-16",
@@ -5853,11 +5848,6 @@
       {
         "date": "2026-11-18",
         "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
-        "symbol": "ASPI"
-      },
-      {
-        "date": "2026-11-18",
-        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
         "symbol": "HP"
       },
       {
@@ -5919,1481 +5909,113 @@
         "date": "2026-11-18",
         "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
         "symbol": "WWD"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "BABA"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "BBWI"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "ESE"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "ESTC"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "GAP"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "GLOB"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "GRRR"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "HUBG"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "INTU"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "KEYS"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "LQDT"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "MATW"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "MMS"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "POST"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "ROAD"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "ROST"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "VVV"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "WMG"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "WMT"
+      },
+      {
+        "date": "2026-11-19",
+        "reason": "its pre-report close had already passed when this engine first ran; it is counted, never backfilled",
+        "symbol": "WSM"
       }
     ]
   },
   "next": {
-    "count": 20,
-    "date": "2026-11-19",
-    "decision_as_of": "2026-11-18",
-    "names": [
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 234,
-          "high80_pct": 11.1926,
-          "low80_pct": 0.4304,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4304,
-            "0.2": 1.2821,
-            "0.3": 2.0598,
-            "0.4": 2.9956,
-            "0.5": 2.8664,
-            "0.6": 5.1424,
-            "0.7": 6.6667,
-            "0.8": 8.0614,
-            "0.9": 11.1926
-          },
-          "typical_pct": 2.8664
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 234,
-          "priced_move_pct": 6.6908,
-          "share_bigger_than_priced": 0.2906,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 2.8664,
-          "dispersion_adjustment": 0.0161,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": 0.2018,
-          "missing": [],
-          "model_score_normalised": 2.8664,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 6.6908,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 227,
-          "high80_pct": 21.8659,
-          "low80_pct": -19.188,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -19.188,
-            "0.2": -11.2333,
-            "0.3": -8.0442,
-            "0.4": -4.2157,
-            "0.5": 0.0,
-            "0.6": 3.7512,
-            "0.7": 9.4627,
-            "0.8": 15.7784,
-            "0.9": 21.8659
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "BABA",
-        "tier": "untagged",
-        "tier_label": "Not on any of the size lists"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 90,
-          "high80_pct": 13.0441,
-          "low80_pct": 0.2129,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.2129,
-            "0.2": 0.6483,
-            "0.3": 1.0109,
-            "0.4": 1.4883,
-            "0.5": 3.773,
-            "0.6": 2.713,
-            "0.7": 3.552,
-            "0.8": 6.2772,
-            "0.9": 13.0441
-          },
-          "typical_pct": 3.773
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 90,
-          "priced_move_pct": 11.254,
-          "share_bigger_than_priced": 0.1222,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 3.773,
-          "dispersion_adjustment": -0.0092,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1148,
-          "missing": [],
-          "model_score_normalised": 3.773,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 11.254,
-        "signed": {
-          "group_events": 29,
-          "own_events": 0,
-          "reason": "its group holds only 29 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "BBWI",
-        "tier": "sp400",
-        "tier_label": "Mid-sized companies (on the mid-sized list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 171,
-          "high80_pct": 8.6993,
-          "low80_pct": 0.4093,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4093,
-            "0.2": 0.8657,
-            "0.3": 1.2774,
-            "0.4": 1.8206,
-            "0.5": 1.7114,
-            "0.6": 3.4144,
-            "0.7": 4.4679,
-            "0.8": 5.7331,
-            "0.9": 8.6993
-          },
-          "typical_pct": 1.7114
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 171,
-          "priced_move_pct": 4.1481,
-          "share_bigger_than_priced": 0.3275,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 1.7114,
-          "dispersion_adjustment": -0.0139,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1741,
-          "missing": [],
-          "model_score_normalised": 1.7114,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 4.1481,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 98,
-          "high80_pct": 10.6669,
-          "low80_pct": -9.058,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -9.058,
-            "0.2": -5.523,
-            "0.3": -3.8043,
-            "0.4": -2.1185,
-            "0.5": 0.0,
-            "0.6": 1.1735,
-            "0.7": 3.0626,
-            "0.8": 5.4282,
-            "0.9": 10.6669
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "CPRT",
-        "tier": "sp500",
-        "tier_label": "Largest companies (on the largest-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 73,
-          "high80_pct": 8.052,
-          "low80_pct": 0.1873,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.1873,
-            "0.2": 0.5233,
-            "0.3": 0.9243,
-            "0.4": 1.6872,
-            "0.5": 4.4554,
-            "0.6": 2.8436,
-            "0.7": 3.6399,
-            "0.8": 4.4204,
-            "0.9": 8.052
-          },
-          "typical_pct": 4.4554
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 73,
-          "priced_move_pct": 6.0427,
-          "share_bigger_than_priced": 0.137,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 4.4554,
-          "dispersion_adjustment": -0.0056,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.0697,
-          "missing": [],
-          "model_score_normalised": 4.4554,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 6.0427,
-        "signed": {
-          "group_events": 9,
-          "own_events": 0,
-          "reason": "its group holds only 9 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "ESE",
-        "tier": "sp600",
-        "tier_label": "Smaller companies (on the smaller-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 234,
-          "high80_pct": 11.1926,
-          "low80_pct": 0.4304,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4304,
-            "0.2": 1.2821,
-            "0.3": 2.0598,
-            "0.4": 2.9956,
-            "0.5": 5.7168,
-            "0.6": 5.1424,
-            "0.7": 6.6667,
-            "0.8": 8.0614,
-            "0.9": 11.1926
-          },
-          "typical_pct": 5.7168
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 234,
-          "priced_move_pct": 16.5221,
-          "share_bigger_than_priced": 0.0342,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 5.7168,
-          "dispersion_adjustment": -0.0093,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1158,
-          "missing": [],
-          "model_score_normalised": 5.7168,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 16.5221,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 227,
-          "high80_pct": 21.8659,
-          "low80_pct": -19.188,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -19.188,
-            "0.2": -11.2333,
-            "0.3": -8.0442,
-            "0.4": -4.2157,
-            "0.5": 0.0,
-            "0.6": 3.7512,
-            "0.7": 9.4627,
-            "0.8": 15.7784,
-            "0.9": 21.8659
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "ESTC",
-        "tier": "untagged",
-        "tier_label": "Not on any of the size lists"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 90,
-          "high80_pct": 13.0441,
-          "low80_pct": 0.2129,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.2129,
-            "0.2": 0.6483,
-            "0.3": 1.0109,
-            "0.4": 1.4883,
-            "0.5": 3.8981,
-            "0.6": 2.713,
-            "0.7": 3.552,
-            "0.8": 6.2772,
-            "0.9": 13.0441
-          },
-          "typical_pct": 3.8981
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 90,
-          "priced_move_pct": 11.6935,
-          "share_bigger_than_priced": 0.1222,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 3.8981,
-          "dispersion_adjustment": -0.0106,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1325,
-          "missing": [],
-          "model_score_normalised": 3.8981,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 11.6935,
-        "signed": {
-          "group_events": 29,
-          "own_events": 0,
-          "reason": "its group holds only 29 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "GAP",
-        "tier": "sp400",
-        "tier_label": "Mid-sized companies (on the mid-sized list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 234,
-          "high80_pct": 11.1926,
-          "low80_pct": 0.4304,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4304,
-            "0.2": 1.2821,
-            "0.3": 2.0598,
-            "0.4": 2.9956,
-            "0.5": 4.0683,
-            "0.6": 5.1424,
-            "0.7": 6.6667,
-            "0.8": 8.0614,
-            "0.9": 11.1926
-          },
-          "typical_pct": 4.0683
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 234,
-          "priced_move_pct": 13.5053,
-          "share_bigger_than_priced": 0.0641,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "timing_quality"
-          ],
-          "state": "not_recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 13.5053,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 227,
-          "high80_pct": 21.8659,
-          "low80_pct": -19.188,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -19.188,
-            "0.2": -11.2333,
-            "0.3": -8.0442,
-            "0.4": -4.2157,
-            "0.5": 0.0,
-            "0.6": 3.7512,
-            "0.7": 9.4627,
-            "0.8": 15.7784,
-            "0.9": 21.8659
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "GLOB",
-        "tier": "untagged",
-        "tier_label": "Not on any of the size lists"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 73,
-          "high80_pct": 8.052,
-          "low80_pct": 0.1873,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.1873,
-            "0.2": 0.5233,
-            "0.3": 0.9243,
-            "0.4": 1.6872,
-            "0.5": 2.137,
-            "0.6": 2.8436,
-            "0.7": 3.6399,
-            "0.8": 4.4204,
-            "0.9": 8.052
-          },
-          "typical_pct": 2.137
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 73,
-          "priced_move_pct": 12.2354,
-          "share_bigger_than_priced": 0.0548,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "timing_quality"
-          ],
-          "state": "not_recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 12.2354,
-        "signed": {
-          "group_events": 9,
-          "own_events": 0,
-          "reason": "its group holds only 9 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "HUBG",
-        "tier": "sp600",
-        "tier_label": "Smaller companies (on the smaller-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 171,
-          "high80_pct": 8.6993,
-          "low80_pct": 0.4093,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4093,
-            "0.2": 0.8657,
-            "0.3": 1.2774,
-            "0.4": 1.8206,
-            "0.5": 2.8751,
-            "0.6": 3.4144,
-            "0.7": 4.4679,
-            "0.8": 5.7331,
-            "0.9": 8.6993
-          },
-          "typical_pct": 2.8751
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 171,
-          "priced_move_pct": 7.9077,
-          "share_bigger_than_priced": 0.1111,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 2.8751,
-          "dispersion_adjustment": 0.0041,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": 0.0512,
-          "missing": [],
-          "model_score_normalised": 2.8751,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 7.9077,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 98,
-          "high80_pct": 10.6669,
-          "low80_pct": -9.058,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -9.058,
-            "0.2": -5.523,
-            "0.3": -3.8043,
-            "0.4": -2.1185,
-            "0.5": 0.0,
-            "0.6": 1.1735,
-            "0.7": 3.0626,
-            "0.8": 5.4282,
-            "0.9": 10.6669
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "INTU",
-        "tier": "sp500",
-        "tier_label": "Largest companies (on the largest-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 171,
-          "high80_pct": 8.6993,
-          "low80_pct": 0.4093,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4093,
-            "0.2": 0.8657,
-            "0.3": 1.2774,
-            "0.4": 1.8206,
-            "0.5": 6.575,
-            "0.6": 3.4144,
-            "0.7": 4.4679,
-            "0.8": 5.7331,
-            "0.9": 8.6993
-          },
-          "typical_pct": 6.575
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 171,
-          "priced_move_pct": 9.3713,
-          "share_bigger_than_priced": 0.0877,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 6.575,
-          "dispersion_adjustment": -0.0045,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.0568,
-          "missing": [],
-          "model_score_normalised": 6.575,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 9.3713,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 98,
-          "high80_pct": 10.6669,
-          "low80_pct": -9.058,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -9.058,
-            "0.2": -5.523,
-            "0.3": -3.8043,
-            "0.4": -2.1185,
-            "0.5": 0.0,
-            "0.6": 1.1735,
-            "0.7": 3.0626,
-            "0.8": 5.4282,
-            "0.9": 10.6669
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "KEYS",
-        "tier": "sp500",
-        "tier_label": "Largest companies (on the largest-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 73,
-          "high80_pct": 8.052,
-          "low80_pct": 0.1873,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.1873,
-            "0.2": 0.5233,
-            "0.3": 0.9243,
-            "0.4": 1.6872,
-            "0.5": 6.422,
-            "0.6": 2.8436,
-            "0.7": 3.6399,
-            "0.8": 4.4204,
-            "0.9": 8.052
-          },
-          "typical_pct": 6.422
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 73,
-          "priced_move_pct": 9.4269,
-          "share_bigger_than_priced": 0.0822,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 6.422,
-          "dispersion_adjustment": -0.0137,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1707,
-          "missing": [],
-          "model_score_normalised": 6.422,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 9.4269,
-        "signed": {
-          "group_events": 9,
-          "own_events": 0,
-          "reason": "its group holds only 9 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "LQDT",
-        "tier": "sp600",
-        "tier_label": "Smaller companies (on the smaller-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 73,
-          "high80_pct": 8.052,
-          "low80_pct": 0.1873,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.1873,
-            "0.2": 0.5233,
-            "0.3": 0.9243,
-            "0.4": 1.6872,
-            "0.5": 3.7036,
-            "0.6": 2.8436,
-            "0.7": 3.6399,
-            "0.8": 4.4204,
-            "0.9": 8.052
-          },
-          "typical_pct": 3.7036
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 73,
-          "priced_move_pct": 10.9663,
-          "share_bigger_than_priced": 0.0685,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 3.7036,
-          "dispersion_adjustment": -0.0037,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.0462,
-          "missing": [],
-          "model_score_normalised": 3.7036,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 10.9663,
-        "signed": {
-          "group_events": 9,
-          "own_events": 0,
-          "reason": "its group holds only 9 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "MATW",
-        "tier": "sp600",
-        "tier_label": "Smaller companies (on the smaller-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 90,
-          "high80_pct": 13.0441,
-          "low80_pct": 0.2129,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.2129,
-            "0.2": 0.6483,
-            "0.3": 1.0109,
-            "0.4": 1.4883,
-            "0.5": 5.9283,
-            "0.6": 2.713,
-            "0.7": 3.552,
-            "0.8": 6.2772,
-            "0.9": 13.0441
-          },
-          "typical_pct": 5.9283
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 90,
-          "priced_move_pct": 8.3895,
-          "share_bigger_than_priced": 0.1556,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 5.9283,
-          "dispersion_adjustment": 0.0053,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": 0.0657,
-          "missing": [],
-          "model_score_normalised": 5.9283,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 8.3895,
-        "signed": {
-          "group_events": 29,
-          "own_events": 0,
-          "reason": "its group holds only 29 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "MMS",
-        "tier": "sp400",
-        "tier_label": "Mid-sized companies (on the mid-sized list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 90,
-          "high80_pct": 13.0441,
-          "low80_pct": 0.2129,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.2129,
-            "0.2": 0.6483,
-            "0.3": 1.0109,
-            "0.4": 1.4883,
-            "0.5": 4.8356,
-            "0.6": 2.713,
-            "0.7": 3.552,
-            "0.8": 6.2772,
-            "0.9": 13.0441
-          },
-          "typical_pct": 4.8356
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 90,
-          "priced_move_pct": 6.6947,
-          "share_bigger_than_priced": 0.1667,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 4.8356,
-          "dispersion_adjustment": -0.0092,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1148,
-          "missing": [],
-          "model_score_normalised": 4.8356,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 6.6947,
-        "signed": {
-          "group_events": 29,
-          "own_events": 0,
-          "reason": "its group holds only 29 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "POST",
-        "tier": "sp400",
-        "tier_label": "Mid-sized companies (on the mid-sized list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 73,
-          "high80_pct": 8.052,
-          "low80_pct": 0.1873,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.1873,
-            "0.2": 0.5233,
-            "0.3": 0.9243,
-            "0.4": 1.6872,
-            "0.5": 3.8417,
-            "0.6": 2.8436,
-            "0.7": 3.6399,
-            "0.8": 4.4204,
-            "0.9": 8.052
-          },
-          "typical_pct": 3.8417
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 73,
-          "priced_move_pct": 11.4926,
-          "share_bigger_than_priced": 0.0548,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 3.8417,
-          "dispersion_adjustment": -0.0086,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1081,
-          "missing": [],
-          "model_score_normalised": 3.8417,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 11.4926,
-        "signed": {
-          "group_events": 9,
-          "own_events": 0,
-          "reason": "its group holds only 9 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "ROAD",
-        "tier": "sp600",
-        "tier_label": "Smaller companies (on the smaller-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 171,
-          "high80_pct": 8.6993,
-          "low80_pct": 0.4093,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4093,
-            "0.2": 0.8657,
-            "0.3": 1.2774,
-            "0.4": 1.8206,
-            "0.5": 2.919,
-            "0.6": 3.4144,
-            "0.7": 4.4679,
-            "0.8": 5.7331,
-            "0.9": 8.6993
-          },
-          "typical_pct": 2.919
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 171,
-          "priced_move_pct": 8.1884,
-          "share_bigger_than_priced": 0.1111,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 2.919,
-          "dispersion_adjustment": -0.0097,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1212,
-          "missing": [],
-          "model_score_normalised": 2.919,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 8.1884,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 98,
-          "high80_pct": 10.6669,
-          "low80_pct": -9.058,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -9.058,
-            "0.2": -5.523,
-            "0.3": -3.8043,
-            "0.4": -2.1185,
-            "0.5": 0.0,
-            "0.6": 1.1735,
-            "0.7": 3.0626,
-            "0.8": 5.4282,
-            "0.9": 10.6669
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "ROST",
-        "tier": "sp500",
-        "tier_label": "Largest companies (on the largest-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 90,
-          "high80_pct": 13.0441,
-          "low80_pct": 0.2129,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.2129,
-            "0.2": 0.6483,
-            "0.3": 1.0109,
-            "0.4": 1.4883,
-            "0.5": 8.4339,
-            "0.6": 2.713,
-            "0.7": 3.552,
-            "0.8": 6.2772,
-            "0.9": 13.0441
-          },
-          "typical_pct": 8.4339
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 90,
-          "priced_move_pct": 12.8109,
-          "share_bigger_than_priced": 0.1111,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 8.4339,
-          "dispersion_adjustment": -0.0136,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1699,
-          "missing": [],
-          "model_score_normalised": 8.4339,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 12.8109,
-        "signed": {
-          "group_events": 29,
-          "own_events": 0,
-          "reason": "its group holds only 29 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "VVV",
-        "tier": "sp400",
-        "tier_label": "Mid-sized companies (on the mid-sized list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 90,
-          "high80_pct": 13.0441,
-          "low80_pct": 0.2129,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.2129,
-            "0.2": 0.6483,
-            "0.3": 1.0109,
-            "0.4": 1.4883,
-            "0.5": 2.159,
-            "0.6": 2.713,
-            "0.7": 3.552,
-            "0.8": 6.2772,
-            "0.9": 13.0441
-          },
-          "typical_pct": 2.159
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": null,
-        "signed": {
-          "group_events": 29,
-          "own_events": 0,
-          "reason": "its group holds only 29 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "WMG",
-        "tier": "sp400",
-        "tier_label": "Mid-sized companies (on the mid-sized list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 171,
-          "high80_pct": 8.6993,
-          "low80_pct": 0.4093,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4093,
-            "0.2": 0.8657,
-            "0.3": 1.2774,
-            "0.4": 1.8206,
-            "0.5": 4.6273,
-            "0.6": 3.4144,
-            "0.7": 4.4679,
-            "0.8": 5.7331,
-            "0.9": 8.6993
-          },
-          "typical_pct": 4.6273
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 171,
-          "priced_move_pct": 6.1793,
-          "share_bigger_than_priced": 0.1754,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 4.6273,
-          "dispersion_adjustment": -0.0133,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1666,
-          "missing": [],
-          "model_score_normalised": 4.6273,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 6.1793,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 98,
-          "high80_pct": 10.6669,
-          "low80_pct": -9.058,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -9.058,
-            "0.2": -5.523,
-            "0.3": -3.8043,
-            "0.4": -2.1185,
-            "0.5": 0.0,
-            "0.6": 1.1735,
-            "0.7": 3.0626,
-            "0.8": 5.4282,
-            "0.9": 10.6669
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "WMT",
-        "tier": "sp500",
-        "tier_label": "Largest companies (on the largest-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 171,
-          "high80_pct": 8.6993,
-          "low80_pct": 0.4093,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4093,
-            "0.2": 0.8657,
-            "0.3": 1.2774,
-            "0.4": 1.8206,
-            "0.5": 2.6904,
-            "0.6": 3.4144,
-            "0.7": 4.4679,
-            "0.8": 5.7331,
-            "0.9": 8.6993
-          },
-          "typical_pct": 2.6904
-        },
-        "date": "2026-11-19",
-        "exceedance": {
-          "pool_moves": 171,
-          "priced_move_pct": 7.4167,
-          "share_bigger_than_priced": 0.117,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 2.6904,
-          "dispersion_adjustment": -0.0095,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1184,
-          "missing": [],
-          "model_score_normalised": 2.6904,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 7.4167,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 98,
-          "high80_pct": 10.6669,
-          "low80_pct": -9.058,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -9.058,
-            "0.2": -5.523,
-            "0.3": -3.8043,
-            "0.4": -2.1185,
-            "0.5": 0.0,
-            "0.6": 1.1735,
-            "0.7": 3.0626,
-            "0.8": 5.4282,
-            "0.9": 10.6669
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "WSM",
-        "tier": "sp500",
-        "tier_label": "Largest companies (on the largest-company list)"
-      }
-    ],
-    "new_rows_today": 60,
-    "signed_horizon_close": "2026-11-26"
-  },
-  "panel_last_session": "2026-11-18",
-  "past_record": {
-    "own_full_names": 19,
-    "own_names_on_calendar": 26,
-    "panel_reports": 247,
-    "panel_signed": 42,
-    "past_names": 32,
-    "past_reports": 321,
-    "total_reports": 568,
-    "vintage_note": "A company's own past reports on record run from 2022 to 2024 only. No stored report dates exist after December 19, 2024 until the report days inside the recent price history, and no long price panel is on file. The page claims nothing beyond that."
-  },
-  "price_basis": "snapshot",
-  "provenance": {
-    "execution_pricing": false,
-    "feed": "tastytrade_chain_snapshot",
-    "price_basis": "snapshot",
-    "stamped_by": "terminal_common.stamp_provenance"
-  },
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "1064 graded forecasts of 2769 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 2769,
-        "graded_forecasts": 1064,
-        "ledger_rows_at_write": 565694,
-        "recorded_on": "2026-11-18",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_12",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-18",
-      "keys_present": [
-        "calendar",
-        "calibration_attestation",
-        "claim",
-        "decision_as_of",
-        "exceedance",
-        "execution_pricing",
-        "explanation",
-        "fe04_fair_gap_remainder",
-        "fe17_centre",
-        "fe18_pead",
-        "feed",
-        "grading_note",
-        "history",
-        "how_built",
-        "issue_day",
-        "issued_ts",
-        "kill_criterion",
-        "live",
-        "loaded_at_utc",
-        "missed",
-        "next",
-        "panel_last_session",
-        "past_record",
-        "price_basis",
-        "provenance",
-        "record_surface",
-        "rest",
-        "self_test",
-        "source",
-        "state",
-        "subject_chart",
-        "thin_rule",
-        "tiers",
-        "tool"
-      ]
-    },
-    "feed": "tastytrade_chain_snapshot",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_12",
-      "forecasts": 2769,
-      "grades": 1064,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "More live grades are still to come: 2769 forecasts are on record and 1064 are graded so far. The rest arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "tastytrade_chain_snapshot",
-      "price_basis": "snapshot",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 13,
-          "path": "/history"
-        },
-        {
-          "items": 0,
-          "path": "/history/pooled"
-        },
-        {
-          "items": 13,
-          "path": "/history/seasons"
-        },
-        {
-          "items": 0,
-          "path": "/history/signed_pooled"
-        }
-      ],
-      "total_items_counted": 26
-    },
-    "version": 1
-  },
-  "rest": {
-    "count": 147,
+    "count": 5,
+    "date": "2026-11-20",
+    "decision_as_of": "2026-11-19",
     "names": [
       {
         "abs": {
@@ -7410,28 +6032,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 4.6309,
+            "0.5": 4.1927,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 4.6309
+          "typical_pct": 4.1927
         },
         "date": "2026-11-20",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 6.3537,
-          "share_bigger_than_priced": 0.2,
+          "priced_move_pct": 5.6163,
+          "share_bigger_than_priced": 0.2333,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.6309,
+          "centre_pct": 4.1927,
           "dispersion_adjustment": -0.0096,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1202,
           "missing": [],
-          "model_score_normalised": 4.6309,
+          "model_score_normalised": 4.1927,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -7445,7 +6067,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 6.3537,
+        "priced_move_pct": 5.6163,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -7481,7 +6103,7 @@
         "date": "2026-11-20",
         "exceedance": {
           "pool_moves": 73,
-          "priced_move_pct": 5.5686,
+          "priced_move_pct": 5.2058,
           "share_bigger_than_priced": 0.1507,
           "state": "recorded"
         },
@@ -7503,7 +6125,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 5.5686,
+        "priced_move_pct": 5.2058,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -7539,8 +6161,8 @@
         "date": "2026-11-20",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 15.4712,
-          "share_bigger_than_priced": 0.0889,
+          "priced_move_pct": 12.2978,
+          "share_bigger_than_priced": 0.1222,
           "state": "recorded"
         },
         "fe17_centre": {
@@ -7561,7 +6183,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 15.4712,
+        "priced_move_pct": 12.2978,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -7587,28 +6209,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 2.1769,
+            "0.5": 1.9475,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 2.1769
+          "typical_pct": 1.9475
         },
         "date": "2026-11-20",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 5.7982,
-          "share_bigger_than_priced": 0.2222,
+          "priced_move_pct": 5.0355,
+          "share_bigger_than_priced": 0.2444,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 2.1769,
+          "centre_pct": 1.9475,
           "dispersion_adjustment": 0.0026,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": 0.0322,
           "missing": [],
-          "model_score_normalised": 2.1769,
+          "model_score_normalised": 1.9475,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -7622,7 +6244,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 5.7982,
+        "priced_move_pct": 5.0355,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -7705,7 +6327,131 @@
         "symbol": "SIDU",
         "tier": "untagged",
         "tier_label": "Not on any of the size lists"
+      }
+    ],
+    "new_rows_today": 15,
+    "signed_horizon_close": "2026-11-27"
+  },
+  "panel_last_session": "2026-11-19",
+  "past_record": {
+    "own_full_names": 19,
+    "own_names_on_calendar": 26,
+    "panel_reports": 247,
+    "panel_signed": 42,
+    "past_names": 32,
+    "past_reports": 321,
+    "total_reports": 568,
+    "vintage_note": "A company's own past reports on record run from 2022 to 2024 only. No stored report dates exist after December 19, 2024 until the report days inside the recent price history, and no long price panel is on file. The page claims nothing beyond that."
+  },
+  "price_basis": "snapshot",
+  "provenance": {
+    "execution_pricing": false,
+    "feed": "tastytrade_chain_snapshot",
+    "price_basis": "snapshot",
+    "stamped_by": "terminal_common.stamp_provenance"
+  },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "1102 graded forecasts of 2769 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 2769,
+        "graded_forecasts": 1102,
+        "ledger_rows_at_write": 572976,
+        "recorded_on": "2026-11-19",
+        "status": "not_attested"
       },
+      "engine_id": "engine_12",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-11-19",
+      "keys_present": [
+        "calendar",
+        "calibration_attestation",
+        "claim",
+        "decision_as_of",
+        "exceedance",
+        "execution_pricing",
+        "explanation",
+        "fe04_fair_gap_remainder",
+        "fe17_centre",
+        "fe18_pead",
+        "feed",
+        "grading_note",
+        "history",
+        "how_built",
+        "issue_day",
+        "issued_ts",
+        "kill_criterion",
+        "live",
+        "loaded_at_utc",
+        "missed",
+        "next",
+        "panel_last_session",
+        "past_record",
+        "price_basis",
+        "provenance",
+        "record_surface",
+        "rest",
+        "self_test",
+        "source",
+        "state",
+        "subject_chart",
+        "thin_rule",
+        "tiers",
+        "tool"
+      ]
+    },
+    "feed": "tastytrade_chain_snapshot",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_12",
+      "forecasts": 2784,
+      "grades": 1102,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 2784 forecasts are on record and 1102 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "tastytrade_chain_snapshot",
+      "price_basis": "snapshot",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 13,
+          "path": "/history"
+        },
+        {
+          "items": 0,
+          "path": "/history/pooled"
+        },
+        {
+          "items": 13,
+          "path": "/history/seasons"
+        },
+        {
+          "items": 0,
+          "path": "/history/signed_pooled"
+        }
+      ],
+      "total_items_counted": 26
+    },
+    "version": 1
+  },
+  "rest": {
+    "count": 148,
+    "names": [
       {
         "abs": {
           "blend": "group_only",
@@ -8031,28 +6777,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 4.5854,
+            "0.5": 4.3863,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 4.5854
+          "typical_pct": 4.3863
         },
         "date": "2026-11-23",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 13.8052,
-          "share_bigger_than_priced": 0.0409,
+          "priced_move_pct": 13.1348,
+          "share_bigger_than_priced": 0.0468,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.5854,
+          "centre_pct": 4.3863,
           "dispersion_adjustment": -0.0102,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1276,
           "missing": [],
-          "model_score_normalised": 4.5854,
+          "model_score_normalised": 4.3863,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8066,7 +6812,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 13.8052,
+        "priced_move_pct": 13.1348,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -8178,28 +6924,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 5.3088,
+            "0.5": 5.2684,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 5.3088
+          "typical_pct": 5.2684
         },
         "date": "2026-11-23",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 16.4508,
-          "share_bigger_than_priced": 0.0778,
+          "priced_move_pct": 16.3147,
+          "share_bigger_than_priced": 0.0889,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.3088,
+          "centre_pct": 5.2684,
           "dispersion_adjustment": -0.0109,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1357,
           "missing": [],
-          "model_score_normalised": 5.3088,
+          "model_score_normalised": 5.2684,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8213,7 +6959,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 16.4508,
+        "priced_move_pct": 16.3147,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -8239,28 +6985,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 3.8729,
+            "0.5": 3.787,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 3.8729
+          "typical_pct": 3.787
         },
         "date": "2026-11-23",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 10.3043,
-          "share_bigger_than_priced": 0.1325,
+          "priced_move_pct": 10.0155,
+          "share_bigger_than_priced": 0.141,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.8729,
+          "centre_pct": 3.787,
           "dispersion_adjustment": -0.0082,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1026,
           "missing": [],
-          "model_score_normalised": 3.8729,
+          "model_score_normalised": 3.787,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8274,7 +7020,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 10.3043,
+        "priced_move_pct": 10.0155,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -8315,28 +7061,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 5.8449,
+            "0.5": 5.9852,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 5.8449
+          "typical_pct": 5.9852
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 8.219,
-          "share_bigger_than_priced": 0.1111,
+          "priced_move_pct": 8.4556,
+          "share_bigger_than_priced": 0.1053,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.8449,
+          "centre_pct": 5.9852,
           "dispersion_adjustment": -0.0116,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1452,
           "missing": [],
-          "model_score_normalised": 5.8449,
+          "model_score_normalised": 5.9852,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8350,7 +7096,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 8.219,
+        "priced_move_pct": 8.4556,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -8391,28 +7137,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 3.1859,
+            "0.5": 3.2338,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 3.1859
+          "typical_pct": 3.2338
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 9.087,
-          "share_bigger_than_priced": 0.0936,
+          "priced_move_pct": 9.2483,
+          "share_bigger_than_priced": 0.0877,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.1859,
+          "centre_pct": 3.2338,
           "dispersion_adjustment": -0.0097,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1216,
           "missing": [],
-          "model_score_normalised": 3.1859,
+          "model_score_normalised": 3.2338,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8426,7 +7172,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 9.087,
+        "priced_move_pct": 9.2483,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -8467,28 +7213,28 @@
             "0.2": 0.9107,
             "0.3": 1.9143,
             "0.4": 2.4353,
-            "0.5": 4.884,
+            "0.5": 5.1761,
             "0.6": 6.2772,
             "0.7": 13.0441,
             "0.8": 21.536,
             "0.9": 24.173
           },
-          "typical_pct": 4.884
+          "typical_pct": 5.1761
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 14.0637,
+          "priced_move_pct": 15.0465,
           "share_bigger_than_priced": 0.1,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.884,
+          "centre_pct": 5.1761,
           "dispersion_adjustment": -0.0092,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1154,
           "missing": [],
-          "model_score_normalised": 4.884,
+          "model_score_normalised": 5.1761,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8502,7 +7248,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 12,
-        "priced_move_pct": 14.0637,
+        "priced_move_pct": 15.0465,
         "signed": {
           "group_events": 29,
           "own_events": 12,
@@ -8528,28 +7274,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 6.3536,
+            "0.5": 7.0378,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 6.3536
+          "typical_pct": 7.0378
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 9.0669,
-          "share_bigger_than_priced": 0.0936,
+          "priced_move_pct": 10.2196,
+          "share_bigger_than_priced": 0.0819,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 6.3536,
+          "centre_pct": 7.0378,
           "dispersion_adjustment": -0.0107,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1338,
           "missing": [],
-          "model_score_normalised": 6.3536,
+          "model_score_normalised": 7.0378,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8563,7 +7309,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 9.0669,
+        "priced_move_pct": 10.2196,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -8604,28 +7350,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 3.8222,
+            "0.5": 3.9091,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 3.8222
+          "typical_pct": 3.9091
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 11.4207,
+          "priced_move_pct": 11.713,
           "share_bigger_than_priced": 0.1222,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.8222,
+          "centre_pct": 3.9091,
           "dispersion_adjustment": -0.0093,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1161,
           "missing": [],
-          "model_score_normalised": 3.8222,
+          "model_score_normalised": 3.9091,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8639,7 +7385,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 11.4207,
+        "priced_move_pct": 11.713,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -8665,28 +7411,28 @@
             "0.2": 0.5233,
             "0.3": 0.9243,
             "0.4": 1.6872,
-            "0.5": 4.4379,
+            "0.5": 4.666,
             "0.6": 2.8436,
             "0.7": 3.6399,
             "0.8": 4.4204,
             "0.9": 8.052
           },
-          "typical_pct": 4.4379
+          "typical_pct": 4.666
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 73,
-          "priced_move_pct": 13.285,
-          "share_bigger_than_priced": 0.0548,
+          "priced_move_pct": 14.0411,
+          "share_bigger_than_priced": 0.0274,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.4379,
+          "centre_pct": 4.666,
           "dispersion_adjustment": 0.0057,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": 0.0707,
           "missing": [],
-          "model_score_normalised": 4.4379,
+          "model_score_normalised": 4.666,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8700,7 +7446,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 13.285,
+        "priced_move_pct": 14.0411,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -8726,28 +7472,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 5.1798,
+            "0.5": 4.968,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 5.1798
+          "typical_pct": 4.968
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 15.2135,
-          "share_bigger_than_priced": 0.0292,
+          "priced_move_pct": 14.5245,
+          "share_bigger_than_priced": 0.0351,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.1798,
+          "centre_pct": 4.968,
           "dispersion_adjustment": 0.0247,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": 0.3083,
           "missing": [],
-          "model_score_normalised": 5.1798,
+          "model_score_normalised": 4.968,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8761,7 +7507,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 15.2135,
+        "priced_move_pct": 14.5245,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -8802,28 +7548,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 3.7866,
+            "0.5": 4.1518,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 3.7866
+          "typical_pct": 4.1518
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 11.1583,
+          "priced_move_pct": 12.3733,
           "share_bigger_than_priced": 0.1222,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.7866,
+          "centre_pct": 4.1518,
           "dispersion_adjustment": 0.0019,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": 0.0242,
           "missing": [],
-          "model_score_normalised": 3.7866,
+          "model_score_normalised": 4.1518,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8837,7 +7583,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 11.1583,
+        "priced_move_pct": 12.3733,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -8863,28 +7609,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 3.2776,
+            "0.5": 3.5178,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 3.2776
+          "typical_pct": 3.5178
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 9.3057,
-          "share_bigger_than_priced": 0.0877,
+          "priced_move_pct": 10.1077,
+          "share_bigger_than_priced": 0.0819,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.2776,
+          "centre_pct": 3.5178,
           "dispersion_adjustment": -0.0016,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.0199,
           "missing": [],
-          "model_score_normalised": 3.2776,
+          "model_score_normalised": 3.5178,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -8898,7 +7644,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 9.3057,
+        "priced_move_pct": 10.1077,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -8954,7 +7700,8 @@
         "fe17_centre": {
           "centre_pct": null,
           "missing": [
-            "implied_move"
+            "implied_move",
+            "timing_quality"
           ],
           "state": "not_recorded"
         },
@@ -8995,28 +7742,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 3.3109,
+            "0.5": 3.5615,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 3.3109
+          "typical_pct": 3.5615
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 9.5255,
-          "share_bigger_than_priced": 0.0877,
+          "priced_move_pct": 10.3702,
+          "share_bigger_than_priced": 0.0819,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.3109,
+          "centre_pct": 3.5615,
           "dispersion_adjustment": -0.0113,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1411,
           "missing": [],
-          "model_score_normalised": 3.3109,
+          "model_score_normalised": 3.5615,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -9030,7 +7777,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 9.5255,
+        "priced_move_pct": 10.3702,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -9071,28 +7818,28 @@
             "0.2": 0.5233,
             "0.3": 0.9243,
             "0.4": 1.6872,
-            "0.5": 4.9989,
+            "0.5": 4.8388,
             "0.6": 2.8436,
             "0.7": 3.6399,
             "0.8": 4.4204,
             "0.9": 8.052
           },
-          "typical_pct": 4.9989
+          "typical_pct": 4.8388
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 73,
-          "priced_move_pct": 15.3702,
+          "priced_move_pct": 14.8325,
           "share_bigger_than_priced": 0.0137,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.9989,
+          "centre_pct": 4.8388,
           "dispersion_adjustment": -0.0079,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.0982,
           "missing": [],
-          "model_score_normalised": 4.9989,
+          "model_score_normalised": 4.8388,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -9106,7 +7853,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 15.3702,
+        "priced_move_pct": 14.8325,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -9142,8 +7889,8 @@
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 4.9891,
-          "share_bigger_than_priced": 0.2456,
+          "priced_move_pct": 4.2839,
+          "share_bigger_than_priced": 0.3099,
           "state": "recorded"
         },
         "fe17_centre": {
@@ -9164,7 +7911,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 4.9891,
+        "priced_move_pct": 4.2839,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -9189,82 +7936,6 @@
         "symbol": "MDT",
         "tier": "sp500",
         "tier_label": "Largest companies (on the largest-company list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "centre_source": "fe17_blend",
-          "conditioner_applied": false,
-          "group_events": 234,
-          "high80_pct": 11.1926,
-          "low80_pct": 0.4304,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.4304,
-            "0.2": 1.2821,
-            "0.3": 2.0598,
-            "0.4": 2.9956,
-            "0.5": 4.1439,
-            "0.6": 5.1424,
-            "0.7": 6.6667,
-            "0.8": 8.0614,
-            "0.9": 11.1926
-          },
-          "typical_pct": 4.1439
-        },
-        "date": "2026-11-24",
-        "exceedance": {
-          "pool_moves": 234,
-          "priced_move_pct": 11.1913,
-          "share_bigger_than_priced": 0.1026,
-          "state": "recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": 4.1439,
-          "dispersion_adjustment": -0.0065,
-          "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.0815,
-          "missing": [],
-          "model_score_normalised": 4.1439,
-          "state": "recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": 11.1913,
-        "signed": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 227,
-          "high80_pct": 21.8659,
-          "low80_pct": -19.188,
-          "own_events": 0,
-          "state": "computed",
-          "steps_pct": {
-            "0.1": -19.188,
-            "0.2": -11.2333,
-            "0.3": -8.0442,
-            "0.4": -4.2157,
-            "0.5": 0.0,
-            "0.6": 3.7512,
-            "0.7": 9.4627,
-            "0.8": 15.7784,
-            "0.9": 21.8659
-          },
-          "typical_pct": 0.0
-        },
-        "symbol": "NIO",
-        "tier": "untagged",
-        "tier_label": "Not on any of the size lists"
       },
       {
         "abs": {
@@ -9408,28 +8079,28 @@
             "0.2": 0.5233,
             "0.3": 0.9243,
             "0.4": 1.6872,
-            "0.5": 3.5676,
+            "0.5": 3.7083,
             "0.6": 2.8436,
             "0.7": 3.6399,
             "0.8": 4.4204,
             "0.9": 8.052
           },
-          "typical_pct": 3.5676
+          "typical_pct": 3.7083
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 73,
-          "priced_move_pct": 10.5904,
-          "share_bigger_than_priced": 0.0822,
+          "priced_move_pct": 11.0642,
+          "share_bigger_than_priced": 0.0685,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.5676,
+          "centre_pct": 3.7083,
           "dispersion_adjustment": -0.0102,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.128,
           "missing": [],
-          "model_score_normalised": 3.5676,
+          "model_score_normalised": 3.7083,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -9443,7 +8114,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 10.5904,
+        "priced_move_pct": 11.0642,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -9469,28 +8140,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 3.5632,
+            "0.5": 3.3206,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 3.5632
+          "typical_pct": 3.3206
         },
         "date": "2026-11-24",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 10.2987,
-          "share_bigger_than_priced": 0.0819,
+          "priced_move_pct": 9.486,
+          "share_bigger_than_priced": 0.0877,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.5632,
+          "centre_pct": 3.3206,
           "dispersion_adjustment": -0.0049,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.061,
           "missing": [],
-          "model_score_normalised": 3.5632,
+          "model_score_normalised": 3.3206,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -9504,7 +8175,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 10.2987,
+        "priced_move_pct": 9.486,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -9555,7 +8226,7 @@
         "date": "2026-11-25",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 7.3494,
+          "priced_move_pct": 7.1637,
           "share_bigger_than_priced": 0.117,
           "state": "recorded"
         },
@@ -9577,7 +8248,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 7.3494,
+        "priced_move_pct": 7.1637,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -9628,8 +8299,8 @@
         "date": "2026-11-25",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 8.5143,
-          "share_bigger_than_priced": 0.188,
+          "priced_move_pct": 7.4733,
+          "share_bigger_than_priced": 0.2436,
           "state": "recorded"
         },
         "fe17_centre": {
@@ -9650,7 +8321,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 8.5143,
+        "priced_move_pct": 7.4733,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -9763,28 +8434,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 5.0843,
+            "0.5": 5.3823,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 5.0843
+          "typical_pct": 5.3823
         },
         "date": "2026-11-30",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 14.2512,
-          "share_bigger_than_priced": 0.0556,
+          "priced_move_pct": 15.2457,
+          "share_bigger_than_priced": 0.0427,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.0843,
+          "centre_pct": 5.3823,
           "dispersion_adjustment": -0.0009,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.0117,
           "missing": [],
-          "model_score_normalised": 5.0843,
+          "model_score_normalised": 5.3823,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -9798,7 +8469,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 14.2512,
+        "priced_move_pct": 15.2457,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -9839,28 +8510,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 5.9361,
+            "0.5": 6.0263,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 5.9361
+          "typical_pct": 6.0263
         },
         "date": "2026-11-30",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 17.2636,
+          "priced_move_pct": 17.5672,
           "share_bigger_than_priced": 0.0299,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.9361,
+          "centre_pct": 6.0263,
           "dispersion_adjustment": -0.0094,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1181,
           "missing": [],
-          "model_score_normalised": 5.9361,
+          "model_score_normalised": 6.0263,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -9874,7 +8545,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 17.2636,
+        "priced_move_pct": 17.5672,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -9915,28 +8586,28 @@
             "0.2": 0.5233,
             "0.3": 0.9243,
             "0.4": 1.6872,
-            "0.5": 4.0753,
+            "0.5": 4.5542,
             "0.6": 2.8436,
             "0.7": 3.6399,
             "0.8": 4.4204,
             "0.9": 8.052
           },
-          "typical_pct": 4.0753
+          "typical_pct": 4.5542
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 73,
-          "priced_move_pct": 12.2928,
-          "share_bigger_than_priced": 0.0548,
+          "priced_move_pct": 13.9048,
+          "share_bigger_than_priced": 0.0274,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.0753,
+          "centre_pct": 4.5542,
           "dispersion_adjustment": -0.0097,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1212,
           "missing": [],
-          "model_score_normalised": 4.0753,
+          "model_score_normalised": 4.5542,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -9950,7 +8621,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 12.2928,
+        "priced_move_pct": 13.9048,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -9976,28 +8647,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 6.7396,
+            "0.5": 6.7037,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 6.7396
+          "typical_pct": 6.7037
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 20.0543,
+          "priced_move_pct": 19.9328,
           "share_bigger_than_priced": 0.0171,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 6.7396,
+          "centre_pct": 6.7037,
           "dispersion_adjustment": -0.0132,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1653,
           "missing": [],
-          "model_score_normalised": 6.7396,
+          "model_score_normalised": 6.7037,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10011,7 +8682,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 20.0543,
+        "priced_move_pct": 19.9328,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -10052,28 +8723,28 @@
             "0.2": 0.5233,
             "0.3": 0.9243,
             "0.4": 1.6872,
-            "0.5": 4.1407,
+            "0.5": 4.1898,
             "0.6": 2.8436,
             "0.7": 3.6399,
             "0.8": 4.4204,
             "0.9": 8.052
           },
-          "typical_pct": 4.1407
+          "typical_pct": 4.1898
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 73,
-          "priced_move_pct": 12.5319,
+          "priced_move_pct": 12.6973,
           "share_bigger_than_priced": 0.0548,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.1407,
+          "centre_pct": 4.1898,
           "dispersion_adjustment": -0.011,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1381,
           "missing": [],
-          "model_score_normalised": 4.1407,
+          "model_score_normalised": 4.1898,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10087,7 +8758,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 12.5319,
+        "priced_move_pct": 12.6973,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -10097,6 +8768,82 @@
         "symbol": "BOX",
         "tier": "sp600",
         "tier_label": "Smaller companies (on the smaller-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "centre_source": "fe17_blend",
+          "conditioner_applied": false,
+          "group_events": 171,
+          "high80_pct": 8.6993,
+          "low80_pct": 0.4093,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.4093,
+            "0.2": 0.8657,
+            "0.3": 1.2774,
+            "0.4": 1.8206,
+            "0.5": 3.2594,
+            "0.6": 3.4144,
+            "0.7": 4.4679,
+            "0.8": 5.7331,
+            "0.9": 8.6993
+          },
+          "typical_pct": 3.2594
+        },
+        "date": "2026-12-01",
+        "exceedance": {
+          "pool_moves": 171,
+          "priced_move_pct": 9.3811,
+          "share_bigger_than_priced": 0.0877,
+          "state": "recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": 3.2594,
+          "dispersion_adjustment": -0.0139,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1741,
+          "missing": [],
+          "model_score_normalised": 3.2594,
+          "state": "recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": 9.3811,
+        "signed": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 98,
+          "high80_pct": 10.6669,
+          "low80_pct": -9.058,
+          "own_events": 0,
+          "state": "computed",
+          "steps_pct": {
+            "0.1": -9.058,
+            "0.2": -5.523,
+            "0.3": -3.8043,
+            "0.4": -2.1185,
+            "0.5": 0.0,
+            "0.6": 1.1735,
+            "0.7": 3.0626,
+            "0.8": 5.4282,
+            "0.9": 10.6669
+          },
+          "typical_pct": 0.0
+        },
+        "symbol": "CPRT",
+        "tier": "sp500",
+        "tier_label": "Largest companies (on the largest-company list)"
       },
       {
         "abs": {
@@ -10113,28 +8860,28 @@
             "0.2": 0.8858,
             "0.3": 1.2716,
             "0.4": 2.123,
-            "0.5": 7.4072,
+            "0.5": 7.0512,
             "0.6": 3.7952,
             "0.7": 5.0,
             "0.8": 6.6667,
             "0.9": 8.365
           },
-          "typical_pct": 7.4072
+          "typical_pct": 7.0512
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 23.3,
-          "share_bigger_than_priced": 0.0128,
+          "priced_move_pct": 22.1,
+          "share_bigger_than_priced": 0.0171,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 7.4072,
+          "centre_pct": 7.0512,
           "dispersion_adjustment": -0.0113,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1407,
           "missing": [],
-          "model_score_normalised": 7.4072,
+          "model_score_normalised": 7.0512,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10148,7 +8895,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 12,
-        "priced_move_pct": 23.3,
+        "priced_move_pct": 22.1,
         "signed": {
           "blend": "own_and_group",
           "conditioner_applied": false,
@@ -10189,28 +8936,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 5.1397,
+            "0.5": 4.9546,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 5.1397
+          "typical_pct": 4.9546
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 15.6752,
+          "priced_move_pct": 15.0518,
           "share_bigger_than_priced": 0.0292,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.1397,
+          "centre_pct": 4.9546,
           "dispersion_adjustment": -0.0104,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1299,
           "missing": [],
-          "model_score_normalised": 5.1397,
+          "model_score_normalised": 4.9546,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10224,7 +8971,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 15.6752,
+        "priced_move_pct": 15.0518,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -10265,28 +9012,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 4.926,
+            "0.5": 5.5295,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 4.926
+          "typical_pct": 5.5295
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 13.909,
-          "share_bigger_than_priced": 0.0598,
+          "priced_move_pct": 15.9455,
+          "share_bigger_than_priced": 0.0385,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.926,
+          "centre_pct": 5.5295,
           "dispersion_adjustment": -0.0121,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1514,
           "missing": [],
-          "model_score_normalised": 4.926,
+          "model_score_normalised": 5.5295,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10300,7 +9047,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 13.909,
+        "priced_move_pct": 15.9455,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -10341,28 +9088,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 3.7719,
+            "0.5": 3.7147,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 3.7719
+          "typical_pct": 3.7147
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 11.2835,
+          "priced_move_pct": 11.0906,
           "share_bigger_than_priced": 0.1222,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.7719,
+          "centre_pct": 3.7147,
           "dispersion_adjustment": -0.0118,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1472,
           "missing": [],
-          "model_score_normalised": 3.7719,
+          "model_score_normalised": 3.7147,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10376,7 +9123,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 11.2835,
+        "priced_move_pct": 11.0906,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -10402,28 +9149,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 6.5311,
+            "0.5": 6.8586,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 6.5311
+          "typical_pct": 6.8586
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 18.9984,
-          "share_bigger_than_priced": 0.0299,
+          "priced_move_pct": 20.0869,
+          "share_bigger_than_priced": 0.0171,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 6.5311,
+          "centre_pct": 6.8586,
           "dispersion_adjustment": 0.0028,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": 0.0344,
           "missing": [],
-          "model_score_normalised": 6.5311,
+          "model_score_normalised": 6.8586,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10437,7 +9184,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 18.9984,
+        "priced_move_pct": 20.0869,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -10478,28 +9225,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 5.3812,
+            "0.5": 5.4977,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 5.3812
+          "typical_pct": 5.4977
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 16.5522,
+          "priced_move_pct": 16.9459,
           "share_bigger_than_priced": 0.0234,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.3812,
+          "centre_pct": 5.4977,
           "dispersion_adjustment": -0.0138,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.173,
           "missing": [],
-          "model_score_normalised": 5.3812,
+          "model_score_normalised": 5.4977,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10513,7 +9260,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 16.5522,
+        "priced_move_pct": 16.9459,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -10544,38 +9291,38 @@
           "blend": "group_only",
           "centre_source": "fe17_blend",
           "conditioner_applied": false,
-          "group_events": 171,
-          "high80_pct": 8.6993,
-          "low80_pct": 0.4093,
+          "group_events": 234,
+          "high80_pct": 11.1926,
+          "low80_pct": 0.4304,
           "own_events": 0,
           "state": "recorded",
           "steps_pct": {
-            "0.1": 0.4093,
-            "0.2": 0.8657,
-            "0.3": 1.2774,
-            "0.4": 1.8206,
-            "0.5": 10.7573,
-            "0.6": 3.4144,
-            "0.7": 4.4679,
-            "0.8": 5.7331,
-            "0.9": 8.6993
+            "0.1": 0.4304,
+            "0.2": 1.2821,
+            "0.3": 2.0598,
+            "0.4": 2.9956,
+            "0.5": 4.674,
+            "0.6": 5.1424,
+            "0.7": 6.6667,
+            "0.8": 8.0614,
+            "0.9": 11.1926
           },
-          "typical_pct": 10.7573
+          "typical_pct": 4.674
         },
         "date": "2026-12-01",
         "exceedance": {
-          "pool_moves": 171,
-          "priced_move_pct": 16.5021,
-          "share_bigger_than_priced": 0.0234,
+          "pool_moves": 234,
+          "priced_move_pct": 12.9699,
+          "share_bigger_than_priced": 0.0726,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 10.7573,
-          "dispersion_adjustment": -0.0116,
+          "centre_pct": 4.674,
+          "dispersion_adjustment": -0.0065,
           "dispersion_input": "forecast_error_dispersion",
-          "dispersion_z": -0.1449,
+          "dispersion_z": -0.0815,
           "missing": [],
-          "model_score_normalised": 10.7573,
+          "model_score_normalised": 4.674,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10589,7 +9336,83 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 16.5021,
+        "priced_move_pct": 12.9699,
+        "signed": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 227,
+          "high80_pct": 21.8659,
+          "low80_pct": -19.188,
+          "own_events": 0,
+          "state": "computed",
+          "steps_pct": {
+            "0.1": -19.188,
+            "0.2": -11.2333,
+            "0.3": -8.0442,
+            "0.4": -4.2157,
+            "0.5": 0.0,
+            "0.6": 3.7512,
+            "0.7": 9.4627,
+            "0.8": 15.7784,
+            "0.9": 21.8659
+          },
+          "typical_pct": 0.0
+        },
+        "symbol": "NIO",
+        "tier": "untagged",
+        "tier_label": "Not on any of the size lists"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "centre_source": "fe17_blend",
+          "conditioner_applied": false,
+          "group_events": 171,
+          "high80_pct": 8.6993,
+          "low80_pct": 0.4093,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.4093,
+            "0.2": 0.8657,
+            "0.3": 1.2774,
+            "0.4": 1.8206,
+            "0.5": 10.4826,
+            "0.6": 3.4144,
+            "0.7": 4.4679,
+            "0.8": 5.7331,
+            "0.9": 8.6993
+          },
+          "typical_pct": 10.4826
+        },
+        "date": "2026-12-01",
+        "exceedance": {
+          "pool_moves": 171,
+          "priced_move_pct": 16.0389,
+          "share_bigger_than_priced": 0.0292,
+          "state": "recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": 10.4826,
+          "dispersion_adjustment": -0.0116,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1449,
+          "missing": [],
+          "model_score_normalised": 10.4826,
+          "state": "recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": 16.0389,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -10630,28 +9453,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 5.879,
+            "0.5": 5.7456,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 5.879
+          "typical_pct": 5.7456
         },
         "date": "2026-12-01",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 18.3784,
+          "priced_move_pct": 17.9285,
           "share_bigger_than_priced": 0.0667,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.879,
+          "centre_pct": 5.7456,
           "dispersion_adjustment": -0.0112,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1394,
           "missing": [],
-          "model_score_normalised": 5.879,
+          "model_score_normalised": 5.7456,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10665,7 +9488,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 18.3784,
+        "priced_move_pct": 17.9285,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -10675,6 +9498,67 @@
         "symbol": "OKTA",
         "tier": "sp400",
         "tier_label": "Mid-sized companies (on the mid-sized list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "centre_source": "fe17_blend",
+          "conditioner_applied": false,
+          "group_events": 73,
+          "high80_pct": 8.052,
+          "low80_pct": 0.1873,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.1873,
+            "0.2": 0.5233,
+            "0.3": 0.9243,
+            "0.4": 1.6872,
+            "0.5": 5.5655,
+            "0.6": 2.8436,
+            "0.7": 3.6399,
+            "0.8": 4.4204,
+            "0.9": 8.052
+          },
+          "typical_pct": 5.5655
+        },
+        "date": "2026-12-01",
+        "exceedance": {
+          "pool_moves": 73,
+          "priced_move_pct": 17.3091,
+          "share_bigger_than_priced": 0.0,
+          "state": "recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": 5.5655,
+          "dispersion_adjustment": -0.0097,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1214,
+          "missing": [],
+          "model_score_normalised": 5.5655,
+          "state": "recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": 17.3091,
+        "signed": {
+          "group_events": 9,
+          "own_events": 0,
+          "reason": "its group holds only 9 past moves for this part; 30 are needed",
+          "state": "not_recorded"
+        },
+        "symbol": "VSTS",
+        "tier": "sp600",
+        "tier_label": "Smaller companies (on the smaller-company list)"
       },
       {
         "abs": {
@@ -10691,28 +9575,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 4.6038,
+            "0.5": 4.4926,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 4.6038
+          "typical_pct": 4.4926
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 12.7745,
-          "share_bigger_than_priced": 0.0812,
+          "priced_move_pct": 12.4004,
+          "share_bigger_than_priced": 0.094,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.6038,
+          "centre_pct": 4.4926,
           "dispersion_adjustment": -0.0091,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1135,
           "missing": [],
-          "model_score_normalised": 4.6038,
+          "model_score_normalised": 4.4926,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10726,7 +9610,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 12.7745,
+        "priced_move_pct": 12.4004,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -10767,28 +9651,28 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 4.002,
+            "0.5": 4.1131,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 4.002
+          "typical_pct": 4.1131
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 171,
-          "priced_move_pct": 11.6728,
+          "priced_move_pct": 12.0424,
           "share_bigger_than_priced": 0.0468,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.002,
+          "centre_pct": 4.1131,
           "dispersion_adjustment": 0.0023,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": 0.0284,
           "missing": [],
-          "model_score_normalised": 4.002,
+          "model_score_normalised": 4.1131,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10802,7 +9686,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 11.6728,
+        "priced_move_pct": 12.0424,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -10899,28 +9783,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 2.8992,
+            "0.5": 3.1144,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 2.8992
+          "typical_pct": 3.1144
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 8.352,
+          "priced_move_pct": 9.0788,
           "share_bigger_than_priced": 0.1556,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 2.8992,
+          "centre_pct": 3.1144,
           "dispersion_adjustment": -0.013,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1627,
           "missing": [],
-          "model_score_normalised": 2.8992,
+          "model_score_normalised": 3.1144,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10934,7 +9818,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 8.352,
+        "priced_move_pct": 9.0788,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -10960,28 +9844,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 4.2437,
+            "0.5": 4.1697,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 4.2437
+          "typical_pct": 4.1697
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 12.7521,
-          "share_bigger_than_priced": 0.1111,
+          "priced_move_pct": 12.5049,
+          "share_bigger_than_priced": 0.1222,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.2437,
+          "centre_pct": 4.1697,
           "dispersion_adjustment": -0.0032,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.0404,
           "missing": [],
-          "model_score_normalised": 4.2437,
+          "model_score_normalised": 4.1697,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -10995,7 +9879,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 12.7521,
+        "priced_move_pct": 12.5049,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -11021,28 +9905,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 5.5429,
+            "0.5": 6.2921,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 5.5429
+          "typical_pct": 6.2921
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 17.1005,
+          "priced_move_pct": 19.6063,
           "share_bigger_than_priced": 0.0667,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.5429,
+          "centre_pct": 6.2921,
           "dispersion_adjustment": -0.0034,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.0428,
           "missing": [],
-          "model_score_normalised": 5.5429,
+          "model_score_normalised": 6.2921,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -11056,7 +9940,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 17.1005,
+        "priced_move_pct": 19.6063,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -11082,28 +9966,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 3.6904,
+            "0.5": 3.5264,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 3.6904
+          "typical_pct": 3.5264
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 10.9727,
-          "share_bigger_than_priced": 0.1222,
+          "priced_move_pct": 10.4211,
+          "share_bigger_than_priced": 0.1333,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 3.6904,
+          "centre_pct": 3.5264,
           "dispersion_adjustment": -0.0089,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1115,
           "missing": [],
-          "model_score_normalised": 3.6904,
+          "model_score_normalised": 3.5264,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -11117,7 +10001,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 10.9727,
+        "priced_move_pct": 10.4211,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -11143,28 +10027,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 4.3991,
+            "0.5": 4.3985,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 4.3991
+          "typical_pct": 4.3985
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 13.2243,
+          "priced_move_pct": 13.2225,
           "share_bigger_than_priced": 0.1,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.3991,
+          "centre_pct": 4.3985,
           "dispersion_adjustment": -0.0,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.0001,
           "missing": [],
-          "model_score_normalised": 4.3991,
+          "model_score_normalised": 4.3985,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -11178,7 +10062,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 13.2243,
+        "priced_move_pct": 13.2225,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -11204,28 +10088,28 @@
             "0.2": 0.5233,
             "0.3": 0.9243,
             "0.4": 1.6872,
-            "0.5": 4.9657,
+            "0.5": 4.8628,
             "0.6": 2.8436,
             "0.7": 3.6399,
             "0.8": 4.4204,
             "0.9": 8.052
           },
-          "typical_pct": 4.9657
+          "typical_pct": 4.8628
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 73,
-          "priced_move_pct": 15.2126,
+          "priced_move_pct": 14.8679,
           "share_bigger_than_priced": 0.0137,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.9657,
+          "centre_pct": 4.8628,
           "dispersion_adjustment": -0.0051,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.0638,
           "missing": [],
-          "model_score_normalised": 4.9657,
+          "model_score_normalised": 4.8628,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -11239,7 +10123,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 15.2126,
+        "priced_move_pct": 14.8679,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -11265,28 +10149,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 5.7361,
+            "0.5": 5.7015,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 5.7361
+          "typical_pct": 5.7015
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 16.61,
+          "priced_move_pct": 16.4935,
           "share_bigger_than_priced": 0.0342,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.7361,
+          "centre_pct": 5.7015,
           "dispersion_adjustment": -0.0104,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1306,
           "missing": [],
-          "model_score_normalised": 5.7361,
+          "model_score_normalised": 5.7015,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -11300,7 +10184,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 16.61,
+        "priced_move_pct": 16.4935,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -11341,28 +10225,28 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 4.1895,
+            "0.5": 4.2603,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 4.1895
+          "typical_pct": 4.2603
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 90,
-          "priced_move_pct": 12.2603,
+          "priced_move_pct": 12.4918,
           "share_bigger_than_priced": 0.1222,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 4.1895,
+          "centre_pct": 4.2603,
           "dispersion_adjustment": 0.0194,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": 0.2421,
           "missing": [],
-          "model_score_normalised": 4.1895,
+          "model_score_normalised": 4.2603,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -11376,7 +10260,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 12.2603,
+        "priced_move_pct": 12.4918,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -11402,28 +10286,28 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 5.8759,
+            "0.5": 5.699,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 5.8759
+          "typical_pct": 5.699
         },
         "date": "2026-12-02",
         "exceedance": {
           "pool_moves": 234,
-          "priced_move_pct": 17.07,
+          "priced_move_pct": 16.4746,
           "share_bigger_than_priced": 0.0342,
           "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": 5.8759,
+          "centre_pct": 5.699,
           "dispersion_adjustment": -0.0099,
           "dispersion_input": "forecast_error_dispersion",
           "dispersion_z": -0.1238,
           "missing": [],
-          "model_score_normalised": 5.8759,
+          "model_score_normalised": 5.699,
           "state": "recorded"
         },
         "fe18_pead": {
@@ -11437,7 +10321,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": 17.07,
+        "priced_move_pct": 16.4746,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -11466,6 +10350,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 73,
           "high80_pct": 8.052,
@@ -11477,25 +10362,29 @@
             "0.2": 0.5233,
             "0.3": 0.9243,
             "0.4": 1.6872,
-            "0.5": 2.137,
+            "0.5": 6.6709,
             "0.6": 2.8436,
             "0.7": 3.6399,
             "0.8": 4.4204,
             "0.9": 8.052
           },
-          "typical_pct": 2.137
+          "typical_pct": 6.6709
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 73,
+          "priced_move_pct": 20.4901,
+          "share_bigger_than_priced": 0.0,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 6.6709,
+          "dispersion_adjustment": 0.0147,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": 0.1835,
+          "missing": [],
+          "model_score_normalised": 6.6709,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -11508,7 +10397,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 20.4901,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -11522,6 +10411,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
@@ -11533,25 +10423,29 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 2.4555,
+            "0.5": 3.0083,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 2.4555
+          "typical_pct": 3.0083
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 171,
+          "priced_move_pct": 8.4827,
+          "share_bigger_than_priced": 0.1053,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 3.0083,
+          "dispersion_adjustment": -0.0091,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1137,
+          "missing": [],
+          "model_score_normalised": 3.0083,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -11564,7 +10458,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 8.4827,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -11593,6 +10487,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 234,
           "high80_pct": 11.1926,
@@ -11604,25 +10499,29 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 4.0683,
+            "0.5": 8.9082,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 4.0683
+          "typical_pct": 8.9082
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 234,
+          "priced_move_pct": 26.7913,
+          "share_bigger_than_priced": 0.0128,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 8.9082,
+          "dispersion_adjustment": 0.0065,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": 0.0807,
+          "missing": [],
+          "model_score_normalised": 8.9082,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -11635,7 +10534,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 26.7913,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -11664,6 +10563,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
@@ -11675,25 +10575,29 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 2.4555,
+            "0.5": 3.7592,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 2.4555
+          "typical_pct": 3.7592
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 171,
+          "priced_move_pct": 11.0641,
+          "share_bigger_than_priced": 0.0702,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 3.7592,
+          "dispersion_adjustment": -0.0134,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1678,
+          "missing": [],
+          "model_score_normalised": 3.7592,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -11706,7 +10610,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 11.0641,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -11735,6 +10639,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
@@ -11746,25 +10651,29 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 2.4555,
+            "0.5": 3.3805,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 2.4555
+          "typical_pct": 3.3805
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 171,
+          "priced_move_pct": 9.6772,
+          "share_bigger_than_priced": 0.0877,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 3.3805,
+          "dispersion_adjustment": -0.004,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.0505,
+          "missing": [],
+          "model_score_normalised": 3.3805,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -11777,7 +10686,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 9.6772,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -11806,6 +10715,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 90,
           "high80_pct": 13.0441,
@@ -11817,25 +10727,29 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 2.159,
+            "0.5": 3.9604,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 2.159
+          "typical_pct": 3.9604
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 90,
+          "priced_move_pct": 11.9371,
+          "share_bigger_than_priced": 0.1222,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 3.9604,
+          "dispersion_adjustment": -0.0131,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1637,
+          "missing": [],
+          "model_score_normalised": 3.9604,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -11848,7 +10762,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 11.9371,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -11862,6 +10776,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
@@ -11873,25 +10788,29 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 2.4555,
+            "0.5": 2.4932,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 2.4555
+          "typical_pct": 2.4932
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 171,
+          "priced_move_pct": 6.7866,
+          "share_bigger_than_priced": 0.152,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 2.4932,
+          "dispersion_adjustment": -0.0134,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1677,
+          "missing": [],
+          "model_score_normalised": 2.4932,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -11904,7 +10823,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 6.7866,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -11933,6 +10852,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 234,
           "high80_pct": 11.1926,
@@ -11944,25 +10864,29 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 4.0683,
+            "0.5": 5.2304,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 4.0683
+          "typical_pct": 5.2304
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 234,
+          "priced_move_pct": 14.987,
+          "share_bigger_than_priced": 0.047,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 5.2304,
+          "dispersion_adjustment": -0.0149,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1868,
+          "missing": [],
+          "model_score_normalised": 5.2304,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -11975,7 +10899,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 14.987,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -12004,6 +10928,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
@@ -12015,25 +10940,29 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 2.4555,
+            "0.5": 2.5183,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 2.4555
+          "typical_pct": 2.5183
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 171,
+          "priced_move_pct": 6.8737,
+          "share_bigger_than_priced": 0.1462,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 2.5183,
+          "dispersion_adjustment": -0.0137,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1708,
+          "missing": [],
+          "model_score_normalised": 2.5183,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -12046,7 +10975,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 6.8737,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -12075,6 +11004,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 90,
           "high80_pct": 13.0441,
@@ -12086,25 +11016,29 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 2.159,
+            "0.5": 5.1936,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 2.159
+          "typical_pct": 5.1936
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 90,
+          "priced_move_pct": 16.1175,
+          "share_bigger_than_priced": 0.0889,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 5.1936,
+          "dispersion_adjustment": -0.0139,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1743,
+          "missing": [],
+          "model_score_normalised": 5.1936,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -12117,7 +11051,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 16.1175,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -12152,13 +11086,14 @@
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 73,
+          "priced_move_pct": 12.5,
+          "share_bigger_than_priced": 0.0548,
+          "state": "recorded"
         },
         "fe17_centre": {
           "centre_pct": null,
           "missing": [
-            "implied_move",
             "forecast_error_dispersion_z"
           ],
           "state": "not_recorded"
@@ -12174,7 +11109,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 12.5,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -12188,6 +11123,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 234,
           "high80_pct": 11.1926,
@@ -12199,25 +11135,29 @@
             "0.2": 1.2821,
             "0.3": 2.0598,
             "0.4": 2.9956,
-            "0.5": 4.0683,
+            "0.5": 5.1942,
             "0.6": 5.1424,
             "0.7": 6.6667,
             "0.8": 8.0614,
             "0.9": 11.1926
           },
-          "typical_pct": 4.0683
+          "typical_pct": 5.1942
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 234,
+          "priced_move_pct": 14.848,
+          "share_bigger_than_priced": 0.047,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 5.1942,
+          "dispersion_adjustment": -0.014,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.1753,
+          "missing": [],
+          "model_score_normalised": 5.1942,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -12230,7 +11170,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 14.848,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -12259,6 +11199,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 90,
           "high80_pct": 13.0441,
@@ -12270,25 +11211,29 @@
             "0.2": 0.6483,
             "0.3": 1.0109,
             "0.4": 1.4883,
-            "0.5": 2.159,
+            "0.5": 3.9866,
             "0.6": 2.713,
             "0.7": 3.552,
             "0.8": 6.2772,
             "0.9": 13.0441
           },
-          "typical_pct": 2.159
+          "typical_pct": 3.9866
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 90,
+          "priced_move_pct": 11.6445,
+          "share_bigger_than_priced": 0.1222,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 3.9866,
+          "dispersion_adjustment": 0.0157,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": 0.1958,
+          "missing": [],
+          "model_score_normalised": 3.9866,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -12301,7 +11246,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 11.6445,
         "signed": {
           "group_events": 29,
           "own_events": 0,
@@ -12315,6 +11260,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
@@ -12326,25 +11272,29 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 2.4555,
+            "0.5": 6.6953,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 2.4555
+          "typical_pct": 6.6953
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 171,
+          "priced_move_pct": 9.3471,
+          "share_bigger_than_priced": 0.0877,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 6.6953,
+          "dispersion_adjustment": 0.0159,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": 0.1988,
+          "missing": [],
+          "model_score_normalised": 6.6953,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -12357,7 +11307,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 9.3471,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -12386,6 +11336,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 171,
           "high80_pct": 8.6993,
@@ -12397,25 +11348,29 @@
             "0.2": 0.8657,
             "0.3": 1.2774,
             "0.4": 1.8206,
-            "0.5": 2.4555,
+            "0.5": 4.4321,
             "0.6": 3.4144,
             "0.7": 4.4679,
             "0.8": 5.7331,
             "0.9": 8.6993
           },
-          "typical_pct": 2.4555
+          "typical_pct": 4.4321
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 171,
+          "priced_move_pct": 13.2835,
+          "share_bigger_than_priced": 0.0468,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 4.4321,
+          "dispersion_adjustment": -0.0098,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.123,
+          "missing": [],
+          "model_score_normalised": 4.4321,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -12428,7 +11383,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 13.2835,
         "signed": {
           "blend": "group_only",
           "conditioner_applied": false,
@@ -12457,6 +11412,7 @@
       {
         "abs": {
           "blend": "group_only",
+          "centre_source": "fe17_blend",
           "conditioner_applied": false,
           "group_events": 73,
           "high80_pct": 8.052,
@@ -12468,25 +11424,29 @@
             "0.2": 0.5233,
             "0.3": 0.9243,
             "0.4": 1.6872,
-            "0.5": 2.137,
+            "0.5": 5.821,
             "0.6": 2.8436,
             "0.7": 3.6399,
             "0.8": 4.4204,
             "0.9": 8.052
           },
-          "typical_pct": 2.137
+          "typical_pct": 5.821
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 73,
+          "priced_move_pct": 18.1144,
+          "share_bigger_than_priced": 0.0,
+          "state": "recorded"
         },
         "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
+          "centre_pct": 5.821,
+          "dispersion_adjustment": -0.007,
+          "dispersion_input": "forecast_error_dispersion",
+          "dispersion_z": -0.0869,
+          "missing": [],
+          "model_score_normalised": 5.821,
+          "state": "recorded"
         },
         "fe18_pead": {
           "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
@@ -12499,7 +11459,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 18.1144,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -12534,13 +11494,14 @@
         },
         "date": "2026-12-03",
         "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
+          "pool_moves": 73,
+          "priced_move_pct": 13.0122,
+          "share_bigger_than_priced": 0.0548,
+          "state": "recorded"
         },
         "fe17_centre": {
           "centre_pct": null,
           "missing": [
-            "implied_move",
             "forecast_error_dispersion_z"
           ],
           "state": "not_recorded"
@@ -12556,7 +11517,7 @@
           "state": "awaiting_drift_window"
         },
         "own_events": 0,
-        "priced_move_pct": null,
+        "priced_move_pct": 13.0122,
         "signed": {
           "group_events": 9,
           "own_events": 0,
@@ -12622,62 +11583,6 @@
         "symbol": "TOL",
         "tier": "sp400",
         "tier_label": "Mid-sized companies (on the mid-sized list)"
-      },
-      {
-        "abs": {
-          "blend": "group_only",
-          "conditioner_applied": false,
-          "group_events": 73,
-          "high80_pct": 8.052,
-          "low80_pct": 0.1873,
-          "own_events": 0,
-          "state": "recorded",
-          "steps_pct": {
-            "0.1": 0.1873,
-            "0.2": 0.5233,
-            "0.3": 0.9243,
-            "0.4": 1.6872,
-            "0.5": 2.137,
-            "0.6": 2.8436,
-            "0.7": 3.6399,
-            "0.8": 4.4204,
-            "0.9": 8.052
-          },
-          "typical_pct": 2.137
-        },
-        "date": "2026-12-07",
-        "exceedance": {
-          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
-          "state": "not_recorded"
-        },
-        "fe17_centre": {
-          "centre_pct": null,
-          "missing": [
-            "implied_move"
-          ],
-          "state": "not_recorded"
-        },
-        "fe18_pead": {
-          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
-          "missing": [
-            "standardized_surprise_z",
-            "observed_post_event_drift",
-            "sector_residual_z",
-            "revision_breadth"
-          ],
-          "state": "awaiting_drift_window"
-        },
-        "own_events": 0,
-        "priced_move_pct": null,
-        "signed": {
-          "group_events": 9,
-          "own_events": 0,
-          "reason": "its group holds only 9 past moves for this part; 30 are needed",
-          "state": "not_recorded"
-        },
-        "symbol": "VSTS",
-        "tier": "sp600",
-        "tier_label": "Smaller companies (on the smaller-company list)"
       },
       {
         "abs": {
@@ -16954,6 +15859,352 @@
         "symbol": "UNF",
         "tier": "sp600",
         "tier_label": "Smaller companies (on the smaller-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 171,
+          "high80_pct": 8.6993,
+          "low80_pct": 0.4093,
+          "own_events": 1,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.4093,
+            "0.2": 0.8657,
+            "0.3": 1.2774,
+            "0.4": 1.8206,
+            "0.5": 2.4555,
+            "0.6": 3.4144,
+            "0.7": 4.4679,
+            "0.8": 5.7331,
+            "0.9": 8.6993
+          },
+          "typical_pct": 2.4555
+        },
+        "date": "2027-01-12",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move",
+            "timing_quality"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 98,
+          "high80_pct": 10.6669,
+          "low80_pct": -9.058,
+          "own_events": 1,
+          "state": "computed",
+          "steps_pct": {
+            "0.1": -9.058,
+            "0.2": -5.523,
+            "0.3": -3.8043,
+            "0.4": -2.1185,
+            "0.5": 0.0,
+            "0.6": 1.1735,
+            "0.7": 3.0626,
+            "0.8": 5.4282,
+            "0.9": 10.6669
+          },
+          "typical_pct": 0.0
+        },
+        "symbol": "BNY",
+        "tier": "sp500",
+        "tier_label": "Largest companies (on the largest-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 73,
+          "high80_pct": 8.052,
+          "low80_pct": 0.1873,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.1873,
+            "0.2": 0.5233,
+            "0.3": 0.9243,
+            "0.4": 1.6872,
+            "0.5": 2.137,
+            "0.6": 2.8436,
+            "0.7": 3.6399,
+            "0.8": 4.4204,
+            "0.9": 8.052
+          },
+          "typical_pct": 2.137
+        },
+        "date": "2027-01-12",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move",
+            "timing_quality"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "group_events": 9,
+          "own_events": 0,
+          "reason": "its group holds only 9 past moves for this part; 30 are needed",
+          "state": "not_recorded"
+        },
+        "symbol": "CNXC",
+        "tier": "sp600",
+        "tier_label": "Smaller companies (on the smaller-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 171,
+          "high80_pct": 8.6993,
+          "low80_pct": 0.4093,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.4093,
+            "0.2": 0.8657,
+            "0.3": 1.2774,
+            "0.4": 1.8206,
+            "0.5": 2.4555,
+            "0.6": 3.4144,
+            "0.7": 4.4679,
+            "0.8": 5.7331,
+            "0.9": 8.6993
+          },
+          "typical_pct": 2.4555
+        },
+        "date": "2027-01-12",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move",
+            "timing_quality"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 98,
+          "high80_pct": 10.6669,
+          "low80_pct": -9.058,
+          "own_events": 0,
+          "state": "computed",
+          "steps_pct": {
+            "0.1": -9.058,
+            "0.2": -5.523,
+            "0.3": -3.8043,
+            "0.4": -2.1185,
+            "0.5": 0.0,
+            "0.6": 1.1735,
+            "0.7": 3.0626,
+            "0.8": 5.4282,
+            "0.9": 10.6669
+          },
+          "typical_pct": 0.0
+        },
+        "symbol": "DAL",
+        "tier": "sp500",
+        "tier_label": "Largest companies (on the largest-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 171,
+          "high80_pct": 8.6993,
+          "low80_pct": 0.4093,
+          "own_events": 1,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.4093,
+            "0.2": 0.8657,
+            "0.3": 1.2774,
+            "0.4": 1.8206,
+            "0.5": 2.4555,
+            "0.6": 3.4144,
+            "0.7": 4.4679,
+            "0.8": 5.7331,
+            "0.9": 8.6993
+          },
+          "typical_pct": 2.4555
+        },
+        "date": "2027-01-12",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move",
+            "timing_quality"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 98,
+          "high80_pct": 10.6669,
+          "low80_pct": -9.058,
+          "own_events": 1,
+          "state": "computed",
+          "steps_pct": {
+            "0.1": -9.058,
+            "0.2": -5.523,
+            "0.3": -3.8043,
+            "0.4": -2.1185,
+            "0.5": 0.0,
+            "0.6": 1.1735,
+            "0.7": 3.0626,
+            "0.8": 5.4282,
+            "0.9": 10.6669
+          },
+          "typical_pct": 0.0
+        },
+        "symbol": "JPM",
+        "tier": "sp500",
+        "tier_label": "Largest companies (on the largest-company list)"
+      },
+      {
+        "abs": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 234,
+          "high80_pct": 11.1926,
+          "low80_pct": 0.4304,
+          "own_events": 0,
+          "state": "recorded",
+          "steps_pct": {
+            "0.1": 0.4304,
+            "0.2": 1.2821,
+            "0.3": 2.0598,
+            "0.4": 2.9956,
+            "0.5": 4.0683,
+            "0.6": 5.1424,
+            "0.7": 6.6667,
+            "0.8": 8.0614,
+            "0.9": 11.1926
+          },
+          "typical_pct": 4.0683
+        },
+        "date": "2027-01-12",
+        "exceedance": {
+          "reason": "no priced expected move is on record for this name, so no bigger-than-priced chance can be recorded for it yet",
+          "state": "not_recorded"
+        },
+        "fe17_centre": {
+          "centre_pct": null,
+          "missing": [
+            "implied_move",
+            "forecast_error_dispersion_z",
+            "timing_quality"
+          ],
+          "state": "not_recorded"
+        },
+        "fe18_pead": {
+          "detail": "the report has not happened yet; the sub forecast is issued only after the 5 session drift window it consumes has closed, and is graded from there",
+          "missing": [
+            "standardized_surprise_z",
+            "observed_post_event_drift",
+            "sector_residual_z",
+            "revision_breadth"
+          ],
+          "state": "awaiting_drift_window"
+        },
+        "own_events": 0,
+        "priced_move_pct": null,
+        "signed": {
+          "blend": "group_only",
+          "conditioner_applied": false,
+          "group_events": 227,
+          "high80_pct": 21.8659,
+          "low80_pct": -19.188,
+          "own_events": 0,
+          "state": "computed",
+          "steps_pct": {
+            "0.1": -19.188,
+            "0.2": -11.2333,
+            "0.3": -8.0442,
+            "0.4": -4.2157,
+            "0.5": 0.0,
+            "0.6": 3.7512,
+            "0.7": 9.4627,
+            "0.8": 15.7784,
+            "0.9": 21.8659
+          },
+          "typical_pct": 0.0
+        },
+        "symbol": "PKE",
+        "tier": "untagged",
+        "tier_label": "Not on any of the size lists"
       }
     ]
   },
@@ -16969,52 +16220,20 @@
       "label": "The priced move percent for each coming report.",
       "rows": [
         {
-          "name": "ESTC",
-          "score": 16.5221
+          "name": "IESC",
+          "score": 12.2978
         },
         {
-          "name": "GLOB",
-          "score": 13.5053
+          "name": "BJ",
+          "score": 5.6163
         },
         {
-          "name": "VVV",
-          "score": 12.8109
+          "name": "BKE",
+          "score": 5.2058
         },
         {
-          "name": "HUBG",
-          "score": 12.2354
-        },
-        {
-          "name": "GAP",
-          "score": 11.6935
-        },
-        {
-          "name": "ROAD",
-          "score": 11.4926
-        },
-        {
-          "name": "BBWI",
-          "score": 11.254
-        },
-        {
-          "name": "MATW",
-          "score": 10.9663
-        },
-        {
-          "name": "LQDT",
-          "score": 9.4269
-        },
-        {
-          "name": "KEYS",
-          "score": 9.3713
-        },
-        {
-          "name": "MMS",
-          "score": 8.3895
-        },
-        {
-          "name": "ROST",
-          "score": 8.1884
+          "name": "MOG.A",
+          "score": 5.0355
         }
       ],
       "source": "next.names[].exceedance.priced_move_pct",
