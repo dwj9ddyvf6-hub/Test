@@ -18,7 +18,7 @@
   },
   "coverage": {
     "both": 0,
-    "both_note": "On the index cards, no name carries both readings: the three funds with card readings are not among the names with insider records. On the per-name store for 2026-11-18, 96 names carry both readings, and those are the names the arm tests below ran on.",
+    "both_note": "On the index cards, no name carries both readings: the three funds with card readings are not among the names with insider records. On the per-name store for 2026-11-19, 96 names carry both readings, and those are the names the arm tests below ran on.",
     "both_pername": 96,
     "heat": {
       "names": [
@@ -26,7 +26,7 @@
         "QQQ",
         "SPY"
       ],
-      "note": "Options heat is carded for the three index funds on every session on record. The per-name tape store also cards heat for 99 names for 2026-11-18, each name's own reading from its own prints. The two aggregations count prints differently and are kept apart; an index fund's card reading is never handed to a stock, and no reading is ever substituted for another.",
+      "note": "Options heat is carded for the three index funds on every session on record. The per-name tape store also cards heat for 99 names for 2026-11-19, each name's own reading from its own prints. The two aggregations count prints differently and are kept apart; an index fund's card reading is never handed to a stock, and no reading is ever substituted for another.",
       "pername_names": [
         "ACHC",
         "AIZ",
@@ -129,7 +129,7 @@
         "ZETA"
       ],
       "pername_names_count": 99,
-      "pername_session": "2026-11-18",
+      "pername_session": "2026-11-19",
       "sessions": [
         {
           "names": [
@@ -598,9 +598,35 @@
             }
           ],
           "session": "2026-11-18"
+        },
+        {
+          "names": [
+            {
+              "heat_state": "top",
+              "high_heat_prints": 637,
+              "mean_heat": 4.4,
+              "prints": 580889,
+              "symbol": "SPY"
+            },
+            {
+              "heat_state": "top",
+              "high_heat_prints": 453,
+              "mean_heat": 4.64,
+              "prints": 469473,
+              "symbol": "QQQ"
+            },
+            {
+              "heat_state": "top",
+              "high_heat_prints": 127,
+              "mean_heat": 4.46,
+              "prints": 210955,
+              "symbol": "IWM"
+            }
+          ],
+          "session": "2026-11-19"
         }
       ],
-      "sessions_on_record": 18
+      "sessions_on_record": 19
     },
     "insider": {
       "as_of": "2026-11-15",
@@ -618,10 +644,6 @@
     }
   },
   "execution_pricing": false,
-  "explanation": {
-    "body": "Its forecast takes this form: direction, over 21 sessions. It is graded on the size and direction of the gap between its forecast and what actually happens. It would be ended if after 60 fires per arm, either arm's mean sign is wrong. It counts as proven at 60 fires per arm.",
-    "summary": "Forecast what happens when company insiders and options traders disagree about the same stock."
-  },
   "feed": "forecast_ledger",
   "forecast": {
     "arm_a": "Arm A: in a name where insiders have sold heavily (at least 10 sales for every buy across the record) while options trading is at its hottest, the name will trail SPY by an average of at least 1.5 points over the next 21 trading days.",
@@ -629,10 +651,10 @@
     "control": "Names carrying both readings where the two agree, or where neither side of the insider test is triggered, are recorded as the comparison group and graded the same way. Each arm has to beat that group, not just the market.",
     "heat_states": "A name's heat for a session is at its top when at least one of its options trades that session scored at or above the tape's own High Heat line of 15. It is cold only when the name was actually measured that session and no trade reached the line. A name that was not measured is unmeasured, never cold."
   },
-  "grading_note": "Grading waits on the calendar, stated plainly: the shared grading machinery scores this kind of 21-day gain against SPY directly (the excess_21s resolver, wired 2026-10-30), each arm is judged against the comparison group once 30 in a group have graded, and the price history on record ends 2026-11-18, before every tape session on record, so no 21-day window after a fire exists yet either.",
+  "grading_note": "Grading waits on the calendar, stated plainly: the shared grading machinery scores this kind of 21-day gain against SPY directly (the excess_21s resolver, wired 2026-10-30), each arm is judged against the comparison group once 30 in a group have graded, and the price history on record ends 2026-11-19, before every tape session on record, so no 21-day window after a fire exists yet either.",
   "history": {
     "label": "History: the sessions on record, worked out after the fact and recorded nowhere in advance",
-    "note": "On every index-card session on record the overlap was empty, so no card session would have fired. The insider side alone was ready: 67 names met Arm A's selling test and 15 met Arm B's buying test. The per-name store session 2026-11-18 is the first session where the second reading exists for those same names: 96 names carried both readings and were tested for real, and their forecasts are in the ledger, not in this after-the-fact table.",
+    "note": "On every index-card session on record the overlap was empty, so no card session would have fired. The insider side alone was ready: 67 names met Arm A's selling test and 15 met Arm B's buying test. The per-name store session 2026-11-19 is the first session where the second reading exists for those same names: 96 names carried both readings and were tested for real, and their forecasts are in the ledger, not in this after-the-fact table.",
     "sessions": [
       {
         "arm_a": [],
@@ -761,24 +783,29 @@
         "session": "2026-11-18"
       },
       {
+        "arm_a": [],
+        "arm_b": [],
+        "control": [],
+        "overlap": [],
+        "session": "2026-11-19"
+      },
+      {
         "arm_a": [
-          "BOX",
+          "ASO",
+          "BDX",
           "CBOE",
           "CBRL",
           "COLM",
           "COST",
+          "DGX",
           "FROG",
           "JNJ",
           "KSS",
           "MDT",
-          "MMM",
-          "PSA",
           "RCL",
+          "REGN",
           "SDGR",
-          "TGTX",
-          "TRUP",
           "ULTA",
-          "VSXY",
           "ZETA"
         ],
         "arm_b": [
@@ -803,8 +830,7 @@
           "AIZ",
           "AMPH",
           "APLE",
-          "ASO",
-          "BDX",
+          "BOX",
           "BTSG",
           "CALY",
           "CCI",
@@ -817,7 +843,6 @@
           "CUBI",
           "CVCO",
           "DCOM",
-          "DGX",
           "DXC",
           "EG",
           "EW",
@@ -833,6 +858,7 @@
           "LIVN",
           "MD",
           "MHK",
+          "MMM",
           "MORN",
           "NWE",
           "OGE",
@@ -841,8 +867,8 @@
           "PCRX",
           "PGNY",
           "POOL",
+          "PSA",
           "R",
-          "REGN",
           "RHP",
           "ROIV",
           "ROKU",
@@ -850,10 +876,13 @@
           "SIGI",
           "SKY",
           "SPNT",
+          "TGTX",
           "TRMK",
+          "TRUP",
           "VCEL",
           "VIR",
           "VLY",
+          "VSXY",
           "VTRS",
           "WING",
           "WMG",
@@ -961,15 +990,15 @@
           "XNCR",
           "ZETA"
         ],
-        "session": "2026-11-18",
+        "session": "2026-11-19",
         "source": "per-name tape store"
       }
     ],
     "would_have": {
-      "arm_a": 18,
+      "arm_a": 16,
       "arm_b": 15,
-      "control": 63,
-      "sessions_on_record": 19
+      "control": 65,
+      "sessions_on_record": 20
     }
   },
   "insider_legs": {
@@ -1126,34 +1155,32 @@
   },
   "kill_criterion": "After 60 fires in either arm, that arm is retired if its average gain against SPY points the wrong way: Arm A must average below SPY, Arm B must average above it. An arm that points the wrong way at 60 fires is finished, with its record left standing.",
   "live": {
-    "arm_a_fires": 241,
-    "arm_b_fires": 174,
-    "control_recorded": 898,
+    "arm_a_fires": 257,
+    "arm_b_fires": 189,
+    "control_recorded": 963,
     "forecasts_graded": 0,
-    "forecasts_recorded": 1313,
+    "forecasts_recorded": 1409,
     "target_per_arm": 60
   },
-  "loaded_at_utc": "2026-11-18T23:44:38.520455+00:00",
-  "panel_last_session": "2026-11-18",
+  "loaded_at_utc": "2026-11-19T23:39:46.877801+00:00",
+  "panel_last_session": "2026-11-19",
   "pername_today": {
     "arm_a": [
-      "BOX",
+      "ASO",
+      "BDX",
       "CBOE",
       "CBRL",
       "COLM",
       "COST",
+      "DGX",
       "FROG",
       "JNJ",
       "KSS",
       "MDT",
-      "MMM",
-      "PSA",
       "RCL",
+      "REGN",
       "SDGR",
-      "TGTX",
-      "TRUP",
       "ULTA",
-      "VSXY",
       "ZETA"
     ],
     "arm_b": [
@@ -1178,8 +1205,7 @@
       "AIZ",
       "AMPH",
       "APLE",
-      "ASO",
-      "BDX",
+      "BOX",
       "BTSG",
       "CALY",
       "CCI",
@@ -1192,7 +1218,6 @@
       "CUBI",
       "CVCO",
       "DCOM",
-      "DGX",
       "DXC",
       "EG",
       "EW",
@@ -1208,6 +1233,7 @@
       "LIVN",
       "MD",
       "MHK",
+      "MMM",
       "MORN",
       "NWE",
       "OGE",
@@ -1216,8 +1242,8 @@
       "PCRX",
       "PGNY",
       "POOL",
+      "PSA",
       "R",
-      "REGN",
       "RHP",
       "ROIV",
       "ROKU",
@@ -1225,10 +1251,13 @@
       "SIGI",
       "SKY",
       "SPNT",
+      "TGTX",
       "TRMK",
+      "TRUP",
       "VCEL",
       "VIR",
       "VLY",
+      "VSXY",
       "VTRS",
       "WING",
       "WMG",
@@ -1338,8 +1367,8 @@
       "XNCR",
       "ZETA"
     ],
-    "reason": "96 names carry both an insider summary and a per-name heat reading for 2026-11-18. Every one of them was tested and recorded in the forecast ledger under its own arm, graded 21 sessions out against SPY.",
-    "session": "2026-11-18"
+    "reason": "96 names carry both an insider summary and a per-name heat reading for 2026-11-19. Every one of them was tested and recorded in the forecast ledger under its own arm, graded 21 sessions out against SPY.",
+    "session": "2026-11-19"
   },
   "plan_adjustment": {
     "classified": {
@@ -1408,8 +1437,8 @@
         "plan_10b5_1": 0
       },
       "GKOS": {
-        "discretionary": 27,
-        "plan_10b5_1": 11
+        "discretionary": 38,
+        "plan_10b5_1": 17
       },
       "GO": {
         "discretionary": 5,
@@ -1521,15 +1550,15 @@
     "detail": "Plan status is now read from Form 4 footnote text on record (form4_footnotes.py, EDGAR ownership XML): each classified name's sales were matched to the footnotes their own transactions reference, and a filing with no footnotes stays unknown, never discretionary by default. Precision is measured against the record's labelled footnotes, labelled off the raw filing text by an independent literal rule, under the registered 0.90 floor on at least 20 labelled footnotes.",
     "footnote_record": {
       "filings_on_record": 170,
-      "updated_ts": "2026-11-18T22:54:11Z",
+      "updated_ts": "2026-11-19T22:52:42Z",
       "window_since": "2026-05-01"
     },
     "names_classified": 43,
     "names_with_summaries": 97,
     "precision": {
-      "labelled": 605,
-      "plan_calls": 59,
-      "plan_correct": 59,
+      "labelled": 622,
+      "plan_calls": 65,
+      "plan_correct": 65,
       "precision": 1.0
     },
     "precision_kill_floor": 0.9,
@@ -1542,95 +1571,7 @@
     "price_basis": "close",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "published_at_utc": "2026-11-18T22:12:03.532910+00:00",
-  "record_surface": {
-    "calibration_record": {
-      "attestation": {
-        "basis": "no graded forecasts on record yet (1313 recorded, 0 graded); nothing has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-        "forecasts_recorded": 1313,
-        "graded_forecasts": 0,
-        "ledger_rows_at_write": 565694,
-        "recorded_on": "2026-11-18",
-        "status": "not_attested"
-      },
-      "engine_id": "engine_10",
-      "probability_rendering": {
-        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
-        "render_as_probability": false,
-        "rendered_as": "uncalibrated_score"
-      },
-      "zero_forecast_state": null
-    },
-    "current_reading": {
-      "as_of": "2026-11-18",
-      "keys_present": [
-        "calibration_attestation",
-        "coverage",
-        "execution_pricing",
-        "explanation",
-        "feed",
-        "forecast",
-        "grading_note",
-        "history",
-        "insider_legs",
-        "kill_criterion",
-        "live",
-        "loaded_at_utc",
-        "panel_last_session",
-        "pername_today",
-        "plan_adjustment",
-        "price_basis",
-        "provenance",
-        "published_at_utc",
-        "record_surface",
-        "self_test",
-        "source",
-        "state",
-        "subject_chart",
-        "thin_rule",
-        "today",
-        "tool",
-        "waiting"
-      ]
-    },
-    "feed": "forecast_ledger",
-    "label": "Study record",
-    "live_accrual": {
-      "corrections": 0,
-      "engine": "engine_10",
-      "forecasts": 1313,
-      "grades": 0,
-      "source": "forecast/ledger.jsonl (counted)"
-    },
-    "missing": {
-      "what_and_when": "Live grades are still building: 1313 forecasts are on record and none are graded yet. Grades arrive after each following session close."
-    },
-    "provenance": {
-      "execution_pricing": false,
-      "feed": "forecast_ledger",
-      "price_basis": "close",
-      "stamped_by": "terminal_common.stamp_provenance"
-    },
-    "study_record": {
-      "label": "Study record",
-      "locations": [
-        {
-          "items": 19,
-          "path": "/history"
-        },
-        {
-          "items": 19,
-          "path": "/history/sessions"
-        },
-        {
-          "items": 0,
-          "path": "/history/would_have"
-        }
-      ],
-      "total_items_counted": 38
-    },
-    "version": 1
-  },
+  "published_at_utc": "2026-11-19T21:47:03.009092+00:00",
   "self_test": {
     "cases": 12,
     "note": "On every run, the two tests and the comparison-group rule are also exercised on made-up records in memory, covering each way a name can land and the two ways it must not fire (no insider record, or no heat reading). All cases passed on this run. Made-up records are never written to the record of real forecasts.",
@@ -1638,133 +1579,6 @@
   },
   "source": "Company ownership filings gathered on October 26, 2026, and the daily options-print tape summaries",
   "state": "proving",
-  "subject_chart": {
-    "lead": {
-      "kind": "ranked",
-      "label": "Insider sales per eligible name, buys beside each bar.",
-      "rows": [
-        {
-          "coverage": "4 buys",
-          "name": "CROX",
-          "score": 19
-        },
-        {
-          "coverage": "3 buys",
-          "name": "DFIN",
-          "score": 16
-        },
-        {
-          "coverage": "2 buys",
-          "name": "ED",
-          "score": 0
-        },
-        {
-          "coverage": "2 buys",
-          "name": "EGBN",
-          "score": 5
-        },
-        {
-          "coverage": "4 buys",
-          "name": "GO",
-          "score": 1
-        },
-        {
-          "coverage": "3 buys",
-          "name": "HOG",
-          "score": 6
-        },
-        {
-          "coverage": "1 buys",
-          "name": "KDP",
-          "score": 3
-        },
-        {
-          "coverage": "5 buys",
-          "name": "KMPR",
-          "score": 0
-        },
-        {
-          "coverage": "1 buys",
-          "name": "KNSL",
-          "score": 1
-        },
-        {
-          "coverage": "5 buys",
-          "name": "PEB",
-          "score": 1
-        },
-        {
-          "coverage": "6 buys",
-          "name": "RLI",
-          "score": 0
-        },
-        {
-          "coverage": "6 buys",
-          "name": "RYAN",
-          "score": 4
-        }
-      ],
-      "source": "insider_legs.arm_b_eligible[].sells",
-      "title": "Insider buying names: sales against buys"
-    },
-    "record": {
-      "kind": "ranked",
-      "label": "Insider buys per eligible name.",
-      "rows": [
-        {
-          "name": "CROX",
-          "score": 4
-        },
-        {
-          "name": "DFIN",
-          "score": 3
-        },
-        {
-          "name": "ED",
-          "score": 2
-        },
-        {
-          "name": "EGBN",
-          "score": 2
-        },
-        {
-          "name": "GO",
-          "score": 4
-        },
-        {
-          "name": "HOG",
-          "score": 3
-        },
-        {
-          "name": "KDP",
-          "score": 1
-        },
-        {
-          "name": "KMPR",
-          "score": 5
-        },
-        {
-          "name": "KNSL",
-          "score": 1
-        },
-        {
-          "name": "PEB",
-          "score": 5
-        },
-        {
-          "name": "RLI",
-          "score": 6
-        },
-        {
-          "name": "RYAN",
-          "score": 6
-        }
-      ],
-      "source": "insider_legs.arm_b_eligible[].buys",
-      "title": "Insider buying names: buys on record"
-    },
-    "version": 1
-  },
   "thin_rule": "Below 30 graded in any group, counts only: no average and no score is drawn from a handful of tests.",
   "today": {
     "arm_a": [],
@@ -1774,7 +1588,7 @@
     "insider_as_of": "2026-11-15",
     "overlap": [],
     "reason": "No name carries both readings, so no test could run on any name and nothing was recorded. Zero is the count, not a gap in the page.",
-    "session": "2026-11-18"
+    "session": "2026-11-19"
   },
   "tool": "Insider-Flow Divergence",
   "waiting": true
