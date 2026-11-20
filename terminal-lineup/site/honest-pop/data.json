@@ -2,10 +2,10 @@
   "as_of": "2026-11-19",
   "calibration_attestation": {
     "attestation": {
-      "basis": "1593 graded forecasts of 2737 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
-      "forecasts_recorded": 2737,
+      "basis": "1593 graded forecasts of 2881 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+      "forecasts_recorded": 2881,
       "graded_forecasts": 1593,
-      "ledger_rows_at_write": 572976,
+      "ledger_rows_at_write": 592098,
       "recorded_on": "2026-11-19",
       "status": "not_attested"
     },
@@ -18,6 +18,10 @@
     "zero_forecast_state": null
   },
   "execution_pricing": false,
+  "explanation": {
+    "body": "Its forecast takes this form: probability, over to weekly expiry, graded at expiry close. It is graded on a score that rewards probabilities that land close to what actually happens. It would be ended if after 26 weekly expiries, its Brier is no better than the uncorrected IV POP's. It counts as proven at 26 weekly expiries.",
+    "summary": "For SPY and QQQ, attach an honest chance of finishing above each strike to this week's expiry, and grade every strike when the week ends."
+  },
   "feed": "tastytrade_chain_snapshot",
   "kill_criterion": "This tool is retired if, after 26 weekly expiries have been graded, its score for how close its chances were is no better than the score of the market's own uncorrected chances recorded beside them.",
   "live": {
@@ -57,6 +61,82 @@
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
   },
+  "record_surface": {
+    "calibration_record": {
+      "attestation": {
+        "basis": "1593 graded forecasts of 2881 recorded on the ledger (mean scores: no numeric mean scores); graded record only, no calibrated out of sample evaluation has been attested, so this engine's numbers are published as uncalibrated scores, never as probabilities",
+        "forecasts_recorded": 2881,
+        "graded_forecasts": 1593,
+        "ledger_rows_at_write": 592098,
+        "recorded_on": "2026-11-19",
+        "status": "not_attested"
+      },
+      "engine_id": "engine_05",
+      "probability_rendering": {
+        "reason": "no calibrated out of sample attestation on record for this engine; its numbers may be published only as uncalibrated scores, never as probabilities",
+        "render_as_probability": false,
+        "rendered_as": "uncalibrated_score"
+      },
+      "zero_forecast_state": null
+    },
+    "current_reading": {
+      "as_of": "2026-11-19",
+      "keys_present": [
+        "as_of",
+        "calibration_attestation",
+        "execution_pricing",
+        "explanation",
+        "feed",
+        "kill_criterion",
+        "live",
+        "loaded_at_utc",
+        "method",
+        "price_basis",
+        "price_history_as_of",
+        "provenance",
+        "record_surface",
+        "scope_line",
+        "self_test",
+        "source",
+        "state",
+        "subject_chart",
+        "surfaces",
+        "thin_cell_rule",
+        "tool",
+        "waiting",
+        "what_exists"
+      ]
+    },
+    "feed": "tastytrade_chain_snapshot",
+    "label": "Study record",
+    "live_accrual": {
+      "corrections": 0,
+      "engine": "engine_05",
+      "forecasts": 2881,
+      "grades": 1593,
+      "source": "forecast/ledger.jsonl (counted)"
+    },
+    "missing": {
+      "what_and_when": "More live grades are still to come: 2881 forecasts are on record and 1593 are graded so far. The rest arrive after each following session close."
+    },
+    "provenance": {
+      "execution_pricing": false,
+      "feed": "tastytrade_chain_snapshot",
+      "price_basis": "snapshot",
+      "stamped_by": "terminal_common.stamp_provenance"
+    },
+    "study_record": {
+      "label": "Study record",
+      "locations": [
+        {
+          "items": 2,
+          "path": "/method"
+        }
+      ],
+      "total_items_counted": 2
+    },
+    "version": 1
+  },
   "scope_line": "A win rate is not an edge. This page states the chance of finishing above a strike; it says nothing about how much a trade would win or lose, or whether any trade pays.",
   "self_test": {
     "oracle_cases": 8,
@@ -67,6 +147,313 @@
   },
   "source": "The stored options chains for SPY and QQQ, one snapshot kept per trading day, read with the price history on record (last session 2026-11-19).",
   "state": "proving",
+  "subject_chart": {
+    "lead": {
+      "kind": "curve",
+      "label": "Honest chance percent by strike.",
+      "points": [
+        {
+          "x": "702.0",
+          "y": 97.7
+        },
+        {
+          "x": "703.0",
+          "y": 96.8
+        },
+        {
+          "x": "704.0",
+          "y": 95.9
+        },
+        {
+          "x": "705.0",
+          "y": 94.6
+        },
+        {
+          "x": "706.0",
+          "y": 93.0
+        },
+        {
+          "x": "707.0",
+          "y": 91.6
+        },
+        {
+          "x": "708.0",
+          "y": 89.8
+        },
+        {
+          "x": "709.0",
+          "y": 87.1
+        },
+        {
+          "x": "710.0",
+          "y": 84.9
+        },
+        {
+          "x": "711.0",
+          "y": 82.2
+        },
+        {
+          "x": "712.0",
+          "y": 78.4
+        },
+        {
+          "x": "713.0",
+          "y": 74.2
+        },
+        {
+          "x": "714.0",
+          "y": 68.8
+        },
+        {
+          "x": "715.0",
+          "y": 62.3
+        },
+        {
+          "x": "716.0",
+          "y": 56.5
+        },
+        {
+          "x": "717.0",
+          "y": 49.3
+        },
+        {
+          "x": "718.0",
+          "y": 43.7
+        },
+        {
+          "x": "719.0",
+          "y": 37.8
+        },
+        {
+          "x": "720.0",
+          "y": 31.7
+        },
+        {
+          "x": "721.0",
+          "y": 25.3
+        },
+        {
+          "x": "722.0",
+          "y": 20.4
+        },
+        {
+          "x": "723.0",
+          "y": 15.7
+        },
+        {
+          "x": "724.0",
+          "y": 12.7
+        },
+        {
+          "x": "725.0",
+          "y": 10.3
+        },
+        {
+          "x": "726.0",
+          "y": 8.7
+        },
+        {
+          "x": "727.0",
+          "y": 7.2
+        },
+        {
+          "x": "728.0",
+          "y": 5.3
+        },
+        {
+          "x": "729.0",
+          "y": 4.1
+        },
+        {
+          "x": "730.0",
+          "y": 3.1
+        },
+        {
+          "x": "731.0",
+          "y": 2.5
+        }
+      ],
+      "source": "surfaces[0].rows[].p_pct",
+      "title": "Chance of finishing above each strike, SPY"
+    },
+    "record": {
+      "kind": "curve",
+      "label": "The second surface on record, chance percent by strike.",
+      "points": [
+        {
+          "x": "625.0",
+          "y": 97.7
+        },
+        {
+          "x": "626.0",
+          "y": 97.3
+        },
+        {
+          "x": "627.0",
+          "y": 96.9
+        },
+        {
+          "x": "628.0",
+          "y": 96.3
+        },
+        {
+          "x": "629.0",
+          "y": 95.5
+        },
+        {
+          "x": "630.0",
+          "y": 94.7
+        },
+        {
+          "x": "631.0",
+          "y": 93.7
+        },
+        {
+          "x": "632.0",
+          "y": 92.7
+        },
+        {
+          "x": "633.0",
+          "y": 90.8
+        },
+        {
+          "x": "634.0",
+          "y": 88.6
+        },
+        {
+          "x": "635.0",
+          "y": 86.9
+        },
+        {
+          "x": "636.0",
+          "y": 84.9
+        },
+        {
+          "x": "637.0",
+          "y": 82.7
+        },
+        {
+          "x": "638.0",
+          "y": 80.3
+        },
+        {
+          "x": "639.0",
+          "y": 77.8
+        },
+        {
+          "x": "640.0",
+          "y": 75.1
+        },
+        {
+          "x": "641.0",
+          "y": 72.1
+        },
+        {
+          "x": "642.0",
+          "y": 68.5
+        },
+        {
+          "x": "643.0",
+          "y": 64.7
+        },
+        {
+          "x": "644.0",
+          "y": 59.6
+        },
+        {
+          "x": "645.0",
+          "y": 54.7
+        },
+        {
+          "x": "646.0",
+          "y": 50.2
+        },
+        {
+          "x": "647.0",
+          "y": 45.2
+        },
+        {
+          "x": "648.0",
+          "y": 40.3
+        },
+        {
+          "x": "649.0",
+          "y": 35.5
+        },
+        {
+          "x": "650.0",
+          "y": 30.8
+        },
+        {
+          "x": "651.0",
+          "y": 26.3
+        },
+        {
+          "x": "652.0",
+          "y": 22.7
+        },
+        {
+          "x": "653.0",
+          "y": 19.5
+        },
+        {
+          "x": "654.0",
+          "y": 16.7
+        },
+        {
+          "x": "655.0",
+          "y": 14.3
+        },
+        {
+          "x": "656.0",
+          "y": 12.4
+        },
+        {
+          "x": "657.0",
+          "y": 10.4
+        },
+        {
+          "x": "658.0",
+          "y": 8.8
+        },
+        {
+          "x": "659.0",
+          "y": 7.8
+        },
+        {
+          "x": "660.0",
+          "y": 6.7
+        },
+        {
+          "x": "661.0",
+          "y": 5.5
+        },
+        {
+          "x": "662.0",
+          "y": 4.5
+        },
+        {
+          "x": "663.0",
+          "y": 3.9
+        },
+        {
+          "x": "664.0",
+          "y": 3.2
+        },
+        {
+          "x": "665.0",
+          "y": 2.7
+        },
+        {
+          "x": "666.0",
+          "y": 2.3
+        }
+      ],
+      "source": "surfaces[1].rows[].p_pct",
+      "title": "Chance of finishing above each strike, QQQ"
+    },
+    "version": 1
+  },
   "surfaces": [
     {
       "contracts_on_record": 12326,
