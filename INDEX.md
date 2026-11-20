@@ -2,10 +2,10 @@
 
 The complete measured file inventory and collection map. [INDEX.json](INDEX.json) is the machine-readable twin; [docs/REPOSITORY-MAP.json](docs/REPOSITORY-MAP.json) supplies curated meanings and task routes when present. No catalog or prose page substitutes for the full inventory.
 
-Total files indexed: 9931
+Total files indexed: 9933
 
-Indexed commit: `d47ba1e4ebba727da6f02996ecdba1426a0da99e`. Source commit timestamp: 2026-11-20T01:53:48Z.
-Total indexed bytes: 1057295476 (only the two generated index outputs have null hashes and sizes).
+Indexed commit: `0c584ff8d3213465539714d64a5f124b9c76c1ac`. Source commit timestamp: 2026-11-20T02:18:25Z.
+Total indexed bytes: 1060586793 (only the two generated index outputs have null hashes and sizes).
 
 ## What this repository is
 
@@ -62,7 +62,7 @@ Counts and bytes below are derived from the selected Git tree, not copied from o
 | sleeves | 578 | 5819273 | Strategy implementations grouped by family and standalone named sleeve modules. [sleeves/AREA.md](sleeves/AREA.md) · [docs/SLEEVES.json](docs/SLEEVES.json) · [docs/VERIFY.md](docs/VERIFY.md) copied source; verify exact variant, dependencies, adapter and validation boundary |
 | strategies | 270 | 528417 | Human-readable strategy cards indexed separately from the rest of the repository. [strategies/AREA.md](strategies/AREA.md) · [docs/CATALOG.json](docs/CATALOG.json) · [docs/ALL-SLEEVES.json](docs/ALL-SLEEVES.json) source-derived summaries; strategy cards are not performance evidence or the whole-repository index |
 | terminal | 1 | 4822 | New or unclassified area: inspect its files and add a curated route. |
-| terminal-lineup | 3343 | 834292048 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
+| terminal-lineup | 3345 | 837583365 | Terminal tool pages, refresh/build source, forecast machinery, specifications and historical records. [terminal-lineup/AREA.md](terminal-lineup/AREA.md) · [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) · [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) mixed published snapshots, implementation source and dated build evidence; live state requires fresh readback |
 | tests | 289 | 2941825 | Repository-level regression checks for selected implemented strategy families. [tests/AREA.md](tests/AREA.md) · [docs/VERIFY.md](docs/VERIFY.md) bounded regression evidence; passing tests do not establish market profitability or live readiness |
 | tools | 79 | 392434 | Repository navigation and inventory tooling. [tools/AREA.md](tools/AREA.md) · [tools/build_repo_index.py](tools/build_repo_index.py) local tooling and generated metadata; verify indexed revision and working-tree state |
 | vendor | 11 | 164504 | New or unclassified area: inspect its files and add a curated route. |
@@ -102,8 +102,8 @@ These are independent source collections unless their own records establish a li
 ## Terminal, implementation and evidence routes
 
 - [terminal-lineup/THE-70-TOOLS.md](terminal-lineup/THE-70-TOOLS.md) and [terminal-lineup/FORECAST-ENGINES-30.md](terminal-lineup/FORECAST-ENGINES-30.md) retain historical titles; the tree and registry determine the captured contents.
-- [terminal-lineup/site/](terminal-lineup/site/) — 3032 files: tool pages, assets, source and dated data.
-- [terminal-lineup/forecast/](terminal-lineup/forecast/) — 140 files: forecast implementations, registry, grading and tests.
+- [terminal-lineup/site/](terminal-lineup/site/) — 3033 files: tool pages, assets, source and dated data.
+- [terminal-lineup/forecast/](terminal-lineup/forecast/) — 141 files: forecast implementations, registry, grading and tests.
 - [terminal-lineup/records/](terminal-lineup/records/) — 16 files: historical build and source-discovery records.
 - [master/](master/) — 106 files: externally mirrored terminal assets and snapshots.
 - [docs/VERIFY.md](docs/VERIFY.md), [docs/verify/](docs/verify/) and [proof/install/](proof/install/): source attribution and historical receipts. Check the captured source, date and exact claim before relying on them.
@@ -113,7 +113,7 @@ These are independent source collections unless their own records establish a li
 
 ## Coverage and preservation contract
 
-INDEX.json has 9931 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
+INDEX.json has 9933 sorted file entries. All source blobs are included with exact Git blob hashes and byte sizes. Only `INDEX.md` and `INDEX.json` are generated self entries, with null hashes/sizes; `tools/build_repo_index.py` is ordinary hashed source. When an output is absent from the selected source tree, its marked self entry anticipates the generated file and is not a claim it was already committed.
 
 A file inventory proves paths and byte identity, not semantic correctness or runtime behavior. Unsupported submodules, truncated snapshots, duplicate paths, unsafe paths and missing hashes/sizes fail explicitly rather than yielding a partial inventory described as complete. The index does not enumerate files inside archives; use their own manifests and the artifact's documented extraction procedure.
 
