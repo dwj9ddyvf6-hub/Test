@@ -405,7 +405,7 @@ def build():
     for sym, c in map_by_symbol.items():
         f = feed_map[sym]
         checks = [
-            ("spot", f["spot"], c["spot"]),
+            ("spot", round(f["spot"], 2), round(c["spot"], 2)),
             ("net pressure",
              round(c["net_gex_usd_per_1pct"] / 1e9, 2),
              f["net_gex_b"]),
