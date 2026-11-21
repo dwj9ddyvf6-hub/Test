@@ -1,10 +1,10 @@
 {
   "calendar": {
-    "dated": 1177,
+    "dated": 1185,
     "names_on_record": 1838,
-    "no_date": 661,
-    "priced_moves_on_record": 125,
-    "recorded_on": "2026-11-19",
+    "no_date": 653,
+    "priced_moves_on_record": 123,
+    "recorded_on": "2026-11-20",
     "stale_note": "The calendar was gathered on October 12, 2026, more than a week before the newest map session, so by its own page's rule it is old. Its dates are shown as recorded, and any date that has slipped will be caught when the calendar is next gathered.",
     "timing_note": "The calendar carries no report timing, nothing about whether a report lands before the open or after the close. Until a record carries timing, the report date itself is counted as the earnings day. That is a named gap in the record, not a fact about the companies."
   },
@@ -34,10 +34,10 @@
   "forecast": {
     "claim": "For a stock in the index that reports earnings within the next 5 trading days while dealer positioning for the whole index is negative, the size of its earnings-day move, whichever way it goes, will be bigger than the move the options market priced in for at least 55 out of every 100 such reports, and the middle report's actual move will be at least 1.10 times its priced move.",
     "control": "The comparison group: the same measurement for earnings reports that land while index-wide positioning is positive, recorded at the same time and graded in exactly the same way. The claim above has to beat this group, not just a coin flip.",
-    "positioning_level": "Every forecast states the positioning level it used. Today only the index-wide level exists. A per-stock positioning reading would need stored per-stock option chains, and the chain store holds 547 snapshots, so no per-stock reading is used or implied.",
+    "positioning_level": "Every forecast states the positioning level it used. Today only the index-wide level exists. A per-stock positioning reading would need stored per-stock option chains, and the chain store holds 590 snapshots, so no per-stock reading is used or implied.",
     "size_only": "This forecast is about the SIZE of the move only. It never says, and nothing on this page says, which way any stock will move."
   },
-  "grading_note": "Grading waits on two things, both stated plainly: the shared grading machinery cannot yet score this kind of actual-against-priced size result for a group of reports, and the price history on record ends 2026-11-19, before every report date in the window.",
+  "grading_note": "Grading waits on two things, both stated plainly: the shared grading machinery cannot yet score this kind of actual-against-priced size result for a group of reports, and the price history on record ends 2026-11-20, before every report date in the window.",
   "history": {
     "control_arm_graded": 0,
     "detail": "No past report qualifies, in either group. The past-earnings record holds a pooled summary only: 36 reports across 3 names (AAPL, MSFT, NVDA), a pooled average move of -0.22 percent and a pooled middle of -0.36 percent, gathered 2026-11-19. Individual report dates and individual moves are not stored, no priced move exists for any of those reports, and positioning readings exist only for October 2026 sessions, long after them. With any one of the four inputs missing, an event is not graded, so the count is 0, stated plainly.",
@@ -49,43 +49,43 @@
   "live": {
     "control_recorded": 0,
     "forecasts_graded": 3129,
-    "forecasts_recorded": 3251,
-    "main_recorded": 3251,
+    "forecasts_recorded": 3274,
+    "main_recorded": 3274,
     "target_events": 60
   },
-  "loaded_at_utc": "2026-11-20T01:39:21.355080+00:00",
+  "loaded_at_utc": "2026-11-21T00:13:22.104811+00:00",
   "membership": {
     "note": "The only index membership list on record is the S&P list: 503 S&P 500 names among 1,503 tagged names. No membership list for the Nasdaq-100 or the Russell 2000 exists on record, so membership is claimed for the S&P 500 only. A name on the list is governed by SPY as its own index; every other calendar name is carried under SPY as the stated fallback, and each report below says which.",
     "sp500_on_record": 503,
     "tagged_names_on_record": 1503
   },
   "missing_input": {
-    "detail": "The calendar's priced-move field is empty for all 1177 dated names. The chain store that could carry a per-stock priced move holds 547 snapshots. The expected-move page covers the index funds only and is not a per-stock earnings price. The per-stock volatility record holds a volatility level, not a priced move, and a level is never turned into a priced move here. The first record that carries a real priced move for a coming report, for example the first stored per-stock option chain, lets this engine record forecasts unchanged.",
+    "detail": "The calendar's priced-move field is empty for all 1185 dated names. The chain store that could carry a per-stock priced move holds 590 snapshots. The expected-move page covers the index funds only and is not a per-stock earnings price. The per-stock volatility record holds a volatility level, not a priced move, and a level is never turned into a priced move here. The first record that carries a real priced move for a coming report, for example the first stored per-stock option chain, lets this engine record forecasts unchanged.",
     "name": "the priced expected move for each report",
     "state": "absent"
   },
   "options_gate": {
-    "admitted": 423974,
+    "admitted": 452330,
     "greek_max_age_seconds": 4500,
     "greek_states": {
       "fresh": 0,
       "future": 0,
       "stale": 0,
-      "undated": 423974
+      "undated": 452330
     },
     "iv_ceiling": 5.0,
     "iv_states": {
-      "absent": 246564,
+      "absent": 265183,
       "invalid": 0,
-      "ok": 177410,
+      "ok": 187147,
       "over_ceiling": 0
     },
     "note": "Candidate gate over the stored chain snapshots: Greeks older than 75 minutes, future dated Greeks and IV at or over 500 percent refuse a candidate; contracts whose source supplies no Greek timestamp are labelled undated, not silently trusted. The current store's source supplies no Greek timestamps and no IV, so its contracts count as undated with IV absent.",
     "refused": 0,
-    "snapshots_scanned": 45,
-    "total": 423974
+    "snapshots_scanned": 48,
+    "total": 452330
   },
-  "panel_last_session": "2026-11-19",
+  "panel_last_session": "2026-11-20",
   "positioning": {
     "freshest_session": "2026-11-19",
     "level": "index-wide",
@@ -475,19 +475,19 @@
       {
         "funds": {
           "IWM": {
-            "run_ts": "2026-11-20T01:33:49.599864+00:00",
+            "run_ts": "2026-11-20T01:39:39.002995+00:00",
             "sign": "negative",
-            "value_usd_per_1pct": -7343132249.594306
+            "value_usd_per_1pct": -7342982115.842641
           },
           "QQQ": {
-            "run_ts": "2026-11-20T01:33:49.599360+00:00",
+            "run_ts": "2026-11-20T01:39:39.002634+00:00",
             "sign": "negative",
-            "value_usd_per_1pct": -5326423586.295387
+            "value_usd_per_1pct": -5326421838.475639
           },
           "SPY": {
-            "run_ts": "2026-11-20T01:33:49.594903+00:00",
+            "run_ts": "2026-11-20T01:39:38.999353+00:00",
             "sign": "negative",
-            "value_usd_per_1pct": -17470194291.775406
+            "value_usd_per_1pct": -17471113442.87852
           }
         },
         "session": "2026-11-19"
@@ -502,7 +502,7 @@
     "price_basis": "snapshot",
     "stamped_by": "terminal_common.stamp_provenance"
   },
-  "published_at_utc": "2026-11-20T01:33:49.594817+00:00",
+  "published_at_utc": "2026-11-20T01:39:38.999247+00:00",
   "record_surface": {
     "calibration_record": {
       "attestation": {
@@ -522,7 +522,7 @@
       "zero_forecast_state": null
     },
     "current_reading": {
-      "as_of": "2026-11-19",
+      "as_of": "2026-11-20",
       "keys_present": [
         "calendar",
         "calibration_attestation",
@@ -560,12 +560,12 @@
     "live_accrual": {
       "corrections": 0,
       "engine": "engine_11",
-      "forecasts": 3251,
+      "forecasts": 3274,
       "grades": 3129,
       "source": "forecast/ledger.jsonl (counted)"
     },
     "missing": {
-      "what_and_when": "More live grades are still to come: 3251 forecasts are on record and 3129 are graded so far. The rest arrive after each following session close."
+      "what_and_when": "More live grades are still to come: 3274 forecasts are on record and 3129 are graded so far. The rest arrive after each following session close."
     },
     "provenance": {
       "execution_pricing": false,
@@ -598,43 +598,43 @@
       "rows": [
         {
           "name": "BJ",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "BKE",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "IESC",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "MOG.A",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "SIDU",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "A",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "AMTM",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "CENT",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "CENTA",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         },
         {
           "name": "FLNC",
-          "score": -17470194291.775406
+          "score": -17471113442.87852
         }
       ],
       "source": "window.events[].positioning_value_usd_per_1pct",
@@ -675,7 +675,7 @@
   "waiting": true,
   "window": {
     "after_session": "2026-11-19",
-    "count": 34,
+    "count": 36,
     "events": [
       {
         "date": "2026-11-20",
@@ -686,7 +686,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "5.6%",
         "priced_move_state": "on record",
         "symbol": "BJ"
@@ -700,7 +700,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "5.2%",
         "priced_move_state": "on record",
         "symbol": "BKE"
@@ -714,7 +714,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "12.3%",
         "priced_move_state": "on record",
         "symbol": "IESC"
@@ -728,7 +728,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "5.0%",
         "priced_move_state": "on record",
         "symbol": "MOG.A"
@@ -742,7 +742,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SIDU"
@@ -756,7 +756,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "A"
@@ -770,7 +770,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "AMTM"
@@ -784,7 +784,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "CENT"
@@ -798,7 +798,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "CENTA"
@@ -812,7 +812,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "FLNC"
@@ -826,7 +826,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "13.1%",
         "priced_move_state": "on record",
         "symbol": "HPE"
@@ -840,7 +840,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "J"
@@ -854,7 +854,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "16.3%",
         "priced_move_state": "on record",
         "symbol": "SMTC"
@@ -868,7 +868,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "10.0%",
         "priced_move_state": "on record",
         "symbol": "ZM"
@@ -882,7 +882,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "8.5%",
         "priced_move_state": "on record",
         "symbol": "ADI"
@@ -896,7 +896,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "9.2%",
         "priced_move_state": "on record",
         "symbol": "ADSK"
@@ -910,7 +910,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "15.0%",
         "priced_move_state": "on record",
         "symbol": "ANF"
@@ -924,7 +924,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "10.2%",
         "priced_move_state": "on record",
         "symbol": "BBY"
@@ -938,7 +938,21 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "BHP"
+      },
+      {
+        "date": "2026-11-24",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-19",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "11.7%",
         "priced_move_state": "on record",
         "symbol": "BURL"
@@ -952,7 +966,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "14.0%",
         "priced_move_state": "on record",
         "symbol": "CLSK"
@@ -966,7 +980,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "14.5%",
         "priced_move_state": "on record",
         "symbol": "DELL"
@@ -980,7 +994,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "12.4%",
         "priced_move_state": "on record",
         "symbol": "DKS"
@@ -994,7 +1008,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "10.1%",
         "priced_move_state": "on record",
         "symbol": "DLTR"
@@ -1008,7 +1022,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "DY"
@@ -1022,7 +1036,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "10.4%",
         "priced_move_state": "on record",
         "symbol": "HPQ"
@@ -1036,7 +1050,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "14.8%",
         "priced_move_state": "on record",
         "symbol": "KSS"
@@ -1050,7 +1064,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "4.3%",
         "priced_move_state": "on record",
         "symbol": "MDT"
@@ -1064,7 +1078,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "NTNX"
@@ -1078,7 +1092,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "SJM"
@@ -1092,7 +1106,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "11.1%",
         "priced_move_state": "on record",
         "symbol": "URBN"
@@ -1106,7 +1120,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "9.5%",
         "priced_move_state": "on record",
         "symbol": "WDAY"
@@ -1120,7 +1134,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "7.2%",
         "priced_move_state": "on record",
         "symbol": "DE"
@@ -1134,7 +1148,7 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": "7.5%",
         "priced_move_state": "on record",
         "symbol": "LI"
@@ -1148,10 +1162,24 @@
         "positioning_level": "index-wide",
         "positioning_session": "2026-11-19",
         "positioning_sign": "negative",
-        "positioning_value_usd_per_1pct": -17470194291.775406,
+        "positioning_value_usd_per_1pct": -17471113442.87852,
         "priced_move_pct": null,
         "priced_move_state": "absent: no record carries one for this name",
         "symbol": "PLG"
+      },
+      {
+        "date": "2026-11-26",
+        "governing_basis": "the stated fallback",
+        "governing_index": "SPY",
+        "in_sp500": false,
+        "membership": "not on the S&P 500 list on record; carried under the SPY fallback",
+        "positioning_level": "index-wide",
+        "positioning_session": "2026-11-19",
+        "positioning_sign": "negative",
+        "positioning_value_usd_per_1pct": -17471113442.87852,
+        "priced_move_pct": null,
+        "priced_move_state": "absent: no record carries one for this name",
+        "symbol": "HUBG"
       }
     ],
     "forecasts_recorded_today": 23,
